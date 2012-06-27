@@ -1,2 +1,0 @@
-﻿CREATE USER [DIRECTAGENTS\AccountMangers] FOR LOGIN [DIRECTAGENTS\AccountMangers];
-
