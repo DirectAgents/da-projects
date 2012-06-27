@@ -108,5 +108,8 @@
     <Setting Name="EomApp1_CakeService_Service" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">http://localhost:61333/Service.asmx</Value>
     </Setting>
+    <Setting Name="DADatabaseMasterListConnectionString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DA;Integrated Security=True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

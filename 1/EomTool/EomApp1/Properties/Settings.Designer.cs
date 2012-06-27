@@ -232,5 +232,14 @@ namespace EomApp1.Properties {
                 return ((string)(this["EomApp1_CakeService_Service"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DA;Integrated Security=True")]
+        public string DADatabaseMasterListConnectionString {
+            get {
+                return ((string)(this["DADatabaseMasterListConnectionString"]));
+            }
+        }
     }
 }
