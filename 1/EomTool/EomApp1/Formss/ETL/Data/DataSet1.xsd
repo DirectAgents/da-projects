@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DataSet1" targetNamespace="http://tempuri.org/DataSet1.xsd" xmlns:mstns="http://tempuri.org/DataSet1.xsd" xmlns="http://tempuri.org/DataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DataSet1" msprop:Generator_UserDSName="DataSet1">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DTRestCall" msprop:Generator_TableClassName="DTRestCallDataTable" msprop:Generator_TableVarName="tableDTRestCall" msprop:Generator_TablePropName="DTRestCall" msprop:Generator_RowDeletingName="DTRestCallRowDeleting" msprop:Generator_UserTableName="DTRestCall" msprop:Generator_RowChangingName="DTRestCallRowChanging" msprop:Generator_RowEvHandlerName="DTRestCallRowChangeEventHandler" msprop:Generator_RowDeletedName="DTRestCallRowDeleted" msprop:Generator_RowEvArgName="DTRestCallRowChangeEvent" msprop:Generator_RowChangedName="DTRestCallRowChanged" msprop:Generator_RowClassName="DTRestCallRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Url" msprop:Generator_ColumnVarNameInTable="columnUrl" msprop:Generator_ColumnPropNameInRow="Url" msprop:Generator_ColumnPropNameInTable="UrlColumn" msprop:Generator_UserColumnName="Url" type="xs:string" minOccurs="0" />
+              <xs:element name="Element" msprop:Generator_ColumnVarNameInTable="columnElement" msprop:Generator_ColumnPropNameInRow="Element" msprop:Generator_ColumnPropNameInTable="ElementColumn" msprop:Generator_UserColumnName="Element" type="xs:string" minOccurs="0" />
+              <xs:element name="Call" msprop:Generator_ColumnVarNameInTable="columnCall" msprop:Generator_ColumnPropNameInRow="Call" msprop:Generator_ColumnPropNameInTable="CallColumn" msprop:Generator_UserColumnName="Call" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

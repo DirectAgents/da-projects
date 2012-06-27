@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="FinalizeDataSet1" targetNamespace="http://tempuri.org/FinalizeDataSet1.xsd" xmlns:mstns="http://tempuri.org/FinalizeDataSet1.xsd" xmlns="http://tempuri.org/FinalizeDataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignTableAdapter" GeneratorDataComponentClassName="CampaignTableAdapter" Name="Campaign" UserDataComponentName="CampaignTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
+                         SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note
+FROM            Campaign INNER JOIN
+                         AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
+                         Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
+                         CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
+                         Item ON Campaign.pid = Item.pid INNER JOIN
+                         Currency ON Item.revenue_currency_id = Currency.id LEFT OUTER JOIN
+                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id
+GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
+                         LatestCampaignNote.note
+ORDER BY Campaign.campaign_name</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id" DataSetColumn="id" />
+              <Mapping SourceColumn="pid" DataSetColumn="pid" />
+              <Mapping SourceColumn="campaign_name" DataSetColumn="campaign_name" />
+              <Mapping SourceColumn="modified" DataSetColumn="modified" />
+              <Mapping SourceColumn="AM" DataSetColumn="AM" />
+              <Mapping SourceColumn="Advertiser" DataSetColumn="Advertiser" />
+              <Mapping SourceColumn="Revenue" DataSetColumn="Revenue" />
+              <Mapping SourceColumn="Curr" DataSetColumn="Curr" />
+              <Mapping SourceColumn="Status" DataSetColumn="Status" />
+              <Mapping SourceColumn="Note" DataSetColumn="Note" />
+            </Mappings>
+            <Sources>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="FillByAM" GenerateMethods="Fill" GenerateShortCommands="true" GeneratorSourceName="FillByAM" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillByAM">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
+                         SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note
+FROM            Campaign INNER JOIN
+                         AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
+                         Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
+                         CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
+                         Item ON Campaign.pid = Item.pid INNER JOIN
+                         Currency ON Item.revenue_currency_id = Currency.id LEFT OUTER JOIN
+                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id
+GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
+                         LatestCampaignNote.note
+HAVING        (AccountManager.name = @1)
+ORDER BY Campaign.campaign_name</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="name" DataSourceName="DADatabaseR1.dbo.AccountManager" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="AM" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignStatusTableAdapter" GeneratorDataComponentClassName="CampaignStatusTableAdapter" Name="CampaignStatus" UserDataComponentName="CampaignStatusTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.CampaignStatus" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM [dbo].[CampaignStatus] WHERE (([id] = @Original_id) AND ([name] = @Original_name))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_name" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="name" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO [dbo].[CampaignStatus] ([name]) VALUES (@name);
+SELECT id, name FROM CampaignStatus WHERE (id = SCOPE_IDENTITY())</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@name" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="name" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT id, name FROM dbo.CampaignStatus</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE [dbo].[CampaignStatus] SET [name] = @name WHERE (([id] = @Original_id) AND ([name] = @Original_name));
+SELECT id, name FROM CampaignStatus WHERE (id = @id)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@name" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="name" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_name" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="name" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="id" ColumnName="id" DataSourceName="" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@id" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id" DataSetColumn="id" />
+              <Mapping SourceColumn="name" DataSetColumn="name" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignNotesTableAdapter" GeneratorDataComponentClassName="CampaignNotesTableAdapter" Name="CampaignNotes" UserDataComponentName="CampaignNotesTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.CampaignNotes" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM [dbo].[CampaignNotes] WHERE (([id] = @Original_id) AND ([campaign_id] = @Original_campaign_id) AND ((@IsNull_added_by_system_user = 1 AND [added_by_system_user] IS NULL) OR ([added_by_system_user] = @Original_added_by_system_user)))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_campaign_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="campaign_id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_added_by_system_user" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="added_by_system_user" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_added_by_system_user" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="added_by_system_user" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO [dbo].[CampaignNotes] ([campaign_id], [note], [added_by_system_user]) VALUES (@campaign_id, @note, @added_by_system_user);
+SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id = SCOPE_IDENTITY())</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@campaign_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="campaign_id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@note" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="note" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@added_by_system_user" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="added_by_system_user" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT id, campaign_id, note, added_by_system_user FROM dbo.CampaignNotes</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE [dbo].[CampaignNotes] SET [campaign_id] = @campaign_id, [note] = @note, [added_by_system_user] = @added_by_system_user WHERE (([id] = @Original_id) AND ([campaign_id] = @Original_campaign_id) AND ((@IsNull_added_by_system_user = 1 AND [added_by_system_user] IS NULL) OR ([added_by_system_user] = @Original_added_by_system_user)));
+SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id = @id)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@campaign_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="campaign_id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@note" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="note" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@added_by_system_user" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="added_by_system_user" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_campaign_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="campaign_id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_added_by_system_user" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="added_by_system_user" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_added_by_system_user" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="added_by_system_user" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="id" ColumnName="id" DataSourceName="" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@id" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id" DataSetColumn="id" />
+              <Mapping SourceColumn="campaign_id" DataSetColumn="campaign_id" />
+              <Mapping SourceColumn="note" DataSetColumn="note" />
+              <Mapping SourceColumn="added_by_system_user" DataSetColumn="added_by_system_user" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="FinalizeDataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="FinalizeDataSet1" msprop:Generator_UserDSName="FinalizeDataSet1">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Campaign" msprop:Generator_TableClassName="CampaignDataTable" msprop:Generator_TableVarName="tableCampaign" msprop:Generator_TablePropName="Campaign" msprop:Generator_RowDeletingName="CampaignRowDeleting" msprop:Generator_UserTableName="Campaign" msprop:Generator_RowChangingName="CampaignRowChanging" msprop:Generator_RowEvHandlerName="CampaignRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignRowDeleted" msprop:Generator_RowEvArgName="CampaignRowChangeEvent" msprop:Generator_RowChangedName="CampaignRowChanged" msprop:Generator_RowClassName="CampaignRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
+              <xs:element name="pid" msprop:Generator_ColumnVarNameInTable="columnpid" msprop:Generator_ColumnPropNameInRow="pid" msprop:Generator_ColumnPropNameInTable="pidColumn" msprop:Generator_UserColumnName="pid" type="xs:int" />
+              <xs:element name="campaign_name" msprop:Generator_ColumnVarNameInTable="columncampaign_name" msprop:Generator_ColumnPropNameInRow="campaign_name" msprop:Generator_ColumnPropNameInTable="campaign_nameColumn" msprop:Generator_UserColumnName="campaign_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="modified" msprop:Generator_ColumnVarNameInTable="columnmodified" msprop:Generator_ColumnPropNameInRow="modified" msprop:Generator_ColumnPropNameInTable="modifiedColumn" msprop:Generator_UserColumnName="modified" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="AM" msprop:Generator_ColumnVarNameInTable="columnAM" msprop:Generator_ColumnPropNameInRow="AM" msprop:Generator_ColumnPropNameInTable="AMColumn" msprop:Generator_UserColumnName="AM">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Advertiser" msprop:Generator_ColumnVarNameInTable="columnAdvertiser" msprop:Generator_ColumnPropNameInRow="Advertiser" msprop:Generator_ColumnPropNameInTable="AdvertiserColumn" msprop:Generator_UserColumnName="Advertiser">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Revenue" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRevenue" msprop:Generator_ColumnPropNameInRow="Revenue" msprop:Generator_ColumnPropNameInTable="RevenueColumn" msprop:Generator_UserColumnName="Revenue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Curr" msprop:Generator_ColumnVarNameInTable="columnCurr" msprop:Generator_ColumnPropNameInRow="Curr" msprop:Generator_ColumnPropNameInTable="CurrColumn" msprop:Generator_UserColumnName="Curr">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Note" msprop:Generator_ColumnVarNameInTable="columnNote" msprop:Generator_ColumnPropNameInRow="Note" msprop:Generator_ColumnPropNameInTable="NoteColumn" msprop:Generator_UserColumnName="Note" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CampaignStatus" msprop:Generator_TableClassName="CampaignStatusDataTable" msprop:Generator_TableVarName="tableCampaignStatus" msprop:Generator_TablePropName="CampaignStatus" msprop:Generator_RowDeletingName="CampaignStatusRowDeleting" msprop:Generator_UserTableName="CampaignStatus" msprop:Generator_RowChangingName="CampaignStatusRowChanging" msprop:Generator_RowEvHandlerName="CampaignStatusRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignStatusRowDeleted" msprop:Generator_RowEvArgName="CampaignStatusRowChangeEvent" msprop:Generator_RowChangedName="CampaignStatusRowChanged" msprop:Generator_RowClassName="CampaignStatusRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
+              <xs:element name="name" msprop:Generator_ColumnVarNameInTable="columnname" msprop:Generator_ColumnPropNameInRow="name" msprop:Generator_ColumnPropNameInTable="nameColumn" msprop:Generator_UserColumnName="name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CampaignNotes" msprop:Generator_TableClassName="CampaignNotesDataTable" msprop:Generator_TableVarName="tableCampaignNotes" msprop:Generator_TablePropName="CampaignNotes" msprop:Generator_RowDeletingName="CampaignNotesRowDeleting" msprop:Generator_UserTableName="CampaignNotes" msprop:Generator_RowChangingName="CampaignNotesRowChanging" msprop:Generator_RowEvHandlerName="CampaignNotesRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignNotesRowDeleted" msprop:Generator_RowEvArgName="CampaignNotesRowChangeEvent" msprop:Generator_RowChangedName="CampaignNotesRowChanged" msprop:Generator_RowClassName="CampaignNotesRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
+              <xs:element name="campaign_id" msprop:Generator_ColumnVarNameInTable="columncampaign_id" msprop:Generator_ColumnPropNameInRow="campaign_id" msprop:Generator_ColumnPropNameInTable="campaign_idColumn" msprop:Generator_UserColumnName="campaign_id" type="xs:int" />
+              <xs:element name="note" msprop:Generator_ColumnVarNameInTable="columnnote" msprop:Generator_ColumnPropNameInRow="note" msprop:Generator_ColumnPropNameInTable="noteColumn" msprop:Generator_UserColumnName="note">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="added_by_system_user" msprop:Generator_ColumnVarNameInTable="columnadded_by_system_user" msprop:Generator_ColumnPropNameInRow="added_by_system_user" msprop:Generator_ColumnPropNameInTable="added_by_system_userColumn" msprop:Generator_UserColumnName="added_by_system_user" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Campaign" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+    <xs:unique name="CampaignStatus_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:CampaignStatus" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+    <xs:unique name="CampaignNotes_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:CampaignNotes" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="Campaign_CampaignNotes" msdata:parent="Campaign" msdata:child="CampaignNotes" msdata:parentkey="pid" msdata:childkey="campaign_id" msprop:Generator_UserChildTable="CampaignNotes" msprop:Generator_ChildPropName="GetCampaignNotesRows" msprop:Generator_UserParentTable="Campaign" msprop:Generator_UserRelationName="Campaign_CampaignNotes" msprop:Generator_RelationVarName="relationCampaign_CampaignNotes" msprop:Generator_ParentPropName="CampaignRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

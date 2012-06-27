@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="StatusControlDataSet" targetNamespace="http://tempuri.org/StatusControlDataSet.xsd" xmlns:mstns="http://tempuri.org/StatusControlDataSet.xsd" xmlns="http://tempuri.org/StatusControlDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" GeneratorFunctionsComponentClassName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" UserFunctionsComponentName="QueriesTableAdapter" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignStatusCountTableTableAdapter" GeneratorDataComponentClassName="CampaignStatusCountTableTableAdapter" Name="CampaignStatusCountTable" UserDataComponentName="CampaignStatusCountTableTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        (SELECT        COUNT(DISTINCT Campaign.id) AS Expr1
+                          FROM            Campaign INNER JOIN
+                                                    Item ON Campaign.pid = Item.pid) AS num_campaigns_with_items,
+                             (SELECT        COUNT(DISTINCT Campaign_4.id) AS Expr1
+                               FROM            Campaign AS Campaign_4 INNER JOIN
+                                                         Item AS Item_4 ON Campaign_4.pid = Item_4.pid
+                               WHERE        (Campaign_4.campaign_status_id = 1)) AS num_default,
+                             (SELECT        COUNT(DISTINCT Campaign_1.id) AS Expr1
+                               FROM            Campaign AS Campaign_1 INNER JOIN
+                                                         Item AS Item_3 ON Campaign_1.pid = Item_3.pid
+                               WHERE        (Campaign_1.campaign_status_id = 2)) AS num_finalized,
+                             (SELECT        COUNT(DISTINCT Campaign_2.id) AS Expr1
+                               FROM            Campaign AS Campaign_2 INNER JOIN
+                                                         Item AS Item_2 ON Campaign_2.pid = Item_2.pid
+                               WHERE        (Campaign_2.campaign_status_id = 3)) AS num_active,
+                             (SELECT        COUNT(DISTINCT Campaign_3.id) AS Expr1
+                               FROM            Campaign AS Campaign_3 INNER JOIN
+                                                         Item AS Item_1 ON Campaign_3.pid = Item_1.pid
+                               WHERE        (Campaign_3.campaign_status_id = 4)) AS num_verified</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="num_default" DataSetColumn="num_default" />
+              <Mapping SourceColumn="num_finalized" DataSetColumn="num_finalized" />
+              <Mapping SourceColumn="num_active" DataSetColumn="num_active" />
+              <Mapping SourceColumn="num_verified" DataSetColumn="num_verified" />
+              <Mapping SourceColumn="num_campaigns_with_items" DataSetColumn="num_campaigns_with_items" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ReportingStatusCountTableAdapter" GeneratorDataComponentClassName="ReportingStatusCountTableAdapter" Name="ReportingStatusCount" UserDataComponentName="ReportingStatusCountTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        (SELECT        COUNT(DISTINCT Campaign.id) AS Expr1
+                          FROM            Campaign INNER JOIN
+                                                    Item ON Campaign.pid = Item.pid) AS num_campaigns_with_items,
+                             (SELECT        COUNT(DISTINCT Campaign_1.pid) AS Expr1
+                               FROM            Campaign AS Campaign_1 INNER JOIN
+                                                         Item AS Item_4 ON Campaign_1.pid = Item_4.pid
+                               WHERE        (Item_4.item_reporting_status_id = 2)) AS num_default,
+                             (SELECT        COUNT(DISTINCT Campaign_1.pid) AS Expr1
+                               FROM            Campaign AS Campaign_1 INNER JOIN
+                                                         Item AS Item_3 ON Campaign_1.pid = Item_3.pid
+                               WHERE        (Item_3.item_reporting_status_id = 2)) AS num_finalized,
+                             (SELECT        COUNT(DISTINCT Campaign_3.pid) AS Expr1
+                               FROM            Campaign AS Campaign_3 INNER JOIN
+                                                         Item AS Item_1 ON Campaign_3.pid = Item_1.pid
+                               WHERE        (Item_1.item_reporting_status_id = 3)) AS num_verified,
+                             (SELECT        COUNT(DISTINCT Campaign_3.pid) AS Expr1
+                               FROM            Campaign AS Campaign_3 INNER JOIN
+                                                         Item AS Item_1 ON Campaign_3.pid = Item_1.pid
+                               WHERE        (Item_1.item_reporting_status_id = 4)) AS num_in_review,
+                             (SELECT        COUNT(DISTINCT Campaign_3.pid) AS Expr1
+                               FROM            Campaign AS Campaign_3 INNER JOIN
+                                                         Item AS Item_1 ON Campaign_3.pid = Item_1.pid
+                               WHERE        (Item_1.item_reporting_status_id = 5)) AS num_report_made,
+                             (SELECT        COUNT(DISTINCT Campaign_3.pid) AS Expr1
+                               FROM            Campaign AS Campaign_3 INNER JOIN
+                                                         Item AS Item_1 ON Campaign_3.pid = Item_1.pid
+                               WHERE        (Item_1.item_reporting_status_id = 6)) AS num_report_in_qb,
+                             (SELECT        COUNT(DISTINCT Campaign_3.pid) AS Expr1
+                               FROM            Campaign AS Campaign_3 INNER JOIN
+                                                         Item AS Item_1 ON Campaign_3.pid = Item_1.pid
+                               WHERE        (Item_1.item_reporting_status_id = 7)) AS num_sent</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="num_campaigns_with_items" DataSetColumn="num_campaigns_with_items" />
+              <Mapping SourceColumn="num_default" DataSetColumn="num_default" />
+              <Mapping SourceColumn="num_finalized" DataSetColumn="num_finalized" />
+              <Mapping SourceColumn="num_verified" DataSetColumn="num_verified" />
+              <Mapping SourceColumn="num_in_review" DataSetColumn="num_in_review" />
+              <Mapping SourceColumn="num_report_made" DataSetColumn="num_report_made" />
+              <Mapping SourceColumn="num_report_in_qb" DataSetColumn="num_report_in_qb" />
+              <Mapping SourceColumn="num_sent" DataSetColumn="num_sent" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="StatusControlDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="StatusControlDataSet" msprop:Generator_UserDSName="StatusControlDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="CampaignStatusCountTable" msprop:Generator_TableClassName="CampaignStatusCountTableDataTable" msprop:Generator_TableVarName="tableCampaignStatusCountTable" msprop:Generator_TablePropName="CampaignStatusCountTable" msprop:Generator_RowDeletingName="CampaignStatusCountTableRowDeleting" msprop:Generator_UserTableName="CampaignStatusCountTable" msprop:Generator_RowChangingName="CampaignStatusCountTableRowChanging" msprop:Generator_RowEvHandlerName="CampaignStatusCountTableRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignStatusCountTableRowDeleted" msprop:Generator_RowEvArgName="CampaignStatusCountTableRowChangeEvent" msprop:Generator_RowChangedName="CampaignStatusCountTableRowChanged" msprop:Generator_RowClassName="CampaignStatusCountTableRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="num_default" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_default" msprop:Generator_ColumnPropNameInRow="num_default" msprop:Generator_ColumnPropNameInTable="num_defaultColumn" msprop:Generator_UserColumnName="num_default" type="xs:int" minOccurs="0" />
+              <xs:element name="num_finalized" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_finalized" msprop:Generator_ColumnPropNameInRow="num_finalized" msprop:Generator_ColumnPropNameInTable="num_finalizedColumn" msprop:Generator_UserColumnName="num_finalized" type="xs:int" minOccurs="0" />
+              <xs:element name="num_active" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_active" msprop:Generator_ColumnPropNameInRow="num_active" msprop:Generator_ColumnPropNameInTable="num_activeColumn" msprop:Generator_UserColumnName="num_active" type="xs:int" minOccurs="0" />
+              <xs:element name="num_verified" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_verified" msprop:Generator_ColumnPropNameInRow="num_verified" msprop:Generator_ColumnPropNameInTable="num_verifiedColumn" msprop:Generator_UserColumnName="num_verified" type="xs:int" minOccurs="0" />
+              <xs:element name="num_campaigns_with_items" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_campaigns_with_items" msprop:Generator_ColumnPropNameInRow="num_campaigns_with_items" msprop:Generator_ColumnPropNameInTable="num_campaigns_with_itemsColumn" msprop:Generator_UserColumnName="num_campaigns_with_items" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ReportingStatusCount" msprop:Generator_TableClassName="ReportingStatusCountDataTable" msprop:Generator_TableVarName="tableReportingStatusCount" msprop:Generator_TablePropName="ReportingStatusCount" msprop:Generator_RowDeletingName="ReportingStatusCountRowDeleting" msprop:Generator_UserTableName="ReportingStatusCount" msprop:Generator_RowChangingName="ReportingStatusCountRowChanging" msprop:Generator_RowEvHandlerName="ReportingStatusCountRowChangeEventHandler" msprop:Generator_RowDeletedName="ReportingStatusCountRowDeleted" msprop:Generator_RowEvArgName="ReportingStatusCountRowChangeEvent" msprop:Generator_RowChangedName="ReportingStatusCountRowChanged" msprop:Generator_RowClassName="ReportingStatusCountRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="num_campaigns_with_items" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_campaigns_with_items" msprop:Generator_ColumnPropNameInRow="num_campaigns_with_items" msprop:Generator_ColumnPropNameInTable="num_campaigns_with_itemsColumn" msprop:Generator_UserColumnName="num_campaigns_with_items" type="xs:int" minOccurs="0" />
+              <xs:element name="num_default" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_default" msprop:Generator_ColumnPropNameInRow="num_default" msprop:Generator_ColumnPropNameInTable="num_defaultColumn" msprop:Generator_UserColumnName="num_default" type="xs:int" minOccurs="0" />
+              <xs:element name="num_finalized" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_finalized" msprop:Generator_ColumnPropNameInRow="num_finalized" msprop:Generator_ColumnPropNameInTable="num_finalizedColumn" msprop:Generator_UserColumnName="num_finalized" type="xs:int" minOccurs="0" />
+              <xs:element name="num_verified" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_verified" msprop:Generator_ColumnPropNameInRow="num_verified" msprop:Generator_ColumnPropNameInTable="num_verifiedColumn" msprop:Generator_UserColumnName="num_verified" type="xs:int" minOccurs="0" />
+              <xs:element name="num_in_review" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_in_review" msprop:Generator_ColumnPropNameInRow="num_in_review" msprop:Generator_ColumnPropNameInTable="num_in_reviewColumn" msprop:Generator_UserColumnName="num_in_review" type="xs:int" minOccurs="0" />
+              <xs:element name="num_report_made" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_report_made" msprop:Generator_ColumnPropNameInRow="num_report_made" msprop:Generator_ColumnPropNameInTable="num_report_madeColumn" msprop:Generator_UserColumnName="num_report_made" type="xs:int" minOccurs="0" />
+              <xs:element name="num_report_in_qb" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_report_in_qb" msprop:Generator_ColumnPropNameInRow="num_report_in_qb" msprop:Generator_ColumnPropNameInTable="num_report_in_qbColumn" msprop:Generator_UserColumnName="num_report_in_qb" type="xs:int" minOccurs="0" />
+              <xs:element name="num_sent" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnnum_sent" msprop:Generator_ColumnPropNameInRow="num_sent" msprop:Generator_ColumnPropNameInTable="num_sentColumn" msprop:Generator_UserColumnName="num_sent" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

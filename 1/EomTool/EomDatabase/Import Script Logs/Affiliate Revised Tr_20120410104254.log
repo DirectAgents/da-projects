@@ -1,0 +1,11 @@
+4/10/2012 6:42:54 PM	This log contains information about the import operation of the script 'Affiliate Revised Triggers for Created and Modified Date in EOM Database.sql' into project 'EomDatabase' on computer 'AARON' by user'aanodide.
+4/10/2012 6:42:54 PM	Started importing file: \\ad1\Marketing\Aaron\SqlQueries\Affiliate Revised Triggers for Created and Modified Date in EOM Database.sql 
+4/10/2012 6:42:54 PM	File name \\ad1\Marketing\Aaron\SqlQueries\Affiliate Revised Triggers for Created and Modified Date in EOM Database.sql (size: 2602)
+4/10/2012 6:42:54 PM	Parsing import script
+4/10/2012 6:42:54 PM	Total number of batches in script: 4
+4/10/2012 6:42:54 PM	Total number of statements in script: 4
+4/10/2012 6:42:54 PM	The script was successfully imported into the project.
+4/10/2012 6:42:54 PM	Analyzing schema objects...
+4/10/2012 6:42:54 PM	In the script that you provided to the import operation, one or more statements were not fully understood. These statements were moved to the C:\DACode\SqlServer\EomDatabase\Scripts\ScriptsIgnoredOnImport.sql file. Review the file contents for additional information.
+4/10/2012 6:42:54 PM	A summary of the import operation was saved to the log file C:\DACode\SqlServer\EomDatabase\Import Script Logs\Affiliate Revised Tr_20120410104254.log.
+4/10/2012 6:42:54 PM	Click Finish to continue...

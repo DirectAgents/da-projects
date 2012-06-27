@@ -1,0 +1,617 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DAMain1Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="DAMain1ModelStoreContainer">
+          <EntitySet Name="AccountingPeriod" EntityType="DAMain1Model.Store.AccountingPeriod" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Advertiser" EntityType="DAMain1Model.Store.Advertiser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AdvertiserStartingBalance" EntityType="DAMain1Model.Store.AdvertiserStartingBalance" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Customer" EntityType="DAMain1Model.Store.Customer" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerSource" EntityType="DAMain1Model.Store.CustomerSource" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DADB" EntityType="DAMain1Model.Store.DADB" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DBInstance" EntityType="DAMain1Model.Store.DBInstance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DBServer" EntityType="DAMain1Model.Store.DBServer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReceivePayment" EntityType="DAMain1Model.Store.ReceivePayment" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK__DADB__Accounting__66AB197F" Association="DAMain1Model.Store.FK__DADB__Accounting__66AB197F">
+            <End Role="AccountingPeriod" EntitySet="AccountingPeriod" />
+            <End Role="DADB" EntitySet="DADB" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DADB__DBInstance__679F3DB8" Association="DAMain1Model.Store.FK__DADB__DBInstance__679F3DB8">
+            <End EntitySet="DBInstance" Role="DBInstance" />
+            <End EntitySet="DADB" Role="DADB" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DBInstanc__DBSer__5F09F7B7" Association="DAMain1Model.Store.FK__DBInstanc__DBSer__5F09F7B7">
+            <End EntitySet="DBServer" Role="DBServer" />
+            <End EntitySet="DBInstance" Role="DBInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Advertiser_Customer" Association="DAMain1Model.Store.FK_Advertiser_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Advertiser" EntitySet="Advertiser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AdvertiserStartingBalance_Advertiser" Association="DAMain1Model.Store.FK_AdvertiserStartingBalance_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="AdvertiserStartingBalance" EntitySet="AdvertiserStartingBalance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_CustomerSource" Association="DAMain1Model.Store.FK_Customer_CustomerSource">
+            <End Role="CustomerSource" EntitySet="CustomerSource" />
+            <End Role="Customer" EntitySet="Customer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceivePayment_CustomerSource" Association="DAMain1Model.Store.FK_ReceivePayment_CustomerSource">
+            <End Role="CustomerSource" EntitySet="CustomerSource" />
+            <End Role="ReceivePayment" EntitySet="ReceivePayment" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AccountingPeriod">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="DateStart" Type="date" Nullable="false" />
+          <Property Name="DateStop" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="customer_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AdvertiserStartingBalance">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="advertiser_id" Type="int" Nullable="false" />
+          <Property Name="currency" Type="char" Nullable="false" MaxLength="3" />
+          <Property Name="amount" Type="money" Nullable="false" />
+          <Property Name="effective_date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6035: The relationship 'FK_ReceivePayment_Customer' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+      -->
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="customer_source_id" Type="int" Nullable="false" />
+          <Property Name="company_name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="phone" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="fax" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="email" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="terms_ref_full_name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="quickbooks_list_id" Type="varchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="CustomerSource">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DADB">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="AccountingPeriodId" Type="int" Nullable="false" />
+          <Property Name="DBInstanceId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DBInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Nullable="false" Type="int" />
+          <Property Name="DBServerId" Nullable="false" Type="int" />
+          <Property Name="SchemaName" Nullable="false" MaxLength="255" Type="varchar" />
+          <Property Name="CatalogName" Nullable="false" MaxLength="255" Type="varchar" />
+          <Property Name="ConnectionString" Nullable="false" MaxLength="2000" Type="varchar" />
+        </EntityType>
+        <EntityType Name="DBServer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Nullable="false" Type="int" />
+          <Property Name="Name" Nullable="false" MaxLength="255" Type="varchar" />
+        </EntityType>
+        <EntityType Name="ReceivePayment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="txn_id" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="txn_number" Type="bigint" Nullable="false" />
+          <Property Name="customer_ref_list_id" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="currency" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="txn_date" Type="datetime" Nullable="false" />
+          <Property Name="ref_number" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="total_amount" Type="money" Nullable="false" />
+          <Property Name="payment_method_full_name" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="memo" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="customer_source_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__DADB__Accounting__66AB197F">
+          <End Role="AccountingPeriod" Type="DAMain1Model.Store.AccountingPeriod" Multiplicity="1" />
+          <End Role="DADB" Type="DAMain1Model.Store.DADB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountingPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DADB">
+              <PropertyRef Name="AccountingPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DADB__DBInstance__679F3DB8">
+          <End Type="DAMain1Model.Store.DBInstance" Multiplicity="1" Role="DBInstance" />
+          <End Type="DAMain1Model.Store.DADB" Multiplicity="*" Role="DADB" />
+          <ReferentialConstraint>
+            <Principal Role="DBInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DADB">
+              <PropertyRef Name="DBInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DBInstanc__DBSer__5F09F7B7">
+          <End Type="DAMain1Model.Store.DBServer" Multiplicity="1" Role="DBServer" />
+          <End Type="DAMain1Model.Store.DBInstance" Multiplicity="*" Role="DBInstance" />
+          <ReferentialConstraint>
+            <Principal Role="DBServer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DBInstance">
+              <PropertyRef Name="DBServerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Advertiser_Customer">
+          <End Role="Customer" Type="DAMain1Model.Store.Customer" Multiplicity="1" />
+          <End Role="Advertiser" Type="DAMain1Model.Store.Advertiser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Advertiser">
+              <PropertyRef Name="customer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AdvertiserStartingBalance_Advertiser">
+          <End Role="Advertiser" Type="DAMain1Model.Store.Advertiser" Multiplicity="1" />
+          <End Role="AdvertiserStartingBalance" Type="DAMain1Model.Store.AdvertiserStartingBalance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="AdvertiserStartingBalance">
+              <PropertyRef Name="advertiser_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_CustomerSource">
+          <End Role="CustomerSource" Type="DAMain1Model.Store.CustomerSource" Multiplicity="1" />
+          <End Role="Customer" Type="DAMain1Model.Store.Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSource">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="customer_source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceivePayment_CustomerSource">
+          <End Role="CustomerSource" Type="DAMain1Model.Store.CustomerSource" Multiplicity="1" />
+          <End Role="ReceivePayment" Type="DAMain1Model.Store.ReceivePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSource">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReceivePayment">
+              <PropertyRef Name="customer_source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DAMain1Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="DAMain1Entities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Advertisers" EntityType="DAMain1Model.Advertiser" />
+          <EntitySet Name="DADBs" EntityType="DAMain1Model.DADB" />
+          <EntitySet Name="ReceivePayments" EntityType="DAMain1Model.ReceivePayment" />
+          <EntitySet Name="AccountingPeriods" EntityType="DAMain1Model.AccountingPeriod" />
+          <AssociationSet Name="FK__DADB__Accounting__66AB197F" Association="DAMain1Model.FK__DADB__Accounting__66AB197F">
+            <End Role="AccountingPeriod" EntitySet="AccountingPeriods" />
+            <End Role="DADB" EntitySet="DADBs" />
+          </AssociationSet>
+          <EntitySet Name="DBInstances" EntityType="DAMain1Model.DBInstance" />
+          <AssociationSet Name="FK__DADB__DBInstance__679F3DB8" Association="DAMain1Model.FK__DADB__DBInstance__679F3DB8">
+            <End EntitySet="DBInstances" Role="DBInstance" />
+            <End EntitySet="DADBs" Role="DADB" />
+          </AssociationSet>
+          <EntitySet Name="Customers" EntityType="DAMain1Model.Customer" />
+          <EntitySet Name="CustomerSources" EntityType="DAMain1Model.CustomerSource" />
+          <EntitySet Name="DBServers" EntityType="DAMain1Model.DBServer" />
+          <AssociationSet Name="FK_Advertiser_Customer" Association="DAMain1Model.FK_Advertiser_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Advertiser" EntitySet="Advertisers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_CustomerSource" Association="DAMain1Model.FK_Customer_CustomerSource">
+            <End Role="CustomerSource" EntitySet="CustomerSources" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ReceivePayment_CustomerSource" Association="DAMain1Model.FK_ReceivePayment_CustomerSource">
+            <End Role="CustomerSource" EntitySet="CustomerSources" />
+            <End Role="ReceivePayment" EntitySet="ReceivePayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DBInstanc__DBSer__5F09F7B7" Association="DAMain1Model.FK__DBInstanc__DBSer__5F09F7B7">
+            <End EntitySet="DBServers" Role="DBServer" />
+            <End EntitySet="DBInstances" Role="DBInstance" />
+          </AssociationSet>
+          <EntitySet Name="AdvertiserStartingBalances" EntityType="DAMain1Model.AdvertiserStartingBalance" />
+          <AssociationSet Name="FK_AdvertiserStartingBalance_Advertiser" Association="DAMain1Model.FK_AdvertiserStartingBalance_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="AdvertiserStartingBalance" EntitySet="AdvertiserStartingBalances" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="customer_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="DAMain1Model.FK_Advertiser_Customer" FromRole="Advertiser" ToRole="Customer" />
+          <NavigationProperty Name="AdvertiserStartingBalances" Relationship="DAMain1Model.FK_AdvertiserStartingBalance_Advertiser" FromRole="Advertiser" ToRole="AdvertiserStartingBalance" />
+        </EntityType>
+        <EntityType Name="DADB">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="AccountingPeriodId" Nullable="false" />
+          <Property Type="Int32" Name="DBInstanceId" Nullable="false" />
+          <NavigationProperty Name="AccountingPeriod" Relationship="DAMain1Model.FK__DADB__Accounting__66AB197F" FromRole="DADB" ToRole="AccountingPeriod" />
+          <NavigationProperty Name="DBInstance" Relationship="DAMain1Model.FK__DADB__DBInstance__679F3DB8" FromRole="DADB" ToRole="DBInstance" />
+        </EntityType>
+        <EntityType Name="ReceivePayment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="txn_id" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int64" Name="txn_number" Nullable="false" />
+          <Property Type="String" Name="customer_ref_list_id" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="currency" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="txn_date" Nullable="false" />
+          <Property Type="String" Name="ref_number" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="total_amount" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="String" Name="payment_method_full_name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="memo" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="customer_source_id" Nullable="false" />
+          <NavigationProperty Name="CustomerSource" Relationship="DAMain1Model.FK_ReceivePayment_CustomerSource" FromRole="ReceivePayment" ToRole="CustomerSource" />
+        </EntityType>
+        <EntityType Name="AccountingPeriod">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DateStart" Nullable="false" />
+          <Property Type="DateTime" Name="DateStop" Nullable="false" />
+          <NavigationProperty Name="DADBs" Relationship="DAMain1Model.FK__DADB__Accounting__66AB197F" FromRole="AccountingPeriod" ToRole="DADB" />
+        </EntityType>
+        <Association Name="FK__DADB__Accounting__66AB197F">
+          <End Type="DAMain1Model.AccountingPeriod" Role="AccountingPeriod" Multiplicity="1" />
+          <End Type="DAMain1Model.DADB" Role="DADB" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountingPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DADB">
+              <PropertyRef Name="AccountingPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DBInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Nullable="false" Type="Int32" />
+          <Property Name="DBServerId" Nullable="false" Type="Int32" />
+          <Property Name="SchemaName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" Type="String" />
+          <Property Name="CatalogName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" Type="String" />
+          <Property Name="ConnectionString" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" Type="String" />
+          <NavigationProperty Name="DADBs" Relationship="DAMain1Model.FK__DADB__DBInstance__679F3DB8" FromRole="DBInstance" ToRole="DADB" />
+          <NavigationProperty Name="DBServer" Relationship="DAMain1Model.FK__DBInstanc__DBSer__5F09F7B7" FromRole="DBInstance" ToRole="DBServer" />
+        </EntityType>
+        <Association Name="FK__DADB__DBInstance__679F3DB8">
+          <End Type="DAMain1Model.DBInstance" Multiplicity="1" Role="DBInstance" />
+          <End Type="DAMain1Model.DADB" Multiplicity="*" Role="DADB" />
+          <ReferentialConstraint>
+            <Principal Role="DBInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DADB">
+              <PropertyRef Name="DBInstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="customer_source_id" Nullable="false" />
+          <Property Type="String" Name="company_name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="phone" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="fax" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="email" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="terms_ref_full_name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="quickbooks_list_id" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Advertisers" Relationship="DAMain1Model.FK_Advertiser_Customer" FromRole="Customer" ToRole="Advertiser" />
+          <NavigationProperty Name="CustomerSource" Relationship="DAMain1Model.FK_Customer_CustomerSource" FromRole="Customer" ToRole="CustomerSource" />
+        </EntityType>
+        <EntityType Name="CustomerSource">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Customers" Relationship="DAMain1Model.FK_Customer_CustomerSource" FromRole="CustomerSource" ToRole="Customer" />
+          <NavigationProperty Name="ReceivePayments" Relationship="DAMain1Model.FK_ReceivePayment_CustomerSource" FromRole="CustomerSource" ToRole="ReceivePayment" />
+        </EntityType>
+        <EntityType Name="DBServer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Nullable="false" Type="Int32" />
+          <Property Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" Type="String" />
+          <NavigationProperty Name="DBInstances" Relationship="DAMain1Model.FK__DBInstanc__DBSer__5F09F7B7" FromRole="DBServer" ToRole="DBInstance" />
+        </EntityType>
+        <Association Name="FK_Advertiser_Customer">
+          <End Type="DAMain1Model.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="DAMain1Model.Advertiser" Role="Advertiser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Advertiser">
+              <PropertyRef Name="customer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Customer_CustomerSource">
+          <End Type="DAMain1Model.CustomerSource" Role="CustomerSource" Multiplicity="1" />
+          <End Type="DAMain1Model.Customer" Role="Customer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSource">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Customer">
+              <PropertyRef Name="customer_source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ReceivePayment_CustomerSource">
+          <End Type="DAMain1Model.CustomerSource" Role="CustomerSource" Multiplicity="1" />
+          <End Type="DAMain1Model.ReceivePayment" Role="ReceivePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerSource">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ReceivePayment">
+              <PropertyRef Name="customer_source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DBInstanc__DBSer__5F09F7B7">
+          <End Type="DAMain1Model.DBServer" Multiplicity="1" Role="DBServer" />
+          <End Type="DAMain1Model.DBInstance" Multiplicity="*" Role="DBInstance" />
+          <ReferentialConstraint>
+            <Principal Role="DBServer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DBInstance">
+              <PropertyRef Name="DBServerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AdvertiserStartingBalance">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="advertiser_id" Nullable="false" />
+          <Property Type="String" Name="currency" Nullable="false" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Type="Decimal" Name="amount" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="DateTime" Name="effective_date" Nullable="false" />
+          <NavigationProperty Name="Advertiser" Relationship="DAMain1Model.FK_AdvertiserStartingBalance_Advertiser" FromRole="AdvertiserStartingBalance" ToRole="Advertiser" />
+        </EntityType>
+        <Association Name="FK_AdvertiserStartingBalance_Advertiser">
+          <End Type="DAMain1Model.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="DAMain1Model.AdvertiserStartingBalance" Role="AdvertiserStartingBalance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="AdvertiserStartingBalance">
+              <PropertyRef Name="advertiser_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DAMain1ModelStoreContainer" CdmEntityContainer="DAMain1Entities1">
+          <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="DAMain1Model.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+            <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="DADBs">
+            <EntityTypeMapping TypeName="DAMain1Model.DADB">
+              <MappingFragment StoreEntitySet="DADB">
+                <ScalarProperty Name="DBInstanceId" ColumnName="DBInstanceId" />
+                <ScalarProperty Name="AccountingPeriodId" ColumnName="AccountingPeriodId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReceivePayments">
+            <EntityTypeMapping TypeName="DAMain1Model.ReceivePayment">
+              <MappingFragment StoreEntitySet="ReceivePayment">
+                <ScalarProperty Name="customer_source_id" ColumnName="customer_source_id" />
+                <ScalarProperty Name="memo" ColumnName="memo" />
+                <ScalarProperty Name="payment_method_full_name" ColumnName="payment_method_full_name" />
+                <ScalarProperty Name="total_amount" ColumnName="total_amount" />
+                <ScalarProperty Name="ref_number" ColumnName="ref_number" />
+                <ScalarProperty Name="txn_date" ColumnName="txn_date" />
+                <ScalarProperty Name="currency" ColumnName="currency" />
+                <ScalarProperty Name="customer_ref_list_id" ColumnName="customer_ref_list_id" />
+                <ScalarProperty Name="txn_number" ColumnName="txn_number" />
+                <ScalarProperty Name="txn_id" ColumnName="txn_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountingPeriods">
+            <EntityTypeMapping TypeName="DAMain1Model.AccountingPeriod">
+              <MappingFragment StoreEntitySet="AccountingPeriod">
+                <ScalarProperty Name="DateStop" ColumnName="DateStop" />
+                <ScalarProperty Name="DateStart" ColumnName="DateStart" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DBInstances">
+            <EntityTypeMapping TypeName="DAMain1Model.DBInstance">
+              <MappingFragment StoreEntitySet="DBInstance">
+                <ScalarProperty Name="ConnectionString" ColumnName="ConnectionString" />
+                <ScalarProperty Name="CatalogName" ColumnName="CatalogName" />
+                <ScalarProperty Name="SchemaName" ColumnName="SchemaName" />
+                <ScalarProperty Name="DBServerId" ColumnName="DBServerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="DAMain1Model.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="quickbooks_list_id" ColumnName="quickbooks_list_id" />
+                <ScalarProperty Name="terms_ref_full_name" ColumnName="terms_ref_full_name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="company_name" ColumnName="company_name" />
+                <ScalarProperty Name="customer_source_id" ColumnName="customer_source_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerSources">
+            <EntityTypeMapping TypeName="DAMain1Model.CustomerSource">
+              <MappingFragment StoreEntitySet="CustomerSource">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DBServers">
+            <EntityTypeMapping TypeName="DAMain1Model.DBServer">
+              <MappingFragment StoreEntitySet="DBServer">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdvertiserStartingBalances">
+            <EntityTypeMapping TypeName="DAMain1Model.AdvertiserStartingBalance">
+              <MappingFragment StoreEntitySet="AdvertiserStartingBalance">
+                <ScalarProperty Name="effective_date" ColumnName="effective_date" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="currency" ColumnName="currency" />
+                <ScalarProperty Name="advertiser_id" ColumnName="advertiser_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="AdvertiserModel">
+        <EntityTypeShape EntityType="DAMain1Model.Advertiser" Width="1.875" PointX="6.25" PointY="5.875" Height="1.9802864583333317" IsExpanded="true" />
+        <EntityTypeShape EntityType="DAMain1Model.DADB" Width="3.5" PointX="10.25" PointY="1" Height="2.1725878906250005" />
+        <EntityTypeShape EntityType="DAMain1Model.ReceivePayment" Width="2.375" PointX="3" PointY="1.125" Height="3.3263964843749996" />
+        <EntityTypeShape EntityType="DAMain1Model.AccountingPeriod" Width="2.625" PointX="11.375" PointY="3.75" Height="1.9802864583333353" />
+        <AssociationConnector Association="DAMain1Model.FK__DADB__Accounting__66AB197F" >
+          <ConnectorPoint PointX="12.5625" PointY="3.75" />
+          <ConnectorPoint PointX="12.5625" PointY="3.1725878906250005" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DAMain1Model.DBInstance" PointX="8" PointY="1" Width="1.5" Height="2.3648893229166656" />
+        <AssociationConnector Association="DAMain1Model.FK__DADB__DBInstance__679F3DB8">
+          <ConnectorPoint PointX="9.5" PointY="2.0862939453125002" />
+          <ConnectorPoint PointX="10.25" PointY="2.0862939453125002" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DAMain1Model.Customer" Width="2.5" PointX="3" PointY="5.25" Height="3.1340950520833326" />
+        <EntityTypeShape EntityType="DAMain1Model.CustomerSource" Width="1.5" PointX="0.75" PointY="3.875" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="DAMain1Model.DBServer" PointX="5.75" PointY="1.375" Width="1.5" Height="1.5956835937499996" />
+        <AssociationConnector Association="DAMain1Model.FK_Advertiser_Customer" >
+          <ConnectorPoint PointX="5.5" PointY="6.8651432291666659" />
+          <ConnectorPoint PointX="6.25" PointY="6.8651432291666659" />
+        </AssociationConnector>
+        <AssociationConnector Association="DAMain1Model.FK_Customer_CustomerSource" >
+          <ConnectorPoint PointX="2.25" PointY="5.4564925130208337" />
+          <ConnectorPoint PointX="3" PointY="5.4564925130208337" />
+        </AssociationConnector>
+        <AssociationConnector Association="DAMain1Model.FK_ReceivePayment_CustomerSource" >
+          <ConnectorPoint PointX="2.25" PointY="4.1631982421875" />
+          <ConnectorPoint PointX="3" PointY="4.1631982421875" />
+        </AssociationConnector>
+        <AssociationConnector Association="DAMain1Model.FK__DBInstanc__DBSer__5F09F7B7">
+          <ConnectorPoint PointX="7.25" PointY="2.172841796875" />
+          <ConnectorPoint PointX="8" PointY="2.172841796875" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DAMain1Model.AdvertiserStartingBalance" Width="2.125" PointX="8.875" PointY="5.875" Height="2.1725878906249996" />
+        <AssociationConnector Association="DAMain1Model.FK_AdvertiserStartingBalance_Advertiser" >
+          <ConnectorPoint PointX="8.125" PointY="6.8651432291666659" />
+          <ConnectorPoint PointX="8.875" PointY="6.8651432291666659" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

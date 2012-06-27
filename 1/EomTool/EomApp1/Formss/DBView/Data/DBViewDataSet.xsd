@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DBViewDataSet" targetNamespace="http://tempuri.org/DBViewDataSet.xsd" xmlns:mstns="http://tempuri.org/DBViewDataSet.xsd" xmlns="http://tempuri.org/DBViewDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" GeneratorFunctionsComponentClassName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" UserFunctionsComponentName="QueriesTableAdapter" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="TABLESTableAdapter" GeneratorDataComponentClassName="TABLESTableAdapter" Name="TABLES" UserDataComponentName="TABLESTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.INFORMATION_SCHEMA.TABLES" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT [TABLE_CATALOG]
+      ,[TABLE_SCHEMA]
+      ,[TABLE_NAME]
+      ,[TABLE_TYPE]
+  FROM [INFORMATION_SCHEMA].[TABLES]</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="TABLE_CATALOG" DataSetColumn="TABLE_CATALOG" />
+              <Mapping SourceColumn="TABLE_SCHEMA" DataSetColumn="TABLE_SCHEMA" />
+              <Mapping SourceColumn="TABLE_NAME" DataSetColumn="TABLE_NAME" />
+              <Mapping SourceColumn="TABLE_TYPE" DataSetColumn="TABLE_TYPE" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DBViewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DBViewDataSet" msprop:Generator_UserDSName="DBViewDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="TABLES" msprop:Generator_TableClassName="TABLESDataTable" msprop:Generator_TableVarName="tableTABLES" msprop:Generator_TablePropName="TABLES" msprop:Generator_RowDeletingName="TABLESRowDeleting" msprop:Generator_UserTableName="TABLES" msprop:Generator_RowChangingName="TABLESRowChanging" msprop:Generator_RowEvHandlerName="TABLESRowChangeEventHandler" msprop:Generator_RowDeletedName="TABLESRowDeleted" msprop:Generator_RowEvArgName="TABLESRowChangeEvent" msprop:Generator_RowChangedName="TABLESRowChanged" msprop:Generator_RowClassName="TABLESRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TABLE_CATALOG" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnTABLE_CATALOG" msprop:Generator_ColumnPropNameInRow="TABLE_CATALOG" msprop:Generator_ColumnPropNameInTable="TABLE_CATALOGColumn" msprop:Generator_UserColumnName="TABLE_CATALOG" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TABLE_SCHEMA" msprop:Generator_ColumnVarNameInTable="columnTABLE_SCHEMA" msprop:Generator_ColumnPropNameInRow="TABLE_SCHEMA" msprop:Generator_ColumnPropNameInTable="TABLE_SCHEMAColumn" msprop:Generator_UserColumnName="TABLE_SCHEMA" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TABLE_NAME" msprop:Generator_ColumnVarNameInTable="columnTABLE_NAME" msprop:Generator_ColumnPropNameInRow="TABLE_NAME" msprop:Generator_ColumnPropNameInTable="TABLE_NAMEColumn" msprop:Generator_UserColumnName="TABLE_NAME">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TABLE_TYPE" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnTABLE_TYPE" msprop:Generator_ColumnPropNameInRow="TABLE_TYPE" msprop:Generator_ColumnPropNameInTable="TABLE_TYPEColumn" msprop:Generator_UserColumnName="TABLE_TYPE" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

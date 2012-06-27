@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 11.125" name="PRData">
+  <DataContextMoniker Name="/PRDataDataContext" />
+  <nestedChildShapes>
+    <classShape Id="516251e9-d7d2-43a1-92f9-956acca26715" absoluteBounds="0.875, 1.375, 2, 4.4631168619791666">
+      <DataClassMoniker Name="/PRDataDataContext/Item" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a38cfc57-1e19-415d-90ed-53d57ad795c5" absoluteBounds="0.89000000000000012, 1.835, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="46bdb14c-ab63-4f66-9d28-9200ac4e5931" absoluteBounds="3.625, 0.625, 2, 1.3862939453125">
+      <DataClassMoniker Name="/PRDataDataContext/Publisher" />
+      <nestedChildShapes>
+        <elementListCompartment Id="15b3293a-8f94-49b1-8570-e077afd93f37" absoluteBounds="3.6399999999999997, 1.085, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="cbff663d-9ebf-44eb-9b65-ca254af2f7da" absoluteBounds="3.625, 5.25, 2, 1.1939925130208333">
+      <DataClassMoniker Name="/PRDataDataContext/Vendor" />
+      <nestedChildShapes>
+        <elementListCompartment Id="db1914a3-172e-4baf-a335-91fdff94b131" absoluteBounds="3.6399999999999997, 5.71, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="1081f37e-ee78-4855-95db-8bda293735e2" absoluteBounds="6.5, 2.75, 2, 1.9631982421875">
+      <DataClassMoniker Name="/PRDataDataContext/PubReportEmail" />
+      <nestedChildShapes>
+        <elementListCompartment Id="4e7cc182-fcce-489d-8ada-530a9a8f19ff" absoluteBounds="6.5150000000000006, 3.21, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="8ed2bcfa-4fec-461c-8b37-167c7867c129" absoluteBounds="3.625, 2.375, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/PRDataDataContext/PubReportInstance" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a1c74678-28d1-41b6-9f6b-84a181e4f3c9" absoluteBounds="3.64, 2.835, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.625 : 3.64024983723958); (6.5 : 3.64024983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/PubReportInstance/PubReportInstance_PubReportEmail" />
+      <nodes>
+        <classShapeMoniker Id="8ed2bcfa-4fec-461c-8b37-167c7867c129" />
+        <classShapeMoniker Id="1081f37e-ee78-4855-95db-8bda293735e2" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.625 : 5.25); (4.625 : 4.53049967447917)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/Vendor/Vendor_PubReportInstance" />
+      <nodes>
+        <classShapeMoniker Id="cbff663d-9ebf-44eb-9b65-ca254af2f7da" />
+        <classShapeMoniker Id="8ed2bcfa-4fec-461c-8b37-167c7867c129" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="99e6a04b-9a73-4b39-ab91-646c1f9ae21d" absoluteBounds="0.875, 6.375, 2, 4.4631168619791666">
+      <DataClassMoniker Name="/PRDataDataContext/Campaign" />
+      <nestedChildShapes>
+        <elementListCompartment Id="9c8e2459-4849-4d39-a076-8a87c89366cd" absoluteBounds="0.88999999999999968, 6.835, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(1.875 : 6.375); (1.875 : 5.83811686197917)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/PRDataDataContext/Campaign/Campaign_Item" />
+      <nodes>
+        <classShapeMoniker Id="99e6a04b-9a73-4b39-ab91-646c1f9ae21d" />
+        <classShapeMoniker Id="516251e9-d7d2-43a1-92f9-956acca26715" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

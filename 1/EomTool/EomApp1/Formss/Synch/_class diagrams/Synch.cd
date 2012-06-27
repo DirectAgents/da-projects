@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access">
+  <Class Name="EomApp1.Formss.Synch.CakeSyncher">
+    <Position X="6.25" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gQAGIBAAAAAQAAACAAAACkAAAAQABAAgAAAAAgEACAA=</HashCode>
+      <FileName>Formss\Synch\CakeSyncher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EomApp1.Formss.Synch.CakeWebService">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAASAAACgAAABAEAAAAAABQAAAAAAAA=</HashCode>
+      <FileName>Formss\Synch\CakeWebService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EomApp1.Formss.Synch.TargetSystemChoiceChangedEventArgs" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Formss\Synch\TargetSystemChoiceChangedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EomApp1.Formss.Synch.NameHelper">
+    <Position X="6.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Formss\Synch\NameHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EomApp1.Formss.Synch.SynchForm" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="0.5" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="EomApp1.Formss.Synch.SynchForm.PidInfo" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Formss\Synch\SynchForm.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>oAkAAEGAICIACBDtABmDEQ+HIAiIIQBwYKKUBgECACo=</HashCode>
+      <FileName>Formss\Synch\SynchForm.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="targetSystem1" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="EomApp1.Formss.Synch.TargetSystem">
+    <Position X="11.25" Y="3.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAgACgAAAAAAAAAAAAACAgAI=</HashCode>
+      <FileName>Formss\Synch\TargetSystem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TargetSystemChoice" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="EomApp1.Cake.WebServices._4.Export.advertiser1" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>kAAAAEQ6CEAAAAAAA4giBAAA6QIQABgECIFRCQAAoAA=</HashCode>
+      <FileName>Formss\Synch\CakeWebService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="EomApp1.Cake.WebServices._4.Export.affiliate" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Protected" Collapsed="true" />
+      <Compartment Name="Private" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>jCQkAFQzHkCYoAAACtgijVAA6RqQCRgULQVVBYoApIA=</HashCode>
+      <FileName>Formss\Synch\CakeWebService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Enum Name="EomApp1.Formss.Synch.TargetSystemChoice">
+    <Position X="11.5" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Formss\Synch\TargetSystemChoice.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

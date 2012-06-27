@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DirectTrack" Class="DirectTrackClassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=biz2\da;Initial Catalog=DirectTrack;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DirectTrackConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.XmlResourceDoc" Member="XmlResourceDocs">
+    <Type Name="XmlResourceDoc">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Location" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="XmlDoc" Type="System.Xml.Linq.XElement" DbType="Xml NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+    </Type>
+  </Table>
+  <Function Name="dbo.UpsertXmlResourceDoc" Method="UpsertXmlResourceDoc">
+    <Parameter Name="location" Type="System.String" DbType="NVarChar(500)" />
+    <Parameter Name="xmldoc" Type="System.Xml.Linq.XElement" DbType="Xml" />
+    <Return Type="System.Int32" />
+  </Function>
+</Database>

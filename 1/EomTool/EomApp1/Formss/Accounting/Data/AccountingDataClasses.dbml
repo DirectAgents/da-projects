@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" Class="AccountingDataClassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Item" Member="Items">
+    <Type Name="Item">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="source_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="unit_type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="stat_id_n" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="revenue_currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="cost_currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="revenue_per_unit" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="cost_per_unit" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="num_units" Type="System.Decimal" DbType="Decimal(12,6) NOT NULL" CanBeNull="false" />
+      <Column Name="notes" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="accounting_notes" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="item_accounting_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="item_reporting_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="total_revenue" Type="System.Decimal" DbType="Decimal(32,10)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="total_cost" Type="System.Decimal" DbType="Decimal(32,10)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="margin" Type="System.Decimal" DbType="Money" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="Affiliate_Item" Member="Affiliate" ThisKey="affid" OtherKey="affid" Type="Affiliate" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Affiliate" Member="Affiliates">
+    <Type Name="Affiliate">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="media_buyer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="add_code" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="name2" Type="System.String" DbType="VarChar(358) NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="net_term_type_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="payment_method_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Affiliate_Item" Member="Items" ThisKey="affid" OtherKey="affid" Type="Item" />
+    </Type>
+  </Table>
+</Database>

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" Class="PRDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Item" Member="Items">
+    <Type Name="Item">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="source_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="unit_type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="stat_id_n" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="revenue_currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="cost_currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="revenue_per_unit" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="cost_per_unit" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="num_units" Type="System.Decimal" DbType="Decimal(12,6) NOT NULL" CanBeNull="false" />
+      <Column Name="notes" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="accounting_notes" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="item_accounting_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="item_reporting_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="total_revenue" Type="System.Decimal" DbType="Decimal(32,10)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="total_cost" Type="System.Decimal" DbType="Decimal(32,10)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="margin" Type="System.Decimal" DbType="Money" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="Campaign_Item" Member="Campaign" ThisKey="pid" OtherKey="pid" Type="Campaign" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Publisher" Member="Publishers">
+    <Type Name="Publisher">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Vendor" Member="Vendors">
+    <Type Name="Vendor">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Vendor_PubReportInstance" Member="PubReportInstances" ThisKey="id" OtherKey="vendor_id" Type="PubReportInstance" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PubReportEmail" Member="PubReportEmails">
+    <Type Name="PubReportEmail">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="to_email_address" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="sent_date" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="subject" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="body" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="pub_report_instance_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="PubReportInstance_PubReportEmail" Member="PubReportInstance" ThisKey="pub_report_instance_id" OtherKey="id" Type="PubReportInstance" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PubReportInstance" Member="PubReportInstances">
+    <Type Name="PubReportInstance">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="created_by_user_name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="report_content" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="path_to_hard_copy" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="vendor_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="saved" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="email_status_msg" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="PubReportInstance_PubReportEmail" Member="PubReportEmails" ThisKey="id" OtherKey="pub_report_instance_id" Type="PubReportEmail" />
+      <Association Name="Vendor_PubReportInstance" Member="Vendor" ThisKey="vendor_id" OtherKey="id" Type="Vendor" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Campaign" Member="Campaigns">
+    <Type Name="Campaign">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="account_manager_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ad_manager_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="advertiser_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_type" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="modified" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="created" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dt_campaign_status" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="dt_campaign_url" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="dt_allowed_country_names" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="is_email" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_search" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_display" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_coreg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="max_scrub" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="notes" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Association Name="Campaign_Item" Member="Items" ThisKey="pid" OtherKey="pid" Type="Item" />
+    </Type>
+  </Table>
+</Database>

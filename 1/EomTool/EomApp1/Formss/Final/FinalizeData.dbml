@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" Class="FinalizeDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Item" Member="Items">
+    <Type Name="Item">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="source_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="unit_type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="stat_id_n" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="revenue_currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="cost_currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="revenue_per_unit" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="cost_per_unit" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="num_units" Type="System.Decimal" DbType="Decimal(12,6) NOT NULL" CanBeNull="false" />
+      <Column Name="notes" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="accounting_notes" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="item_accounting_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="item_reporting_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="total_revenue" Type="System.Decimal" DbType="Decimal(32,10)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="total_cost" Type="System.Decimal" DbType="Decimal(32,10)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="margin" Type="System.Decimal" DbType="Money" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="ItemReportingStatus_Item" Member="ItemReportingStatus" ThisKey="item_reporting_status_id" OtherKey="id" Type="ItemReportingStatus" IsForeignKey="true" />
+      <Association Name="Campaign_Item" Member="Campaign" ThisKey="pid" OtherKey="pid" Type="Campaign" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ItemReportingStatus" Member="ItemReportingStatus">
+    <Type Name="ItemReportingStatus">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="ItemReportingStatus_Item" Member="Items" ThisKey="id" OtherKey="item_reporting_status_id" Type="Item" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Campaign" Member="Campaigns">
+    <Type Name="Campaign">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="account_manager_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ad_manager_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="advertiser_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_type" Type="System.String" DbType="Char(3)" CanBeNull="true" />
+      <Column Name="modified" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="created" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dt_campaign_status" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="dt_campaign_url" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="dt_allowed_country_names" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="is_email" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_search" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_display" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_coreg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="max_scrub" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="notes" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Association Name="Campaign_Item" Member="Items" ThisKey="pid" OtherKey="pid" Type="Item" />
+      <Association Name="Campaign_CampaignNote" Member="CampaignNotes" ThisKey="pid" OtherKey="campaign_id" Type="CampaignNote" />
+      <Association Name="CampaignStatus_Campaign" Member="CampaignStatus" ThisKey="campaign_status_id" OtherKey="id" Type="CampaignStatus" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CampaignStatus" Member="CampaignStatus">
+    <Type Name="CampaignStatus">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="CampaignStatus_Campaign" Member="Campaigns" ThisKey="id" OtherKey="campaign_status_id" Type="Campaign" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CampaignNotes" Member="CampaignNotes">
+    <Type Name="CampaignNote">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="campaign_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="note" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="added_by_system_user" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Association Name="Campaign_CampaignNote" Member="Campaign" ThisKey="campaign_id" OtherKey="pid" Type="Campaign" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

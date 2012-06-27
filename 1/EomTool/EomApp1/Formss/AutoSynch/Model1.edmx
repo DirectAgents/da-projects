@@ -1,0 +1,424 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DADatabaseR1Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="DADatabaseR1ModelStoreContainer">
+          <EntitySet Name="AccountManager" EntityType="DADatabaseR1Model.Store.AccountManager" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AdManager" EntityType="DADatabaseR1Model.Store.AdManager" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Advertiser" EntityType="DADatabaseR1Model.Store.Advertiser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Campaign" EntityType="DADatabaseR1Model.Store.Campaign" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CampaignStatus" EntityType="DADatabaseR1Model.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CampaignSynch" EntityType="DADatabaseR1Model.Store.CampaignSynch" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Campaign_AccountManager" Association="DADatabaseR1Model.Store.FK_Campaign_AccountManager">
+            <End Role="AccountManager" EntitySet="AccountManager" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_AdManager" Association="DADatabaseR1Model.Store.FK_Campaign_AdManager">
+            <End Role="AdManager" EntitySet="AdManager" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_Advertiser" Association="DADatabaseR1Model.Store.FK_Campaign_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_CampaignStatus" Association="DADatabaseR1Model.Store.FK_Campaign_CampaignStatus">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampaignSynch_Campaign" Association="DADatabaseR1Model.Store.FK_CampaignSynch_Campaign">
+            <End Role="Campaign" EntitySet="Campaign" />
+            <End Role="CampaignSynch" EntitySet="CampaignSynch" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AccountManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="AdManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="account_manager_id" Type="int" Nullable="false" />
+          <Property Name="campaign_status_id" Type="int" Nullable="false" />
+          <Property Name="ad_manager_id" Type="int" Nullable="false" />
+          <Property Name="advertiser_id" Type="int" Nullable="false" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="campaign_name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="campaign_type" Type="char" MaxLength="3" />
+          <Property Name="modified" Type="datetime" />
+          <Property Name="created" Type="datetime" />
+          <Property Name="dt_campaign_status" Type="varchar" MaxLength="25" />
+          <Property Name="dt_campaign_url" Type="varchar" MaxLength="255" />
+          <Property Name="dt_allowed_country_names" Type="varchar" MaxLength="255" />
+          <Property Name="is_email" Type="bit" />
+          <Property Name="is_search" Type="bit" />
+          <Property Name="is_display" Type="bit" />
+          <Property Name="is_coreg" Type="bit" />
+          <Property Name="max_scrub" Type="int" />
+          <Property Name="notes" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="CampaignStatus">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CampaignSynch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignId" Type="int" Nullable="false" />
+          <Property Name="IntervalMinutes" Type="int" Nullable="false" />
+          <Property Name="LastSynched" Type="datetime" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Campaign_AccountManager">
+          <End Role="AccountManager" Type="DADatabaseR1Model.Store.AccountManager" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseR1Model.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="account_manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_AdManager">
+          <End Role="AdManager" Type="DADatabaseR1Model.Store.AdManager" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseR1Model.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AdManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="ad_manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_Advertiser">
+          <End Role="Advertiser" Type="DADatabaseR1Model.Store.Advertiser" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseR1Model.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="advertiser_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_CampaignStatus">
+          <End Role="CampaignStatus" Type="DADatabaseR1Model.Store.CampaignStatus" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseR1Model.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CampaignSynch_Campaign">
+          <End Role="Campaign" Type="DADatabaseR1Model.Store.Campaign" Multiplicity="1" />
+          <End Role="CampaignSynch" Type="DADatabaseR1Model.Store.CampaignSynch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaign">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampaignSynch">
+              <PropertyRef Name="CampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DADatabaseModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="DADatabaseEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AccountManagers" EntityType="DADatabaseModel.AccountManager" />
+          <EntitySet Name="AdManagers" EntityType="DADatabaseModel.AdManager" />
+          <EntitySet Name="Advertisers" EntityType="DADatabaseModel.Advertiser" />
+          <EntitySet Name="Campaigns" EntityType="DADatabaseModel.Campaign" />
+          <EntitySet Name="CampaignStatus" EntityType="DADatabaseModel.CampaignStatu" />
+          <EntitySet Name="CampaignSynches" EntityType="DADatabaseModel.CampaignSynch" />
+          <AssociationSet Name="FK_Campaign_AccountManager" Association="DADatabaseModel.FK_Campaign_AccountManager">
+            <End Role="AccountManager" EntitySet="AccountManagers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_AdManager" Association="DADatabaseModel.FK_Campaign_AdManager">
+            <End Role="AdManager" EntitySet="AdManagers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_Advertiser" Association="DADatabaseModel.FK_Campaign_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_CampaignStatus" Association="DADatabaseModel.FK_Campaign_CampaignStatus">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampaignSynch_Campaign" Association="DADatabaseModel.FK_CampaignSynch_Campaign">
+            <End Role="Campaign" EntitySet="Campaigns" />
+            <End Role="CampaignSynch" EntitySet="CampaignSynches" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AccountManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Campaigns" Relationship="DADatabaseModel.FK_Campaign_AccountManager" FromRole="AccountManager" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="AdManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Campaigns" Relationship="DADatabaseModel.FK_Campaign_AdManager" FromRole="AdManager" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Campaigns" Relationship="DADatabaseModel.FK_Campaign_Advertiser" FromRole="Advertiser" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="account_manager_id" Type="Int32" Nullable="false" />
+          <Property Name="campaign_status_id" Type="Int32" Nullable="false" />
+          <Property Name="ad_manager_id" Type="Int32" Nullable="false" />
+          <Property Name="advertiser_id" Type="Int32" Nullable="false" />
+          <Property Name="pid" Type="Int32" Nullable="false" />
+          <Property Name="campaign_name" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="campaign_type" Type="String" MaxLength="3" Unicode="false" FixedLength="true" />
+          <Property Name="modified" Type="DateTime" />
+          <Property Name="created" Type="DateTime" />
+          <Property Name="dt_campaign_status" Type="String" MaxLength="25" Unicode="false" FixedLength="false" />
+          <Property Name="dt_campaign_url" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="dt_allowed_country_names" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="is_email" Type="Boolean" />
+          <Property Name="is_search" Type="Boolean" />
+          <Property Name="is_display" Type="Boolean" />
+          <Property Name="is_coreg" Type="Boolean" />
+          <Property Name="max_scrub" Type="Int32" />
+          <Property Name="notes" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="AccountManager" Relationship="DADatabaseModel.FK_Campaign_AccountManager" FromRole="Campaign" ToRole="AccountManager" />
+          <NavigationProperty Name="AdManager" Relationship="DADatabaseModel.FK_Campaign_AdManager" FromRole="Campaign" ToRole="AdManager" />
+          <NavigationProperty Name="Advertiser" Relationship="DADatabaseModel.FK_Campaign_Advertiser" FromRole="Campaign" ToRole="Advertiser" />
+          <NavigationProperty Name="CampaignStatu" Relationship="DADatabaseModel.FK_Campaign_CampaignStatus" FromRole="Campaign" ToRole="CampaignStatus" />
+          <NavigationProperty Name="CampaignSynches" Relationship="DADatabaseModel.FK_CampaignSynch_Campaign" FromRole="Campaign" ToRole="CampaignSynch" />
+        </EntityType>
+        <EntityType Name="CampaignStatu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Campaigns" Relationship="DADatabaseModel.FK_Campaign_CampaignStatus" FromRole="CampaignStatus" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="CampaignSynch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignId" Type="Int32" Nullable="false" />
+          <Property Name="IntervalMinutes" Type="Int32" Nullable="false" />
+          <Property Name="LastSynched" Type="DateTime" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Campaign" Relationship="DADatabaseModel.FK_CampaignSynch_Campaign" FromRole="CampaignSynch" ToRole="Campaign" />
+        </EntityType>
+        <Association Name="FK_Campaign_AccountManager">
+          <End Role="AccountManager" Type="DADatabaseModel.AccountManager" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseModel.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="account_manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_AdManager">
+          <End Role="AdManager" Type="DADatabaseModel.AdManager" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseModel.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AdManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="ad_manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_Advertiser">
+          <End Role="Advertiser" Type="DADatabaseModel.Advertiser" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseModel.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="advertiser_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_CampaignStatus">
+          <End Role="CampaignStatus" Type="DADatabaseModel.CampaignStatu" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseModel.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CampaignSynch_Campaign">
+          <End Role="Campaign" Type="DADatabaseModel.Campaign" Multiplicity="1" />
+          <End Role="CampaignSynch" Type="DADatabaseModel.CampaignSynch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaign">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="CampaignSynch">
+              <PropertyRef Name="CampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DADatabaseR1ModelStoreContainer" CdmEntityContainer="DADatabaseEntities1">
+          <EntitySetMapping Name="AccountManagers"><EntityTypeMapping TypeName="DADatabaseModel.AccountManager"><MappingFragment StoreEntitySet="AccountManager">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="AdManagers"><EntityTypeMapping TypeName="DADatabaseModel.AdManager"><MappingFragment StoreEntitySet="AdManager">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="DADatabaseModel.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Campaigns"><EntityTypeMapping TypeName="DADatabaseModel.Campaign"><MappingFragment StoreEntitySet="Campaign">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="account_manager_id" ColumnName="account_manager_id" />
+            <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
+            <ScalarProperty Name="ad_manager_id" ColumnName="ad_manager_id" />
+            <ScalarProperty Name="advertiser_id" ColumnName="advertiser_id" />
+            <ScalarProperty Name="pid" ColumnName="pid" />
+            <ScalarProperty Name="campaign_name" ColumnName="campaign_name" />
+            <ScalarProperty Name="campaign_type" ColumnName="campaign_type" />
+            <ScalarProperty Name="modified" ColumnName="modified" />
+            <ScalarProperty Name="created" ColumnName="created" />
+            <ScalarProperty Name="dt_campaign_status" ColumnName="dt_campaign_status" />
+            <ScalarProperty Name="dt_campaign_url" ColumnName="dt_campaign_url" />
+            <ScalarProperty Name="dt_allowed_country_names" ColumnName="dt_allowed_country_names" />
+            <ScalarProperty Name="is_email" ColumnName="is_email" />
+            <ScalarProperty Name="is_search" ColumnName="is_search" />
+            <ScalarProperty Name="is_display" ColumnName="is_display" />
+            <ScalarProperty Name="is_coreg" ColumnName="is_coreg" />
+            <ScalarProperty Name="max_scrub" ColumnName="max_scrub" />
+            <ScalarProperty Name="notes" ColumnName="notes" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="CampaignStatus"><EntityTypeMapping TypeName="DADatabaseModel.CampaignStatu"><MappingFragment StoreEntitySet="CampaignStatus">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="CampaignSynches"><EntityTypeMapping TypeName="DADatabaseModel.CampaignSynch"><MappingFragment StoreEntitySet="CampaignSynch">
+            <ScalarProperty Name="Id" ColumnName="Id" />
+            <ScalarProperty Name="CampaignId" ColumnName="CampaignId" />
+            <ScalarProperty Name="IntervalMinutes" ColumnName="IntervalMinutes" />
+            <ScalarProperty Name="LastSynched" ColumnName="LastSynched" />
+            <ScalarProperty Name="Active" ColumnName="Active" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Model1">
+        <EntityTypeShape EntityType="DADatabaseModel.AccountManager" Width="1.5" PointX="0.75" PointY="3.125" Height="1.5956835937500005" IsExpanded="true" />
+        <EntityTypeShape EntityType="DADatabaseModel.AdManager" Width="1.5" PointX="0.75" PointY="0.75" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="DADatabaseModel.Advertiser" Width="1.5" PointX="0.75" PointY="6.125" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="DADatabaseModel.Campaign" Width="1.5" PointX="3" PointY="1.125" Height="5.6340136718749978" IsExpanded="true" />
+        <EntityTypeShape EntityType="DADatabaseModel.CampaignStatu" Width="1.5" PointX="0.75" PointY="8.5" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="DADatabaseModel.CampaignSynch" Width="1.5" PointX="5.25" PointY="2.875" Height="2.1725878906249996" IsExpanded="true" />
+        <AssociationConnector Association="DADatabaseModel.FK_Campaign_AccountManager" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="3.9228417968750002" />
+          <ConnectorPoint PointX="3" PointY="3.9228417968750002" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseModel.FK_Campaign_AdManager" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="1.7353417968749998" />
+          <ConnectorPoint PointX="3" PointY="1.7353417968749998" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseModel.FK_Campaign_Advertiser" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="6.4420068359374989" />
+          <ConnectorPoint PointX="3" PointY="6.4420068359374989" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseModel.FK_Campaign_CampaignStatus" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="9.297841796875" />
+          <ConnectorPoint PointX="3.75" PointY="9.297841796875" />
+          <ConnectorPoint PointX="3.75" PointY="6.7590136718749978" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseModel.FK_CampaignSynch_Campaign" ManuallyRouted="false">
+          <ConnectorPoint PointX="4.5" PointY="3.9612939453125" />
+          <ConnectorPoint PointX="5.25" PointY="3.9612939453125" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

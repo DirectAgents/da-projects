@@ -1,0 +1,797 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DADatabaseAug11Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="DADatabaseAug11ModelStoreContainer">
+          <EntitySet Name="Advertiser" EntityType="DADatabaseAug11Model.Store.Advertiser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Campaign" EntityType="DADatabaseAug11Model.Store.Campaign" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Currency" EntityType="DADatabaseAug11Model.Store.Currency" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Item" EntityType="DADatabaseAug11Model.Store.Item" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ItemAccountingStatus" EntityType="DADatabaseAug11Model.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ItemReportingStatus" EntityType="DADatabaseAug11Model.Store.ItemReportingStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Source" EntityType="DADatabaseAug11Model.Store.Source" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Stat" EntityType="DADatabaseAug11Model.Store.Stat" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UnitType" EntityType="DADatabaseAug11Model.Store.UnitType" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Advertiser_Currency" Association="DADatabaseAug11Model.Store.FK_Advertiser_Currency">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Advertiser" EntitySet="Advertiser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_Advertiser" Association="DADatabaseAug11Model.Store.FK_Campaign_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Currency" Association="DADatabaseAug11Model.Store.FK_Item_Currency">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Currency1" Association="DADatabaseAug11Model.Store.FK_Item_Currency1">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemAccountingStatus" Association="DADatabaseAug11Model.Store.FK_Item_ItemAccountingStatus">
+            <End Role="ItemAccountingStatus" EntitySet="ItemAccountingStatus" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemReportingStatus" Association="DADatabaseAug11Model.Store.FK_Item_ItemReportingStatus">
+            <End Role="ItemReportingStatus" EntitySet="ItemReportingStatus" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Source" Association="DADatabaseAug11Model.Store.FK_Item_Source">
+            <End Role="Source" EntitySet="Source" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Stat" Association="DADatabaseAug11Model.Store.FK_Item_Stat">
+            <End Role="Stat" EntitySet="Stat" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_UnitType" Association="DADatabaseAug11Model.Store.FK_Item_UnitType">
+            <End Role="UnitType" EntitySet="UnitType" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="advertiser_credit_limit_currency_id" Type="int" />
+          <Property Name="advertiser_credit_limit" Type="money" />
+          <Property Name="customer_id" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6035: The relationship 'FK_Item_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+      warning 6035: The relationship 'FK_Stat_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+      -->
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="account_manager_id" Type="int" Nullable="false" />
+          <Property Name="campaign_status_id" Type="int" Nullable="false" />
+          <Property Name="ad_manager_id" Type="int" Nullable="false" />
+          <Property Name="advertiser_id" Type="int" Nullable="false" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="campaign_name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="campaign_type" Type="char" MaxLength="3" />
+          <Property Name="modified" Type="datetime" />
+          <Property Name="created" Type="datetime" />
+          <Property Name="dt_campaign_status" Type="varchar" MaxLength="25" />
+          <Property Name="dt_campaign_url" Type="varchar" MaxLength="255" />
+          <Property Name="dt_allowed_country_names" Type="varchar" MaxLength="255" />
+          <Property Name="is_email" Type="bit" />
+          <Property Name="is_search" Type="bit" />
+          <Property Name="is_display" Type="bit" />
+          <Property Name="is_coreg" Type="bit" />
+          <Property Name="max_scrub" Type="int" />
+          <Property Name="notes" Type="varchar(max)" />
+          <Property Name="category1_id" Type="int" />
+          <Property Name="category2_id" Type="int" />
+          <Property Name="category3_id" Type="int" />
+          <Property Name="short_description" Type="varchar" MaxLength="255" />
+          <Property Name="is_third_party_pixel_placed" Type="bit" />
+          <Property Name="short_description_full" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="to_usd_multiplier" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+          <Property Name="to_gbp_multiplier" Type="decimal" Precision="14" Scale="4" />
+          <Property Name="to_eur_multiplier" Type="decimal" Precision="14" Scale="4" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" MaxLength="300" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="affid" Type="int" Nullable="false" />
+          <Property Name="source_id" Type="int" Nullable="false" />
+          <Property Name="unit_type_id" Type="int" Nullable="false" />
+          <Property Name="stat_id_n" Type="int" />
+          <Property Name="revenue_currency_id" Type="int" Nullable="false" />
+          <Property Name="cost_currency_id" Type="int" Nullable="false" />
+          <Property Name="revenue_per_unit" Type="money" Nullable="false" />
+          <Property Name="cost_per_unit" Type="money" Nullable="false" />
+          <Property Name="num_units" Type="decimal" Nullable="false" Precision="12" Scale="6" />
+          <Property Name="notes" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="accounting_notes" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="item_accounting_status_id" Type="int" Nullable="false" />
+          <Property Name="item_reporting_status_id" Type="int" Nullable="false" />
+          <Property Name="total_revenue" Type="decimal" Precision="32" Scale="10" StoreGeneratedPattern="Computed" />
+          <Property Name="total_cost" Type="decimal" Precision="32" Scale="10" StoreGeneratedPattern="Computed" />
+          <Property Name="margin" Type="money" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="ItemAccountingStatus">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ItemReportingStatus">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Stat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="affid" Type="int" Nullable="false" />
+          <Property Name="revenue_payout_id" Type="int" Nullable="false" />
+          <Property Name="cost_payout_id" Type="int" Nullable="false" />
+          <Property Name="apiurl" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="clicks" Type="int" Nullable="false" />
+          <Property Name="leads" Type="int" Nullable="false" />
+          <Property Name="num_sales" Type="int" Nullable="false" />
+          <Property Name="num_post_impression_sales" Type="int" Nullable="false" />
+          <Property Name="sale_amount" Type="decimal" Nullable="false" Precision="16" Scale="2" />
+          <Property Name="post_impression_sale_amount" Type="decimal" Nullable="false" Precision="16" Scale="2" />
+          <Property Name="num_sub_sales" Type="int" Nullable="false" />
+          <Property Name="num_post_impression_sub_sales" Type="int" Nullable="false" />
+          <Property Name="sub_sale_amount" Type="decimal" Nullable="false" Precision="16" Scale="2" />
+          <Property Name="post_impression_sub_sale_amount" Type="decimal" Nullable="false" Precision="16" Scale="2" />
+          <Property Name="stat_date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UnitType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_Advertiser_Currency">
+          <End Role="Currency" Type="DADatabaseAug11Model.Store.Currency" Multiplicity="0..1" />
+          <End Role="Advertiser" Type="DADatabaseAug11Model.Store.Advertiser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Advertiser">
+              <PropertyRef Name="advertiser_credit_limit_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_Advertiser">
+          <End Role="Advertiser" Type="DADatabaseAug11Model.Store.Advertiser" Multiplicity="1" />
+          <End Role="Campaign" Type="DADatabaseAug11Model.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="advertiser_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Currency">
+          <End Role="Currency" Type="DADatabaseAug11Model.Store.Currency" Multiplicity="1" />
+          <End Role="Item" Type="DADatabaseAug11Model.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="revenue_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Currency1">
+          <End Role="Currency" Type="DADatabaseAug11Model.Store.Currency" Multiplicity="1" />
+          <End Role="Item" Type="DADatabaseAug11Model.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="cost_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemAccountingStatus">
+          <End Role="ItemAccountingStatus" Type="DADatabaseAug11Model.Store.ItemAccountingStatus" Multiplicity="1" />
+          <End Role="Item" Type="DADatabaseAug11Model.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemAccountingStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="item_accounting_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemReportingStatus">
+          <End Role="ItemReportingStatus" Type="DADatabaseAug11Model.Store.ItemReportingStatus" Multiplicity="1" />
+          <End Role="Item" Type="DADatabaseAug11Model.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReportingStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="item_reporting_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Source">
+          <End Role="Source" Type="DADatabaseAug11Model.Store.Source" Multiplicity="1" />
+          <End Role="Item" Type="DADatabaseAug11Model.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Source">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Stat">
+          <End Role="Stat" Type="DADatabaseAug11Model.Store.Stat" Multiplicity="0..1" />
+          <End Role="Item" Type="DADatabaseAug11Model.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stat">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="stat_id_n" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_UnitType">
+          <End Role="UnitType" Type="DADatabaseAug11Model.Store.UnitType" Multiplicity="1" />
+          <End Role="Item" Type="DADatabaseAug11Model.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="unit_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DADatabaseAug11Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="ExternalDatabaseModel" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Currencies" EntityType="DADatabaseAug11Model.Currency" />
+          <EntitySet Name="Advertisers" EntityType="DADatabaseAug11Model.Advertiser" />
+          <AssociationSet Name="FK_Advertiser_Currency" Association="DADatabaseAug11Model.FK_Advertiser_Currency">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Advertiser" EntitySet="Advertisers" />
+          </AssociationSet>
+          <EntitySet Name="Campaigns" EntityType="DADatabaseAug11Model.Campaign" />
+          <AssociationSet Name="FK_Campaign_Advertiser" Association="DADatabaseAug11Model.FK_Campaign_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <EntitySet Name="ItemAccountingStatus" EntityType="DADatabaseAug11Model.ItemAccountingStatu" />
+          <EntitySet Name="ItemReportingStatus" EntityType="DADatabaseAug11Model.ItemReportingStatu" />
+          <EntitySet Name="Sources" EntityType="DADatabaseAug11Model.Source" />
+          <EntitySet Name="Stats" EntityType="DADatabaseAug11Model.Stat" />
+          <EntitySet Name="UnitTypes" EntityType="DADatabaseAug11Model.UnitType" />
+          <EntitySet Name="Items" EntityType="DADatabaseAug11Model.Item" />
+          <AssociationSet Name="FK_Item_Currency" Association="DADatabaseAug11Model.FK_Item_Currency">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Currency1" Association="DADatabaseAug11Model.FK_Item_Currency1">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemAccountingStatus" Association="DADatabaseAug11Model.FK_Item_ItemAccountingStatus">
+            <End Role="ItemAccountingStatu" EntitySet="ItemAccountingStatus" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemReportingStatus" Association="DADatabaseAug11Model.FK_Item_ItemReportingStatus">
+            <End Role="ItemReportingStatu" EntitySet="ItemReportingStatus" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Source" Association="DADatabaseAug11Model.FK_Item_Source">
+            <End Role="Source" EntitySet="Sources" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Stat" Association="DADatabaseAug11Model.FK_Item_Stat">
+            <End Role="Stat" EntitySet="Stats" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_UnitType" Association="DADatabaseAug11Model.FK_Item_UnitType">
+            <End Role="UnitType" EntitySet="UnitTypes" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="to_usd_multiplier" Type="Decimal" Nullable="false" Precision="14" Scale="4" />
+          <Property Name="to_gbp_multiplier" Type="Decimal" Precision="14" Scale="4" />
+          <Property Name="to_eur_multiplier" Type="Decimal" Precision="14" Scale="4" />
+          <NavigationProperty Name="Advertisers" Relationship="DADatabaseAug11Model.FK_Advertiser_Currency" FromRole="Currency" ToRole="Advertiser" />
+          <NavigationProperty Name="Items" Relationship="DADatabaseAug11Model.FK_Item_Currency" FromRole="Currency" ToRole="Item" />
+          <NavigationProperty Name="Items1" Relationship="DADatabaseAug11Model.FK_Item_Currency1" FromRole="Currency" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="advertiser_credit_limit_currency_id" />
+          <Property Type="Decimal" Name="advertiser_credit_limit" Precision="19" Scale="4" />
+          <Property Type="Int32" Name="customer_id" Nullable="false" />
+          <NavigationProperty Name="Currency" Relationship="DADatabaseAug11Model.FK_Advertiser_Currency" FromRole="Advertiser" ToRole="Currency" />
+          <NavigationProperty Name="Campaigns" Relationship="DADatabaseAug11Model.FK_Campaign_Advertiser" FromRole="Advertiser" ToRole="Campaign" />
+        </EntityType>
+        <Association Name="FK_Advertiser_Currency">
+          <End Type="DADatabaseAug11Model.Currency" Role="Currency" Multiplicity="0..1" />
+          <End Type="DADatabaseAug11Model.Advertiser" Role="Advertiser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Advertiser">
+              <PropertyRef Name="advertiser_credit_limit_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="account_manager_id" Nullable="false" />
+          <Property Type="Int32" Name="campaign_status_id" Nullable="false" />
+          <Property Type="Int32" Name="ad_manager_id" Nullable="false" />
+          <Property Type="Int32" Name="advertiser_id" Nullable="false" />
+          <Property Type="Int32" Name="pid" Nullable="false" />
+          <Property Type="String" Name="campaign_name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="campaign_type" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Type="DateTime" Name="modified" />
+          <Property Type="DateTime" Name="created" />
+          <Property Type="String" Name="dt_campaign_status" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="dt_campaign_url" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="dt_allowed_country_names" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="is_email" />
+          <Property Type="Boolean" Name="is_search" />
+          <Property Type="Boolean" Name="is_display" />
+          <Property Type="Boolean" Name="is_coreg" />
+          <Property Type="Int32" Name="max_scrub" />
+          <Property Type="String" Name="notes" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="category1_id" />
+          <Property Type="Int32" Name="category2_id" />
+          <Property Type="Int32" Name="category3_id" />
+          <Property Type="String" Name="short_description" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="is_third_party_pixel_placed" />
+          <Property Type="String" Name="short_description_full" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Advertiser" Relationship="DADatabaseAug11Model.FK_Campaign_Advertiser" FromRole="Campaign" ToRole="Advertiser" />
+        </EntityType>
+        <Association Name="FK_Campaign_Advertiser">
+          <End Type="DADatabaseAug11Model.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="DADatabaseAug11Model.Campaign" Role="Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="advertiser_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ItemAccountingStatu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Items" Relationship="DADatabaseAug11Model.FK_Item_ItemAccountingStatus" FromRole="ItemAccountingStatu" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="ItemReportingStatu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Items" Relationship="DADatabaseAug11Model.FK_Item_ItemReportingStatus" FromRole="ItemReportingStatu" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Items" Relationship="DADatabaseAug11Model.FK_Item_Source" FromRole="Source" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Stat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="pid" Nullable="false" />
+          <Property Type="Int32" Name="affid" Nullable="false" />
+          <Property Type="Int32" Name="revenue_payout_id" Nullable="false" />
+          <Property Type="Int32" Name="cost_payout_id" Nullable="false" />
+          <Property Type="String" Name="apiurl" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="clicks" Nullable="false" />
+          <Property Type="Int32" Name="leads" Nullable="false" />
+          <Property Type="Int32" Name="num_sales" Nullable="false" />
+          <Property Type="Int32" Name="num_post_impression_sales" Nullable="false" />
+          <Property Type="Decimal" Name="sale_amount" Nullable="false" Precision="16" Scale="2" />
+          <Property Type="Decimal" Name="post_impression_sale_amount" Nullable="false" Precision="16" Scale="2" />
+          <Property Type="Int32" Name="num_sub_sales" Nullable="false" />
+          <Property Type="Int32" Name="num_post_impression_sub_sales" Nullable="false" />
+          <Property Type="Decimal" Name="sub_sale_amount" Nullable="false" Precision="16" Scale="2" />
+          <Property Type="Decimal" Name="post_impression_sub_sale_amount" Nullable="false" Precision="16" Scale="2" />
+          <Property Type="DateTime" Name="stat_date" Nullable="false" />
+          <NavigationProperty Name="Items" Relationship="DADatabaseAug11Model.FK_Item_Stat" FromRole="Stat" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="UnitType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Items" Relationship="DADatabaseAug11Model.FK_Item_UnitType" FromRole="UnitType" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="pid" Nullable="false" />
+          <Property Type="Int32" Name="affid" Nullable="false" />
+          <Property Type="Int32" Name="source_id" Nullable="false" />
+          <Property Type="Int32" Name="unit_type_id" Nullable="false" />
+          <Property Type="Int32" Name="stat_id_n" />
+          <Property Type="Int32" Name="revenue_currency_id" Nullable="false" />
+          <Property Type="Int32" Name="cost_currency_id" Nullable="false" />
+          <Property Type="Decimal" Name="revenue_per_unit" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="cost_per_unit" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="num_units" Nullable="false" Precision="12" Scale="6" />
+          <Property Type="String" Name="notes" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="accounting_notes" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="item_accounting_status_id" Nullable="false" />
+          <Property Type="Int32" Name="item_reporting_status_id" Nullable="false" />
+          <Property Type="Decimal" Name="total_revenue" Precision="32" Scale="10" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Decimal" Name="total_cost" Precision="32" Scale="10" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Decimal" Name="margin" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Currency" Relationship="DADatabaseAug11Model.FK_Item_Currency" FromRole="Item" ToRole="Currency" />
+          <NavigationProperty Name="Currency1" Relationship="DADatabaseAug11Model.FK_Item_Currency1" FromRole="Item" ToRole="Currency" />
+          <NavigationProperty Name="ItemAccountingStatu" Relationship="DADatabaseAug11Model.FK_Item_ItemAccountingStatus" FromRole="Item" ToRole="ItemAccountingStatu" />
+          <NavigationProperty Name="ItemReportingStatu" Relationship="DADatabaseAug11Model.FK_Item_ItemReportingStatus" FromRole="Item" ToRole="ItemReportingStatu" />
+          <NavigationProperty Name="Source" Relationship="DADatabaseAug11Model.FK_Item_Source" FromRole="Item" ToRole="Source" />
+          <NavigationProperty Name="Stat" Relationship="DADatabaseAug11Model.FK_Item_Stat" FromRole="Item" ToRole="Stat" />
+          <NavigationProperty Name="UnitType" Relationship="DADatabaseAug11Model.FK_Item_UnitType" FromRole="Item" ToRole="UnitType" />
+        </EntityType>
+        <Association Name="FK_Item_Currency">
+          <End Type="DADatabaseAug11Model.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="DADatabaseAug11Model.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="revenue_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Currency1">
+          <End Type="DADatabaseAug11Model.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="DADatabaseAug11Model.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="cost_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemAccountingStatus">
+          <End Type="DADatabaseAug11Model.ItemAccountingStatu" Role="ItemAccountingStatu" Multiplicity="1" />
+          <End Type="DADatabaseAug11Model.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemAccountingStatu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="item_accounting_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemReportingStatus">
+          <End Type="DADatabaseAug11Model.ItemReportingStatu" Role="ItemReportingStatu" Multiplicity="1" />
+          <End Type="DADatabaseAug11Model.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReportingStatu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="item_reporting_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Source">
+          <End Type="DADatabaseAug11Model.Source" Role="Source" Multiplicity="1" />
+          <End Type="DADatabaseAug11Model.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Source">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_Stat">
+          <End Type="DADatabaseAug11Model.Stat" Role="Stat" Multiplicity="0..1" />
+          <End Type="DADatabaseAug11Model.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stat">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="stat_id_n" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_UnitType">
+          <End Type="DADatabaseAug11Model.UnitType" Role="UnitType" Multiplicity="1" />
+          <End Type="DADatabaseAug11Model.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="unit_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DADatabaseAug11ModelStoreContainer" CdmEntityContainer="ExternalDatabaseModel">
+          <EntitySetMapping Name="Currencies"><EntityTypeMapping TypeName="DADatabaseAug11Model.Currency"><MappingFragment StoreEntitySet="Currency">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+            <ScalarProperty Name="to_usd_multiplier" ColumnName="to_usd_multiplier" />
+            <ScalarProperty Name="to_gbp_multiplier" ColumnName="to_gbp_multiplier" />
+            <ScalarProperty Name="to_eur_multiplier" ColumnName="to_eur_multiplier" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Advertisers">
+            <EntityTypeMapping TypeName="DADatabaseAug11Model.Advertiser">
+              <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="advertiser_credit_limit" ColumnName="advertiser_credit_limit" />
+                <ScalarProperty Name="advertiser_credit_limit_currency_id" ColumnName="advertiser_credit_limit_currency_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Campaigns">
+            <EntityTypeMapping TypeName="DADatabaseAug11Model.Campaign">
+              <MappingFragment StoreEntitySet="Campaign">
+                <ScalarProperty Name="short_description_full" ColumnName="short_description_full" />
+                <ScalarProperty Name="is_third_party_pixel_placed" ColumnName="is_third_party_pixel_placed" />
+                <ScalarProperty Name="short_description" ColumnName="short_description" />
+                <ScalarProperty Name="category3_id" ColumnName="category3_id" />
+                <ScalarProperty Name="category2_id" ColumnName="category2_id" />
+                <ScalarProperty Name="category1_id" ColumnName="category1_id" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="max_scrub" ColumnName="max_scrub" />
+                <ScalarProperty Name="is_coreg" ColumnName="is_coreg" />
+                <ScalarProperty Name="is_display" ColumnName="is_display" />
+                <ScalarProperty Name="is_search" ColumnName="is_search" />
+                <ScalarProperty Name="is_email" ColumnName="is_email" />
+                <ScalarProperty Name="dt_allowed_country_names" ColumnName="dt_allowed_country_names" />
+                <ScalarProperty Name="dt_campaign_url" ColumnName="dt_campaign_url" />
+                <ScalarProperty Name="dt_campaign_status" ColumnName="dt_campaign_status" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="modified" ColumnName="modified" />
+                <ScalarProperty Name="campaign_type" ColumnName="campaign_type" />
+                <ScalarProperty Name="campaign_name" ColumnName="campaign_name" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="advertiser_id" ColumnName="advertiser_id" />
+                <ScalarProperty Name="ad_manager_id" ColumnName="ad_manager_id" />
+                <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
+                <ScalarProperty Name="account_manager_id" ColumnName="account_manager_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemAccountingStatus">
+            <EntityTypeMapping TypeName="DADatabaseAug11Model.ItemAccountingStatu">
+              <MappingFragment StoreEntitySet="ItemAccountingStatus">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemReportingStatus">
+            <EntityTypeMapping TypeName="DADatabaseAug11Model.ItemReportingStatu">
+              <MappingFragment StoreEntitySet="ItemReportingStatus">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sources">
+            <EntityTypeMapping TypeName="DADatabaseAug11Model.Source">
+              <MappingFragment StoreEntitySet="Source">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stats">
+            <EntityTypeMapping TypeName="DADatabaseAug11Model.Stat">
+              <MappingFragment StoreEntitySet="Stat">
+                <ScalarProperty Name="stat_date" ColumnName="stat_date" />
+                <ScalarProperty Name="post_impression_sub_sale_amount" ColumnName="post_impression_sub_sale_amount" />
+                <ScalarProperty Name="sub_sale_amount" ColumnName="sub_sale_amount" />
+                <ScalarProperty Name="num_post_impression_sub_sales" ColumnName="num_post_impression_sub_sales" />
+                <ScalarProperty Name="num_sub_sales" ColumnName="num_sub_sales" />
+                <ScalarProperty Name="post_impression_sale_amount" ColumnName="post_impression_sale_amount" />
+                <ScalarProperty Name="sale_amount" ColumnName="sale_amount" />
+                <ScalarProperty Name="num_post_impression_sales" ColumnName="num_post_impression_sales" />
+                <ScalarProperty Name="num_sales" ColumnName="num_sales" />
+                <ScalarProperty Name="leads" ColumnName="leads" />
+                <ScalarProperty Name="clicks" ColumnName="clicks" />
+                <ScalarProperty Name="apiurl" ColumnName="apiurl" />
+                <ScalarProperty Name="cost_payout_id" ColumnName="cost_payout_id" />
+                <ScalarProperty Name="revenue_payout_id" ColumnName="revenue_payout_id" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UnitTypes">
+            <EntityTypeMapping TypeName="DADatabaseAug11Model.UnitType">
+              <MappingFragment StoreEntitySet="UnitType">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Items">
+            <EntityTypeMapping TypeName="DADatabaseAug11Model.Item">
+              <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="margin" ColumnName="margin" />
+                <ScalarProperty Name="total_cost" ColumnName="total_cost" />
+                <ScalarProperty Name="total_revenue" ColumnName="total_revenue" />
+                <ScalarProperty Name="item_reporting_status_id" ColumnName="item_reporting_status_id" />
+                <ScalarProperty Name="item_accounting_status_id" ColumnName="item_accounting_status_id" />
+                <ScalarProperty Name="accounting_notes" ColumnName="accounting_notes" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="num_units" ColumnName="num_units" />
+                <ScalarProperty Name="cost_per_unit" ColumnName="cost_per_unit" />
+                <ScalarProperty Name="revenue_per_unit" ColumnName="revenue_per_unit" />
+                <ScalarProperty Name="cost_currency_id" ColumnName="cost_currency_id" />
+                <ScalarProperty Name="revenue_currency_id" ColumnName="revenue_currency_id" />
+                <ScalarProperty Name="stat_id_n" ColumnName="stat_id_n" />
+                <ScalarProperty Name="unit_type_id" ColumnName="unit_type_id" />
+                <ScalarProperty Name="source_id" ColumnName="source_id" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="ExternalDatabase" ZoomLevel="55">
+        <EntityTypeShape EntityType="DADatabaseAug11Model.Currency" Width="1.5" PointX="9" PointY="0.5" Height="2.5571907552083331" IsExpanded="true" />
+        <EntityTypeShape EntityType="DADatabaseAug11Model.Advertiser" Width="2.875" PointX="5.5" PointY="0.75" Height="2.3648893229166661" />
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Advertiser_Currency" >
+          <ConnectorPoint PointX="9" PointY="1.9035953776041668" />
+          <ConnectorPoint PointX="8.375" PointY="1.9035953776041668" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DADatabaseAug11Model.Campaign" Width="1.5" PointX="3.5" PointY="0.75" Height="6.018616536458353" />
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Campaign_Advertiser" >
+          <ConnectorPoint PointX="5.5" PointY="1.9324446614583328" />
+          <ConnectorPoint PointX="5" PointY="1.9324446614583328" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DADatabaseAug11Model.ItemAccountingStatu" Width="1.5" PointX="6.75" PointY="4.375" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="DADatabaseAug11Model.ItemReportingStatu" Width="1.5" PointX="6.75" PointY="6.5" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="DADatabaseAug11Model.Source" Width="1.5" PointX="6.75" PointY="8.5" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="DADatabaseAug11Model.Stat" Width="1.5" PointX="13.125" PointY="9.875" Height="4.4802050781250014" />
+        <EntityTypeShape EntityType="DADatabaseAug11Model.UnitType" Width="1.5" PointX="13.75" PointY="6.625" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="DADatabaseAug11Model.Item" Width="3.125" PointX="9" PointY="3.5" Height="6.018616536458353" />
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Item_Currency" >
+          <ConnectorPoint PointX="9.4765625" PointY="3.0571907552083331" />
+          <ConnectorPoint PointX="9.4765625" PointY="3.5" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Item_Currency1" >
+          <ConnectorPoint PointX="10.05078125" PointY="3.0571907552083331" />
+          <ConnectorPoint PointX="10.05078125" PointY="3.5" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Item_ItemAccountingStatus" >
+          <ConnectorPoint PointX="8.25" PointY="5.172841796875" />
+          <ConnectorPoint PointX="9" PointY="5.172841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Item_ItemReportingStatus" >
+          <ConnectorPoint PointX="8.25" PointY="7.297841796875" />
+          <ConnectorPoint PointX="9" PointY="7.297841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Item_Source" >
+          <ConnectorPoint PointX="8.25" PointY="9.0093082682291765" />
+          <ConnectorPoint PointX="9" PointY="9.0093082682291765" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Item_Stat" >
+          <ConnectorPoint PointX="13.125" PointY="12.115102539062502" />
+          <ConnectorPoint PointX="10.5625" PointY="12.115102539062502" />
+          <ConnectorPoint PointX="10.5625" PointY="9.518616536458353" />
+        </AssociationConnector>
+        <AssociationConnector Association="DADatabaseAug11Model.FK_Item_UnitType" >
+          <ConnectorPoint PointX="13.75" PointY="7.422841796875" />
+          <ConnectorPoint PointX="12.125" PointY="7.422841796875" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

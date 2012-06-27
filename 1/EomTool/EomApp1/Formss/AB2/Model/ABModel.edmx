@@ -1,0 +1,2843 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DirectAgentsModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="DirectAgentsModelStoreContainer">
+    <EntitySet Name="Amounts" EntityType="DirectAgentsModel.Store.Amounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Items" EntityType="DirectAgentsModel.Store.Items" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Periods" EntityType="DirectAgentsModel.Store.Periods" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Units" EntityType="DirectAgentsModel.Store.Units" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UnitConversions" EntityType="DirectAgentsModel.Store.UnitConversions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Clients" EntityType="DirectAgentsModel.Store.Clients" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SqlServerDatabases" EntityType="DirectAgentsModel.Store.SqlServerDatabases" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Advertisers" EntityType="DirectAgentsModel.Store.Advertisers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="QuickBooksCompanyFiles" EntityType="DirectAgentsModel.Store.QuickBooksCompanyFiles" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Customers" EntityType="DirectAgentsModel.Store.Customers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Credits" EntityType="DirectAgentsModel.Store.Credits" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Debits" EntityType="DirectAgentsModel.Store.Debits" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Charges" EntityType="DirectAgentsModel.Store.Charges" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DateSpans" EntityType="DirectAgentsModel.Store.DateSpans" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="AdvertisingRevenues" EntityType="DirectAgentsModel.Store.AdvertisingRevenues" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PayTerms" EntityType="DirectAgentsModel.Store.PayTerms" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Campaigns" EntityType="DirectAgentsModel.Store.Campaigns" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackCampaigns" EntityType="DirectAgentsModel.Store.DirectTrackCampaigns" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Payments" EntityType="DirectAgentsModel.Store.Payments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="QuickBooksReceivedPayments" EntityType="DirectAgentsModel.Store.QuickBooksReceivedPayments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="QuickBooksCustomers" EntityType="DirectAgentsModel.Store.QuickBooksCustomers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackAdvertisers" EntityType="DirectAgentsModel.Store.DirectTrackAdvertisers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Logs" EntityType="DirectAgentsModel.Store.Logs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackResources" EntityType="DirectAgentsModel.Store.DirectTrackResources" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackInstances" EntityType="DirectAgentsModel.Store.DirectTrackInstances" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Permissions" EntityType="DirectAgentsModel.Store.Permissions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PermissionGroups" EntityType="DirectAgentsModel.Store.PermissionGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tasks" EntityType="DirectAgentsModel.Store.Tasks" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TaskGroups" EntityType="DirectAgentsModel.Store.TaskGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Schedules" EntityType="DirectAgentsModel.Store.Schedules" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackPayouts" EntityType="DirectAgentsModel.Store.DirectTrackPayouts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackAdvertiserGroups" EntityType="DirectAgentsModel.Store.DirectTrackAdvertiserGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackAffiliates" EntityType="DirectAgentsModel.Store.DirectTrackAffiliates" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackAffiliateGroups" EntityType="DirectAgentsModel.Store.DirectTrackAffiliateGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackStats" EntityType="DirectAgentsModel.Store.DirectTrackStats" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="QuickBooksInvoices" EntityType="DirectAgentsModel.Store.QuickBooksInvoices" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Notifications" EntityType="DirectAgentsModel.Store.Notifications" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="NotificationGroups" EntityType="DirectAgentsModel.Store.NotificationGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EmailServices" EntityType="DirectAgentsModel.Store.EmailServices" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Messages" EntityType="DirectAgentsModel.Store.Messages" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Menus" EntityType="DirectAgentsModel.Store.Menus" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MenuItems" EntityType="DirectAgentsModel.Store.MenuItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Apps" EntityType="DirectAgentsModel.Store.Apps" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Users" EntityType="DirectAgentsModel.Store.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserGroups" EntityType="DirectAgentsModel.Store.UserGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Screens" EntityType="DirectAgentsModel.Store.Screens" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Employees" EntityType="DirectAgentsModel.Store.Employees" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackCreatives" EntityType="DirectAgentsModel.Store.DirectTrackCreatives" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="LogEntries" EntityType="DirectAgentsModel.Store.LogEntries" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="LogEntryTypes" EntityType="DirectAgentsModel.Store.LogEntryTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackAllowedCountries" EntityType="DirectAgentsModel.Store.DirectTrackAllowedCountries" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ExternalItems" EntityType="DirectAgentsModel.Store.ExternalItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackCampaignGroups" EntityType="DirectAgentsModel.Store.DirectTrackCampaignGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Amounts_CreditLimit" EntityType="DirectAgentsModel.Store.Amounts_CreditLimit" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Credits_StartingBalance" EntityType="DirectAgentsModel.Store.Credits_StartingBalance" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTrackCampaignGroupDirectTrackCampaign" EntityType="DirectAgentsModel.Store.DirectTrackCampaignGroupDirectTrackCampaign" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Amount_Unit" Association="DirectAgentsModel.Store.FK_Amount_Unit">
+      <End Role="Unit" EntitySet="Units" />
+      <End Role="Amount" EntitySet="Amounts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Item_Amount" Association="DirectAgentsModel.Store.FK_Item_Amount">
+      <End Role="Amount" EntitySet="Amounts" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Item_Client" Association="DirectAgentsModel.Store.FK_Item_Client">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UnitConversion_Unit" Association="DirectAgentsModel.Store.FK_UnitConversion_Unit">
+      <End Role="Unit" EntitySet="Units" />
+      <End Role="UnitConversion" EntitySet="UnitConversions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UnitConversion_Unit1" Association="DirectAgentsModel.Store.FK_UnitConversion_Unit1">
+      <End Role="Unit" EntitySet="Units" />
+      <End Role="UnitConversion" EntitySet="UnitConversions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Advertiser_Client" Association="DirectAgentsModel.Store.FK_Advertiser_Client">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="Advertiser" EntitySet="Advertisers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Customer_Client" Association="DirectAgentsModel.Store.FK_Customer_Client">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Credit_Item" Association="DirectAgentsModel.Store.FK_Credit_Item">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="Credit" EntitySet="Credits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Charge_Debit" Association="DirectAgentsModel.Store.FK_Charge_Debit">
+      <End Role="Debit" EntitySet="Debits" />
+      <End Role="Charge" EntitySet="Charges" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Debit_Item" Association="DirectAgentsModel.Store.FK_Debit_Item">
+      <End Role="Item" EntitySet="Items" />
+      <End Role="Debit" EntitySet="Debits" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Item_DateSpan" Association="DirectAgentsModel.Store.FK_Item_DateSpan">
+      <End Role="DateSpan" EntitySet="DateSpans" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Period_DateSpan" Association="DirectAgentsModel.Store.FK_Period_DateSpan">
+      <End Role="DateSpan" EntitySet="DateSpans" />
+      <End Role="Period" EntitySet="Periods" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AdvertisingRevenue_Charge" Association="DirectAgentsModel.Store.FK_AdvertisingRevenue_Charge">
+      <End Role="Charge" EntitySet="Charges" />
+      <End Role="AdvertisingRevenue" EntitySet="AdvertisingRevenues" />
+    </AssociationSet>
+    <AssociationSet Name="DateSpanUnitConversion" Association="DirectAgentsModel.Store.DateSpanUnitConversion">
+      <End Role="DateSpan" EntitySet="DateSpans" />
+      <End Role="UnitConversion" EntitySet="UnitConversions" />
+    </AssociationSet>
+    <AssociationSet Name="SqlServerDatabasePeriod" Association="DirectAgentsModel.Store.SqlServerDatabasePeriod">
+      <End Role="SqlServerDatabase" EntitySet="SqlServerDatabases" />
+      <End Role="Period" EntitySet="Periods" />
+    </AssociationSet>
+    <AssociationSet Name="ClientPayTerm" Association="DirectAgentsModel.Store.ClientPayTerm">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="PayTerm" EntitySet="PayTerms" />
+    </AssociationSet>
+    <AssociationSet Name="AdvertisingRevenueCampaign" Association="DirectAgentsModel.Store.AdvertisingRevenueCampaign">
+      <End Role="AdvertisingRevenue" EntitySet="AdvertisingRevenues" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="PaymentCredit" Association="DirectAgentsModel.Store.PaymentCredit">
+      <End Role="Payment" EntitySet="Payments" />
+      <End Role="Credit" EntitySet="Credits" />
+    </AssociationSet>
+    <AssociationSet Name="QuickBooksReceivedPaymentQuickBooksCompanyFile" Association="DirectAgentsModel.Store.QuickBooksReceivedPaymentQuickBooksCompanyFile">
+      <End Role="QuickBooksReceivedPayment" EntitySet="QuickBooksReceivedPayments" />
+      <End Role="QuickBooksCompanyFile" EntitySet="QuickBooksCompanyFiles" />
+    </AssociationSet>
+    <AssociationSet Name="PaymentQuickBooksReceivedPayment" Association="DirectAgentsModel.Store.PaymentQuickBooksReceivedPayment">
+      <End Role="Payment" EntitySet="Payments" />
+      <End Role="QuickBooksReceivedPayment" EntitySet="QuickBooksReceivedPayments" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerQuickBooksCustomer" Association="DirectAgentsModel.Store.CustomerQuickBooksCustomer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="QuickBooksCustomer" EntitySet="QuickBooksCustomers" />
+    </AssociationSet>
+    <AssociationSet Name="DirectTrackAdvertiserAdvertiser" Association="DirectAgentsModel.Store.DirectTrackAdvertiserAdvertiser">
+      <End Role="DirectTrackAdvertiser" EntitySet="DirectTrackAdvertisers" />
+      <End Role="Advertiser" EntitySet="Advertisers" />
+    </AssociationSet>
+    <AssociationSet Name="QuickBooksCompanyFileQuickBooksCustomer" Association="DirectAgentsModel.Store.QuickBooksCompanyFileQuickBooksCustomer">
+      <End Role="QuickBooksCompanyFile" EntitySet="QuickBooksCompanyFiles" />
+      <End Role="QuickBooksCustomer" EntitySet="QuickBooksCustomers" />
+    </AssociationSet>
+    <AssociationSet Name="QuickBooksCustomerQuickBooksReceivedPayment" Association="DirectAgentsModel.Store.QuickBooksCustomerQuickBooksReceivedPayment">
+      <End Role="QuickBooksCustomer" EntitySet="QuickBooksCustomers" />
+      <End Role="QuickBooksReceivedPayment" EntitySet="QuickBooksReceivedPayments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LogEntry_Log" Association="DirectAgentsModel.Store.FK_LogEntry_Log">
+      <End Role="Log" EntitySet="Logs" />
+      <End Role="LogEntry" EntitySet="LogEntries" />
+    </AssociationSet>
+    <AssociationSet Name="LogEntryTypeLogEntry" Association="DirectAgentsModel.Store.LogEntryTypeLogEntry">
+      <End Role="LogEntryType" EntitySet="LogEntryTypes" />
+      <End Role="LogEntry" EntitySet="LogEntries" />
+    </AssociationSet>
+    <AssociationSet Name="AdvertiserCampaign" Association="DirectAgentsModel.Store.AdvertiserCampaign">
+      <End Role="Advertiser" EntitySet="Advertisers" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="SqlServerDatabaseExternalItem" Association="DirectAgentsModel.Store.SqlServerDatabaseExternalItem">
+      <End Role="SqlServerDatabase" EntitySet="SqlServerDatabases" />
+      <End Role="ExternalItem" EntitySet="ExternalItems" />
+    </AssociationSet>
+    <AssociationSet Name="ExternalItemAdvertisingRevenue" Association="DirectAgentsModel.Store.ExternalItemAdvertisingRevenue">
+      <End Role="ExternalItem" EntitySet="ExternalItems" />
+      <End Role="AdvertisingRevenue" EntitySet="AdvertisingRevenues" />
+    </AssociationSet>
+    <AssociationSet Name="ClientCreditLimit" Association="DirectAgentsModel.Store.ClientCreditLimit">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="CreditLimit" EntitySet="Amounts_CreditLimit" />
+    </AssociationSet>
+    <AssociationSet Name="ClientStartingBalance" Association="DirectAgentsModel.Store.ClientStartingBalance">
+      <End Role="Client" EntitySet="Clients" />
+      <End Role="StartingBalance" EntitySet="Credits_StartingBalance" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DirectTrackCampaignGroupDirectTrackCampaign_DirectTrackCampaign" Association="DirectAgentsModel.Store.FK_DirectTrackCampaignGroupDirectTrackCampaign_DirectTrackCampaign">
+      <End Role="DirectTrackCampaign" EntitySet="DirectTrackCampaigns" />
+      <End Role="DirectTrackCampaignGroupDirectTrackCampaign" EntitySet="DirectTrackCampaignGroupDirectTrackCampaign" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DirectTrackCampaignGroupDirectTrackCampaign_DirectTrackCampaignGroup" Association="DirectAgentsModel.Store.FK_DirectTrackCampaignGroupDirectTrackCampaign_DirectTrackCampaignGroup">
+      <End Role="DirectTrackCampaignGroup" EntitySet="DirectTrackCampaignGroups" />
+      <End Role="DirectTrackCampaignGroupDirectTrackCampaign" EntitySet="DirectTrackCampaignGroupDirectTrackCampaign" />
+    </AssociationSet>
+    <AssociationSet Name="DirectTrackResourceDirectTrackCampaignGroup" Association="DirectAgentsModel.Store.DirectTrackResourceDirectTrackCampaignGroup">
+      <End Role="DirectTrackResource" EntitySet="DirectTrackResources" />
+      <End Role="DirectTrackCampaignGroup" EntitySet="DirectTrackCampaignGroups" />
+    </AssociationSet>
+    <AssociationSet Name="DirectTrackResourceDirectTrackCampaign" Association="DirectAgentsModel.Store.DirectTrackResourceDirectTrackCampaign">
+      <End Role="DirectTrackResource" EntitySet="DirectTrackResources" />
+      <End Role="DirectTrackCampaign" EntitySet="DirectTrackCampaigns" />
+    </AssociationSet>
+    <AssociationSet Name="CampaignDirectTrackCampaign" Association="DirectAgentsModel.Store.CampaignDirectTrackCampaign">
+      <End Role="Campaign" EntitySet="Campaigns" />
+      <End Role="DirectTrackCampaign" EntitySet="DirectTrackCampaigns" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreditLimit_inherits_Amount" Association="DirectAgentsModel.Store.FK_CreditLimit_inherits_Amount">
+      <End Role="Amount" EntitySet="Amounts" />
+      <End Role="CreditLimit" EntitySet="Amounts_CreditLimit" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StartingBalance_inherits_Credit" Association="DirectAgentsModel.Store.FK_StartingBalance_inherits_Credit">
+      <End Role="Credit" EntitySet="Credits" />
+      <End Role="StartingBalance" EntitySet="Credits_StartingBalance" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Amounts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Quantity" Type="decimal" Nullable="false" />
+    <Property Name="Unit_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Items">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Amount_Id" Type="int" Nullable="false" />
+    <Property Name="Client_Id" Type="int" Nullable="false" />
+    <Property Name="DateSpan_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Periods">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="DateSpan_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Units">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="UnitConversions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Multiplier" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="From_Id" Type="int" Nullable="false" />
+    <Property Name="To_Id" Type="int" Nullable="false" />
+    <Property Name="DateSpan_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Clients">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="PayTerm_Id" Type="int" Nullable="false" />
+    <Property Name="CreditLimit_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SqlServerDatabases">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="ConnectionString" Type="nvarchar" Nullable="false" MaxLength="500" />
+    <Property Name="Period_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Advertisers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="Client_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="QuickBooksCompanyFiles">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Customers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="Client_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Credits">
+    <Key>
+      <PropertyRef Name="CreditId" />
+    </Key>
+    <Property Name="CreditId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Item_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Debits">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Item_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Charges">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Debit_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DateSpans">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="From" Type="datetime" Nullable="false" />
+    <Property Name="To" Type="datetime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="AdvertisingRevenues">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Charge_Id" Type="int" Nullable="true" />
+    <Property Name="Campaign_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PayTerms">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Campaigns">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Advertiser_Id" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="DirectTrackCampaigns">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CampaignNumber" Type="int" Nullable="false" />
+    <Property Name="CampaignName" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="DirectTrackResource_Id" Type="int" Nullable="false" />
+    <Property Name="Campaign_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Payments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Credit_CreditId" Type="int" Nullable="false" />
+    <Property Name="QuickBooksReceivedPayment_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="QuickBooksReceivedPayments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TxnNumber" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Memo" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="TxnId" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ARAccountRefFullName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TxnDate" Type="datetime" Nullable="false" />
+    <Property Name="TotalAmount" Type="decimal" Nullable="false" />
+    <Property Name="PaymentMethodRefFullName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="QuickBooksCompanyFile_Id" Type="int" Nullable="false" />
+    <Property Name="QuickBooksCustomer_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="QuickBooksCustomers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ListId" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FullName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CompanyName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Phone" Type="nvarchar(max)" Nullable="true" DefaultValue="not known" />
+    <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TermsRefFullName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Customer_Id" Type="int" Nullable="true" />
+    <Property Name="QuickBooksCompanyFile_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackAdvertisers">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="AdvertiserId" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AdvertiserId" Type="int" Nullable="false" />
+    <Property Name="Advertiser_Id" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Logs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackResources">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Location" Type="nvarchar" Nullable="false" MaxLength="500" />
+    <Property Name="XmlDoc" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Updated" Type="datetime" Nullable="false" />
+    <Property Name="ResourceName" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Pushed" Type="datetime" Nullable="true" />
+    <Property Name="Posted" Type="datetime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="DirectTrackInstances">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Permissions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PermissionGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Tasks">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TaskGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Schedules">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackPayouts">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackAdvertiserGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackAffiliates">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackAffiliateGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackStats">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="QuickBooksInvoices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Notifications">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="NotificationGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EmailServices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Messages">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Menus">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MenuItems">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Apps">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="UserGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Screens">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Employees">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackCreatives">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LogEntries">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StringData" Type="nvarchar" Nullable="true" MaxLength="255" />
+    <Property Name="Created" Type="datetime" Nullable="true" />
+    <Property Name="Log_Id" Type="int" Nullable="false" />
+    <Property Name="LogEntryType_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LogEntryTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackAllowedCountries">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ExternalItems">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ExternalId" Type="int" Nullable="false" />
+    <Property Name="SqlServerDatabase_Id" Type="int" Nullable="false" />
+    <Property Name="AdvertisingRevenue_Id" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="DirectTrackCampaignGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="DirectTrackResource_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Amounts_CreditLimit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Credits_StartingBalance">
+    <Key>
+      <PropertyRef Name="CreditId" />
+    </Key>
+    <Property Name="CreditId" Type="int" Nullable="false" />
+    <Property Name="Client_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTrackCampaignGroupDirectTrackCampaign">
+    <Key>
+      <PropertyRef Name="DirectTrackCampaigns_Id" />
+      <PropertyRef Name="DirectTrackCampaignGroups_Id" />
+    </Key>
+    <Property Name="DirectTrackCampaigns_Id" Type="int" Nullable="false" />
+    <Property Name="DirectTrackCampaignGroups_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Amount_Unit">
+    <End Role="Unit" Type="DirectAgentsModel.Store.Units" Multiplicity="1" />
+    <End Role="Amount" Type="DirectAgentsModel.Store.Amounts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Unit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Amount">
+        <PropertyRef Name="Unit_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Item_Amount">
+    <End Role="Amount" Type="DirectAgentsModel.Store.Amounts" Multiplicity="1" />
+    <End Role="Item" Type="DirectAgentsModel.Store.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Amount">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="Amount_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Item_Client">
+    <End Role="Client" Type="DirectAgentsModel.Store.Clients" Multiplicity="1" />
+    <End Role="Item" Type="DirectAgentsModel.Store.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="Client_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UnitConversion_Unit">
+    <End Role="Unit" Type="DirectAgentsModel.Store.Units" Multiplicity="1" />
+    <End Role="UnitConversion" Type="DirectAgentsModel.Store.UnitConversions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Unit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UnitConversion">
+        <PropertyRef Name="From_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UnitConversion_Unit1">
+    <End Role="Unit" Type="DirectAgentsModel.Store.Units" Multiplicity="1" />
+    <End Role="UnitConversion" Type="DirectAgentsModel.Store.UnitConversions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Unit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UnitConversion">
+        <PropertyRef Name="To_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Advertiser_Client">
+    <End Role="Client" Type="DirectAgentsModel.Store.Clients" Multiplicity="1" />
+    <End Role="Advertiser" Type="DirectAgentsModel.Store.Advertisers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Advertiser">
+        <PropertyRef Name="Client_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Customer_Client">
+    <End Role="Client" Type="DirectAgentsModel.Store.Clients" Multiplicity="1" />
+    <End Role="Customer" Type="DirectAgentsModel.Store.Customers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="Client_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Credit_Item">
+    <End Role="Item" Type="DirectAgentsModel.Store.Items" Multiplicity="1" />
+    <End Role="Credit" Type="DirectAgentsModel.Store.Credits" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Credit">
+        <PropertyRef Name="Item_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Charge_Debit">
+    <End Role="Debit" Type="DirectAgentsModel.Store.Debits" Multiplicity="1" />
+    <End Role="Charge" Type="DirectAgentsModel.Store.Charges" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Debit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Charge">
+        <PropertyRef Name="Debit_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Debit_Item">
+    <End Role="Item" Type="DirectAgentsModel.Store.Items" Multiplicity="1" />
+    <End Role="Debit" Type="DirectAgentsModel.Store.Debits" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Debit">
+        <PropertyRef Name="Item_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Item_DateSpan">
+    <End Role="DateSpan" Type="DirectAgentsModel.Store.DateSpans" Multiplicity="1" />
+    <End Role="Item" Type="DirectAgentsModel.Store.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DateSpan">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="DateSpan_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Period_DateSpan">
+    <End Role="DateSpan" Type="DirectAgentsModel.Store.DateSpans" Multiplicity="1" />
+    <End Role="Period" Type="DirectAgentsModel.Store.Periods" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DateSpan">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Period">
+        <PropertyRef Name="DateSpan_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AdvertisingRevenue_Charge">
+    <End Role="Charge" Type="DirectAgentsModel.Store.Charges" Multiplicity="0..1" />
+    <End Role="AdvertisingRevenue" Type="DirectAgentsModel.Store.AdvertisingRevenues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Charge">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AdvertisingRevenue">
+        <PropertyRef Name="Charge_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DateSpanUnitConversion">
+    <End Role="DateSpan" Type="DirectAgentsModel.Store.DateSpans" Multiplicity="1" />
+    <End Role="UnitConversion" Type="DirectAgentsModel.Store.UnitConversions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DateSpan">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UnitConversion">
+        <PropertyRef Name="DateSpan_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SqlServerDatabasePeriod">
+    <End Role="SqlServerDatabase" Type="DirectAgentsModel.Store.SqlServerDatabases" Multiplicity="*" />
+    <End Role="Period" Type="DirectAgentsModel.Store.Periods" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Period">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SqlServerDatabase">
+        <PropertyRef Name="Period_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ClientPayTerm">
+    <End Role="Client" Type="DirectAgentsModel.Store.Clients" Multiplicity="*" />
+    <End Role="PayTerm" Type="DirectAgentsModel.Store.PayTerms" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="PayTerm">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Client">
+        <PropertyRef Name="PayTerm_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AdvertisingRevenueCampaign">
+    <End Role="AdvertisingRevenue" Type="DirectAgentsModel.Store.AdvertisingRevenues" Multiplicity="*" />
+    <End Role="Campaign" Type="DirectAgentsModel.Store.Campaigns" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Campaign">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AdvertisingRevenue">
+        <PropertyRef Name="Campaign_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PaymentCredit">
+    <End Role="Payment" Type="DirectAgentsModel.Store.Payments" Multiplicity="*" />
+    <End Role="Credit" Type="DirectAgentsModel.Store.Credits" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Credit">
+        <PropertyRef Name="CreditId" />
+      </Principal>
+      <Dependent Role="Payment">
+        <PropertyRef Name="Credit_CreditId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="QuickBooksReceivedPaymentQuickBooksCompanyFile">
+    <End Role="QuickBooksReceivedPayment" Type="DirectAgentsModel.Store.QuickBooksReceivedPayments" Multiplicity="*" />
+    <End Role="QuickBooksCompanyFile" Type="DirectAgentsModel.Store.QuickBooksCompanyFiles" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="QuickBooksCompanyFile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuickBooksReceivedPayment">
+        <PropertyRef Name="QuickBooksCompanyFile_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PaymentQuickBooksReceivedPayment">
+    <End Role="Payment" Type="DirectAgentsModel.Store.Payments" Multiplicity="*" />
+    <End Role="QuickBooksReceivedPayment" Type="DirectAgentsModel.Store.QuickBooksReceivedPayments" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="QuickBooksReceivedPayment">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Payment">
+        <PropertyRef Name="QuickBooksReceivedPayment_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CustomerQuickBooksCustomer">
+    <End Role="Customer" Type="DirectAgentsModel.Store.Customers" Multiplicity="0..1" />
+    <End Role="QuickBooksCustomer" Type="DirectAgentsModel.Store.QuickBooksCustomers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuickBooksCustomer">
+        <PropertyRef Name="Customer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DirectTrackAdvertiserAdvertiser">
+    <End Role="DirectTrackAdvertiser" Type="DirectAgentsModel.Store.DirectTrackAdvertisers" Multiplicity="*" />
+    <End Role="Advertiser" Type="DirectAgentsModel.Store.Advertisers" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Advertiser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DirectTrackAdvertiser">
+        <PropertyRef Name="Advertiser_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="QuickBooksCompanyFileQuickBooksCustomer">
+    <End Role="QuickBooksCompanyFile" Type="DirectAgentsModel.Store.QuickBooksCompanyFiles" Multiplicity="1" />
+    <End Role="QuickBooksCustomer" Type="DirectAgentsModel.Store.QuickBooksCustomers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="QuickBooksCompanyFile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuickBooksCustomer">
+        <PropertyRef Name="QuickBooksCompanyFile_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="QuickBooksCustomerQuickBooksReceivedPayment">
+    <End Role="QuickBooksCustomer" Type="DirectAgentsModel.Store.QuickBooksCustomers" Multiplicity="1" />
+    <End Role="QuickBooksReceivedPayment" Type="DirectAgentsModel.Store.QuickBooksReceivedPayments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="QuickBooksCustomer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuickBooksReceivedPayment">
+        <PropertyRef Name="QuickBooksCustomer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LogEntry_Log">
+    <End Role="Log" Type="DirectAgentsModel.Store.Logs" Multiplicity="1" />
+    <End Role="LogEntry" Type="DirectAgentsModel.Store.LogEntries" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Log">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LogEntry">
+        <PropertyRef Name="Log_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="LogEntryTypeLogEntry">
+    <End Role="LogEntryType" Type="DirectAgentsModel.Store.LogEntryTypes" Multiplicity="1" />
+    <End Role="LogEntry" Type="DirectAgentsModel.Store.LogEntries" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="LogEntryType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="LogEntry">
+        <PropertyRef Name="LogEntryType_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AdvertiserCampaign">
+    <End Role="Advertiser" Type="DirectAgentsModel.Store.Advertisers" Multiplicity="0..1" />
+    <End Role="Campaign" Type="DirectAgentsModel.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Advertiser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="Advertiser_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SqlServerDatabaseExternalItem">
+    <End Role="SqlServerDatabase" Type="DirectAgentsModel.Store.SqlServerDatabases" Multiplicity="1" />
+    <End Role="ExternalItem" Type="DirectAgentsModel.Store.ExternalItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SqlServerDatabase">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ExternalItem">
+        <PropertyRef Name="SqlServerDatabase_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ExternalItemAdvertisingRevenue">
+    <End Role="ExternalItem" Type="DirectAgentsModel.Store.ExternalItems" Multiplicity="*" />
+    <End Role="AdvertisingRevenue" Type="DirectAgentsModel.Store.AdvertisingRevenues" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="AdvertisingRevenue">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ExternalItem">
+        <PropertyRef Name="AdvertisingRevenue_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ClientCreditLimit">
+    <End Role="Client" Type="DirectAgentsModel.Store.Clients" Multiplicity="*" />
+    <End Role="CreditLimit" Type="DirectAgentsModel.Store.Amounts_CreditLimit" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="CreditLimit">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Client">
+        <PropertyRef Name="CreditLimit_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ClientStartingBalance">
+    <End Role="Client" Type="DirectAgentsModel.Store.Clients" Multiplicity="1" />
+    <End Role="StartingBalance" Type="DirectAgentsModel.Store.Credits_StartingBalance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StartingBalance">
+        <PropertyRef Name="Client_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DirectTrackResourceDirectTrackCampaignGroup">
+    <End Role="DirectTrackResource" Type="DirectAgentsModel.Store.DirectTrackResources" Multiplicity="1" />
+    <End Role="DirectTrackCampaignGroup" Type="DirectAgentsModel.Store.DirectTrackCampaignGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DirectTrackResource">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DirectTrackCampaignGroup">
+        <PropertyRef Name="DirectTrackResource_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DirectTrackResourceDirectTrackCampaign">
+    <End Role="DirectTrackResource" Type="DirectAgentsModel.Store.DirectTrackResources" Multiplicity="1" />
+    <End Role="DirectTrackCampaign" Type="DirectAgentsModel.Store.DirectTrackCampaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DirectTrackResource">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DirectTrackCampaign">
+        <PropertyRef Name="DirectTrackResource_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CampaignDirectTrackCampaign">
+    <End Role="Campaign" Type="DirectAgentsModel.Store.Campaigns" Multiplicity="1" />
+    <End Role="DirectTrackCampaign" Type="DirectAgentsModel.Store.DirectTrackCampaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Campaign">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DirectTrackCampaign">
+        <PropertyRef Name="Campaign_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DirectTrackCampaignGroupDirectTrackCampaign_DirectTrackCampaign">
+    <End Role="DirectTrackCampaign" Type="DirectAgentsModel.Store.DirectTrackCampaigns" Multiplicity="1" />
+    <End Role="DirectTrackCampaignGroupDirectTrackCampaign" Type="DirectAgentsModel.Store.DirectTrackCampaignGroupDirectTrackCampaign" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DirectTrackCampaign">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DirectTrackCampaignGroupDirectTrackCampaign">
+        <PropertyRef Name="DirectTrackCampaigns_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DirectTrackCampaignGroupDirectTrackCampaign_DirectTrackCampaignGroup">
+    <End Role="DirectTrackCampaignGroupDirectTrackCampaign" Type="DirectAgentsModel.Store.DirectTrackCampaignGroupDirectTrackCampaign" Multiplicity="*" />
+    <End Role="DirectTrackCampaignGroup" Type="DirectAgentsModel.Store.DirectTrackCampaignGroups" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="DirectTrackCampaignGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DirectTrackCampaignGroupDirectTrackCampaign">
+        <PropertyRef Name="DirectTrackCampaignGroups_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreditLimit_inherits_Amount">
+    <End Role="Amount" Type="DirectAgentsModel.Store.Amounts" Multiplicity="1" />
+    <End Role="CreditLimit" Type="DirectAgentsModel.Store.Amounts_CreditLimit" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Amount">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CreditLimit">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StartingBalance_inherits_Credit">
+    <End Role="Credit" Type="DirectAgentsModel.Store.Credits" Multiplicity="1" />
+    <End Role="StartingBalance" Type="DirectAgentsModel.Store.Credits_StartingBalance" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Credit">
+        <PropertyRef Name="CreditId" />
+      </Principal>
+      <Dependent Role="StartingBalance">
+        <PropertyRef Name="CreditId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DirectAgentsModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="DirectAgentsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Amounts" EntityType="DirectAgentsModel.Amount" />
+          <EntitySet Name="Items" EntityType="DirectAgentsModel.Item" />
+          <EntitySet Name="Periods" EntityType="DirectAgentsModel.Period" />
+          <EntitySet Name="Units" EntityType="DirectAgentsModel.Unit" />
+          <EntitySet Name="UnitConversions" EntityType="DirectAgentsModel.UnitConversion" />
+          <EntitySet Name="Clients" EntityType="DirectAgentsModel.Client" />
+          <EntitySet Name="SqlServerDatabases" EntityType="DirectAgentsModel.SqlServerDatabase" />
+          <EntitySet Name="Advertisers" EntityType="DirectAgentsModel.Advertiser" />
+          <EntitySet Name="QuickBooksCompanyFiles" EntityType="DirectAgentsModel.QuickBooksCompanyFile" />
+          <EntitySet Name="Customers" EntityType="DirectAgentsModel.Customer" />
+          <AssociationSet Name="FK_Amount_Unit" Association="DirectAgentsModel.FK_Amount_Unit">
+            <End Role="Unit" EntitySet="Units" />
+            <End Role="Amount" EntitySet="Amounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Amount" Association="DirectAgentsModel.FK_Item_Amount">
+            <End Role="Amount" EntitySet="Amounts" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_Client" Association="DirectAgentsModel.FK_Item_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UnitConversion_Unit" Association="DirectAgentsModel.FK_UnitConversion_Unit">
+            <End Role="Unit" EntitySet="Units" />
+            <End Role="UnitConversion" EntitySet="UnitConversions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UnitConversion_Unit1" Association="DirectAgentsModel.FK_UnitConversion_Unit1">
+            <End Role="Unit" EntitySet="Units" />
+            <End Role="UnitConversion" EntitySet="UnitConversions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Advertiser_Client" Association="DirectAgentsModel.FK_Advertiser_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Advertiser" EntitySet="Advertisers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Customer_Client" Association="DirectAgentsModel.FK_Customer_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <EntitySet Name="Credits" EntityType="DirectAgentsModel.Credit" />
+          <AssociationSet Name="FK_Credit_Item" Association="DirectAgentsModel.FK_Credit_Item">
+            <End EntitySet="Items" Role="Item" />
+            <End EntitySet="Credits" Role="Credit" />
+          </AssociationSet>
+          <EntitySet Name="Debits" EntityType="DirectAgentsModel.Debit" />
+          <EntitySet Name="Charges" EntityType="DirectAgentsModel.Charge" />
+          <AssociationSet Name="FK_Charge_Debit" Association="DirectAgentsModel.FK_Charge_Debit">
+            <End EntitySet="Debits" Role="Debit" />
+            <End EntitySet="Charges" Role="Charge" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Debit_Item" Association="DirectAgentsModel.FK_Debit_Item">
+            <End EntitySet="Items" Role="Item" />
+            <End EntitySet="Debits" Role="Debit" />
+          </AssociationSet>
+          <EntitySet Name="DateSpans" EntityType="DirectAgentsModel.DateSpan" />
+          <AssociationSet Name="FK_Item_DateSpan" Association="DirectAgentsModel.FK_Item_DateSpan">
+            <End Role="DateSpan" EntitySet="DateSpans" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Period_DateSpan" Association="DirectAgentsModel.FK_Period_DateSpan">
+            <End Role="DateSpan" EntitySet="DateSpans" />
+            <End Role="Period" EntitySet="Periods" />
+          </AssociationSet>
+          <EntitySet Name="AdvertisingRevenues" EntityType="DirectAgentsModel.AdvertisingRevenue" />
+          <AssociationSet Name="FK_AdvertisingRevenue_Charge" Association="DirectAgentsModel.FK_AdvertisingRevenue_Charge">
+            <End Role="Charge" EntitySet="Charges" />
+            <End Role="AdvertisingRevenue" EntitySet="AdvertisingRevenues" />
+          </AssociationSet>
+          <AssociationSet Name="DateSpanUnitConversion" Association="DirectAgentsModel.DateSpanUnitConversion">
+            <End Role="DateSpan" EntitySet="DateSpans" />
+            <End Role="UnitConversion" EntitySet="UnitConversions" />
+          </AssociationSet>
+          <AssociationSet Name="SqlServerDatabasePeriod" Association="DirectAgentsModel.SqlServerDatabasePeriod">
+            <End Role="SqlServerDatabase" EntitySet="SqlServerDatabases" />
+            <End Role="Period" EntitySet="Periods" />
+          </AssociationSet>
+          <FunctionImport Name="DeleteTable">
+          <Parameter Name="tableName" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="PayTerms" EntityType="DirectAgentsModel.PayTerm" />
+          <AssociationSet Name="ClientPayTerm" Association="DirectAgentsModel.ClientPayTerm">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="PayTerm" EntitySet="PayTerms" />
+          </AssociationSet>
+          <EntitySet Name="Campaigns" EntityType="DirectAgentsModel.Campaign" />
+          <AssociationSet Name="AdvertisingRevenueCampaign" Association="DirectAgentsModel.AdvertisingRevenueCampaign">
+            <End Role="AdvertisingRevenue" EntitySet="AdvertisingRevenues" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <EntitySet Name="DirectTrackCampaigns" EntityType="DirectAgentsModel.DirectTrackCampaign" />
+          <EntitySet Name="Payments" EntityType="DirectAgentsModel.Payment" />
+          <EntitySet Name="QuickBooksReceivedPayments" EntityType="DirectAgentsModel.QuickBooksReceivedPayment" />
+          <AssociationSet Name="PaymentCredit" Association="DirectAgentsModel.PaymentCredit">
+            <End Role="Payment" EntitySet="Payments" />
+            <End Role="Credit" EntitySet="Credits" />
+          </AssociationSet>
+          <AssociationSet Name="QuickBooksReceivedPaymentQuickBooksCompanyFile" Association="DirectAgentsModel.QuickBooksReceivedPaymentQuickBooksCompanyFile">
+            <End Role="QuickBooksReceivedPayment" EntitySet="QuickBooksReceivedPayments" />
+            <End Role="QuickBooksCompanyFile" EntitySet="QuickBooksCompanyFiles" />
+          </AssociationSet>
+          <AssociationSet Name="PaymentQuickBooksReceivedPayment" Association="DirectAgentsModel.PaymentQuickBooksReceivedPayment">
+            <End Role="Payment" EntitySet="Payments" />
+            <End Role="QuickBooksReceivedPayment" EntitySet="QuickBooksReceivedPayments" />
+          </AssociationSet>
+          <EntitySet Name="QuickBooksCustomers" EntityType="DirectAgentsModel.QuickBooksCustomer" />
+          <AssociationSet Name="CustomerQuickBooksCustomer" Association="DirectAgentsModel.CustomerQuickBooksCustomer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="QuickBooksCustomer" EntitySet="QuickBooksCustomers" />
+          </AssociationSet>
+          <EntitySet Name="DirectTrackAdvertisers" EntityType="DirectAgentsModel.DirectTrackAdvertiser" />
+          <AssociationSet Name="DirectTrackAdvertiserAdvertiser" Association="DirectAgentsModel.DirectTrackAdvertiserAdvertiser">
+            <End Role="DirectTrackAdvertiser" EntitySet="DirectTrackAdvertisers" />
+            <End Role="Advertiser" EntitySet="Advertisers" />
+          </AssociationSet>
+          <EntitySet Name="Logs" EntityType="DirectAgentsModel.Log" />
+          <EntitySet Name="DirectTrackResources" EntityType="DirectAgentsModel.DirectTrackResource" />
+          <EntitySet Name="DirectTrackInstances" EntityType="DirectAgentsModel.DirectTrackInstance" />
+          <EntitySet Name="Permissions" EntityType="DirectAgentsModel.Permission" />
+          <EntitySet Name="PermissionGroups" EntityType="DirectAgentsModel.PermissionGroup" />
+          <EntitySet Name="Tasks" EntityType="DirectAgentsModel.Task" />
+          <EntitySet Name="TaskGroups" EntityType="DirectAgentsModel.TaskGroup" />
+          <EntitySet Name="Schedules" EntityType="DirectAgentsModel.Schedule" />
+          <EntitySet Name="DirectTrackPayouts" EntityType="DirectAgentsModel.DirectTrackPayout" />
+          <EntitySet Name="DirectTrackAdvertiserGroups" EntityType="DirectAgentsModel.DirectTrackAdvertiserGroup" />
+          <EntitySet Name="DirectTrackAffiliates" EntityType="DirectAgentsModel.DirectTrackAffiliate" />
+          <EntitySet Name="DirectTrackAffiliateGroups" EntityType="DirectAgentsModel.DirectTrackAffiliateGroup" />
+          <EntitySet Name="DirectTrackStats" EntityType="DirectAgentsModel.DirectTrackStat" />
+          <EntitySet Name="QuickBooksInvoices" EntityType="DirectAgentsModel.QuickBooksInvoice" />
+          <EntitySet Name="Notifications" EntityType="DirectAgentsModel.Notification" />
+          <EntitySet Name="NotificationGroups" EntityType="DirectAgentsModel.NotificationGroup" />
+          <EntitySet Name="EmailServices" EntityType="DirectAgentsModel.EmailService" />
+          <EntitySet Name="Messages" EntityType="DirectAgentsModel.Message" />
+          <EntitySet Name="Menus" EntityType="DirectAgentsModel.Menu" />
+          <EntitySet Name="MenuItems" EntityType="DirectAgentsModel.MenuItem" />
+          <EntitySet Name="Apps" EntityType="DirectAgentsModel.App" />
+          <EntitySet Name="Users" EntityType="DirectAgentsModel.User" />
+          <EntitySet Name="UserGroups" EntityType="DirectAgentsModel.UserGroup" />
+          <EntitySet Name="Screens" EntityType="DirectAgentsModel.Screen" />
+          <EntitySet Name="Employees" EntityType="DirectAgentsModel.Employee" />
+          <EntitySet Name="DirectTrackCreatives" EntityType="DirectAgentsModel.DirectTrackCreative" />
+          <AssociationSet Name="QuickBooksCompanyFileQuickBooksCustomer" Association="DirectAgentsModel.QuickBooksCompanyFileQuickBooksCustomer">
+            <End Role="QuickBooksCompanyFile" EntitySet="QuickBooksCompanyFiles" />
+            <End Role="QuickBooksCustomer" EntitySet="QuickBooksCustomers" />
+          </AssociationSet>
+          <AssociationSet Name="QuickBooksCustomerQuickBooksReceivedPayment" Association="DirectAgentsModel.QuickBooksCustomerQuickBooksReceivedPayment">
+            <End Role="QuickBooksCustomer" EntitySet="QuickBooksCustomers" />
+            <End Role="QuickBooksReceivedPayment" EntitySet="QuickBooksReceivedPayments" />
+          </AssociationSet>
+          <EntitySet Name="LogEntries" EntityType="DirectAgentsModel.LogEntry" />
+          <AssociationSet Name="FK_LogEntry_Log" Association="DirectAgentsModel.FK_LogEntry_Log">
+            <End Role="Log" EntitySet="Logs" />
+            <End Role="LogEntry" EntitySet="LogEntries" />
+          </AssociationSet>
+          <EntitySet Name="LogEntryTypes" EntityType="DirectAgentsModel.LogEntryType" />
+          <AssociationSet Name="LogEntryTypeLogEntry" Association="DirectAgentsModel.LogEntryTypeLogEntry">
+            <End Role="LogEntryType" EntitySet="LogEntryTypes" />
+            <End Role="LogEntry" EntitySet="LogEntries" />
+          </AssociationSet>
+          <EntitySet Name="DirectTrackAllowedCountries" EntityType="DirectAgentsModel.DirectTrackCampaignAllowedCountry"/>
+          <AssociationSet Name="AdvertiserCampaign" Association="DirectAgentsModel.AdvertiserCampaign">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <EntitySet Name="ExternalItems" EntityType="DirectAgentsModel.ExternalItem" />
+          <AssociationSet Name="SqlServerDatabaseExternalItem" Association="DirectAgentsModel.SqlServerDatabaseExternalItem">
+            <End Role="SqlServerDatabase" EntitySet="SqlServerDatabases" />
+            <End Role="ExternalItem" EntitySet="ExternalItems" />
+          </AssociationSet>
+          <AssociationSet Name="ExternalItemAdvertisingRevenue" Association="DirectAgentsModel.ExternalItemAdvertisingRevenue">
+            <End Role="ExternalItem" EntitySet="ExternalItems" />
+            <End Role="AdvertisingRevenue" EntitySet="AdvertisingRevenues" />
+          </AssociationSet>
+          <AssociationSet Name="ClientCreditLimit" Association="DirectAgentsModel.ClientCreditLimit">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="CreditLimit" EntitySet="Amounts" />
+          </AssociationSet>
+          <AssociationSet Name="ClientStartingBalance" Association="DirectAgentsModel.ClientStartingBalance">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="StartingBalance" EntitySet="Credits" />
+          </AssociationSet>
+          <EntitySet Name="DirectTrackCampaignGroups" EntityType="DirectAgentsModel.DirectTrackCampaignGroup" />
+          <AssociationSet Name="DirectTrackCampaignGroupDirectTrackCampaign" Association="DirectAgentsModel.DirectTrackCampaignGroupDirectTrackCampaign">
+            <End Role="DirectTrackCampaign" EntitySet="DirectTrackCampaigns" />
+            <End Role="DirectTrackCampaignGroup" EntitySet="DirectTrackCampaignGroups" />
+          </AssociationSet>
+          <AssociationSet Name="DirectTrackResourceDirectTrackCampaignGroup" Association="DirectAgentsModel.DirectTrackResourceDirectTrackCampaignGroup">
+            <End Role="DirectTrackResource" EntitySet="DirectTrackResources" />
+            <End Role="DirectTrackCampaignGroup" EntitySet="DirectTrackCampaignGroups" />
+          </AssociationSet>
+          <AssociationSet Name="DirectTrackResourceDirectTrackCampaign" Association="DirectAgentsModel.DirectTrackResourceDirectTrackCampaign">
+            <End Role="DirectTrackResource" EntitySet="DirectTrackResources" />
+            <End Role="DirectTrackCampaign" EntitySet="DirectTrackCampaigns" />
+          </AssociationSet>
+          <AssociationSet Name="CampaignDirectTrackCampaign" Association="DirectAgentsModel.CampaignDirectTrackCampaign">
+            <End Role="Campaign" EntitySet="Campaigns" />
+            <End Role="DirectTrackCampaign" EntitySet="DirectTrackCampaigns" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Amount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="Unit" Relationship="DirectAgentsModel.FK_Amount_Unit" FromRole="Amount" ToRole="Unit" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Amount" Relationship="DirectAgentsModel.FK_Item_Amount" FromRole="Item" ToRole="Amount" />
+          <NavigationProperty Name="Client" Relationship="DirectAgentsModel.FK_Item_Client" FromRole="Item" ToRole="Client" />
+          <NavigationProperty Name="Credits" Relationship="DirectAgentsModel.FK_Credit_Item" FromRole="Item" ToRole="Credit" />
+          <NavigationProperty Name="Debits" Relationship="DirectAgentsModel.FK_Debit_Item" FromRole="Item" ToRole="Debit" />
+          <NavigationProperty Name="DateSpan" Relationship="DirectAgentsModel.FK_Item_DateSpan" FromRole="Item" ToRole="DateSpan" />
+        </EntityType>
+        <EntityType Name="Period">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DateSpan" Relationship="DirectAgentsModel.FK_Period_DateSpan" FromRole="Period" ToRole="DateSpan" />
+          <NavigationProperty Name="SqlServerDatabases" Relationship="DirectAgentsModel.SqlServerDatabasePeriod" FromRole="Period" ToRole="SqlServerDatabase" />
+        </EntityType>
+        <EntityType Name="Unit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Amounts" Relationship="DirectAgentsModel.FK_Amount_Unit" FromRole="Unit" ToRole="Amount" />
+          <NavigationProperty Name="FromUnitConversions" Relationship="DirectAgentsModel.FK_UnitConversion_Unit" FromRole="Unit" ToRole="UnitConversion" />
+          <NavigationProperty Name="ToUnitConversions" Relationship="DirectAgentsModel.FK_UnitConversion_Unit1" FromRole="Unit" ToRole="UnitConversion" />
+        </EntityType>
+        <EntityType Name="UnitConversion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Multiplier" Type="Decimal" Nullable="false" Precision="14" Scale="4" />
+          <NavigationProperty Name="From" Relationship="DirectAgentsModel.FK_UnitConversion_Unit" FromRole="UnitConversion" ToRole="Unit" />
+          <NavigationProperty Name="To" Relationship="DirectAgentsModel.FK_UnitConversion_Unit1" FromRole="UnitConversion" ToRole="Unit" />
+          <NavigationProperty Name="DateSpan" Relationship="DirectAgentsModel.DateSpanUnitConversion" FromRole="UnitConversion" ToRole="DateSpan" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Items" Relationship="DirectAgentsModel.FK_Item_Client" FromRole="Client" ToRole="Item" />
+          <NavigationProperty Name="Advertisers" Relationship="DirectAgentsModel.FK_Advertiser_Client" FromRole="Client" ToRole="Advertiser" />
+          <NavigationProperty Name="Customers" Relationship="DirectAgentsModel.FK_Customer_Client" FromRole="Client" ToRole="Customer" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PayTerm" Relationship="DirectAgentsModel.ClientPayTerm" FromRole="Client" ToRole="PayTerm" />
+          <NavigationProperty Name="CreditLimit" Relationship="DirectAgentsModel.ClientCreditLimit" FromRole="Client" ToRole="CreditLimit" />
+          <NavigationProperty Name="StartingBalance" Relationship="DirectAgentsModel.ClientStartingBalance" FromRole="Client" ToRole="StartingBalance" />
+        </EntityType>
+        <EntityType Name="SqlServerDatabase">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="ConnectionString" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Period" Relationship="DirectAgentsModel.SqlServerDatabasePeriod" FromRole="SqlServerDatabase" ToRole="Period" />
+          <NavigationProperty Name="ExternalItems" Relationship="DirectAgentsModel.SqlServerDatabaseExternalItem" FromRole="SqlServerDatabase" ToRole="ExternalItem" />
+        </EntityType>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Client" Relationship="DirectAgentsModel.FK_Advertiser_Client" FromRole="Advertiser" ToRole="Client" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DirectTrackAdvertisers" Relationship="DirectAgentsModel.DirectTrackAdvertiserAdvertiser" FromRole="Advertiser" ToRole="DirectTrackAdvertiser" />
+          <NavigationProperty Name="Campaigns" Relationship="DirectAgentsModel.AdvertiserCampaign" FromRole="Advertiser" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="QuickBooksCompanyFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="QuickBooksReceivedPayments" Relationship="DirectAgentsModel.QuickBooksReceivedPaymentQuickBooksCompanyFile" FromRole="QuickBooksCompanyFile" ToRole="QuickBooksReceivedPayment" />
+          <NavigationProperty Name="QuickBooksCustomers" Relationship="DirectAgentsModel.QuickBooksCompanyFileQuickBooksCustomer" FromRole="QuickBooksCompanyFile" ToRole="QuickBooksCustomer" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Client" Relationship="DirectAgentsModel.FK_Customer_Client" FromRole="Customer" ToRole="Client" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="QuickBooksCustomer" Relationship="DirectAgentsModel.CustomerQuickBooksCustomer" FromRole="Customer" ToRole="QuickBooksCustomer" />
+        </EntityType>
+        <Association Name="FK_Amount_Unit">
+          <End Role="Unit" Type="DirectAgentsModel.Unit" Multiplicity="1" />
+          <End Role="Amount" Type="DirectAgentsModel.Amount" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Item_Amount">
+          <End Role="Amount" Type="DirectAgentsModel.Amount" Multiplicity="1" />
+          <End Role="Item" Type="DirectAgentsModel.Item" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Item_Client">
+          <End Role="Client" Type="DirectAgentsModel.Client" Multiplicity="1" />
+          <End Role="Item" Type="DirectAgentsModel.Item" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UnitConversion_Unit">
+          <End Role="Unit" Type="DirectAgentsModel.Unit" Multiplicity="1" />
+          <End Role="UnitConversion" Type="DirectAgentsModel.UnitConversion" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UnitConversion_Unit1">
+          <End Role="Unit" Type="DirectAgentsModel.Unit" Multiplicity="1" />
+          <End Role="UnitConversion" Type="DirectAgentsModel.UnitConversion" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Advertiser_Client">
+          <End Role="Client" Type="DirectAgentsModel.Client" Multiplicity="1" />
+          <End Role="Advertiser" Type="DirectAgentsModel.Advertiser" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Customer_Client">
+          <End Role="Client" Type="DirectAgentsModel.Client" Multiplicity="1" />
+          <End Role="Customer" Type="DirectAgentsModel.Customer" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Credit">
+          <Key>
+            <PropertyRef Name="CreditId" />
+          </Key>
+          <Property Type="Int32" Name="CreditId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Item" Relationship="DirectAgentsModel.FK_Credit_Item" FromRole="Credit" ToRole="Item" />
+          <NavigationProperty Name="Payments" Relationship="DirectAgentsModel.PaymentCredit" FromRole="Credit" ToRole="Payment" />
+        </EntityType>
+        <Association Name="FK_Credit_Item">
+          <End Type="DirectAgentsModel.Item" Multiplicity="1" Role="Item" />
+          <End Type="DirectAgentsModel.Credit" Multiplicity="*" Role="Credit" />
+        </Association>
+        <EntityType Name="Debit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+          <NavigationProperty Name="Charges" Relationship="DirectAgentsModel.FK_Charge_Debit" FromRole="Debit" ToRole="Charge" />
+          <NavigationProperty Name="Item" Relationship="DirectAgentsModel.FK_Debit_Item" FromRole="Debit" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Charge">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Debit" Relationship="DirectAgentsModel.FK_Charge_Debit" FromRole="Charge" ToRole="Debit" />
+          <NavigationProperty Name="AdvertisingRevenues" Relationship="DirectAgentsModel.FK_AdvertisingRevenue_Charge" FromRole="Charge" ToRole="AdvertisingRevenue" />
+        </EntityType>
+        <Association Name="FK_Charge_Debit">
+          <End Type="DirectAgentsModel.Debit" Multiplicity="1" Role="Debit" />
+          <End Type="DirectAgentsModel.Charge" Multiplicity="*" Role="Charge" />
+        </Association>
+        <Association Name="FK_Debit_Item">
+          <End Type="DirectAgentsModel.Item" Multiplicity="1" Role="Item" />
+          <End Type="DirectAgentsModel.Debit" Multiplicity="*" Role="Debit" />
+        </Association>
+        <EntityType Name="DateSpan">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="From" Nullable="false" />
+          <Property Type="DateTime" Name="To" />
+          <NavigationProperty Name="Items" Relationship="DirectAgentsModel.FK_Item_DateSpan" FromRole="DateSpan" ToRole="Item" />
+          <NavigationProperty Name="Periods" Relationship="DirectAgentsModel.FK_Period_DateSpan" FromRole="DateSpan" ToRole="Period" />
+          <NavigationProperty Name="UnitConversions" Relationship="DirectAgentsModel.DateSpanUnitConversion" FromRole="DateSpan" ToRole="UnitConversion" />
+        </EntityType>
+        <Association Name="FK_Item_DateSpan">
+          <End Type="DirectAgentsModel.DateSpan" Role="DateSpan" Multiplicity="1" />
+          <End Type="DirectAgentsModel.Item" Role="Item" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Period_DateSpan">
+          <End Type="DirectAgentsModel.DateSpan" Role="DateSpan" Multiplicity="1" />
+          <End Type="DirectAgentsModel.Period" Role="Period" Multiplicity="*" />
+        </Association>
+        <EntityType Name="AdvertisingRevenue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Charge" Relationship="DirectAgentsModel.FK_AdvertisingRevenue_Charge" FromRole="AdvertisingRevenue" ToRole="Charge" />
+          <NavigationProperty Name="Campaign" Relationship="DirectAgentsModel.AdvertisingRevenueCampaign" FromRole="AdvertisingRevenue" ToRole="Campaign" />
+        </EntityType>
+        <Association Name="FK_AdvertisingRevenue_Charge">
+          <End Type="DirectAgentsModel.Charge" Role="Charge" Multiplicity="0..1" />
+          <End Type="DirectAgentsModel.AdvertisingRevenue" Role="AdvertisingRevenue" Multiplicity="*" />
+        </Association>
+        <Association Name="DateSpanUnitConversion">
+          <End Type="DirectAgentsModel.DateSpan" Role="DateSpan" Multiplicity="1" />
+          <End Type="DirectAgentsModel.UnitConversion" Role="UnitConversion" Multiplicity="*" />
+        </Association>
+        <Association Name="SqlServerDatabasePeriod">
+          <End Type="DirectAgentsModel.SqlServerDatabase" Role="SqlServerDatabase" Multiplicity="*" />
+          <End Type="DirectAgentsModel.Period" Role="Period" Multiplicity="1" />
+        </Association>
+        <EntityType Name="PayTerm">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Clients" Relationship="DirectAgentsModel.ClientPayTerm" FromRole="PayTerm" ToRole="Client" />
+          <Property Type="String" Name="Name" Nullable="false" />
+        </EntityType>
+        <Association Name="ClientPayTerm">
+          <End Type="DirectAgentsModel.Client" Role="Client" Multiplicity="*" />
+          <End Type="DirectAgentsModel.PayTerm" Role="PayTerm" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="AdvertisingRevenues" Relationship="DirectAgentsModel.AdvertisingRevenueCampaign" FromRole="Campaign" ToRole="AdvertisingRevenue" />
+          <NavigationProperty Name="Advertiser" Relationship="DirectAgentsModel.AdvertiserCampaign" FromRole="Campaign" ToRole="Advertiser" />
+          <NavigationProperty Name="DirectTrackCampaigns" Relationship="DirectAgentsModel.CampaignDirectTrackCampaign" FromRole="Campaign" ToRole="DirectTrackCampaign" />
+        </EntityType>
+        <Association Name="AdvertisingRevenueCampaign">
+          <End Type="DirectAgentsModel.AdvertisingRevenue" Role="AdvertisingRevenue" Multiplicity="*" />
+          <End Type="DirectAgentsModel.Campaign" Role="Campaign" Multiplicity="1" />
+        </Association>
+        <EntityType Name="DirectTrackCampaign">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CampaignNumber" Nullable="false" />
+          <Property Type="String" Name="CampaignName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DirectTrackCampaignGroups" Relationship="DirectAgentsModel.DirectTrackCampaignGroupDirectTrackCampaign" FromRole="DirectTrackCampaign" ToRole="DirectTrackCampaignGroup" />
+          <NavigationProperty Name="DirectTrackResource" Relationship="DirectAgentsModel.DirectTrackResourceDirectTrackCampaign" FromRole="DirectTrackCampaign" ToRole="DirectTrackResource" />
+          <NavigationProperty Name="Campaign" Relationship="DirectAgentsModel.CampaignDirectTrackCampaign" FromRole="DirectTrackCampaign" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="Payment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Credit" Relationship="DirectAgentsModel.PaymentCredit" FromRole="Payment" ToRole="Credit" />
+          <NavigationProperty Name="QuickBooksReceivedPayment" Relationship="DirectAgentsModel.PaymentQuickBooksReceivedPayment" FromRole="Payment" ToRole="QuickBooksReceivedPayment" />
+        </EntityType>
+        <EntityType Name="QuickBooksReceivedPayment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="QuickBooksCompanyFile" Relationship="DirectAgentsModel.QuickBooksReceivedPaymentQuickBooksCompanyFile" FromRole="QuickBooksReceivedPayment" ToRole="QuickBooksCompanyFile" />
+          <NavigationProperty Name="Payment" Relationship="DirectAgentsModel.PaymentQuickBooksReceivedPayment" FromRole="QuickBooksReceivedPayment" ToRole="Payment" />
+          <Property Type="String" Name="TxnNumber" Nullable="false" />
+          <Property Type="String" Name="Memo" Nullable="true" />
+          <Property Type="String" Name="TxnId" Nullable="false" />
+          <Property Type="String" Name="ARAccountRefFullName" Nullable="false" />
+          <Property Type="DateTime" Name="TxnDate" Nullable="false" />
+          <Property Type="Decimal" Name="TotalAmount" Nullable="false" />
+          <Property Type="String" Name="PaymentMethodRefFullName" Nullable="false" />
+          <NavigationProperty Name="QuickBooksCustomer" Relationship="DirectAgentsModel.QuickBooksCustomerQuickBooksReceivedPayment" FromRole="QuickBooksReceivedPayment" ToRole="QuickBooksCustomer" />
+        </EntityType>
+        <Association Name="PaymentCredit">
+          <End Type="DirectAgentsModel.Payment" Role="Payment" Multiplicity="*" />
+          <End Type="DirectAgentsModel.Credit" Role="Credit" Multiplicity="1" />
+        </Association>
+        <Association Name="QuickBooksReceivedPaymentQuickBooksCompanyFile">
+          <End Type="DirectAgentsModel.QuickBooksReceivedPayment" Role="QuickBooksReceivedPayment" Multiplicity="*" />
+          <End Type="DirectAgentsModel.QuickBooksCompanyFile" Role="QuickBooksCompanyFile" Multiplicity="1" />
+        </Association>
+        <Association Name="PaymentQuickBooksReceivedPayment">
+          <End Type="DirectAgentsModel.Payment" Role="Payment" Multiplicity="*" />
+          <End Type="DirectAgentsModel.QuickBooksReceivedPayment" Role="QuickBooksReceivedPayment" Multiplicity="1" />
+        </Association>
+        <EntityType Name="QuickBooksCustomer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="ListId" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="DirectAgentsModel.CustomerQuickBooksCustomer" FromRole="QuickBooksCustomer" ToRole="Customer" />
+          <NavigationProperty Name="QuickBooksCompanyFile" Relationship="DirectAgentsModel.QuickBooksCompanyFileQuickBooksCustomer" FromRole="QuickBooksCustomer" ToRole="QuickBooksCompanyFile" />
+          <Property Type="String" Name="FullName" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="false" />
+          <Property Type="String" Name="Phone" Nullable="true" DefaultValue="not known" />
+          <Property Type="String" Name="Email" Nullable="false" />
+          <Property Type="String" Name="TermsRefFullName" Nullable="false" />
+          <NavigationProperty Name="QuickBooksReceivedPayments" Relationship="DirectAgentsModel.QuickBooksCustomerQuickBooksReceivedPayment" FromRole="QuickBooksCustomer" ToRole="QuickBooksReceivedPayment" />
+        </EntityType>
+        <Association Name="CustomerQuickBooksCustomer">
+          <End Type="DirectAgentsModel.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="DirectAgentsModel.QuickBooksCustomer" Role="QuickBooksCustomer" Multiplicity="*" />
+        </Association>
+        <EntityType Name="DirectTrackAdvertiser">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="AdvertiserId" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Advertiser" Relationship="DirectAgentsModel.DirectTrackAdvertiserAdvertiser" FromRole="DirectTrackAdvertiser" ToRole="Advertiser" />
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+        </EntityType>
+        <Association Name="DirectTrackAdvertiserAdvertiser">
+          <End Type="DirectAgentsModel.DirectTrackAdvertiser" Role="DirectTrackAdvertiser" Multiplicity="*" />
+          <End Type="DirectAgentsModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
+        </Association>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="LogEntries" Relationship="DirectAgentsModel.FK_LogEntry_Log" FromRole="Log" ToRole="LogEntry" />
+          <Property Type="String" Name="Name" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DirectTrackResource">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Location" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="XmlDoc" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Updated" Nullable="false" />
+          <Property Type="String" Name="ResourceName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Pushed" />
+          <Property Type="DateTime" Name="Posted" />
+          <NavigationProperty Name="DirectTrackCampaignGroup" Relationship="DirectAgentsModel.DirectTrackResourceDirectTrackCampaignGroup" FromRole="DirectTrackResource" ToRole="DirectTrackCampaignGroup" />
+          <NavigationProperty Name="DirectTrackCampaign" Relationship="DirectAgentsModel.DirectTrackResourceDirectTrackCampaign" FromRole="DirectTrackResource" ToRole="DirectTrackCampaign" />
+        </EntityType>
+        <EntityType Name="DirectTrackInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="PermissionGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Task">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="TaskGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Schedule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="DirectTrackPayout">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="DirectTrackAdvertiserGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="DirectTrackAffiliate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="DirectTrackAffiliateGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="DirectTrackStat">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="QuickBooksInvoice">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="NotificationGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="EmailService">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Menu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="MenuItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="App">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Screen">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="DirectTrackCreative">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="QuickBooksCompanyFileQuickBooksCustomer">
+          <End Type="DirectAgentsModel.QuickBooksCompanyFile" Role="QuickBooksCompanyFile" Multiplicity="1" />
+          <End Type="DirectAgentsModel.QuickBooksCustomer" Role="QuickBooksCustomer" Multiplicity="*" />
+        </Association>
+        <Association Name="QuickBooksCustomerQuickBooksReceivedPayment">
+          <End Type="DirectAgentsModel.QuickBooksCustomer" Role="QuickBooksCustomer" Multiplicity="1" />
+          <End Type="DirectAgentsModel.QuickBooksReceivedPayment" Role="QuickBooksReceivedPayment" Multiplicity="*" />
+        </Association>
+        <EntityType Name="LogEntry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="StringData" MaxLength="255" FixedLength="false" Unicode="true" Nullable="true" />
+          <NavigationProperty Name="Log" Relationship="DirectAgentsModel.FK_LogEntry_Log" FromRole="LogEntry" ToRole="Log" />
+          <Property Type="DateTime" Name="Created" Nullable="true" />
+          <NavigationProperty Name="LogEntryType" Relationship="DirectAgentsModel.LogEntryTypeLogEntry" FromRole="LogEntry" ToRole="LogEntryType" />
+        </EntityType>
+        <Association Name="FK_LogEntry_Log">
+          <End Type="DirectAgentsModel.Log" Role="Log" Multiplicity="1" />
+          <End Type="DirectAgentsModel.LogEntry" Role="LogEntry" Multiplicity="*" />
+        </Association>
+        <EntityType Name="LogEntryType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="LogEntries" Relationship="DirectAgentsModel.LogEntryTypeLogEntry" FromRole="LogEntryType" ToRole="LogEntry" />
+          <Property Type="String" Name="Name" Nullable="false" />
+        </EntityType>
+        <Association Name="LogEntryTypeLogEntry">
+          <End Type="DirectAgentsModel.LogEntryType" Role="LogEntryType" Multiplicity="1" />
+          <End Type="DirectAgentsModel.LogEntry" Role="LogEntry" Multiplicity="*" />
+        </Association>
+        <EntityType Name="DirectTrackCampaignAllowedCountry">
+          <Key>
+            <PropertyRef Name="Id"/>
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity"/>
+        </EntityType>
+        <Association Name="AdvertiserCampaign">
+          <End Type="DirectAgentsModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
+          <End Type="DirectAgentsModel.Campaign" Role="Campaign" Multiplicity="*" />
+        </Association>
+        <EntityType Name="ExternalItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="ExternalId" Nullable="false" />
+          <NavigationProperty Name="SqlServerDatabase" Relationship="DirectAgentsModel.SqlServerDatabaseExternalItem" FromRole="ExternalItem" ToRole="SqlServerDatabase" />
+          <NavigationProperty Name="AdvertisingRevenue" Relationship="DirectAgentsModel.ExternalItemAdvertisingRevenue" FromRole="ExternalItem" ToRole="AdvertisingRevenue" />
+        </EntityType>
+        <Association Name="SqlServerDatabaseExternalItem">
+          <End Type="DirectAgentsModel.SqlServerDatabase" Role="SqlServerDatabase" Multiplicity="1" />
+          <End Type="DirectAgentsModel.ExternalItem" Role="ExternalItem" Multiplicity="*" />
+        </Association>
+        <Association Name="ExternalItemAdvertisingRevenue">
+          <End Type="DirectAgentsModel.ExternalItem" Role="ExternalItem" Multiplicity="*" />
+          <End Type="DirectAgentsModel.AdvertisingRevenue" Role="AdvertisingRevenue" Multiplicity="0..1" />
+        </Association>
+        <EntityType Name="StartingBalance" BaseType="DirectAgentsModel.Credit" >
+          <NavigationProperty Name="Client" Relationship="DirectAgentsModel.ClientStartingBalance" FromRole="StartingBalance" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="CreditLimit" BaseType="DirectAgentsModel.Amount" >
+          <NavigationProperty Name="Client" Relationship="DirectAgentsModel.ClientCreditLimit" FromRole="CreditLimit" ToRole="Client" />
+        </EntityType>
+        <Association Name="ClientCreditLimit">
+          <End Type="DirectAgentsModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="DirectAgentsModel.CreditLimit" Role="CreditLimit" Multiplicity="1" />
+        </Association>
+        <Association Name="ClientStartingBalance">
+          <End Type="DirectAgentsModel.Client" Role="Client" Multiplicity="1" />
+          <End Type="DirectAgentsModel.StartingBalance" Role="StartingBalance" Multiplicity="0..1" />
+        </Association>
+        <EntityType Name="DirectTrackCampaignGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DirectTrackCampaigns" Relationship="DirectAgentsModel.DirectTrackCampaignGroupDirectTrackCampaign" FromRole="DirectTrackCampaignGroup" ToRole="DirectTrackCampaign" />
+          <NavigationProperty Name="DirectTrackResource" Relationship="DirectAgentsModel.DirectTrackResourceDirectTrackCampaignGroup" FromRole="DirectTrackCampaignGroup" ToRole="DirectTrackResource" />
+        </EntityType>
+        <Association Name="DirectTrackCampaignGroupDirectTrackCampaign">
+          <End Type="DirectAgentsModel.DirectTrackCampaign" Role="DirectTrackCampaign" Multiplicity="*" />
+          <End Type="DirectAgentsModel.DirectTrackCampaignGroup" Role="DirectTrackCampaignGroup" Multiplicity="*" />
+        </Association>
+        <Association Name="DirectTrackResourceDirectTrackCampaignGroup">
+          <End Type="DirectAgentsModel.DirectTrackResource" Role="DirectTrackResource" Multiplicity="1" />
+          <End Type="DirectAgentsModel.DirectTrackCampaignGroup" Role="DirectTrackCampaignGroup" Multiplicity="0..1" />
+        </Association>
+        <Association Name="DirectTrackResourceDirectTrackCampaign">
+          <End Type="DirectAgentsModel.DirectTrackResource" Role="DirectTrackResource" Multiplicity="1" />
+          <End Type="DirectAgentsModel.DirectTrackCampaign" Role="DirectTrackCampaign" Multiplicity="0..1" />
+        </Association>
+        <Association Name="CampaignDirectTrackCampaign">
+          <End Type="DirectAgentsModel.Campaign" Role="Campaign" Multiplicity="1" />
+          <End Type="DirectAgentsModel.DirectTrackCampaign" Role="DirectTrackCampaign" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DirectAgentsModelStoreContainer" CdmEntityContainer="DirectAgentsEntities">
+    <EntitySetMapping Name="Amounts">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Amount)">
+        <MappingFragment StoreEntitySet="Amounts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.CreditLimit)">
+        <MappingFragment StoreEntitySet="Amounts_CreditLimit">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Items">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Item)">
+        <MappingFragment StoreEntitySet="Items">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Periods">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Period)">
+        <MappingFragment StoreEntitySet="Periods">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Units">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Unit)">
+        <MappingFragment StoreEntitySet="Units">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UnitConversions">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.UnitConversion)">
+        <MappingFragment StoreEntitySet="UnitConversions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Multiplier" ColumnName="Multiplier" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Clients">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Client)">
+        <MappingFragment StoreEntitySet="Clients">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SqlServerDatabases">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.SqlServerDatabase)">
+        <MappingFragment StoreEntitySet="SqlServerDatabases">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ConnectionString" ColumnName="ConnectionString" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Advertisers">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Advertiser)">
+        <MappingFragment StoreEntitySet="Advertisers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuickBooksCompanyFiles">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.QuickBooksCompanyFile)">
+        <MappingFragment StoreEntitySet="QuickBooksCompanyFiles">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Customer)">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Credits">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Credit)">
+        <MappingFragment StoreEntitySet="Credits">
+          <ScalarProperty Name="CreditId" ColumnName="CreditId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.StartingBalance)">
+        <MappingFragment StoreEntitySet="Credits_StartingBalance">
+          <ScalarProperty Name="CreditId" ColumnName="CreditId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Debits">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Debit)">
+        <MappingFragment StoreEntitySet="Debits">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Charges">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Charge)">
+        <MappingFragment StoreEntitySet="Charges">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DateSpans">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DateSpan)">
+        <MappingFragment StoreEntitySet="DateSpans">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="From" ColumnName="From" />
+          <ScalarProperty Name="To" ColumnName="To" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AdvertisingRevenues">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.AdvertisingRevenue)">
+        <MappingFragment StoreEntitySet="AdvertisingRevenues">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayTerms">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.PayTerm)">
+        <MappingFragment StoreEntitySet="PayTerms">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Campaigns">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Campaign)">
+        <MappingFragment StoreEntitySet="Campaigns">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackCampaigns">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackCampaign)">
+        <MappingFragment StoreEntitySet="DirectTrackCampaigns">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CampaignNumber" ColumnName="CampaignNumber" />
+          <ScalarProperty Name="CampaignName" ColumnName="CampaignName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Payments">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Payment)">
+        <MappingFragment StoreEntitySet="Payments">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuickBooksReceivedPayments">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.QuickBooksReceivedPayment)">
+        <MappingFragment StoreEntitySet="QuickBooksReceivedPayments">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="TxnNumber" ColumnName="TxnNumber" />
+          <ScalarProperty Name="Memo" ColumnName="Memo" />
+          <ScalarProperty Name="TxnId" ColumnName="TxnId" />
+          <ScalarProperty Name="ARAccountRefFullName" ColumnName="ARAccountRefFullName" />
+          <ScalarProperty Name="TxnDate" ColumnName="TxnDate" />
+          <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+          <ScalarProperty Name="PaymentMethodRefFullName" ColumnName="PaymentMethodRefFullName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuickBooksCustomers">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.QuickBooksCustomer)">
+        <MappingFragment StoreEntitySet="QuickBooksCustomers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ListId" ColumnName="ListId" />
+          <ScalarProperty Name="FullName" ColumnName="FullName" />
+          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="TermsRefFullName" ColumnName="TermsRefFullName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackAdvertisers">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackAdvertiser)">
+        <MappingFragment StoreEntitySet="DirectTrackAdvertisers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Logs">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Log)">
+        <MappingFragment StoreEntitySet="Logs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackResources">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackResource)">
+        <MappingFragment StoreEntitySet="DirectTrackResources">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="XmlDoc" ColumnName="XmlDoc" />
+          <ScalarProperty Name="Updated" ColumnName="Updated" />
+          <ScalarProperty Name="ResourceName" ColumnName="ResourceName" />
+          <ScalarProperty Name="Pushed" ColumnName="Pushed" />
+          <ScalarProperty Name="Posted" ColumnName="Posted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackInstances">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackInstance)">
+        <MappingFragment StoreEntitySet="DirectTrackInstances">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Permissions">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Permission)">
+        <MappingFragment StoreEntitySet="Permissions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PermissionGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.PermissionGroup)">
+        <MappingFragment StoreEntitySet="PermissionGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tasks">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Task)">
+        <MappingFragment StoreEntitySet="Tasks">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TaskGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.TaskGroup)">
+        <MappingFragment StoreEntitySet="TaskGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Schedules">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Schedule)">
+        <MappingFragment StoreEntitySet="Schedules">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackPayouts">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackPayout)">
+        <MappingFragment StoreEntitySet="DirectTrackPayouts">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackAdvertiserGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackAdvertiserGroup)">
+        <MappingFragment StoreEntitySet="DirectTrackAdvertiserGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackAffiliates">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackAffiliate)">
+        <MappingFragment StoreEntitySet="DirectTrackAffiliates">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackAffiliateGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackAffiliateGroup)">
+        <MappingFragment StoreEntitySet="DirectTrackAffiliateGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackStats">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackStat)">
+        <MappingFragment StoreEntitySet="DirectTrackStats">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuickBooksInvoices">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.QuickBooksInvoice)">
+        <MappingFragment StoreEntitySet="QuickBooksInvoices">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Notifications">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Notification)">
+        <MappingFragment StoreEntitySet="Notifications">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NotificationGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.NotificationGroup)">
+        <MappingFragment StoreEntitySet="NotificationGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmailServices">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.EmailService)">
+        <MappingFragment StoreEntitySet="EmailServices">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Messages">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Message)">
+        <MappingFragment StoreEntitySet="Messages">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Menus">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Menu)">
+        <MappingFragment StoreEntitySet="Menus">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MenuItems">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.MenuItem)">
+        <MappingFragment StoreEntitySet="MenuItems">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Apps">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.App)">
+        <MappingFragment StoreEntitySet="Apps">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.User)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.UserGroup)">
+        <MappingFragment StoreEntitySet="UserGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Screens">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Screen)">
+        <MappingFragment StoreEntitySet="Screens">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Employees">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.Employee)">
+        <MappingFragment StoreEntitySet="Employees">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackCreatives">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackCreative)">
+        <MappingFragment StoreEntitySet="DirectTrackCreatives">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LogEntries">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.LogEntry)">
+        <MappingFragment StoreEntitySet="LogEntries">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="StringData" ColumnName="StringData" />
+          <ScalarProperty Name="Created" ColumnName="Created" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LogEntryTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.LogEntryType)">
+        <MappingFragment StoreEntitySet="LogEntryTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackAllowedCountries">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackCampaignAllowedCountry)">
+        <MappingFragment StoreEntitySet="DirectTrackAllowedCountries">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ExternalItems">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.ExternalItem)">
+        <MappingFragment StoreEntitySet="ExternalItems">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTrackCampaignGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectAgentsModel.DirectTrackCampaignGroup)">
+        <MappingFragment StoreEntitySet="DirectTrackCampaignGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FK_Amount_Unit" TypeName="DirectAgentsModel.FK_Amount_Unit" StoreEntitySet="Amounts">
+      <EndProperty Name="Unit">
+        <ScalarProperty Name="Id" ColumnName="Unit_Id" />
+      </EndProperty>
+      <EndProperty Name="Amount">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Item_Amount" TypeName="DirectAgentsModel.FK_Item_Amount" StoreEntitySet="Items">
+      <EndProperty Name="Amount">
+        <ScalarProperty Name="Id" ColumnName="Amount_Id" />
+      </EndProperty>
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Item_Client" TypeName="DirectAgentsModel.FK_Item_Client" StoreEntitySet="Items">
+      <EndProperty Name="Client">
+        <ScalarProperty Name="Id" ColumnName="Client_Id" />
+      </EndProperty>
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_UnitConversion_Unit" TypeName="DirectAgentsModel.FK_UnitConversion_Unit" StoreEntitySet="UnitConversions">
+      <EndProperty Name="Unit">
+        <ScalarProperty Name="Id" ColumnName="From_Id" />
+      </EndProperty>
+      <EndProperty Name="UnitConversion">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_UnitConversion_Unit1" TypeName="DirectAgentsModel.FK_UnitConversion_Unit1" StoreEntitySet="UnitConversions">
+      <EndProperty Name="Unit">
+        <ScalarProperty Name="Id" ColumnName="To_Id" />
+      </EndProperty>
+      <EndProperty Name="UnitConversion">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Advertiser_Client" TypeName="DirectAgentsModel.FK_Advertiser_Client" StoreEntitySet="Advertisers">
+      <EndProperty Name="Client">
+        <ScalarProperty Name="Id" ColumnName="Client_Id" />
+      </EndProperty>
+      <EndProperty Name="Advertiser">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Customer_Client" TypeName="DirectAgentsModel.FK_Customer_Client" StoreEntitySet="Customers">
+      <EndProperty Name="Client">
+        <ScalarProperty Name="Id" ColumnName="Client_Id" />
+      </EndProperty>
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Credit_Item" TypeName="DirectAgentsModel.FK_Credit_Item" StoreEntitySet="Credits">
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Item_Id" />
+      </EndProperty>
+      <EndProperty Name="Credit">
+        <ScalarProperty Name="CreditId" ColumnName="CreditId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Charge_Debit" TypeName="DirectAgentsModel.FK_Charge_Debit" StoreEntitySet="Charges">
+      <EndProperty Name="Debit">
+        <ScalarProperty Name="Id" ColumnName="Debit_Id" />
+      </EndProperty>
+      <EndProperty Name="Charge">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Debit_Item" TypeName="DirectAgentsModel.FK_Debit_Item" StoreEntitySet="Debits">
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Item_Id" />
+      </EndProperty>
+      <EndProperty Name="Debit">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Item_DateSpan" TypeName="DirectAgentsModel.FK_Item_DateSpan" StoreEntitySet="Items">
+      <EndProperty Name="DateSpan">
+        <ScalarProperty Name="Id" ColumnName="DateSpan_Id" />
+      </EndProperty>
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_Period_DateSpan" TypeName="DirectAgentsModel.FK_Period_DateSpan" StoreEntitySet="Periods">
+      <EndProperty Name="DateSpan">
+        <ScalarProperty Name="Id" ColumnName="DateSpan_Id" />
+      </EndProperty>
+      <EndProperty Name="Period">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_AdvertisingRevenue_Charge" TypeName="DirectAgentsModel.FK_AdvertisingRevenue_Charge" StoreEntitySet="AdvertisingRevenues">
+      <EndProperty Name="Charge">
+        <ScalarProperty Name="Id" ColumnName="Charge_Id" />
+      </EndProperty>
+      <EndProperty Name="AdvertisingRevenue">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Charge_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DateSpanUnitConversion" TypeName="DirectAgentsModel.DateSpanUnitConversion" StoreEntitySet="UnitConversions">
+      <EndProperty Name="DateSpan">
+        <ScalarProperty Name="Id" ColumnName="DateSpan_Id" />
+      </EndProperty>
+      <EndProperty Name="UnitConversion">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="SqlServerDatabasePeriod" TypeName="DirectAgentsModel.SqlServerDatabasePeriod" StoreEntitySet="SqlServerDatabases">
+      <EndProperty Name="Period">
+        <ScalarProperty Name="Id" ColumnName="Period_Id" />
+      </EndProperty>
+      <EndProperty Name="SqlServerDatabase">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ClientPayTerm" TypeName="DirectAgentsModel.ClientPayTerm" StoreEntitySet="Clients">
+      <EndProperty Name="PayTerm">
+        <ScalarProperty Name="Id" ColumnName="PayTerm_Id" />
+      </EndProperty>
+      <EndProperty Name="Client">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AdvertisingRevenueCampaign" TypeName="DirectAgentsModel.AdvertisingRevenueCampaign" StoreEntitySet="AdvertisingRevenues">
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Campaign_Id" />
+      </EndProperty>
+      <EndProperty Name="AdvertisingRevenue">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PaymentCredit" TypeName="DirectAgentsModel.PaymentCredit" StoreEntitySet="Payments">
+      <EndProperty Name="Credit">
+        <ScalarProperty Name="CreditId" ColumnName="Credit_CreditId" />
+      </EndProperty>
+      <EndProperty Name="Payment">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="QuickBooksReceivedPaymentQuickBooksCompanyFile" TypeName="DirectAgentsModel.QuickBooksReceivedPaymentQuickBooksCompanyFile" StoreEntitySet="QuickBooksReceivedPayments">
+      <EndProperty Name="QuickBooksCompanyFile">
+        <ScalarProperty Name="Id" ColumnName="QuickBooksCompanyFile_Id" />
+      </EndProperty>
+      <EndProperty Name="QuickBooksReceivedPayment">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PaymentQuickBooksReceivedPayment" TypeName="DirectAgentsModel.PaymentQuickBooksReceivedPayment" StoreEntitySet="Payments">
+      <EndProperty Name="QuickBooksReceivedPayment">
+        <ScalarProperty Name="Id" ColumnName="QuickBooksReceivedPayment_Id" />
+      </EndProperty>
+      <EndProperty Name="Payment">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CustomerQuickBooksCustomer" TypeName="DirectAgentsModel.CustomerQuickBooksCustomer" StoreEntitySet="QuickBooksCustomers">
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Customer_Id" />
+      </EndProperty>
+      <EndProperty Name="QuickBooksCustomer">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Customer_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DirectTrackAdvertiserAdvertiser" TypeName="DirectAgentsModel.DirectTrackAdvertiserAdvertiser" StoreEntitySet="DirectTrackAdvertisers">
+      <EndProperty Name="Advertiser">
+        <ScalarProperty Name="Id" ColumnName="Advertiser_Id" />
+      </EndProperty>
+      <EndProperty Name="DirectTrackAdvertiser">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+        <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+      </EndProperty>
+      <Condition ColumnName="Advertiser_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="QuickBooksCompanyFileQuickBooksCustomer" TypeName="DirectAgentsModel.QuickBooksCompanyFileQuickBooksCustomer" StoreEntitySet="QuickBooksCustomers">
+      <EndProperty Name="QuickBooksCompanyFile">
+        <ScalarProperty Name="Id" ColumnName="QuickBooksCompanyFile_Id" />
+      </EndProperty>
+      <EndProperty Name="QuickBooksCustomer">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="QuickBooksCustomerQuickBooksReceivedPayment" TypeName="DirectAgentsModel.QuickBooksCustomerQuickBooksReceivedPayment" StoreEntitySet="QuickBooksReceivedPayments">
+      <EndProperty Name="QuickBooksCustomer">
+        <ScalarProperty Name="Id" ColumnName="QuickBooksCustomer_Id" />
+      </EndProperty>
+      <EndProperty Name="QuickBooksReceivedPayment">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_LogEntry_Log" TypeName="DirectAgentsModel.FK_LogEntry_Log" StoreEntitySet="LogEntries">
+      <EndProperty Name="Log">
+        <ScalarProperty Name="Id" ColumnName="Log_Id" />
+      </EndProperty>
+      <EndProperty Name="LogEntry">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="LogEntryTypeLogEntry" TypeName="DirectAgentsModel.LogEntryTypeLogEntry" StoreEntitySet="LogEntries">
+      <EndProperty Name="LogEntryType">
+        <ScalarProperty Name="Id" ColumnName="LogEntryType_Id" />
+      </EndProperty>
+      <EndProperty Name="LogEntry">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AdvertiserCampaign" TypeName="DirectAgentsModel.AdvertiserCampaign" StoreEntitySet="Campaigns">
+      <EndProperty Name="Advertiser">
+        <ScalarProperty Name="Id" ColumnName="Advertiser_Id" />
+      </EndProperty>
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Advertiser_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="SqlServerDatabaseExternalItem" TypeName="DirectAgentsModel.SqlServerDatabaseExternalItem" StoreEntitySet="ExternalItems">
+      <EndProperty Name="SqlServerDatabase">
+        <ScalarProperty Name="Id" ColumnName="SqlServerDatabase_Id" />
+      </EndProperty>
+      <EndProperty Name="ExternalItem">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ExternalItemAdvertisingRevenue" TypeName="DirectAgentsModel.ExternalItemAdvertisingRevenue" StoreEntitySet="ExternalItems">
+      <EndProperty Name="AdvertisingRevenue">
+        <ScalarProperty Name="Id" ColumnName="AdvertisingRevenue_Id" />
+      </EndProperty>
+      <EndProperty Name="ExternalItem">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="AdvertisingRevenue_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ClientCreditLimit" TypeName="DirectAgentsModel.ClientCreditLimit" StoreEntitySet="Clients">
+      <EndProperty Name="CreditLimit">
+        <ScalarProperty Name="Id" ColumnName="CreditLimit_Id" />
+      </EndProperty>
+      <EndProperty Name="Client">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ClientStartingBalance" TypeName="DirectAgentsModel.ClientStartingBalance" StoreEntitySet="Credits_StartingBalance">
+      <EndProperty Name="Client">
+        <ScalarProperty Name="Id" ColumnName="Client_Id" />
+      </EndProperty>
+      <EndProperty Name="StartingBalance">
+        <ScalarProperty Name="CreditId" ColumnName="CreditId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DirectTrackCampaignGroupDirectTrackCampaign" TypeName="DirectAgentsModel.DirectTrackCampaignGroupDirectTrackCampaign" StoreEntitySet="DirectTrackCampaignGroupDirectTrackCampaign">
+      <EndProperty Name="DirectTrackCampaign">
+        <ScalarProperty Name="Id" ColumnName="DirectTrackCampaigns_Id" />
+      </EndProperty>
+      <EndProperty Name="DirectTrackCampaignGroup">
+        <ScalarProperty Name="Id" ColumnName="DirectTrackCampaignGroups_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DirectTrackResourceDirectTrackCampaignGroup" TypeName="DirectAgentsModel.DirectTrackResourceDirectTrackCampaignGroup" StoreEntitySet="DirectTrackCampaignGroups">
+      <EndProperty Name="DirectTrackResource">
+        <ScalarProperty Name="Id" ColumnName="DirectTrackResource_Id" />
+      </EndProperty>
+      <EndProperty Name="DirectTrackCampaignGroup">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="DirectTrackResourceDirectTrackCampaign" TypeName="DirectAgentsModel.DirectTrackResourceDirectTrackCampaign" StoreEntitySet="DirectTrackCampaigns">
+      <EndProperty Name="DirectTrackResource">
+        <ScalarProperty Name="Id" ColumnName="DirectTrackResource_Id" />
+      </EndProperty>
+      <EndProperty Name="DirectTrackCampaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CampaignDirectTrackCampaign" TypeName="DirectAgentsModel.CampaignDirectTrackCampaign" StoreEntitySet="DirectTrackCampaigns">
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Campaign_Id" />
+      </EndProperty>
+      <EndProperty Name="DirectTrackCampaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="ABModel" ZoomLevel="72">
+        <EntityTypeShape EntityType="DirectAgentsModel.Amount" Width="1.5" PointX="7.625" PointY="3.125" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Item" Width="1.75" PointX="5.75" PointY="7.25" Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Period" Width="1.875" PointX="1.875" PointY="7.625" Height="1.7879850260416657" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Unit" Width="1.5" PointX="4" PointY="0.5" Height="1.9802864583333331" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.UnitConversion" Width="1.5" PointX="1.5" PointY="2.625" Height="1.9802864583333317" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Client" Width="1.5" PointX="12.25" PointY="5.125" Height="2.5571907552083326" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.SqlServerDatabase" Width="1.75" PointX="0.875" PointY="10.125" Height="1.9802864583333335" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Advertiser" Width="2" PointX="13" PointY="11.875" Height="1.9802864583333335" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.QuickBooksCompanyFile" Width="2" PointX="14.125" PointY="16.875" Height="1.7879850260416674" IsExpanded="true" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Customer" Width="1.5" PointX="15.375" PointY="9.25" Height="1.7879850260416674" IsExpanded="true" />
+        <AssociationConnector Association="DirectAgentsModel.FK_Amount_Unit" ManuallyRouted="false">
+          <ConnectorPoint PointX="5.5" PointY="1.4901432291666665" />
+          <ConnectorPoint PointX="8.375" PointY="1.4901432291666665" />
+          <ConnectorPoint PointX="8.375" PointY="3.125" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.FK_Item_Amount" ManuallyRouted="false">
+          <ConnectorPoint PointX="7.625" PointY="4.3532124920643849" />
+          <ConnectorPoint PointX="6.8644620288584957" PointY="4.3532124920643849" />
+          <ConnectorPoint PointX="6.8644620288584957" PointY="7.25" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.FK_Item_Client" ManuallyRouted="false">
+          <ConnectorPoint PointX="12.25" PointY="6.183259933964254" />
+          <ConnectorPoint PointX="7.2134835144292477" PointY="6.183259933964254" />
+          <ConnectorPoint PointX="7.2134835144292477" PointY="7.25" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.FK_UnitConversion_Unit" ManuallyRouted="false">
+          <ConnectorPoint PointX="4" PointY="1.4901432291666665" />
+          <ConnectorPoint PointX="2.25" PointY="1.4901432291666665" />
+          <ConnectorPoint PointX="2.25" PointY="2.625" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.FK_UnitConversion_Unit1" ManuallyRouted="false">
+          <ConnectorPoint PointX="4" PointY="2.0164673437500005" />
+          <ConnectorPoint PointX="2.6562525" PointY="2.0164673437500005" />
+          <ConnectorPoint PointX="2.6562525" PointY="2.625" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.FK_Advertiser_Client" ManuallyRouted="false">
+          <ConnectorPoint PointX="13.271407449905638" PointY="7.6821907552083326" />
+          <ConnectorPoint PointX="13.271407449905638" PointY="11.875" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.FK_Customer_Client" ManuallyRouted="false">
+          <ConnectorPoint PointX="13.667814899811276" PointY="7.6821907552083326" />
+          <ConnectorPoint PointX="13.667814899811276" PointY="10.143992513020834" />
+          <ConnectorPoint PointX="15.375" PointY="10.143992513020834" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.Credit" Width="1.5" PointX="8.625" PointY="9.625" Height="1.5956835937499996" />
+        <AssociationConnector Association="DirectAgentsModel.FK_Credit_Item">
+          <ConnectorPoint PointX="7.5" PointY="9.2543343098958335" />
+          <ConnectorPoint PointX="9.15625" PointY="9.2543343098958335" />
+          <ConnectorPoint PointX="9.15625" PointY="9.625" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.Debit" PointX="4.5" PointY="10.25" Width="1.5" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Charge" Width="1.75" PointX="3" PointY="12" Height="1.5956835937499996" />
+        <AssociationConnector Association="DirectAgentsModel.FK_Charge_Debit">
+          <ConnectorPoint PointX="5.3750005000000005" PointY="11.84568359375" />
+          <ConnectorPoint PointX="5.3750005000000005" PointY="12.797841796875" />
+          <ConnectorPoint PointX="4.75" PointY="12.797841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.FK_Debit_Item">
+          <ConnectorPoint PointX="5.75" PointY="9.0167087854690582" />
+          <ConnectorPoint PointX="5.1249994999999995" PointY="9.0167087854690582" />
+          <ConnectorPoint PointX="5.1249994999999995" PointY="10.25" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.DateSpan" Width="1.5" PointX="4" PointY="4.625" Height="2.1725878906249996" />
+        <AssociationConnector Association="DirectAgentsModel.FK_Item_DateSpan" >
+          <ConnectorPoint PointX="5.5" PointY="6.3177254718597462" />
+          <ConnectorPoint PointX="6.2759790144292484" PointY="6.3177254718597462" />
+          <ConnectorPoint PointX="6.2759790144292484" PointY="7.25" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.FK_Period_DateSpan" >
+          <ConnectorPoint PointX="4" PointY="6.3469508015631941" />
+          <ConnectorPoint PointX="2.894986750737254" PointY="6.3469508015631941" />
+          <ConnectorPoint PointX="2.894986750737254" PointY="7.625" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.AdvertisingRevenue" Width="1.875" PointX="0.5" PointY="15.5" Height="1.5956835937499996" />
+        <AssociationConnector Association="DirectAgentsModel.FK_AdvertisingRevenue_Charge" >
+          <ConnectorPoint PointX="3.875" PointY="13.59568359375" />
+          <ConnectorPoint PointX="3.875" PointY="14.375" />
+          <ConnectorPoint PointX="3.375" PointY="14.375" />
+          <ConnectorPoint PointX="3.375" PointY="15.812394733252592" />
+          <ConnectorPoint PointX="2.375" PointY="15.812394733252592" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.DateSpanUnitConversion">
+          <ConnectorPoint PointX="4" PointY="5.2969766437098631" />
+          <ConnectorPoint PointX="2.25" PointY="5.2969766437098631" />
+          <ConnectorPoint PointX="2.25" PointY="4.6052864583333317" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.SqlServerDatabasePeriod">
+          <ConnectorPoint PointX="1.3749995" PointY="10.125" />
+          <ConnectorPoint PointX="1.3749995" PointY="8.9502804526301354" />
+          <ConnectorPoint PointX="1.875" PointY="8.9502804526301354" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.PayTerm" Width="1.5" PointX="9.625" PointY="1.75" Height="1.5956835937499996" />
+        <AssociationConnector Association="DirectAgentsModel.ClientPayTerm">
+          <ConnectorPoint PointX="13" PointY="5.125" />
+          <ConnectorPoint PointX="13" PointY="2.6770472711595277" />
+          <ConnectorPoint PointX="11.125" PointY="2.6770472711595277" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.Campaign" Width="2" PointX="3.625" PointY="14.625" Height="2.3648893229166674" />
+        <AssociationConnector Association="DirectAgentsModel.AdvertisingRevenueCampaign">
+          <ConnectorPoint PointX="2.375" PointY="16.244944661458334" />
+          <ConnectorPoint PointX="3.625" PointY="16.244944661458334" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackCampaign" Width="2.375" PointX="6.375" PointY="16.25" Height="2.1725878906250031" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Payment" Width="2.25" PointX="10.375" PointY="13.5" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="DirectAgentsModel.QuickBooksReceivedPayment" Width="2.25" PointX="12.25" PointY="21.125" Height="3.1340950520833353" />
+        <AssociationConnector Association="DirectAgentsModel.PaymentCredit">
+          <ConnectorPoint PointX="12.40625" PointY="13.5" />
+          <ConnectorPoint PointX="12.40625" PointY="10.779091796874999" />
+          <ConnectorPoint PointX="10.125" PointY="10.779091796874999" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.QuickBooksReceivedPaymentQuickBooksCompanyFile">
+          <ConnectorPoint PointX="13.635591237014832" PointY="21.125" />
+          <ConnectorPoint PointX="13.635591237014832" PointY="18.030126417769043" />
+          <ConnectorPoint PointX="14.125" PointY="18.030126417769043" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.PaymentQuickBooksReceivedPayment">
+          <ConnectorPoint PointX="11.843749500000001" PointY="15.09568359375" />
+          <ConnectorPoint PointX="11.843749500000001" PointY="23.117290039062503" />
+          <ConnectorPoint PointX="12.25" PointY="23.117290039062503" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.QuickBooksCustomer" Width="2.375" PointX="16.125" PointY="19" Height="2.9417936197916674" />
+        <AssociationConnector Association="DirectAgentsModel.CustomerQuickBooksCustomer">
+          <ConnectorPoint PointX="16.875" PointY="10.452768691148751" />
+          <ConnectorPoint PointX="17.6875005" PointY="10.452768691148751" />
+          <ConnectorPoint PointX="17.6875005" PointY="19" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackAdvertiser" Width="2" PointX="14.875" PointY="14.625" Height="1.5956835937499996" />
+        <AssociationConnector Association="DirectAgentsModel.DirectTrackAdvertiserAdvertiser" ManuallyRouted="false">
+          <ConnectorPoint PointX="15.781221002573719" PointY="14.625" />
+          <ConnectorPoint PointX="15.781221002573719" PointY="13.223893232535337" />
+          <ConnectorPoint PointX="15" PointY="13.223893232535337" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.Log" Width="1.5" PointX="17.25" PointY="28" Height="1.5956835937500031" />
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackResource" Width="2.25" PointX="5.75" PointY="19.625" Height="2.7494921874999996" />
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackInstance" Width="2" PointX="10.75" PointY="37.125" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Permission" Width="1.5" PointX="0.5" PointY="41.125" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.PermissionGroup" Width="1.625" PointX="2.375" PointY="41.125" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Task" Width="1.5" PointX="0.5" PointY="25.875" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.TaskGroup" Width="1.5" PointX="0.5" PointY="27.5" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Schedule" Width="1.5" PointX="2.5" PointY="25.875" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackPayout" Width="1.875" PointX="10.75" PointY="35.625" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackAdvertiserGroup" Width="2.25" PointX="14" PointY="35.625" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackAffiliate" Width="1.875" PointX="14" PointY="37.125" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackAffiliateGroup" Width="2" PointX="10.625" PointY="31.125" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackStat" Width="1.75" PointX="10.75" PointY="32.625" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.QuickBooksInvoice" Width="1.75" PointX="14.125" PointY="34.125" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Notification" Width="1.5" PointX="0.5" PointY="29.625" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.NotificationGroup" Width="1.75" PointX="0.5" PointY="31.125" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.EmailService" Width="1.5" PointX="0.5" PointY="33.5" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Message" Width="1.5" PointX="0.5" PointY="35.625" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Menu" Width="1.5" PointX="2.375" PointY="39.5" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.MenuItem" Width="1.5" PointX="4.25" PointY="39.5" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.App" Width="1.5" PointX="4.25" PointY="37.875" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.User" Width="1.5" PointX="0.5" PointY="37.875" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.UserGroup" Width="1.5" PointX="0.5" PointY="39.5" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Screen" Width="1.5" PointX="2.375" PointY="37.875" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.Employee" Width="1.5" PointX="3.25" PointY="17.5" Height="1.2110807291666674" />
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackCreative" Width="2" PointX="10.75" PointY="34.125" Height="1.2110807291666657" />
+        <AssociationConnector Association="DirectAgentsModel.QuickBooksCompanyFileQuickBooksCustomer">
+          <ConnectorPoint PointX="16.125" PointY="17.57968102375132" />
+          <ConnectorPoint PointX="16.818585966206594" PointY="17.57968102375132" />
+          <ConnectorPoint PointX="16.818585966206594" PointY="19" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.QuickBooksCustomerQuickBooksReceivedPayment">
+          <ConnectorPoint PointX="16.125" PointY="20.150902248132624" />
+          <ConnectorPoint PointX="14.200316788717874" PointY="20.150902248132624" />
+          <ConnectorPoint PointX="14.200316788717874" PointY="21.125" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.LogEntry" Width="1.5" PointX="17.25" PointY="25.5" Height="1.9802864583333353" />
+        <AssociationConnector Association="DirectAgentsModel.FK_LogEntry_Log" >
+          <ConnectorPoint PointX="18" PointY="28" />
+          <ConnectorPoint PointX="18" PointY="27.480286458333335" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.LogEntryType" Width="1.5" PointX="19.25" PointY="25.625" Height="1.5956835937500031" />
+        <AssociationConnector Association="DirectAgentsModel.LogEntryTypeLogEntry">
+          <ConnectorPoint PointX="19.25" PointY="26.422841796875" />
+          <ConnectorPoint PointX="18.75" PointY="26.422841796875" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackCampaignAllowedCountry" Width="2.875" PointX="10.75" PointY="38.625" Height="1.2110807291666674" />
+        <AssociationConnector Association="DirectAgentsModel.AdvertiserCampaign" ManuallyRouted="true">
+          <ConnectorPoint PointX="13" PointY="11.90625" />
+          <ConnectorPoint PointX="12.489583333333334" PointY="11.90625" />
+          <ConnectorPoint PointX="12.322916666666666" PointY="11.90625" />
+          <ConnectorPoint PointX="10.3909375825" PointY="11.90625" />
+          <ConnectorPoint PointX="10.3909375825" PointY="13.238571075417864" />
+          <ConnectorPoint PointX="5.09375025" PointY="13.238571075417864" />
+          <ConnectorPoint PointX="5.09375025" PointY="14.625" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.ExternalItem" Width="1.625" PointX="0.5" PointY="12.875" Height="1.5956835937499996" />
+        <AssociationConnector Association="DirectAgentsModel.SqlServerDatabaseExternalItem">
+          <ConnectorPoint PointX="0.875" PointY="11.655225552222618" />
+          <ConnectorPoint PointX="0.61084009574972908" PointY="11.655225552222618" />
+          <ConnectorPoint PointX="0.61084009574972908" PointY="12.875" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.ExternalItemAdvertisingRevenue">
+          <ConnectorPoint PointX="1.3125" PointY="14.662985026041667" />
+          <ConnectorPoint PointX="1.3125" PointY="15.5" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.StartingBalance" Width="1.5" PointX="10.625" PointY="9.875" Height="0.4" IsExpanded="false" />
+        <InheritanceConnector EntityType="DirectAgentsModel.StartingBalance" ManuallyRouted="false" >
+          <ConnectorPoint PointX="10.125" PointY="10.242417694429316" />
+          <ConnectorPoint PointX="10.365" PointY="10.242417694429316" />
+          <ConnectorPoint PointX="10.365" PointY="10.243740617086631" />
+          <ConnectorPoint PointX="10.625" PointY="10.243740617086631" />
+        </InheritanceConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.CreditLimit" Width="1.5" PointX="9.625" PointY="3.875" Height="1.2110807291666665" IsExpanded="true" />
+        <InheritanceConnector EntityType="DirectAgentsModel.CreditLimit" >
+          <ConnectorPoint PointX="9.125" PointY="4.361764305934444" />
+          <ConnectorPoint PointX="9.625" PointY="4.361764305934444" />
+        </InheritanceConnector>
+        <AssociationConnector Association="DirectAgentsModel.ClientCreditLimit">
+          <ConnectorPoint PointX="12.25" PointY="5.6228774669821266" />
+          <ConnectorPoint PointX="10.375" PointY="5.6228774669821266" />
+          <ConnectorPoint PointX="10.375" PointY="5.0860807291666665" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.ClientStartingBalance">
+          <ConnectorPoint PointX="12.25" PointY="7.17776914262334" />
+          <ConnectorPoint PointX="11.37430896396242" PointY="7.17776914262334" />
+          <ConnectorPoint PointX="11.37430896396242" PointY="9.875" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectAgentsModel.DirectTrackCampaignGroup" Width="2.375" PointX="9" PointY="20.125" Height="1.7879850260416674" />
+        <AssociationConnector Association="DirectAgentsModel.DirectTrackCampaignGroupDirectTrackCampaign" >
+          <ConnectorPoint PointX="8.75" PointY="17.3362939453125" />
+          <ConnectorPoint PointX="10.1875" PointY="17.3362939453125" />
+          <ConnectorPoint PointX="10.1875" PointY="20.125" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.DirectTrackResourceDirectTrackCampaignGroup">
+          <ConnectorPoint PointX="8" PointY="21.018992513020834" />
+          <ConnectorPoint PointX="9" PointY="21.018992513020834" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.DirectTrackResourceDirectTrackCampaign">
+          <ConnectorPoint PointX="7.1875" PointY="19.625" />
+          <ConnectorPoint PointX="7.1875" PointY="18.422587890625003" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectAgentsModel.CampaignDirectTrackCampaign">
+          <ConnectorPoint PointX="5.625" PointY="16.619944661458334" />
+          <ConnectorPoint PointX="6.375" PointY="16.619944661458334" />
+        </AssociationConnector>
+        </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,1116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PublisherReportDataSet1" targetNamespace="http://tempuri.org/PublisherReportDataSet1.xsd" xmlns:mstns="http://tempuri.org/PublisherReportDataSet1.xsd" xmlns="http://tempuri.org/PublisherReportDataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" GeneratorFunctionsComponentClassName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" UserFunctionsComponentName="QueriesTableAdapter" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="VerifiedLineItemsTableAdapter" GeneratorDataComponentClassName="VerifiedLineItemsTableAdapter" Name="VerifiedLineItems" UserDataComponentName="VerifiedLineItemsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        Affiliate.name, Affiliate.add_code, Campaign.campaign_name, Campaign.pid, CampaignStatus.name AS status, Currency.name AS cost_currency_name, 
+                         Currency.to_usd_multiplier AS cust_to_usd_multiplier, Item.cost_per_unit, Item.num_units, Item.total_cost, Currency_1.name AS payment_currency_name, 
+                         Currency_1.to_usd_multiplier AS payment_to_usd_multiplier, Affiliate.email, MediaBuyer.name AS media_buyer_name, Affiliate.affid, 
+                         Item.item_accounting_status_id, ItemAccountingStatus.name AS item_accounting_status_name, UnitType.name AS unit_type_name, Item.id AS item_id
+FROM            Campaign INNER JOIN
+                         CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
+                         Item ON Campaign.pid = Item.pid INNER JOIN
+                         Affiliate ON Item.affid = Affiliate.affid INNER JOIN
+                         Currency ON Item.cost_currency_id = Currency.id INNER JOIN
+                         Currency AS Currency_1 ON Affiliate.currency_id = Currency_1.id INNER JOIN
+                         MediaBuyer ON Affiliate.media_buyer_id = MediaBuyer.id INNER JOIN
+                         ItemAccountingStatus ON Item.item_accounting_status_id = ItemAccountingStatus.id INNER JOIN
+                         UnitType ON Item.unit_type_id = UnitType.id
+GROUP BY Affiliate.name, Affiliate.add_code, CampaignStatus.name, Currency.name, Item.cost_per_unit, Item.num_units, Item.total_cost, Currency.to_usd_multiplier, 
+                         Currency_1.name, Currency_1.to_usd_multiplier, Campaign.campaign_name, Campaign.pid, Affiliate.email, MediaBuyer.name, Affiliate.affid, 
+                         Item.item_accounting_status_id, ItemAccountingStatus.name, UnitType.name, Item.id
+HAVING        (CampaignStatus.name = 'Verified')</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="name" DataSetColumn="name" />
+              <Mapping SourceColumn="add_code" DataSetColumn="add_code" />
+              <Mapping SourceColumn="campaign_name" DataSetColumn="campaign_name" />
+              <Mapping SourceColumn="pid" DataSetColumn="pid" />
+              <Mapping SourceColumn="status" DataSetColumn="status" />
+              <Mapping SourceColumn="cost_currency_name" DataSetColumn="cost_currency_name" />
+              <Mapping SourceColumn="cust_to_usd_multiplier" DataSetColumn="cust_to_usd_multiplier" />
+              <Mapping SourceColumn="cost_per_unit" DataSetColumn="cost_per_unit" />
+              <Mapping SourceColumn="num_units" DataSetColumn="num_units" />
+              <Mapping SourceColumn="total_cost" DataSetColumn="total_cost" />
+              <Mapping SourceColumn="payment_currency_name" DataSetColumn="payment_currency_name" />
+              <Mapping SourceColumn="payment_to_usd_multiplier" DataSetColumn="payment_to_usd_multiplier" />
+              <Mapping SourceColumn="email" DataSetColumn="email" />
+              <Mapping SourceColumn="media_buyer_name" DataSetColumn="media_buyer_name" />
+              <Mapping SourceColumn="affid" DataSetColumn="affid" />
+              <Mapping SourceColumn="item_accounting_status_id" DataSetColumn="item_accounting_status_id" />
+              <Mapping SourceColumn="item_accounting_status_name" DataSetColumn="item_accounting_status_name" />
+              <Mapping SourceColumn="unit_type_name" DataSetColumn="unit_type_name" />
+              <Mapping SourceColumn="item_id" DataSetColumn="item_id" />
+            </Mappings>
+            <Sources>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="FillByAffId" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDataByAffId" GeneratorSourceName="FillByAffId" GetMethodModifier="Public" GetMethodName="GetDataByAffId" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataByAffId" UserSourceName="FillByAffId">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        Affiliate.name, Affiliate.add_code, Campaign.campaign_name, Campaign.pid, CampaignStatus.name AS status, Currency.name AS cost_currency_name, 
+                         Currency.to_usd_multiplier AS cust_to_usd_multiplier, Item.cost_per_unit, SUM(Item.num_units) AS num_units, SUM(Item.total_cost) AS total_cost, 
+                         Currency_1.name AS payment_currency_name, Currency_1.to_usd_multiplier AS payment_to_usd_multiplier, Affiliate.email, 
+                         MediaBuyer.name AS media_buyer_name, Affiliate.affid, Item.item_accounting_status_id, ItemAccountingStatus.name AS item_accounting_status_name, 
+                         UnitType.name AS unit_type_name, dbo.SumKeys(Item.id) AS item_id
+FROM            Campaign INNER JOIN
+                         CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
+                         Item ON Campaign.pid = Item.pid INNER JOIN
+                         Affiliate ON Item.affid = Affiliate.affid INNER JOIN
+                         Currency ON Item.cost_currency_id = Currency.id INNER JOIN
+                         Currency AS Currency_1 ON Affiliate.currency_id = Currency_1.id INNER JOIN
+                         MediaBuyer ON Affiliate.media_buyer_id = MediaBuyer.id INNER JOIN
+                         ItemAccountingStatus ON Item.item_accounting_status_id = ItemAccountingStatus.id INNER JOIN
+                         UnitType ON Item.unit_type_id = UnitType.id
+GROUP BY Affiliate.name, Affiliate.add_code, CampaignStatus.name, Currency.name, Item.cost_per_unit, Currency.to_usd_multiplier, Currency_1.name, 
+                         Currency_1.to_usd_multiplier, Campaign.campaign_name, Campaign.pid, Item.affid, Affiliate.email, MediaBuyer.name, Affiliate.affid, Item.item_accounting_status_id, 
+                         ItemAccountingStatus.name, UnitType.name
+HAVING        (Item.affid = @1)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="affid" DataSourceName="DADatabaseR1.dbo.Item" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@1" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="affid" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="AffiliatesHavingReportsTableAdapter" GeneratorDataComponentClassName="AffiliatesHavingReportsTableAdapter" Name="AffiliatesHavingReports" UserDataComponentName="AffiliatesHavingReportsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="SELECT TOP (100) PERCENT CASE WHEN Pub.name IS NULL THEN Aff.name ELSE Pub.name END AS publisher_name, NTT.name AS NetTerms, Curr.name AS CurrName FROM Item INNER JOIN Affiliate AS Aff ON Item.affid = Aff.affid INNER JOIN Currency AS Curr ON Curr.id = Aff.currency_id INNER JOIN NetTermType AS NTT ON NTT.id = Aff.net_term_type_id INNER JOIN Campaign ON Item.pid = Campaign.pid INNER JOIN CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id LEFT OUTER JOIN Publisher AS Pub ON Aff.affid = Pub.affid GROUP BY Pub.name, Aff.name, Pub.affid, CampaignStatus.name, NTT.name, Curr.name HAVING (CampaignStatus.name = 'Verified')" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Fill" GenerateShortCommands="false" GeneratorSourceName="Fill" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT DISTINCT publisher_name, NetTerms, CurrName
+FROM            (SELECT        TOP (100) PERCENT CASE WHEN Pub.name IS NULL THEN Aff.name ELSE Pub.name END AS publisher_name, NTT.name AS NetTerms, 
+                                                    Curr.name AS CurrName
+                          FROM            Item INNER JOIN
+                                                    Affiliate AS Aff ON Item.affid = Aff.affid INNER JOIN
+                                                    Currency AS Curr ON Curr.id = Aff.currency_id INNER JOIN
+                                                    NetTermType AS NTT ON NTT.id = Aff.net_term_type_id INNER JOIN
+                                                    Campaign ON Item.pid = Campaign.pid INNER JOIN
+                                                    CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id LEFT OUTER JOIN
+                                                    Publisher AS Pub ON Aff.affid = Pub.affid
+                          GROUP BY Pub.name, Aff.name, Pub.affid, CampaignStatus.name, NTT.name, Curr.name
+                          HAVING         (CampaignStatus.name = 'Verified')) AS A
+ORDER BY publisher_name</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="publisher_name" DataSetColumn="publisher_name" />
+              <Mapping SourceColumn="NetTerms" DataSetColumn="NetTerms" />
+              <Mapping SourceColumn="CurrName" DataSetColumn="CurrName" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="PubReportEmailTableAdapter" GeneratorDataComponentClassName="PubReportEmailTableAdapter" Name="PubReportEmail" UserDataComponentName="PubReportEmailTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.PubReportEmail" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <DeleteCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>DELETE FROM [dbo].[PubReportEmail] WHERE (([id] = @Original_id) AND ((@IsNull_to_email_address = 1 AND [to_email_address] IS NULL) OR ([to_email_address] = @Original_to_email_address)) AND ([sent_date] = @Original_sent_date) AND ([subject] = @Original_subject) AND ([pub_report_instance_id] = @Original_pub_report_instance_id))</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_to_email_address" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="to_email_address" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_to_email_address" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="to_email_address" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Original_sent_date" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="sent_date" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_subject" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="subject" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_pub_report_instance_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="pub_report_instance_id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                    </Parameters>
+                  </DbCommand>
+                </DeleteCommand>
+                <InsertCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>INSERT INTO [dbo].[PubReportEmail] ([to_email_address], [sent_date], [subject], [body], [pub_report_instance_id]) VALUES (@to_email_address, @sent_date, @subject, @body, @pub_report_instance_id);
+SELECT id, to_email_address, sent_date, subject, body, pub_report_instance_id FROM PubReportEmail WHERE (id = SCOPE_IDENTITY())</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@to_email_address" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="to_email_address" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@sent_date" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="sent_date" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@subject" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="subject" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@body" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="body" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@pub_report_instance_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="pub_report_instance_id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </InsertCommand>
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT id, to_email_address, sent_date, subject, body, pub_report_instance_id FROM dbo.PubReportEmail</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+                <UpdateCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>UPDATE [dbo].[PubReportEmail] SET [to_email_address] = @to_email_address, [sent_date] = @sent_date, [subject] = @subject, [body] = @body, [pub_report_instance_id] = @pub_report_instance_id WHERE (([id] = @Original_id) AND ((@IsNull_to_email_address = 1 AND [to_email_address] IS NULL) OR ([to_email_address] = @Original_to_email_address)) AND ([sent_date] = @Original_sent_date) AND ([subject] = @Original_subject) AND ([pub_report_instance_id] = @Original_pub_report_instance_id));
+SELECT id, to_email_address, sent_date, subject, body, pub_report_instance_id FROM PubReportEmail WHERE (id = @id)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@to_email_address" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="to_email_address" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@sent_date" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="sent_date" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@subject" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="subject" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="String" Direction="Input" ParameterName="@body" Precision="0" ProviderType="NVarChar" Scale="0" Size="0" SourceColumn="body" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@pub_report_instance_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="pub_report_instance_id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@IsNull_to_email_address" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="to_email_address" SourceColumnNullMapping="true" SourceVersion="Original" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_to_email_address" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="to_email_address" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="DateTime" Direction="Input" ParameterName="@Original_sent_date" Precision="0" ProviderType="DateTime" Scale="0" Size="0" SourceColumn="sent_date" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="AnsiString" Direction="Input" ParameterName="@Original_subject" Precision="0" ProviderType="VarChar" Scale="0" Size="0" SourceColumn="subject" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="" DataSourceName="" DbType="Int32" Direction="Input" ParameterName="@Original_pub_report_instance_id" Precision="0" ProviderType="Int" Scale="0" Size="0" SourceColumn="pub_report_instance_id" SourceColumnNullMapping="false" SourceVersion="Original" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="id" ColumnName="id" DataSourceName="" DataTypeServer="int" DbType="Int32" Direction="Input" ParameterName="@id" Precision="0" ProviderType="Int" Scale="0" Size="4" SourceColumn="id" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </UpdateCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id" DataSetColumn="id" />
+              <Mapping SourceColumn="to_email_address" DataSetColumn="to_email_address" />
+              <Mapping SourceColumn="sent_date" DataSetColumn="sent_date" />
+              <Mapping SourceColumn="subject" DataSetColumn="subject" />
+              <Mapping SourceColumn="body" DataSetColumn="body" />
+              <Mapping SourceColumn="pub_report_instance_id" DataSetColumn="pub_report_instance_id" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="PubReportInstanceTableAdapter" GeneratorDataComponentClassName="PubReportInstanceTableAdapter" Name="PubReportInstance" UserDataComponentName="PubReportInstanceTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        PubReportInstance.id, PubReportInstance.created_by_user_name, PubReportInstance.path_to_hard_copy, PubReportInstance.vendor_id, PubReportInstance.saved, 
+                         Vendor.name AS vendor_name, PubReportInstance.email_status_msg
+FROM            PubReportInstance INNER JOIN
+                         Vendor ON PubReportInstance.vendor_id = Vendor.id
+WHERE        (Vendor.name = @1)
+ORDER BY PubReportInstance.saved DESC</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="name" DataSourceName="DADatabaseR1.dbo.Vendor" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="vendor_name" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id" DataSetColumn="id" />
+              <Mapping SourceColumn="created_by_user_name" DataSetColumn="created_by_user_name" />
+              <Mapping SourceColumn="path_to_hard_copy" DataSetColumn="path_to_hard_copy" />
+              <Mapping SourceColumn="vendor_id" DataSetColumn="vendor_id" />
+              <Mapping SourceColumn="saved" DataSetColumn="saved" />
+              <Mapping SourceColumn="vendor_name" DataSetColumn="vendor_name" />
+              <Mapping SourceColumn="email_status_msg" DataSetColumn="email_status_msg" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="NetTermTypeTableAdapter" GeneratorDataComponentClassName="NetTermTypeTableAdapter" Name="NetTermType" UserDataComponentName="NetTermTypeTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.NetTermType" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        name, name AS filter_string
+FROM            NetTermType</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="name" DataSetColumn="name" />
+              <Mapping SourceColumn="filter_string" DataSetColumn="filter_string" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CurrencyTableAdapter" GeneratorDataComponentClassName="CurrencyTableAdapter" Name="Currency" UserDataComponentName="CurrencyTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.Currency" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        name, name AS filter_string
+FROM            Currency</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="name" DataSetColumn="name" />
+              <Mapping SourceColumn="filter_string" DataSetColumn="filter_string" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignsPublisherReportSummaryTableAdapter" GeneratorDataComponentClassName="CampaignsPublisherReportSummaryTableAdapter" Name="CampaignsPublisherReportSummary" UserDataComponentName="CampaignsPublisherReportSummaryTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.CampaignsPublisherReportSummary" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT CampaignStatus, Publisher, NetTerms, PayCurrency, Unverified, Verified, Approved, Paid, ToBePaid, Total FROM dbo.CampaignsPublisherReportSummary</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="CampaignStatus" DataSetColumn="CampaignStatus" />
+              <Mapping SourceColumn="Publisher" DataSetColumn="Publisher" />
+              <Mapping SourceColumn="NetTerms" DataSetColumn="NetTerms" />
+              <Mapping SourceColumn="PayCurrency" DataSetColumn="PayCurrency" />
+              <Mapping SourceColumn="Unverified" DataSetColumn="Unverified" />
+              <Mapping SourceColumn="Verified" DataSetColumn="Verified" />
+              <Mapping SourceColumn="Approved" DataSetColumn="Approved" />
+              <Mapping SourceColumn="Paid" DataSetColumn="Paid" />
+              <Mapping SourceColumn="ToBePaid" DataSetColumn="ToBePaid" />
+              <Mapping SourceColumn="Total" DataSetColumn="Total" />
+            </Mappings>
+            <Sources>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.CampaignsPublisherReportSummary" DbObjectType="View" FillMethodModifier="Public" FillMethodName="FillByPublishersWithLineItemsOfVerifiedCampaigns" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDataBy" GeneratorSourceName="FillByPublishersWithLineItemsOfVerifiedCampaigns" GetMethodModifier="Public" GetMethodName="GetDataBy" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillByPublishersWithLineItemsOfVerifiedCampaigns">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT CampaignStatus, Publisher, NetTerms, PayCurrency, Unverified, Verified, Approved, Paid, ToBePaid, Total FROM dbo.CampaignsPublisherReportSummary
+WHERE CampaignStatus='Verified'</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="AccountingDetailsTableAdapter" GeneratorDataComponentClassName="AccountingDetailsTableAdapter" Name="AccountingDetails" UserDataComponentName="AccountingDetailsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.AccountingDetails" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT Publisher, Affiliate, Advertiser, PID, Campaign, [Rev Curr], [Cost Curr], [Pay Curr], [Rev/Unit], [Cost/Unit], Units, [Unit Type], Revenue, Cost, [Media Buyer], [Ad Manager], [Account Manager], [Accounting Status] FROM dbo.AccountingDetails</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Publisher" DataSetColumn="Publisher" />
+              <Mapping SourceColumn="Affiliate" DataSetColumn="Affiliate" />
+              <Mapping SourceColumn="Advertiser" DataSetColumn="Advertiser" />
+              <Mapping SourceColumn="PID" DataSetColumn="PID" />
+              <Mapping SourceColumn="Campaign" DataSetColumn="Campaign" />
+              <Mapping SourceColumn="Rev Curr" DataSetColumn="Rev Curr" />
+              <Mapping SourceColumn="Cost Curr" DataSetColumn="Cost Curr" />
+              <Mapping SourceColumn="Pay Curr" DataSetColumn="Pay Curr" />
+              <Mapping SourceColumn="Rev/Unit" DataSetColumn="Rev/Unit" />
+              <Mapping SourceColumn="Cost/Unit" DataSetColumn="Cost/Unit" />
+              <Mapping SourceColumn="Units" DataSetColumn="Units" />
+              <Mapping SourceColumn="Unit Type" DataSetColumn="Unit Type" />
+              <Mapping SourceColumn="Revenue" DataSetColumn="Revenue" />
+              <Mapping SourceColumn="Cost" DataSetColumn="Cost" />
+              <Mapping SourceColumn="Media Buyer" DataSetColumn="Media Buyer" />
+              <Mapping SourceColumn="Ad Manager" DataSetColumn="Ad Manager" />
+              <Mapping SourceColumn="Account Manager" DataSetColumn="Account Manager" />
+              <Mapping SourceColumn="Accounting Status" DataSetColumn="Accounting Status" />
+            </Mappings>
+            <Sources>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.AccountingDetails" DbObjectType="View" FillMethodModifier="Public" FillMethodName="FillByPublisher" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDataByPublisher" GeneratorSourceName="FillByPublisher" GetMethodModifier="Public" GetMethodName="GetDataByPublisher" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataByPublisher" UserSourceName="FillByPublisher">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        Publisher, Affiliate, Advertiser, PID, Campaign, [Rev Curr], [Cost Curr], [Pay Curr], [Rev/Unit], [Cost/Unit], Units, [Unit Type], Revenue, Cost, [Media Buyer], 
+                         [Ad Manager], [Account Manager], [Accounting Status]
+FROM            AccountingDetails
+WHERE        (Publisher = @1)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="1" ColumnName="Publisher" DataSourceName="DADatabaseR1.dbo.AccountingDetails" DataTypeServer="varchar(255)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="255" SourceColumn="Publisher" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignsPublisherReportDetailsTableAdapter" GeneratorDataComponentClassName="CampaignsPublisherReportDetailsTableAdapter" Name="CampaignsPublisherReportDetails" UserDataComponentName="CampaignsPublisherReportDetailsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.CampaignsPublisherReportDetails" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        ItemIDs, CampaignStatus, Publisher, AddCode, CampaignName, NumUnits, CostPerUnit, NetTerms, PayCurrency, IsCPM, MediaBuyer, ToBePaid, Paid, Total
+FROM            CampaignsPublisherReportDetails
+WHERE        (Publisher = @Publisher)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="Publisher" ColumnName="Publisher" DataSourceName="DADatabaseR1.dbo.CampaignsPublisherReportDetails" DataTypeServer="varchar(255)" DbType="AnsiString" Direction="Input" ParameterName="@Publisher" Precision="0" ProviderType="VarChar" Scale="0" Size="255" SourceColumn="Publisher" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="ItemIDs" DataSetColumn="ItemIDs" />
+              <Mapping SourceColumn="CampaignStatus" DataSetColumn="CampaignStatus" />
+              <Mapping SourceColumn="Publisher" DataSetColumn="Publisher" />
+              <Mapping SourceColumn="AddCode" DataSetColumn="AddCode" />
+              <Mapping SourceColumn="CampaignName" DataSetColumn="CampaignName" />
+              <Mapping SourceColumn="NumUnits" DataSetColumn="NumUnits" />
+              <Mapping SourceColumn="CostPerUnit" DataSetColumn="CostPerUnit" />
+              <Mapping SourceColumn="NetTerms" DataSetColumn="NetTerms" />
+              <Mapping SourceColumn="PayCurrency" DataSetColumn="PayCurrency" />
+              <Mapping SourceColumn="IsCPM" DataSetColumn="IsCPM" />
+              <Mapping SourceColumn="MediaBuyer" DataSetColumn="MediaBuyer" />
+              <Mapping SourceColumn="ToBePaid" DataSetColumn="ToBePaid" />
+              <Mapping SourceColumn="Paid" DataSetColumn="Paid" />
+              <Mapping SourceColumn="Total" DataSetColumn="Total" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="AccountingDetailsWithMarginTableAdapter" GeneratorDataComponentClassName="AccountingDetailsWithMarginTableAdapter" Name="AccountingDetailsWithMargin" UserDataComponentName="AccountingDetailsWithMarginTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.AccountingDetailsWithMargin" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT Publisher, Affiliate, Advertiser, pid, Campaign, [Rev Curr], [Cost Curr], [Pay Curr], [Rev/Unit], [Cost/Unit], Units, [Unit Type], Revenue, Cost, [Media Buyer], [Ad Manager], [Account Manager], [Accounting Status], [Rev USD], [Cost USD], [Margin USD] FROM dbo.AccountingDetailsWithMargin</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Publisher" DataSetColumn="Publisher" />
+              <Mapping SourceColumn="Affiliate" DataSetColumn="Affiliate" />
+              <Mapping SourceColumn="Advertiser" DataSetColumn="Advertiser" />
+              <Mapping SourceColumn="pid" DataSetColumn="pid" />
+              <Mapping SourceColumn="Campaign" DataSetColumn="Campaign" />
+              <Mapping SourceColumn="Rev Curr" DataSetColumn="Rev Curr" />
+              <Mapping SourceColumn="Cost Curr" DataSetColumn="Cost Curr" />
+              <Mapping SourceColumn="Pay Curr" DataSetColumn="Pay Curr" />
+              <Mapping SourceColumn="Rev/Unit" DataSetColumn="Rev/Unit" />
+              <Mapping SourceColumn="Cost/Unit" DataSetColumn="Cost/Unit" />
+              <Mapping SourceColumn="Units" DataSetColumn="Units" />
+              <Mapping SourceColumn="Unit Type" DataSetColumn="Unit Type" />
+              <Mapping SourceColumn="Revenue" DataSetColumn="Revenue" />
+              <Mapping SourceColumn="Cost" DataSetColumn="Cost" />
+              <Mapping SourceColumn="Media Buyer" DataSetColumn="Media Buyer" />
+              <Mapping SourceColumn="Ad Manager" DataSetColumn="Ad Manager" />
+              <Mapping SourceColumn="Account Manager" DataSetColumn="Account Manager" />
+              <Mapping SourceColumn="Accounting Status" DataSetColumn="Accounting Status" />
+              <Mapping SourceColumn="Rev USD" DataSetColumn="Rev USD" />
+              <Mapping SourceColumn="Cost USD" DataSetColumn="Cost USD" />
+              <Mapping SourceColumn="Margin USD" DataSetColumn="Margin USD" />
+            </Mappings>
+            <Sources>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.AccountingDetailsWithMargin" DbObjectType="View" FillMethodModifier="Public" FillMethodName="FillByPublisher" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDataByPublisher" GeneratorSourceName="FillByPublisher" GetMethodModifier="Public" GetMethodName="GetDataByPublisher" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataByPublisher" UserSourceName="FillByPublisher">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT        Publisher, Affiliate, Advertiser, pid, Campaign, [Rev Curr], [Cost Curr], [Pay Curr], [Rev/Unit], [Cost/Unit], Units, [Unit Type], Revenue, Cost, [Media Buyer], 
+                         [Ad Manager], [Account Manager], [Accounting Status], [Rev USD], [Cost USD], [Margin USD]
+FROM            AccountingDetailsWithMargin
+WHERE        (Publisher = @Publisher)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="Publisher" ColumnName="Publisher" DataSourceName="DADatabaseR1.dbo.AccountingDetailsWithMargin" DataTypeServer="varchar(255)" DbType="AnsiString" Direction="Input" ParameterName="@Publisher" Precision="0" ProviderType="VarChar" Scale="0" Size="255" SourceColumn="Publisher" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="PublisherRepSummaryTotalsTableAdapter" GeneratorDataComponentClassName="PublisherRepSummaryTotalsTableAdapter" Name="PublisherRepSummaryTotals" UserDataComponentName="PublisherRepSummaryTotalsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>WITH C AS (SELECT * FROM CampaignsPublisherReportSummary)
+SELECT
+	'Total' [Status],
+	SUM(CASE WHEN PayCurrency='USD' THEN Total END) USD,
+	SUM(CASE WHEN PayCurrency='EUR' THEN Total END) EUR,
+	SUM(CASE WHEN PayCurrency='GBP' THEN Total END) GBP,
+	SUM(CASE WHEN PayCurrency='AUD' THEN Total END) AUD
+FROM C
+UNION
+SELECT
+	'ToBePaid' [Status],
+	SUM(CASE WHEN PayCurrency='USD' THEN ToBePaid END) USD,
+	SUM(CASE WHEN PayCurrency='EUR' THEN ToBePaid END) EUR,
+	SUM(CASE WHEN PayCurrency='GBP' THEN ToBePaid END) GBP,
+	SUM(CASE WHEN PayCurrency='AUD' THEN ToBePaid END) AUD
+FROM C
+UNION
+SELECT
+	'Paid' [Status],
+	SUM(CASE WHEN PayCurrency='USD' THEN Paid END) USD,
+	SUM(CASE WHEN PayCurrency='EUR' THEN Paid END) EUR,
+	SUM(CASE WHEN PayCurrency='GBP' THEN Paid END) GBP,
+	SUM(CASE WHEN PayCurrency='AUD' THEN Paid END) AUD
+FROM C
+UNION
+SELECT
+	'Approved' [Status],
+	SUM(CASE WHEN PayCurrency='USD' THEN Approved END) USD,
+	SUM(CASE WHEN PayCurrency='EUR' THEN Approved END) EUR,
+	SUM(CASE WHEN PayCurrency='GBP' THEN Approved END) GBP,
+	SUM(CASE WHEN PayCurrency='AUD' THEN Approved END) AUD
+FROM C
+UNION
+SELECT
+	'Verified' [Status],
+	SUM(CASE WHEN PayCurrency='USD' THEN Verified END) USD,
+	SUM(CASE WHEN PayCurrency='EUR' THEN Verified END) EUR,
+	SUM(CASE WHEN PayCurrency='GBP' THEN Verified END) GBP,
+	SUM(CASE WHEN PayCurrency='AUD' THEN Verified END) AUD
+FROM C
+UNION
+SELECT
+	'Unverified' [Status],
+	SUM(CASE WHEN PayCurrency='USD' THEN Verified END) USD,
+	SUM(CASE WHEN PayCurrency='EUR' THEN Verified END) EUR,
+	SUM(CASE WHEN PayCurrency='GBP' THEN Verified END) GBP,
+	SUM(CASE WHEN PayCurrency='AUD' THEN Verified END) AUD
+FROM C
+GO</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Status" DataSetColumn="Status" />
+              <Mapping SourceColumn="USD" DataSetColumn="USD" />
+              <Mapping SourceColumn="EUR" DataSetColumn="EUR" />
+              <Mapping SourceColumn="GBP" DataSetColumn="GBP" />
+              <Mapping SourceColumn="AUD" DataSetColumn="AUD" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignsPublisherReportSummarySummaryByNetTermsTableAdapter" GeneratorDataComponentClassName="CampaignsPublisherReportSummarySummaryByNetTermsTableAdapter" Name="CampaignsPublisherReportSummarySummaryByNetTerms" UserDataComponentName="CampaignsPublisherReportSummarySummaryByNetTermsTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.CampaignsPublisherReportSummarySummaryByNetTerms" DbObjectType="Function" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT Status, USD, EUR, GBP, AUD FROM dbo.CampaignsPublisherReportSummarySummaryByNetTerms(@p_net_terms)</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="false" AutogeneratedName="p_net_terms" ColumnName="" DataSourceName="" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@p_net_terms" Precision="0" Scale="0" Size="1024" SourceColumn="" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="Status" DataSetColumn="Status" />
+              <Mapping SourceColumn="USD" DataSetColumn="USD" />
+              <Mapping SourceColumn="EUR" DataSetColumn="EUR" />
+              <Mapping SourceColumn="GBP" DataSetColumn="GBP" />
+              <Mapping SourceColumn="AUD" DataSetColumn="AUD" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources>
+          <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.Affiliate" DbObjectType="Table" GenerateShortCommands="true" GeneratorSourceName="EmailFromAffiliateAddCodeScalarQuery" MethodsParameterType="CLR" Modifier="Public" Name="EmailFromAffiliateAddCodeScalarQuery" QueryType="Scalar" ScalarCallRetval="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="EmailFromAffiliateAddCodeScalarQuery">
+            <SelectCommand>
+              <DbCommand CommandType="Text" ModifiedByUser="true">
+                <CommandText>SELECT        email
+FROM            Affiliate
+WHERE        (add_code = @AddCode)</CommandText>
+                <Parameters>
+                  <Parameter AllowDbNull="false" AutogeneratedName="AddCode" ColumnName="add_code" DataSourceName="DADatabaseR1.dbo.Affiliate" DataTypeServer="varchar(100)" DbType="AnsiString" Direction="Input" ParameterName="@AddCode" Precision="0" ProviderType="VarChar" Scale="0" Size="100" SourceColumn="add_code" SourceColumnNullMapping="false" SourceVersion="Current" />
+                </Parameters>
+              </DbCommand>
+            </SelectCommand>
+          </DbSource>
+          <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.PubReportInstance" DbObjectType="Table" GenerateShortCommands="true" GeneratorSourceName="PubReportSentStatusFromVendorScalarQuery" MethodsParameterType="CLR" Modifier="Public" Name="PubReportSentStatusFromVendorScalarQuery" QueryType="Scalar" ScalarCallRetval="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="PubReportSentStatusFromVendorScalarQuery">
+            <SelectCommand>
+              <DbCommand CommandType="Text" ModifiedByUser="true">
+                <CommandText>SELECT        PubReportInstance.email_status_msg
+FROM            PubReportInstance INNER JOIN
+                         Vendor ON PubReportInstance.vendor_id = Vendor.id
+WHERE        (Vendor.name = @Vendor)</CommandText>
+                <Parameters>
+                  <Parameter AllowDbNull="false" AutogeneratedName="Vendor" ColumnName="name" DataSourceName="DADatabaseR1.dbo.Vendor" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@Vendor" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="name" SourceColumnNullMapping="false" SourceVersion="Current" />
+                </Parameters>
+              </DbCommand>
+            </SelectCommand>
+          </DbSource>
+        </Sources>
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="PublisherReportDataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="PublisherReportDataSet1" msprop:Generator_UserDSName="PublisherReportDataSet1">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="VerifiedLineItems" msprop:Generator_TableClassName="VerifiedLineItemsDataTable" msprop:Generator_TableVarName="tableVerifiedLineItems" msprop:Generator_TablePropName="VerifiedLineItems" msprop:Generator_RowDeletingName="VerifiedLineItemsRowDeleting" msprop:Generator_UserTableName="VerifiedLineItems" msprop:Generator_RowChangingName="VerifiedLineItemsRowChanging" msprop:Generator_RowEvHandlerName="VerifiedLineItemsRowChangeEventHandler" msprop:Generator_RowDeletedName="VerifiedLineItemsRowDeleted" msprop:Generator_RowEvArgName="VerifiedLineItemsRowChangeEvent" msprop:Generator_RowChangedName="VerifiedLineItemsRowChanged" msprop:Generator_RowClassName="VerifiedLineItemsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" msprop:Generator_ColumnVarNameInTable="columnname" msprop:Generator_ColumnPropNameInRow="name" msprop:Generator_ColumnPropNameInTable="nameColumn" msprop:Generator_UserColumnName="name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="add_code" msprop:Generator_ColumnVarNameInTable="columnadd_code" msprop:Generator_ColumnPropNameInRow="add_code" msprop:Generator_ColumnPropNameInTable="add_codeColumn" msprop:Generator_UserColumnName="add_code">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="campaign_name" msprop:Generator_ColumnVarNameInTable="columncampaign_name" msprop:Generator_ColumnPropNameInRow="campaign_name" msprop:Generator_ColumnPropNameInTable="campaign_nameColumn" msprop:Generator_UserColumnName="campaign_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="pid" msprop:Generator_ColumnVarNameInTable="columnpid" msprop:Generator_ColumnPropNameInRow="pid" msprop:Generator_ColumnPropNameInTable="pidColumn" msprop:Generator_UserColumnName="pid" type="xs:int" />
+              <xs:element name="status" msprop:Generator_ColumnVarNameInTable="columnstatus" msprop:Generator_ColumnPropNameInRow="status" msprop:Generator_ColumnPropNameInTable="statusColumn" msprop:Generator_UserColumnName="status">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="cost_currency_name" msprop:Generator_ColumnVarNameInTable="columncost_currency_name" msprop:Generator_ColumnPropNameInRow="cost_currency_name" msprop:Generator_ColumnPropNameInTable="cost_currency_nameColumn" msprop:Generator_UserColumnName="cost_currency_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="cust_to_usd_multiplier" msprop:Generator_ColumnVarNameInTable="columncust_to_usd_multiplier" msprop:Generator_ColumnPropNameInRow="cust_to_usd_multiplier" msprop:Generator_ColumnPropNameInTable="cust_to_usd_multiplierColumn" msprop:Generator_UserColumnName="cust_to_usd_multiplier" type="xs:decimal" />
+              <xs:element name="cost_per_unit" msprop:Generator_ColumnVarNameInTable="columncost_per_unit" msprop:Generator_ColumnPropNameInRow="cost_per_unit" msprop:Generator_ColumnPropNameInTable="cost_per_unitColumn" msprop:Generator_UserColumnName="cost_per_unit" type="xs:decimal" />
+              <xs:element name="num_units" msprop:Generator_ColumnVarNameInTable="columnnum_units" msprop:Generator_ColumnPropNameInRow="num_units" msprop:Generator_ColumnPropNameInTable="num_unitsColumn" msprop:Generator_UserColumnName="num_units" type="xs:decimal" />
+              <xs:element name="total_cost" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columntotal_cost" msprop:Generator_ColumnPropNameInRow="total_cost" msprop:Generator_ColumnPropNameInTable="total_costColumn" msprop:Generator_UserColumnName="total_cost" type="xs:decimal" minOccurs="0" />
+              <xs:element name="payment_currency_name" msprop:Generator_ColumnVarNameInTable="columnpayment_currency_name" msprop:Generator_ColumnPropNameInRow="payment_currency_name" msprop:Generator_ColumnPropNameInTable="payment_currency_nameColumn" msprop:Generator_UserColumnName="payment_currency_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="payment_to_usd_multiplier" msprop:Generator_ColumnVarNameInTable="columnpayment_to_usd_multiplier" msprop:Generator_ColumnPropNameInRow="payment_to_usd_multiplier" msprop:Generator_ColumnPropNameInTable="payment_to_usd_multiplierColumn" msprop:Generator_UserColumnName="payment_to_usd_multiplier" type="xs:decimal" />
+              <xs:element name="email" msprop:Generator_ColumnVarNameInTable="columnemail" msprop:Generator_ColumnPropNameInRow="email" msprop:Generator_ColumnPropNameInTable="emailColumn" msprop:Generator_UserColumnName="email">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="media_buyer_name" msprop:Generator_ColumnVarNameInTable="columnmedia_buyer_name" msprop:Generator_ColumnPropNameInRow="media_buyer_name" msprop:Generator_ColumnPropNameInTable="media_buyer_nameColumn" msprop:Generator_UserColumnName="media_buyer_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="affid" msprop:Generator_ColumnVarNameInTable="columnaffid" msprop:Generator_ColumnPropNameInRow="affid" msprop:Generator_ColumnPropNameInTable="affidColumn" msprop:Generator_UserColumnName="affid" type="xs:int" />
+              <xs:element name="item_accounting_status_id" msprop:Generator_ColumnVarNameInTable="columnitem_accounting_status_id" msprop:Generator_ColumnPropNameInRow="item_accounting_status_id" msprop:Generator_ColumnPropNameInTable="item_accounting_status_idColumn" msprop:Generator_UserColumnName="item_accounting_status_id" type="xs:int" />
+              <xs:element name="item_accounting_status_name" msprop:Generator_ColumnVarNameInTable="columnitem_accounting_status_name" msprop:Generator_ColumnPropNameInRow="item_accounting_status_name" msprop:Generator_ColumnPropNameInTable="item_accounting_status_nameColumn" msprop:Generator_UserColumnName="item_accounting_status_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="unit_type_name" msprop:Generator_ColumnVarNameInTable="columnunit_type_name" msprop:Generator_ColumnPropNameInRow="unit_type_name" msprop:Generator_ColumnPropNameInTable="unit_type_nameColumn" msprop:Generator_UserColumnName="unit_type_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="item_id" msdata:ReadOnly="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnitem_id" msprop:Generator_ColumnPropNameInRow="item_id" msprop:Generator_ColumnPropNameInTable="item_idColumn" msprop:Generator_UserColumnName="item_id">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="8000" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="AffiliatesHavingReports" msprop:Generator_TableClassName="AffiliatesHavingReportsDataTable" msprop:Generator_TableVarName="tableAffiliatesHavingReports" msprop:Generator_TablePropName="AffiliatesHavingReports" msprop:Generator_RowDeletingName="AffiliatesHavingReportsRowDeleting" msprop:Generator_UserTableName="AffiliatesHavingReports" msprop:Generator_RowChangingName="AffiliatesHavingReportsRowChanging" msprop:Generator_RowEvHandlerName="AffiliatesHavingReportsRowChangeEventHandler" msprop:Generator_RowDeletedName="AffiliatesHavingReportsRowDeleted" msprop:Generator_RowEvArgName="AffiliatesHavingReportsRowChangeEvent" msprop:Generator_RowChangedName="AffiliatesHavingReportsRowChanged" msprop:Generator_RowClassName="AffiliatesHavingReportsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="publisher_name" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnpublisher_name" msprop:Generator_ColumnPropNameInRow="publisher_name" msprop:Generator_ColumnPropNameInTable="publisher_nameColumn" msprop:Generator_UserColumnName="publisher_name" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="text_for_col_pay_button" msprop:Generator_ColumnVarNameInTable="columntext_for_col_pay_button" msprop:Generator_ColumnPropNameInRow="text_for_col_pay_button" msprop:Generator_ColumnPropNameInTable="text_for_col_pay_buttonColumn" msprop:Generator_UserColumnName="text_for_col_pay_button" type="xs:string" minOccurs="0" />
+              <xs:element name="NetTerms" msprop:Generator_ColumnVarNameInTable="columnNetTerms" msprop:Generator_ColumnPropNameInRow="NetTerms" msprop:Generator_ColumnPropNameInTable="NetTermsColumn" msprop:Generator_UserColumnName="NetTerms">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CurrName" msprop:Generator_ColumnVarNameInTable="columnCurrName" msprop:Generator_ColumnPropNameInRow="CurrName" msprop:Generator_ColumnPropNameInTable="CurrNameColumn" msprop:Generator_UserColumnName="CurrName">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PubReportEmail" msprop:Generator_TableClassName="PubReportEmailDataTable" msprop:Generator_TableVarName="tablePubReportEmail" msprop:Generator_TablePropName="PubReportEmail" msprop:Generator_RowDeletingName="PubReportEmailRowDeleting" msprop:Generator_UserTableName="PubReportEmail" msprop:Generator_RowChangingName="PubReportEmailRowChanging" msprop:Generator_RowEvHandlerName="PubReportEmailRowChangeEventHandler" msprop:Generator_RowDeletedName="PubReportEmailRowDeleted" msprop:Generator_RowEvArgName="PubReportEmailRowChangeEvent" msprop:Generator_RowChangedName="PubReportEmailRowChanged" msprop:Generator_RowClassName="PubReportEmailRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
+              <xs:element name="to_email_address" msprop:Generator_ColumnVarNameInTable="columnto_email_address" msprop:Generator_ColumnPropNameInRow="to_email_address" msprop:Generator_ColumnPropNameInTable="to_email_addressColumn" msprop:Generator_UserColumnName="to_email_address" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="sent_date" msprop:Generator_ColumnVarNameInTable="columnsent_date" msprop:Generator_ColumnPropNameInRow="sent_date" msprop:Generator_ColumnPropNameInTable="sent_dateColumn" msprop:Generator_UserColumnName="sent_date" type="xs:dateTime" />
+              <xs:element name="subject" msprop:Generator_ColumnVarNameInTable="columnsubject" msprop:Generator_ColumnPropNameInRow="subject" msprop:Generator_ColumnPropNameInTable="subjectColumn" msprop:Generator_UserColumnName="subject">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="body" msprop:Generator_ColumnVarNameInTable="columnbody" msprop:Generator_ColumnPropNameInRow="body" msprop:Generator_ColumnPropNameInTable="bodyColumn" msprop:Generator_UserColumnName="body">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="pub_report_instance_id" msprop:Generator_ColumnVarNameInTable="columnpub_report_instance_id" msprop:Generator_ColumnPropNameInRow="pub_report_instance_id" msprop:Generator_ColumnPropNameInTable="pub_report_instance_idColumn" msprop:Generator_UserColumnName="pub_report_instance_id" type="xs:int" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PubReportInstance" msprop:Generator_TableClassName="PubReportInstanceDataTable" msprop:Generator_TableVarName="tablePubReportInstance" msprop:Generator_TablePropName="PubReportInstance" msprop:Generator_RowDeletingName="PubReportInstanceRowDeleting" msprop:Generator_UserTableName="PubReportInstance" msprop:Generator_RowChangingName="PubReportInstanceRowChanging" msprop:Generator_RowEvHandlerName="PubReportInstanceRowChangeEventHandler" msprop:Generator_RowDeletedName="PubReportInstanceRowDeleted" msprop:Generator_RowEvArgName="PubReportInstanceRowChangeEvent" msprop:Generator_RowChangedName="PubReportInstanceRowChanged" msprop:Generator_RowClassName="PubReportInstanceRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
+              <xs:element name="created_by_user_name" msprop:Generator_ColumnVarNameInTable="columncreated_by_user_name" msprop:Generator_ColumnPropNameInRow="created_by_user_name" msprop:Generator_ColumnPropNameInTable="created_by_user_nameColumn" msprop:Generator_UserColumnName="created_by_user_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="path_to_hard_copy" msprop:Generator_ColumnVarNameInTable="columnpath_to_hard_copy" msprop:Generator_ColumnPropNameInRow="path_to_hard_copy" msprop:Generator_ColumnPropNameInTable="path_to_hard_copyColumn" msprop:Generator_UserColumnName="path_to_hard_copy">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="vendor_id" msprop:Generator_ColumnVarNameInTable="columnvendor_id" msprop:Generator_ColumnPropNameInRow="vendor_id" msprop:Generator_ColumnPropNameInTable="vendor_idColumn" msprop:Generator_UserColumnName="vendor_id" type="xs:int" />
+              <xs:element name="saved" msprop:Generator_ColumnVarNameInTable="columnsaved" msprop:Generator_ColumnPropNameInRow="saved" msprop:Generator_ColumnPropNameInTable="savedColumn" msprop:Generator_UserColumnName="saved" type="xs:dateTime" />
+              <xs:element name="vendor_name" msprop:Generator_ColumnVarNameInTable="columnvendor_name" msprop:Generator_ColumnPropNameInRow="vendor_name" msprop:Generator_ColumnPropNameInTable="vendor_nameColumn" msprop:Generator_UserColumnName="vendor_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="email_status_msg" msprop:Generator_ColumnVarNameInTable="columnemail_status_msg" msprop:Generator_ColumnPropNameInRow="email_status_msg" msprop:Generator_ColumnPropNameInTable="email_status_msgColumn" msprop:Generator_UserColumnName="email_status_msg">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="NetTermType" msprop:Generator_TableClassName="NetTermTypeDataTable" msprop:Generator_TableVarName="tableNetTermType" msprop:Generator_TablePropName="NetTermType" msprop:Generator_RowDeletingName="NetTermTypeRowDeleting" msprop:Generator_UserTableName="NetTermType" msprop:Generator_RowChangingName="NetTermTypeRowChanging" msprop:Generator_RowEvHandlerName="NetTermTypeRowChangeEventHandler" msprop:Generator_RowDeletedName="NetTermTypeRowDeleted" msprop:Generator_RowEvArgName="NetTermTypeRowChangeEvent" msprop:Generator_RowChangedName="NetTermTypeRowChanged" msprop:Generator_RowClassName="NetTermTypeRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" msprop:Generator_ColumnVarNameInTable="columnname" msprop:Generator_ColumnPropNameInRow="name" msprop:Generator_ColumnPropNameInTable="nameColumn" msprop:Generator_UserColumnName="name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="filter_string" msprop:Generator_ColumnVarNameInTable="columnfilter_string" msprop:Generator_ColumnPropNameInRow="filter_string" msprop:Generator_ColumnPropNameInTable="filter_stringColumn" msprop:Generator_UserColumnName="filter_string" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Currency" msprop:Generator_TableClassName="CurrencyDataTable" msprop:Generator_TableVarName="tableCurrency" msprop:Generator_TablePropName="Currency" msprop:Generator_RowDeletingName="CurrencyRowDeleting" msprop:Generator_UserTableName="Currency" msprop:Generator_RowChangingName="CurrencyRowChanging" msprop:Generator_RowEvHandlerName="CurrencyRowChangeEventHandler" msprop:Generator_RowDeletedName="CurrencyRowDeleted" msprop:Generator_RowEvArgName="CurrencyRowChangeEvent" msprop:Generator_RowChangedName="CurrencyRowChanged" msprop:Generator_RowClassName="CurrencyRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" msprop:Generator_ColumnVarNameInTable="columnname" msprop:Generator_ColumnPropNameInRow="name" msprop:Generator_ColumnPropNameInTable="nameColumn" msprop:Generator_UserColumnName="name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="filter_string" msprop:Generator_ColumnVarNameInTable="columnfilter_string" msprop:Generator_ColumnPropNameInRow="filter_string" msprop:Generator_ColumnPropNameInTable="filter_stringColumn" msprop:Generator_UserColumnName="filter_string" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CampaignsPublisherReportSummary" msprop:Generator_TableClassName="CampaignsPublisherReportSummaryDataTable" msprop:Generator_TableVarName="tableCampaignsPublisherReportSummary" msprop:Generator_TablePropName="CampaignsPublisherReportSummary" msprop:Generator_RowDeletingName="CampaignsPublisherReportSummaryRowDeleting" msprop:Generator_UserTableName="CampaignsPublisherReportSummary" msprop:Generator_RowChangingName="CampaignsPublisherReportSummaryRowChanging" msprop:Generator_RowEvHandlerName="CampaignsPublisherReportSummaryRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignsPublisherReportSummaryRowDeleted" msprop:Generator_RowEvArgName="CampaignsPublisherReportSummaryRowChangeEvent" msprop:Generator_RowChangedName="CampaignsPublisherReportSummaryRowChanged" msprop:Generator_RowClassName="CampaignsPublisherReportSummaryRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CampaignStatus" msprop:Generator_ColumnVarNameInTable="columnCampaignStatus" msprop:Generator_ColumnPropNameInRow="CampaignStatus" msprop:Generator_ColumnPropNameInTable="CampaignStatusColumn" msprop:Generator_UserColumnName="CampaignStatus">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Publisher" msprop:Generator_ColumnVarNameInTable="columnPublisher" msprop:Generator_ColumnPropNameInRow="Publisher" msprop:Generator_ColumnPropNameInTable="PublisherColumn" msprop:Generator_UserColumnName="Publisher" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NetTerms" msprop:Generator_ColumnVarNameInTable="columnNetTerms" msprop:Generator_ColumnPropNameInRow="NetTerms" msprop:Generator_ColumnPropNameInTable="NetTermsColumn" msprop:Generator_UserColumnName="NetTerms">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PayCurrency" msprop:Generator_ColumnVarNameInTable="columnPayCurrency" msprop:Generator_ColumnPropNameInRow="PayCurrency" msprop:Generator_ColumnPropNameInTable="PayCurrencyColumn" msprop:Generator_UserColumnName="PayCurrency">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Unverified" msprop:Generator_ColumnVarNameInTable="columnUnverified" msprop:Generator_ColumnPropNameInRow="Unverified" msprop:Generator_ColumnPropNameInTable="UnverifiedColumn" msprop:Generator_UserColumnName="Unverified" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Verified" msprop:Generator_ColumnVarNameInTable="columnVerified" msprop:Generator_ColumnPropNameInRow="Verified" msprop:Generator_ColumnPropNameInTable="VerifiedColumn" msprop:Generator_UserColumnName="Verified" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Approved" msprop:Generator_ColumnVarNameInTable="columnApproved" msprop:Generator_ColumnPropNameInRow="Approved" msprop:Generator_ColumnPropNameInTable="ApprovedColumn" msprop:Generator_UserColumnName="Approved" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Paid" msprop:Generator_ColumnVarNameInTable="columnPaid" msprop:Generator_ColumnPropNameInRow="Paid" msprop:Generator_ColumnPropNameInTable="PaidColumn" msprop:Generator_UserColumnName="Paid" type="xs:decimal" minOccurs="0" />
+              <xs:element name="ToBePaid" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnToBePaid" msprop:Generator_ColumnPropNameInRow="ToBePaid" msprop:Generator_ColumnPropNameInTable="ToBePaidColumn" msprop:Generator_UserColumnName="ToBePaid" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Total" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnTotal" msprop:Generator_ColumnPropNameInRow="Total" msprop:Generator_ColumnPropNameInTable="TotalColumn" msprop:Generator_UserColumnName="Total" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="AccountingDetails" msprop:Generator_TableClassName="AccountingDetailsDataTable" msprop:Generator_TableVarName="tableAccountingDetails" msprop:Generator_TablePropName="AccountingDetails" msprop:Generator_RowDeletingName="AccountingDetailsRowDeleting" msprop:Generator_UserTableName="AccountingDetails" msprop:Generator_RowChangingName="AccountingDetailsRowChanging" msprop:Generator_RowEvHandlerName="AccountingDetailsRowChangeEventHandler" msprop:Generator_RowDeletedName="AccountingDetailsRowDeleted" msprop:Generator_RowEvArgName="AccountingDetailsRowChangeEvent" msprop:Generator_RowChangedName="AccountingDetailsRowChanged" msprop:Generator_RowClassName="AccountingDetailsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Publisher" msprop:Generator_ColumnVarNameInTable="columnPublisher" msprop:Generator_ColumnPropNameInRow="Publisher" msprop:Generator_ColumnPropNameInTable="PublisherColumn" msprop:Generator_UserColumnName="Publisher" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Affiliate" msprop:Generator_ColumnVarNameInTable="columnAffiliate" msprop:Generator_ColumnPropNameInRow="Affiliate" msprop:Generator_ColumnPropNameInTable="AffiliateColumn" msprop:Generator_UserColumnName="Affiliate">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Advertiser" msprop:Generator_ColumnVarNameInTable="columnAdvertiser" msprop:Generator_ColumnPropNameInRow="Advertiser" msprop:Generator_ColumnPropNameInTable="AdvertiserColumn" msprop:Generator_UserColumnName="Advertiser">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PID" msprop:Generator_ColumnVarNameInTable="columnPID" msprop:Generator_ColumnPropNameInRow="PID" msprop:Generator_ColumnPropNameInTable="PIDColumn" msprop:Generator_UserColumnName="PID" type="xs:int" />
+              <xs:element name="Campaign" msprop:Generator_ColumnVarNameInTable="columnCampaign" msprop:Generator_ColumnPropNameInRow="Campaign" msprop:Generator_ColumnPropNameInTable="CampaignColumn" msprop:Generator_UserColumnName="Campaign">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Rev_x0020_Curr" msprop:Generator_ColumnVarNameInTable="columnRev_Curr" msprop:Generator_ColumnPropNameInRow="Rev_Curr" msprop:Generator_ColumnPropNameInTable="Rev_CurrColumn" msprop:Generator_UserColumnName="Rev Curr">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Cost_x0020_Curr" msprop:Generator_ColumnVarNameInTable="columnCost_Curr" msprop:Generator_ColumnPropNameInRow="Cost_Curr" msprop:Generator_ColumnPropNameInTable="Cost_CurrColumn" msprop:Generator_UserColumnName="Cost Curr">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Pay_x0020_Curr" msprop:Generator_ColumnVarNameInTable="columnPay_Curr" msprop:Generator_ColumnPropNameInRow="Pay_Curr" msprop:Generator_ColumnPropNameInTable="Pay_CurrColumn" msprop:Generator_UserColumnName="Pay Curr">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Rev_x002F_Unit" msprop:Generator_ColumnVarNameInTable="_columnRev_Unit" msprop:Generator_ColumnPropNameInRow="_Rev_Unit" msprop:Generator_ColumnPropNameInTable="_Rev_UnitColumn" msprop:Generator_UserColumnName="Rev/Unit" type="xs:decimal" />
+              <xs:element name="Cost_x002F_Unit" msprop:Generator_ColumnVarNameInTable="_columnCost_Unit" msprop:Generator_ColumnPropNameInRow="_Cost_Unit" msprop:Generator_ColumnPropNameInTable="_Cost_UnitColumn" msprop:Generator_UserColumnName="Cost/Unit" type="xs:decimal" />
+              <xs:element name="Units" msprop:Generator_ColumnVarNameInTable="columnUnits" msprop:Generator_ColumnPropNameInRow="Units" msprop:Generator_ColumnPropNameInTable="UnitsColumn" msprop:Generator_UserColumnName="Units" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Unit_x0020_Type" msprop:Generator_ColumnVarNameInTable="columnUnit_Type" msprop:Generator_ColumnPropNameInRow="Unit_Type" msprop:Generator_ColumnPropNameInTable="Unit_TypeColumn" msprop:Generator_UserColumnName="Unit Type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Revenue" msprop:Generator_ColumnVarNameInTable="columnRevenue" msprop:Generator_ColumnPropNameInRow="Revenue" msprop:Generator_ColumnPropNameInTable="RevenueColumn" msprop:Generator_UserColumnName="Revenue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Cost" msprop:Generator_ColumnVarNameInTable="columnCost" msprop:Generator_ColumnPropNameInRow="Cost" msprop:Generator_ColumnPropNameInTable="CostColumn" msprop:Generator_UserColumnName="Cost" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Media_x0020_Buyer" msprop:Generator_ColumnVarNameInTable="columnMedia_Buyer" msprop:Generator_ColumnPropNameInRow="Media_Buyer" msprop:Generator_ColumnPropNameInTable="Media_BuyerColumn" msprop:Generator_UserColumnName="Media Buyer">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ad_x0020_Manager" msprop:Generator_ColumnVarNameInTable="columnAd_Manager" msprop:Generator_ColumnPropNameInRow="Ad_Manager" msprop:Generator_ColumnPropNameInTable="Ad_ManagerColumn" msprop:Generator_UserColumnName="Ad Manager">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Account_x0020_Manager" msprop:Generator_ColumnVarNameInTable="columnAccount_Manager" msprop:Generator_ColumnPropNameInRow="Account_Manager" msprop:Generator_ColumnPropNameInTable="Account_ManagerColumn" msprop:Generator_UserColumnName="Account Manager">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Accounting_x0020_Status" msprop:Generator_ColumnVarNameInTable="columnAccounting_Status" msprop:Generator_ColumnPropNameInRow="Accounting_Status" msprop:Generator_ColumnPropNameInTable="Accounting_StatusColumn" msprop:Generator_UserColumnName="Accounting Status">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CampaignsPublisherReportDetails" msprop:Generator_TableClassName="CampaignsPublisherReportDetailsDataTable" msprop:Generator_TableVarName="tableCampaignsPublisherReportDetails" msprop:Generator_TablePropName="CampaignsPublisherReportDetails" msprop:Generator_RowDeletingName="CampaignsPublisherReportDetailsRowDeleting" msprop:Generator_UserTableName="CampaignsPublisherReportDetails" msprop:Generator_RowChangingName="CampaignsPublisherReportDetailsRowChanging" msprop:Generator_RowEvHandlerName="CampaignsPublisherReportDetailsRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignsPublisherReportDetailsRowDeleted" msprop:Generator_RowEvArgName="CampaignsPublisherReportDetailsRowChangeEvent" msprop:Generator_RowChangedName="CampaignsPublisherReportDetailsRowChanged" msprop:Generator_RowClassName="CampaignsPublisherReportDetailsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ItemIDs" msprop:Generator_ColumnVarNameInTable="columnItemIDs" msprop:Generator_ColumnPropNameInRow="ItemIDs" msprop:Generator_ColumnPropNameInTable="ItemIDsColumn" msprop:Generator_UserColumnName="ItemIDs" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="4000" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CampaignStatus" msprop:Generator_ColumnVarNameInTable="columnCampaignStatus" msprop:Generator_ColumnPropNameInRow="CampaignStatus" msprop:Generator_ColumnPropNameInTable="CampaignStatusColumn" msprop:Generator_UserColumnName="CampaignStatus">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Publisher" msprop:Generator_ColumnVarNameInTable="columnPublisher" msprop:Generator_ColumnPropNameInRow="Publisher" msprop:Generator_ColumnPropNameInTable="PublisherColumn" msprop:Generator_UserColumnName="Publisher" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="AddCode" msprop:Generator_ColumnVarNameInTable="columnAddCode" msprop:Generator_ColumnPropNameInRow="AddCode" msprop:Generator_ColumnPropNameInTable="AddCodeColumn" msprop:Generator_UserColumnName="AddCode">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="CampaignName" msprop:Generator_ColumnVarNameInTable="columnCampaignName" msprop:Generator_ColumnPropNameInRow="CampaignName" msprop:Generator_ColumnPropNameInTable="CampaignNameColumn" msprop:Generator_UserColumnName="CampaignName">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NumUnits" msprop:Generator_ColumnVarNameInTable="columnNumUnits" msprop:Generator_ColumnPropNameInRow="NumUnits" msprop:Generator_ColumnPropNameInTable="NumUnitsColumn" msprop:Generator_UserColumnName="NumUnits" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CostPerUnit" msprop:Generator_ColumnVarNameInTable="columnCostPerUnit" msprop:Generator_ColumnPropNameInRow="CostPerUnit" msprop:Generator_ColumnPropNameInTable="CostPerUnitColumn" msprop:Generator_UserColumnName="CostPerUnit" type="xs:decimal" minOccurs="0" />
+              <xs:element name="NetTerms" msprop:Generator_ColumnVarNameInTable="columnNetTerms" msprop:Generator_ColumnPropNameInRow="NetTerms" msprop:Generator_ColumnPropNameInTable="NetTermsColumn" msprop:Generator_UserColumnName="NetTerms">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="PayCurrency" msprop:Generator_ColumnVarNameInTable="columnPayCurrency" msprop:Generator_ColumnPropNameInRow="PayCurrency" msprop:Generator_ColumnPropNameInTable="PayCurrencyColumn" msprop:Generator_UserColumnName="PayCurrency">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="IsCPM" msprop:Generator_ColumnVarNameInTable="columnIsCPM" msprop:Generator_ColumnPropNameInRow="IsCPM" msprop:Generator_ColumnPropNameInTable="IsCPMColumn" msprop:Generator_UserColumnName="IsCPM">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="3" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="MediaBuyer" msprop:Generator_ColumnVarNameInTable="columnMediaBuyer" msprop:Generator_ColumnPropNameInRow="MediaBuyer" msprop:Generator_ColumnPropNameInTable="MediaBuyerColumn" msprop:Generator_UserColumnName="MediaBuyer">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ToBePaid" msprop:Generator_ColumnVarNameInTable="columnToBePaid" msprop:Generator_ColumnPropNameInRow="ToBePaid" msprop:Generator_ColumnPropNameInTable="ToBePaidColumn" msprop:Generator_UserColumnName="ToBePaid" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Paid" msprop:Generator_ColumnVarNameInTable="columnPaid" msprop:Generator_ColumnPropNameInRow="Paid" msprop:Generator_ColumnPropNameInTable="PaidColumn" msprop:Generator_UserColumnName="Paid" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Total" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnTotal" msprop:Generator_ColumnPropNameInRow="Total" msprop:Generator_ColumnPropNameInTable="TotalColumn" msprop:Generator_UserColumnName="Total" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="AccountingDetailsWithMargin" msprop:Generator_TableClassName="AccountingDetailsWithMarginDataTable" msprop:Generator_TableVarName="tableAccountingDetailsWithMargin" msprop:Generator_TablePropName="AccountingDetailsWithMargin" msprop:Generator_RowDeletingName="AccountingDetailsWithMarginRowDeleting" msprop:Generator_UserTableName="AccountingDetailsWithMargin" msprop:Generator_RowChangingName="AccountingDetailsWithMarginRowChanging" msprop:Generator_RowEvHandlerName="AccountingDetailsWithMarginRowChangeEventHandler" msprop:Generator_RowDeletedName="AccountingDetailsWithMarginRowDeleted" msprop:Generator_RowEvArgName="AccountingDetailsWithMarginRowChangeEvent" msprop:Generator_RowChangedName="AccountingDetailsWithMarginRowChanged" msprop:Generator_RowClassName="AccountingDetailsWithMarginRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Publisher" msprop:Generator_ColumnVarNameInTable="columnPublisher" msprop:Generator_ColumnPropNameInRow="Publisher" msprop:Generator_ColumnPropNameInTable="PublisherColumn" msprop:Generator_UserColumnName="Publisher" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Affiliate" msprop:Generator_ColumnVarNameInTable="columnAffiliate" msprop:Generator_ColumnPropNameInRow="Affiliate" msprop:Generator_ColumnPropNameInTable="AffiliateColumn" msprop:Generator_UserColumnName="Affiliate">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Advertiser" msprop:Generator_ColumnVarNameInTable="columnAdvertiser" msprop:Generator_ColumnPropNameInRow="Advertiser" msprop:Generator_ColumnPropNameInTable="AdvertiserColumn" msprop:Generator_UserColumnName="Advertiser">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="pid" msprop:Generator_ColumnVarNameInTable="columnpid" msprop:Generator_ColumnPropNameInRow="pid" msprop:Generator_ColumnPropNameInTable="pidColumn" msprop:Generator_UserColumnName="pid" type="xs:int" />
+              <xs:element name="Campaign" msprop:Generator_ColumnVarNameInTable="columnCampaign" msprop:Generator_ColumnPropNameInRow="Campaign" msprop:Generator_ColumnPropNameInTable="CampaignColumn" msprop:Generator_UserColumnName="Campaign">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Rev_x0020_Curr" msprop:Generator_ColumnVarNameInTable="columnRev_Curr" msprop:Generator_ColumnPropNameInRow="Rev_Curr" msprop:Generator_ColumnPropNameInTable="Rev_CurrColumn" msprop:Generator_UserColumnName="Rev Curr">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Cost_x0020_Curr" msprop:Generator_ColumnVarNameInTable="columnCost_Curr" msprop:Generator_ColumnPropNameInRow="Cost_Curr" msprop:Generator_ColumnPropNameInTable="Cost_CurrColumn" msprop:Generator_UserColumnName="Cost Curr">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Pay_x0020_Curr" msprop:Generator_ColumnVarNameInTable="columnPay_Curr" msprop:Generator_ColumnPropNameInRow="Pay_Curr" msprop:Generator_ColumnPropNameInTable="Pay_CurrColumn" msprop:Generator_UserColumnName="Pay Curr">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Rev_x002F_Unit" msprop:Generator_ColumnVarNameInTable="_columnRev_Unit" msprop:Generator_ColumnPropNameInRow="_Rev_Unit" msprop:Generator_ColumnPropNameInTable="_Rev_UnitColumn" msprop:Generator_UserColumnName="Rev/Unit" type="xs:decimal" />
+              <xs:element name="Cost_x002F_Unit" msprop:Generator_ColumnVarNameInTable="_columnCost_Unit" msprop:Generator_ColumnPropNameInRow="_Cost_Unit" msprop:Generator_ColumnPropNameInTable="_Cost_UnitColumn" msprop:Generator_UserColumnName="Cost/Unit" type="xs:decimal" />
+              <xs:element name="Units" msprop:Generator_ColumnVarNameInTable="columnUnits" msprop:Generator_ColumnPropNameInRow="Units" msprop:Generator_ColumnPropNameInTable="UnitsColumn" msprop:Generator_UserColumnName="Units" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Unit_x0020_Type" msprop:Generator_ColumnVarNameInTable="columnUnit_Type" msprop:Generator_ColumnPropNameInRow="Unit_Type" msprop:Generator_ColumnPropNameInTable="Unit_TypeColumn" msprop:Generator_UserColumnName="Unit Type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Revenue" msprop:Generator_ColumnVarNameInTable="columnRevenue" msprop:Generator_ColumnPropNameInRow="Revenue" msprop:Generator_ColumnPropNameInTable="RevenueColumn" msprop:Generator_UserColumnName="Revenue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Cost" msprop:Generator_ColumnVarNameInTable="columnCost" msprop:Generator_ColumnPropNameInRow="Cost" msprop:Generator_ColumnPropNameInTable="CostColumn" msprop:Generator_UserColumnName="Cost" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Media_x0020_Buyer" msprop:Generator_ColumnVarNameInTable="columnMedia_Buyer" msprop:Generator_ColumnPropNameInRow="Media_Buyer" msprop:Generator_ColumnPropNameInTable="Media_BuyerColumn" msprop:Generator_UserColumnName="Media Buyer">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ad_x0020_Manager" msprop:Generator_ColumnVarNameInTable="columnAd_Manager" msprop:Generator_ColumnPropNameInRow="Ad_Manager" msprop:Generator_ColumnPropNameInTable="Ad_ManagerColumn" msprop:Generator_UserColumnName="Ad Manager">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Account_x0020_Manager" msprop:Generator_ColumnVarNameInTable="columnAccount_Manager" msprop:Generator_ColumnPropNameInRow="Account_Manager" msprop:Generator_ColumnPropNameInTable="Account_ManagerColumn" msprop:Generator_UserColumnName="Account Manager">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Accounting_x0020_Status" msprop:Generator_ColumnVarNameInTable="columnAccounting_Status" msprop:Generator_ColumnPropNameInRow="Accounting_Status" msprop:Generator_ColumnPropNameInTable="Accounting_StatusColumn" msprop:Generator_UserColumnName="Accounting Status">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Rev_x0020_USD" msprop:Generator_ColumnVarNameInTable="columnRev_USD" msprop:Generator_ColumnPropNameInRow="Rev_USD" msprop:Generator_ColumnPropNameInTable="Rev_USDColumn" msprop:Generator_UserColumnName="Rev USD" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Cost_x0020_USD" msprop:Generator_ColumnVarNameInTable="columnCost_USD" msprop:Generator_ColumnPropNameInRow="Cost_USD" msprop:Generator_ColumnPropNameInTable="Cost_USDColumn" msprop:Generator_UserColumnName="Cost USD" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Margin_x0020_USD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnMargin_USD" msprop:Generator_ColumnPropNameInRow="Margin_USD" msprop:Generator_ColumnPropNameInTable="Margin_USDColumn" msprop:Generator_UserColumnName="Margin USD" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PublisherRepSummaryTotals" msprop:Generator_TableClassName="PublisherRepSummaryTotalsDataTable" msprop:Generator_TableVarName="tablePublisherRepSummaryTotals" msprop:Generator_TablePropName="PublisherRepSummaryTotals" msprop:Generator_RowDeletingName="PublisherRepSummaryTotalsRowDeleting" msprop:Generator_UserTableName="PublisherRepSummaryTotals" msprop:Generator_RowChangingName="PublisherRepSummaryTotalsRowChanging" msprop:Generator_RowEvHandlerName="PublisherRepSummaryTotalsRowChangeEventHandler" msprop:Generator_RowDeletedName="PublisherRepSummaryTotalsRowDeleted" msprop:Generator_RowEvArgName="PublisherRepSummaryTotalsRowChangeEvent" msprop:Generator_RowChangedName="PublisherRepSummaryTotalsRowChanged" msprop:Generator_RowClassName="PublisherRepSummaryTotalsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Status" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="USD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnUSD" msprop:Generator_ColumnPropNameInRow="USD" msprop:Generator_ColumnPropNameInTable="USDColumn" msprop:Generator_UserColumnName="USD" type="xs:decimal" minOccurs="0" />
+              <xs:element name="EUR" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnEUR" msprop:Generator_ColumnPropNameInRow="EUR" msprop:Generator_ColumnPropNameInTable="EURColumn" msprop:Generator_UserColumnName="EUR" type="xs:decimal" minOccurs="0" />
+              <xs:element name="GBP" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnGBP" msprop:Generator_ColumnPropNameInRow="GBP" msprop:Generator_ColumnPropNameInTable="GBPColumn" msprop:Generator_UserColumnName="GBP" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AUD" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnAUD" msprop:Generator_ColumnPropNameInRow="AUD" msprop:Generator_ColumnPropNameInTable="AUDColumn" msprop:Generator_UserColumnName="AUD" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CampaignsPublisherReportSummarySummaryByNetTerms" msprop:Generator_TableClassName="CampaignsPublisherReportSummarySummaryByNetTermsDataTable" msprop:Generator_TableVarName="tableCampaignsPublisherReportSummarySummaryByNetTerms" msprop:Generator_TablePropName="CampaignsPublisherReportSummarySummaryByNetTerms" msprop:Generator_RowDeletingName="CampaignsPublisherReportSummarySummaryByNetTermsRowDeleting" msprop:Generator_UserTableName="CampaignsPublisherReportSummarySummaryByNetTerms" msprop:Generator_RowChangingName="CampaignsPublisherReportSummarySummaryByNetTermsRowChanging" msprop:Generator_RowEvHandlerName="CampaignsPublisherReportSummarySummaryByNetTermsRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignsPublisherReportSummarySummaryByNetTermsRowDeleted" msprop:Generator_RowEvArgName="CampaignsPublisherReportSummarySummaryByNetTermsRowChangeEvent" msprop:Generator_RowChangedName="CampaignsPublisherReportSummarySummaryByNetTermsRowChanged" msprop:Generator_RowClassName="CampaignsPublisherReportSummarySummaryByNetTermsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="128" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="USD" msprop:Generator_ColumnVarNameInTable="columnUSD" msprop:Generator_ColumnPropNameInRow="USD" msprop:Generator_ColumnPropNameInTable="USDColumn" msprop:Generator_UserColumnName="USD" type="xs:decimal" minOccurs="0" />
+              <xs:element name="EUR" msprop:Generator_ColumnVarNameInTable="columnEUR" msprop:Generator_ColumnPropNameInRow="EUR" msprop:Generator_ColumnPropNameInTable="EURColumn" msprop:Generator_UserColumnName="EUR" type="xs:decimal" minOccurs="0" />
+              <xs:element name="GBP" msprop:Generator_ColumnVarNameInTable="columnGBP" msprop:Generator_ColumnPropNameInRow="GBP" msprop:Generator_ColumnPropNameInTable="GBPColumn" msprop:Generator_UserColumnName="GBP" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AUD" msprop:Generator_ColumnVarNameInTable="columnAUD" msprop:Generator_ColumnPropNameInRow="AUD" msprop:Generator_ColumnPropNameInTable="AUDColumn" msprop:Generator_UserColumnName="AUD" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:VerifiedLineItems" />
+      <xs:field xpath="mstns:item_id" />
+    </xs:unique>
+    <xs:unique name="PubReportEmail_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:PubReportEmail" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+    <xs:unique name="PubReportInstance_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:PubReportInstance" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="FK_PubReportEmail_PubReportInstance" msdata:parent="PubReportInstance" msdata:child="PubReportEmail" msdata:parentkey="id" msdata:childkey="pub_report_instance_id" msprop:Generator_UserChildTable="PubReportEmail" msprop:Generator_ChildPropName="GetPubReportEmailRows" msprop:Generator_UserParentTable="PubReportInstance" msprop:Generator_UserRelationName="FK_PubReportEmail_PubReportInstance" msprop:Generator_RelationVarName="relationFK_PubReportEmail_PubReportInstance" msprop:Generator_ParentPropName="PubReportInstanceRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

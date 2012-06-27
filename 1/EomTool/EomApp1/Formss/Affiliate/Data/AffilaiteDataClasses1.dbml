@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" Class="AffilaiteDataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Affiliate" Member="Affiliates">
+    <Type Name="Affiliate">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="media_buyer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="add_code" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="name2" Type="System.String" DbType="VarChar(358) NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="net_term_type_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="payment_method_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="MediaBuyer_Affiliate" Member="MediaBuyer" ThisKey="media_buyer_id" OtherKey="id" Type="MediaBuyer" IsForeignKey="true" />
+      <Association Name="Currency_Affiliate" Member="Currency" ThisKey="currency_id" OtherKey="id" Type="Currency" IsForeignKey="true" />
+      <Association Name="NetTermType_Affiliate" Member="NetTermType" ThisKey="net_term_type_id" OtherKey="id" Type="NetTermType" IsForeignKey="true" />
+      <Association Name="AffiliatePaymentMethod_Affiliate" Member="AffiliatePaymentMethod" ThisKey="payment_method_id" OtherKey="id" Type="AffiliatePaymentMethod" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MediaBuyer" Member="MediaBuyers">
+    <Type Name="MediaBuyer">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="MediaBuyer_Affiliate" Member="Affiliates" ThisKey="id" OtherKey="media_buyer_id" Type="Affiliate" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Currency" Member="Currencies">
+    <Type Name="Currency">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="to_usd_multiplier" Type="System.Decimal" DbType="Decimal(14,4) NOT NULL" CanBeNull="false" />
+      <Association Name="Currency_Affiliate" Member="Affiliates" ThisKey="id" OtherKey="currency_id" Type="Affiliate" />
+    </Type>
+  </Table>
+  <Table Name="dbo.NetTermType" Member="NetTermTypes">
+    <Type Name="NetTermType">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="NetTermType_Affiliate" Member="Affiliates" ThisKey="id" OtherKey="net_term_type_id" Type="Affiliate" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AffiliatePaymentMethod" Member="AffiliatePaymentMethods">
+    <Type Name="AffiliatePaymentMethod">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="AffiliatePaymentMethod_Affiliate" Member="Affiliates" ThisKey="id" OtherKey="payment_method_id" Type="Affiliate" />
+    </Type>
+  </Table>
+</Database>

@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/campaign/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/campaign/v1_0"
+elementFormDefault="qualified">
+
+  <!--
+  simpleType[booleanInt]/restriction[integer]/enumeration
+  -->
+  <xs:simpleType name="booleanInt">
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!--
+  simpleType[resourceURI]/restriction[anyURI]/pattern[value]
+  -->
+  <xs:simpleType name="resourceURI">
+    <xs:restriction base="xs:anyURI">
+      <xs:pattern value=".*/.*[^/]"></xs:pattern>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!--
+  element[campaignType]/simpleType/restriction[string]/enumeration
+  -->
+  <xs:element name="campaignType">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="CPC"/>
+        <xs:enumeration value="CPM"/>
+        <xs:enumeration value="CPA"/>
+        <xs:enumeration value="CPS"/>
+        <xs:enumeration value="PSC"/>
+        <xs:enumeration value="Category Specific"/>
+        <xs:enumeration value="Coregistration"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <!--
+  element/simpleType/restriction[string]/enumeration
+  -->
+  <xs:element name="campaignName">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="trackMethod">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="pixel"/>
+        <xs:enumeration value="hosted"/>
+        <xs:enumeration value="import"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="status">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="active"/>
+        <xs:enumeration value="inactive"/>
+        <xs:enumeration value="pending"/>
+        <xs:enumeration value="deleted"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="excludeEPC" type="booleanInt" />
+
+  <xs:element name="overridePayout" type="booleanInt" />
+
+  <xs:element name="trackConversionType">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="none"/>
+        <xs:enumeration value="lead"/>
+        <xs:enumeration value="sales"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="recurringPayout" type="booleanInt" />
+
+  <xs:element name="sharePerformance" type="booleanInt" />
+
+  <xs:element name="campaignURL">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="255"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="discontinueURL">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="255"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="authenticationDomainURL">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="longDescription">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="60000"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="shortDescription">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="60000"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="subjectLines">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="60000"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="primaryAdvertiserEmail">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+        <xs:pattern value="(.+\.[A-Za-z]{2,4})?"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="startDate">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:pattern value="[0-9]{4}-(((0[013578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))"/>
+        <xs:maxLength value="10"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="endDate">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:pattern value="[0-9]{4}-(((0[013578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))"/>
+        <xs:maxLength value="10"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="cookieExpireDays" type="xs:unsignedInt"/>
+  
+  <xs:element name="target">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="category"/>
+        <xs:enumeration value="public"/>
+        <xs:enumeration value="select"/>
+        <xs:enumeration value="private"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="turnOffBlanket" type="booleanInt" />
+  
+  <xs:element name="notificationDate">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:pattern value="[0-9]{4}-(((0[013578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))"/>
+        <xs:maxLength value="10"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="notifyLevelClicks" type="xs:unsignedInt"/>
+  
+  <xs:element name="notifyLevelLeads" type="xs:unsignedInt"/>
+  
+  <xs:element name="notifyLevelSales" type="xs:unsignedInt"/>
+  
+  <xs:element name="notifyLevelImpressions" type="xs:unsignedInt"/>
+
+  <xs:element name="thresholdEmail" type="xs:string"/>
+  
+  <xs:element name="internalNotes">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="2000"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="updateSchedule">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="none"/>
+        <xs:enumeration value="realtime"/>
+        <xs:enumeration value="sporadically"/>
+        <xs:enumeration value="daily"/>
+        <xs:enumeration value="weekly"/>
+        <xs:enumeration value="monthly"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="thirdPartyPlaced" type="booleanInt" />
+  
+  <xs:element name="allowAffiliateUpload" type="booleanInt" />
+  
+  <xs:element name="hidden" type="booleanInt" />
+  
+  <xs:element name="campaignImage" type="xs:anyURI"/>
+  
+  <xs:element name="campaignSuppressionList" type="xs:anyURI"/>
+  
+  <xs:element name="removeExisting" type="booleanInt" />
+  
+  <xs:element name="fileLocation">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="fileMethod">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="ftp"/>
+        <xs:enumeration value="globalftp"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="ftpServer">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="ftpUsername">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="ftpPassword">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="unsubType">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="Custom"/>
+        <xs:enumeration value="DNEList"/>
+        <xs:enumeration value="UnsubCentral"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="requireDownload" type="booleanInt" />
+  
+  <xs:element name="dneMerchantCode">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="5"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="dneList">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="alternateLinkURL">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="65536"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="unsubLinkURL">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="65536"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="suppressionFileLinkURL">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="65536"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="apiURL">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="65536"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+
+  <xs:element name="hashValue">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="255"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="extraTerms" type="xs:string"/>
+  
+  <xs:element name="extraTermsRequired" type="booleanInt" />
+  
+  <xs:element name="country">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:minLength value="2"/>
+        <xs:maxLength value="4"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="trafficLimitResourceURL">
+    <xs:complexType>
+      <xs:attribute name="location" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="notifyEmail">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="100"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:simpleType name="limitType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="discontinue"/>
+      <xs:enumeration value="georedirect"/>
+      <xs:enumeration value="custom"/>
+      <xs:enumeration value="inactivate"/>
+      <xs:enumeration value="campaign"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!-- END simple elements -->
+
+  <!-- attributes -->
+  
+  <!-- END attributes -->
+
+  <!-- complex elements -->
+  
+  <xs:element name="resourceURL">
+    <xs:complexType>
+      <xs:attribute name="location" type="resourceURI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="advertiserURL">
+    <xs:complexType>
+      <xs:attribute name="location" type="resourceURI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="newImageFile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="removeExisting" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="fileMethod" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="fileLocation" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ftpServer" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ftpUsername" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ftpPassword" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="category1ResourceURL">
+    <xs:complexType>
+      <xs:attribute name="location" type="resourceURI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="category2ResourceURL">
+    <xs:complexType>
+      <xs:attribute name="location" type="resourceURI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="category3ResourceURL">
+    <xs:complexType>
+      <xs:attribute name="location" type="resourceURI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="unsubFileResourceURLType">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="65536" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="unsubFileResourceURL">
+    <xs:complexType>
+      <xs:attribute name="location" type="unsubFileResourceURLType" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="campaignGroups">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="resourceURL" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="allowedCountries">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="country" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="allCountries" type="booleanInt"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="trafficLimitRedirectURL">
+    <xs:complexType>
+      <xs:attribute name="type" type="limitType" use="required"/>
+      <xs:attribute name="campaignResourceURL" type="xs:string"/>
+      <xs:attribute name="creativeResourceURL" type="xs:string"/>
+      <xs:attribute name="url" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="trafficLimits">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="trafficLimitResourceURL" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="trafficLimitNotification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="notifyEmail" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="newSuppressionFile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="removeExisting" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="fileMethod" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="fileLocation" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ftpServer" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ftpUsername" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ftpPassword" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="usesReservoirTrackingServer" type="booleanInt" />
+  
+  <xs:element name="logRawClicks" type="booleanInt" />
+
+  <xs:element name="requireApprovedSiteID" type="booleanInt" />
+
+  <xs:element name="defaultSiteID">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:maxLength value="65536"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <!-- END complex elements -->
+
+  <!-- PRIMARY ELEMENT -->
+  
+  <xs:element name="campaign">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="campaignType" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="campaignName" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="trackMethod" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="status" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="excludeEPC" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="trackConversionType" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="recurringPayout" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="sharePerformance" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="campaignURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="discontinueURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="longDescription" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="shortDescription" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="subjectLines" minOccurs="0" maxOccurs="1"/>
+        <!-- primaryAdvertiserEmail read-only -->
+        <xs:element ref="primaryAdvertiserEmail" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="advertiserURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="startDate" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="endDate" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="cookieExpireDays" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="target" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="turnOffBlanket" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="notificationDate" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="notifyLevelClicks" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="notifyLevelLeads" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="notifyLevelSales" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="notifyLevelImpressions" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="thresholdEmail" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="internalNotes" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="updateSchedule" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="authenticationDomainURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="thirdPartyPlaced" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="allowAffiliateUpload" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="hidden" minOccurs="0" maxOccurs="1"/>
+        <!-- campaign image - secondary element (newImageFile) used for creating/changing/removing of image -->
+        <xs:element ref="campaignImage" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="newImageFile" minOccurs="0" maxOccurs="1"/>
+        <!-- campaign Suppression List - secondary element (newSuppressionFile) used for creating/changing/removing of Suppression List -->
+        <xs:element ref="campaignSuppressionList" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="newSuppressionFile" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="unsubType" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="requireDownload" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="dneMerchantCode" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="dneList" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="alternateLinkURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="unsubLinkURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="suppressionFileLinkURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="apiURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="hashValue" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="extraTerms" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="extraTermsRequired" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="category1ResourceURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="category2ResourceURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="category3ResourceURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="unsubFileResourceURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="campaignGroups" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="allowedCountries" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="usesReservoirTrackingServer" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="requireApprovedSiteID" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="defaultSiteID" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="trafficLimitRedirectURL" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="trafficLimits" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="trafficLimitNotification" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="logRawClicks" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="overridePayout" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="location" type="resourceURI"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

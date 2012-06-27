@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="DirectTrackClasses">
+  <DataContextMoniker Name="/DirectTrackClassesDataContext" />
+  <nestedChildShapes>
+    <classShape Id="990ff009-7b2e-4c30-b5e7-2bf363ce2fc4" absoluteBounds="0.875, 0.5, 2, 1.3862939453125">
+      <DataClassMoniker Name="/DirectTrackClassesDataContext/XmlResourceDoc" />
+      <nestedChildShapes>
+        <elementListCompartment Id="00a6550e-56f6-46c9-8609-ba3a643c869d" absoluteBounds="0.89000000000000012, 0.96, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

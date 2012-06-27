@@ -1,0 +1,100 @@
+﻿<#@ template language="C#" #>
+<#@ import namespace="System.Linq" #>
+<#
+var items = Data.Where(c => c.Publisher == Publisher).ToList(); 
+var first = items.First();
+string currency = first.PayCurrency;
+#>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Publisher Report</title>
+    <style type="text/css">
+body {font-size: 80%; font-family: arial}
+h2 {border-width: thin; border-style: solid; text-align: center;}
+#outer {width: 700px; margin: 0px auto;}
+#title {font-weight: bold; background-color:#ffffff; border-width: thin; border-style: none; text-align: center}
+#title1 {font-size: 200%; font-style: italic; color: #000000}
+#title2 {font-size: 200%; color: #000000}
+#title3 {font-size: 140%; color: #000000}
+#subtitle {text-align: center; padding: 1em;}
+#info1 {padding: 0.7em;}
+#info2 {padding: 0.7em;}
+#info3 {padding: 0.7em;}
+.lineitems {font-size: 70%; border: 1px solid black; border-collapse:collapse; clear: both}
+.lineitems2 {border: 1px solid black; padding:1px; width: 387px}
+.lineitems3 {border: 1px solid black; padding:1px; width: 100px; text-align: center}
+.lineitems4 {border: 1px solid black; padding:1px; width: 100px; text-align: center}
+.lineitems5 {border: 1px solid black; padding:1px; width: 100px; text-align: center}
+.lineitems6 {border: 1px solid black; padding:1px; width: 100px; text-align: center; background-color:#cccccc}
+.noshow {display: none;}
+#info4 {padding: 0.7em; float: left}
+#info5 {padding: 0.7em; float: right}
+</style>
+  </head>
+  <body>
+    <div id="outer">
+      <div id="title">
+        <img src="http://www.directagents.com/publisherreportheader.png" />
+      </div>
+      <div id="subtitle">
+        <span id="subtitle1">Monthly Performance Report</span>
+      </div>
+      <div id="info1">
+        <span id="info11"><#=first.Publisher#> </span>
+      </div>
+      <div id="info2">
+        <span id="info21"><#=first.MediaBuyer#></span>
+      </div>
+      <div id="info3">
+        <span id="info31">Report For: <#=FormatDate(FromDate)#> to <#=FormatDate(ToDate)#></span>
+      </div>
+<#
+foreach(var i in new [] {
+    new { q = (items.Where(c=>c.IsCPM=="No" && c.Paid > 0 && c.CampaignStatus == "Verified")), s = "Paid" },
+    new { q = (items.Where(c=>c.IsCPM=="No" && c.ToBePaid > 0 && c.CampaignStatus == "Verified")), s= "To Be Paid" },
+    new { q = (items.Where(c=>c.IsCPM=="Yes" && c.Paid > 0 && c.CampaignStatus == "Verified")), s = "CPM Paid" },
+    new { q = (items.Where(c=>c.IsCPM=="Yes" && c.ToBePaid > 0 && c.CampaignStatus == "Verified")), s = "CPM To Be Paid" }
+}) {
+	var list = i.q.ToList();
+	if(list.Count == 0) continue;
+	foreach(var c in i.q) {
+	#>
+	<div>
+        <br />
+        <table class="lineitems">
+          <tr class="lineitems1">
+            <td class="lineitems2">Campaign: <#=c.CampaignName#></td>
+            <td class="lineitems3">Payout</td>
+            <td class="lineitems4">Actions</td>
+            <td class="lineitems5">Revenue</td>
+          </tr>
+          <tr class="lineitems1">
+            <td class="lineitems2"><#=c.CampaignName#> - <#=c.AddCode#></td>
+            <td class="lineitems3"><#=FormatCurrency(currency, c.CostPerUnit)#></td>
+            <td class="lineitems4"><#=(int)c.NumUnits#></td>
+            <td class="lineitems5">
+              <span><#=FormatCurrency(currency, c.Total)#></span>
+            </td>
+          </tr>
+        </table>
+	</div>
+	<#}#>
+	<div id="info4"><span id="info51">Status: <#=i.s#></span></div>
+	<div id="info5"><a id="info61">Total: <#=FormatCurrency(currency, list.Sum(c => c.Total))#></a></div>
+<#}#>
+<#
+foreach(var i in new [] {
+	new { q = (items.Where(c=>c.CampaignStatus != "Verified")), s = "Not Yet Final" }
+}) {
+	var list = i.q.ToList();
+	if(list.Count == 0) continue;
+	foreach(var c in i.q) {
+	#>
+    <table class="lineitems"><tr><td><#=i.s#></td><td><#=c.CampaignName#></td></tr></table>
+	<#}#>
+<#}#>
+    </div>
+  </body>
+</html>

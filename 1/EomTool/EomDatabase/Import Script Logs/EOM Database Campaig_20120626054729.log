@@ -1,0 +1,19 @@
+6/26/2012 1:47:29 PM	This log contains information about the import operation of the script 'EOM Database Campaign Table.sql' into project 'EomDatabase' on computer 'AARON' by user'aanodide.
+6/26/2012 1:47:29 PM	Started importing file: \\ad1\Users\AAnodide\My Documents\SQL Server Management Studio\Projects\EOM Database Campaign Table.sql 
+6/26/2012 1:47:29 PM	File name \\ad1\Users\AAnodide\My Documents\SQL Server Management Studio\Projects\EOM Database Campaign Table.sql (size: 2803)
+6/26/2012 1:47:29 PM	Parsing import script
+6/26/2012 1:47:30 PM	Total number of batches in script: 16
+6/26/2012 1:47:30 PM	Total number of statements in script: 16
+6/26/2012 1:47:30 PM	The script was successfully imported into the project.
+6/26/2012 1:47:30 PM	Analyzing schema objects...
+6/26/2012 1:47:30 PM	Scanning project for duplicate elements
+6/26/2012 1:47:30 PM	Element 'Campaign_DTCampaignStatus_name_FK_DTCampaignStatus_name_UK' was merged into the existing script: 'C:\DACODE\SQLSERVER\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\TABLES\KEYS\CAMPAIGN_DTCAMPAIGNSTATUS_NAME_FK_DTCAMPAIGNSTATUS_NAME_UK.FKEY.SQL'.
+6/26/2012 1:47:30 PM	Element 'Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK' was merged into the existing script: 'C:\DACODE\SQLSERVER\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\TABLES\KEYS\CAMPAIGN_CAMPAIGNSTATUS_ID_FK_CAMPAIGNSTATUS_ID_PK.FKEY.SQL'.
+6/26/2012 1:47:30 PM	Element 'Campaign_Advertiser_id_FK_Advertiser_id_PK' was merged into the existing script: 'C:\DACODE\SQLSERVER\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\TABLES\KEYS\CAMPAIGN_ADVERTISER_ID_FK_ADVERTISER_ID_PK.FKEY.SQL'.
+6/26/2012 1:47:30 PM	Element 'Campaign_AdManager_id_FK_AdManager_id_PK' was merged into the existing script: 'C:\DACODE\SQLSERVER\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\TABLES\KEYS\CAMPAIGN_ADMANAGER_ID_FK_ADMANAGER_ID_PK.FKEY.SQL'.
+6/26/2012 1:47:30 PM	Element 'Campaign_AccountManager_id_FK_AccountManager_id_PK' was merged into the existing script: 'C:\DACODE\SQLSERVER\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\TABLES\KEYS\CAMPAIGN_ACCOUNTMANAGER_ID_FK_ACCOUNTMANAGER_ID_PK.FKEY.SQL'.
+6/26/2012 1:47:30 PM	Element 'Campaign' was merged into the existing script: 'C:\DACODE\SQLSERVER\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\TABLES\CAMPAIGN.TABLE.SQL'.
+6/26/2012 1:47:30 PM	Finished duplicate element processing
+6/26/2012 1:47:30 PM	In the script that you provided to the import operation, one or more statements were not fully understood. These statements were moved to the C:\DACode\SqlServer\EomDatabase\Scripts\ScriptsIgnoredOnImport.sql file. Review the file contents for additional information.
+6/26/2012 1:47:30 PM	A summary of the import operation was saved to the log file C:\DACode\SqlServer\EomDatabase\Import Script Logs\EOM Database Campaig_20120626054729.log.
+6/26/2012 1:47:30 PM	Click Finish to continue...

@@ -1,0 +1,21 @@
+﻿CREATE TABLE [dbo].[Campaign](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[account_manager_id] [int] NOT NULL,
+	[campaign_status_id] [int] NOT NULL,
+	[ad_manager_id] [int] NOT NULL,
+	[advertiser_id] [int] NOT NULL,
+	[pid] [int] NOT NULL,
+	[campaign_name] [varchar](255) NOT NULL,
+	[campaign_type] [char](3) NULL,
+	[modified] [datetime] NULL,
+	[created] [datetime] NULL,
+	[dt_campaign_status] [varchar](25) NULL,
+	[dt_campaign_url] [varchar](255) NULL,
+	[dt_allowed_country_names] [varchar](255) NULL,
+	[is_email] [bit] NULL,
+	[is_search] [bit] NULL,
+	[is_display] [bit] NULL,
+	[is_coreg] [bit] NULL,
+	[max_scrub] [int] NULL,
+	[notes] [varchar](max) NULL
+);

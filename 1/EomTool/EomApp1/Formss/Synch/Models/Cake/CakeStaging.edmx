@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CakeStagingModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="CakeStagingModelStoreContainer">
+          <EntitySet Name="CakeConversions" EntityType="CakeStagingModel.Store.CakeConversions" store:Type="Tables" Schema="staging" />
+          <EntitySet Name="CakeConversionSummary" EntityType="CakeStagingModel.Store.CakeConversionSummary" store:Type="Views" store:Schema="staging" store:Name="CakeConversionSummary">
+            <DefiningQuery>SELECT 
+      [CakeConversionSummary].[Name] AS [Name], 
+      [CakeConversionSummary].[ConversionDate] AS [ConversionDate], 
+      [CakeConversionSummary].[Affiliate_Id] AS [Affiliate_Id], 
+      [CakeConversionSummary].[Offer_Id] AS [Offer_Id], 
+      [CakeConversionSummary].[ConversionType] AS [ConversionType], 
+      [CakeConversionSummary].[Units] AS [Units], 
+      [CakeConversionSummary].[PricePaid] AS [PricePaid], 
+      [CakeConversionSummary].[PriceReceived] AS [PriceReceived], 
+      [CakeConversionSummary].[PricePaidCurrency] AS [PricePaidCurrency], 
+      [CakeConversionSummary].[PriceReceivedCurrency] AS [PriceReceivedCurrency], 
+      [CakeConversionSummary].[Paid] AS [Paid], 
+      [CakeConversionSummary].[Received] AS [Received]
+      FROM [staging].[CakeConversionSummary] AS [CakeConversionSummary]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+        <EntityType Name="CakeConversions">
+          <Key>
+            <PropertyRef Name="Conversion_Id" />
+          </Key>
+          <Property Name="Conversion_Id" Type="int" Nullable="false" />
+          <Property Name="ConversionDate" Type="datetime" />
+          <Property Name="Affiliate_Id" Type="int" />
+          <Property Name="Offer_Id" Type="int" />
+          <Property Name="Advertiser_Id" Type="int" />
+          <Property Name="Campaign_Id" Type="int" />
+          <Property Name="Creative_Id" Type="int" />
+          <Property Name="CreativeName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Subid1" Type="nvarchar" MaxLength="255" />
+          <Property Name="ConversionType" Type="nvarchar" MaxLength="50" />
+          <Property Name="PricePaid" Type="decimal" />
+          <Property Name="PriceReceived" Type="decimal" />
+          <Property Name="IpAddress" Type="nvarchar" MaxLength="50" />
+          <Property Name="PricePaidCurrencyId" Type="int" />
+          <Property Name="PricePaidFormattedAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="PriceReceivedCurrencyId" Type="int" />
+          <Property Name="PriceReceivedFormattedAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'Cake.staging.CakeConversionSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="CakeConversionSummary">
+          <Key>
+            
+            
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="198" Nullable="false" />
+          <Property Name="ConversionDate" Type="date" />
+          <Property Name="Affiliate_Id" Type="int" />
+          <Property Name="Offer_Id" Type="int" />
+          <Property Name="ConversionType" Type="nvarchar" MaxLength="50" />
+          <Property Name="Units" Type="int" />
+          <Property Name="PricePaid" Type="decimal" />
+          <Property Name="PriceReceived" Type="decimal" />
+          <Property Name="PricePaidCurrency" Type="nchar" Nullable="false" MaxLength="3" />
+          <Property Name="PriceReceivedCurrency" Type="nchar" Nullable="false" MaxLength="3" />
+          <Property Name="Paid" Type="decimal" Precision="29" />
+          <Property Name="Received" Type="decimal" Precision="29" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CakeStagingModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="CakeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CakeConversionSummaries" EntityType="CakeStagingModel.CakeConversionSummary" />
+          <EntitySet Name="CakeConversions" EntityType="CakeStagingModel.CakeConversion" />
+        </EntityContainer>
+        <EntityType Name="CakeConversionSummary">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Type="String" Name="Name" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Type="DateTime" Name="ConversionDate" />
+          <Property Type="Int32" Name="Affiliate_Id" />
+          <Property Type="Int32" Name="Offer_Id" />
+          <Property Type="String" Name="ConversionType" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Units" />
+          <Property Type="Decimal" Name="PricePaid" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="PriceReceived" Precision="18" Scale="0" />
+          <Property Type="String" Name="PricePaidCurrency" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="PriceReceivedCurrency" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Type="Decimal" Name="Paid" Precision="29" Scale="0" />
+          <Property Type="Decimal" Name="Received" Precision="29" Scale="0" />
+        </EntityType>
+        <EntityType Name="CakeConversion">
+          <Key>
+            <PropertyRef Name="Conversion_Id" />
+          </Key>
+          <Property Type="Int32" Name="Conversion_Id" Nullable="false" />
+          <Property Type="DateTime" Name="ConversionDate" />
+          <Property Type="Int32" Name="Affiliate_Id" />
+          <Property Type="Int32" Name="Offer_Id" />
+          <Property Type="Int32" Name="Advertiser_Id" />
+          <Property Type="Int32" Name="Campaign_Id" />
+          <Property Type="Int32" Name="Creative_Id" />
+          <Property Type="String" Name="CreativeName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Subid1" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ConversionType" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="PricePaid" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="PriceReceived" Precision="18" Scale="0" />
+          <Property Type="String" Name="IpAddress" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PricePaidCurrencyId" />
+          <Property Type="String" Name="PricePaidFormattedAmount" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PriceReceivedCurrencyId" />
+          <Property Type="String" Name="PriceReceivedFormattedAmount" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Deleted" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CakeStagingModelStoreContainer" CdmEntityContainer="CakeEntities">
+          <EntitySetMapping Name="CakeConversionSummaries">
+            <EntityTypeMapping TypeName="CakeStagingModel.CakeConversionSummary">
+              <MappingFragment StoreEntitySet="CakeConversionSummary">
+                <ScalarProperty Name="Received" ColumnName="Received" />
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+                <ScalarProperty Name="PriceReceivedCurrency" ColumnName="PriceReceivedCurrency" />
+                <ScalarProperty Name="PricePaidCurrency" ColumnName="PricePaidCurrency" />
+                <ScalarProperty Name="PriceReceived" ColumnName="PriceReceived" />
+                <ScalarProperty Name="PricePaid" ColumnName="PricePaid" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="ConversionType" ColumnName="ConversionType" />
+                <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
+                <ScalarProperty Name="Affiliate_Id" ColumnName="Affiliate_Id" />
+                <ScalarProperty Name="ConversionDate" ColumnName="ConversionDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CakeConversions">
+            <EntityTypeMapping TypeName="CakeStagingModel.CakeConversion">
+              <MappingFragment StoreEntitySet="CakeConversions">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="PriceReceivedFormattedAmount" ColumnName="PriceReceivedFormattedAmount" />
+                <ScalarProperty Name="PriceReceivedCurrencyId" ColumnName="PriceReceivedCurrencyId" />
+                <ScalarProperty Name="PricePaidFormattedAmount" ColumnName="PricePaidFormattedAmount" />
+                <ScalarProperty Name="PricePaidCurrencyId" ColumnName="PricePaidCurrencyId" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="PriceReceived" ColumnName="PriceReceived" />
+                <ScalarProperty Name="PricePaid" ColumnName="PricePaid" />
+                <ScalarProperty Name="ConversionType" ColumnName="ConversionType" />
+                <ScalarProperty Name="Subid1" ColumnName="Subid1" />
+                <ScalarProperty Name="CreativeName" ColumnName="CreativeName" />
+                <ScalarProperty Name="Creative_Id" ColumnName="Creative_Id" />
+                <ScalarProperty Name="Campaign_Id" ColumnName="Campaign_Id" />
+                <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
+                <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
+                <ScalarProperty Name="Affiliate_Id" ColumnName="Affiliate_Id" />
+                <ScalarProperty Name="ConversionDate" ColumnName="ConversionDate" />
+                <ScalarProperty Name="Conversion_Id" ColumnName="Conversion_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="CakeStaging">
+        <EntityTypeShape EntityType="CakeStagingModel.CakeConversionSummary" Width="2.5" PointX="0.75" PointY="0.75" Height="3.3263964843749996" />
+        <EntityTypeShape EntityType="CakeStagingModel.CakeConversion" Width="2.375" PointX="3.75" PointY="0.75" Height="4.480205078125" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

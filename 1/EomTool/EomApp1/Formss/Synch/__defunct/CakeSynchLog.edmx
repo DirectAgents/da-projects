@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CakeModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="CakeModelStoreContainer">
+          <EntitySet Name="CakeSynches" EntityType="CakeModel.Store.CakeSynches" store:Type="Tables" Schema="synchlog" />
+          <EntitySet Name="LogEntries" EntityType="CakeModel.Store.LogEntries" store:Type="Tables" Schema="synchlog" />
+          <EntitySet Name="Logs" EntityType="CakeModel.Store.Logs" store:Type="Tables" Schema="synchlog" />
+          <AssociationSet Name="FK_LogCakeSynch" Association="CakeModel.Store.FK_LogCakeSynch">
+            <End Role="Logs" EntitySet="Logs" />
+            <End Role="CakeSynches" EntitySet="CakeSynches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LogLogEntry" Association="CakeModel.Store.FK_LogLogEntry">
+            <End Role="Logs" EntitySet="Logs" />
+            <End Role="LogEntries" EntitySet="LogEntries" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="CakeSynches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OfferId" Type="int" Nullable="false" />
+          <Property Name="FromDate" Type="datetime" Nullable="false" />
+          <Property Name="ToDate" Type="datetime" Nullable="false" />
+          <Property Name="Log_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LogEntries">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Message" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Log_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Logs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="IsRunning" Type="bit" Nullable="false" />
+          <Property Name="Name" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_LogCakeSynch">
+          <End Role="Logs" Type="CakeModel.Store.Logs" Multiplicity="1" />
+          <End Role="CakeSynches" Type="CakeModel.Store.CakeSynches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Logs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CakeSynches">
+              <PropertyRef Name="Log_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LogLogEntry">
+          <End Role="Logs" Type="CakeModel.Store.Logs" Multiplicity="1" />
+          <End Role="LogEntries" Type="CakeModel.Store.LogEntries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Logs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LogEntries">
+              <PropertyRef Name="Log_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CakeModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="CakeSynchEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="LogEntries" EntityType="CakeModel.LogEntry" />
+          <EntitySet Name="Logs" EntityType="CakeModel.Log" />
+          <AssociationSet Name="FK_LogLogEntry" Association="CakeModel.FK_LogLogEntry">
+            <End Role="Log" EntitySet="Logs" />
+            <End Role="LogEntry" EntitySet="LogEntries" />
+          </AssociationSet>
+          <EntitySet Name="CakeSynches" EntityType="CakeModel.CakeSynch" />
+          <AssociationSet Name="FK_LogCakeSynch" Association="CakeModel.FK_LogCakeSynch">
+            <End Role="Log" EntitySet="Logs" />
+            <End Role="CakeSynch" EntitySet="CakeSynches" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="LogEntry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Message" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Log_Id" Nullable="false" />
+          <NavigationProperty Name="Log" Relationship="CakeModel.FK_LogLogEntry" FromRole="LogEntry" ToRole="Log" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="StartTime" Nullable="false" />
+          <Property Type="Boolean" Name="IsRunning" Nullable="false" />
+          <Property Type="Guid" Name="Name" Nullable="false" />
+          <NavigationProperty Name="LogEntries" Relationship="CakeModel.FK_LogLogEntry" FromRole="Log" ToRole="LogEntry" />
+          <NavigationProperty Name="CakeSynches" Relationship="CakeModel.FK_LogCakeSynch" FromRole="Log" ToRole="CakeSynch" />
+        </EntityType>
+        <Association Name="FK_LogLogEntry">
+          <End Type="CakeModel.Log" Role="Log" Multiplicity="1" />
+          <End Type="CakeModel.LogEntry" Role="LogEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Log">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="LogEntry">
+              <PropertyRef Name="Log_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CakeSynch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="OfferId" Nullable="false" />
+          <Property Type="DateTime" Name="FromDate" Nullable="false" />
+          <Property Type="DateTime" Name="ToDate" Nullable="false" />
+          <Property Type="Int32" Name="Log_Id" Nullable="false" />
+          <NavigationProperty Name="Log" Relationship="CakeModel.FK_LogCakeSynch" FromRole="CakeSynch" ToRole="Log" />
+        </EntityType>
+        <Association Name="FK_LogCakeSynch">
+          <End Type="CakeModel.Log" Role="Log" Multiplicity="1" />
+          <End Type="CakeModel.CakeSynch" Role="CakeSynch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Log">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CakeSynch">
+              <PropertyRef Name="Log_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CakeModelStoreContainer" CdmEntityContainer="CakeSynchEntities">
+          <EntitySetMapping Name="LogEntries">
+            <EntityTypeMapping TypeName="CakeModel.LogEntry">
+              <MappingFragment StoreEntitySet="LogEntries">
+                <ScalarProperty Name="Log_Id" ColumnName="Log_Id" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="CakeModel.Log">
+              <MappingFragment StoreEntitySet="Logs">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IsRunning" ColumnName="IsRunning" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CakeSynches">
+            <EntityTypeMapping TypeName="CakeModel.CakeSynch">
+              <MappingFragment StoreEntitySet="CakeSynches">
+                <ScalarProperty Name="Log_Id" ColumnName="Log_Id" />
+                <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="CakeSynchLog">
+        <EntityTypeShape EntityType="CakeModel.LogEntry" Width="1.5" PointX="3" PointY="1" Height="1.7879850260416665" />
+        <EntityTypeShape EntityType="CakeModel.Log" Width="1.5" PointX="0.75" PointY="0.875" Height="1.9802864583333335" />
+        <AssociationConnector Association="CakeModel.FK_LogLogEntry" >
+          <ConnectorPoint PointX="2.25" PointY="1.8939925130208333" />
+          <ConnectorPoint PointX="3" PointY="1.8939925130208333" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="CakeModel.CakeSynch" Width="1.5" PointX="0.875" PointY="3.875" Height="2.1725878906249996" />
+        <AssociationConnector Association="CakeModel.FK_LogCakeSynch" >
+          <ConnectorPoint PointX="1.5625" PointY="3.047587890625" />
+          <ConnectorPoint PointX="1.5625" PointY="3.875" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

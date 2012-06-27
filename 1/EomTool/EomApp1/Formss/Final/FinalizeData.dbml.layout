@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.5, 10.5" name="FinalizeData">
+  <DataContextMoniker Name="/FinalizeDataDataContext" />
+  <nestedChildShapes>
+    <classShape Id="16cdd4f0-8bb6-4df1-b2bf-80adca4e55ef" absoluteBounds="9.25, 2.625, 2, 4.4631168619791666">
+      <DataClassMoniker Name="/FinalizeDataDataContext/Item" />
+      <nestedChildShapes>
+        <elementListCompartment Id="91a46a41-f5e2-4c8a-9eec-d4c994f3431b" absoluteBounds="9.265, 3.085, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="1770e81c-ffb0-4d2c-865d-41b02817e50b" absoluteBounds="5.875, 5.25, 2, 1.1939925130208333">
+      <DataClassMoniker Name="/FinalizeDataDataContext/ItemReportingStatus" />
+      <nestedChildShapes>
+        <elementListCompartment Id="8c5d5674-eee7-4847-9a9e-95c6754bc8cf" absoluteBounds="5.89, 5.71, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(7.875 : 5.84699625651042); (9.25 : 5.84699625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/FinalizeDataDataContext/ItemReportingStatus/ItemReportingStatus_Item" />
+      <nodes>
+        <classShapeMoniker Id="1770e81c-ffb0-4d2c-865d-41b02817e50b" />
+        <classShapeMoniker Id="16cdd4f0-8bb6-4df1-b2bf-80adca4e55ef" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="7cb3a59c-2938-405c-ab06-57b67699cbd4" absoluteBounds="2, 1.75, 2, 4.4631168619791666">
+      <DataClassMoniker Name="/FinalizeDataDataContext/Campaign" />
+      <nestedChildShapes>
+        <elementListCompartment Id="2d41f1ee-09f0-4ba9-9065-ace3bdb71124" absoluteBounds="2.015, 2.21, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4 : 3.90625); (9.25 : 3.90625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/FinalizeDataDataContext/Campaign/Campaign_Item" />
+      <nodes>
+        <classShapeMoniker Id="7cb3a59c-2938-405c-ab06-57b67699cbd4" />
+        <classShapeMoniker Id="16cdd4f0-8bb6-4df1-b2bf-80adca4e55ef" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="4fd9ea79-c145-4b9a-a63d-21fa478770de" absoluteBounds="6.5, 1.125, 2, 1.1939925130208333">
+      <DataClassMoniker Name="/FinalizeDataDataContext/CampaignStatus" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3d41f9cb-26c6-4451-827c-5cbdbe9d67e3" absoluteBounds="6.515, 1.585, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(6.5 : 2.03449625651042); (4 : 2.03449625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/FinalizeDataDataContext/CampaignStatus/CampaignStatus_Campaign" />
+      <nodes>
+        <classShapeMoniker Id="4fd9ea79-c145-4b9a-a63d-21fa478770de" />
+        <classShapeMoniker Id="7cb3a59c-2938-405c-ab06-57b67699cbd4" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="211069fd-1e6a-46bb-a4db-9fde41465b6c" absoluteBounds="2.875, 8.625, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/FinalizeDataDataContext/CampaignNote" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b5895ec2-089d-4d99-aa7c-665ac4524b89" absoluteBounds="2.89, 9.085, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(3.4375 : 6.21311686197917); (3.4375 : 8.625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FinalizeDataDataContext/Campaign/Campaign_CampaignNote" />
+      <nodes>
+        <classShapeMoniker Id="7cb3a59c-2938-405c-ab06-57b67699cbd4" />
+        <classShapeMoniker Id="211069fd-1e6a-46bb-a4db-9fde41465b6c" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

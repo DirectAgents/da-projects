@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" EntityNamespace="Dec" Class="DecDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Campaign" Member="Campaigns">
+    <Type Name="Campaign">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="account_manager_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ad_manager_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="advertiser_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_type" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="modified" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="created" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Advertiser_Campaign" Member="Advertiser" ThisKey="advertiser_id" OtherKey="id" Type="Advertiser" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Advertiser" Member="Advertisers">
+    <Type Name="Advertiser">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Advertiser_Campaign" Member="Campaigns" ThisKey="id" OtherKey="advertiser_id" Type="Campaign" />
+    </Type>
+  </Table>
+</Database>

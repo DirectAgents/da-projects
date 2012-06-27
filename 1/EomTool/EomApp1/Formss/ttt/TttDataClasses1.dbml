@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Nov10Eom2" Class="TttDataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\sqlexpress;Initial Catalog=Nov10Eom2;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="Nov10Eom2ConnectionString2" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.TttState1" Member="TttState1s">
+    <Type Name="TttState1">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="state" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>

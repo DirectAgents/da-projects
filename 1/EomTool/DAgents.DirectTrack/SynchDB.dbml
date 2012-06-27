@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" EntityNamespace="DAgents.Synch" ContextNamespace="DAgents.Synch" Class="SynchDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="DAgents.Common.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.AccountManager" Member="AccountManagerEntities">
+    <Type Name="AccountManagerEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="AccountManagerEntity_CampaignEntity" Member="CampaignEntities" ThisKey="id" OtherKey="account_manager_id" Type="CampaignEntity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AdManager" Member="AdManagerEntities">
+    <Type Name="AdManagerEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="AdManagerEntity_CampaignEntity" Member="CampaignEntities" ThisKey="id" OtherKey="ad_manager_id" Type="CampaignEntity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Payout" Member="PayoutEntities">
+    <Type Name="PayoutEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="payout_id" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="payout_type" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="impression" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="click" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="lead" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="percent_sale" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="flat_sale" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="percent_sub_sale" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="flat_sub_sale" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="effective_date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="modify_date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="product_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="PayoutEntity_StatEntity" Member="Stats" ThisKey="id" OtherKey="revenue_payout_id" Type="StatEntity" />
+      <Association Name="PayoutEntity_StatEntity1" Member="StatEntities" ThisKey="id" OtherKey="cost_payout_id" Type="StatEntity" />
+      <Association Name="CurrencyEntity_PayoutEntity" Member="CurrencyEntity" ThisKey="currency_id" OtherKey="id" Type="CurrencyEntity" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Currency" Member="CurrencyEntities">
+    <Type Name="CurrencyEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="to_usd_multiplier" Type="System.Decimal" DbType="Decimal(14,4) NOT NULL" CanBeNull="false" />
+      <Association Name="CurrencyEntity_PayoutEntity" Member="PayoutEntities" ThisKey="id" OtherKey="currency_id" Type="PayoutEntity" />
+      <Association Name="CurrencyEntity_ItemEntity" Member="Items" ThisKey="id" OtherKey="revenue_currency_id" Type="ItemEntity" />
+      <Association Name="CurrencyEntity_ItemEntity1" Member="ItemEntities" ThisKey="id" OtherKey="cost_currency_id" Type="ItemEntity" />
+      <Association Name="CurrencyEntity_Affiliate" Member="AffiliateEntities" ThisKey="id" OtherKey="currency_id" Type="AffiliateEntity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Stat" Member="StatEntities">
+    <Type Name="StatEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="revenue_payout_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="cost_payout_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="apiurl" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="clicks" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="leads" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="num_sales" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="num_post_impression_sales" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="sale_amount" Type="System.Decimal" DbType="Decimal(16,2) NOT NULL" CanBeNull="false" />
+      <Column Name="post_impression_sale_amount" Type="System.Decimal" DbType="Decimal(16,2) NOT NULL" CanBeNull="false" />
+      <Column Name="num_sub_sales" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="num_post_impression_sub_sales" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="sub_sale_amount" Type="System.Decimal" DbType="Decimal(16,2) NOT NULL" CanBeNull="false" />
+      <Column Name="post_impression_sub_sale_amount" Type="System.Decimal" DbType="Decimal(16,2) NOT NULL" CanBeNull="false" />
+      <Column Name="stat_date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Association Name="StatEntity_ItemEntity" Member="ItemEntities" ThisKey="id" OtherKey="stat_id_n" Type="ItemEntity" />
+      <Association Name="PayoutEntity_StatEntity" Member="RevenuePayout" Storage="_PayoutEntity" ThisKey="revenue_payout_id" OtherKey="id" Type="PayoutEntity" IsForeignKey="true" />
+      <Association Name="PayoutEntity_StatEntity1" Member="CostPayoutEntity" Storage="_PayoutEntity1" ThisKey="cost_payout_id" OtherKey="id" Type="PayoutEntity" IsForeignKey="true" />
+      <Association Name="CampaignEntity_StatEntity" Member="CampaignEntity" ThisKey="pid" OtherKey="pid" Type="CampaignEntity" IsForeignKey="true" />
+      <Association Name="Affiliate_StatEntity" Member="AffiliateEntity" ThisKey="affid" OtherKey="affid" Type="AffiliateEntity" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MediaBuyer" Member="MediaBuyerEntities">
+    <Type Name="MediaBuyerEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="MediaBuyerEntity_Affiliate" Member="AffiliateEntities" ThisKey="id" OtherKey="media_buyer_id" Type="AffiliateEntity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Source" Member="SourceEntities">
+    <Type Name="SourceEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="SourceEntity_ItemEntity" Member="ItemEntities" ThisKey="id" OtherKey="source_id" Type="ItemEntity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UnitType" Member="UnitTypes">
+    <Type Name="UnitType">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="UnitType_ItemEntity" Member="ItemEntities" ThisKey="id" OtherKey="unit_type_id" Type="ItemEntity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.XmlSource" Member="XmlSourceEntities">
+    <Type Name="XmlSourceEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="data" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="apiurl" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="CampaignEntity_XmlSourceEntity" Member="CampaignEntity" ThisKey="pid" OtherKey="pid" Type="CampaignEntity" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Item" Member="ItemEntities">
+    <Type Name="ItemEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(300) NOT NULL" CanBeNull="false" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="source_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="unit_type_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="stat_id_n" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="revenue_currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="cost_currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="revenue_per_unit" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="cost_per_unit" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Column Name="num_units" Type="System.Decimal" DbType="Decimal(12,6) NOT NULL" CanBeNull="false" />
+      <Column Name="notes" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="item_accounting_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="item_reporting_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="accounting_notes" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Association Name="CurrencyEntity_ItemEntity" Member="RevenueCurrencyEntity" ThisKey="revenue_currency_id" OtherKey="id" Type="CurrencyEntity" IsForeignKey="true" />
+      <Association Name="CurrencyEntity_ItemEntity1" Member="CostCurrencyEntity" ThisKey="cost_currency_id" OtherKey="id" Type="CurrencyEntity" IsForeignKey="true" />
+      <Association Name="SourceEntity_ItemEntity" Member="SourceEntity" ThisKey="source_id" OtherKey="id" Type="SourceEntity" IsForeignKey="true" />
+      <Association Name="StatEntity_ItemEntity" Member="StatEntity" ThisKey="stat_id_n" OtherKey="id" Type="StatEntity" IsForeignKey="true" />
+      <Association Name="UnitType_ItemEntity" Member="UnitType" ThisKey="unit_type_id" OtherKey="id" Type="UnitType" IsForeignKey="true" />
+      <Association Name="ItemAccountingStatusEntity_ItemEntity" Member="ItemAccountingStatusEntity" ThisKey="item_accounting_status_id" OtherKey="id" Type="ItemAccountingStatusEntity" IsForeignKey="true" />
+      <Association Name="ItemReportingStatusEntity_ItemEntity" Member="ItemReportingStatusEntity" ThisKey="item_reporting_status_id" OtherKey="id" Type="ItemReportingStatusEntity" IsForeignKey="true" />
+      <Association Name="CampaignEntity_ItemEntity" Member="CampaignEntity" ThisKey="pid" OtherKey="pid" Type="CampaignEntity" IsForeignKey="true" />
+      <Association Name="Affiliate_ItemEntity" Member="AffiliateEntity" ThisKey="affid" OtherKey="affid" Type="AffiliateEntity" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ItemAccountingStatus" Member="ItemAccountingStatusEntities">
+    <Type Name="ItemAccountingStatusEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="ItemAccountingStatusEntity_ItemEntity" Member="ItemEntities" ThisKey="id" OtherKey="item_accounting_status_id" Type="ItemEntity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ItemReportingStatus" Member="ItemReportingStatusEntities">
+    <Type Name="ItemReportingStatusEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="ItemReportingStatusEntity_ItemEntity" Member="ItemEntities" ThisKey="id" OtherKey="item_reporting_status_id" Type="ItemEntity" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Campaign" Member="CampaignEntities">
+    <Type Name="CampaignEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="account_manager_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ad_manager_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="advertiser_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="pid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="campaign_type" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="modified" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="created" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dt_campaign_status" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="dt_campaign_url" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="dt_allowed_country_names" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="is_email" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_search" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_display" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="is_coreg" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="max_scrub" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="notes" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Association Name="CampaignEntity_StatEntity" Member="StatEntities" ThisKey="pid" OtherKey="pid" Type="StatEntity" />
+      <Association Name="CampaignEntity_XmlSourceEntity" Member="XmlSourceEntities" ThisKey="pid" OtherKey="pid" Type="XmlSourceEntity" />
+      <Association Name="CampaignEntity_ItemEntity" Member="ItemEntities" ThisKey="pid" OtherKey="pid" Type="ItemEntity" />
+      <Association Name="AccountManagerEntity_CampaignEntity" Member="AccountManagerEntity" ThisKey="account_manager_id" OtherKey="id" Type="AccountManagerEntity" IsForeignKey="true" />
+      <Association Name="AdManagerEntity_CampaignEntity" Member="AdManagerEntity" ThisKey="ad_manager_id" OtherKey="id" Type="AdManagerEntity" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Affiliate" Member="AffiliateEntities">
+    <Type Name="AffiliateEntity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="media_buyer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="add_code" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="name2" Type="System.String" DbType="VarChar(358) NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="net_term_type_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="payment_method_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Affiliate_StatEntity" Member="StatEntities" ThisKey="affid" OtherKey="affid" Type="StatEntity" />
+      <Association Name="Affiliate_ItemEntity" Member="ItemEntities" ThisKey="affid" OtherKey="affid" Type="ItemEntity" />
+      <Association Name="CurrencyEntity_Affiliate" Member="CurrencyEntity" ThisKey="currency_id" OtherKey="id" Type="CurrencyEntity" IsForeignKey="true" />
+      <Association Name="MediaBuyerEntity_Affiliate" Member="MediaBuyerEntity" ThisKey="media_buyer_id" OtherKey="id" Type="MediaBuyerEntity" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

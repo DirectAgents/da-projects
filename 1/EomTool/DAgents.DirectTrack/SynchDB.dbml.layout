@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 12.875, 11" name="SynchDB">
+  <DataContextMoniker Name="/SynchDBDataContext" />
+  <nestedChildShapes>
+    <classShape Id="baec5a2f-960c-4195-8207-ec6b424d3cd4" absoluteBounds="5.5, 6.125, 2, 1.1939925123006105">
+      <DataClassMoniker Name="/SynchDBDataContext/AccountManagerEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="286531ea-e910-4c96-a0bb-74932aa67f09" absoluteBounds="5.5150000005960464, 6.58500000089407, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="24ccd93c-1d69-4193-91d2-31ec830b111a" absoluteBounds="5.5, 7.625, 2, 1.1939925123006105">
+      <DataClassMoniker Name="/SynchDBDataContext/AdManagerEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5335cc1a-09c9-4c8e-826e-9fe2dcd29849" absoluteBounds="5.5150000005960464, 8.08500000089407, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="e0326d9a-878c-48ae-b645-f1e324a3042e" absoluteBounds="0.5, 1.5, 2, 3.8862125650048256">
+      <DataClassMoniker Name="/SynchDBDataContext/PayoutEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5b8e7972-b5ca-41da-af47-1f1ca0b74425" absoluteBounds="0.51500000059604645, 1.9600000008940697, 1.9700000000000002, 3.3262125651041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="7692cbba-4a62-49e9-a82f-4df6dbcfbd55" absoluteBounds="8.125, 0.5, 2, 1.3862939458340406">
+      <DataClassMoniker Name="/SynchDBDataContext/CurrencyEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="73a35587-df5f-43a4-8890-e2a64b02b669" absoluteBounds="8.1400000005960464, 0.96000000089406967, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="822fbc2d-f048-47b5-bfb5-708df5a65977" absoluteBounds="3, 1.5, 2, 4.0785139973958326">
+      <DataClassMoniker Name="/SynchDBDataContext/StatEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="2aa5a43c-941f-4f18-bb9c-849cd93a46ed" absoluteBounds="3.0150000005960464, 1.9600000008940697, 1.9700000000000002, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="ce033c07-e6ce-40f6-b9f5-9bb4da7c79ed" absoluteBounds="5.5, 4.5, 2, 1.1939925123006105">
+      <DataClassMoniker Name="/SynchDBDataContext/MediaBuyerEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="6d3839c2-4302-42d2-93fc-ad8ff2d4daa8" absoluteBounds="5.5150000005960464, 4.96000000089407, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="37405912-d453-4b2d-a00b-b886eba98049" absoluteBounds="10.625, 4.125, 2, 1.1939925130208344">
+      <DataClassMoniker Name="/SynchDBDataContext/SourceEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="af4a81a4-bd3c-4cc4-9fa0-c335628f38c7" absoluteBounds="10.64, 4.5850000000000009, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="aac73e07-2dc2-449c-a171-6c98c5ae8444" absoluteBounds="10.625, 2.625, 2, 1.1939925130208327">
+      <DataClassMoniker Name="/SynchDBDataContext/UnitType" />
+      <nestedChildShapes>
+        <elementListCompartment Id="905f38b3-e540-48fe-8990-287d9c27e8df" absoluteBounds="10.64, 3.085, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="ab38a0f3-2462-466e-a6dd-71fe056f1e39" absoluteBounds="0.5, 5.875, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/SynchDBDataContext/XmlSourceEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="588bb13f-dfcf-4056-9938-a9abd5a7b005" absoluteBounds="0.51500000000000012, 6.335, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(8.125 : 0.84375); (1.5 : 0.84375); (1.5 : 1.5)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SynchDBDataContext/CurrencyEntity/CurrencyEntity_PayoutEntity" />
+      <nodes>
+        <classShapeMoniker Id="7692cbba-4a62-49e9-a82f-4df6dbcfbd55" />
+        <classShapeMoniker Id="e0326d9a-878c-48ae-b645-f1e324a3042e" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.5 : 3.44310628250241); (3 : 3.44310628250241)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SynchDBDataContext/PayoutEntity/PayoutEntity_StatEntity" />
+      <nodes>
+        <classShapeMoniker Id="e0326d9a-878c-48ae-b645-f1e324a3042e" />
+        <classShapeMoniker Id="822fbc2d-f048-47b5-bfb5-708df5a65977" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.5 : 2.40905314125121); (3 : 2.40905314125121)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SynchDBDataContext/PayoutEntity/PayoutEntity_StatEntity1" />
+      <nodes>
+        <classShapeMoniker Id="e0326d9a-878c-48ae-b645-f1e324a3042e" />
+        <classShapeMoniker Id="822fbc2d-f048-47b5-bfb5-708df5a65977" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" absoluteBounds="8.125, 2.75, 2, 3.8862125651041666">
+      <DataClassMoniker Name="/SynchDBDataContext/ItemEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="1d509f60-1389-4ade-8889-7128d5ca1ee8" absoluteBounds="8.14, 3.21, 1.9700000000000002, 3.3262125651041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a5d0a220-df68-4a35-98aa-f4b382d31f2c" absoluteBounds="8.75, 7, 2, 1.1939925130208344">
+      <DataClassMoniker Name="/SynchDBDataContext/ItemAccountingStatusEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="7702e646-7079-48ec-a1be-6953dd3c3d7d" absoluteBounds="8.765, 7.4600000000000009, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="06dbb144-fd0b-41e2-adf8-1f1bd2c7c4d6" absoluteBounds="10.625, 5.625, 2, 1.1939925130208344">
+      <DataClassMoniker Name="/SynchDBDataContext/ItemReportingStatusEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="16016c02-bbfc-4e10-9f47-33f7c10a6d04" absoluteBounds="10.64, 6.0850000000000009, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(9.125 : 1.88629394583404); (9.125 : 2.75)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/CurrencyEntity/CurrencyEntity_ItemEntity" />
+      <nodes>
+        <classShapeMoniker Id="7692cbba-4a62-49e9-a82f-4df6dbcfbd55" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(9.6875 : 1.88629394583404); (9.6875 : 2.75)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/CurrencyEntity/CurrencyEntity_ItemEntity1" />
+      <nodes>
+        <classShapeMoniker Id="7692cbba-4a62-49e9-a82f-4df6dbcfbd55" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(10.625 : 4.72199625651042); (10.125 : 4.72199625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/SourceEntity/SourceEntity_ItemEntity" />
+      <nodes>
+        <classShapeMoniker Id="37405912-d453-4b2d-a00b-b886eba98049" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5 : 4.24120198567708); (6.41666666666667 : 4.24120198567708 : JumpStart); (6.58333333333333 : 4.24120198567708 : JumpEnd); (8.125 : 4.24120198567708)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SynchDBDataContext/StatEntity/StatEntity_ItemEntity" />
+      <nodes>
+        <classShapeMoniker Id="822fbc2d-f048-47b5-bfb5-708df5a65977" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(10.625 : 3.28449625651042); (10.125 : 3.28449625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/UnitType/UnitType_ItemEntity" />
+      <nodes>
+        <classShapeMoniker Id="aac73e07-2dc2-449c-a171-6c98c5ae8444" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(9.4375 : 7); (9.4375 : 6.63621256510417)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/ItemAccountingStatusEntity/ItemAccountingStatusEntity_ItemEntity" />
+      <nodes>
+        <classShapeMoniker Id="a5d0a220-df68-4a35-98aa-f4b382d31f2c" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(10.625 : 6.13060628255208); (10.125 : 6.13060628255208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/ItemReportingStatusEntity/ItemReportingStatusEntity_ItemEntity" />
+      <nodes>
+        <classShapeMoniker Id="06dbb144-fd0b-41e2-adf8-1f1bd2c7c4d6" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="350d8028-346b-4140-bb05-8c00587b2c60" absoluteBounds="2.875, 6.25, 2, 4.4631168619791666">
+      <DataClassMoniker Name="/SynchDBDataContext/CampaignEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="d5c012d4-1919-4793-a54f-ee6eb62450ca" absoluteBounds="2.89, 6.71, 1.9700000000000002, 3.9031168619791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(3.9375 : 6.25); (3.9375 : 5.57851399739583)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/CampaignEntity/CampaignEntity_StatEntity" />
+      <nodes>
+        <classShapeMoniker Id="350d8028-346b-4140-bb05-8c00587b2c60" />
+        <classShapeMoniker Id="822fbc2d-f048-47b5-bfb5-708df5a65977" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.875 : 6.85179768880208); (2.5 : 6.85179768880208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/CampaignEntity/CampaignEntity_XmlSourceEntity" />
+      <nodes>
+        <classShapeMoniker Id="350d8028-346b-4140-bb05-8c00587b2c60" />
+        <classShapeMoniker Id="ab38a0f3-2462-466e-a6dd-71fe056f1e39" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.875 : 9.79730468713989); (8.40625 : 9.79730468713989); (8.40625 : 6.63621256510417)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/CampaignEntity/CampaignEntity_ItemEntity" />
+      <nodes>
+        <classShapeMoniker Id="350d8028-346b-4140-bb05-8c00587b2c60" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 6.78449625615031); (4.875 : 6.78449625615031)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/AccountManagerEntity/AccountManagerEntity_CampaignEntity" />
+      <nodes>
+        <classShapeMoniker Id="baec5a2f-960c-4195-8207-ec6b424d3cd4" />
+        <classShapeMoniker Id="350d8028-346b-4140-bb05-8c00587b2c60" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 8.22199625615031); (4.875 : 8.22199625615031)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/SynchDBDataContext/AdManagerEntity/AdManagerEntity_CampaignEntity" />
+      <nodes>
+        <classShapeMoniker Id="24ccd93c-1d69-4193-91d2-31ec830b111a" />
+        <classShapeMoniker Id="350d8028-346b-4140-bb05-8c00587b2c60" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="80a8cf45-42ad-43a1-beb6-63269fe2e00d" absoluteBounds="5.5, 1.25, 2, 2.7324039713541666">
+      <DataClassMoniker Name="/SynchDBDataContext/AffiliateEntity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="14f54f9e-3553-4c4a-873c-0b0ae8ed7fa6" absoluteBounds="5.515, 1.71, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.5 : 2.74120198567708); (5 : 2.74120198567708)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SynchDBDataContext/AffiliateEntity/Affiliate_StatEntity" />
+      <nodes>
+        <classShapeMoniker Id="80a8cf45-42ad-43a1-beb6-63269fe2e00d" />
+        <classShapeMoniker Id="822fbc2d-f048-47b5-bfb5-708df5a65977" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(7.5 : 3.36620198567708); (8.125 : 3.36620198567708)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SynchDBDataContext/AffiliateEntity/Affiliate_ItemEntity" />
+      <nodes>
+        <classShapeMoniker Id="80a8cf45-42ad-43a1-beb6-63269fe2e00d" />
+        <classShapeMoniker Id="ffdd27d7-16b5-4674-80c9-7601dbcf0ae4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8.125 : 1.56814697291702); (7.5 : 1.56814697291702)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SynchDBDataContext/CurrencyEntity/CurrencyEntity_Affiliate" />
+      <nodes>
+        <classShapeMoniker Id="7692cbba-4a62-49e9-a82f-4df6dbcfbd55" />
+        <classShapeMoniker Id="80a8cf45-42ad-43a1-beb6-63269fe2e00d" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(6.5 : 4.5); (6.5 : 3.98240397135417)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/SynchDBDataContext/MediaBuyerEntity/MediaBuyerEntity_Affiliate" />
+      <nodes>
+        <classShapeMoniker Id="ce033c07-e6ce-40f6-b9f5-9bb4da7c79ed" />
+        <classShapeMoniker Id="80a8cf45-42ad-43a1-beb6-63269fe2e00d" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DADatabaseR1DataSet" targetNamespace="http://tempuri.org/DADatabaseR1DataSet.xsd" xmlns:mstns="http://tempuri.org/DADatabaseR1DataSet.xsd" xmlns="http://tempuri.org/DADatabaseR1DataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="1" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseMarch11ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseMarch11ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseMarch11ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignStatusAuditTrailViewTableAdapter" GeneratorDataComponentClassName="CampaignStatusAuditTrailViewTableAdapter" Name="CampaignStatusAuditTrailView" UserDataComponentName="CampaignStatusAuditTrailViewTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseMarch11ConnectionString (Settings)" DbObjectName="DADatabaseMarch11.dbo.CampaignStatusAuditTrailView" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        status_change_datetime, changed_by_system_user, campaign_name, name
+FROM            CampaignStatusAuditTrailView
+ORDER BY status_change_datetime DESC</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="status_change_datetime" DataSetColumn="status_change_datetime" />
+              <Mapping SourceColumn="changed_by_system_user" DataSetColumn="changed_by_system_user" />
+              <Mapping SourceColumn="campaign_name" DataSetColumn="campaign_name" />
+              <Mapping SourceColumn="name" DataSetColumn="name" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DADatabaseR1DataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="DADatabaseR1DataSet" msprop:Generator_UserDSName="DADatabaseR1DataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="CampaignStatusAuditTrailView" msprop:Generator_TableClassName="CampaignStatusAuditTrailViewDataTable" msprop:Generator_TableVarName="tableCampaignStatusAuditTrailView" msprop:Generator_TablePropName="CampaignStatusAuditTrailView" msprop:Generator_RowDeletingName="CampaignStatusAuditTrailViewRowDeleting" msprop:Generator_UserTableName="CampaignStatusAuditTrailView" msprop:Generator_RowChangingName="CampaignStatusAuditTrailViewRowChanging" msprop:Generator_RowEvHandlerName="CampaignStatusAuditTrailViewRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignStatusAuditTrailViewRowDeleted" msprop:Generator_RowEvArgName="CampaignStatusAuditTrailViewRowChangeEvent" msprop:Generator_RowChangedName="CampaignStatusAuditTrailViewRowChanged" msprop:Generator_RowClassName="CampaignStatusAuditTrailViewRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="status_change_datetime" msprop:Generator_ColumnVarNameInTable="columnstatus_change_datetime" msprop:Generator_ColumnPropNameInRow="status_change_datetime" msprop:Generator_ColumnPropNameInTable="status_change_datetimeColumn" msprop:Generator_UserColumnName="status_change_datetime" type="xs:dateTime" />
+              <xs:element name="changed_by_system_user" msprop:Generator_ColumnVarNameInTable="columnchanged_by_system_user" msprop:Generator_ColumnPropNameInRow="changed_by_system_user" msprop:Generator_ColumnPropNameInTable="changed_by_system_userColumn" msprop:Generator_UserColumnName="changed_by_system_user">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="campaign_name" msprop:Generator_ColumnVarNameInTable="columncampaign_name" msprop:Generator_ColumnPropNameInRow="campaign_name" msprop:Generator_ColumnPropNameInTable="campaign_nameColumn" msprop:Generator_UserColumnName="campaign_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="name" msprop:Generator_ColumnVarNameInTable="columnname" msprop:Generator_ColumnPropNameInRow="name" msprop:Generator_ColumnPropNameInTable="nameColumn" msprop:Generator_UserColumnName="name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

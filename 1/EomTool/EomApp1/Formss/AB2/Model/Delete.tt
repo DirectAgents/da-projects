@@ -1,0 +1,63 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core.dll" #>
+<#@ Assembly Name="System.Xml.dll" #>
+<#@ Assembly Name="System.Xml.Linq.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<# 
+	string ns = "EomApp1.Formss.AB2.Model";
+	string edmxFile = "\\ABModel.edmx";
+	string inputContent = System.IO.File.ReadAllText(System.IO.Path.GetDirectoryName(this.Host.TemplateFile) + edmxFile);  	
+#>
+namespace <#=ns#>
+{
+<#DeleteTablesCodeGen2(inputContent);#>
+}
+<#+
+	void DeleteTablesCodeGen2(string input) 
+	{
+	// Add to model definition via partial class
+#>
+	public partial class DirectAgentsEntities
+	{
+<#+
+		// Read the tables from the EDMX
+		XNamespace edmxNS = "http://schemas.microsoft.com/ado/2008/10/edmx";
+		XNamespace ssdlNS ="http://schemas.microsoft.com/ado/2009/02/edm/ssdl";
+		System.Xml.Linq.XDocument xd = System.Xml.Linq.XDocument.Parse(input);	
+		var tables = 
+				from c in xd.Root
+							.Element(edmxNS + "Runtime")
+							.Element(edmxNS + "StorageModels")
+							.Element(ssdlNS + "Schema")
+							.Element(ssdlNS + "EntityContainer")
+							.Elements(ssdlNS + "EntitySet")
+				select new
+				{
+					Name = c.Attribute("Name").Value,
+					EntitySet = c
+				};
+				
+		// Loop over the tables
+    	foreach (var table in tables)
+		{
+		// Provide a Delete method for each table
+#>
+		public void Delete<#=table.Name#>() 
+		{ 
+			this.DeleteTable("<#=table.Name#>");
+		}
+<#+
+		}
+#>
+	}
+<#+
+  	}
+#>
