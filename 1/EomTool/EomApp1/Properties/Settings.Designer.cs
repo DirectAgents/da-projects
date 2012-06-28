@@ -59,7 +59,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=aaron\\sqlexpress;Initial Catalog=DAMain1;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DAMain1;Integrated Security=True")]
         public string DAMain1ConnectionString {
             get {
                 return ((string)(this["DAMain1ConnectionString"]));

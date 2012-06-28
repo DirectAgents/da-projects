@@ -225,7 +225,7 @@ namespace EomApp1
         private void synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            using (var con = new SqlConnection(DAgents.Common.Properties.Settings.Default.ConnStr))
+            using (var con = new SqlConnection(EomAppCommon.Settings.ConnStr))
             {
                 var cmd = new SqlCommand("select * from Affiliate", con);
                 con.Open();
@@ -301,6 +301,11 @@ namespace EomApp1
         {
             var a = new Formss.Final.CampaignNotes();
             a.Show();
+        }
+
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("hello");
         }
 
         // add Dirty bit to XmlDoc table
