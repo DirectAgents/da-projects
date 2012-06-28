@@ -29,7 +29,7 @@
     <SuiteName>Direct Agents Internal Tools</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>181</ApplicationRevision>
+    <ApplicationRevision>184</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -1648,9 +1648,17 @@
       <Project>{A5D217FE-1556-4ABD-BFDF-F5A2D65F5D8A}</Project>
       <Name>DirectTrack.Rest</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EomAppCommon\EomAppCommon.csproj">
+      <Project>{A90C19EE-A413-4680-BB6F-36D612FE9157}</Project>
+      <Name>EomAppCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EomAppControls\EomAppControls.csproj">
       <Project>{1594F5F0-0810-4CD2-8C1E-439BA340EC2E}</Project>
       <Name>EomAppControls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EomAppModels\EomAppModels.csproj">
+      <Project>{B9F971EA-5F76-474C-B3DC-E00FD3760967}</Project>
+      <Name>EomAppModels</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

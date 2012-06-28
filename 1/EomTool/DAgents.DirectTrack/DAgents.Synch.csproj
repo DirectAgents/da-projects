@@ -67,7 +67,6 @@
     <Compile Include="AffiliateDetail.cs" />
     <Compile Include="CampaignGroupList.cs" />
     <Compile Include="CampaignGroup.cs" />
-    <Compile Include="SettingsPartial.cs" />
     <Compile Include="StatDetail.cs" />
     <Compile Include="StatList.cs" />
     <Compile Include="CampaignDetail.cs" />
@@ -102,6 +101,10 @@
     <ProjectReference Include="..\DirectTrack.Rest\DirectTrack.Rest.csproj">
       <Project>{A5D217FE-1556-4ABD-BFDF-F5A2D65F5D8A}</Project>
       <Name>DirectTrack.Rest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EomAppCommon\EomAppCommon.csproj">
+      <Project>{A90C19EE-A413-4680-BB6F-36D612FE9157}</Project>
+      <Name>EomAppCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,7 @@ namespace EomApp1.Formss.Affiliate.Forms
 
         private void AffiliatesForm1_Load(object sender, EventArgs e)
         {
-            var db = new AffilaiteDataClasses1DataContext(DAgents.Common.Properties.Settings.Default.ConnStr);
+            var db = new AffilaiteDataClasses1DataContext(EomAppCommon.Settings.ConnStr);
             affiliateTableAdapter.Fill(this.affiliatesDataSet2.Affiliate);
             dataItemBindingSource.DataSource = (new DataItemList(db.MediaBuyers)).TheList;
             dataItemBindingSource1.DataSource = (new DataItemList(db.Currencies)).TheList;

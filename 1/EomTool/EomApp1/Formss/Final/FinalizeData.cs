@@ -5,14 +5,14 @@ namespace EomApp1.Formss.Final
     public partial class FinalizeDataDataContext
     {
         public FinalizeDataDataContext(bool b) :
-            base(DAgents.Common.Properties.Settings.Default.ConnStr, mappingSource)
+            base(EomAppCommon.Settings.ConnStr, mappingSource)
         {
             OnCreated();
         }
 
         partial void OnCreated()
         {
-            if (Connection.ConnectionString != DAgents.Common.Properties.Settings.Default.ConnStr)
+            if (Connection.ConnectionString != EomAppCommon.Settings.ConnStr)
             {
                 throw new Exception("Connection String Error");
             }

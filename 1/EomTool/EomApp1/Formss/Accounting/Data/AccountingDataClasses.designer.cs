@@ -70,7 +70,7 @@ namespace EomApp1.Formss.Accounting.Data
 		}
 
         public AccountingDataClassesDataContext(bool p)
-            : base(global::DAgents.Common.Properties.Settings.Default.ConnStr, mappingSource)
+            : base(EomAppCommon.Settings.ConnStr, mappingSource)
         {
             OnCreated();
         }

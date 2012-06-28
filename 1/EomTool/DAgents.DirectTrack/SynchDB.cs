@@ -7,14 +7,14 @@ namespace DAgents.Synch
     public partial class SynchDBDataContext : System.Data.Linq.DataContext
     {
         public SynchDBDataContext(bool b) :
-            base(global::DAgents.Common.Properties.Settings.Default.ConnStr, mappingSource)
+            base(EomAppCommon.Settings.ConnStr, mappingSource)
         {
             OnCreated();
         }
 
         partial void OnCreated()
         {
-            if (this.Connection.ConnectionString != global::DAgents.Common.Properties.Settings.Default.ConnStr)
+            if (this.Connection.ConnectionString != EomAppCommon.Settings.ConnStr)
             {
                 throw new Exception("Connection String Error");
             }

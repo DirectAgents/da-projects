@@ -89,7 +89,7 @@ namespace EomApp1.Formss.Campaign
         {
             // Choose campaign to Synch
             int? nextCampaignIdToSynch;
-            using (var sqlConnection = new SqlConnection(global::DAgents.Common.Properties.Settings.Default.ConnStr))
+            using (var sqlConnection = new SqlConnection(EomAppCommon.Settings.ConnStr))
             {
                 sqlConnection.Open();
                 using (var sqlCommand = new SqlCommand(@"
@@ -131,7 +131,7 @@ namespace EomApp1.Formss.Campaign
                 if (synchStats || synchPayouts)
                 {
                     // Update Synch Time
-                    using (var connection = new SqlConnection(global::DAgents.Common.Properties.Settings.Default.ConnStr))
+                    using (var connection = new SqlConnection(EomAppCommon.Settings.ConnStr))
                     {
                         connection.Open();
                         using (var command = new SqlCommand(@"EXEC dbo.UpdateLastCampaignSynch " + nextCampaignIdToSynch, connection))
