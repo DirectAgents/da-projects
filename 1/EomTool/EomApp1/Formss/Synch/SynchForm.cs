@@ -7,6 +7,8 @@ using DAgents.Common;
 using DAgents.Synch;
 using System.Threading;
 using Mainn.Controls.Logging;
+using EomApp1.Formss.Synch.Models.Eom;
+using System.Drawing;
 namespace EomApp1.Formss.Synch
 {
     public partial class SynchForm : Form, ILogger
@@ -304,15 +306,40 @@ namespace EomApp1.Formss.Synch
 
         private void SynchStatsFromCake(int offerID, int redirectedPID, int startDay, int endDay)
         {
+            int campaignID = offerID;
+
+            try
+            {
+                using (var db = EomDatabaseEntities.Create())
+                {
+                    var campaignQuery = from c in db.Campaigns
+                                        where c.external_id == offerID && c.TrackingSystem.name == "Cake Marketing"
+                                        select c;
+
+                    var campaign = campaignQuery.FirstOrDefault();
+
+                    if (campaign != null)
+                    {
+                        campaignID = campaign.pid;
+                    }
+                }
+            }
+            catch
+            {
+            }
+
             var parameters = new CakeSyncher.Parameters 
-            { 
-                OfferId = offerID, 
+            {
+                CampaignId = campaignID,
+                ExternalId = offerID,
                 Year = Properties.Settings.Default.StatsYear, 
                 Month = Properties.Settings.Default.StatsMonth,
                 FromDay = startDay,
                 ToDay = endDay 
             };
+
             var cakeSyncher = new CakeSyncher(this.Logger, parameters);
+
             cakeSyncher.SynchStatsForOfferId();
         }
 
@@ -442,6 +469,7 @@ namespace EomApp1.Formss.Synch
             this.checkBox1.Enabled = true;
             this._preDeleteCheckBox.Enabled = true;
             this.groupBox1.Enabled = true;
+            this.redirectsLinkLabel.Visible = false;
         }
 
         private void EnableAndDisableControlsForCakeTargetSystemChoice()
@@ -449,6 +477,13 @@ namespace EomApp1.Formss.Synch
             this.checkBox1.Enabled = false;
             this._preDeleteCheckBox.Enabled = false;
             this.groupBox1.Enabled = false;
+            this.redirectsLinkLabel.Visible = true;
+        }
+
+        private void redirectsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var form = new CampaignsForm();
+            form.ShowDialog();
         }
     }
 }

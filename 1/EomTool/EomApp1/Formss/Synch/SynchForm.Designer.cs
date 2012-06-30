@@ -51,6 +51,7 @@
             this._preDeleteCheckBox = new System.Windows.Forms.CheckBox();
             this.loggerBox1 = new Mainn.Controls.Logging.LoggerBox();
             this.targetSystem1 = new EomApp1.Formss.Synch.TargetSystem();
+            this.redirectsLinkLabel = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -280,11 +281,23 @@
             this.targetSystem1.TargetSystemChoice = global::EomApp1.Properties.Settings.Default.SynchScreenTargetSystemChoice;
             this.targetSystem1.TargetSystemChoiceChanged += new System.EventHandler<EomApp1.Formss.Synch.TargetSystemChoiceChangedEventArgs>(this.targetSystem1_TargetSystemChoiceChanged);
             // 
+            // redirectsLinkLabel
+            // 
+            this.redirectsLinkLabel.AutoSize = true;
+            this.redirectsLinkLabel.Location = new System.Drawing.Point(190, 125);
+            this.redirectsLinkLabel.Name = "redirectsLinkLabel";
+            this.redirectsLinkLabel.Size = new System.Drawing.Size(33, 13);
+            this.redirectsLinkLabel.TabIndex = 16;
+            this.redirectsLinkLabel.TabStop = true;
+            this.redirectsLinkLabel.Text = "setup";
+            this.redirectsLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.redirectsLinkLabel_LinkClicked);
+            // 
             // SynchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(705, 523);
+            this.Controls.Add(this.redirectsLinkLabel);
             this.Controls.Add(this.targetSystem1);
             this.Controls.Add(this.loggerBox1);
             this.Controls.Add(this.groupBox1);
@@ -332,5 +345,6 @@
         private System.Windows.Forms.TextBox _loopEveryTextBox;
         private Mainn.Controls.Logging.LoggerBox loggerBox1;
         private TargetSystem targetSystem1;
+        private System.Windows.Forms.LinkLabel redirectsLinkLabel;
     }
 }

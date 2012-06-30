@@ -32,6 +32,7 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "Campaign_AdManager_id_FK_AdManager_id_PK", "AdManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Formss.Synch.Models.Eom.AdManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Formss.Synch.Models.Eom.Campaign), true)]
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "Campaign_Advertiser_id_FK_Advertiser_id_PK", "Advertiser", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Formss.Synch.Models.Eom.Advertiser), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Formss.Synch.Models.Eom.Campaign), true)]
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Formss.Synch.Models.Eom.CampaignStatu), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Formss.Synch.Models.Eom.Campaign), true)]
+[assembly: EdmRelationshipAttribute("EomDatabaseModel", "tracking_system_fk", "TrackingSystem", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomApp1.Formss.Synch.Models.Eom.TrackingSystem), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Formss.Synch.Models.Eom.Campaign), true)]
 
 #endregion
 
@@ -322,6 +323,22 @@ namespace EomApp1.Formss.Synch.Models.Eom
             }
         }
         private ObjectSet<Campaign> _Campaigns;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<TrackingSystem> TrackingSystems
+        {
+            get
+            {
+                if ((_TrackingSystems == null))
+                {
+                    _TrackingSystems = base.CreateObjectSet<TrackingSystem>("TrackingSystems");
+                }
+                return _TrackingSystems;
+            }
+        }
+        private ObjectSet<TrackingSystem> _TrackingSystems;
 
         #endregion
         #region AddTo Methods
@@ -444,6 +461,14 @@ namespace EomApp1.Formss.Synch.Models.Eom
         public void AddToCampaigns(Campaign campaign)
         {
             base.AddObject("Campaigns", campaign);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the TrackingSystems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToTrackingSystems(TrackingSystem trackingSystem)
+        {
+            base.AddObject("TrackingSystems", trackingSystem);
         }
 
         #endregion
@@ -1862,6 +1887,54 @@ namespace EomApp1.Formss.Synch.Models.Eom
         private global::System.String _notes;
         partial void OnnotesChanging(global::System.String value);
         partial void OnnotesChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> tracking_system_id
+        {
+            get
+            {
+                return _tracking_system_id;
+            }
+            set
+            {
+                Ontracking_system_idChanging(value);
+                ReportPropertyChanging("tracking_system_id");
+                _tracking_system_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("tracking_system_id");
+                Ontracking_system_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _tracking_system_id;
+        partial void Ontracking_system_idChanging(Nullable<global::System.Int32> value);
+        partial void Ontracking_system_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> external_id
+        {
+            get
+            {
+                return _external_id;
+            }
+            set
+            {
+                Onexternal_idChanging(value);
+                ReportPropertyChanging("external_id");
+                _external_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("external_id");
+                Onexternal_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _external_id;
+        partial void Onexternal_idChanging(Nullable<global::System.Int32> value);
+        partial void Onexternal_idChanged();
 
         #endregion
     
@@ -2015,6 +2088,44 @@ namespace EomApp1.Formss.Synch.Models.Eom
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatu>("EomDatabaseModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatu", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "tracking_system_fk", "TrackingSystem")]
+        public TrackingSystem TrackingSystem
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<TrackingSystem>("EomDatabaseModel.tracking_system_fk", "TrackingSystem").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<TrackingSystem>("EomDatabaseModel.tracking_system_fk", "TrackingSystem").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<TrackingSystem> TrackingSystemReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<TrackingSystem>("EomDatabaseModel.tracking_system_fk", "TrackingSystem");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<TrackingSystem>("EomDatabaseModel.tracking_system_fk", "TrackingSystem", value);
                 }
             }
         }
@@ -3597,6 +3708,112 @@ namespace EomApp1.Formss.Synch.Models.Eom
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Item", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomDatabaseModel", Name="TrackingSystem")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class TrackingSystem : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new TrackingSystem object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="name">Initial value of the name property.</param>
+        public static TrackingSystem CreateTrackingSystem(global::System.Int32 id, global::System.String name)
+        {
+            TrackingSystem trackingSystem = new TrackingSystem();
+            trackingSystem.id = id;
+            trackingSystem.name = name;
+            return trackingSystem;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "tracking_system_fk", "Campaign")]
+        public EntityCollection<Campaign> Campaigns
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Campaign>("EomDatabaseModel.tracking_system_fk", "Campaign");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Campaign>("EomDatabaseModel.tracking_system_fk", "Campaign", value);
                 }
             }
         }

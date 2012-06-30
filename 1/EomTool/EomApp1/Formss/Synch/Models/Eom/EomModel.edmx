@@ -20,6 +20,7 @@
           <EntitySet Name="MediaBuyer" EntityType="EomDatabaseModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="NetTermType" EntityType="EomDatabaseModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Source" EntityType="EomDatabaseModel.Store.Source" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TrackingSystem" EntityType="EomDatabaseModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UnitType" EntityType="EomDatabaseModel.Store.UnitType" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" Association="EomDatabaseModel.Store.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
             <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
@@ -76,6 +77,10 @@
           <AssociationSet Name="Item_UnitType_id_FK_UnitType_id_PK" Association="EomDatabaseModel.Store.Item_UnitType_id_FK_UnitType_id_PK">
             <End Role="UnitType" EntitySet="UnitType" />
             <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="tracking_system_fk" Association="EomDatabaseModel.Store.tracking_system_fk">
+            <End Role="TrackingSystem" EntitySet="TrackingSystem" />
+            <End Role="Campaign" EntitySet="Campaign" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AccountManager">
@@ -152,6 +157,8 @@
           <Property Name="is_coreg" Type="bit" />
           <Property Name="max_scrub" Type="int" />
           <Property Name="notes" Type="varchar(max)" />
+          <Property Name="tracking_system_id" Type="int" />
+          <Property Name="external_id" Type="int" />
         </EntityType>
         <EntityType Name="CampaignStatus">
           <Key>
@@ -226,6 +233,13 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TrackingSystem">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="UnitType">
@@ -403,6 +417,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="tracking_system_fk">
+          <End Role="TrackingSystem" Type="EomDatabaseModel.Store.TrackingSystem" Multiplicity="0..1" />
+          <End Role="Campaign" Type="EomDatabaseModel.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TrackingSystem">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="tracking_system_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -463,6 +489,7 @@
             <End Role="Affiliate" EntitySet="Affiliates" />
           </AssociationSet>
           <EntitySet Name="Campaigns" EntityType="EomDatabaseModel.Campaign" />
+          <EntitySet Name="TrackingSystems" EntityType="EomDatabaseModel.TrackingSystem" />
           <AssociationSet Name="Campaign_AccountManager_id_FK_AccountManager_id_PK" Association="EomDatabaseModel.Campaign_AccountManager_id_FK_AccountManager_id_PK">
             <End Role="AccountManager" EntitySet="AccountManagers" />
             <End Role="Campaign" EntitySet="Campaigns" />
@@ -479,7 +506,11 @@
             <End Role="CampaignStatu" EntitySet="CampaignStatus" />
             <End Role="Campaign" EntitySet="Campaigns" />
           </AssociationSet>
-        </EntityContainer>
+          <AssociationSet Name="tracking_system_fk" Association="EomDatabaseModel.tracking_system_fk">
+            <End Role="TrackingSystem" EntitySet="TrackingSystems" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="AccountManager">
           <Key>
             <PropertyRef Name="id" />
@@ -763,7 +794,7 @@
           <Property Type="Int32" Name="pid" Nullable="false" />
           <Property Type="String" Name="campaign_name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="campaign_type" MaxLength="3" FixedLength="true" Unicode="false" />
-          <Property Type="DateTime" Name="modified" Nullable="true" />
+          <Property Type="DateTime" Name="modified" />
           <Property Type="DateTime" Name="created" />
           <Property Type="String" Name="dt_campaign_status" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="dt_campaign_url" MaxLength="255" FixedLength="false" Unicode="false" />
@@ -774,10 +805,21 @@
           <Property Type="Boolean" Name="is_coreg" />
           <Property Type="Int32" Name="max_scrub" />
           <Property Type="String" Name="notes" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="tracking_system_id" />
+          <Property Type="Int32" Name="external_id" />
           <NavigationProperty Name="AccountManager" Relationship="EomDatabaseModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" FromRole="Campaign" ToRole="AccountManager" />
           <NavigationProperty Name="AdManager" Relationship="EomDatabaseModel.Campaign_AdManager_id_FK_AdManager_id_PK" FromRole="Campaign" ToRole="AdManager" />
           <NavigationProperty Name="Advertiser" Relationship="EomDatabaseModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" FromRole="Campaign" ToRole="Advertiser" />
           <NavigationProperty Name="CampaignStatu" Relationship="EomDatabaseModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="Campaign" ToRole="CampaignStatu" />
+          <NavigationProperty Name="TrackingSystem" Relationship="EomDatabaseModel.tracking_system_fk" FromRole="Campaign" ToRole="TrackingSystem" />
+        </EntityType>
+        <EntityType Name="TrackingSystem">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Campaigns" Relationship="EomDatabaseModel.tracking_system_fk" FromRole="TrackingSystem" ToRole="Campaign" />
         </EntityType>
         <Association Name="Campaign_AccountManager_id_FK_AccountManager_id_PK">
           <End Type="EomDatabaseModel.AccountManager" Role="AccountManager" Multiplicity="1" />
@@ -827,7 +869,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="tracking_system_fk">
+          <End Type="EomDatabaseModel.TrackingSystem" Role="TrackingSystem" Multiplicity="0..1" />
+          <End Type="EomDatabaseModel.Campaign" Role="Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TrackingSystem">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="tracking_system_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -933,6 +987,8 @@
           <EntitySetMapping Name="Campaigns">
             <EntityTypeMapping TypeName="EomDatabaseModel.Campaign">
               <MappingFragment StoreEntitySet="Campaign">
+                <ScalarProperty Name="external_id" ColumnName="external_id" />
+                <ScalarProperty Name="tracking_system_id" ColumnName="tracking_system_id" />
                 <ScalarProperty Name="notes" ColumnName="notes" />
                 <ScalarProperty Name="max_scrub" ColumnName="max_scrub" />
                 <ScalarProperty Name="is_coreg" ColumnName="is_coreg" />
@@ -951,6 +1007,14 @@
                 <ScalarProperty Name="ad_manager_id" ColumnName="ad_manager_id" />
                 <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
                 <ScalarProperty Name="account_manager_id" ColumnName="account_manager_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrackingSystems">
+            <EntityTypeMapping TypeName="EomDatabaseModel.TrackingSystem">
+              <MappingFragment StoreEntitySet="TrackingSystem">
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -976,12 +1040,12 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="EomModel" ZoomLevel="97">
-        <EntityTypeShape EntityType="EomDatabaseModel.AccountManager" Width="1.5" PointX="7" PointY="6.625" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomDatabaseModel.AdManager" Width="1.5" PointX="9.25" PointY="4.75" Height="1.5956835937500005" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomDatabaseModel.Advertiser" Width="1.5" PointX="9.25" PointY="2.625" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomDatabaseModel.AccountManager" Width="1.5" PointX="7" PointY="7.125" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomDatabaseModel.AdManager" Width="1.5" PointX="9.125" PointY="4.75" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomDatabaseModel.Advertiser" Width="1.5" PointX="9.125" PointY="2.625" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.Affiliate" Width="1.75" PointX="2.5" PointY="0.5" Height="3.9033007812500005" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.AffiliatePaymentMethod" Width="1.5" PointX="0.5" PointY="0.5" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomDatabaseModel.CampaignStatu" Width="1.5" PointX="9.25" PointY="0.5" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomDatabaseModel.CampaignStatu" Width="1.5" PointX="9.125" PointY="0.5" Height="1.59568359375" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.Currency" Width="1.5" PointX="4.875" PointY="0.75" Height="2.1725878906250005" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.Item" Width="1.875" PointX="4.75" PointY="3.5" Height="6.0186165364583335" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.NetTermType" Width="1.5" PointX="0.5" PointY="2.625" Height="1.5956835937500031" IsExpanded="true" />
@@ -1030,24 +1094,29 @@
           <ConnectorPoint PointX="2" PointY="5" />
           <ConnectorPoint PointX="2.5" PointY="4.5956022135416656" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="EomDatabaseModel.Campaign" Width="1.5" PointX="7" PointY="0.5" Height="5.4417122395833317" />
+        <EntityTypeShape EntityType="EomDatabaseModel.Campaign" Width="1.5" PointX="7" PointY="0.5" Height="6.0186165364583388" />
+        <EntityTypeShape EntityType="EomDatabaseModel.TrackingSystem" Width="1.5" PointX="9.125" PointY="6.875" Height="1.5956835937500031" />
         <AssociationConnector Association="EomDatabaseModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" >
-          <ConnectorPoint PointX="7.75" PointY="6.625" />
-          <ConnectorPoint PointX="7.75" PointY="5.9417122395833317" />
+          <ConnectorPoint PointX="7.75" PointY="7.125" />
+          <ConnectorPoint PointX="7.75" PointY="6.5186165364583388" />
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Campaign_AdManager_id_FK_AdManager_id_PK" >
-          <ConnectorPoint PointX="9.25" PointY="5.3458561197916659" />
-          <ConnectorPoint PointX="8.5" PointY="5.3458561197916659" />
+          <ConnectorPoint PointX="9.125" PointY="5.547841796875" />
+          <ConnectorPoint PointX="8.5" PointY="5.547841796875" />
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" >
-          <ConnectorPoint PointX="9.25" PointY="3.422841796875" />
+          <ConnectorPoint PointX="9.125" PointY="3.422841796875" />
           <ConnectorPoint PointX="8.5" PointY="3.422841796875" />
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" >
-          <ConnectorPoint PointX="9.25" PointY="1.297841796875" />
+          <ConnectorPoint PointX="9.125" PointY="1.297841796875" />
           <ConnectorPoint PointX="8.5" PointY="1.297841796875" />
         </AssociationConnector>
-      </Diagram>
+        <AssociationConnector Association="EomDatabaseModel.tracking_system_fk" >
+          <ConnectorPoint PointX="9.125" PointY="6.875" />
+          <ConnectorPoint PointX="8.5" PointY="6.5186165364583388" />
+        </AssociationConnector>
+        </Diagram>
     </Diagrams>
   </Designer>
 </edmx:Edmx>

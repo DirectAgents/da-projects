@@ -4,6 +4,7 @@ using System.Data.Objects;
 using System.Linq;
 using DAgents.Common;
 using EomApp1.Formss.Synch.Services.Cake;
+using System.Data.Objects.DataClasses;
 
 namespace EomApp1.Formss.Synch.Models.Eom
 {
@@ -13,9 +14,7 @@ namespace EomApp1.Formss.Synch.Models.Eom
         {
             var entityBuilder = new EntityConnectionStringBuilder();
             entityBuilder.Provider = "System.Data.SqlClient";
-            // TODO: !!!switch this to use the configuration setting!!!
             entityBuilder.ProviderConnectionString = Properties.Settings.Default.DADatabaseR1ConnectionString + ";multipleactiveresultsets=True;App=EntityFramework";
-            //entityBuilder.ProviderConnectionString = @"data source=biz2\da;initial catalog=zTestMay2012;integrated security=True;multipleactiveresultsets=True;App=EntityFramework";
             entityBuilder.Metadata = @"res://*/Formss.Synch.Models.Eom.EomModel.csdl|res://*/Formss.Synch.Models.Eom.EomModel.ssdl|res://*/Formss.Synch.Models.Eom.EomModel.msl";
             return new EomDatabaseEntities(entityBuilder.ConnectionString); 
         }

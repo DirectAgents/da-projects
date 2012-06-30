@@ -29,7 +29,7 @@
     <SuiteName>Direct Agents Internal Tools</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>184</ApplicationRevision>
+    <ApplicationRevision>185</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -44,6 +44,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -534,6 +536,18 @@
     <Compile Include="Formss\SqlExecute.Designer.cs">
       <DependentUpon>SqlExecute.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formss\Synch\AddNewCampaignSetupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formss\Synch\AddNewCampaignSetupForm.Designer.cs">
+      <DependentUpon>AddNewCampaignSetupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formss\Synch\CampaignsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formss\Synch\CampaignsForm.Designer.cs">
+      <DependentUpon>CampaignsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Formss\Synch\Models\Cake\CakeConversion.cs" />
     <Compile Include="Formss\Synch\Models\Cake\CakeEntities.cs" />
     <Compile Include="Formss\Synch\Services\Cake\CakeWebServiceCache.cs" />
@@ -872,7 +886,6 @@
     </EntityDeploy>
     <None Include="ClassDiagram1.cd" />
     <None Include="ClassDiagram2.cd" />
-    <None Include="Formss\Synch\_class diagrams\Synch.cd" />
     <None Include="DADatabaseApril2012_before_cakeDataSet.xsc">
       <DependentUpon>DADatabaseApril2012_before_cakeDataSet.xsd</DependentUpon>
     </None>
@@ -1140,6 +1153,12 @@
     <None Include="Model\DirectTrackClasses.dbml.layout">
       <DependentUpon>DirectTrackClasses.dbml</DependentUpon>
     </None>
+    <EmbeddedResource Include="Formss\Synch\AddNewCampaignSetupForm.resx">
+      <DependentUpon>AddNewCampaignSetupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formss\Synch\CampaignsForm.resx">
+      <DependentUpon>CampaignsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Formss\Synch\__defunct\DisplayAndSaveChanges.resx">
       <DependentUpon>DisplayAndSaveChanges.cs</DependentUpon>
     </EmbeddedResource>
@@ -1435,6 +1454,7 @@
     <None Include="Properties\DataSources\EomApp1.Formss.Payment.DataSets.DADatabaseR2Entities.datasource" />
     <None Include="Properties\DataSources\EomApp1.Formss.PubRep1.Components.PendingStatusUpdates.datasource" />
     <None Include="Properties\DataSources\EomApp1.Formss.PubRep1.Controls.CampaignsForIDs.datasource" />
+    <None Include="Properties\DataSources\EomApp1.Formss.Synch.CampaignSetupItemContainer.datasource" />
     <None Include="Properties\DataSources\System.Data.DataTable.datasource" />
     <None Include="PublisherNameCombine\PublisherCombineDataSet.xsc">
       <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
