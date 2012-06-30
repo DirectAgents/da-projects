@@ -1,0 +1,10 @@
+6/27/2012 5:00:50 PM	This log contains information about the import operation of the script 'DA.sql' into project 'DA.Database' on computer 'GREEN-PC' by user'green.
+6/27/2012 5:00:50 PM	Started importing file: C:\Users\green\Desktop\DA.sql 
+6/27/2012 5:00:50 PM	File name C:\Users\green\Desktop\DA.sql (size: 417)
+6/27/2012 5:00:50 PM	Parsing import script
+6/27/2012 5:00:50 PM	Total number of batches in script: 1
+6/27/2012 5:00:50 PM	Total number of statements in script: 1
+6/27/2012 5:00:50 PM	The script was successfully imported into the project.
+6/27/2012 5:00:51 PM	Analyzing schema objects...
+6/27/2012 5:00:51 PM	A summary of the import operation was saved to the log file C:\Users\green\Documents\GitHub\da-projects\1\DA\DA.Database\Import Script Logs\DA_sql_20120627090050.log.
+6/27/2012 5:00:51 PM	Click Finish to continue...

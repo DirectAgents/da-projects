@@ -235,10 +235,11 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DA;Integrated Security=True")]
-        public string DADatabaseMasterListConnectionString {
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\sqlexpress;Initial Catalog=DA;Integrated Security=True")]
+        public string DAConnectionString {
             get {
-                return ((string)(this["DADatabaseMasterListConnectionString"]));
+                return ((string)(this["DAConnectionString"]));
             }
         }
     }
