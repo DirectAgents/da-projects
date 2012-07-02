@@ -82,6 +82,11 @@ namespace EomApp1.Formss.Synch
                     this.DeleteExistingConversions();
                     this.cakeEntities.SaveChanges();
                 }
+                using (this.eomEntities = EomDatabaseEntities.Create())
+                {
+                    this.DeleteExistingItems();
+                    this.eomEntities.SaveChanges();
+                }
                 using (this.cakeEntities = new CakeEntities())
                 {
                     this.ExtractConversions();
@@ -118,6 +123,23 @@ namespace EomApp1.Formss.Synch
 
             this.logger.Log("Deleted " + existingConversions.Count() + " conversions.");
         }
+
+        private void DeleteExistingItems()
+        {
+            this.logger.Log("Deleting Items with default accounting/reporting status...");
+
+            var existingItems = from c in this.eomEntities.Items
+                                where
+                                   c.item_accounting_status_id == 1 &&
+                                   c.item_reporting_status_id == 1 &&
+                                   c.pid == this.parameters.CampaignId &&
+                                   c.Source.name == "Cake"
+                                select c;
+
+            existingItems.ToList().ForEach(c => this.eomEntities.Items.DeleteObject(c));
+
+            this.logger.Log("Deleted " + existingItems.Count() + " items.");
+        }
         #endregion
 
         #region Extract
@@ -147,6 +169,8 @@ namespace EomApp1.Formss.Synch
             logger.Log("Extracted " + this.extractedConversions.Count + " conversions.");
         }
 
+
+        List<CakeConversion> updatedCakeConversions = new List<CakeConversion>();
         private void StageExtractedConversions()
         {
             this.logger.Log("Staging extracted conversions...");
@@ -155,6 +179,7 @@ namespace EomApp1.Formss.Synch
             {
                 var cakeConversion = this.cakeEntities.CakeConversions.Create(extractedConversion.IdAsInt);
                 cakeConversion.Update(extractedConversion);
+                updatedCakeConversions.Add(cakeConversion);
             });
 
             this.logger.Log("Staged " + this.extractedConversions.Count + ".");
