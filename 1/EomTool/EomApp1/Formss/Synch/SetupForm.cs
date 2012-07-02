@@ -1,34 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Collections.ObjectModel;
 
 namespace EomApp1.Formss.Synch
 {
-    public partial class CampaignsForm : Form
+    public partial class SetupForm : Form
     {
-        private CampaignSetupItemContainer container = new CampaignSetupItemContainer();
+        private SetupItemContainer container = new SetupItemContainer();
 
-        public CampaignsForm()
+        public SetupForm()
         {
             InitializeComponent();
-            this.bindingSource1.DataSource = this.container;
-            this.Fill();
+            if (!this.DesignMode)
+            {
+                this.bindingSource1.DataSource = this.container;
+                this.Fill();
+            }
         }
 
         private void Fill()
         {
             using (var db = Models.Eom.EomDatabaseEntities.Create())
             {
+                this.bindingSource1.RaiseListChangedEvents = false;
+                this.bindingSource1.SuspendBinding();
                 GetCampaignSetupItems(db).ToList().ForEach(c =>
                 {
                     this.bindingSource1.Add(c);
                 });
+                this.bindingSource1.RaiseListChangedEvents = true;
+                this.bindingSource1.ResumeBinding();
             }
         }
 
@@ -39,10 +46,10 @@ namespace EomApp1.Formss.Synch
                    select c;
         }
 
-        private static IQueryable<CampaignSetupItem> GetCampaignSetupItems(Models.Eom.EomDatabaseEntities db)
+        private static IQueryable<SetupItem> GetCampaignSetupItems(Models.Eom.EomDatabaseEntities db)
         {
             return from c in GetCampaigns(db)
-                   select new CampaignSetupItem {
+                   select new SetupItem {
                        PID = c.pid,
                        Campaign = c.campaign_name,
                        ExternalId = c.external_id.Value
@@ -77,11 +84,14 @@ namespace EomApp1.Formss.Synch
 
         private void addItemToolStripClick(object sender, EventArgs e)
         {
-            var form = new AddNewCampaignSetupForm();
-            form.ShowDialog();
-            this.Add(form.OfferId, form.PID);
-            this.Clear();
-            this.Fill();
+            var form = new AddCampaignSetupForm();
+            var dialogResult = form.ShowDialog();
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+            {
+                this.Add(form.OfferId, form.PID);
+                this.Clear();
+                this.Fill();
+            }
         }
 
         private void Clear()
@@ -101,17 +111,17 @@ namespace EomApp1.Formss.Synch
         }
     }
 
-    public class CampaignSetupItemContainer
+    internal class SetupItemContainer
     {
-        private ObservableCollection<CampaignSetupItem> items = new ObservableCollection<CampaignSetupItem>();
-        public ObservableCollection<CampaignSetupItem> Items
+        private ObservableCollection<SetupItem> items = new ObservableCollection<SetupItem>();
+        public ObservableCollection<SetupItem> Items
         {
             get { return items; }
             set { items = value; }
         }
     }
 
-    public class CampaignSetupItem
+    internal class SetupItem
     {
         public int PID { get; set; }
         public string Campaign { get; set; }

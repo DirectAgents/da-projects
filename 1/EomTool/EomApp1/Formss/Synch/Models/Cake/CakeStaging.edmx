@@ -187,7 +187,7 @@
     <Diagrams>
       <Diagram Name="CakeStaging">
         <EntityTypeShape EntityType="CakeStagingModel.CakeConversionSummary" Width="2.5" PointX="0.75" PointY="0.75" Height="3.3263964843749996" />
-        <EntityTypeShape EntityType="CakeStagingModel.CakeConversion" Width="2.375" PointX="3.75" PointY="0.75" Height="4.480205078125" />
+        <EntityTypeShape EntityType="CakeStagingModel.CakeConversion" Width="2.625" PointX="4.375" PointY="0.75" Height="4.480205078125" />
       </Diagram>
     </Diagrams>
   </Designer>

@@ -1,6 +1,6 @@
 ﻿namespace EomApp1.Formss.Synch
 {
-    partial class CampaignsForm
+    partial class SetupForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CampaignsForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupForm));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
@@ -72,7 +72,7 @@
             // bindingSource1
             // 
             this.bindingSource1.DataMember = "Items";
-            this.bindingSource1.DataSource = typeof(EomApp1.Formss.Synch.CampaignSetupItemContainer);
+            this.bindingSource1.DataSource = typeof(EomApp1.Formss.Synch.SetupItemContainer);
             // 
             // bindingNavigator1
             // 

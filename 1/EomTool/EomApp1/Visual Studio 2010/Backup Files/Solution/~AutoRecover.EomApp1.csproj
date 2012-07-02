@@ -29,7 +29,7 @@
     <SuiteName>Direct Agents Internal Tools</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>189</ApplicationRevision>
+    <ApplicationRevision>185</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -536,17 +536,17 @@
     <Compile Include="Formss\SqlExecute.Designer.cs">
       <DependentUpon>SqlExecute.cs</DependentUpon>
     </Compile>
-    <Compile Include="Formss\Synch\AddCampaignSetupForm.cs">
+    <Compile Include="Formss\Synch\AddNewCampaignSetupForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Formss\Synch\AddCampaignSetupForm.Designer.cs">
-      <DependentUpon>AddCampaignSetupForm.cs</DependentUpon>
+    <Compile Include="Formss\Synch\AddNewCampaignSetupForm.Designer.cs">
+      <DependentUpon>AddNewCampaignSetupForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Formss\Synch\SetupForm.cs">
+    <Compile Include="Formss\Synch\CampaignsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Formss\Synch\SetupForm.Designer.cs">
-      <DependentUpon>SetupForm.cs</DependentUpon>
+    <Compile Include="Formss\Synch\CampaignsForm.Designer.cs">
+      <DependentUpon>CampaignsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Formss\Synch\Models\Cake\CakeConversion.cs" />
     <Compile Include="Formss\Synch\Models\Cake\CakeEntities.cs" />
@@ -1153,11 +1153,11 @@
     <None Include="Model\DirectTrackClasses.dbml.layout">
       <DependentUpon>DirectTrackClasses.dbml</DependentUpon>
     </None>
-    <EmbeddedResource Include="Formss\Synch\AddCampaignSetupForm.resx">
-      <DependentUpon>AddCampaignSetupForm.cs</DependentUpon>
+    <EmbeddedResource Include="Formss\Synch\AddNewCampaignSetupForm.resx">
+      <DependentUpon>AddNewCampaignSetupForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Formss\Synch\SetupForm.resx">
-      <DependentUpon>SetupForm.cs</DependentUpon>
+    <EmbeddedResource Include="Formss\Synch\CampaignsForm.resx">
+      <DependentUpon>CampaignsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Formss\Synch\__defunct\DisplayAndSaveChanges.resx">
       <DependentUpon>DisplayAndSaveChanges.cs</DependentUpon>

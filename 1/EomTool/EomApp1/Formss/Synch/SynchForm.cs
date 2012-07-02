@@ -269,7 +269,11 @@ namespace EomApp1.Formss.Synch
             {
                 if (!ex.Message.Contains("(404)"))
                 {
-                    Logger.LogError("error for payout(pid=" + pid + "): " + ex.Message);
+                    Logger.LogError("error for payout(pid=" + pid + "): " + ex.Message + ex.StackTrace);
+                    if (ex.InnerException != null)
+                    {
+                        Logger.LogError("error for payout(pid=" + pid + "): " + ex.InnerException.Message + ex.InnerException.StackTrace);
+                    }
                 }
             }
             Log("done synching payouts.");
@@ -298,7 +302,11 @@ namespace EomApp1.Formss.Synch
             {
                 if (!ex.Message.Contains("(404)"))
                 {
-                    Logger.LogError("error for stats(pid=" + pid + "): " + ex.Message);
+                    Logger.LogError("error for stats(pid=" + pid + "): " + ex.Message + " " + ex.StackTrace);
+                    if (ex.InnerException != null)
+                    {
+                        Logger.LogError("INNER EXCEPTION: " + pid + "): " + ex.InnerException.Message + " " + ex.InnerException.StackTrace);
+                    }
                 }
             }
             Log("synching stats.");
@@ -482,7 +490,7 @@ namespace EomApp1.Formss.Synch
 
         private void redirectsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var form = new CampaignsForm();
+            var form = new SetupForm();
             form.ShowDialog();
         }
     }
