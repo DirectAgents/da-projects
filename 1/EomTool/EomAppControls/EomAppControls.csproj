@@ -42,16 +42,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoggerBox.cs">
+    <Compile Include="Filtering\DataGridViewColumnSelector.cs" />
+    <Compile Include="Logging\LoggerBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="LoggerBox.Designer.cs">
+    <Compile Include="Logging\LoggerBox.Designer.cs">
       <DependentUpon>LoggerBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sorting\SortableBindingList.cs" />
+    <Compile Include="Typing\TextEventArgs.cs" />
+    <Compile Include="Typing\TypingTracker.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="LoggerBox.resx">
+    <EmbeddedResource Include="Logging\LoggerBox.resx">
       <DependentUpon>LoggerBox.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

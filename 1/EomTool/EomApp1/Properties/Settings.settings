@@ -105,8 +105,5 @@
     <Setting Name="SynchScreenTargetSystemChoice" Type="EomApp1.Formss.Synch.TargetSystemChoice" Scope="User">
       <Value Profile="(Default)">DirectTrack</Value>
     </Setting>
-    <Setting Name="EomApp1_CakeService_Service" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://localhost:61333/Service.asmx</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

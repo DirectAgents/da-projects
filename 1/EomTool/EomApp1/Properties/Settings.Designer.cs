@@ -222,15 +222,5 @@ namespace EomApp1.Properties {
                 this["SynchScreenTargetSystemChoice"] = value;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:61333/Service.asmx")]
-        public string EomApp1_CakeService_Service {
-            get {
-                return ((string)(this["EomApp1_CakeService_Service"]));
-            }
-        }
     }
 }

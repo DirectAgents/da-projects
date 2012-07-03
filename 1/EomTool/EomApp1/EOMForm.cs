@@ -124,8 +124,6 @@ namespace EomApp1
         private void advertisersToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             var a = new Formss.Advertiser2.Forms.AdvertisersForm();
-            //var a = new Formss.Advertiser4.Form1();
-
             a.Show();
         }
 

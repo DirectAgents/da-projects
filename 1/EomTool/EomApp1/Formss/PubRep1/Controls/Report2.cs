@@ -6,7 +6,6 @@ using EomApp1.Formss.PubRep1.Data;
 using EomApp1.Formss.PubRep1.Data.PublisherReportDataSet1TableAdapters;
 using EomApp1.Formss.PubRep1.Utils;
 using EomApp1.Properties;
-using EomApp1.Formss.Common;
 
 namespace EomApp1.Formss.PubRep1.Controls
 {
