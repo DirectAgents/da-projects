@@ -51,7 +51,7 @@ namespace EomApp1.Formss
         private bool IsValidPid(int pid)
         {
             bool result = false;
-            using (var sqlConnection = new SqlConnection(EomAppCommon.Settings.ConnStr))
+            using (var sqlConnection = new SqlConnection(EomAppCommon.EomAppSettings.ConnStr))
             using (var sqlCommand = new SqlCommand(string.Format("select count(pid) from Campaign where pid={0}", pid), sqlConnection))
             {
                 sqlConnection.Open();
@@ -73,7 +73,7 @@ namespace EomApp1.Formss
 
         private void button1_Click(object sender, EventArgs e)
         {
-            using (var sqlConnection = new SqlConnection(EomAppCommon.Settings.ConnStr))
+            using (var sqlConnection = new SqlConnection(EomAppCommon.EomAppSettings.ConnStr))
             using (var sqlCommand = new SqlCommand(richTextBox1.Text, sqlConnection))
             {
                 if (textBox1.Text == "da123")

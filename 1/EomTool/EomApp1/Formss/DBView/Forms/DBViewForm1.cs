@@ -129,7 +129,7 @@ namespace EomApp1.Formss.DBView.Forms
                     tt = TableType.Table;
                 }
 
-                string cs = EomAppCommon.Settings.ConnStr;
+                string cs = EomAppCommon.EomAppSettings.ConnStr;
 
                 var a = new DBTableViewerForm1(cs, targetName, tt);
 

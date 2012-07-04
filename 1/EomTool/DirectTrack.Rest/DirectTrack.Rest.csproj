@@ -74,9 +74,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DAgents.Common\DAgents.Common.csproj">
+    <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
-      <Name>DAgents.Common</Name>
+      <Name>DirectAgents.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

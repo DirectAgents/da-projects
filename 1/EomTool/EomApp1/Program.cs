@@ -12,7 +12,7 @@ namespace EomApp1
             Application.SetCompatibleTextRenderingDefault(false);
             try
             {
-                EomAppCommon.Settings.ConnStr = Properties.Settings.Default.DADatabaseR1ConnectionString;
+                EomAppCommon.EomAppSettings.ConnStr = Properties.Settings.Default.DADatabaseR1ConnectionString;
                 Application.Run(new EOMForm());
             }
             catch (Exception ex)

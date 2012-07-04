@@ -223,7 +223,7 @@ namespace EomApp1
         private void synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            using (var con = new SqlConnection(EomAppCommon.Settings.ConnStr))
+            using (var con = new SqlConnection(EomAppCommon.EomAppSettings.ConnStr))
             {
                 var cmd = new SqlCommand("select * from Affiliate", con);
                 con.Open();

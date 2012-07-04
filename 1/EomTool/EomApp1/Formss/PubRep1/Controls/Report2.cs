@@ -128,7 +128,7 @@ namespace EomApp1.Formss.PubRep1.Controls
         int Save()
         {
             //File.WriteAllText(ReportSavePath, ReportText);
-            Data.PRDataDataContext db = new Data.PRDataDataContext(EomAppCommon.Settings.ConnStr);
+            Data.PRDataDataContext db = new Data.PRDataDataContext(EomAppCommon.EomAppSettings.ConnStr);
             var o = new PubReportInstance
             {
                 created_by_user_name = DAgents.Common.Utilities.GetWindowsIdentityNameLower(),

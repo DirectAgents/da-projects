@@ -63,6 +63,7 @@
     <Compile Include="ConsoleHelper.cs" />
     <Compile Include="ConsoleProgramTemplate.cs" />
     <Compile Include="ConsoleUtility.cs" />
+    <Compile Include="EomAppSettings.cs" />
     <Compile Include="SqlBatch.cs" />
     <Compile Include="IAccessor.cs" />
     <Compile Include="IConfigure.cs" />

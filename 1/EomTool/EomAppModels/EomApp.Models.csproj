@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1594F5F0-0810-4CD2-8C1E-439BA340EC2E}</ProjectGuid>
+    <ProjectGuid>{B9F971EA-5F76-474C-B3DC-E00FD3760967}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EomAppControls</RootNamespace>
-    <AssemblyName>EomAppControls</AssemblyName>
+    <RootNamespace>EomAppModels</RootNamespace>
+    <AssemblyName>EomAppModels</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,8 +33,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,29 +43,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Filtering\DataGridViewColumnSelector.cs" />
-    <Compile Include="Logging\LoggerBox.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="DADatabase.cs">
+      <DependentUpon>DAMain1Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Logging\LoggerBox.Designer.cs">
-      <DependentUpon>LoggerBox.cs</DependentUpon>
+    <Compile Include="DAMain1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DAMain1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DAMain1Entities.cs" />
+    <Compile Include="DAMain1Model.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DAMain1Model.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAMain1Model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DAMain1Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sorting\SortableBindingList.cs" />
-    <Compile Include="Typing\TextEventArgs.cs" />
-    <Compile Include="Typing\TypingTracker.cs">
-      <SubType>Component</SubType>
+    <Compile Include="QueryForSqlExecuteDialog.cs">
+      <DependentUpon>DAMain1Model.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Logging\LoggerBox.resx">
-      <DependentUpon>LoggerBox.cs</DependentUpon>
-    </EmbeddedResource>
+    <EntityDeploy Include="DAMain1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DAMain1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DAgents.Common\DAgents.Common.csproj">
+    <None Include="App.Config" />
+    <None Include="DAMain1Model.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DAMain1Model.Context.cs</LastGenOutput>
+    </None>
+    <None Include="DAMain1Model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DAMain1Model.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
-      <Name>DAgents.Common</Name>
+      <Name>DirectAgents.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

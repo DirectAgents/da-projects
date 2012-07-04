@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EomAppCommon
 {
-    public static class Settings
+    public static class EomAppSettings
     {
         public static string ConnStr { get; set; }
         public static string MasterDatabaseListConnectionString { get; set; }

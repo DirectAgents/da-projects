@@ -29,7 +29,7 @@
     <SuiteName>Direct Agents Internal Tools</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>189</ApplicationRevision>
+    <ApplicationRevision>190</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -119,12 +119,6 @@
       <DependentUpon>DAMain1DataSetForSqlExecute.xsd</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Filtering\DataGridViewAutoFilterColumnHeaderCell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Filtering\DataGridViewAutoFilterTextBoxColumn.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Formss\AB\Data\ABItem.cs" />
     <Compile Include="Formss\AB\Data\Advertiser.cs" />
@@ -555,7 +549,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Services\EomAppService.cs">
+    <Compile Include="Formss\Final\EomAppService.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Settings.cs" />
@@ -1373,29 +1367,25 @@
     <None Include="Resources\Refresh1.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DAgents.Common\DAgents.Common.csproj">
+    <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
-      <Name>DAgents.Common</Name>
+      <Name>DirectAgents.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DAgents.DirectTrack\DAgents.Synch.csproj">
+    <ProjectReference Include="..\DAgents.DirectTrack\DirectAgents.Synch.csproj">
       <Project>{4C08DC70-20A6-4D3B-AB4B-5AAA04521118}</Project>
-      <Name>DAgents.Synch</Name>
+      <Name>DirectAgents.Synch</Name>
     </ProjectReference>
     <ProjectReference Include="..\DirectTrack.Rest\DirectTrack.Rest.csproj">
       <Project>{A5D217FE-1556-4ABD-BFDF-F5A2D65F5D8A}</Project>
       <Name>DirectTrack.Rest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EomAppCommon\EomAppCommon.csproj">
-      <Project>{A90C19EE-A413-4680-BB6F-36D612FE9157}</Project>
-      <Name>EomAppCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EomAppControls\EomAppControls.csproj">
+    <ProjectReference Include="..\EomAppControls\EomApp.Controls.csproj">
       <Project>{1594F5F0-0810-4CD2-8C1E-439BA340EC2E}</Project>
-      <Name>EomAppControls</Name>
+      <Name>EomApp.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EomAppModels\EomAppModels.csproj">
+    <ProjectReference Include="..\EomAppModels\EomApp.Models.csproj">
       <Project>{B9F971EA-5F76-474C-B3DC-E00FD3760967}</Project>
-      <Name>EomAppModels</Name>
+      <Name>EomApp.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

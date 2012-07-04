@@ -70,7 +70,7 @@ namespace EomApp1.Formss.Accounting.Data
 		}
 
         public AccountingDataClassesDataContext(bool p)
-            : base(EomAppCommon.Settings.ConnStr, mappingSource)
+            : base(EomAppCommon.EomAppSettings.ConnStr, mappingSource)
         {
             OnCreated();
         }

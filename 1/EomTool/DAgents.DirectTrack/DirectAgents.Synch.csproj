@@ -102,10 +102,6 @@
       <Project>{A5D217FE-1556-4ABD-BFDF-F5A2D65F5D8A}</Project>
       <Name>DirectTrack.Rest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EomAppCommon\EomAppCommon.csproj">
-      <Project>{A90C19EE-A413-4680-BB6F-36D612FE9157}</Project>
-      <Name>EomAppCommon</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />

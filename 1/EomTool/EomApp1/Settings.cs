@@ -9,7 +9,7 @@ namespace EomApp1.Properties
         protected override void OnSettingsLoaded(object sender, System.Configuration.SettingsLoadedEventArgs e)
         {
             // The common setting specifying the list of databases needs to be set before making any queries.
-            EomAppCommon.Settings.MasterDatabaseListConnectionString = this.DAMain1ConnectionString;
+            EomAppCommon.EomAppSettings.MasterDatabaseListConnectionString = this.DAMain1ConnectionString;
             string name = this.DADatabaseName;
             var database = DADatabase.ByName(name);
 
@@ -33,7 +33,7 @@ namespace EomApp1.Properties
             this["DADatabaseMarch11ConnectionString"] = this["DADatabaseR1ConnectionString"];
 
 #if DEBUG
-            if (EomAppCommon.Settings.DebugEomDatabase)
+            if (EomAppCommon.EomAppSettings.DebugEomDatabase)
             {
                 var form = new System.Windows.Forms.Form();
                 var grid = new System.Windows.Forms.DataGridView {

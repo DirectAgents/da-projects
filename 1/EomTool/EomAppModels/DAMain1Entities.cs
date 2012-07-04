@@ -11,7 +11,7 @@ namespace EomAppModels
             var builder = new EntityConnectionStringBuilder();
 
             builder.Provider = "System.Data.SqlClient";
-            builder.ProviderConnectionString = string.Format("{0};multipleactiveresultsets=True;App=EntityFramework", EomAppCommon.Settings.MasterDatabaseListConnectionString);
+            builder.ProviderConnectionString = string.Format("{0};multipleactiveresultsets=True;App=EntityFramework", EomAppCommon.EomAppSettings.MasterDatabaseListConnectionString);
             builder.Metadata = @"res://*/DAMain1.csdl|res://*/DAMain1.ssdl|res://*/DAMain1.msl";
 
             return new DAMain1Entities(builder.ConnectionString);

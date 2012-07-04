@@ -37,7 +37,7 @@ namespace EomApp1.Formss.Campaign
 
         private IEnumerable<KeyValuePair<int, string>> GetAccountManagers()
         {
-            using (var connection = new SqlConnection(EomAppCommon.Settings.ConnStr))
+            using (var connection = new SqlConnection(EomAppCommon.EomAppSettings.ConnStr))
             {
                 connection.Open();
                 using (var command = new SqlCommand("select * from AccountManager", connection))
