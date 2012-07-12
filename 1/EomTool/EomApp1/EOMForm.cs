@@ -1,13 +1,10 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.Windows.Forms;
 using DAgents.Common;
 using DAgents.Synch;
 using EomApp1.UI;
-using System.Data.SqlClient;
-using DirectTrack.Rest;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using EomApp1.Services;
+
 namespace EomApp1
 {
     public partial class EOMForm : AppFormBase, ILogger
@@ -20,7 +17,7 @@ namespace EomApp1
 
         private void finalizedCampaignsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Final.FinalizeForm1();
+            var a = new Screens.Final.FinalizeForm1();
             a.Show();
         }
 
@@ -30,49 +27,49 @@ namespace EomApp1
 
         private void namesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Advertiser.Advertisers();
+            var a = new Screens.Advertiser.Advertisers();
             a.Show();
         }
 
         private void advertisersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Advertiser.AdvertiserMapping();
+            var a = new Screens.Advertiser.AdvertiserMapping();
             a.Show();
         }
 
         private void publisherReportsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.PubRep1.Forms.PubRep();
+            var a = new Screens.PubRep1.Forms.PubRep();
             a.Show();
         }
 
         private void currenciesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Accounting.Forms.CurrencyForm();
+            var a = new Screens.Accounting.Forms.CurrencyForm();
             a.Show();
         }
 
         private void extraItemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Extra.ExtraItemsForm();
+            var a = new Screens.Extra.ExtraItemsForm();
             a.Show();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var a = new Formss.ttt.TttGameForm1();
+            var a = new Screens.ttt.TttGameForm1();
             a.Show();
         }
 
         private void synchToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Synch.SynchForm();
+            var a = new Screens.Synch.SynchForm();
             a.Show();
         }
 
         private void affiliatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Affiliate.Forms.AffiliatesForm1();
+            var a = new Screens.Affiliate.Forms.AffiliatesForm1();
             a.Show();
         }
 
@@ -84,7 +81,7 @@ namespace EomApp1
 
         private void campaignsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Campaign.CampaignsForm();
+            var a = new Screens.Campaign.CampaignsForm();
             a.Show();
         }
 
@@ -97,14 +94,14 @@ namespace EomApp1
 
         private void selectDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Settings.SelectDatabaseForm(Properties.Settings.Default.DADatabaseName);
+            var a = new Screens.Settings.SelectDatabaseForm(Properties.Settings.Default.DADatabaseName);
             a.SelectedARow += new EventHandler(a_SelectedARow);
             a.ShowDialog();
         }
 
         void a_SelectedARow(object sender, EventArgs e)
         {
-            Properties.Settings.Default.DADatabaseName = ((Formss.Settings.SelectDatabaseForm)sender).SelectedDatabaseName;
+            Properties.Settings.Default.DADatabaseName = ((Screens.Settings.SelectDatabaseForm)sender).SelectedDatabaseName;
             Properties.Settings.Default.Save();
             Application.Restart();
         }
@@ -117,13 +114,13 @@ namespace EomApp1
 
         private void paymentsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Payment.Forms.PaymentsForm();
+            var a = new Screens.Payment.Forms.PaymentsForm();
             a.Show();
         }
 
         private void advertisersToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Advertiser2.Forms.AdvertisersForm();
+            var a = new Screens.Advertiser2.Forms.AdvertisersForm();
             a.Show();
         }
 
@@ -187,31 +184,31 @@ namespace EomApp1
 
         private void qBToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //var a = new Formss.QB.Forms.QB();
+            //var a = new Screens.QB.Forms.QB();
             //a.Show();
         }
 
         private void dTRestApiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.ETL.Forms.DTRestApi();
+            var a = new Screens.ETL.Forms.DTRestApi();
             a.Show();
         }
 
         private void aBToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //var a = new Formss.AB.Forms.AB10();
+            //var a = new Screens.AB.Forms.AB10();
             //a.Show();
         }
 
         private void tablesViewsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.DBView.Forms.DBViewForm1();
+            var a = new Screens.DBView.Forms.DBViewForm1();
             a.Show();
         }
 
         private void sQLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.SqlExecute();
+            var a = new Screens.SqlExecute();
             a.Show();
         }
 
@@ -242,19 +239,19 @@ namespace EomApp1
 
         private void accountingSheetToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Accounting.Forms.AccountingSheetForm();
+            var a = new Screens.Accounting.Forms.AccountingSheetForm();
             a.Show();
         }
 
         private void syncher2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Campaign.CampaignSynchForm();
+            var a = new Screens.Campaign.CampaignSynchForm();
             a.Show();
         }
 
         private void syncher3ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.AutoSynch.Screen(new Formss.AutoSynch.Presenter(new Formss.AutoSynch.Model()));
+            var a = new Screens.AutoSynch.Screen(new Screens.AutoSynch.Presenter(new Screens.AutoSynch.Model()));
             a.Show();
         }
 
@@ -262,7 +259,7 @@ namespace EomApp1
         {
             //var service = new SyncherService();
             //var action = new Action<ILogger>((logger) => service.SynchAdvertisers(logger));
-            //var form = new Formss.Campaign.LoggerForm("synch ADVERTISERS", action);
+            //var form = new Screens.Campaign.LoggerForm("synch ADVERTISERS", action);
             //form.Show();
         }
 
@@ -270,7 +267,7 @@ namespace EomApp1
         {
             //var service = new SyncherService();
             //var action = new Action<ILogger>((logger) => service.SynchCampaigns(logger));
-            //var form = new Formss.Campaign.LoggerForm("synch CAMPAIGNS", action);
+            //var form = new Screens.Campaign.LoggerForm("synch CAMPAIGNS", action);
             //form.Show();
         }
 
@@ -278,7 +275,7 @@ namespace EomApp1
         {
             //var service = new SyncherService();
             //var action = new Action<ILogger>((logger) => service.SynchCampaignGroups(logger));
-            //var form = new Formss.Campaign.LoggerForm("synch CAMPAIGN GROUPS", action);
+            //var form = new Screens.Campaign.LoggerForm("synch CAMPAIGN GROUPS", action);
             //form.Show();
         }
 
@@ -286,7 +283,7 @@ namespace EomApp1
         {
             //var service = new SyncherService();
             //var action = new Action<ILogger>((logger) => service.SynchCampaignCategories(logger));
-            //var form = new Formss.Campaign.LoggerForm("synch CAMPAIGN CATEGORIES", action);
+            //var form = new Screens.Campaign.LoggerForm("synch CAMPAIGN CATEGORIES", action);
             //form.Show();
         }
 
@@ -297,7 +294,7 @@ namespace EomApp1
 
         private void notesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Formss.Final.CampaignNotes();
+            var a = new Screens.Final.CampaignNotes();
             a.Show();
         }
 

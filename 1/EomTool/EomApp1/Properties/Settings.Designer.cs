@@ -214,9 +214,9 @@ namespace EomApp1.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DirectTrack")]
-        public global::EomApp1.Formss.Synch.TargetSystemChoice SynchScreenTargetSystemChoice {
+        public global::EomApp1.Screens.Synch.TargetSystemChoice SynchScreenTargetSystemChoice {
             get {
-                return ((global::EomApp1.Formss.Synch.TargetSystemChoice)(this["SynchScreenTargetSystemChoice"]));
+                return ((global::EomApp1.Screens.Synch.TargetSystemChoice)(this["SynchScreenTargetSystemChoice"]));
             }
             set {
                 this["SynchScreenTargetSystemChoice"] = value;

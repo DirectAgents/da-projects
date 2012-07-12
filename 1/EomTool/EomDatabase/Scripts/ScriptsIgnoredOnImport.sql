@@ -29,3 +29,78 @@ GO
 SET ANSI_PADDING ON
 
 GO
+
+USE [DADatabaseJune2012]
+GO
+/****** Object:  View [dbo].[AccountingView1]    Script Date: 07/10/2012 15:48:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+
+GO
+
+USE [DADatabaseJune2012]
+GO
+/****** Object:  Table [dbo].[Affiliate]    Script Date: 07/10/2012 15:52:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+SET ANSI_PADDING ON
+GO
+USE [DADatabaseJune2012]
+GO
+/****** Object:  Table [dbo].[Campaign]    Script Date: 07/10/2012 15:52:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+SET ANSI_PADDING ON
+
+GO
+
+USE [DADatabaseJune2012]
+GO
+/****** Object:  View [dbo].[AccountingView1]    Script Date: 07/10/2012 15:48:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+USE [DADatabaseJune2012]
+GO
+/****** Object:  Table [dbo].[Affiliate]    Script Date: 07/10/2012 15:52:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+SET ANSI_PADDING ON
+GO
+USE [DADatabaseJune2012]
+GO
+/****** Object:  Table [dbo].[Campaign]    Script Date: 07/10/2012 15:52:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+SET ANSI_PADDING ON
+GO
+USE [DADatabaseJune2012]
+GO
+/****** Object:  Table [dbo].[TrackingSystem]    Script Date: 07/10/2012 15:58:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+SET ANSI_PADDING ON
+
+GO

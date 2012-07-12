@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="EomApp1.Screens.Synch.CakeSyncher">
+    <Position X="0.5" Y="0.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Struct Name="EomApp1.Screens.Synch.CakeSyncher.Parameters">
+        <TypeIdentifier>
+          <NewMemberFileName>Screens\Synch\CakeSyncher.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAREAAAAAIkAAAACAAAACEAAEIgAQAAAAAEAAgmAAAA=</HashCode>
+      <FileName>Screens\Synch\CakeSyncher.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="eomEntities" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="EomApp1.Screens.Synch.Models.Eom.EomDatabaseEntities">
+    <Position X="4.75" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>iAABBgAEgDQACmUABACAQASgRClQBECEASAAlAAA6AA=</HashCode>
+      <FileName>Screens\Synch\Models\Eom\EomDatabaseEntities.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+      <Property Name="Affiliates" />
+      <Property Name="Campaigns" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="EomApp1.Screens.Synch.Models.Eom.Item">
+    <Position X="8" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>NVVSLUEQC1ABEAOgoQDYMIgBrxokZBQCABigYUiQNwA=</HashCode>
+      <FileName>Screens\Synch\Models\Eom\Item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EomApp1.Screens.Synch.Models.Eom.Affiliate">
+    <Position X="4" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ARAjJhAEAYUEAsAgBMBAiERQHgIEUQBQAAiGMSkRh8M=</HashCode>
+      <FileName>Screens\Synch\Models\Eom\Affiliate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EomApp1.Screens.Synch.Models.Eom.Campaign">
+    <Position X="6" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>w0QwEkAgOODlVHNRoIBSJQAgBgAYJ9wEQwgzIYdQY1A=</HashCode>
+      <FileName>Screens\Synch\Models\Eom\Campaign.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

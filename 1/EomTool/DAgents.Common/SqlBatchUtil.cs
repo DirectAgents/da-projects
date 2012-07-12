@@ -2,7 +2,6 @@
 using System.Data.SqlClient;
 using System.IO;
 using System.Text.RegularExpressions;
-using DAgents.Common.AsciiArt;
 
 namespace DAgents.Common
 {
@@ -87,11 +86,11 @@ namespace DAgents.Common
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandText = sql;
 
-                Logger.Log("Executing SQL".InBox() + sql);
+                Logger.Log("Executing SQL" + sql);
 
                 int rc = cmd.ExecuteNonQuery();
 
-                Logger.Log(("Execution result is " + rc).AfterArrow());
+                Logger.Log("Execution result is " + rc);
             }
         }
     }

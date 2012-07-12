@@ -1,5 +1,4 @@
-﻿using System;
-namespace DAgents.Common
+﻿namespace DAgents.Common
 {
     public interface IServiceLocator
     {

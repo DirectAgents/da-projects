@@ -17,5 +17,7 @@
 	[is_display] [bit] NULL,
 	[is_coreg] [bit] NULL,
 	[max_scrub] [int] NULL,
-	[notes] [varchar](max) NULL
+	[notes] [varchar](max) NULL,
+	[tracking_system_id] [int] NULL,
+	[external_id] [int] NULL
 );

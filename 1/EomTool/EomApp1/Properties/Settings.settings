@@ -102,7 +102,7 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DADatabaseApril2012_before_cake;Integrated Security=True</Value>
     </Setting>
-    <Setting Name="SynchScreenTargetSystemChoice" Type="EomApp1.Formss.Synch.TargetSystemChoice" Scope="User">
+    <Setting Name="SynchScreenTargetSystemChoice" Type="EomApp1.Screens.Synch.TargetSystemChoice" Scope="User">
       <Value Profile="(Default)">DirectTrack</Value>
     </Setting>
   </Settings>

@@ -1,0 +1,1035 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://cakemarketing.com/api/1/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s1="API:id_name_store" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://cakemarketing.com/api/1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://cakemarketing.com/api/1/">
+      <s:import namespace="API:id_name_store" />
+      <s:element name="Advertisers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AdvertisersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdvertisersResult" type="tns:ArrayOfAdvertiser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfAdvertiser">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Advertiser" nillable="true" type="tns:Advertiser" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Advertiser">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="advertiser_id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="advertiser_name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Verticals">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VerticalsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VerticalsResult" type="tns:ArrayOfVertical" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVertical">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Vertical" nillable="true" type="tns:Vertical" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Vertical">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="vertical_id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="vertical_name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetAPIKey">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAPIKeyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAPIKeyResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Currencies">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CurrenciesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CurrenciesResult" type="tns:currencies_response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="currencies_response">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:get_response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="currencies" type="tns:ArrayOfCurrency" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="get_response">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:base_response">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="row_count" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="base_response">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="success" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCurrency">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="currency" nillable="true" type="s1:currency" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AffiliateTiers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AffiliateTiersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AffiliateTiersResult" type="tns:affiliate_tiers_response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="affiliate_tiers_response">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:get_response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="affiliate_tiers" type="tns:ArrayOfAffiliate_tier" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfAffiliate_tier">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="affiliate_tier" nillable="true" type="s1:affiliate_tier" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PaymentSettings">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PaymentSettingsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PaymentSettingsResult" type="tns:payment_settings_response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="payment_settings_response">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:get_response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="payment_settings" type="tns:ArrayOfPayment_setting" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfPayment_setting">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="payment_setting" nillable="true" type="s1:payment_setting" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="BillingCycles">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BillingCyclesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BillingCyclesResult" type="tns:billing_cycles_response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="billing_cycles_response">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:get_response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="billing_cycles" type="tns:ArrayOfBilling_cycle" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfBilling_cycle">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="billing_cycle" nillable="true" type="s1:billing_cycle" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PaymentTypes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PaymentTypesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PaymentTypesResult" type="tns:payment_types_response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="payment_types_response">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:get_response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="payment_types" type="tns:ArrayOfPayment_type" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfPayment_type">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="payment_type" nillable="true" type="s1:payment_type" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Languages">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LanguagesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LanguagesResult" type="tns:languages_response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="languages_response">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:get_response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="languages" type="tns:ArrayOfLanguage" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfLanguage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="language" nillable="true" type="s1:language" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AffiliateTags">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="api_key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AffiliateTagsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AffiliateTagsResult" type="tns:affiliate_tags_response" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="affiliate_tags_response">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:get_response">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="tags" type="tns:ArrayOfTag" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfTag">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="tag" nillable="true" type="s1:tag" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ArrayOfAdvertiser" nillable="true" type="tns:ArrayOfAdvertiser" />
+      <s:element name="ArrayOfVertical" nillable="true" type="tns:ArrayOfVertical" />
+      <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="currencies_response" nillable="true" type="tns:currencies_response" />
+      <s:element name="affiliate_tiers_response" nillable="true" type="tns:affiliate_tiers_response" />
+      <s:element name="payment_settings_response" nillable="true" type="tns:payment_settings_response" />
+      <s:element name="billing_cycles_response" nillable="true" type="tns:billing_cycles_response" />
+      <s:element name="payment_types_response" nillable="true" type="tns:payment_types_response" />
+      <s:element name="languages_response" nillable="true" type="tns:languages_response" />
+      <s:element name="affiliate_tags_response" nillable="true" type="tns:affiliate_tags_response" />
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="API:id_name_store">
+      <s:complexType name="currency">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="currency_id" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="currency_symbol" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="currency_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="currency_abbr" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="affiliate_tier">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="affiliate_tier_id" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="affiliate_tier_name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="payment_setting">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="payment_setting_id" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="payment_setting_name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="billing_cycle">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="billing_cycle_id" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="billing_cycle_name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="payment_type">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="payment_type_id" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="payment_type_name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="language">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="language_id" type="s:unsignedByte" />
+          <s:element minOccurs="0" maxOccurs="1" name="language_name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="language_abbr" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="tag">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="tag_id" type="s:short" />
+          <s:element minOccurs="0" maxOccurs="1" name="tag_name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AdvertisersSoapIn">
+    <wsdl:part name="parameters" element="tns:Advertisers" />
+  </wsdl:message>
+  <wsdl:message name="AdvertisersSoapOut">
+    <wsdl:part name="parameters" element="tns:AdvertisersResponse" />
+  </wsdl:message>
+  <wsdl:message name="VerticalsSoapIn">
+    <wsdl:part name="parameters" element="tns:Verticals" />
+  </wsdl:message>
+  <wsdl:message name="VerticalsSoapOut">
+    <wsdl:part name="parameters" element="tns:VerticalsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAPIKeySoapIn">
+    <wsdl:part name="parameters" element="tns:GetAPIKey" />
+  </wsdl:message>
+  <wsdl:message name="GetAPIKeySoapOut">
+    <wsdl:part name="parameters" element="tns:GetAPIKeyResponse" />
+  </wsdl:message>
+  <wsdl:message name="CurrenciesSoapIn">
+    <wsdl:part name="parameters" element="tns:Currencies" />
+  </wsdl:message>
+  <wsdl:message name="CurrenciesSoapOut">
+    <wsdl:part name="parameters" element="tns:CurrenciesResponse" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTiersSoapIn">
+    <wsdl:part name="parameters" element="tns:AffiliateTiers" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTiersSoapOut">
+    <wsdl:part name="parameters" element="tns:AffiliateTiersResponse" />
+  </wsdl:message>
+  <wsdl:message name="PaymentSettingsSoapIn">
+    <wsdl:part name="parameters" element="tns:PaymentSettings" />
+  </wsdl:message>
+  <wsdl:message name="PaymentSettingsSoapOut">
+    <wsdl:part name="parameters" element="tns:PaymentSettingsResponse" />
+  </wsdl:message>
+  <wsdl:message name="BillingCyclesSoapIn">
+    <wsdl:part name="parameters" element="tns:BillingCycles" />
+  </wsdl:message>
+  <wsdl:message name="BillingCyclesSoapOut">
+    <wsdl:part name="parameters" element="tns:BillingCyclesResponse" />
+  </wsdl:message>
+  <wsdl:message name="PaymentTypesSoapIn">
+    <wsdl:part name="parameters" element="tns:PaymentTypes" />
+  </wsdl:message>
+  <wsdl:message name="PaymentTypesSoapOut">
+    <wsdl:part name="parameters" element="tns:PaymentTypesResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguagesSoapIn">
+    <wsdl:part name="parameters" element="tns:Languages" />
+  </wsdl:message>
+  <wsdl:message name="LanguagesSoapOut">
+    <wsdl:part name="parameters" element="tns:LanguagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTagsSoapIn">
+    <wsdl:part name="parameters" element="tns:AffiliateTags" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTagsSoapOut">
+    <wsdl:part name="parameters" element="tns:AffiliateTagsResponse" />
+  </wsdl:message>
+  <wsdl:message name="AdvertisersHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdvertisersHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfAdvertiser" />
+  </wsdl:message>
+  <wsdl:message name="VerticalsHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="VerticalsHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVertical" />
+  </wsdl:message>
+  <wsdl:message name="GetAPIKeyHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetAPIKeyHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CurrenciesHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CurrenciesHttpGetOut">
+    <wsdl:part name="Body" element="tns:currencies_response" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTiersHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTiersHttpGetOut">
+    <wsdl:part name="Body" element="tns:affiliate_tiers_response" />
+  </wsdl:message>
+  <wsdl:message name="PaymentSettingsHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PaymentSettingsHttpGetOut">
+    <wsdl:part name="Body" element="tns:payment_settings_response" />
+  </wsdl:message>
+  <wsdl:message name="BillingCyclesHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="BillingCyclesHttpGetOut">
+    <wsdl:part name="Body" element="tns:billing_cycles_response" />
+  </wsdl:message>
+  <wsdl:message name="PaymentTypesHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PaymentTypesHttpGetOut">
+    <wsdl:part name="Body" element="tns:payment_types_response" />
+  </wsdl:message>
+  <wsdl:message name="LanguagesHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LanguagesHttpGetOut">
+    <wsdl:part name="Body" element="tns:languages_response" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTagsHttpGetIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTagsHttpGetOut">
+    <wsdl:part name="Body" element="tns:affiliate_tags_response" />
+  </wsdl:message>
+  <wsdl:message name="AdvertisersHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AdvertisersHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfAdvertiser" />
+  </wsdl:message>
+  <wsdl:message name="VerticalsHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="VerticalsHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVertical" />
+  </wsdl:message>
+  <wsdl:message name="GetAPIKeyHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetAPIKeyHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CurrenciesHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CurrenciesHttpPostOut">
+    <wsdl:part name="Body" element="tns:currencies_response" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTiersHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTiersHttpPostOut">
+    <wsdl:part name="Body" element="tns:affiliate_tiers_response" />
+  </wsdl:message>
+  <wsdl:message name="PaymentSettingsHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PaymentSettingsHttpPostOut">
+    <wsdl:part name="Body" element="tns:payment_settings_response" />
+  </wsdl:message>
+  <wsdl:message name="BillingCyclesHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="BillingCyclesHttpPostOut">
+    <wsdl:part name="Body" element="tns:billing_cycles_response" />
+  </wsdl:message>
+  <wsdl:message name="PaymentTypesHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PaymentTypesHttpPostOut">
+    <wsdl:part name="Body" element="tns:payment_types_response" />
+  </wsdl:message>
+  <wsdl:message name="LanguagesHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="LanguagesHttpPostOut">
+    <wsdl:part name="Body" element="tns:languages_response" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTagsHttpPostIn">
+    <wsdl:part name="api_key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AffiliateTagsHttpPostOut">
+    <wsdl:part name="Body" element="tns:affiliate_tags_response" />
+  </wsdl:message>
+  <wsdl:portType name="getSoap">
+    <wsdl:operation name="Advertisers">
+      <wsdl:input message="tns:AdvertisersSoapIn" />
+      <wsdl:output message="tns:AdvertisersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Verticals">
+      <wsdl:input message="tns:VerticalsSoapIn" />
+      <wsdl:output message="tns:VerticalsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAPIKey">
+      <wsdl:input message="tns:GetAPIKeySoapIn" />
+      <wsdl:output message="tns:GetAPIKeySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Currencies">
+      <wsdl:input message="tns:CurrenciesSoapIn" />
+      <wsdl:output message="tns:CurrenciesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTiers">
+      <wsdl:input message="tns:AffiliateTiersSoapIn" />
+      <wsdl:output message="tns:AffiliateTiersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PaymentSettings">
+      <wsdl:input message="tns:PaymentSettingsSoapIn" />
+      <wsdl:output message="tns:PaymentSettingsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="BillingCycles">
+      <wsdl:input message="tns:BillingCyclesSoapIn" />
+      <wsdl:output message="tns:BillingCyclesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PaymentTypes">
+      <wsdl:input message="tns:PaymentTypesSoapIn" />
+      <wsdl:output message="tns:PaymentTypesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Languages">
+      <wsdl:input message="tns:LanguagesSoapIn" />
+      <wsdl:output message="tns:LanguagesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTags">
+      <wsdl:input message="tns:AffiliateTagsSoapIn" />
+      <wsdl:output message="tns:AffiliateTagsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="getHttpGet">
+    <wsdl:operation name="Advertisers">
+      <wsdl:input message="tns:AdvertisersHttpGetIn" />
+      <wsdl:output message="tns:AdvertisersHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Verticals">
+      <wsdl:input message="tns:VerticalsHttpGetIn" />
+      <wsdl:output message="tns:VerticalsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAPIKey">
+      <wsdl:input message="tns:GetAPIKeyHttpGetIn" />
+      <wsdl:output message="tns:GetAPIKeyHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Currencies">
+      <wsdl:input message="tns:CurrenciesHttpGetIn" />
+      <wsdl:output message="tns:CurrenciesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTiers">
+      <wsdl:input message="tns:AffiliateTiersHttpGetIn" />
+      <wsdl:output message="tns:AffiliateTiersHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PaymentSettings">
+      <wsdl:input message="tns:PaymentSettingsHttpGetIn" />
+      <wsdl:output message="tns:PaymentSettingsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="BillingCycles">
+      <wsdl:input message="tns:BillingCyclesHttpGetIn" />
+      <wsdl:output message="tns:BillingCyclesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PaymentTypes">
+      <wsdl:input message="tns:PaymentTypesHttpGetIn" />
+      <wsdl:output message="tns:PaymentTypesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Languages">
+      <wsdl:input message="tns:LanguagesHttpGetIn" />
+      <wsdl:output message="tns:LanguagesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTags">
+      <wsdl:input message="tns:AffiliateTagsHttpGetIn" />
+      <wsdl:output message="tns:AffiliateTagsHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="getHttpPost">
+    <wsdl:operation name="Advertisers">
+      <wsdl:input message="tns:AdvertisersHttpPostIn" />
+      <wsdl:output message="tns:AdvertisersHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Verticals">
+      <wsdl:input message="tns:VerticalsHttpPostIn" />
+      <wsdl:output message="tns:VerticalsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAPIKey">
+      <wsdl:input message="tns:GetAPIKeyHttpPostIn" />
+      <wsdl:output message="tns:GetAPIKeyHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Currencies">
+      <wsdl:input message="tns:CurrenciesHttpPostIn" />
+      <wsdl:output message="tns:CurrenciesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTiers">
+      <wsdl:input message="tns:AffiliateTiersHttpPostIn" />
+      <wsdl:output message="tns:AffiliateTiersHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PaymentSettings">
+      <wsdl:input message="tns:PaymentSettingsHttpPostIn" />
+      <wsdl:output message="tns:PaymentSettingsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="BillingCycles">
+      <wsdl:input message="tns:BillingCyclesHttpPostIn" />
+      <wsdl:output message="tns:BillingCyclesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PaymentTypes">
+      <wsdl:input message="tns:PaymentTypesHttpPostIn" />
+      <wsdl:output message="tns:PaymentTypesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Languages">
+      <wsdl:input message="tns:LanguagesHttpPostIn" />
+      <wsdl:output message="tns:LanguagesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTags">
+      <wsdl:input message="tns:AffiliateTagsHttpPostIn" />
+      <wsdl:output message="tns:AffiliateTagsHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="getSoap" type="tns:getSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Advertisers">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/Advertisers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Verticals">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/Verticals" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAPIKey">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/GetAPIKey" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Currencies">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/Currencies" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTiers">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/AffiliateTiers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentSettings">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/PaymentSettings" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BillingCycles">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/BillingCycles" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentTypes">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/PaymentTypes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Languages">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/Languages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTags">
+      <soap:operation soapAction="http://cakemarketing.com/api/1/AffiliateTags" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="getSoap12" type="tns:getSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Advertisers">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/Advertisers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Verticals">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/Verticals" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAPIKey">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/GetAPIKey" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Currencies">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/Currencies" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTiers">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/AffiliateTiers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentSettings">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/PaymentSettings" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BillingCycles">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/BillingCycles" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentTypes">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/PaymentTypes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Languages">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/Languages" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTags">
+      <soap12:operation soapAction="http://cakemarketing.com/api/1/AffiliateTags" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="getHttpGet" type="tns:getHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Advertisers">
+      <http:operation location="/Advertisers" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Verticals">
+      <http:operation location="/Verticals" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAPIKey">
+      <http:operation location="/GetAPIKey" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Currencies">
+      <http:operation location="/Currencies" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTiers">
+      <http:operation location="/AffiliateTiers" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentSettings">
+      <http:operation location="/PaymentSettings" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BillingCycles">
+      <http:operation location="/BillingCycles" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentTypes">
+      <http:operation location="/PaymentTypes" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Languages">
+      <http:operation location="/Languages" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTags">
+      <http:operation location="/AffiliateTags" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="getHttpPost" type="tns:getHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="Advertisers">
+      <http:operation location="/Advertisers" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Verticals">
+      <http:operation location="/Verticals" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAPIKey">
+      <http:operation location="/GetAPIKey" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Currencies">
+      <http:operation location="/Currencies" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTiers">
+      <http:operation location="/AffiliateTiers" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentSettings">
+      <http:operation location="/PaymentSettings" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BillingCycles">
+      <http:operation location="/BillingCycles" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentTypes">
+      <http:operation location="/PaymentTypes" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Languages">
+      <http:operation location="/Languages" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateTags">
+      <http:operation location="/AffiliateTags" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="get">
+    <wsdl:port name="getSoap" binding="tns:getSoap">
+      <soap:address location="http://login.directagents.com/api/1/get.asmx" />
+    </wsdl:port>
+    <wsdl:port name="getSoap12" binding="tns:getSoap12">
+      <soap12:address location="http://login.directagents.com/api/1/get.asmx" />
+    </wsdl:port>
+    <wsdl:port name="getHttpGet" binding="tns:getHttpGet">
+      <http:address location="http://login.directagents.com/api/1/get.asmx" />
+    </wsdl:port>
+    <wsdl:port name="getHttpPost" binding="tns:getHttpPost">
+      <http:address location="http://login.directagents.com/api/1/get.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

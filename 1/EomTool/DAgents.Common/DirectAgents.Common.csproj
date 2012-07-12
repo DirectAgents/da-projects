@@ -21,7 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\DAgents.Common.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,7 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleHelper.cs" />
+    <Compile Include="ConsoleHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ConsoleProgramTemplate.cs" />
     <Compile Include="ConsoleUtility.cs" />
     <Compile Include="EomAppSettings.cs" />
@@ -81,7 +84,6 @@
     <Compile Include="ObjectMapper.cs" />
     <Compile Include="ProgramObject.cs" />
     <Compile Include="SqlBatchUtil.cs" />
-    <Compile Include="AsciiArt\AsciiArtExtensions.cs" />
     <Compile Include="XDocumentExtensions.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IRestCall.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Wrap.cs" />
     <Compile Include="DynamicXML.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
