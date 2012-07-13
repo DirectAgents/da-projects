@@ -104,3 +104,19 @@ GO
 SET ANSI_PADDING ON
 
 GO
+
+USE [DADatabaseJune2012]
+GO
+/****** Object:  View [dbo].[AccountingView1]    Script Date: 07/13/2012 16:09:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+USE [DADatabaseJune2012]
+GO
+/****** Object:  View [dbo].[AccountingView2]    Script Date: 07/13/2012 15:44:53 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+
+GO

@@ -35,7 +35,9 @@ SELECT id, name, connection_string, effective_date FROM DADatabase WHERE (id = S
                 </InsertCommand>
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT id, name, connection_string, effective_date FROM dbo.DADatabase</CommandText>
+                    <CommandText>SELECT        id, name, connection_string, effective_date
+FROM            DADatabase
+ORDER BY effective_date</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>

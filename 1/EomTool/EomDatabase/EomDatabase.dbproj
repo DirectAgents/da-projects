@@ -38,10 +38,8 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <OutputPath>.\sql\debug\</OutputPath>
     <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
-    <TargetConnectionString>
-    </TargetConnectionString>
-    <TargetDatabase>
-    </TargetDatabase>
+    <TargetConnectionString>Data Source=biz2\da;Integrated Security=True;Pooling=False</TargetConnectionString>
+    <TargetDatabase>EOMDatabase</TargetDatabase>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <SuppressWarnings>
     </SuppressWarnings>

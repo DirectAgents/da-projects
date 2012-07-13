@@ -1,0 +1,18 @@
+7/13/2012 4:10:53 PM	This log contains information about the import operation of the script 'AccountingView1.sql' into project 'EomDatabase' on computer 'AARON' by user'aanodide.
+7/13/2012 4:10:53 PM	Started importing file: C:\Users\aanodide\AppData\Local\Temp\tmpDBE0.tmp 
+7/13/2012 4:10:53 PM	File name C:\Users\aanodide\AppData\Local\Temp\tmpDBE0.tmp (size: 13507)
+7/13/2012 4:10:53 PM	Parsing import script
+7/13/2012 4:10:54 PM	Total number of batches in script: 11
+7/13/2012 4:10:54 PM	Total number of statements in script: 11
+7/13/2012 4:10:54 PM	The script was successfully imported into the project.
+7/13/2012 4:10:54 PM	Analyzing schema objects...
+7/13/2012 4:10:54 PM	Scanning project for duplicate elements
+7/13/2012 4:10:54 PM	Element 'AccountingView2' was merged into the existing script: 'C:\GITHUB\DA-PROJECTS\1\EOMTOOL\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\VIEWS\ACCOUNTINGVIEW2.VIEW.SQL'.
+7/13/2012 4:10:54 PM	Element 'AccountingView1' was merged into the existing script: 'C:\GITHUB\DA-PROJECTS\1\EOMTOOL\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\VIEWS\ACCOUNTINGVIEW1.VIEW.SQL'.
+7/13/2012 4:10:54 PM	Element 'MS_DiagramPane1' was merged into the existing script: 'C:\GITHUB\DA-PROJECTS\1\EOMTOOL\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\VIEWS\ACCOUNTINGVIEW1.VIEW.SQL'.
+7/13/2012 4:10:54 PM	Element 'MS_DiagramPane2' was merged into the existing script: 'C:\GITHUB\DA-PROJECTS\1\EOMTOOL\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\VIEWS\ACCOUNTINGVIEW1.VIEW.SQL'.
+7/13/2012 4:10:54 PM	Element 'MS_DiagramPaneCount' was merged into the existing script: 'C:\GITHUB\DA-PROJECTS\1\EOMTOOL\EOMDATABASE\SCHEMA OBJECTS\SCHEMAS\DBO\VIEWS\ACCOUNTINGVIEW1.VIEW.SQL'.
+7/13/2012 4:10:54 PM	Finished duplicate element processing
+7/13/2012 4:10:54 PM	In the script that you provided to the import operation, one or more statements were not fully understood. These statements were moved to the C:\GitHub\da-projects\1\EomTool\EomDatabase\Scripts\ScriptsIgnoredOnImport.sql file. Review the file contents for additional information.
+7/13/2012 4:10:54 PM	A summary of the import operation was saved to the log file C:\GitHub\da-projects\1\EomTool\EomDatabase\Import Script Logs\AccountingView1_sql_20120713081053.log.
+7/13/2012 4:10:54 PM	Click Finish to continue...

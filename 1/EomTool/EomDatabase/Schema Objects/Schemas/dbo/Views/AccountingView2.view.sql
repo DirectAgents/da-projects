@@ -1,4 +1,4 @@
-﻿CREATE VIEW AccountingView2 AS
+﻿CREATE VIEW [dbo].[AccountingView2] AS
 SELECT     dbo.AccountingView1.Publisher, dbo.AccountingView1.Advertiser, dbo.AccountingView1.[Campaign Number], dbo.AccountingView1.[Campaign Name], 
                       dbo.AccountingView1.[Rev Currency], dbo.AccountingView1.[Cost Currency], dbo.AccountingView1.[Rev/Unit], dbo.AccountingView1.[Rev/Unit USD], 
                       dbo.AccountingView1.[Cost/Unit], dbo.AccountingView1.[Cost/Unit USD], dbo.AccountingView1.Units, dbo.AccountingView1.[Unit Type], dbo.AccountingView1.Revenue, 
@@ -10,3 +10,5 @@ SELECT     dbo.AccountingView1.Publisher, dbo.AccountingView1.Advertiser, dbo.Ac
                       dbo.GetCampaignNotes(dbo.AccountingView1.[Campaign Number]) AS CampaignNotes, dbo.AccountingView1.[Source]
 FROM         dbo.AccountingView1 INNER JOIN
                       dbo.Currency ON dbo.AccountingView1.currency_id = dbo.Currency.id
+
+

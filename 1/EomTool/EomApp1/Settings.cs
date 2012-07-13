@@ -69,7 +69,7 @@ namespace EomApp1.Properties
         {
             bool ovverideConnectionStringHasValue = OverrideConnectionHasValue();
             bool isValuidTestUser = IsValidTestUser();
-            return (ovverideConnectionStringHasValue && isValuidTestUser);
+            return (ovverideConnectionStringHasValue && isValuidTestUser && this.TestMode);
         }
 
         private bool OverrideConnectionHasValue()

@@ -118,5 +118,8 @@
     <Setting Name="TestUserIdentities" Type="System.String" Scope="Application">
       <Value Profile="(Default)">directagents\aanodide,directagents\kslesinsky</Value>
     </Setting>
+    <Setting Name="TestMode" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
