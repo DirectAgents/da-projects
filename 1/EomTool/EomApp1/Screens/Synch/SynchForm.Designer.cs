@@ -278,7 +278,7 @@
             this.targetSystem1.Name = "targetSystem1";
             this.targetSystem1.Size = new System.Drawing.Size(92, 50);
             this.targetSystem1.TabIndex = 15;
-            this.targetSystem1.TargetSystemChoice = global::EomApp1.Properties.Settings.Default.SynchScreenTargetSystemChoice;
+//            this.targetSystem1.TargetSystemChoice = global::EomApp1.Properties.Settings.Default.SynchScreenTargetSystemChoice;
             this.targetSystem1.TargetSystemChoiceChanged += new System.EventHandler<EomApp1.Screens.Synch.TargetSystemChoiceChangedEventArgs>(this.targetSystem1_TargetSystemChoiceChanged);
             // 
             // redirectsLinkLabel

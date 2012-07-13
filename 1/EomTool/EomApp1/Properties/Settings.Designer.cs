@@ -222,5 +222,27 @@ namespace EomApp1.Properties {
                 this["SynchScreenTargetSystemChoice"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseKevin;Integrated Security=True")]
+        public string OverrideConnectionString {
+            get {
+                return ((string)(this["OverrideConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2012-06-01")]
+        public global::System.DateTime OverrideDate {
+            get {
+                return ((global::System.DateTime)(this["OverrideDate"]));
+            }
+            set {
+                this["OverrideDate"] = value;
+            }
+        }
     }
 }
