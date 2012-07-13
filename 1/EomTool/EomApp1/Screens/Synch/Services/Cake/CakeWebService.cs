@@ -14,7 +14,7 @@ namespace EomApp1.Screens.Synch.Services.Cake
         public CakeWebService(ILogger logger)
         {
             this.logger = logger;
-            this.cache = new CakeWebServiceCache(logger);
+            this.cache = new CakeWebServiceCache();
         }
 
         public EomApp1.Cake.WebServices._3.Export.offer1 OfferById(int offerID)
@@ -140,7 +140,7 @@ namespace EomApp1.Screens.Synch.Services.Cake
                     throw new Exception("Error exporting affiliate: " + response.message);
                 }
             }
-
+      
             return affiliate;
         }
 
@@ -172,9 +172,7 @@ namespace EomApp1.Screens.Synch.Services.Cake
             else
             {
                 var conversions = response.conversions;
-
                 this.logger.Log(string.Format("Got {0} conversions.", conversions.Length));
-
                 return conversions.ToList();
             }
         }

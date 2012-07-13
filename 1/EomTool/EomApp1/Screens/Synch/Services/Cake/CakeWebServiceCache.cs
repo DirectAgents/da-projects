@@ -5,14 +5,12 @@ namespace EomApp1.Screens.Synch.Services.Cake
 {
     class CakeWebServiceCache
     {
-        private readonly ILogger logger;
         private readonly Dictionary<int, EomApp1.Cake.WebServices._3.Export.offer1> offersById;
         private readonly Dictionary<int, EomApp1.Cake.WebServices._4.Export.advertiser1> advertisersById;
         private readonly Dictionary<int, EomApp1.Cake.WebServices._4.Export.affiliate> affiliatesById;
 
-        public CakeWebServiceCache(ILogger logger)
+        public CakeWebServiceCache()
         {
-            this.logger = logger;
             this.offersById = new Dictionary<int, EomApp1.Cake.WebServices._3.Export.offer1>();
             this.advertisersById = new Dictionary<int, EomApp1.Cake.WebServices._4.Export.advertiser1>();
             this.affiliatesById = new Dictionary<int, EomApp1.Cake.WebServices._4.Export.affiliate>();
