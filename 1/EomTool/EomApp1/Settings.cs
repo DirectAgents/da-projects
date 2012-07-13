@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using EomAppModels;
+using DAgents.Common;
 
 namespace EomApp1.Properties
 {
@@ -11,7 +12,13 @@ namespace EomApp1.Properties
             // The common setting specifying the list of databases needs to be set before making any queries.
             EomAppCommon.EomAppSettings.MasterDatabaseListConnectionString = this.DAMain1ConnectionString;
 
-            if (String.IsNullOrWhiteSpace(this.OverrideConnectionString))
+            if (IsTestMode())
+            {
+                string name = "Test";
+                SetSettings(this.OverrideConnectionString, this.OverrideDate, name);
+                this.DADatabaseName = name;
+            }
+            else
             {
                 string name = this.DADatabaseName;
                 var database = DADatabase.ByName(name);
@@ -25,12 +32,6 @@ namespace EomApp1.Properties
                 {
                     throw new Exception("The currently selected database named " + name + " is not found in the master list of EOM databases.");
                 }
-            }
-            else
-            {
-                string name = "Test";
-                SetSettings(this.OverrideConnectionString, this.OverrideDate, name);
-                this.DADatabaseName = name;
             }
 
             // TODO: find and remove references
@@ -62,6 +63,26 @@ namespace EomApp1.Properties
                 form.ShowDialog();
             }
 #endif
+        }
+
+        private bool IsTestMode()
+        {
+            bool ovverideConnectionStringHasValue = OverrideConnectionHasValue();
+            bool isValuidTestUser = IsValidTestUser();
+            return (ovverideConnectionStringHasValue && isValuidTestUser);
+        }
+
+        private bool OverrideConnectionHasValue()
+        {
+            return !String.IsNullOrWhiteSpace(this.OverrideConnectionString);
+        }
+
+        private bool IsValidTestUser()
+        {
+            var testUsers = this.TestUserIdentities.Split(',');
+            string identity = WindowsIdentityHelper.GetWindowsIdentityNameLower();
+            bool found = testUsers.Any(c => c == identity);
+            return found;
         }
 
         private void SetSettings(string connectionString, DateTime effectiveDate, string reportName)

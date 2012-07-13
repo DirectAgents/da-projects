@@ -131,7 +131,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             Data.PRDataDataContext db = new Data.PRDataDataContext(EomAppCommon.EomAppSettings.ConnStr);
             var o = new PubReportInstance
             {
-                created_by_user_name = DAgents.Common.Utilities.GetWindowsIdentityNameLower(),
+                created_by_user_name = DAgents.Common.WindowsIdentityHelper.GetWindowsIdentityName(),
                 path_to_hard_copy = ReportSavePath,
                 report_content = ReportText,
                 vendor_id = Data.Vendor.GetOrCreate(_publisher),

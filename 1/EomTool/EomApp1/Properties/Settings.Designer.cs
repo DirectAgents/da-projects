@@ -233,15 +233,21 @@ namespace EomApp1.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2012-06-01")]
         public global::System.DateTime OverrideDate {
             get {
                 return ((global::System.DateTime)(this["OverrideDate"]));
             }
-            set {
-                this["OverrideDate"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("directagents\\aanodide,directagents\\kslesinsky")]
+        public string TestUserIdentities {
+            get {
+                return ((string)(this["TestUserIdentities"]));
             }
         }
     }

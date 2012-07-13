@@ -122,7 +122,7 @@ namespace EomApp1.Screens.PubRep1.Components
                         //MessageBox.Show(n.ToString() + " rows affected");
 
                         item.BeginEdit();
-                        item.Saved = string.Format("{0} by {1}", DateTime.Now, DAgents.Common.Utilities.GetWindowsIdentityNameLower());
+                        item.Saved = string.Format("{0} by {1}", DateTime.Now, DAgents.Common.WindowsIdentityHelper.GetWindowsIdentityName());
                         item.EndEdit();
                     }
                 }

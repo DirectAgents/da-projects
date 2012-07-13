@@ -95,7 +95,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             // Save a new report to the database
             Data.PRDataDataContext db = new Data.PRDataDataContext();
             var pri = new Data.PubReportInstance();
-            pri.created_by_user_name = DAgents.Common.Utilities.GetWindowsIdentityNameLower();
+            pri.created_by_user_name = DAgents.Common.WindowsIdentityHelper.GetWindowsIdentityName();
             pri.path_to_hard_copy = ReportSavePath;
             pri.report_content = ReportText;
             pri.vendor_id = Data.Vendor.GetOrCreate(_cur.publisher_name);

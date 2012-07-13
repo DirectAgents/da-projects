@@ -32,12 +32,6 @@ namespace DAgents.Common
             return sb.ToString();
         }
 
-        public static string GetWindowsIdentityNameLower()
-        {
-            var ident = System.Security.Principal.WindowsIdentity.GetCurrent();
-            return ident.Name;
-        }
-
         public class XSettings : DynamicObject, IEnumerable
         {
             private XElement _xe;

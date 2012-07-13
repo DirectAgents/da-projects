@@ -84,6 +84,7 @@
     <Compile Include="ObjectMapper.cs" />
     <Compile Include="ProgramObject.cs" />
     <Compile Include="SqlBatchUtil.cs" />
+    <Compile Include="WindowsIdentityHelper.cs" />
     <Compile Include="XDocumentExtensions.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="IRestCall.cs" />

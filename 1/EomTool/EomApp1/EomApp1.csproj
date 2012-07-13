@@ -14,7 +14,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>http://localhost/eomtool/install/</PublishUrl>
+    <PublishUrl>\\biz3\EomToolInstall\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -24,11 +24,13 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://eomtool.directagents.local/</InstallUrl>
     <ProductName>Direct Agents End of Month Tool</ProductName>
     <PublisherName>Direct Agents</PublisherName>
     <SuiteName>Direct Agents Internal Tools</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>194</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
@@ -57,10 +59,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>6BEB9914BF40F2B952B53C65A0E7499958DB564E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>91A88A39BBE8295DBEC39C9D685ED02D287660C0</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>EomApp1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>EOMTool-ClickOnce-Manifests.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -816,7 +818,8 @@
     <None Include="DAMain1DataSetForSqlExecute.xss">
       <DependentUpon>DAMain1DataSetForSqlExecute.xsd</DependentUpon>
     </None>
-    <None Include="EomApp1_TemporaryKey.pfx" />
+    <None Include="EOMTool-ClickOnce-Manifests-5Years.pfx" />
+    <None Include="EOMTool-ClickOnce-Manifests.pfx" />
     <None Include="Properties\DataSources\EomApp1.Screens.Synch.Controls.AffiliateItemContainer.datasource" />
     <None Include="Screens\AB\Data\DAMain1DataSet.xsc">
       <DependentUpon>DAMain1DataSet.xsd</DependentUpon>
