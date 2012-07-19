@@ -226,7 +226,8 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseKevin;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseJuly2012Test;Integrated Security=T" +
+            "rue")]
         public string OverrideConnectionString {
             get {
                 return ((string)(this["OverrideConnectionString"]));
@@ -235,7 +236,7 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2012-06-01")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2012-07-01")]
         public global::System.DateTime OverrideDate {
             get {
                 return ((global::System.DateTime)(this["OverrideDate"]));
@@ -253,7 +254,7 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool TestMode {
             get {
                 return ((bool)(this["TestMode"]));
