@@ -2,23 +2,40 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace EomApp1.Screens.Final.Controls
 {
     public partial class PublishersView : UserControl
     {
+        private List<int> affIDs = new List<int>();
+
         public PublishersView()
         {
             InitializeComponent();
         }
 
-        public void ClearSelection()
+        public void SelectAll()
+        {
+            grid.SelectAll();
+        }
+
+        internal void SelectNone()
         {
             grid.ClearSelection();
         }
 
         private void SelectionChanged(object sender, EventArgs e)
         {
+            this.affIDs.Clear();
+            DataGridViewSelectedRowCollection selectedRows = this.grid.SelectedRows;
+
+            foreach (DataGridViewRow row in selectedRows)
+            {
+                var rowView = row.DataBoundItem as DataRowView;
+                affIDs.Add(((Data.PublishersDataSet.PublishersRow)rowView.Row).AffId);
+            }
+
             actionButton.Enabled = (grid.SelectedRows.Count > 0);
         }
 
@@ -35,20 +52,27 @@ namespace EomApp1.Screens.Final.Controls
         }
 
         // Selected
-        private void CellClicked(object sender, EventArgs e)
+        private void ActionButtonClicked(object sender, EventArgs e)
         {
-            DataGridViewSelectedRowCollection selectedRows = this.grid.SelectedRows;
-            var affIDs = new List<int>();
-
-            foreach (DataGridViewRow row in selectedRows)
+            if (PublishersActionInvoked != null)
             {
-                var rowView = row.DataBoundItem as DataRowView;
-                affIDs.Add(((Data.PublishersDataSet.PublishersRow)rowView.Row).AffId);
+                PublishersActionInvoked(this, new PublishersEventArgs(affIDs));
             }
+        }
 
-            if (PublishersSelected != null)
+        public void InitializeNetTermsDropdown()
+        {
+            var items = this.finalizePublishersDataSet.Publishers.AsEnumerable().Select(p => p.NetTerms).Distinct().OrderBy(n => n);
+            if (items.Count() > 1)
             {
-                PublishersSelected(this, new PublishersEventArgs(affIDs));
+                netTermsComboBox.Items.Add("All");
+                netTermsComboBox.Items.AddRange(items.ToArray());
+                netTermsComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                netTermsLabel.Enabled = false;
+                netTermsComboBox.Enabled = false;
             }
         }
 
@@ -63,6 +87,30 @@ namespace EomApp1.Screens.Final.Controls
             set { this.actionButton.Text = value; }
         }
 
-        public event EventHandler<PublishersEventArgs> PublishersSelected;
+        public event EventHandler<PublishersEventArgs> PublishersActionInvoked;
+
+        private void netTermsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var affIDsBeforeFilter = this.affIDs.ToList();
+            int selectedIndex = netTermsComboBox.SelectedIndex;
+            if (selectedIndex == 0)
+            {
+                this.finalizePublishersBindingSource.Filter = "NetTerms LIKE '%'";
+            }
+            else if (selectedIndex > 0)
+            {
+                this.finalizePublishersBindingSource.Filter = "NetTerms LIKE '%" + netTermsComboBox.Items[selectedIndex] + "%'";
+            }
+            grid.ClearSelection();
+
+            var rows = this.grid.Rows;
+            foreach (DataGridViewRow row in rows)
+            {
+                var rowView = row.DataBoundItem as DataRowView;
+                int affID = ((Data.PublishersDataSet.PublishersRow)rowView.Row).AffId;
+                if (affIDsBeforeFilter.Contains(affID))
+                    row.Selected = true;
+            }
+        }
     }
 }

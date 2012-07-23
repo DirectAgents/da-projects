@@ -45,6 +45,7 @@ namespace EomApp1.Screens.Final.Presenters
             this.view.SetWindowText(this.model.CampaignName, this.model.AdvertiserName);
             this.model.FillPublishers(this.view.PublishersToFinalize, CampaignStatusId.Default);
             this.model.FillPublishers(this.view.PublishersToVerify, CampaignStatusId.Finalized);
+            this.view.InitializeNetTermsFilter();
         }
     }
 }

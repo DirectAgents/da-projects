@@ -287,6 +287,8 @@ namespace EomApp1.Screens.Final.Data {
             
             private global::System.Data.DataColumn columnAffId;
             
+            private global::System.Data.DataColumn columnNetTerms;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public PublishersDataTable() {
@@ -354,6 +356,14 @@ namespace EomApp1.Screens.Final.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn NetTermsColumn {
+                get {
+                    return this.columnNetTerms;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -389,13 +399,14 @@ namespace EomApp1.Screens.Final.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public PublishersRow AddPublishersRow(string Publisher, string Curr, decimal Revenue, int AffId) {
+            public PublishersRow AddPublishersRow(string Publisher, string Curr, decimal Revenue, int AffId, string NetTerms) {
                 PublishersRow rowPublishersRow = ((PublishersRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Publisher,
                         Curr,
                         Revenue,
-                        AffId};
+                        AffId,
+                        NetTerms};
                 rowPublishersRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowPublishersRow);
                 return rowPublishersRow;
@@ -422,6 +433,7 @@ namespace EomApp1.Screens.Final.Data {
                 this.columnCurr = base.Columns["Curr"];
                 this.columnRevenue = base.Columns["Revenue"];
                 this.columnAffId = base.Columns["AffId"];
+                this.columnNetTerms = base.Columns["NetTerms"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -435,6 +447,8 @@ namespace EomApp1.Screens.Final.Data {
                 base.Columns.Add(this.columnRevenue);
                 this.columnAffId = new global::System.Data.DataColumn("AffId", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnAffId);
+                this.columnNetTerms = new global::System.Data.DataColumn("NetTerms", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNetTerms);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -641,6 +655,22 @@ namespace EomApp1.Screens.Final.Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string NetTerms {
+                get {
+                    try {
+                        return ((string)(this[this.tablePublishers.NetTermsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NetTerms\' in table \'Publishers\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublishers.NetTermsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsPublisherNull() {
                 return this.IsNull(this.tablePublishers.PublisherColumn);
             }
@@ -685,6 +715,18 @@ namespace EomApp1.Screens.Final.Data {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetAffIdNull() {
                 this[this.tablePublishers.AffIdColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNetTermsNull() {
+                return this.IsNull(this.tablePublishers.NetTermsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNetTermsNull() {
+                this[this.tablePublishers.NetTermsColumn] = global::System.Convert.DBNull;
             }
         }
         

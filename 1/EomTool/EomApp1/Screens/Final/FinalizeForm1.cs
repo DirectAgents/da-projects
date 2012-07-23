@@ -53,7 +53,7 @@ namespace EomApp1.Screens.Final
             // #Pubs Button
             else if (e.ColumnIndex == NumPubsToFinalizeCol.Index)
             {
-                var finalizePublishersForm = new Forms.PublishersForm(this, pid);
+                var finalizePublishersForm = new Forms.PublishersForm(this, pid, Forms.PublishersForm.Mode.Finalize);
                 finalizePublishersForm.ShowDialog();
             }
         }
@@ -83,33 +83,34 @@ namespace EomApp1.Screens.Final
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
+            var pid = (int)dataGridView1["pidCol2", e.RowIndex].Value;
 
             string notes;
+            // Verify Button
             if (e.ColumnIndex == dataGridView1.Columns["verifyCol"].Index)
             {
-                var id = (int)dataGridView1["pidCol2", e.RowIndex].Value;
-
                 if (ConfirmationBox.ShowConfirmationModalDialog("Verify", out notes))
                 {
-                    VerifyCampaign(id);
-                    AddCampaignNote(id, notes);
+                    VerifyCampaign(pid);
+                    AddCampaignNote(pid, notes);
                     FillCampaigns();
                 }
             }
+            // Review Button
             else if (e.ColumnIndex == dataGridView1.Columns["colReview"].Index)
             {
-                var id = (int)dataGridView1["pidCol2", e.RowIndex].Value;
-
                 if (ConfirmationBox.ShowConfirmationModalDialog("Review", out notes))
                 {
-                    ReviewCampaign(id);
-                    AddCampaignNote(id, notes);
+                    ReviewCampaign(pid);
+                    AddCampaignNote(pid, notes);
                     FillCampaigns();
                 }
             }
+            // #Pubs Button
             else if (e.ColumnIndex == NumPubsToVerifyCol.Index)
             {
-                // todo: display modal workflow by publisher
+                var finalizePublishersForm = new Forms.PublishersForm(this, pid, Forms.PublishersForm.Mode.Verify);
+                finalizePublishersForm.ShowDialog();
             }
         }
 

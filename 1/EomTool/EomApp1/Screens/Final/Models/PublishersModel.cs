@@ -40,12 +40,13 @@ namespace EomApp1.Screens.Final.Models
                                 AffId = g.Key.Affiliate.affid,
                                 Affiliate = g.Key.Affiliate.name,
                                 Currency = g.Key.RevenueCurrency.name,
-                                Total = g.Sum(c => c.total_revenue)
+                                Total = g.Sum(c => c.total_revenue),
+                                NetTerms = g.Key.Affiliate.NetTermType.name
                             };
 
                 foreach (var item in query)
                 {
-                    table.AddPublishersRow(item.Affiliate, item.Currency, item.Total.Value, item.AffId);
+                    table.AddPublishersRow(item.Affiliate, item.Currency, item.Total.Value, item.AffId, item.NetTerms);
                 }
             }
         }

@@ -8,16 +8,20 @@ namespace EomApp1.Screens.Final.Forms
         private static string WindowTitleFormat = "Publishers for {0} ({1})";
         private Presenters.PublishersPresenter presenter;
         private FinalizeForm1 parent;
+        private Mode mode;
+
+        public enum Mode { Finalize, Verify }
 
         public PublishersForm()
         {
             InitializeComponent();
         }
 
-        public PublishersForm(FinalizeForm1 finalizeForm, int pid)
+        public PublishersForm(FinalizeForm1 finalizeForm, int pid, Mode mode)
         {
             InitializeComponent();
             this.parent = finalizeForm;
+            this.mode = mode;
             InitializeMVP(pid);
         }
 
@@ -26,11 +30,11 @@ namespace EomApp1.Screens.Final.Forms
             var model = new Models.PublishersModel(pid);
             this.presenter = new Presenters.PublishersPresenter(this, model);
             this.Shown += new EventHandler(FormShown);
-            this.finalizePublishersView.PublishersSelected += new EventHandler<PublishersEventArgs>(finalizePublishersView_PublishersSelected);
-            this.verifyPublishersView.PublishersSelected += new EventHandler<PublishersEventArgs>(verifyPublishersView_PublishersSelected);
+            this.finalizePublishersView.PublishersActionInvoked += new EventHandler<PublishersEventArgs>(finalizePublishersView_PublishersActionInvoked);
+            this.verifyPublishersView.PublishersActionInvoked += new EventHandler<PublishersEventArgs>(verifyPublishersView_PublishersActionInvoked);
         }
 
-        void finalizePublishersView_PublishersSelected(object sender, PublishersEventArgs e)
+        void finalizePublishersView_PublishersActionInvoked(object sender, PublishersEventArgs e)
         {
             if (PublishersToFinalizeSelected != null)
             {
@@ -38,7 +42,7 @@ namespace EomApp1.Screens.Final.Forms
             }
         }
 
-        void verifyPublishersView_PublishersSelected(object sender, PublishersEventArgs e)
+        void verifyPublishersView_PublishersActionInvoked(object sender, PublishersEventArgs e)
         {
             if (PublishersToFinalizeSelected != null)
             {
@@ -49,8 +53,16 @@ namespace EomApp1.Screens.Final.Forms
         void FormShown(object sender, EventArgs e)
         {
             this.presenter.Present();
-            this.finalizePublishersView.ClearSelection();
-            this.verifyPublishersView.ClearSelection();
+            if (mode == Mode.Finalize)
+            {
+                this.finalizePublishersView.SelectAll();
+                this.verifyPublishersView.SelectNone();
+            }
+            else
+            {
+                this.finalizePublishersView.SelectNone();
+                this.verifyPublishersView.SelectAll();
+            }
         }
 
         public void SetWindowText(string campaignName, string advertiserName)
@@ -71,6 +83,12 @@ namespace EomApp1.Screens.Final.Forms
         public void RefreshCampaigns()
         {
             this.parent.RefreshCampaigns();
+        }
+
+        public void InitializeNetTermsFilter()
+        {
+            this.finalizePublishersView.InitializeNetTermsDropdown();
+            this.verifyPublishersView.InitializeNetTermsDropdown();
         }
 
         public event EventHandler<PublishersEventArgs> PublishersToFinalizeSelected;
