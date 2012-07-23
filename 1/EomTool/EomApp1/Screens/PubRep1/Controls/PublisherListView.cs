@@ -7,8 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using DGVColumnSelector;
 using EomApp1.Screens.PubRep1.Data;
-using System.Data.SqlClient;
-using System.Drawing;
 using EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters;
 
 namespace EomApp1.Screens.PubRep1.Controls

@@ -2,27 +2,32 @@
 <xs:schema id="FinalizeDataSet1" targetNamespace="http://tempuri.org/FinalizeDataSet1.xsd" xmlns:mstns="http://tempuri.org/FinalizeDataSet1.xsd" xmlns="http://tempuri.org/FinalizeDataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
   <xs:annotation>
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
-      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="1" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
           <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="zDADatabaseJuly2012TestConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="zDADatabaseJuly2012TestConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.zDADatabaseJuly2012TestConnectionString" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignTableAdapter" GeneratorDataComponentClassName="CampaignTableAdapter" Name="Campaign" UserDataComponentName="CampaignTableAdapter">
             <MainSource>
-              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="zDADatabaseJuly2012TestConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
                     <CommandText>SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
-                         SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note
+                         SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note, CampaignStatus_1.name AS ItemCampaignStatus, 
+                         COUNT(DISTINCT Item.affid) AS NumAffiliates, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault, 
+                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, 
+                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified
 FROM            Campaign INNER JOIN
                          AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
                          Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
                          CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
                          Item ON Campaign.pid = Item.pid INNER JOIN
-                         Currency ON Item.revenue_currency_id = Currency.id LEFT OUTER JOIN
+                         Currency ON Item.revenue_currency_id = Currency.id INNER JOIN
+                         CampaignStatus AS CampaignStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN
                          LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id
 GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
-                         LatestCampaignNote.note
+                         LatestCampaignNote.note, CampaignStatus_1.name
 ORDER BY Campaign.campaign_name</CommandText>
                     <Parameters />
                   </DbCommand>
@@ -40,26 +45,35 @@ ORDER BY Campaign.campaign_name</CommandText>
               <Mapping SourceColumn="Curr" DataSetColumn="Curr" />
               <Mapping SourceColumn="Status" DataSetColumn="Status" />
               <Mapping SourceColumn="Note" DataSetColumn="Note" />
+              <Mapping SourceColumn="ItemCampaignStatus" DataSetColumn="ItemCampaignStatus" />
+              <Mapping SourceColumn="NumAffiliates" DataSetColumn="NumAffiliates" />
+              <Mapping SourceColumn="NumDefault" DataSetColumn="NumDefault" />
+              <Mapping SourceColumn="NumFinalized" DataSetColumn="NumFinalized" />
+              <Mapping SourceColumn="NumVerified" DataSetColumn="NumVerified" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="FillByAM" GenerateMethods="Fill" GenerateShortCommands="true" GeneratorSourceName="FillByAM" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillByAM">
+              <DbSource ConnectionRef="zDADatabaseJuly2012TestConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="FillByAM" GenerateMethods="Fill" GenerateShortCommands="true" GeneratorSourceName="FillByAM" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillByAM">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
                     <CommandText>SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
-                         SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note
+                         SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note, CampaignStatus_1.name AS ItemCampaignStatus, 
+                         COUNT(DISTINCT Item.affid) AS NumAffiliates, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault, 
+                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, 
+                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified
 FROM            Campaign INNER JOIN
                          AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
                          Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
                          CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
                          Item ON Campaign.pid = Item.pid INNER JOIN
-                         Currency ON Item.revenue_currency_id = Currency.id LEFT OUTER JOIN
+                         Currency ON Item.revenue_currency_id = Currency.id INNER JOIN
+                         CampaignStatus AS CampaignStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN
                          LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id
 GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
-                         LatestCampaignNote.note
+                         LatestCampaignNote.note, CampaignStatus_1.name
 HAVING        (AccountManager.name = @1)
 ORDER BY Campaign.campaign_name</CommandText>
                     <Parameters>
-                      <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="name" DataSourceName="DADatabaseR1.dbo.AccountManager" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="AM" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="name" DataSourceName="zDADatabaseJuly2012Test.dbo.AccountManager" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="AM" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
                   </DbCommand>
                 </SelectCommand>
@@ -227,6 +241,17 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
+              <xs:element name="ItemCampaignStatus" msprop:Generator_ColumnVarNameInTable="columnItemCampaignStatus" msprop:Generator_ColumnPropNameInRow="ItemCampaignStatus" msprop:Generator_ColumnPropNameInTable="ItemCampaignStatusColumn" msprop:Generator_UserColumnName="ItemCampaignStatus">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NumAffiliates" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliates" msprop:Generator_ColumnPropNameInRow="NumAffiliates" msprop:Generator_ColumnPropNameInTable="NumAffiliatesColumn" msprop:Generator_UserColumnName="NumAffiliates" type="xs:int" minOccurs="0" />
+              <xs:element name="NumDefault" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumDefault" msprop:Generator_ColumnPropNameInRow="NumDefault" msprop:Generator_ColumnPropNameInTable="NumDefaultColumn" msprop:Generator_UserColumnName="NumDefault" type="xs:int" minOccurs="0" />
+              <xs:element name="NumFinalized" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumFinalized" msprop:Generator_ColumnPropNameInRow="NumFinalized" msprop:Generator_ColumnPropNameInTable="NumFinalizedColumn" msprop:Generator_UserColumnName="NumFinalized" type="xs:int" minOccurs="0" />
+              <xs:element name="NumVerified" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumVerified" msprop:Generator_ColumnPropNameInRow="NumVerified" msprop:Generator_ColumnPropNameInTable="NumVerifiedColumn" msprop:Generator_UserColumnName="NumVerified" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

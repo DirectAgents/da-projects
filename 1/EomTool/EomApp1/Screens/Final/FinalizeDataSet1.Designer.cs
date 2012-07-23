@@ -376,6 +376,16 @@ namespace EomApp1.Screens.Final {
             
             private global::System.Data.DataColumn columnNote;
             
+            private global::System.Data.DataColumn columnItemCampaignStatus;
+            
+            private global::System.Data.DataColumn columnNumAffiliates;
+            
+            private global::System.Data.DataColumn columnNumDefault;
+            
+            private global::System.Data.DataColumn columnNumFinalized;
+            
+            private global::System.Data.DataColumn columnNumVerified;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CampaignDataTable() {
@@ -491,6 +501,46 @@ namespace EomApp1.Screens.Final {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ItemCampaignStatusColumn {
+                get {
+                    return this.columnItemCampaignStatus;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn NumAffiliatesColumn {
+                get {
+                    return this.columnNumAffiliates;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn NumDefaultColumn {
+                get {
+                    return this.columnNumDefault;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn NumFinalizedColumn {
+                get {
+                    return this.columnNumFinalized;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn NumVerifiedColumn {
+                get {
+                    return this.columnNumVerified;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -526,7 +576,7 @@ namespace EomApp1.Screens.Final {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CampaignRow AddCampaignRow(int pid, string campaign_name, System.DateTime modified, string AM, string Advertiser, decimal Revenue, string Curr, string Status, string Note) {
+            public CampaignRow AddCampaignRow(int pid, string campaign_name, System.DateTime modified, string AM, string Advertiser, decimal Revenue, string Curr, string Status, string Note, string ItemCampaignStatus, int NumAffiliates, int NumDefault, int NumFinalized, int NumVerified) {
                 CampaignRow rowCampaignRow = ((CampaignRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -538,7 +588,12 @@ namespace EomApp1.Screens.Final {
                         Revenue,
                         Curr,
                         Status,
-                        Note};
+                        Note,
+                        ItemCampaignStatus,
+                        NumAffiliates,
+                        NumDefault,
+                        NumFinalized,
+                        NumVerified};
                 rowCampaignRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowCampaignRow);
                 return rowCampaignRow;
@@ -578,6 +633,11 @@ namespace EomApp1.Screens.Final {
                 this.columnCurr = base.Columns["Curr"];
                 this.columnStatus = base.Columns["Status"];
                 this.columnNote = base.Columns["Note"];
+                this.columnItemCampaignStatus = base.Columns["ItemCampaignStatus"];
+                this.columnNumAffiliates = base.Columns["NumAffiliates"];
+                this.columnNumDefault = base.Columns["NumDefault"];
+                this.columnNumFinalized = base.Columns["NumFinalized"];
+                this.columnNumVerified = base.Columns["NumVerified"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -603,6 +663,16 @@ namespace EomApp1.Screens.Final {
                 base.Columns.Add(this.columnStatus);
                 this.columnNote = new global::System.Data.DataColumn("Note", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNote);
+                this.columnItemCampaignStatus = new global::System.Data.DataColumn("ItemCampaignStatus", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnItemCampaignStatus);
+                this.columnNumAffiliates = new global::System.Data.DataColumn("NumAffiliates", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumAffiliates);
+                this.columnNumDefault = new global::System.Data.DataColumn("NumDefault", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumDefault);
+                this.columnNumFinalized = new global::System.Data.DataColumn("NumFinalized", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumFinalized);
+                this.columnNumVerified = new global::System.Data.DataColumn("NumVerified", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumVerified);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnid}, true));
                 this.columnid.AutoIncrement = true;
@@ -624,6 +694,12 @@ namespace EomApp1.Screens.Final {
                 this.columnStatus.AllowDBNull = false;
                 this.columnStatus.MaxLength = 50;
                 this.columnNote.MaxLength = 2147483647;
+                this.columnItemCampaignStatus.AllowDBNull = false;
+                this.columnItemCampaignStatus.MaxLength = 50;
+                this.columnNumAffiliates.ReadOnly = true;
+                this.columnNumDefault.ReadOnly = true;
+                this.columnNumFinalized.ReadOnly = true;
+                this.columnNumVerified.ReadOnly = true;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1480,6 +1556,81 @@ namespace EomApp1.Screens.Final {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string ItemCampaignStatus {
+                get {
+                    return ((string)(this[this.tableCampaign.ItemCampaignStatusColumn]));
+                }
+                set {
+                    this[this.tableCampaign.ItemCampaignStatusColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int NumAffiliates {
+                get {
+                    try {
+                        return ((int)(this[this.tableCampaign.NumAffiliatesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NumAffiliates\' in table \'Campaign\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaign.NumAffiliatesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int NumDefault {
+                get {
+                    try {
+                        return ((int)(this[this.tableCampaign.NumDefaultColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NumDefault\' in table \'Campaign\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaign.NumDefaultColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int NumFinalized {
+                get {
+                    try {
+                        return ((int)(this[this.tableCampaign.NumFinalizedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NumFinalized\' in table \'Campaign\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaign.NumFinalizedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int NumVerified {
+                get {
+                    try {
+                        return ((int)(this[this.tableCampaign.NumVerifiedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NumVerified\' in table \'Campaign\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaign.NumVerifiedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsmodifiedNull() {
                 return this.IsNull(this.tableCampaign.modifiedColumn);
             }
@@ -1512,6 +1663,54 @@ namespace EomApp1.Screens.Final {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetNoteNull() {
                 this[this.tableCampaign.NoteColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNumAffiliatesNull() {
+                return this.IsNull(this.tableCampaign.NumAffiliatesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNumAffiliatesNull() {
+                this[this.tableCampaign.NumAffiliatesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNumDefaultNull() {
+                return this.IsNull(this.tableCampaign.NumDefaultColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNumDefaultNull() {
+                this[this.tableCampaign.NumDefaultColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNumFinalizedNull() {
+                return this.IsNull(this.tableCampaign.NumFinalizedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNumFinalizedNull() {
+                this[this.tableCampaign.NumFinalizedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNumVerifiedNull() {
+                return this.IsNull(this.tableCampaign.NumVerifiedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNumVerifiedNull() {
+                this[this.tableCampaign.NumVerifiedColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1887,6 +2086,11 @@ namespace EomApp1.Screens.Final.FinalizeDataSet1TableAdapters {
             tableMapping.ColumnMappings.Add("Curr", "Curr");
             tableMapping.ColumnMappings.Add("Status", "Status");
             tableMapping.ColumnMappings.Add("Note", "Note");
+            tableMapping.ColumnMappings.Add("ItemCampaignStatus", "ItemCampaignStatus");
+            tableMapping.ColumnMappings.Add("NumAffiliates", "NumAffiliates");
+            tableMapping.ColumnMappings.Add("NumDefault", "NumDefault");
+            tableMapping.ColumnMappings.Add("NumFinalized", "NumFinalized");
+            tableMapping.ColumnMappings.Add("NumVerified", "NumVerified");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -1894,7 +2098,7 @@ namespace EomApp1.Screens.Final.FinalizeDataSet1TableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::EomApp1.Properties.Settings.Default.DADatabaseR1ConnectionString;
+            this._connection.ConnectionString = global::EomApp1.Properties.Settings.Default.zDADatabaseJuly2012TestConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1903,34 +2107,54 @@ namespace EomApp1.Screens.Final.FinalizeDataSet1TableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
-                         SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note
-FROM            Campaign INNER JOIN
-                         AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
-                         Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
-                         CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
-                         Item ON Campaign.pid = Item.pid INNER JOIN
-                         Currency ON Item.revenue_currency_id = Currency.id LEFT OUTER JOIN
-                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id
-GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
-                         LatestCampaignNote.note
-ORDER BY Campaign.campaign_name";
+            this._commandCollection[0].CommandText = "SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modifie" +
+                "d, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Cu" +
+                "rr, \r\n                         SUM(Item.total_revenue) AS Revenue, CampaignStatu" +
+                "s.name AS Status, LatestCampaignNote.note AS Note, CampaignStatus_1.name AS Item" +
+                "CampaignStatus, \r\n                         COUNT(DISTINCT Item.affid) AS NumAffi" +
+                "liates, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE " +
+                "NULL END) AS NumDefault, \r\n                         COUNT(DISTINCT CASE Item.cam" +
+                "paign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, \r\n       " +
+                "                  COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.a" +
+                "ffid ELSE NULL END) AS NumVerified\r\nFROM            Campaign INNER JOIN\r\n       " +
+                "                  AccountManager ON Campaign.account_manager_id = AccountManager" +
+                ".id INNER JOIN\r\n                         Advertiser ON Campaign.advertiser_id = " +
+                "Advertiser.id INNER JOIN\r\n                         CampaignStatus ON Campaign.ca" +
+                "mpaign_status_id = CampaignStatus.id INNER JOIN\r\n                         Item O" +
+                "N Campaign.pid = Item.pid INNER JOIN\r\n                         Currency ON Item." +
+                "revenue_currency_id = Currency.id INNER JOIN\r\n                         CampaignS" +
+                "tatus AS CampaignStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT " +
+                "OUTER JOIN\r\n                         LatestCampaignNote ON Campaign.pid = Latest" +
+                "CampaignNote.campaign_id\r\nGROUP BY Campaign.id, Campaign.pid, Campaign.campaign_" +
+                "name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, Ca" +
+                "mpaignStatus.name, \r\n                         LatestCampaignNote.note, CampaignS" +
+                "tatus_1.name\r\nORDER BY Campaign.campaign_name";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = @"SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
-                         SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note
-FROM            Campaign INNER JOIN
-                         AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
-                         Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
-                         CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
-                         Item ON Campaign.pid = Item.pid INNER JOIN
-                         Currency ON Item.revenue_currency_id = Currency.id LEFT OUTER JOIN
-                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id
-GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
-                         LatestCampaignNote.note
-HAVING        (AccountManager.name = @1)
-ORDER BY Campaign.campaign_name";
+            this._commandCollection[1].CommandText = "SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modifie" +
+                "d, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Cu" +
+                "rr, \r\n                         SUM(Item.total_revenue) AS Revenue, CampaignStatu" +
+                "s.name AS Status, LatestCampaignNote.note AS Note, CampaignStatus_1.name AS Item" +
+                "CampaignStatus, \r\n                         COUNT(DISTINCT Item.affid) AS NumAffi" +
+                "liates, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE " +
+                "NULL END) AS NumDefault, \r\n                         COUNT(DISTINCT CASE Item.cam" +
+                "paign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, \r\n       " +
+                "                  COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.a" +
+                "ffid ELSE NULL END) AS NumVerified\r\nFROM            Campaign INNER JOIN\r\n       " +
+                "                  AccountManager ON Campaign.account_manager_id = AccountManager" +
+                ".id INNER JOIN\r\n                         Advertiser ON Campaign.advertiser_id = " +
+                "Advertiser.id INNER JOIN\r\n                         CampaignStatus ON Campaign.ca" +
+                "mpaign_status_id = CampaignStatus.id INNER JOIN\r\n                         Item O" +
+                "N Campaign.pid = Item.pid INNER JOIN\r\n                         Currency ON Item." +
+                "revenue_currency_id = Currency.id INNER JOIN\r\n                         CampaignS" +
+                "tatus AS CampaignStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT " +
+                "OUTER JOIN\r\n                         LatestCampaignNote ON Campaign.pid = Latest" +
+                "CampaignNote.campaign_id\r\nGROUP BY Campaign.id, Campaign.pid, Campaign.campaign_" +
+                "name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, Ca" +
+                "mpaignStatus.name, \r\n                         LatestCampaignNote.note, CampaignS" +
+                "tatus_1.name\r\nHAVING        (AccountManager.name = @1)\r\nORDER BY Campaign.campai" +
+                "gn_name";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@1", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "AM", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }

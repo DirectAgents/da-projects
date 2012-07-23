@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -37,9 +40,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.button3 = new System.Windows.Forms.Button();
@@ -50,29 +50,9 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.campaignDataGridView = new System.Windows.Forms.DataGridView();
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pidCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AdvertiserCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.campaignnameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Curr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Revenue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FinalizeCol = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.AMCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NoteDGCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.campaignBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.finalizeDataSet1 = new EomApp1.Screens.Final.FinalizeDataSet1();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pidCol2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.modified = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.verifyCol = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colReview = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.NoteDGCol2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.campaignBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.tableAdapterManager = new EomApp1.Screens.Final.FinalizeDataSet1TableAdapters.TableAdapterManager();
             this.campaignTableAdapter = new EomApp1.Screens.Final.FinalizeDataSet1TableAdapters.CampaignTableAdapter();
@@ -85,6 +65,28 @@
             this.dataGridViewTextBoxColumn16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.accountManagerTableAdapter = new EomApp1.Screens.Final.AccountManagersForFinalDataSet1TableAdapters.AccountManagerTableAdapter();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pidCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AdvertiserCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.campaignnameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Curr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Revenue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FinalizeCol = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.AMCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NoteDGCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NumPubsToFinalizeCol = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pidCol2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.modified = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.verifyCol = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colReview = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.NoteDGCol2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NumPubsToVerifyCol = new System.Windows.Forms.DataGridViewLinkColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -231,7 +233,8 @@
             this.Revenue,
             this.FinalizeCol,
             this.AMCol,
-            this.NoteDGCol});
+            this.NoteDGCol,
+            this.NumPubsToFinalizeCol});
             this.campaignDataGridView.DataSource = this.campaignBindingSource;
             this.campaignDataGridView.Location = new System.Drawing.Point(0, 27);
             this.campaignDataGridView.Name = "campaignDataGridView";
@@ -243,6 +246,144 @@
             this.campaignDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.campaignDataGridView_CellClick);
             this.campaignDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.campaignDataGridView_CellDoubleClick);
             this.campaignDataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.campaignDataGridView_RowEnter);
+            // 
+            // campaignBindingSource
+            // 
+            this.campaignBindingSource.DataMember = "Campaign";
+            this.campaignBindingSource.DataSource = this.finalizeDataSet1;
+            this.campaignBindingSource.Filter = "Status=\'Active\' and ItemCampaignStatus=\'default\'";
+            // 
+            // finalizeDataSet1
+            // 
+            this.finalizeDataSet1.DataSetName = "FinalizeDataSet1";
+            this.finalizeDataSet1.EnforceConstraints = false;
+            this.finalizeDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.pidCol2,
+            this.dataGridViewTextBoxColumn4,
+            this.dataGridViewTextBoxColumn6,
+            this.dataGridViewTextBoxColumn7,
+            this.dataGridViewTextBoxColumn8,
+            this.dataGridViewTextBoxColumn9,
+            this.modified,
+            this.verifyCol,
+            this.colReview,
+            this.NoteDGCol2,
+            this.NumPubsToVerifyCol});
+            this.dataGridView1.DataSource = this.campaignBindingSource1;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
+            this.dataGridView1.RowHeadersWidth = 30;
+            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dataGridView1.Size = new System.Drawing.Size(1084, 349);
+            this.dataGridView1.TabIndex = 1;
+            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            // 
+            // campaignBindingSource1
+            // 
+            this.campaignBindingSource1.DataMember = "Campaign";
+            this.campaignBindingSource1.DataSource = this.finalizeDataSet1;
+            this.campaignBindingSource1.Filter = "Status=\'Active\' and ItemCampaignStatus=\'Finalized\'";
+            // 
+            // tableAdapterManager
+            // 
+            this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
+            this.tableAdapterManager.CampaignNotesTableAdapter = null;
+            this.tableAdapterManager.CampaignStatusTableAdapter = null;
+            this.tableAdapterManager.Connection = null;
+            this.tableAdapterManager.UpdateOrder = EomApp1.Screens.Final.FinalizeDataSet1TableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
+            // 
+            // campaignTableAdapter
+            // 
+            this.campaignTableAdapter.ClearBeforeFill = true;
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            this.dataGridViewTextBoxColumn10.DataPropertyName = "id";
+            this.dataGridViewTextBoxColumn10.HeaderText = "id";
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.dataGridViewTextBoxColumn10.ReadOnly = true;
+            this.dataGridViewTextBoxColumn10.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn11
+            // 
+            this.dataGridViewTextBoxColumn11.DataPropertyName = "pid";
+            this.dataGridViewTextBoxColumn11.HeaderText = "pid";
+            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
+            this.dataGridViewTextBoxColumn11.ReadOnly = true;
+            this.dataGridViewTextBoxColumn11.Visible = false;
+            // 
+            // dataGridViewTextBoxColumn12
+            // 
+            this.dataGridViewTextBoxColumn12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn12.DataPropertyName = "Advertiser";
+            this.dataGridViewTextBoxColumn12.FillWeight = 75F;
+            this.dataGridViewTextBoxColumn12.HeaderText = "Advertiser";
+            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn13
+            // 
+            this.dataGridViewTextBoxColumn13.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn13.DataPropertyName = "campaign_name";
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.dataGridViewTextBoxColumn13.DefaultCellStyle = dataGridViewCellStyle9;
+            this.dataGridViewTextBoxColumn13.FillWeight = 75F;
+            this.dataGridViewTextBoxColumn13.HeaderText = "Campaign";
+            this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
+            this.dataGridViewTextBoxColumn13.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn14
+            // 
+            this.dataGridViewTextBoxColumn14.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.dataGridViewTextBoxColumn14.DataPropertyName = "Curr";
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.dataGridViewTextBoxColumn14.DefaultCellStyle = dataGridViewCellStyle10;
+            this.dataGridViewTextBoxColumn14.HeaderText = "Curr";
+            this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
+            this.dataGridViewTextBoxColumn14.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn15
+            // 
+            this.dataGridViewTextBoxColumn15.DataPropertyName = "Revenue";
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.Format = "N2";
+            dataGridViewCellStyle11.NullValue = null;
+            this.dataGridViewTextBoxColumn15.DefaultCellStyle = dataGridViewCellStyle11;
+            this.dataGridViewTextBoxColumn15.HeaderText = "Revenue";
+            this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
+            this.dataGridViewTextBoxColumn15.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn16
+            // 
+            this.dataGridViewTextBoxColumn16.DataPropertyName = "AM";
+            this.dataGridViewTextBoxColumn16.HeaderText = "AM";
+            this.dataGridViewTextBoxColumn16.Name = "dataGridViewTextBoxColumn16";
+            this.dataGridViewTextBoxColumn16.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn17
+            // 
+            this.dataGridViewTextBoxColumn17.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn17.DataPropertyName = "modified";
+            this.dataGridViewTextBoxColumn17.FillWeight = 25F;
+            this.dataGridViewTextBoxColumn17.HeaderText = "Modified";
+            this.dataGridViewTextBoxColumn17.Name = "dataGridViewTextBoxColumn17";
+            this.dataGridViewTextBoxColumn17.ReadOnly = true;
+            // 
+            // accountManagerTableAdapter
+            // 
+            this.accountManagerTableAdapter.ClearBeforeFill = true;
             // 
             // idDataGridViewTextBoxColumn
             // 
@@ -326,46 +467,16 @@
             this.NoteDGCol.ReadOnly = true;
             this.NoteDGCol.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
-            // campaignBindingSource
+            // NumPubsToFinalizeCol
             // 
-            this.campaignBindingSource.DataMember = "Campaign";
-            this.campaignBindingSource.DataSource = this.finalizeDataSet1;
-            this.campaignBindingSource.Filter = "Status=\'Active\'";
-            // 
-            // finalizeDataSet1
-            // 
-            this.finalizeDataSet1.DataSetName = "FinalizeDataSet1";
-            this.finalizeDataSet1.EnforceConstraints = false;
-            this.finalizeDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.AutoGenerateColumns = false;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.pidCol2,
-            this.dataGridViewTextBoxColumn4,
-            this.dataGridViewTextBoxColumn6,
-            this.dataGridViewTextBoxColumn7,
-            this.dataGridViewTextBoxColumn8,
-            this.dataGridViewTextBoxColumn9,
-            this.modified,
-            this.verifyCol,
-            this.colReview,
-            this.NoteDGCol2});
-            this.dataGridView1.DataSource = this.campaignBindingSource1;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersWidth = 30;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1084, 349);
-            this.dataGridView1.TabIndex = 1;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.NumPubsToFinalizeCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.NumPubsToFinalizeCol.DataPropertyName = "NumDefault";
+            this.NumPubsToFinalizeCol.HeaderText = "#Pubs";
+            this.NumPubsToFinalizeCol.Name = "NumPubsToFinalizeCol";
+            this.NumPubsToFinalizeCol.ReadOnly = true;
+            this.NumPubsToFinalizeCol.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.NumPubsToFinalizeCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.NumPubsToFinalizeCol.Width = 63;
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -478,101 +589,16 @@
             this.NoteDGCol2.Name = "NoteDGCol2";
             this.NoteDGCol2.ReadOnly = true;
             // 
-            // campaignBindingSource1
+            // NumPubsToVerifyCol
             // 
-            this.campaignBindingSource1.DataMember = "Campaign";
-            this.campaignBindingSource1.DataSource = this.finalizeDataSet1;
-            this.campaignBindingSource1.Filter = "Status=\'Finalized\'";
-            // 
-            // tableAdapterManager
-            // 
-            this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
-            this.tableAdapterManager.CampaignNotesTableAdapter = null;
-            this.tableAdapterManager.CampaignStatusTableAdapter = null;
-            this.tableAdapterManager.Connection = null;
-            this.tableAdapterManager.UpdateOrder = EomApp1.Screens.Final.FinalizeDataSet1TableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
-            // 
-            // campaignTableAdapter
-            // 
-            this.campaignTableAdapter.ClearBeforeFill = true;
-            // 
-            // dataGridViewTextBoxColumn10
-            // 
-            this.dataGridViewTextBoxColumn10.DataPropertyName = "id";
-            this.dataGridViewTextBoxColumn10.HeaderText = "id";
-            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
-            this.dataGridViewTextBoxColumn10.ReadOnly = true;
-            this.dataGridViewTextBoxColumn10.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn11
-            // 
-            this.dataGridViewTextBoxColumn11.DataPropertyName = "pid";
-            this.dataGridViewTextBoxColumn11.HeaderText = "pid";
-            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
-            this.dataGridViewTextBoxColumn11.ReadOnly = true;
-            this.dataGridViewTextBoxColumn11.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn12
-            // 
-            this.dataGridViewTextBoxColumn12.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn12.DataPropertyName = "Advertiser";
-            this.dataGridViewTextBoxColumn12.FillWeight = 75F;
-            this.dataGridViewTextBoxColumn12.HeaderText = "Advertiser";
-            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
-            this.dataGridViewTextBoxColumn12.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn13
-            // 
-            this.dataGridViewTextBoxColumn13.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn13.DataPropertyName = "campaign_name";
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.dataGridViewTextBoxColumn13.DefaultCellStyle = dataGridViewCellStyle9;
-            this.dataGridViewTextBoxColumn13.FillWeight = 75F;
-            this.dataGridViewTextBoxColumn13.HeaderText = "Campaign";
-            this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
-            this.dataGridViewTextBoxColumn13.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn14
-            // 
-            this.dataGridViewTextBoxColumn14.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
-            this.dataGridViewTextBoxColumn14.DataPropertyName = "Curr";
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.dataGridViewTextBoxColumn14.DefaultCellStyle = dataGridViewCellStyle10;
-            this.dataGridViewTextBoxColumn14.HeaderText = "Curr";
-            this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
-            this.dataGridViewTextBoxColumn14.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn15
-            // 
-            this.dataGridViewTextBoxColumn15.DataPropertyName = "Revenue";
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.Format = "N2";
-            dataGridViewCellStyle11.NullValue = null;
-            this.dataGridViewTextBoxColumn15.DefaultCellStyle = dataGridViewCellStyle11;
-            this.dataGridViewTextBoxColumn15.HeaderText = "Revenue";
-            this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
-            this.dataGridViewTextBoxColumn15.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn16
-            // 
-            this.dataGridViewTextBoxColumn16.DataPropertyName = "AM";
-            this.dataGridViewTextBoxColumn16.HeaderText = "AM";
-            this.dataGridViewTextBoxColumn16.Name = "dataGridViewTextBoxColumn16";
-            this.dataGridViewTextBoxColumn16.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn17
-            // 
-            this.dataGridViewTextBoxColumn17.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.dataGridViewTextBoxColumn17.DataPropertyName = "modified";
-            this.dataGridViewTextBoxColumn17.FillWeight = 25F;
-            this.dataGridViewTextBoxColumn17.HeaderText = "Modified";
-            this.dataGridViewTextBoxColumn17.Name = "dataGridViewTextBoxColumn17";
-            this.dataGridViewTextBoxColumn17.ReadOnly = true;
-            // 
-            // accountManagerTableAdapter
-            // 
-            this.accountManagerTableAdapter.ClearBeforeFill = true;
+            this.NumPubsToVerifyCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.NumPubsToVerifyCol.DataPropertyName = "NumFinalized";
+            this.NumPubsToVerifyCol.HeaderText = "#Pubs";
+            this.NumPubsToVerifyCol.Name = "NumPubsToVerifyCol";
+            this.NumPubsToVerifyCol.ReadOnly = true;
+            this.NumPubsToVerifyCol.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.NumPubsToVerifyCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.NumPubsToVerifyCol.Width = 63;
             // 
             // FinalizeForm1
             // 
@@ -629,6 +655,17 @@
         private System.Windows.Forms.BindingSource accountManagerBindingSource;
         private AccountManagersForFinalDataSet1TableAdapters.AccountManagerTableAdapter accountManagerTableAdapter;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pidCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AdvertiserCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn campaignnameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Curr;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Revenue;
+        private System.Windows.Forms.DataGridViewButtonColumn FinalizeCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AMCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol;
+        private System.Windows.Forms.DataGridViewLinkColumn NumPubsToFinalizeCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn pidCol2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
@@ -640,15 +677,6 @@
         private System.Windows.Forms.DataGridViewButtonColumn verifyCol;
         private System.Windows.Forms.DataGridViewButtonColumn colReview;
         private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn pidCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AdvertiserCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn campaignnameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Curr;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Revenue;
-        private System.Windows.Forms.DataGridViewButtonColumn FinalizeCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AMCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.DataGridViewLinkColumn NumPubsToVerifyCol;
     }
 }

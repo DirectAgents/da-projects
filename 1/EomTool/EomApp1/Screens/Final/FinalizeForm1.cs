@@ -34,21 +34,27 @@ namespace EomApp1.Screens.Final
             campaignTableAdapter.FillByAM(finalizeDataSet1.Campaign, am);
         }
 
-        // Final Button
         private void campaignDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0)
-                return;
-            if (e.ColumnIndex != campaignDataGridView.Columns["FinalizeCol"].Index) 
-                return;
-            var id = (int)campaignDataGridView["pidCol", e.RowIndex].Value;
+            if (e.RowIndex < 0) return;
+            var pid = (int)campaignDataGridView["pidCol", e.RowIndex].Value;
 
-            string note;
-            if (ConfirmationBox.ShowConfirmationModalDialog("Finalize", out note))
+            // Final Button
+            if (e.ColumnIndex == FinalizeCol.Index)
             {
-                FinalizeCampaign(id);
-                AddCampaignNote(id, note); // model
-                DoFillCampaigns();
+                string note;
+                if (ConfirmationBox.ShowConfirmationModalDialog("Finalize", out note))
+                {
+                    FinalizeCampaign(pid);
+                    AddCampaignNote(pid, note); // model
+                    DoFillCampaigns();
+                }
+            }
+            // #Pubs Button
+            else if (e.ColumnIndex == NumPubsToFinalizeCol.Index)
+            {
+                var finalizePublishersForm = new Forms.PublishersForm(this, pid);
+                finalizePublishersForm.ShowDialog();
             }
         }
 
@@ -101,17 +107,26 @@ namespace EomApp1.Screens.Final
                     FillCampaigns();
                 }
             }
+            else if (e.ColumnIndex == NumPubsToVerifyCol.Index)
+            {
+                // todo: display modal workflow by publisher
+            }
         }
 
         private void ReviewCampaign(int id)
         {
             var db = new FinalizeDataDataContext(true);
 
-            (from c in db.Campaigns
-             where c.pid == id
-             select c).First().campaign_status_id = (from c in db.CampaignStatus
-                                                     where c.name == "Active"
-                                                     select c).First().id;
+            var query = from c in db.Items
+                        where c.pid == id && c.CampaignStatus.name == "Finalized"
+                        select c;
+
+            var defaultCampaignStatus = db.CampaignStatus.Single(c => c.name == "default");
+
+            foreach (var item in query)
+            {
+                item.CampaignStatus = defaultCampaignStatus;
+            }
 
             db.SubmitChanges();
         }
@@ -120,11 +135,16 @@ namespace EomApp1.Screens.Final
         {
             var db = new FinalizeDataDataContext(true);
 
-            (from c in db.Campaigns
-             where c.pid == id
-             select c).First().campaign_status_id = (from c in db.CampaignStatus
-                                                     where c.name == "Verified"
-                                                     select c).First().id;
+            var query = from c in db.Items
+                        where c.pid == id && c.CampaignStatus.name == "Finalized"
+                        select c;
+            
+            var verifyCampaignStatus = db.CampaignStatus.Single(c => c.name == "Verified");
+
+            foreach (var item in query)
+            {
+                item.CampaignStatus = verifyCampaignStatus;
+            }
 
             db.SubmitChanges();
         }
@@ -133,11 +153,17 @@ namespace EomApp1.Screens.Final
         {
             var db = new FinalizeDataDataContext(true);
 
-            (from c in db.Campaigns
-             where c.pid == id
-             select c).First().campaign_status_id = (from c in db.CampaignStatus
-                                                     where c.name == "Finalized"
-                                                     select c).First().id;
+            var query = from c in db.Items
+                        where c.pid == id && c.CampaignStatus.name == "default"
+                        select c;
+
+            var finalizeCampaignStatus = db.CampaignStatus.Single(c => c.name == "Finalized");
+
+            foreach (var item in query)
+            {
+                item.CampaignStatus = finalizeCampaignStatus;
+            }
+
             db.SubmitChanges();
         }
 
@@ -162,6 +188,11 @@ namespace EomApp1.Screens.Final
         }
 
         private void button1_Click(object sender, EventArgs e)
+        {
+            RefreshCampaigns();
+        }
+
+        public void RefreshCampaigns()
         {
             string am = comboBox1.Text;
 
