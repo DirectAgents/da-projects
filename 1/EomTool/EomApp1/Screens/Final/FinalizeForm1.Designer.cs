@@ -42,12 +42,11 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.accountManagerBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.accountManagersForFinalDataSet1 = new EomApp1.Screens.Final.AccountManagersForFinalDataSet1();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.campaignDataGridView = new System.Windows.Forms.DataGridView();
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -59,6 +58,11 @@
             this.FinalizeCol = new System.Windows.Forms.DataGridViewButtonColumn();
             this.AMCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NoteDGCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NumPubsToFinalizeCol = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.NumAffiliatesNet7 = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.NumAffiliatesNet15 = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.NumAffiliatesNet30 = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.NumAffiliatesNetBiWeekly = new System.Windows.Forms.DataGridViewLinkColumn();
             this.campaignBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.finalizeDataSet1 = new EomApp1.Screens.Final.FinalizeDataSet1();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -73,6 +77,11 @@
             this.verifyCol = new System.Windows.Forms.DataGridViewButtonColumn();
             this.colReview = new System.Windows.Forms.DataGridViewButtonColumn();
             this.NoteDGCol2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NumPubsToVerifyCol = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.dataGridViewLinkColumn1 = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.dataGridViewLinkColumn2 = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.dataGridViewLinkColumn3 = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.dataGridViewLinkColumn4 = new System.Windows.Forms.DataGridViewLinkColumn();
             this.campaignBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.tableAdapterManager = new EomApp1.Screens.Final.FinalizeDataSet1TableAdapters.TableAdapterManager();
             this.campaignTableAdapter = new EomApp1.Screens.Final.FinalizeDataSet1TableAdapters.CampaignTableAdapter();
@@ -94,7 +103,6 @@
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accountManagerBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountManagersForFinalDataSet1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.finalizeDataSet1)).BeginInit();
@@ -132,10 +140,9 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.AutoScroll = true;
+            this.splitContainer2.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer2.Panel1.Controls.Add(this.button3);
-            this.splitContainer2.Panel1.Controls.Add(this.button2);
             this.splitContainer2.Panel1.Controls.Add(this.comboBox1);
-            this.splitContainer2.Panel1.Controls.Add(this.pictureBox1);
             this.splitContainer2.Panel1.Controls.Add(this.button1);
             this.splitContainer2.Panel1.Controls.Add(this.campaignDataGridView);
             // 
@@ -147,10 +154,21 @@
             this.splitContainer2.SplitterDistance = 309;
             this.splitContainer2.TabIndex = 0;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(938, 6);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(75, 17);
+            this.checkBox1.TabIndex = 6;
+            this.checkBox1.Text = "Net Terms";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(992, 3);
+            this.button3.Location = new System.Drawing.Point(1019, 3);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(53, 21);
             this.button3.TabIndex = 5;
@@ -158,23 +176,12 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // button2
-            // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(1051, 3);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(30, 21);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "QC";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.ShowQCDialog);
-            // 
             // comboBox1
             // 
             this.comboBox1.DataSource = this.accountManagerBindingSource;
             this.comboBox1.DisplayMember = "name";
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(13, 3);
+            this.comboBox1.Location = new System.Drawing.Point(6, 3);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 1;
@@ -189,23 +196,11 @@
             this.accountManagersForFinalDataSet1.DataSetName = "AccountManagersForFinalDataSet1";
             this.accountManagersForFinalDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Image = global::EomApp1.Properties.Resources.SplitterControlOpen;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(7, 21);
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-            // 
             // button1
             // 
             this.button1.BackgroundImage = global::EomApp1.Properties.Resources.Refresh1;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button1.Location = new System.Drawing.Point(140, 3);
+            this.button1.Location = new System.Drawing.Point(133, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(25, 21);
             this.button1.TabIndex = 1;
@@ -231,7 +226,12 @@
             this.Revenue,
             this.FinalizeCol,
             this.AMCol,
-            this.NoteDGCol});
+            this.NoteDGCol,
+            this.NumPubsToFinalizeCol,
+            this.NumAffiliatesNet7,
+            this.NumAffiliatesNet15,
+            this.NumAffiliatesNet30,
+            this.NumAffiliatesNetBiWeekly});
             this.campaignDataGridView.DataSource = this.campaignBindingSource;
             this.campaignDataGridView.Location = new System.Drawing.Point(0, 27);
             this.campaignDataGridView.Name = "campaignDataGridView";
@@ -240,8 +240,9 @@
             this.campaignDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.campaignDataGridView.Size = new System.Drawing.Size(1084, 282);
             this.campaignDataGridView.TabIndex = 0;
-            this.campaignDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.campaignDataGridView_CellClick);
+            this.campaignDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellClickTop);
             this.campaignDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.campaignDataGridView_CellDoubleClick);
+            this.campaignDataGridView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.FormatCell);
             this.campaignDataGridView.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.campaignDataGridView_RowEnter);
             // 
             // idDataGridViewTextBoxColumn
@@ -326,11 +327,58 @@
             this.NoteDGCol.ReadOnly = true;
             this.NoteDGCol.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
+            // NumPubsToFinalizeCol
+            // 
+            this.NumPubsToFinalizeCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.NumPubsToFinalizeCol.DataPropertyName = "NumDefault";
+            this.NumPubsToFinalizeCol.HeaderText = "#Pubs";
+            this.NumPubsToFinalizeCol.Name = "NumPubsToFinalizeCol";
+            this.NumPubsToFinalizeCol.ReadOnly = true;
+            this.NumPubsToFinalizeCol.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.NumPubsToFinalizeCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.NumPubsToFinalizeCol.Width = 63;
+            // 
+            // NumAffiliatesNet7
+            // 
+            this.NumAffiliatesNet7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.NumAffiliatesNet7.DataPropertyName = "NumAffiliatesNet7";
+            this.NumAffiliatesNet7.HeaderText = "#Net7";
+            this.NumAffiliatesNet7.Name = "NumAffiliatesNet7";
+            this.NumAffiliatesNet7.ReadOnly = true;
+            this.NumAffiliatesNet7.Width = 43;
+            // 
+            // NumAffiliatesNet15
+            // 
+            this.NumAffiliatesNet15.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.NumAffiliatesNet15.DataPropertyName = "NumAffiliatesNet15";
+            this.NumAffiliatesNet15.HeaderText = "#Net15";
+            this.NumAffiliatesNet15.Name = "NumAffiliatesNet15";
+            this.NumAffiliatesNet15.ReadOnly = true;
+            this.NumAffiliatesNet15.Width = 49;
+            // 
+            // NumAffiliatesNet30
+            // 
+            this.NumAffiliatesNet30.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.NumAffiliatesNet30.DataPropertyName = "NumAffiliatesNet30";
+            this.NumAffiliatesNet30.HeaderText = "#Net30";
+            this.NumAffiliatesNet30.Name = "NumAffiliatesNet30";
+            this.NumAffiliatesNet30.ReadOnly = true;
+            this.NumAffiliatesNet30.Width = 49;
+            // 
+            // NumAffiliatesNetBiWeekly
+            // 
+            this.NumAffiliatesNetBiWeekly.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.NumAffiliatesNetBiWeekly.DataPropertyName = "NumAffiliatesNetBiWeekly";
+            this.NumAffiliatesNetBiWeekly.HeaderText = "#BiWkly";
+            this.NumAffiliatesNetBiWeekly.Name = "NumAffiliatesNetBiWeekly";
+            this.NumAffiliatesNetBiWeekly.ReadOnly = true;
+            this.NumAffiliatesNetBiWeekly.Width = 53;
+            // 
             // campaignBindingSource
             // 
             this.campaignBindingSource.DataMember = "Campaign";
             this.campaignBindingSource.DataSource = this.finalizeDataSet1;
-            this.campaignBindingSource.Filter = "Status=\'Active\'";
+            this.campaignBindingSource.Filter = "Status=\'Active\' and ItemCampaignStatus=\'default\'";
             // 
             // finalizeDataSet1
             // 
@@ -355,7 +403,12 @@
             this.modified,
             this.verifyCol,
             this.colReview,
-            this.NoteDGCol2});
+            this.NoteDGCol2,
+            this.NumPubsToVerifyCol,
+            this.dataGridViewLinkColumn1,
+            this.dataGridViewLinkColumn2,
+            this.dataGridViewLinkColumn3,
+            this.dataGridViewLinkColumn4});
             this.dataGridView1.DataSource = this.campaignBindingSource1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -365,7 +418,8 @@
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridView1.Size = new System.Drawing.Size(1084, 349);
             this.dataGridView1.TabIndex = 1;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellClickBottom);
+            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.FormatCell);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -478,11 +532,58 @@
             this.NoteDGCol2.Name = "NoteDGCol2";
             this.NoteDGCol2.ReadOnly = true;
             // 
+            // NumPubsToVerifyCol
+            // 
+            this.NumPubsToVerifyCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.NumPubsToVerifyCol.DataPropertyName = "NumFinalized";
+            this.NumPubsToVerifyCol.HeaderText = "#Pubs";
+            this.NumPubsToVerifyCol.Name = "NumPubsToVerifyCol";
+            this.NumPubsToVerifyCol.ReadOnly = true;
+            this.NumPubsToVerifyCol.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.NumPubsToVerifyCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.NumPubsToVerifyCol.Width = 63;
+            // 
+            // dataGridViewLinkColumn1
+            // 
+            this.dataGridViewLinkColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewLinkColumn1.DataPropertyName = "NumAffiliatesNet7";
+            this.dataGridViewLinkColumn1.HeaderText = "#Net7";
+            this.dataGridViewLinkColumn1.Name = "dataGridViewLinkColumn1";
+            this.dataGridViewLinkColumn1.ReadOnly = true;
+            this.dataGridViewLinkColumn1.Width = 43;
+            // 
+            // dataGridViewLinkColumn2
+            // 
+            this.dataGridViewLinkColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewLinkColumn2.DataPropertyName = "NumAffiliatesNet15";
+            this.dataGridViewLinkColumn2.HeaderText = "#Net15";
+            this.dataGridViewLinkColumn2.Name = "dataGridViewLinkColumn2";
+            this.dataGridViewLinkColumn2.ReadOnly = true;
+            this.dataGridViewLinkColumn2.Width = 49;
+            // 
+            // dataGridViewLinkColumn3
+            // 
+            this.dataGridViewLinkColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewLinkColumn3.DataPropertyName = "NumAffiliatesNet30";
+            this.dataGridViewLinkColumn3.HeaderText = "#Net30";
+            this.dataGridViewLinkColumn3.Name = "dataGridViewLinkColumn3";
+            this.dataGridViewLinkColumn3.ReadOnly = true;
+            this.dataGridViewLinkColumn3.Width = 49;
+            // 
+            // dataGridViewLinkColumn4
+            // 
+            this.dataGridViewLinkColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.dataGridViewLinkColumn4.DataPropertyName = "NumAffiliatesNetBiWeekly";
+            this.dataGridViewLinkColumn4.HeaderText = "#BiWkly";
+            this.dataGridViewLinkColumn4.Name = "dataGridViewLinkColumn4";
+            this.dataGridViewLinkColumn4.ReadOnly = true;
+            this.dataGridViewLinkColumn4.Width = 53;
+            // 
             // campaignBindingSource1
             // 
             this.campaignBindingSource1.DataMember = "Campaign";
             this.campaignBindingSource1.DataSource = this.finalizeDataSet1;
-            this.campaignBindingSource1.Filter = "Status=\'Finalized\'";
+            this.campaignBindingSource1.Filter = "Status=\'Active\' and ItemCampaignStatus=\'Finalized\'";
             // 
             // tableAdapterManager
             // 
@@ -588,12 +689,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.accountManagerBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountManagersForFinalDataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.finalizeDataSet1)).EndInit();
@@ -614,7 +715,6 @@
         private FinalizeDataSet1TableAdapters.CampaignTableAdapter campaignTableAdapter;
         private System.Windows.Forms.BindingSource campaignBindingSource1;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
@@ -628,7 +728,22 @@
         private AccountManagersForFinalDataSet1 accountManagersForFinalDataSet1;
         private System.Windows.Forms.BindingSource accountManagerBindingSource;
         private AccountManagersForFinalDataSet1TableAdapters.AccountManagerTableAdapter accountManagerTableAdapter;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pidCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AdvertiserCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn campaignnameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Curr;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Revenue;
+        private System.Windows.Forms.DataGridViewButtonColumn FinalizeCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AMCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol;
+        private System.Windows.Forms.DataGridViewLinkColumn NumPubsToFinalizeCol;
+        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet7;
+        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet15;
+        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet30;
+        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNetBiWeekly;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn pidCol2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
@@ -640,15 +755,10 @@
         private System.Windows.Forms.DataGridViewButtonColumn verifyCol;
         private System.Windows.Forms.DataGridViewButtonColumn colReview;
         private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn pidCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AdvertiserCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn campaignnameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Curr;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Revenue;
-        private System.Windows.Forms.DataGridViewButtonColumn FinalizeCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AMCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.DataGridViewLinkColumn NumPubsToVerifyCol;
+        private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn1;
+        private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn2;
+        private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn3;
+        private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn4;
     }
 }

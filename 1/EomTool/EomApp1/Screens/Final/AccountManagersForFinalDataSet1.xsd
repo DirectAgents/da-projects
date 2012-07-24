@@ -30,7 +30,9 @@ SELECT id, name FROM AccountManager WHERE (id = SCOPE_IDENTITY())</CommandText>
                 </InsertCommand>
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT id, name FROM dbo.AccountManager</CommandText>
+                    <CommandText>SELECT        id, name
+FROM            AccountManager
+ORDER BY CASE WHEN name = 'default' THEN 0 ELSE 1 END, name</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>

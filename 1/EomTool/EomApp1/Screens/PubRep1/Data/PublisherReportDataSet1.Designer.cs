@@ -12138,7 +12138,7 @@ WHERE        (Publisher = @Publisher)";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::EomApp1.Properties.Settings.Default.DADatabaseMarch11ConnectionString;
+            this._connection.ConnectionString = global::EomApp1.Properties.Settings.Default.zDADatabaseJuly2012TestConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -12153,8 +12153,7 @@ FROM            (SELECT        COALESCE (Publisher.name, Affiliate.name) AS Publ
                                                     ItemAccountingStatus ON Item.item_accounting_status_id = ItemAccountingStatus.id INNER JOIN
                                                     Affiliate ON Item.affid = Affiliate.affid INNER JOIN
                                                     Currency AS AffiliateCurrency ON Affiliate.currency_id = AffiliateCurrency.id INNER JOIN
-                                                    Campaign ON Item.pid = Campaign.pid INNER JOIN
-                                                    CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id LEFT OUTER JOIN
+                                                    CampaignStatus ON Item.campaign_status_id = CampaignStatus.id LEFT OUTER JOIN
                                                     Publisher ON Affiliate.affid = Publisher.affid
                           GROUP BY COALESCE (Publisher.name, Affiliate.name), ItemAccountingStatus.name, CampaignStatus.name, Item.id
                           HAVING         (ItemAccountingStatus.name = @AccountingStatus) AND (CampaignStatus.name = @CampaignStatus)) AS A

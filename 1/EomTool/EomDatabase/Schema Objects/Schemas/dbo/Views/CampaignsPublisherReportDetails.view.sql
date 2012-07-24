@@ -44,7 +44,7 @@ FROM
 			INNER JOIN NetTermType ON Affiliate.net_term_type_id = NetTermType.id
 			INNER JOIN Currency AffiliateCurrency ON Affiliate.currency_id = AffiliateCurrency.id
 			INNER JOIN Campaign ON Item.pid = Campaign.pid
-			INNER JOIN CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id
+			INNER JOIN CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
 			LEFT OUTER JOIN Publisher ON Affiliate.affid = Publisher.affid
 		GROUP BY
 			 COALESCE(Publisher.name, Affiliate.name)

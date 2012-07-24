@@ -765,6 +765,9 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\TrackingSystem.table.sql">
       <SubType>Code</SubType>
     </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_CampaignStatus_id_FK_CampaignStatus_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <NotInBuild Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">

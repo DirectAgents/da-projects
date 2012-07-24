@@ -1,0 +1,716 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EomModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="EomModelStoreContainer">
+          <EntitySet Name="AccountManager" EntityType="EomModel.Store.AccountManager" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LatestCampaignNote" EntityType="EomModel.Store.LatestCampaignNote" store:Type="Views" store:Schema="dbo" store:Name="LatestCampaignNote">
+            <DefiningQuery>SELECT 
+      [LatestCampaignNote].[campaign_id] AS [campaign_id], 
+      [LatestCampaignNote].[note] AS [note]
+      FROM [dbo].[LatestCampaignNote] AS [LatestCampaignNote]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="Affiliate_Currency_id_FK_Currency_id_PK" Association="EomModel.Store.Affiliate_Currency_id_FK_Currency_id_PK">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Affiliate" EntitySet="Affiliate" />
+          </AssociationSet>
+          <AssociationSet Name="Affiliate_NetTermType_id_FK_NetTermType_id_PK" Association="EomModel.Store.Affiliate_NetTermType_id_FK_NetTermType_id_PK">
+            <End Role="NetTermType" EntitySet="NetTermType" />
+            <End Role="Affiliate" EntitySet="Affiliate" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_AccountManager_id_FK_AccountManager_id_PK" Association="EomModel.Store.Campaign_AccountManager_id_FK_AccountManager_id_PK">
+            <End Role="AccountManager" EntitySet="AccountManager" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_Advertiser_id_FK_Advertiser_id_PK" Association="EomModel.Store.Campaign_Advertiser_id_FK_Advertiser_id_PK">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Store.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_CampaignStatus" Association="EomModel.Store.FK_Item_CampaignStatus">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomModel.Store.Item_Currency_id_FK_Currency_id_PK">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK1" Association="EomModel.Store.Item_Currency_id_FK_Currency_id_PK1">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AccountManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6035: The relationship 'Item_Affiliate_affid_FK_Affiliate_affid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+      -->
+        <EntityType Name="Affiliate">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="media_buyer_id" Type="int" Nullable="false" />
+          <Property Name="affid" Type="int" Nullable="false" />
+          <Property Name="currency_id" Type="int" Nullable="false" />
+          <Property Name="email" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="add_code" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="net_term_type_id" Type="int" />
+          <Property Name="payment_method_id" Type="int" Nullable="false" />
+          <Property Name="name2" Type="varchar" Nullable="false" MaxLength="358" StoreGeneratedPattern="Computed" />
+          <Property Name="date_created" Type="datetime" />
+          <Property Name="date_modified" Type="datetime" />
+          <Property Name="tracking_system_id" Type="int" />
+          <Property Name="external_id" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
+      -->
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="account_manager_id" Type="int" Nullable="false" />
+          <Property Name="campaign_status_id" Type="int" Nullable="false" />
+          <Property Name="ad_manager_id" Type="int" Nullable="false" />
+          <Property Name="advertiser_id" Type="int" Nullable="false" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="campaign_name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="campaign_type" Type="char" MaxLength="3" />
+          <Property Name="modified" Type="datetime" />
+          <Property Name="created" Type="datetime" />
+          <Property Name="dt_campaign_status" Type="varchar" MaxLength="25" />
+          <Property Name="dt_campaign_url" Type="varchar" MaxLength="255" />
+          <Property Name="dt_allowed_country_names" Type="varchar" MaxLength="255" />
+          <Property Name="is_email" Type="bit" />
+          <Property Name="is_search" Type="bit" />
+          <Property Name="is_display" Type="bit" />
+          <Property Name="is_coreg" Type="bit" />
+          <Property Name="max_scrub" Type="int" />
+          <Property Name="notes" Type="varchar(max)" />
+          <Property Name="tracking_system_id" Type="int" />
+          <Property Name="external_id" Type="int" />
+        </EntityType>
+        <EntityType Name="CampaignStatus">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="to_usd_multiplier" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" MaxLength="300" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="affid" Type="int" Nullable="false" />
+          <Property Name="source_id" Type="int" Nullable="false" />
+          <Property Name="unit_type_id" Type="int" Nullable="false" />
+          <Property Name="stat_id_n" Type="int" />
+          <Property Name="revenue_currency_id" Type="int" Nullable="false" />
+          <Property Name="cost_currency_id" Type="int" Nullable="false" />
+          <Property Name="revenue_per_unit" Type="money" Nullable="false" />
+          <Property Name="cost_per_unit" Type="money" Nullable="false" />
+          <Property Name="num_units" Type="decimal" Nullable="false" Precision="16" Scale="6" />
+          <Property Name="notes" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="accounting_notes" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="item_accounting_status_id" Type="int" Nullable="false" />
+          <Property Name="item_reporting_status_id" Type="int" Nullable="false" />
+          <Property Name="campaign_status_id" Type="int" Nullable="false" />
+          <Property Name="total_revenue" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
+          <Property Name="total_cost" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
+          <Property Name="margin" Type="money" StoreGeneratedPattern="Computed" />
+          <Property Name="modified" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="NetTermType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'zDADatabaseJuly2012Test.dbo.LatestCampaignNote' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="LatestCampaignNote">
+          <Key>
+            <PropertyRef Name="campaign_id" />
+            <PropertyRef Name="note" />
+          </Key>
+          <Property Name="campaign_id" Type="int" Nullable="false" />
+          <Property Name="note" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="Affiliate_Currency_id_FK_Currency_id_PK">
+          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
+          <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Affiliate">
+              <PropertyRef Name="currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Affiliate_NetTermType_id_FK_NetTermType_id_PK">
+          <End Role="NetTermType" Type="EomModel.Store.NetTermType" Multiplicity="0..1" />
+          <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NetTermType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Affiliate">
+              <PropertyRef Name="net_term_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Campaign_AccountManager_id_FK_AccountManager_id_PK">
+          <End Role="AccountManager" Type="EomModel.Store.AccountManager" Multiplicity="1" />
+          <End Role="Campaign" Type="EomModel.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="account_manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Campaign_Advertiser_id_FK_Advertiser_id_PK">
+          <End Role="Advertiser" Type="EomModel.Store.Advertiser" Multiplicity="1" />
+          <End Role="Campaign" Type="EomModel.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="advertiser_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
+          <End Role="CampaignStatus" Type="EomModel.Store.CampaignStatus" Multiplicity="1" />
+          <End Role="Campaign" Type="EomModel.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_CampaignStatus">
+          <End Role="CampaignStatus" Type="EomModel.Store.CampaignStatus" Multiplicity="1" />
+          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_Currency_id_FK_Currency_id_PK">
+          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
+          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="revenue_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_Currency_id_FK_Currency_id_PK1">
+          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
+          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="cost_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EomModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="EomEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AccountManagers" EntityType="EomModel.AccountManager" />
+          <EntitySet Name="Advertisers" EntityType="EomModel.Advertiser" />
+          <EntitySet Name="Campaigns" EntityType="EomModel.Campaign" />
+          <EntitySet Name="CampaignStatus" EntityType="EomModel.CampaignStatu" />
+          <EntitySet Name="Currencies" EntityType="EomModel.Currency" />
+          <EntitySet Name="Items" EntityType="EomModel.Item" />
+          <EntitySet Name="LatestCampaignNotes" EntityType="EomModel.LatestCampaignNote" />
+          <AssociationSet Name="Campaign_AccountManager_id_FK_AccountManager_id_PK" Association="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK">
+            <End Role="AccountManager" EntitySet="AccountManagers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_Advertiser_id_FK_Advertiser_id_PK" Association="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_CampaignStatus" Association="EomModel.FK_Item_CampaignStatus">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomModel.Item_Currency_id_FK_Currency_id_PK">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK1" Association="EomModel.Item_Currency_id_FK_Currency_id_PK1">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <EntitySet Name="Affiliates" EntityType="EomModel.Affiliate" />
+          <EntitySet Name="NetTermTypes" EntityType="EomModel.NetTermType" />
+          <AssociationSet Name="Affiliate_Currency_id_FK_Currency_id_PK" Association="EomModel.Affiliate_Currency_id_FK_Currency_id_PK">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Affiliate" EntitySet="Affiliates" />
+          </AssociationSet>
+          <AssociationSet Name="Affiliate_NetTermType_id_FK_NetTermType_id_PK" Association="EomModel.Affiliate_NetTermType_id_FK_NetTermType_id_PK">
+            <End Role="NetTermType" EntitySet="NetTermTypes" />
+            <End Role="Affiliate" EntitySet="Affiliates" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="AccountManager">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" FromRole="AccountManager" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" FromRole="Advertiser" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="account_manager_id" Type="Int32" Nullable="false" />
+          <Property Name="campaign_status_id" Type="Int32" Nullable="false" />
+          <Property Name="ad_manager_id" Type="Int32" Nullable="false" />
+          <Property Name="advertiser_id" Type="Int32" Nullable="false" />
+          <Property Name="pid" Type="Int32" Nullable="false" />
+          <Property Name="campaign_name" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="campaign_type" Type="String" MaxLength="3" Unicode="false" FixedLength="true" />
+          <Property Name="modified" Type="DateTime" />
+          <Property Name="created" Type="DateTime" />
+          <Property Name="dt_campaign_status" Type="String" MaxLength="25" Unicode="false" FixedLength="false" />
+          <Property Name="dt_campaign_url" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="dt_allowed_country_names" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="is_email" Type="Boolean" />
+          <Property Name="is_search" Type="Boolean" />
+          <Property Name="is_display" Type="Boolean" />
+          <Property Name="is_coreg" Type="Boolean" />
+          <Property Name="max_scrub" Type="Int32" />
+          <Property Name="notes" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <Property Name="tracking_system_id" Type="Int32" />
+          <Property Name="external_id" Type="Int32" />
+          <NavigationProperty Name="AccountManager" Relationship="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" FromRole="Campaign" ToRole="AccountManager" />
+          <NavigationProperty Name="Advertiser" Relationship="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" FromRole="Campaign" ToRole="Advertiser" />
+          <NavigationProperty Name="CampaignStatu" Relationship="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="Campaign" ToRole="CampaignStatus" />
+        </EntityType>
+        <EntityType Name="CampaignStatu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="CampaignStatus" ToRole="Campaign" />
+          <NavigationProperty Name="Items" Relationship="EomModel.FK_Item_CampaignStatus" FromRole="CampaignStatus" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="to_usd_multiplier" Type="Decimal" Nullable="false" Precision="14" Scale="4" />
+          <NavigationProperty Name="Items" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Item" />
+          <NavigationProperty Name="Items1" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Currency" ToRole="Item" />
+          <NavigationProperty Name="Affiliates" Relationship="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Affiliate" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="300" Unicode="false" FixedLength="false" />
+          <Property Name="pid" Type="Int32" Nullable="false" />
+          <Property Name="affid" Type="Int32" Nullable="false" />
+          <Property Name="source_id" Type="Int32" Nullable="false" />
+          <Property Name="unit_type_id" Type="Int32" Nullable="false" />
+          <Property Name="stat_id_n" Type="Int32" />
+          <Property Name="revenue_currency_id" Type="Int32" Nullable="false" />
+          <Property Name="cost_currency_id" Type="Int32" Nullable="false" />
+          <Property Name="revenue_per_unit" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="cost_per_unit" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="num_units" Type="Decimal" Nullable="false" Precision="16" Scale="6" />
+          <Property Name="notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="accounting_notes" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="item_accounting_status_id" Type="Int32" Nullable="false" />
+          <Property Name="item_reporting_status_id" Type="Int32" Nullable="false" />
+          <Property Name="campaign_status_id" Type="Int32" Nullable="false" />
+          <Property Name="total_revenue" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="total_cost" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="margin" Type="Decimal" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="modified" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="CampaignStatu" Relationship="EomModel.FK_Item_CampaignStatus" FromRole="Item" ToRole="CampaignStatus" />
+          <NavigationProperty Name="Currency" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Item" ToRole="Currency" />
+          <NavigationProperty Name="Currency1" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Item" ToRole="Currency" />
+        </EntityType>
+        <EntityType Name="LatestCampaignNote">
+          <Key>
+            <PropertyRef Name="campaign_id" />
+            <PropertyRef Name="note" />
+          </Key>
+          <Property Name="campaign_id" Type="Int32" Nullable="false" />
+          <Property Name="note" Type="String" Nullable="false" MaxLength="Max" Unicode="false" FixedLength="false" />
+        </EntityType>
+        <Association Name="Campaign_AccountManager_id_FK_AccountManager_id_PK">
+          <End Role="AccountManager" Type="EomModel.AccountManager" Multiplicity="1" />
+          <End Role="Campaign" Type="EomModel.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountManager">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="account_manager_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Campaign_Advertiser_id_FK_Advertiser_id_PK">
+          <End Role="Advertiser" Type="EomModel.Advertiser" Multiplicity="1" />
+          <End Role="Campaign" Type="EomModel.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="advertiser_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
+          <End Role="CampaignStatus" Type="EomModel.CampaignStatu" Multiplicity="1" />
+          <End Role="Campaign" Type="EomModel.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_CampaignStatus">
+          <End Role="CampaignStatus" Type="EomModel.CampaignStatu" Multiplicity="1" />
+          <End Role="Item" Type="EomModel.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_Currency_id_FK_Currency_id_PK">
+          <End Role="Currency" Type="EomModel.Currency" Multiplicity="1" />
+          <End Role="Item" Type="EomModel.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="revenue_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_Currency_id_FK_Currency_id_PK1">
+          <End Role="Currency" Type="EomModel.Currency" Multiplicity="1" />
+          <End Role="Item" Type="EomModel.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="cost_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Affiliate">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="media_buyer_id" Nullable="false" />
+          <Property Type="Int32" Name="affid" Nullable="false" />
+          <Property Type="Int32" Name="currency_id" Nullable="false" />
+          <Property Type="String" Name="email" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="add_code" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="net_term_type_id" />
+          <Property Type="Int32" Name="payment_method_id" Nullable="false" />
+          <Property Type="String" Name="name2" Nullable="false" MaxLength="358" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="DateTime" Name="date_created" />
+          <Property Type="DateTime" Name="date_modified" />
+          <Property Type="Int32" Name="tracking_system_id" />
+          <Property Type="Int32" Name="external_id" />
+          <NavigationProperty Name="Currency" Relationship="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" FromRole="Affiliate" ToRole="Currency" />
+          <NavigationProperty Name="NetTermType" Relationship="EomModel.Affiliate_NetTermType_id_FK_NetTermType_id_PK" FromRole="Affiliate" ToRole="NetTermType" />
+        </EntityType>
+        <EntityType Name="NetTermType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Affiliates" Relationship="EomModel.Affiliate_NetTermType_id_FK_NetTermType_id_PK" FromRole="NetTermType" ToRole="Affiliate" />
+        </EntityType>
+        <Association Name="Affiliate_Currency_id_FK_Currency_id_PK">
+          <End Type="EomModel.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="EomModel.Affiliate" Role="Affiliate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Affiliate">
+              <PropertyRef Name="currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Affiliate_NetTermType_id_FK_NetTermType_id_PK">
+          <End Type="EomModel.NetTermType" Role="NetTermType" Multiplicity="0..1" />
+          <End Type="EomModel.Affiliate" Role="Affiliate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NetTermType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Affiliate">
+              <PropertyRef Name="net_term_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EomModelStoreContainer" CdmEntityContainer="EomEntities">
+          <EntitySetMapping Name="AccountManagers"><EntityTypeMapping TypeName="EomModel.AccountManager"><MappingFragment StoreEntitySet="AccountManager">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="EomModel.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Campaigns"><EntityTypeMapping TypeName="EomModel.Campaign"><MappingFragment StoreEntitySet="Campaign">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="account_manager_id" ColumnName="account_manager_id" />
+            <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
+            <ScalarProperty Name="ad_manager_id" ColumnName="ad_manager_id" />
+            <ScalarProperty Name="advertiser_id" ColumnName="advertiser_id" />
+            <ScalarProperty Name="pid" ColumnName="pid" />
+            <ScalarProperty Name="campaign_name" ColumnName="campaign_name" />
+            <ScalarProperty Name="campaign_type" ColumnName="campaign_type" />
+            <ScalarProperty Name="modified" ColumnName="modified" />
+            <ScalarProperty Name="created" ColumnName="created" />
+            <ScalarProperty Name="dt_campaign_status" ColumnName="dt_campaign_status" />
+            <ScalarProperty Name="dt_campaign_url" ColumnName="dt_campaign_url" />
+            <ScalarProperty Name="dt_allowed_country_names" ColumnName="dt_allowed_country_names" />
+            <ScalarProperty Name="is_email" ColumnName="is_email" />
+            <ScalarProperty Name="is_search" ColumnName="is_search" />
+            <ScalarProperty Name="is_display" ColumnName="is_display" />
+            <ScalarProperty Name="is_coreg" ColumnName="is_coreg" />
+            <ScalarProperty Name="max_scrub" ColumnName="max_scrub" />
+            <ScalarProperty Name="notes" ColumnName="notes" />
+            <ScalarProperty Name="tracking_system_id" ColumnName="tracking_system_id" />
+            <ScalarProperty Name="external_id" ColumnName="external_id" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="CampaignStatus"><EntityTypeMapping TypeName="EomModel.CampaignStatu"><MappingFragment StoreEntitySet="CampaignStatus">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Currencies"><EntityTypeMapping TypeName="EomModel.Currency"><MappingFragment StoreEntitySet="Currency">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+            <ScalarProperty Name="to_usd_multiplier" ColumnName="to_usd_multiplier" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Items"><EntityTypeMapping TypeName="EomModel.Item"><MappingFragment StoreEntitySet="Item">
+            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="name" ColumnName="name" />
+            <ScalarProperty Name="pid" ColumnName="pid" />
+            <ScalarProperty Name="affid" ColumnName="affid" />
+            <ScalarProperty Name="source_id" ColumnName="source_id" />
+            <ScalarProperty Name="unit_type_id" ColumnName="unit_type_id" />
+            <ScalarProperty Name="stat_id_n" ColumnName="stat_id_n" />
+            <ScalarProperty Name="revenue_currency_id" ColumnName="revenue_currency_id" />
+            <ScalarProperty Name="cost_currency_id" ColumnName="cost_currency_id" />
+            <ScalarProperty Name="revenue_per_unit" ColumnName="revenue_per_unit" />
+            <ScalarProperty Name="cost_per_unit" ColumnName="cost_per_unit" />
+            <ScalarProperty Name="num_units" ColumnName="num_units" />
+            <ScalarProperty Name="notes" ColumnName="notes" />
+            <ScalarProperty Name="accounting_notes" ColumnName="accounting_notes" />
+            <ScalarProperty Name="item_accounting_status_id" ColumnName="item_accounting_status_id" />
+            <ScalarProperty Name="item_reporting_status_id" ColumnName="item_reporting_status_id" />
+            <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
+            <ScalarProperty Name="total_revenue" ColumnName="total_revenue" />
+            <ScalarProperty Name="total_cost" ColumnName="total_cost" />
+            <ScalarProperty Name="margin" ColumnName="margin" />
+            <ScalarProperty Name="modified" ColumnName="modified" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="LatestCampaignNotes"><EntityTypeMapping TypeName="EomModel.LatestCampaignNote"><MappingFragment StoreEntitySet="LatestCampaignNote">
+            <ScalarProperty Name="campaign_id" ColumnName="campaign_id" />
+            <ScalarProperty Name="note" ColumnName="note" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Affiliates">
+            <EntityTypeMapping TypeName="EomModel.Affiliate">
+              <MappingFragment StoreEntitySet="Affiliate">
+                <ScalarProperty Name="external_id" ColumnName="external_id" />
+                <ScalarProperty Name="tracking_system_id" ColumnName="tracking_system_id" />
+                <ScalarProperty Name="date_modified" ColumnName="date_modified" />
+                <ScalarProperty Name="date_created" ColumnName="date_created" />
+                <ScalarProperty Name="name2" ColumnName="name2" />
+                <ScalarProperty Name="payment_method_id" ColumnName="payment_method_id" />
+                <ScalarProperty Name="net_term_type_id" ColumnName="net_term_type_id" />
+                <ScalarProperty Name="add_code" ColumnName="add_code" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="currency_id" ColumnName="currency_id" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="media_buyer_id" ColumnName="media_buyer_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NetTermTypes">
+            <EntityTypeMapping TypeName="EomModel.NetTermType">
+              <MappingFragment StoreEntitySet="NetTermType">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="EomModel" ZoomLevel="127">
+        <EntityTypeShape EntityType="EomModel.AccountManager" Width="1.5" PointX="2.75" PointY="4.5" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="2.75" PointY="0.5" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Campaign" Width="1.5" PointX="0.5" PointY="0.5" Height="5.6340136718750005" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.CampaignStatu" Width="1.5" PointX="2.75" PointY="2.375" Height="1.7879850260416657" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Currency" Width="1.5" PointX="7.125" PointY="0.5" Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Item" Width="1.5" PointX="5" PointY="0.5" Height="5.6340136718750005" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.LatestCampaignNote" Width="1.5" PointX="7.125" PointY="4.875" Height="1.4033821614583317" IsExpanded="true" />
+        <AssociationConnector Association="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.75" PointY="5.297841796875" />
+          <ConnectorPoint PointX="2" PointY="5.297841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.75" PointY="1.2978417968749998" />
+          <ConnectorPoint PointX="2" PointY="1.2978417968749998" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.75" PointY="3.2689925130208328" />
+          <ConnectorPoint PointX="2" PointY="3.2689925130208328" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomModel.FK_Item_CampaignStatus" ManuallyRouted="false">
+          <ConnectorPoint PointX="4.25" PointY="3.2689925130208328" />
+          <ConnectorPoint PointX="5" PointY="3.2689925130208328" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomModel.Item_Currency_id_FK_Currency_id_PK" ManuallyRouted="false">
+          <ConnectorPoint PointX="7.125" PointY="1.5862939453124998" />
+          <ConnectorPoint PointX="6.5" PointY="1.5862939453124998" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomModel.Item_Currency_id_FK_Currency_id_PK1" ManuallyRouted="false">
+          <ConnectorPoint PointX="7.125" PointY="0.98064697265624989" />
+          <ConnectorPoint PointX="6.5" PointY="0.98064697265624989" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="EomModel.Affiliate" Width="1.5" PointX="9.375" PointY="0.5" Height="4.0956022135416674" />
+        <EntityTypeShape EntityType="EomModel.NetTermType" Width="1.5" PointX="7.125" PointY="3" Height="1.5956835937499996" />
+        <AssociationConnector Association="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" >
+          <ConnectorPoint PointX="8.625" PointY="1.5862939453124998" />
+          <ConnectorPoint PointX="9.375" PointY="1.5862939453124998" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomModel.Affiliate_NetTermType_id_FK_NetTermType_id_PK" >
+          <ConnectorPoint PointX="8.625" PointY="3.7978011067708337" />
+          <ConnectorPoint PointX="9.375" PointY="3.7978011067708337" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

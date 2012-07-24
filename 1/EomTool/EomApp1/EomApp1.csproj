@@ -385,16 +385,45 @@
     <Compile Include="Screens\Final\ConfirmActionUserControl.Designer.cs">
       <DependentUpon>ConfirmActionUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Final\Controls\PublishersView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Screens\Final\Controls\PublishersView.Designer.cs">
+      <DependentUpon>PublishersView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Final\Data\PublishersDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PublishersDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Final\FinalizeData.cs">
       <DependentUpon>FinalizeData.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Final\Forms\PublishersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Final\Forms\PublishersForm.Designer.cs">
+      <DependentUpon>PublishersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Final\Forms\UnfinalizeForm.cs" />
     <Compile Include="Screens\Final\GlobalHelpers.cs" />
+    <Compile Include="Screens\Final\Models\CampaignsModel.cs" />
+    <Compile Include="Screens\Final\Models\CampaignStatusId.cs" />
+    <Compile Include="Screens\Final\Models\EomEntities.cs" />
+    <Compile Include="Screens\Final\Models\EomModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EomModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Final\Models\PublishersModel.cs" />
     <Compile Include="Screens\Final\NotesListForm1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Screens\Final\NotesListForm1.Designer.cs">
       <DependentUpon>NotesListForm1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Final\Presenters\PublishersPresenter.cs" />
+    <Compile Include="Screens\Final\PublishersEventArgs.cs" />
     <Compile Include="Screens\Final\StatusMonitor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -759,6 +788,9 @@
     <Compile Include="UI\CollapsibleSplitter.Designer.cs">
       <DependentUpon>CollapsibleSplitter.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\MaskedDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Screens\Advertiser2\Controls\Advertisers2Control.resx">
       <DependentUpon>Advertisers2Control.cs</DependentUpon>
     </EmbeddedResource>
@@ -777,6 +809,12 @@
     <EmbeddedResource Include="PublisherNameCombine\PublisherCombine.resx">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Final\Controls\PublishersView.resx">
+      <DependentUpon>PublishersView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Final\Forms\PublishersForm.resx">
+      <DependentUpon>PublishersForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Synch\AddAffiliateSetupForm.resx">
       <DependentUpon>AddAffiliateSetupForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -794,8 +832,6 @@
       <LastGenOutput>AdvertiserModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
-    <None Include="ClassDiagram3.cd" />
     <None Include="DADatabaseR1DataSet.xsc">
       <DependentUpon>DADatabaseR1DataSet.xsd</DependentUpon>
     </None>
@@ -1113,6 +1149,21 @@
     </None>
     <None Include="Screens\ETL\Data\DataSet1.xss">
       <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
+    <EntityDeploy Include="Screens\Final\Models\EomModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EomModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Screens\Final\Data\PublishersDataSet.xsc">
+      <DependentUpon>PublishersDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\Final\Data\PublishersDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PublishersDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Screens\Final\Data\PublishersDataSet.xss">
+      <DependentUpon>PublishersDataSet.xsd</DependentUpon>
     </None>
     <None Include="Screens\Payment\DataSets\PaymentsDataSet.xsc">
       <DependentUpon>PaymentsDataSet.xsd</DependentUpon>

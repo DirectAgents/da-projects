@@ -15,6 +15,7 @@
     [accounting_notes]          NVARCHAR (255)  NOT NULL,
     [item_accounting_status_id] INT             NOT NULL,
     [item_reporting_status_id]  INT             NOT NULL,
+	[campaign_status_id]   INT             NOT NULL DEFAULT 1, 
     [total_revenue]             AS              ([num_units]*[revenue_per_unit]),
     [total_cost]                AS              ([num_units]*[cost_per_unit]),
     [margin]                    AS              ([dbo].[tousd3]([revenue_currency_id],[num_units]*[revenue_per_unit])-[dbo].[tousd3]([cost_currency_id],[num_units]*[cost_per_unit])),

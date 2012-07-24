@@ -22,7 +22,7 @@ namespace EomApp1.Screens.Final
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DADatabaseR1")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="zDADatabaseJuly2012Test")]
 	public partial class FinalizeDataDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -30,9 +30,6 @@ namespace EomApp1.Screens.Final
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertItem(Item instance);
-    partial void UpdateItem(Item instance);
-    partial void DeleteItem(Item instance);
     partial void InsertItemReportingStatus(ItemReportingStatus instance);
     partial void UpdateItemReportingStatus(ItemReportingStatus instance);
     partial void DeleteItemReportingStatus(ItemReportingStatus instance);
@@ -45,10 +42,13 @@ namespace EomApp1.Screens.Final
     partial void InsertCampaignNote(CampaignNote instance);
     partial void UpdateCampaignNote(CampaignNote instance);
     partial void DeleteCampaignNote(CampaignNote instance);
+    partial void InsertItem(Item instance);
+    partial void UpdateItem(Item instance);
+    partial void DeleteItem(Item instance);
     #endregion
 		
 		public FinalizeDataDataContext() : 
-				base(global::EomApp1.Properties.Settings.Default.DADatabaseR1ConnectionString, mappingSource)
+				base(global::EomApp1.Properties.Settings.Default.zDADatabaseJuly2012TestConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -75,14 +75,6 @@ namespace EomApp1.Screens.Final
 				base(connection, mappingSource)
 		{
 			OnCreated();
-		}
-		
-		public System.Data.Linq.Table<Item> Items
-		{
-			get
-			{
-				return this.GetTable<Item>();
-			}
 		}
 		
 		public System.Data.Linq.Table<ItemReportingStatus> ItemReportingStatus
@@ -116,580 +108,12 @@ namespace EomApp1.Screens.Final
 				return this.GetTable<CampaignNote>();
 			}
 		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Item")]
-	public partial class Item : INotifyPropertyChanging, INotifyPropertyChanged
-	{
 		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private string _name;
-		
-		private int _pid;
-		
-		private int _affid;
-		
-		private int _source_id;
-		
-		private int _unit_type_id;
-		
-		private System.Nullable<int> _stat_id_n;
-		
-		private int _revenue_currency_id;
-		
-		private int _cost_currency_id;
-		
-		private decimal _revenue_per_unit;
-		
-		private decimal _cost_per_unit;
-		
-		private decimal _num_units;
-		
-		private string _notes;
-		
-		private string _accounting_notes;
-		
-		private int _item_accounting_status_id;
-		
-		private int _item_reporting_status_id;
-		
-		private System.Nullable<decimal> _total_revenue;
-		
-		private System.Nullable<decimal> _total_cost;
-		
-		private System.Nullable<decimal> _margin;
-		
-		private EntityRef<ItemReportingStatus> _ItemReportingStatus;
-		
-		private EntityRef<Campaign> _Campaign;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void OnnameChanging(string value);
-    partial void OnnameChanged();
-    partial void OnpidChanging(int value);
-    partial void OnpidChanged();
-    partial void OnaffidChanging(int value);
-    partial void OnaffidChanged();
-    partial void Onsource_idChanging(int value);
-    partial void Onsource_idChanged();
-    partial void Onunit_type_idChanging(int value);
-    partial void Onunit_type_idChanged();
-    partial void Onstat_id_nChanging(System.Nullable<int> value);
-    partial void Onstat_id_nChanged();
-    partial void Onrevenue_currency_idChanging(int value);
-    partial void Onrevenue_currency_idChanged();
-    partial void Oncost_currency_idChanging(int value);
-    partial void Oncost_currency_idChanged();
-    partial void Onrevenue_per_unitChanging(decimal value);
-    partial void Onrevenue_per_unitChanged();
-    partial void Oncost_per_unitChanging(decimal value);
-    partial void Oncost_per_unitChanged();
-    partial void Onnum_unitsChanging(decimal value);
-    partial void Onnum_unitsChanged();
-    partial void OnnotesChanging(string value);
-    partial void OnnotesChanged();
-    partial void Onaccounting_notesChanging(string value);
-    partial void Onaccounting_notesChanged();
-    partial void Onitem_accounting_status_idChanging(int value);
-    partial void Onitem_accounting_status_idChanged();
-    partial void Onitem_reporting_status_idChanging(int value);
-    partial void Onitem_reporting_status_idChanged();
-    partial void Ontotal_revenueChanging(System.Nullable<decimal> value);
-    partial void Ontotal_revenueChanged();
-    partial void Ontotal_costChanging(System.Nullable<decimal> value);
-    partial void Ontotal_costChanged();
-    partial void OnmarginChanging(System.Nullable<decimal> value);
-    partial void OnmarginChanged();
-    #endregion
-		
-		public Item()
-		{
-			this._ItemReportingStatus = default(EntityRef<ItemReportingStatus>);
-			this._Campaign = default(EntityRef<Campaign>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id
+		public System.Data.Linq.Table<Item> Items
 		{
 			get
 			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(300)")]
-		public string name
-		{
-			get
-			{
-				return this._name;
-			}
-			set
-			{
-				if ((this._name != value))
-				{
-					this.OnnameChanging(value);
-					this.SendPropertyChanging();
-					this._name = value;
-					this.SendPropertyChanged("name");
-					this.OnnameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_pid", DbType="Int NOT NULL")]
-		public int pid
-		{
-			get
-			{
-				return this._pid;
-			}
-			set
-			{
-				if ((this._pid != value))
-				{
-					if (this._Campaign.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnpidChanging(value);
-					this.SendPropertyChanging();
-					this._pid = value;
-					this.SendPropertyChanged("pid");
-					this.OnpidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_affid", DbType="Int NOT NULL")]
-		public int affid
-		{
-			get
-			{
-				return this._affid;
-			}
-			set
-			{
-				if ((this._affid != value))
-				{
-					this.OnaffidChanging(value);
-					this.SendPropertyChanging();
-					this._affid = value;
-					this.SendPropertyChanged("affid");
-					this.OnaffidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_source_id", DbType="Int NOT NULL")]
-		public int source_id
-		{
-			get
-			{
-				return this._source_id;
-			}
-			set
-			{
-				if ((this._source_id != value))
-				{
-					this.Onsource_idChanging(value);
-					this.SendPropertyChanging();
-					this._source_id = value;
-					this.SendPropertyChanged("source_id");
-					this.Onsource_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_unit_type_id", DbType="Int NOT NULL")]
-		public int unit_type_id
-		{
-			get
-			{
-				return this._unit_type_id;
-			}
-			set
-			{
-				if ((this._unit_type_id != value))
-				{
-					this.Onunit_type_idChanging(value);
-					this.SendPropertyChanging();
-					this._unit_type_id = value;
-					this.SendPropertyChanged("unit_type_id");
-					this.Onunit_type_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_stat_id_n", DbType="Int")]
-		public System.Nullable<int> stat_id_n
-		{
-			get
-			{
-				return this._stat_id_n;
-			}
-			set
-			{
-				if ((this._stat_id_n != value))
-				{
-					this.Onstat_id_nChanging(value);
-					this.SendPropertyChanging();
-					this._stat_id_n = value;
-					this.SendPropertyChanged("stat_id_n");
-					this.Onstat_id_nChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_revenue_currency_id", DbType="Int NOT NULL")]
-		public int revenue_currency_id
-		{
-			get
-			{
-				return this._revenue_currency_id;
-			}
-			set
-			{
-				if ((this._revenue_currency_id != value))
-				{
-					this.Onrevenue_currency_idChanging(value);
-					this.SendPropertyChanging();
-					this._revenue_currency_id = value;
-					this.SendPropertyChanged("revenue_currency_id");
-					this.Onrevenue_currency_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_cost_currency_id", DbType="Int NOT NULL")]
-		public int cost_currency_id
-		{
-			get
-			{
-				return this._cost_currency_id;
-			}
-			set
-			{
-				if ((this._cost_currency_id != value))
-				{
-					this.Oncost_currency_idChanging(value);
-					this.SendPropertyChanging();
-					this._cost_currency_id = value;
-					this.SendPropertyChanged("cost_currency_id");
-					this.Oncost_currency_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_revenue_per_unit", DbType="Money NOT NULL")]
-		public decimal revenue_per_unit
-		{
-			get
-			{
-				return this._revenue_per_unit;
-			}
-			set
-			{
-				if ((this._revenue_per_unit != value))
-				{
-					this.Onrevenue_per_unitChanging(value);
-					this.SendPropertyChanging();
-					this._revenue_per_unit = value;
-					this.SendPropertyChanged("revenue_per_unit");
-					this.Onrevenue_per_unitChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_cost_per_unit", DbType="Money NOT NULL")]
-		public decimal cost_per_unit
-		{
-			get
-			{
-				return this._cost_per_unit;
-			}
-			set
-			{
-				if ((this._cost_per_unit != value))
-				{
-					this.Oncost_per_unitChanging(value);
-					this.SendPropertyChanging();
-					this._cost_per_unit = value;
-					this.SendPropertyChanged("cost_per_unit");
-					this.Oncost_per_unitChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_num_units", DbType="Decimal(12,6) NOT NULL")]
-		public decimal num_units
-		{
-			get
-			{
-				return this._num_units;
-			}
-			set
-			{
-				if ((this._num_units != value))
-				{
-					this.Onnum_unitsChanging(value);
-					this.SendPropertyChanging();
-					this._num_units = value;
-					this.SendPropertyChanged("num_units");
-					this.Onnum_unitsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_notes", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string notes
-		{
-			get
-			{
-				return this._notes;
-			}
-			set
-			{
-				if ((this._notes != value))
-				{
-					this.OnnotesChanging(value);
-					this.SendPropertyChanging();
-					this._notes = value;
-					this.SendPropertyChanged("notes");
-					this.OnnotesChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_accounting_notes", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string accounting_notes
-		{
-			get
-			{
-				return this._accounting_notes;
-			}
-			set
-			{
-				if ((this._accounting_notes != value))
-				{
-					this.Onaccounting_notesChanging(value);
-					this.SendPropertyChanging();
-					this._accounting_notes = value;
-					this.SendPropertyChanged("accounting_notes");
-					this.Onaccounting_notesChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_item_accounting_status_id", DbType="Int NOT NULL")]
-		public int item_accounting_status_id
-		{
-			get
-			{
-				return this._item_accounting_status_id;
-			}
-			set
-			{
-				if ((this._item_accounting_status_id != value))
-				{
-					this.Onitem_accounting_status_idChanging(value);
-					this.SendPropertyChanging();
-					this._item_accounting_status_id = value;
-					this.SendPropertyChanged("item_accounting_status_id");
-					this.Onitem_accounting_status_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_item_reporting_status_id", DbType="Int NOT NULL")]
-		public int item_reporting_status_id
-		{
-			get
-			{
-				return this._item_reporting_status_id;
-			}
-			set
-			{
-				if ((this._item_reporting_status_id != value))
-				{
-					if (this._ItemReportingStatus.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onitem_reporting_status_idChanging(value);
-					this.SendPropertyChanging();
-					this._item_reporting_status_id = value;
-					this.SendPropertyChanged("item_reporting_status_id");
-					this.Onitem_reporting_status_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_total_revenue", AutoSync=AutoSync.Always, DbType="Decimal(32,10)", IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> total_revenue
-		{
-			get
-			{
-				return this._total_revenue;
-			}
-			set
-			{
-				if ((this._total_revenue != value))
-				{
-					this.Ontotal_revenueChanging(value);
-					this.SendPropertyChanging();
-					this._total_revenue = value;
-					this.SendPropertyChanged("total_revenue");
-					this.Ontotal_revenueChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_total_cost", AutoSync=AutoSync.Always, DbType="Decimal(32,10)", IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> total_cost
-		{
-			get
-			{
-				return this._total_cost;
-			}
-			set
-			{
-				if ((this._total_cost != value))
-				{
-					this.Ontotal_costChanging(value);
-					this.SendPropertyChanging();
-					this._total_cost = value;
-					this.SendPropertyChanged("total_cost");
-					this.Ontotal_costChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_margin", AutoSync=AutoSync.Always, DbType="Money", IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
-		public System.Nullable<decimal> margin
-		{
-			get
-			{
-				return this._margin;
-			}
-			set
-			{
-				if ((this._margin != value))
-				{
-					this.OnmarginChanging(value);
-					this.SendPropertyChanging();
-					this._margin = value;
-					this.SendPropertyChanged("margin");
-					this.OnmarginChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ItemReportingStatus_Item", Storage="_ItemReportingStatus", ThisKey="item_reporting_status_id", OtherKey="id", IsForeignKey=true)]
-		public ItemReportingStatus ItemReportingStatus
-		{
-			get
-			{
-				return this._ItemReportingStatus.Entity;
-			}
-			set
-			{
-				ItemReportingStatus previousValue = this._ItemReportingStatus.Entity;
-				if (((previousValue != value) 
-							|| (this._ItemReportingStatus.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._ItemReportingStatus.Entity = null;
-						previousValue.Items.Remove(this);
-					}
-					this._ItemReportingStatus.Entity = value;
-					if ((value != null))
-					{
-						value.Items.Add(this);
-						this._item_reporting_status_id = value.id;
-					}
-					else
-					{
-						this._item_reporting_status_id = default(int);
-					}
-					this.SendPropertyChanged("ItemReportingStatus");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Campaign_Item", Storage="_Campaign", ThisKey="pid", OtherKey="pid", IsForeignKey=true)]
-		public Campaign Campaign
-		{
-			get
-			{
-				return this._Campaign.Entity;
-			}
-			set
-			{
-				Campaign previousValue = this._Campaign.Entity;
-				if (((previousValue != value) 
-							|| (this._Campaign.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Campaign.Entity = null;
-						previousValue.Items.Remove(this);
-					}
-					this._Campaign.Entity = value;
-					if ((value != null))
-					{
-						value.Items.Add(this);
-						this._pid = value.pid;
-					}
-					else
-					{
-						this._pid = default(int);
-					}
-					this.SendPropertyChanged("Campaign");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				return this.GetTable<Item>();
 			}
 		}
 	}
@@ -852,9 +276,9 @@ namespace EomApp1.Screens.Final
 		
 		private string _notes;
 		
-		private EntitySet<Item> _Items;
-		
 		private EntitySet<CampaignNote> _CampaignNotes;
+		
+		private EntitySet<Item> _Items;
 		
 		private EntityRef<CampaignStatus> _CampaignStatus;
 		
@@ -904,8 +328,8 @@ namespace EomApp1.Screens.Final
 		
 		public Campaign()
 		{
-			this._Items = new EntitySet<Item>(new Action<Item>(this.attach_Items), new Action<Item>(this.detach_Items));
 			this._CampaignNotes = new EntitySet<CampaignNote>(new Action<CampaignNote>(this.attach_CampaignNotes), new Action<CampaignNote>(this.detach_CampaignNotes));
+			this._Items = new EntitySet<Item>(new Action<Item>(this.attach_Items), new Action<Item>(this.detach_Items));
 			this._CampaignStatus = default(EntityRef<CampaignStatus>);
 			OnCreated();
 		}
@@ -1294,19 +718,6 @@ namespace EomApp1.Screens.Final
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Campaign_Item", Storage="_Items", ThisKey="pid", OtherKey="pid")]
-		public EntitySet<Item> Items
-		{
-			get
-			{
-				return this._Items;
-			}
-			set
-			{
-				this._Items.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Campaign_CampaignNote", Storage="_CampaignNotes", ThisKey="pid", OtherKey="campaign_id")]
 		public EntitySet<CampaignNote> CampaignNotes
 		{
@@ -1317,6 +728,19 @@ namespace EomApp1.Screens.Final
 			set
 			{
 				this._CampaignNotes.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Campaign_Item", Storage="_Items", ThisKey="pid", OtherKey="pid")]
+		public EntitySet<Item> Items
+		{
+			get
+			{
+				return this._Items;
+			}
+			set
+			{
+				this._Items.Assign(value);
 			}
 		}
 		
@@ -1374,18 +798,6 @@ namespace EomApp1.Screens.Final
 			}
 		}
 		
-		private void attach_Items(Item entity)
-		{
-			this.SendPropertyChanging();
-			entity.Campaign = this;
-		}
-		
-		private void detach_Items(Item entity)
-		{
-			this.SendPropertyChanging();
-			entity.Campaign = null;
-		}
-		
 		private void attach_CampaignNotes(CampaignNote entity)
 		{
 			this.SendPropertyChanging();
@@ -1393,6 +805,18 @@ namespace EomApp1.Screens.Final
 		}
 		
 		private void detach_CampaignNotes(CampaignNote entity)
+		{
+			this.SendPropertyChanging();
+			entity.Campaign = null;
+		}
+		
+		private void attach_Items(Item entity)
+		{
+			this.SendPropertyChanging();
+			entity.Campaign = this;
+		}
+		
+		private void detach_Items(Item entity)
 		{
 			this.SendPropertyChanging();
 			entity.Campaign = null;
@@ -1411,6 +835,8 @@ namespace EomApp1.Screens.Final
 		
 		private EntitySet<Campaign> _Campaigns;
 		
+		private EntitySet<Item> _Items;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1424,6 +850,7 @@ namespace EomApp1.Screens.Final
 		public CampaignStatus()
 		{
 			this._Campaigns = new EntitySet<Campaign>(new Action<Campaign>(this.attach_Campaigns), new Action<Campaign>(this.detach_Campaigns));
+			this._Items = new EntitySet<Item>(new Action<Item>(this.attach_Items), new Action<Item>(this.detach_Items));
 			OnCreated();
 		}
 		
@@ -1480,6 +907,19 @@ namespace EomApp1.Screens.Final
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CampaignStatus_Item", Storage="_Items", ThisKey="id", OtherKey="campaign_status_id")]
+		public EntitySet<Item> Items
+		{
+			get
+			{
+				return this._Items;
+			}
+			set
+			{
+				this._Items.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1507,6 +947,18 @@ namespace EomApp1.Screens.Final
 		}
 		
 		private void detach_Campaigns(Campaign entity)
+		{
+			this.SendPropertyChanging();
+			entity.CampaignStatus = null;
+		}
+		
+		private void attach_Items(Item entity)
+		{
+			this.SendPropertyChanging();
+			entity.CampaignStatus = this;
+		}
+		
+		private void detach_Items(Item entity)
 		{
 			this.SendPropertyChanging();
 			entity.CampaignStatus = null;
@@ -1663,6 +1115,671 @@ namespace EomApp1.Screens.Final
 						this._campaign_id = default(int);
 					}
 					this.SendPropertyChanged("Campaign");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Item")]
+	public partial class Item : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private int _pid;
+		
+		private int _affid;
+		
+		private int _source_id;
+		
+		private int _unit_type_id;
+		
+		private System.Nullable<int> _stat_id_n;
+		
+		private int _revenue_currency_id;
+		
+		private int _cost_currency_id;
+		
+		private decimal _revenue_per_unit;
+		
+		private decimal _cost_per_unit;
+		
+		private decimal _num_units;
+		
+		private string _notes;
+		
+		private string _accounting_notes;
+		
+		private int _item_accounting_status_id;
+		
+		private int _item_reporting_status_id;
+		
+		private int _campaign_status_id;
+		
+		private System.Nullable<decimal> _total_revenue;
+		
+		private System.Nullable<decimal> _total_cost;
+		
+		private System.Nullable<decimal> _margin;
+		
+		private System.DateTime _modified;
+		
+		private EntityRef<CampaignStatus> _CampaignStatus;
+		
+		private EntityRef<Campaign> _Campaign;
+		
+		private EntityRef<ItemReportingStatus> _ItemReportingStatus;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void OnpidChanging(int value);
+    partial void OnpidChanged();
+    partial void OnaffidChanging(int value);
+    partial void OnaffidChanged();
+    partial void Onsource_idChanging(int value);
+    partial void Onsource_idChanged();
+    partial void Onunit_type_idChanging(int value);
+    partial void Onunit_type_idChanged();
+    partial void Onstat_id_nChanging(System.Nullable<int> value);
+    partial void Onstat_id_nChanged();
+    partial void Onrevenue_currency_idChanging(int value);
+    partial void Onrevenue_currency_idChanged();
+    partial void Oncost_currency_idChanging(int value);
+    partial void Oncost_currency_idChanged();
+    partial void Onrevenue_per_unitChanging(decimal value);
+    partial void Onrevenue_per_unitChanged();
+    partial void Oncost_per_unitChanging(decimal value);
+    partial void Oncost_per_unitChanged();
+    partial void Onnum_unitsChanging(decimal value);
+    partial void Onnum_unitsChanged();
+    partial void OnnotesChanging(string value);
+    partial void OnnotesChanged();
+    partial void Onaccounting_notesChanging(string value);
+    partial void Onaccounting_notesChanged();
+    partial void Onitem_accounting_status_idChanging(int value);
+    partial void Onitem_accounting_status_idChanged();
+    partial void Onitem_reporting_status_idChanging(int value);
+    partial void Onitem_reporting_status_idChanged();
+    partial void Oncampaign_status_idChanging(int value);
+    partial void Oncampaign_status_idChanged();
+    partial void Ontotal_revenueChanging(System.Nullable<decimal> value);
+    partial void Ontotal_revenueChanged();
+    partial void Ontotal_costChanging(System.Nullable<decimal> value);
+    partial void Ontotal_costChanged();
+    partial void OnmarginChanging(System.Nullable<decimal> value);
+    partial void OnmarginChanged();
+    partial void OnmodifiedChanging(System.DateTime value);
+    partial void OnmodifiedChanged();
+    #endregion
+		
+		public Item()
+		{
+			this._CampaignStatus = default(EntityRef<CampaignStatus>);
+			this._Campaign = default(EntityRef<Campaign>);
+			this._ItemReportingStatus = default(EntityRef<ItemReportingStatus>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(300)")]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_pid", DbType="Int NOT NULL")]
+		public int pid
+		{
+			get
+			{
+				return this._pid;
+			}
+			set
+			{
+				if ((this._pid != value))
+				{
+					if (this._Campaign.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnpidChanging(value);
+					this.SendPropertyChanging();
+					this._pid = value;
+					this.SendPropertyChanged("pid");
+					this.OnpidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_affid", DbType="Int NOT NULL")]
+		public int affid
+		{
+			get
+			{
+				return this._affid;
+			}
+			set
+			{
+				if ((this._affid != value))
+				{
+					this.OnaffidChanging(value);
+					this.SendPropertyChanging();
+					this._affid = value;
+					this.SendPropertyChanged("affid");
+					this.OnaffidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_source_id", DbType="Int NOT NULL")]
+		public int source_id
+		{
+			get
+			{
+				return this._source_id;
+			}
+			set
+			{
+				if ((this._source_id != value))
+				{
+					this.Onsource_idChanging(value);
+					this.SendPropertyChanging();
+					this._source_id = value;
+					this.SendPropertyChanged("source_id");
+					this.Onsource_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_unit_type_id", DbType="Int NOT NULL")]
+		public int unit_type_id
+		{
+			get
+			{
+				return this._unit_type_id;
+			}
+			set
+			{
+				if ((this._unit_type_id != value))
+				{
+					this.Onunit_type_idChanging(value);
+					this.SendPropertyChanging();
+					this._unit_type_id = value;
+					this.SendPropertyChanged("unit_type_id");
+					this.Onunit_type_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_stat_id_n", DbType="Int")]
+		public System.Nullable<int> stat_id_n
+		{
+			get
+			{
+				return this._stat_id_n;
+			}
+			set
+			{
+				if ((this._stat_id_n != value))
+				{
+					this.Onstat_id_nChanging(value);
+					this.SendPropertyChanging();
+					this._stat_id_n = value;
+					this.SendPropertyChanged("stat_id_n");
+					this.Onstat_id_nChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_revenue_currency_id", DbType="Int NOT NULL")]
+		public int revenue_currency_id
+		{
+			get
+			{
+				return this._revenue_currency_id;
+			}
+			set
+			{
+				if ((this._revenue_currency_id != value))
+				{
+					this.Onrevenue_currency_idChanging(value);
+					this.SendPropertyChanging();
+					this._revenue_currency_id = value;
+					this.SendPropertyChanged("revenue_currency_id");
+					this.Onrevenue_currency_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_cost_currency_id", DbType="Int NOT NULL")]
+		public int cost_currency_id
+		{
+			get
+			{
+				return this._cost_currency_id;
+			}
+			set
+			{
+				if ((this._cost_currency_id != value))
+				{
+					this.Oncost_currency_idChanging(value);
+					this.SendPropertyChanging();
+					this._cost_currency_id = value;
+					this.SendPropertyChanged("cost_currency_id");
+					this.Oncost_currency_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_revenue_per_unit", DbType="Money NOT NULL")]
+		public decimal revenue_per_unit
+		{
+			get
+			{
+				return this._revenue_per_unit;
+			}
+			set
+			{
+				if ((this._revenue_per_unit != value))
+				{
+					this.Onrevenue_per_unitChanging(value);
+					this.SendPropertyChanging();
+					this._revenue_per_unit = value;
+					this.SendPropertyChanged("revenue_per_unit");
+					this.Onrevenue_per_unitChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_cost_per_unit", DbType="Money NOT NULL")]
+		public decimal cost_per_unit
+		{
+			get
+			{
+				return this._cost_per_unit;
+			}
+			set
+			{
+				if ((this._cost_per_unit != value))
+				{
+					this.Oncost_per_unitChanging(value);
+					this.SendPropertyChanging();
+					this._cost_per_unit = value;
+					this.SendPropertyChanged("cost_per_unit");
+					this.Oncost_per_unitChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_num_units", DbType="Decimal(16,6) NOT NULL")]
+		public decimal num_units
+		{
+			get
+			{
+				return this._num_units;
+			}
+			set
+			{
+				if ((this._num_units != value))
+				{
+					this.Onnum_unitsChanging(value);
+					this.SendPropertyChanging();
+					this._num_units = value;
+					this.SendPropertyChanged("num_units");
+					this.Onnum_unitsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_notes", DbType="NVarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string notes
+		{
+			get
+			{
+				return this._notes;
+			}
+			set
+			{
+				if ((this._notes != value))
+				{
+					this.OnnotesChanging(value);
+					this.SendPropertyChanging();
+					this._notes = value;
+					this.SendPropertyChanged("notes");
+					this.OnnotesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_accounting_notes", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string accounting_notes
+		{
+			get
+			{
+				return this._accounting_notes;
+			}
+			set
+			{
+				if ((this._accounting_notes != value))
+				{
+					this.Onaccounting_notesChanging(value);
+					this.SendPropertyChanging();
+					this._accounting_notes = value;
+					this.SendPropertyChanged("accounting_notes");
+					this.Onaccounting_notesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_item_accounting_status_id", DbType="Int NOT NULL")]
+		public int item_accounting_status_id
+		{
+			get
+			{
+				return this._item_accounting_status_id;
+			}
+			set
+			{
+				if ((this._item_accounting_status_id != value))
+				{
+					this.Onitem_accounting_status_idChanging(value);
+					this.SendPropertyChanging();
+					this._item_accounting_status_id = value;
+					this.SendPropertyChanged("item_accounting_status_id");
+					this.Onitem_accounting_status_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_item_reporting_status_id", DbType="Int NOT NULL")]
+		public int item_reporting_status_id
+		{
+			get
+			{
+				return this._item_reporting_status_id;
+			}
+			set
+			{
+				if ((this._item_reporting_status_id != value))
+				{
+					if (this._ItemReportingStatus.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onitem_reporting_status_idChanging(value);
+					this.SendPropertyChanging();
+					this._item_reporting_status_id = value;
+					this.SendPropertyChanged("item_reporting_status_id");
+					this.Onitem_reporting_status_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_campaign_status_id", DbType="Int NOT NULL")]
+		public int campaign_status_id
+		{
+			get
+			{
+				return this._campaign_status_id;
+			}
+			set
+			{
+				if ((this._campaign_status_id != value))
+				{
+					if (this._CampaignStatus.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Oncampaign_status_idChanging(value);
+					this.SendPropertyChanging();
+					this._campaign_status_id = value;
+					this.SendPropertyChanged("campaign_status_id");
+					this.Oncampaign_status_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_total_revenue", AutoSync=AutoSync.Always, DbType="Decimal(36,10)", IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Nullable<decimal> total_revenue
+		{
+			get
+			{
+				return this._total_revenue;
+			}
+			set
+			{
+				if ((this._total_revenue != value))
+				{
+					this.Ontotal_revenueChanging(value);
+					this.SendPropertyChanging();
+					this._total_revenue = value;
+					this.SendPropertyChanged("total_revenue");
+					this.Ontotal_revenueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_total_cost", AutoSync=AutoSync.Always, DbType="Decimal(36,10)", IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Nullable<decimal> total_cost
+		{
+			get
+			{
+				return this._total_cost;
+			}
+			set
+			{
+				if ((this._total_cost != value))
+				{
+					this.Ontotal_costChanging(value);
+					this.SendPropertyChanging();
+					this._total_cost = value;
+					this.SendPropertyChanged("total_cost");
+					this.Ontotal_costChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_margin", AutoSync=AutoSync.Always, DbType="Money", IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		public System.Nullable<decimal> margin
+		{
+			get
+			{
+				return this._margin;
+			}
+			set
+			{
+				if ((this._margin != value))
+				{
+					this.OnmarginChanging(value);
+					this.SendPropertyChanging();
+					this._margin = value;
+					this.SendPropertyChanged("margin");
+					this.OnmarginChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_modified", AutoSync=AutoSync.Always, DbType="DateTime NOT NULL", IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		public System.DateTime modified
+		{
+			get
+			{
+				return this._modified;
+			}
+			set
+			{
+				if ((this._modified != value))
+				{
+					this.OnmodifiedChanging(value);
+					this.SendPropertyChanging();
+					this._modified = value;
+					this.SendPropertyChanged("modified");
+					this.OnmodifiedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CampaignStatus_Item", Storage="_CampaignStatus", ThisKey="campaign_status_id", OtherKey="id", IsForeignKey=true)]
+		public CampaignStatus CampaignStatus
+		{
+			get
+			{
+				return this._CampaignStatus.Entity;
+			}
+			set
+			{
+				CampaignStatus previousValue = this._CampaignStatus.Entity;
+				if (((previousValue != value) 
+							|| (this._CampaignStatus.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CampaignStatus.Entity = null;
+						previousValue.Items.Remove(this);
+					}
+					this._CampaignStatus.Entity = value;
+					if ((value != null))
+					{
+						value.Items.Add(this);
+						this._campaign_status_id = value.id;
+					}
+					else
+					{
+						this._campaign_status_id = default(int);
+					}
+					this.SendPropertyChanged("CampaignStatus");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Campaign_Item", Storage="_Campaign", ThisKey="pid", OtherKey="pid", IsForeignKey=true)]
+		public Campaign Campaign
+		{
+			get
+			{
+				return this._Campaign.Entity;
+			}
+			set
+			{
+				Campaign previousValue = this._Campaign.Entity;
+				if (((previousValue != value) 
+							|| (this._Campaign.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Campaign.Entity = null;
+						previousValue.Items.Remove(this);
+					}
+					this._Campaign.Entity = value;
+					if ((value != null))
+					{
+						value.Items.Add(this);
+						this._pid = value.pid;
+					}
+					else
+					{
+						this._pid = default(int);
+					}
+					this.SendPropertyChanged("Campaign");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ItemReportingStatus_Item", Storage="_ItemReportingStatus", ThisKey="item_reporting_status_id", OtherKey="id", IsForeignKey=true)]
+		public ItemReportingStatus ItemReportingStatus
+		{
+			get
+			{
+				return this._ItemReportingStatus.Entity;
+			}
+			set
+			{
+				ItemReportingStatus previousValue = this._ItemReportingStatus.Entity;
+				if (((previousValue != value) 
+							|| (this._ItemReportingStatus.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ItemReportingStatus.Entity = null;
+						previousValue.Items.Remove(this);
+					}
+					this._ItemReportingStatus.Entity = value;
+					if ((value != null))
+					{
+						value.Items.Add(this);
+						this._item_reporting_status_id = value.id;
+					}
+					else
+					{
+						this._item_reporting_status_id = default(int);
+					}
+					this.SendPropertyChanged("ItemReportingStatus");
 				}
 			}
 		}
