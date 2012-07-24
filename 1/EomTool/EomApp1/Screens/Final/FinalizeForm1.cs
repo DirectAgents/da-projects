@@ -14,6 +14,8 @@ namespace EomApp1.Screens.Final
         {
             InitializeComponent();
             this.notesListForm = new NotesListForm1();
+            campaignDataGridView.Columns[NumPubsToFinalizeCol.Index].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns[NumPubsToVerifyCol.Index].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
         }
 
         private void FinalizeForm1_Load(object sender, EventArgs e)
