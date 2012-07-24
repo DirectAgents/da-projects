@@ -9,6 +9,7 @@ namespace EomApp1.Screens.Final.Forms
         private Presenters.PublishersPresenter presenter;
         private FinalizeForm1 parent;
         private Mode mode;
+        private string initialFilter;
 
         public enum Mode { Finalize, Verify }
 
@@ -17,11 +18,12 @@ namespace EomApp1.Screens.Final.Forms
             InitializeComponent();
         }
 
-        public PublishersForm(FinalizeForm1 finalizeForm, int pid, Mode mode)
+        public PublishersForm(FinalizeForm1 finalizeForm, int pid, Mode mode, string initialFilter)
         {
             InitializeComponent();
             this.parent = finalizeForm;
             this.mode = mode;
+            this.initialFilter = initialFilter;
             InitializeMVP(pid);
         }
 
@@ -56,12 +58,16 @@ namespace EomApp1.Screens.Final.Forms
             if (mode == Mode.Finalize)
             {
                 this.finalizePublishersView.SelectAll();
+                this.finalizePublishersView.SetNetTermFilter(this.initialFilter);
+
                 this.verifyPublishersView.SelectNone();
             }
             else
             {
                 this.finalizePublishersView.SelectNone();
+
                 this.verifyPublishersView.SelectAll();
+                this.verifyPublishersView.SetNetTermFilter(this.initialFilter);
             }
         }
 

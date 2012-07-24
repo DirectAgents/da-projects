@@ -405,7 +405,9 @@
     <Compile Include="Screens\Final\Forms\PublishersForm.Designer.cs">
       <DependentUpon>PublishersForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Final\Forms\UnfinalizeForm.cs" />
     <Compile Include="Screens\Final\GlobalHelpers.cs" />
+    <Compile Include="Screens\Final\Models\CampaignsModel.cs" />
     <Compile Include="Screens\Final\Models\CampaignStatusId.cs" />
     <Compile Include="Screens\Final\Models\EomEntities.cs" />
     <Compile Include="Screens\Final\Models\EomModel.Designer.cs">
@@ -786,6 +788,9 @@
     <Compile Include="UI\CollapsibleSplitter.Designer.cs">
       <DependentUpon>CollapsibleSplitter.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\MaskedDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Screens\Advertiser2\Controls\Advertisers2Control.resx">
       <DependentUpon>Advertisers2Control.cs</DependentUpon>
     </EmbeddedResource>
@@ -827,9 +832,6 @@
       <LastGenOutput>AdvertiserModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
-    <None Include="ClassDiagram3.cd" />
-    <None Include="ClassDiagram4.cd" />
     <None Include="DADatabaseR1DataSet.xsc">
       <DependentUpon>DADatabaseR1DataSet.xsd</DependentUpon>
     </None>

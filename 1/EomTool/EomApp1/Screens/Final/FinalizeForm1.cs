@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using EomApp1.Services;
@@ -9,13 +10,29 @@ namespace EomApp1.Screens.Final
     public partial class FinalizeForm1 : AppFormBase
     {
         private EomAppService _eomAppService;
+        private DataGridViewLinkColumn[] numPubCols1;
+        private DataGridViewLinkColumn[] numPubCols2;
+        private int[] pubColIndicies1;
+        private int[] pubColIndicies2;
+        private Dictionary<string, string> pubColHeaderTextToFilter = new Dictionary<string, string>();
 
         public FinalizeForm1()
         {
             InitializeComponent();
+            this.numPubCols1 = new[] { NumPubsToFinalizeCol, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly };
+            this.numPubCols2 = new[] { NumPubsToVerifyCol, dataGridViewLinkColumn1, dataGridViewLinkColumn2, dataGridViewLinkColumn3, dataGridViewLinkColumn4 };
+            this.pubColIndicies1 = this.numPubCols1.Select(c => c.Index).ToArray();
+            this.pubColIndicies2 = this.numPubCols2.Select(c => c.Index).ToArray();
+            this.pubColHeaderTextToFilter.Add("#Net7", "Net 7");
+            this.pubColHeaderTextToFilter.Add("#Net15", "Net 15");
+            this.pubColHeaderTextToFilter.Add("#Net30", "Net 30");
+            this.pubColHeaderTextToFilter.Add("#BiWkly", "Net 7/Biweekly");
             this.notesListForm = new NotesListForm1();
-            campaignDataGridView.Columns[NumPubsToFinalizeCol.Index].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView1.Columns[NumPubsToVerifyCol.Index].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            foreach (var item in this.numPubCols1.Concat(numPubCols2))
+            {
+                item.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+            SetNetTermColumnsVisibility(false);
         }
 
         private void FinalizeForm1_Load(object sender, EventArgs e)
@@ -36,10 +53,12 @@ namespace EomApp1.Screens.Final
             campaignTableAdapter.FillByAM(finalizeDataSet1.Campaign, am);
         }
 
-        private void campaignDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void CellClickTop(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
-            var pid = (int)campaignDataGridView["pidCol", e.RowIndex].Value;
+
+            var grid = sender as DataGridView;
+            var pid = (int)grid["pidCol", e.RowIndex].Value;
 
             // Final Button
             if (e.ColumnIndex == FinalizeCol.Index)
@@ -53,11 +72,65 @@ namespace EomApp1.Screens.Final
                 }
             }
             // #Pubs Button
-            else if (e.ColumnIndex == NumPubsToFinalizeCol.Index)
+            else if (
+                this.pubColIndicies1.Contains(e.ColumnIndex)
+                && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
+            )
             {
-                var finalizePublishersForm = new Forms.PublishersForm(this, pid, Forms.PublishersForm.Mode.Finalize);
-                finalizePublishersForm.ShowDialog();
+                HandleNumPubsClick(e, pid, grid, Forms.PublishersForm.Mode.Finalize);
             }
+        }
+
+        // Verify Button
+        private void CellClickBottom(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            var grid = sender as DataGridView;
+            var pid = (int)grid["pidCol2", e.RowIndex].Value;
+
+            string note;
+            // Verify Button
+            if (e.ColumnIndex == grid.Columns["verifyCol"].Index)
+            {
+                if (ConfirmationBox.ShowConfirmationModalDialog("Verify", out note))
+                {
+                    VerifyCampaign(pid);
+                    AddCampaignNote(pid, note);
+                    FillCampaigns();
+                }
+            }
+            // Review Button
+            else if (e.ColumnIndex == grid.Columns["colReview"].Index)
+            {
+                if (ConfirmationBox.ShowConfirmationModalDialog("Review", out note))
+                {
+                    ReviewCampaign(pid);
+                    AddCampaignNote(pid, note);
+                    FillCampaigns();
+                }
+            }
+            // #Pubs Button
+            else if (
+                this.pubColIndicies2.Contains(e.ColumnIndex)
+                && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
+            )
+            {
+                HandleNumPubsClick(e, pid, grid, Forms.PublishersForm.Mode.Verify);
+            }
+        }
+
+
+        private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, DataGridView grid, Forms.PublishersForm.Mode mode)
+        {
+            string filter = null;
+            string headerText = grid.Columns[e.ColumnIndex].HeaderText;
+            if (this.pubColHeaderTextToFilter.ContainsKey(headerText))
+            {
+                filter = this.pubColHeaderTextToFilter[headerText];
+            }
+            var publishersForm = new Forms.PublishersForm(this, pid, mode, filter);
+            MaskedDialog.ShowDialog(this, publishersForm);
         }
 
         private void AddCampaignNote(int campaignId, string note)
@@ -79,41 +152,6 @@ namespace EomApp1.Screens.Final
         public EomAppService Services
         {
             get { return _eomAppService ?? (_eomAppService = new EomAppService(new DataService(new Txns()))); }
-        }
-
-        // Verify Button
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-            var pid = (int)dataGridView1["pidCol2", e.RowIndex].Value;
-
-            string notes;
-            // Verify Button
-            if (e.ColumnIndex == dataGridView1.Columns["verifyCol"].Index)
-            {
-                if (ConfirmationBox.ShowConfirmationModalDialog("Verify", out notes))
-                {
-                    VerifyCampaign(pid);
-                    AddCampaignNote(pid, notes);
-                    FillCampaigns();
-                }
-            }
-            // Review Button
-            else if (e.ColumnIndex == dataGridView1.Columns["colReview"].Index)
-            {
-                if (ConfirmationBox.ShowConfirmationModalDialog("Review", out notes))
-                {
-                    ReviewCampaign(pid);
-                    AddCampaignNote(pid, notes);
-                    FillCampaigns();
-                }
-            }
-            // #Pubs Button
-            else if (e.ColumnIndex == NumPubsToVerifyCol.Index)
-            {
-                var finalizePublishersForm = new Forms.PublishersForm(this, pid, Forms.PublishersForm.Mode.Verify);
-                finalizePublishersForm.ShowDialog();
-            }
         }
 
         private void ReviewCampaign(int id)
@@ -141,7 +179,7 @@ namespace EomApp1.Screens.Final
             var query = from c in db.Items
                         where c.pid == id && c.CampaignStatus.name == "Finalized"
                         select c;
-            
+
             var verifyCampaignStatus = db.CampaignStatus.Single(c => c.name == "Verified");
 
             foreach (var item in query)
@@ -229,7 +267,7 @@ namespace EomApp1.Screens.Final
                     var campaignID = (int)campaignDataGridView["pidCol", e.RowIndex].Value;
                     AddCampaignNote(campaignID, note);
                     DoFillCampaigns();
-                    
+
                 }
             }
         }
@@ -246,7 +284,7 @@ namespace EomApp1.Screens.Final
         NotesListForm1 notesListForm { get; set; }
 
         private void button3_Click(object sender, EventArgs e)
-        {   
+        {
             this.notesListForm.Show();
         }
 
@@ -259,6 +297,30 @@ namespace EomApp1.Screens.Final
         {
             var campaignID = (int)campaignDataGridView["pidCol", rowIndex].Value;
             this.notesListForm.Fill(TransactionScripts, campaignID);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            SetNetTermColumnsVisibility(checkBox1.Checked);
+        }
+
+        private void SetNetTermColumnsVisibility(bool visible)
+        {
+            foreach (var item in this.numPubCols1.Skip(1).Concat(numPubCols2.Skip(1)))
+            {
+                item.Visible = visible;
+            }
+        }
+
+        private void FormatCell(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value != null && e.Value is int)
+            {
+                if ((int)e.Value == 0)
+                {
+                    e.Value = "";
+                }
+            }
         }
     }
 }

@@ -20,6 +20,7 @@
               <xs:element name="Revenue" msprop:Generator_ColumnVarNameInTable="columnRevenue" msprop:Generator_ColumnPropNameInRow="Revenue" msprop:Generator_ColumnPropNameInTable="RevenueColumn" msprop:Generator_UserColumnName="Revenue" type="xs:decimal" minOccurs="0" />
               <xs:element name="AffId" msprop:Generator_ColumnVarNameInTable="columnAffId" msprop:Generator_ColumnPropNameInRow="AffId" msprop:Generator_ColumnPropNameInTable="AffIdColumn" msprop:Generator_UserColumnName="AffId" type="xs:int" minOccurs="0" />
               <xs:element name="NetTerms" msprop:Generator_ColumnVarNameInTable="columnNetTerms" msprop:Generator_ColumnPropNameInRow="NetTerms" msprop:Generator_ColumnPropNameInTable="NetTermsColumn" msprop:Generator_UserColumnName="NetTerms" type="xs:string" minOccurs="0" />
+              <xs:element name="PID" msprop:Generator_ColumnVarNameInTable="columnPID" msprop:Generator_ColumnPropNameInRow="PID" msprop:Generator_ColumnPropNameInTable="PIDColumn" msprop:Generator_UserColumnName="PID" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

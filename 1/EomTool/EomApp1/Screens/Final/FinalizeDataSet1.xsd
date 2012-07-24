@@ -15,7 +15,11 @@
                   <DbCommand CommandType="Text" ModifiedByUser="false">
                     <CommandText>SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
                          SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note, CampaignStatus_1.name AS ItemCampaignStatus, 
-                         COUNT(DISTINCT Item.affid) AS NumAffiliates, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault, 
+                         COUNT(DISTINCT Item.affid) AS NumAffiliates, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet7, 
+                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet15, 
+                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 3 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet30, 
+                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumAffiliatesNetBiWeekly, 
+                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault, 
                          COUNT(DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, 
                          COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified
 FROM            Campaign INNER JOIN
@@ -25,7 +29,8 @@ FROM            Campaign INNER JOIN
                          Item ON Campaign.pid = Item.pid INNER JOIN
                          Currency ON Item.revenue_currency_id = Currency.id INNER JOIN
                          CampaignStatus AS CampaignStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN
-                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id
+                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id INNER JOIN
+                         Affiliate ON Item.affid = Affiliate.affid
 GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
                          LatestCampaignNote.note, CampaignStatus_1.name
 ORDER BY Campaign.campaign_name</CommandText>
@@ -50,6 +55,10 @@ ORDER BY Campaign.campaign_name</CommandText>
               <Mapping SourceColumn="NumDefault" DataSetColumn="NumDefault" />
               <Mapping SourceColumn="NumFinalized" DataSetColumn="NumFinalized" />
               <Mapping SourceColumn="NumVerified" DataSetColumn="NumVerified" />
+              <Mapping SourceColumn="NumAffiliatesNet7" DataSetColumn="NumAffiliatesNet7" />
+              <Mapping SourceColumn="NumAffiliatesNet15" DataSetColumn="NumAffiliatesNet15" />
+              <Mapping SourceColumn="NumAffiliatesNet30" DataSetColumn="NumAffiliatesNet30" />
+              <Mapping SourceColumn="NumAffiliatesNetBiWeekly" DataSetColumn="NumAffiliatesNetBiWeekly" />
             </Mappings>
             <Sources>
               <DbSource ConnectionRef="zDADatabaseJuly2012TestConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="FillByAM" GenerateMethods="Fill" GenerateShortCommands="true" GeneratorSourceName="FillByAM" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillByAM">
@@ -57,7 +66,11 @@ ORDER BY Campaign.campaign_name</CommandText>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
                     <CommandText>SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
                          SUM(Item.total_revenue) AS Revenue, CampaignStatus.name AS Status, LatestCampaignNote.note AS Note, CampaignStatus_1.name AS ItemCampaignStatus, 
-                         COUNT(DISTINCT Item.affid) AS NumAffiliates, COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault, 
+                         COUNT(DISTINCT Item.affid) AS NumAffiliates, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet7, 
+                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet15, 
+                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 3 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet30, 
+                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumAffiliatesNetBiWeekly, 
+                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault, 
                          COUNT(DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, 
                          COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified
 FROM            Campaign INNER JOIN
@@ -67,7 +80,8 @@ FROM            Campaign INNER JOIN
                          Item ON Campaign.pid = Item.pid INNER JOIN
                          Currency ON Item.revenue_currency_id = Currency.id INNER JOIN
                          CampaignStatus AS CampaignStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN
-                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id
+                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id INNER JOIN
+                         Affiliate ON Item.affid = Affiliate.affid
 GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
                          LatestCampaignNote.note, CampaignStatus_1.name
 HAVING        (AccountManager.name = @1)
@@ -252,6 +266,10 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
               <xs:element name="NumDefault" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumDefault" msprop:Generator_ColumnPropNameInRow="NumDefault" msprop:Generator_ColumnPropNameInTable="NumDefaultColumn" msprop:Generator_UserColumnName="NumDefault" type="xs:int" minOccurs="0" />
               <xs:element name="NumFinalized" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumFinalized" msprop:Generator_ColumnPropNameInRow="NumFinalized" msprop:Generator_ColumnPropNameInTable="NumFinalizedColumn" msprop:Generator_UserColumnName="NumFinalized" type="xs:int" minOccurs="0" />
               <xs:element name="NumVerified" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumVerified" msprop:Generator_ColumnPropNameInRow="NumVerified" msprop:Generator_ColumnPropNameInTable="NumVerifiedColumn" msprop:Generator_UserColumnName="NumVerified" type="xs:int" minOccurs="0" />
+              <xs:element name="NumAffiliatesNet7" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNet7" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNet7" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNet7Column" msprop:Generator_UserColumnName="NumAffiliatesNet7" type="xs:int" minOccurs="0" />
+              <xs:element name="NumAffiliatesNet15" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNet15" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNet15" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNet15Column" msprop:Generator_UserColumnName="NumAffiliatesNet15" type="xs:int" minOccurs="0" />
+              <xs:element name="NumAffiliatesNet30" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNet30" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNet30" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNet30Column" msprop:Generator_UserColumnName="NumAffiliatesNet30" type="xs:int" minOccurs="0" />
+              <xs:element name="NumAffiliatesNetBiWeekly" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnNumAffiliatesNetBiWeekly" msprop:Generator_ColumnPropNameInRow="NumAffiliatesNetBiWeekly" msprop:Generator_ColumnPropNameInTable="NumAffiliatesNetBiWeeklyColumn" msprop:Generator_UserColumnName="NumAffiliatesNetBiWeekly" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -308,7 +326,7 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="Campaign_CampaignNotes" msdata:parent="Campaign" msdata:child="CampaignNotes" msdata:parentkey="pid" msdata:childkey="campaign_id" msprop:Generator_UserChildTable="CampaignNotes" msprop:Generator_ChildPropName="GetCampaignNotesRows" msprop:Generator_UserParentTable="Campaign" msprop:Generator_UserRelationName="Campaign_CampaignNotes" msprop:Generator_RelationVarName="relationCampaign_CampaignNotes" msprop:Generator_ParentPropName="CampaignRow" />
+      <msdata:Relationship name="Campaign_CampaignNotes" msdata:parent="Campaign" msdata:child="CampaignNotes" msdata:parentkey="pid" msdata:childkey="campaign_id" msprop:Generator_UserChildTable="CampaignNotes" msprop:Generator_ChildPropName="GetCampaignNotesRows" msprop:Generator_ParentPropName="CampaignRow" msprop:Generator_UserRelationName="Campaign_CampaignNotes" msprop:Generator_RelationVarName="relationCampaign_CampaignNotes" msprop:Generator_UserParentTable="Campaign" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

@@ -6,6 +6,8 @@ namespace EomApp1.Screens.Final.Models
     public class PublishersModel
     {
         private int pid;
+        private string campaignName;
+        private string advertiserName;
 
         public PublishersModel(int pid)
         {
@@ -18,14 +20,10 @@ namespace EomApp1.Screens.Final.Models
             using (var db = Models.EomEntities.Create())
             {
                 var campaign = db.Campaigns.Where(c => c.pid == this.pid).Single();
-                this.CampaignName = campaign.campaign_name;
-                this.AdvertiserName = campaign.Advertiser.name;
+                this.campaignName = campaign.campaign_name;
+                this.advertiserName = campaign.Advertiser.name;
             }
         }
-
-        public string CampaignName { get; set; }
-
-        public string AdvertiserName { get; set; }
 
         public void FillPublishers(Data.PublishersDataSet.PublishersDataTable table, CampaignStatusId campaignStatusID)
         {
@@ -33,7 +31,7 @@ namespace EomApp1.Screens.Final.Models
             {
                 var query = from affiliate in db.Affiliates
                             from item in db.Items
-                            where affiliate.affid == item.affid && item.pid == pid && item.campaign_status_id == (int)campaignStatusID
+                            where affiliate.affid == item.affid && item.pid == this.pid && item.campaign_status_id == (int)campaignStatusID
                             group item by new { Affiliate = affiliate, RevenueCurrency = item.Currency1 } into g
                             select new
                             {
@@ -46,7 +44,7 @@ namespace EomApp1.Screens.Final.Models
 
                 foreach (var item in query)
                 {
-                    table.AddPublishersRow(item.Affiliate, item.Currency, item.Total.Value, item.AffId, item.NetTerms);
+                    table.AddPublishersRow(item.Affiliate, item.Currency, item.Total.Value, item.AffId, item.NetTerms, this.pid);
                 }
             }
         }
@@ -68,6 +66,30 @@ namespace EomApp1.Screens.Final.Models
                 }
 
                 db.SaveChanges();
+            }
+        }
+
+        public string CampaignName 
+        {
+            get
+            {
+                if (this.campaignName == null)
+                {
+                    Initialize();
+                }
+                return this.campaignName;
+            }
+        }
+
+        public string AdvertiserName
+        {
+            get
+            {
+                if (this.advertiserName == null)
+                {
+                    Initialize();
+                }
+                return this.advertiserName;
             }
         }
     }

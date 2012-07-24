@@ -76,9 +76,9 @@ namespace EomApp1.Screens.Final.Controls
             }
         }
 
-        public Data.PublishersDataSet PublishersDataSet 
-        { 
-            get { return this.finalizePublishersDataSet; } 
+        public Data.PublishersDataSet PublishersDataSet
+        {
+            get { return this.finalizePublishersDataSet; }
         }
 
         public string ActionButtonText
@@ -110,6 +110,17 @@ namespace EomApp1.Screens.Final.Controls
                 int affID = ((Data.PublishersDataSet.PublishersRow)rowView.Row).AffId;
                 if (affIDsBeforeFilter.Contains(affID))
                     row.Selected = true;
+            }
+        }
+
+        public void SetNetTermFilter(string netTermName)
+        {
+            if (this.netTermsComboBox.Items.Count > 0)
+            {
+                if (string.IsNullOrWhiteSpace(netTermName))
+                    this.netTermsComboBox.SelectedIndex = 0;
+                else
+                    this.netTermsComboBox.SelectedIndex = this.netTermsComboBox.Items.IndexOf(netTermName);
             }
         }
     }
