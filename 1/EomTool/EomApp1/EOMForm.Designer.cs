@@ -48,6 +48,7 @@
             this.currenciesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.paymentsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.accountingSheetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.verifiedRevenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.selectDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.utilitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,6 +68,7 @@
             this.sQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importedFrom2010ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.qBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dTRestApiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -77,7 +79,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.class1BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -201,7 +202,8 @@
             this.publisherReportsToolStripMenuItem,
             this.currenciesToolStripMenuItem,
             this.paymentsToolStripMenuItem1,
-            this.accountingSheetToolStripMenuItem1});
+            this.accountingSheetToolStripMenuItem1,
+            this.verifiedRevenueToolStripMenuItem});
             this.accountingToolStripMenuItem.Name = "accountingToolStripMenuItem";
             this.accountingToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.accountingToolStripMenuItem.Text = "Accounting";
@@ -233,6 +235,13 @@
             this.accountingSheetToolStripMenuItem1.Size = new System.Drawing.Size(168, 22);
             this.accountingSheetToolStripMenuItem1.Text = "Accounting Sheet";
             this.accountingSheetToolStripMenuItem1.Click += new System.EventHandler(this.accountingSheetToolStripMenuItem1_Click);
+            // 
+            // verifiedRevenueToolStripMenuItem
+            // 
+            this.verifiedRevenueToolStripMenuItem.Name = "verifiedRevenueToolStripMenuItem";
+            this.verifiedRevenueToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.verifiedRevenueToolStripMenuItem.Text = "Verified Revenue";
+            this.verifiedRevenueToolStripMenuItem.Click += new System.EventHandler(this.finalizedRevenueToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem1
             // 
@@ -384,6 +393,13 @@
             this.qBToolStripMenuItem.Text = "QB";
             this.qBToolStripMenuItem.Click += new System.EventHandler(this.qBToolStripMenuItem_Click);
             // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(93, 22);
+            this.testToolStripMenuItem.Text = "test";
+            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
+            // 
             // eTLToolStripMenuItem
             // 
             this.eTLToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -455,13 +471,6 @@
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.Size = new System.Drawing.Size(46, 20);
             this.webBrowser1.TabIndex = 5;
-            // 
-            // testToolStripMenuItem
-            // 
-            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.testToolStripMenuItem.Text = "test";
-            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
             // EOMForm
             // 
@@ -543,6 +552,7 @@
         private System.Windows.Forms.ToolStripMenuItem synchQuickBooksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem notesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem verifiedRevenueToolStripMenuItem;
 
     }
 }

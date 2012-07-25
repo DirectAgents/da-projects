@@ -19,7 +19,7 @@ namespace EomApp1.Screens.Final.Presenters
 
         void view_PublishersToFinalizeSelected(object sender, PublishersEventArgs e)
         {
-            this.model.ChangePublisherItems(e.AffIds, CampaignStatusId.Default, CampaignStatusId.Finalized);
+            this.model.ChangePublisherItems(CampaignStatusId.Default, CampaignStatusId.Finalized, e.AffIds);
 
             this.view.PublishersToFinalize.Clear();
             this.model.FillPublishers(this.view.PublishersToFinalize, CampaignStatusId.Default);
@@ -32,7 +32,7 @@ namespace EomApp1.Screens.Final.Presenters
 
         void view_PublishersToVerifySelected(object sender, PublishersEventArgs e)
         {
-            this.model.ChangePublisherItems(e.AffIds, CampaignStatusId.Finalized, CampaignStatusId.Verified);
+            this.model.ChangePublisherItems(CampaignStatusId.Finalized, CampaignStatusId.Verified, e.AffIds);
 
             this.view.PublishersToVerify.Clear();
             this.model.FillPublishers(this.view.PublishersToVerify, CampaignStatusId.Finalized);

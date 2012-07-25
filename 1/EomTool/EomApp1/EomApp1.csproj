@@ -391,10 +391,14 @@
     <Compile Include="Screens\Final\Controls\PublishersView.Designer.cs">
       <DependentUpon>PublishersView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\Data\PublishersDataSet.Designer.cs">
+    <Compile Include="Screens\Final\Data\DataSet1.cs">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Screens\Final\Data\DataSet1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PublishersDataSet.xsd</DependentUpon>
+      <DependentUpon>DataSet1.xsd</DependentUpon>
     </Compile>
     <Compile Include="Screens\Final\FinalizeData.cs">
       <DependentUpon>FinalizeData.dbml</DependentUpon>
@@ -405,7 +409,12 @@
     <Compile Include="Screens\Final\Forms\PublishersForm.Designer.cs">
       <DependentUpon>PublishersForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\Forms\UnfinalizeForm.cs" />
+    <Compile Include="Screens\Final\Forms\VerifiedRevenueForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Final\Forms\VerifiedRevenueForm.Designer.cs">
+      <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Final\GlobalHelpers.cs" />
     <Compile Include="Screens\Final\Models\CampaignsModel.cs" />
     <Compile Include="Screens\Final\Models\CampaignStatusId.cs" />
@@ -815,6 +824,9 @@
     <EmbeddedResource Include="Screens\Final\Forms\PublishersForm.resx">
       <DependentUpon>PublishersForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Final\Forms\VerifiedRevenueForm.resx">
+      <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Synch\AddAffiliateSetupForm.resx">
       <DependentUpon>AddAffiliateSetupForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1154,16 +1166,16 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EomModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Screens\Final\Data\PublishersDataSet.xsc">
-      <DependentUpon>PublishersDataSet.xsd</DependentUpon>
+    <None Include="Screens\Final\Data\DataSet1.xsc">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
     </None>
-    <None Include="Screens\Final\Data\PublishersDataSet.xsd">
+    <None Include="Screens\Final\Data\DataSet1.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>PublishersDataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Screens\Final\Data\PublishersDataSet.xss">
-      <DependentUpon>PublishersDataSet.xsd</DependentUpon>
+    <None Include="Screens\Final\Data\DataSet1.xss">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
     </None>
     <None Include="Screens\Payment\DataSets\PaymentsDataSet.xsc">
       <DependentUpon>PaymentsDataSet.xsd</DependentUpon>

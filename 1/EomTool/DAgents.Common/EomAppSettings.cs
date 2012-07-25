@@ -5,5 +5,6 @@
         public static string ConnStr { get; set; }
         public static string MasterDatabaseListConnectionString { get; set; }
         public static bool DebugEomDatabase { get; set; }
+        public static string AdminGroupName = @"DIRECTAGENTS\Biz App Admins";
     }
 }

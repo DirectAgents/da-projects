@@ -47,7 +47,7 @@
             this.revenueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NetTermsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.finalizePublishersBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.finalizePublishersDataSet = new EomApp1.Screens.Final.Data.PublishersDataSet();
+            this.finalizePublishersDataSet = new EomApp1.Screens.Final.Data.DataSet1();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -226,7 +226,7 @@
             // 
             // finalizePublishersDataSet
             // 
-            this.finalizePublishersDataSet.DataSetName = "PublishersDataSet";
+            this.finalizePublishersDataSet.DataSetName = "DataSet1";
             this.finalizePublishersDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // dataGridViewTextBoxColumn1
@@ -261,7 +261,7 @@
 
         private System.Windows.Forms.DataGridView grid;
         private System.Windows.Forms.BindingSource finalizePublishersBindingSource;
-        private Data.PublishersDataSet finalizePublishersDataSet;
+        private Data.DataSet1 finalizePublishersDataSet;
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton selectAllButton;

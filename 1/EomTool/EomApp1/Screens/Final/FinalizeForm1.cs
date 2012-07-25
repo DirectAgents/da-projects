@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows.Forms;
 using EomApp1.Services;
 using EomApp1.UI;
+using DAgents.Common;
+using EomAppCommon;
 
 namespace EomApp1.Screens.Final
 {
@@ -19,6 +21,10 @@ namespace EomApp1.Screens.Final
         public FinalizeForm1()
         {
             InitializeComponent();
+
+            // Security
+            this.finalizedRevenueButton.Visible = WindowsIdentityHelper.IsCurrentUserInGroup(EomAppSettings.AdminGroupName);
+
             this.numPubCols1 = new[] { NumPubsToFinalizeCol, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly };
             this.numPubCols2 = new[] { NumPubsToVerifyCol, dataGridViewLinkColumn1, dataGridViewLinkColumn2, dataGridViewLinkColumn3, dataGridViewLinkColumn4 };
             this.pubColIndicies1 = this.numPubCols1.Select(c => c.Index).ToArray();
@@ -37,7 +43,6 @@ namespace EomApp1.Screens.Final
 
         private void FinalizeForm1_Load(object sender, EventArgs e)
         {
-            splitContainer1.Panel1Collapsed = true;
             accountManagerTableAdapter.Fill(accountManagersForFinalDataSet1.AccountManager);
             FillCampaigns();
         }
@@ -81,7 +86,6 @@ namespace EomApp1.Screens.Final
             }
         }
 
-        // Verify Button
         private void CellClickBottom(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -208,18 +212,6 @@ namespace EomApp1.Screens.Final
             db.SubmitChanges();
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            if (splitContainer1.Panel1Collapsed)
-            {
-                splitContainer1.Panel1Collapsed = false;
-            }
-            else
-            {
-                splitContainer1.Panel1Collapsed = true;
-            }
-        }
-
         string selectedAM
         {
             get
@@ -321,6 +313,11 @@ namespace EomApp1.Screens.Final
                     e.Value = "";
                 }
             }
+        }
+
+        private void finalizedRevenueButton_Click(object sender, EventArgs e)
+        {
+            MaskedDialog.ShowDialog(this, new Screens.Final.Forms.VerifiedRevenueForm(this));
         }
     }
 }

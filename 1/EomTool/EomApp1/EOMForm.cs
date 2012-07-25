@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using DAgents.Common;
 using DAgents.Synch;
 using EomApp1.UI;
+using EomAppCommon;
 
 namespace EomApp1
 {
@@ -13,6 +14,8 @@ namespace EomApp1
         {
             InitializeComponent();
 
+            // Security
+            this.accountingToolStripMenuItem.Enabled = WindowsIdentityHelper.IsCurrentUserInGroup(EomAppSettings.AdminGroupName);
         }
 
         private void finalizedCampaignsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -301,6 +304,12 @@ namespace EomApp1
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("hello");
+        }
+
+        private void finalizedRevenueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var a = new Screens.Final.Forms.VerifiedRevenueForm();
+            a.Show();
         }
 
         // add Dirty bit to XmlDoc table

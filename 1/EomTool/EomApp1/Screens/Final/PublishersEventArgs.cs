@@ -7,10 +7,10 @@ namespace EomApp1.Screens.Final
 {
     public class PublishersEventArgs : EventArgs
     {
-        public PublishersEventArgs(List<int> affIDs)
+        public PublishersEventArgs(int[] affIDs)
         {
             this.AffIds = affIDs;
         }
-        public List<int> AffIds { get; set; }
+        public int[] AffIds { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 using System.Linq;
+using System.Collections;
 
 namespace EomApp1.Screens.Final.Controls
 {
@@ -27,13 +28,14 @@ namespace EomApp1.Screens.Final.Controls
 
         private void SelectionChanged(object sender, EventArgs e)
         {
+
             this.affIDs.Clear();
             DataGridViewSelectedRowCollection selectedRows = this.grid.SelectedRows;
 
             foreach (DataGridViewRow row in selectedRows)
             {
                 var rowView = row.DataBoundItem as DataRowView;
-                affIDs.Add(((Data.PublishersDataSet.PublishersRow)rowView.Row).AffId);
+                affIDs.Add(((Data.DataSet1.PublishersRow)rowView.Row).AffId);
             }
 
             actionButton.Enabled = (grid.SelectedRows.Count > 0);
@@ -56,7 +58,7 @@ namespace EomApp1.Screens.Final.Controls
         {
             if (PublishersActionInvoked != null)
             {
-                PublishersActionInvoked(this, new PublishersEventArgs(affIDs));
+                PublishersActionInvoked(this, new PublishersEventArgs(affIDs.ToArray()));
             }
         }
 
@@ -76,7 +78,7 @@ namespace EomApp1.Screens.Final.Controls
             }
         }
 
-        public Data.PublishersDataSet PublishersDataSet
+        public Data.DataSet1 PublishersDataSet
         {
             get { return this.finalizePublishersDataSet; }
         }
@@ -107,7 +109,7 @@ namespace EomApp1.Screens.Final.Controls
             foreach (DataGridViewRow row in rows)
             {
                 var rowView = row.DataBoundItem as DataRowView;
-                int affID = ((Data.PublishersDataSet.PublishersRow)rowView.Row).AffId;
+                int affID = ((Data.DataSet1.PublishersRow)rowView.Row).AffId;
                 if (affIDsBeforeFilter.Contains(affID))
                     row.Selected = true;
             }

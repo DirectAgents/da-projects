@@ -76,14 +76,14 @@ namespace EomApp1.Screens.Final.Forms
             this.Text = string.Format(WindowTitleFormat, campaignName, advertiserName);
         }
 
-        public Data.PublishersDataSet.PublishersDataTable PublishersToFinalize
+        public Data.DataSet1 PublishersToFinalize
         {
-            get { return this.finalizePublishersView.PublishersDataSet.Publishers; } 
+            get { return this.finalizePublishersView.PublishersDataSet; } 
         }
 
-        public Data.PublishersDataSet.PublishersDataTable PublishersToVerify
+        public Data.DataSet1 PublishersToVerify
         {
-            get { return this.verifyPublishersView.PublishersDataSet.Publishers; }
+            get { return this.verifyPublishersView.PublishersDataSet; }
         }
 
         public void RefreshCampaigns()

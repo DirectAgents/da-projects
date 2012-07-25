@@ -40,8 +40,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.finalizedRevenueButton = new System.Windows.Forms.LinkLabel();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button3 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -94,9 +94,6 @@
             this.dataGridViewTextBoxColumn16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.accountManagerTableAdapter = new EomApp1.Screens.Final.AccountManagersForFinalDataSet1TableAdapters.AccountManagerTableAdapter();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -110,26 +107,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.BackColor = System.Drawing.Color.Black;
-            this.splitContainer1.Panel1.ForeColor = System.Drawing.Color.Lime;
-            this.splitContainer1.Panel1Collapsed = true;
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1084, 662);
-            this.splitContainer1.SplitterDistance = 281;
-            this.splitContainer1.TabIndex = 0;
-            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -140,6 +117,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.AutoScroll = true;
+            this.splitContainer2.Panel1.Controls.Add(this.finalizedRevenueButton);
             this.splitContainer2.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer2.Panel1.Controls.Add(this.button3);
             this.splitContainer2.Panel1.Controls.Add(this.comboBox1);
@@ -151,13 +129,28 @@
             this.splitContainer2.Panel2.AutoScroll = true;
             this.splitContainer2.Panel2.Controls.Add(this.dataGridView1);
             this.splitContainer2.Size = new System.Drawing.Size(1084, 662);
-            this.splitContainer2.SplitterDistance = 309;
+            this.splitContainer2.SplitterDistance = 307;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // finalizedRevenueButton
+            // 
+            this.finalizedRevenueButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.finalizedRevenueButton.AutoSize = true;
+            this.finalizedRevenueButton.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.finalizedRevenueButton.Location = new System.Drawing.Point(815, 9);
+            this.finalizedRevenueButton.Name = "finalizedRevenueButton";
+            this.finalizedRevenueButton.Size = new System.Drawing.Size(89, 13);
+            this.finalizedRevenueButton.TabIndex = 2;
+            this.finalizedRevenueButton.TabStop = true;
+            this.finalizedRevenueButton.Text = "Verified Revenue";
+            this.finalizedRevenueButton.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.finalizedRevenueButton.Click += new System.EventHandler(this.finalizedRevenueButton_Click);
             // 
             // checkBox1
             // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(938, 6);
+            this.checkBox1.Location = new System.Drawing.Point(921, 7);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(75, 17);
             this.checkBox1.TabIndex = 6;
@@ -168,7 +161,7 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(1019, 3);
+            this.button3.Location = new System.Drawing.Point(1019, 4);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(53, 21);
             this.button3.TabIndex = 5;
@@ -233,12 +226,12 @@
             this.NumAffiliatesNet30,
             this.NumAffiliatesNetBiWeekly});
             this.campaignDataGridView.DataSource = this.campaignBindingSource;
-            this.campaignDataGridView.Location = new System.Drawing.Point(0, 27);
+            this.campaignDataGridView.Location = new System.Drawing.Point(0, 29);
             this.campaignDataGridView.Name = "campaignDataGridView";
             this.campaignDataGridView.ReadOnly = true;
             this.campaignDataGridView.RowHeadersWidth = 30;
             this.campaignDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.campaignDataGridView.Size = new System.Drawing.Size(1084, 282);
+            this.campaignDataGridView.Size = new System.Drawing.Size(1084, 278);
             this.campaignDataGridView.TabIndex = 0;
             this.campaignDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellClickTop);
             this.campaignDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.campaignDataGridView_CellDoubleClick);
@@ -416,7 +409,7 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 30;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1084, 349);
+            this.dataGridView1.Size = new System.Drawing.Size(1084, 351);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellClickBottom);
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.FormatCell);
@@ -680,14 +673,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 662);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.splitContainer2);
             this.Name = "FinalizeForm1";
             this.Text = "Campaign Status";
             this.TransparencyKey = System.Drawing.Color.Red;
             this.Load += new System.EventHandler(this.FinalizeForm1_Load);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -706,7 +696,6 @@
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.DataGridView campaignDataGridView;
         private System.Windows.Forms.BindingSource campaignBindingSource;
@@ -760,5 +749,6 @@
         private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn2;
         private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn3;
         private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn4;
+        private System.Windows.Forms.LinkLabel finalizedRevenueButton;
     }
 }
