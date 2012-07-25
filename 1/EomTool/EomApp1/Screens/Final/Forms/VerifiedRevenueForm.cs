@@ -28,14 +28,15 @@ namespace EomApp1.Screens.Final.Forms
 
         private void campaignsBindingSource_CurrentChanged(object sender, EventArgs e)
         {
-            (new CampaignsModel()).FillCampaignPublishers(this.data, this.SelectedCampaignPid);
+            if (this.SelectedCampaignPid != null)
+                (new CampaignsModel()).FillCampaignPublishers(this.data, this.SelectedCampaignPid.Value);
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex != FinalizeCampaignButtonCol.Index) return;
 
-            (new CampaignsModel()).UpdateCampaignItemStatus(this.data, this.SelectedCampaignPid);
+            (new CampaignsModel()).UpdateCampaignItemStatus(this.data, this.SelectedCampaignPid.Value);
             ReFill();
         }
 
@@ -43,7 +44,7 @@ namespace EomApp1.Screens.Final.Forms
         {
             if (e.RowIndex < 0 || e.ColumnIndex != UnfinalizeCampaignPublisherButtonCol.Index) return;
 
-            new PublishersModel(this.SelectedCampaignPid).ChangePublisherItems(CampaignStatusId.Verified, CampaignStatusId.Default, this.SelectedPublisherAffId);
+            new PublishersModel(this.SelectedCampaignPid.Value).ChangePublisherItems(CampaignStatusId.Verified, CampaignStatusId.Default, this.SelectedPublisherAffId.Value);
             ReFill();
         }
 
@@ -57,14 +58,26 @@ namespace EomApp1.Screens.Final.Forms
             }
         }
 
-        private int SelectedCampaignPid
+        private int? SelectedCampaignPid
         {
-            get { return ((Data.DataSet1.CampaignsRow)((DataRowView)campaignsBindingSource.Current).Row).PID; }
+            get
+            {
+                if (campaignsBindingSource.Current == null)
+                    return null;
+                else
+                    return ((Data.DataSet1.CampaignsRow)((DataRowView)campaignsBindingSource.Current).Row).PID;
+            }
         }
 
-        private int SelectedPublisherAffId
+        private int? SelectedPublisherAffId
         {
-            get { return ((Data.DataSet1.PublishersRow)((DataRowView)publishersBindingSource.Current).Row).AffId; }
+            get
+            {
+                if (publishersBindingSource.Current == null)
+                    return null;
+                else
+                    return ((Data.DataSet1.PublishersRow)((DataRowView)publishersBindingSource.Current).Row).AffId;
+            }
         }
     }
 }
