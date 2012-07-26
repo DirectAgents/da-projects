@@ -29,14 +29,14 @@ namespace EomApp1.Screens.Final.Forms
         private void campaignsBindingSource_CurrentChanged(object sender, EventArgs e)
         {
             if (this.SelectedCampaignPid != null)
-                (new CampaignsModel()).FillCampaignPublishers(this.data, this.SelectedCampaignPid.Value);
+                (new CampaignsModel()).FillCampaignPublishers(this.data, this.SelectedCampaignPid.Value, CampaignStatusId.Verified);
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex != FinalizeCampaignButtonCol.Index) return;
 
-            (new CampaignsModel()).UpdateCampaignItemStatus(this.data, this.SelectedCampaignPid.Value);
+            (new CampaignsModel()).UpdateCampaignItemStatus(this.data, this.SelectedCampaignPid.Value, CampaignStatusId.Default);
             ReFill();
         }
 

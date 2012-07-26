@@ -14,7 +14,6 @@ namespace EomApp1.UI
             this.ControlAdded += new ControlEventHandler(FormBase_ControlAdded);
             this.Deactivate += new EventHandler(AppFormBase_Deactivate);
             this.FormClosing += new FormClosingEventHandler(AppFormBase_FormClosing);
-            //this.Opacity = 0.1d;
         }
 
         public string SavePropsFileName

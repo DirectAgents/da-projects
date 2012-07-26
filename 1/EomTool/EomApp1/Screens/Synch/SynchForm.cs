@@ -159,7 +159,7 @@ namespace EomApp1.Screens.Synch
         {
             if (ShouldUpdateCampaigns)
             {
-                UpdateCampaigns();
+                //UpdateCampaigns();
             }
             if (ShouldUpdateAMADMappings)
             {
@@ -221,12 +221,6 @@ namespace EomApp1.Screens.Synch
 
                 Thread.Sleep(interval - elapsed);
             }
-        }
-
-        private void UpdateCampaigns()
-        {
-            Log("updating campaigns from DirectTrack..");
-            SynchUtility.SynchCampaignListFromDirectTrackToDatabase((ILogger)this);
         }
 
         private void UpdateAMADMappings()

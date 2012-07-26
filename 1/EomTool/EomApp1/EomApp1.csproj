@@ -509,6 +509,22 @@
       <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Screens\Security\Data\DataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Security\Forms\SecuritySetupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Security\Forms\SecuritySetupForm.Designer.cs">
+      <DependentUpon>SecuritySetupForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Security\Models\EomToolSecurity.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EomToolSecurity.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Screens\SqlExecute.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -827,6 +843,9 @@
     <EmbeddedResource Include="Screens\Final\Forms\VerifiedRevenueForm.resx">
       <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Security\Forms\SecuritySetupForm.resx">
+      <DependentUpon>SecuritySetupForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Synch\AddAffiliateSetupForm.resx">
       <DependentUpon>AddAffiliateSetupForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -843,7 +862,6 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>AdvertiserModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="ClassDiagram1.cd" />
     <None Include="DADatabaseR1DataSet.xsc">
       <DependentUpon>DADatabaseR1DataSet.xsd</DependentUpon>
     </None>
@@ -868,6 +886,10 @@
     </None>
     <None Include="EOMTool-ClickOnce-Manifests-5Years.pfx" />
     <None Include="EOMTool-ClickOnce-Manifests.pfx" />
+    <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.EomToolSecurityEntities.datasource" />
+    <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Group.datasource" />
+    <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Permission.datasource" />
+    <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Role.datasource" />
     <None Include="Properties\DataSources\EomApp1.Screens.Synch.Controls.AffiliateItemContainer.datasource" />
     <None Include="Screens\AB\Data\DAMain1DataSet.xsc">
       <DependentUpon>DAMain1DataSet.xsd</DependentUpon>
@@ -1245,6 +1267,21 @@
     <None Include="Screens\PubRep1\Data\PublisherReportDataSet1.xss">
       <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
     </None>
+    <EntityDeploy Include="Screens\Security\Models\EomToolSecurity.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EomToolSecurity.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Screens\Security\Data\DataSet1.xsc">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\Security\Data\DataSet1.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Screens\Security\Data\DataSet1.xss">
+      <DependentUpon>DataSet1.xsd</DependentUpon>
+    </None>
     <None Include="Screens\Settings\SettingsDataSet1.xsc">
       <DependentUpon>SettingsDataSet1.xsd</DependentUpon>
     </None>
@@ -1522,6 +1559,7 @@
     <Content Include="Screens\ETL\Xsl\showxml.xslt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Screens\Security\Models\EomToolSecurity.edmx.sql" />
     <None Include="Service References\Cake.WebServices._4.Reports\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

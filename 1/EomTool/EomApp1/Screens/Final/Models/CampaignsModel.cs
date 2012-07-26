@@ -42,7 +42,7 @@ namespace EomApp1.Screens.Final.Models
             }
         }
 
-        public void UpdateCampaignItemStatus(Data.DataSet1 data, int pid)
+        public void UpdateCampaignItemStatus(Data.DataSet1 data, int pid, CampaignStatusId status)
         {
             var query = from c in data.CampaignItems
                         where c.PID == pid
@@ -56,16 +56,16 @@ namespace EomApp1.Screens.Final.Models
                             where itemIDs.Contains(c.id)
                             select c;
 
-                items.ToList().ForEach(i => i.campaign_status_id = (int)CampaignStatusId.Default);
+                items.ToList().ForEach(i => i.campaign_status_id = (int)status);
 
                 db.SaveChanges();
             }
         }
 
-        public void FillCampaignPublishers(Data.DataSet1 data, int pid)
+        public void FillCampaignPublishers(Data.DataSet1 data, int pid, CampaignStatusId status)
         {
             var publisherModel = new PublishersModel(pid);
-            publisherModel.FillPublishers(data, CampaignStatusId.Verified);
+            publisherModel.FillPublishers(data, status);
         }
     }
 }

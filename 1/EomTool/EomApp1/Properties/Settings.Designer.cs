@@ -271,5 +271,15 @@ namespace EomApp1.Properties {
                 return ((string)(this["zDADatabaseJuly2012TestConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=EomToolSecurity;Integrated Security=True")]
+        public string EomToolSecurityConnectionString {
+            get {
+                return ((string)(this["EomToolSecurityConnectionString"]));
+            }
+        }
     }
 }

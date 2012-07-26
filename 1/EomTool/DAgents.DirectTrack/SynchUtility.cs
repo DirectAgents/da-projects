@@ -265,35 +265,6 @@ namespace DAgents.Synch
         /// 
         /// </summary>
         /// <param name="logger"></param>
-        public static void SynchCampaignListFromDirectTrackToDatabase(ILogger logger)
-        {
-            logger.Log("pulling campaign list");
-            var campaignsFromDT = CampaignList.PullFromDirectTrack();
-            //var campaignsFromDB = db.CampaignEntities;
-            ///var campaignsToCreate = campaignsFromDT.CampaignItems.Except(campaignsFromDB, new EqualityComparer<CampaignItem>())
-            using (SynchDBDataContext db = new SynchDBDataContext(true))
-            {
-                foreach (var campaignItem in campaignsFromDT.CampaignItems)
-                {
-                    //logger.Log("upserting campaign with pid " + campaignItem.CampaignId);
-                    //try
-                    //{
-                    //    CampaignEntity.UpdateName(db, campaignItem);
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //    logger.LogError("problem updating campaign " + campaignItem + ": " + e.Message);
-                    //}
-                }
-                //logger.Log("submitting changes...");
-                //db.SubmitChanges();
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logger"></param>
         public static void SynchCampaignListFromDirectTrackToDatabaseWithPID(ILogger logger, int pid)
         {
             logger.Log("pulling campaign details");

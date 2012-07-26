@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EomApp.Models", "..\EomTool
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeMarketing", "..\EomTool\CakeMarketing\CakeMarketing.csproj", "{268E422D-0ED9-4922-AE6E-775534A8EDAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EomToolDatabaseUpdater", "..\EomTool\DatabaseUpdater\EomToolDatabaseUpdater\EomToolDatabaseUpdater.csproj", "{9C62966A-7D38-46A0-8801-8B3BC29FE636}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug - Client Portal|Any CPU = Debug - Client Portal|Any CPU
@@ -436,6 +438,41 @@ Global
 		{268E422D-0ED9-4922-AE6E-775534A8EDAC}.Try1 Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{268E422D-0ED9-4922-AE6E-775534A8EDAC}.Try1 Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{268E422D-0ED9-4922-AE6E-775534A8EDAC}.Try1 Debug|x86.ActiveCfg = Debug|Any CPU
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Client Portal|Any CPU.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Client Portal|Mixed Platforms.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Client Portal|Mixed Platforms.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Client Portal|x86.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Client Portal|x86.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - DADatabaseService|Any CPU.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - DADatabaseService|Mixed Platforms.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - DADatabaseService|Mixed Platforms.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - DADatabaseService|x86.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - DADatabaseService|x86.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Direct Track|Any CPU.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Direct Track|Mixed Platforms.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Direct Track|Mixed Platforms.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Direct Track|x86.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - Direct Track|x86.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - z|Any CPU.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - z|Mixed Platforms.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - z|Mixed Platforms.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - z|x86.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug - z|x86.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug|x86.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Debug|x86.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Release|Any CPU.ActiveCfg = Release|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Release|Mixed Platforms.Build.0 = Release|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Release|x86.ActiveCfg = Release|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Release|x86.Build.0 = Release|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Try1 Debug|Any CPU.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Try1 Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Try1 Debug|Mixed Platforms.Build.0 = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Try1 Debug|x86.ActiveCfg = Debug|x86
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636}.Try1 Debug|x86.Build.0 = Debug|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -448,6 +485,7 @@ Global
 		{C96A7A6B-F15A-4C83-B871-0DF48E798C5F} = {E4D73AA0-8CFD-46A0-BE36-3E34D01CEC05}
 		{B9F971EA-5F76-474C-B3DC-E00FD3760967} = {E4D73AA0-8CFD-46A0-BE36-3E34D01CEC05}
 		{268E422D-0ED9-4922-AE6E-775534A8EDAC} = {E4D73AA0-8CFD-46A0-BE36-3E34D01CEC05}
+		{9C62966A-7D38-46A0-8801-8B3BC29FE636} = {E4D73AA0-8CFD-46A0-BE36-3E34D01CEC05}
 		{AC153EBD-4D65-4B9D-A812-65592DD49508} = {B63CA144-D8E4-4553-BDF6-8268EB9467E7}
 		{87AEC306-A7EC-4F3E-925A-59AB736E60D4} = {B63CA144-D8E4-4553-BDF6-8268EB9467E7}
 		{590BB4FB-CBF2-496C-B408-5D8C1C54CD5F} = {B63CA144-D8E4-4553-BDF6-8268EB9467E7}

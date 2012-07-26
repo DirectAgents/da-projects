@@ -1,6 +1,7 @@
 ﻿using System.Security.Principal;
 using System.Linq;
 using System.Collections.Generic;
+
 namespace DAgents.Common
 {
     public class WindowsIdentityHelper 
@@ -26,7 +27,8 @@ namespace DAgents.Common
             get
             {
                 if (_CurrentUsersGroups.Count == 0)
-                    _CurrentUsersGroups = WindowsIdentity.GetCurrent().Groups.Select(g => ((IdentityReference)g).Translate(typeof(NTAccount)).Value.ToUpper()).ToList();
+                    _CurrentUsersGroups = WindowsIdentity.GetCurrent().Groups.Select(g => ((IdentityReference)g).Translate(typeof(NTAccount)).Value.ToUpper())
+                        .ToList();
 
                 return _CurrentUsersGroups;
             }
