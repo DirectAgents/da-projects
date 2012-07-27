@@ -394,6 +394,12 @@ namespace EomApp1.Screens.Final {
             
             private global::System.Data.DataColumn columnNumAffiliatesNetBiWeekly;
             
+            private global::System.Data.DataColumn columnRevDefault;
+            
+            private global::System.Data.DataColumn columnRevFinalized;
+            
+            private global::System.Data.DataColumn columnRevVerified;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CampaignDataTable() {
@@ -581,6 +587,30 @@ namespace EomApp1.Screens.Final {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RevDefaultColumn {
+                get {
+                    return this.columnRevDefault;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RevFinalizedColumn {
+                get {
+                    return this.columnRevFinalized;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RevVerifiedColumn {
+                get {
+                    return this.columnRevVerified;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -634,7 +664,10 @@ namespace EomApp1.Screens.Final {
                         int NumAffiliatesNet7, 
                         int NumAffiliatesNet15, 
                         int NumAffiliatesNet30, 
-                        int NumAffiliatesNetBiWeekly) {
+                        int NumAffiliatesNetBiWeekly, 
+                        decimal RevDefault, 
+                        decimal RevFinalized, 
+                        decimal RevVerified) {
                 CampaignRow rowCampaignRow = ((CampaignRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -655,7 +688,10 @@ namespace EomApp1.Screens.Final {
                         NumAffiliatesNet7,
                         NumAffiliatesNet15,
                         NumAffiliatesNet30,
-                        NumAffiliatesNetBiWeekly};
+                        NumAffiliatesNetBiWeekly,
+                        RevDefault,
+                        RevFinalized,
+                        RevVerified};
                 rowCampaignRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowCampaignRow);
                 return rowCampaignRow;
@@ -704,6 +740,9 @@ namespace EomApp1.Screens.Final {
                 this.columnNumAffiliatesNet15 = base.Columns["NumAffiliatesNet15"];
                 this.columnNumAffiliatesNet30 = base.Columns["NumAffiliatesNet30"];
                 this.columnNumAffiliatesNetBiWeekly = base.Columns["NumAffiliatesNetBiWeekly"];
+                this.columnRevDefault = base.Columns["RevDefault"];
+                this.columnRevFinalized = base.Columns["RevFinalized"];
+                this.columnRevVerified = base.Columns["RevVerified"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -747,6 +786,12 @@ namespace EomApp1.Screens.Final {
                 base.Columns.Add(this.columnNumAffiliatesNet30);
                 this.columnNumAffiliatesNetBiWeekly = new global::System.Data.DataColumn("NumAffiliatesNetBiWeekly", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNumAffiliatesNetBiWeekly);
+                this.columnRevDefault = new global::System.Data.DataColumn("RevDefault", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRevDefault);
+                this.columnRevFinalized = new global::System.Data.DataColumn("RevFinalized", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRevFinalized);
+                this.columnRevVerified = new global::System.Data.DataColumn("RevVerified", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRevVerified);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnid}, true));
                 this.columnid.AutoIncrement = true;
@@ -778,6 +823,9 @@ namespace EomApp1.Screens.Final {
                 this.columnNumAffiliatesNet15.ReadOnly = true;
                 this.columnNumAffiliatesNet30.ReadOnly = true;
                 this.columnNumAffiliatesNetBiWeekly.ReadOnly = true;
+                this.columnRevDefault.ReadOnly = true;
+                this.columnRevFinalized.ReadOnly = true;
+                this.columnRevVerified.ReadOnly = true;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1773,6 +1821,54 @@ namespace EomApp1.Screens.Final {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal RevDefault {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableCampaign.RevDefaultColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RevDefault\' in table \'Campaign\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaign.RevDefaultColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal RevFinalized {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableCampaign.RevFinalizedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RevFinalized\' in table \'Campaign\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaign.RevFinalizedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal RevVerified {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableCampaign.RevVerifiedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RevVerified\' in table \'Campaign\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaign.RevVerifiedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsmodifiedNull() {
                 return this.IsNull(this.tableCampaign.modifiedColumn);
             }
@@ -1901,6 +1997,42 @@ namespace EomApp1.Screens.Final {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetNumAffiliatesNetBiWeeklyNull() {
                 this[this.tableCampaign.NumAffiliatesNetBiWeeklyColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRevDefaultNull() {
+                return this.IsNull(this.tableCampaign.RevDefaultColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRevDefaultNull() {
+                this[this.tableCampaign.RevDefaultColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRevFinalizedNull() {
+                return this.IsNull(this.tableCampaign.RevFinalizedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRevFinalizedNull() {
+                this[this.tableCampaign.RevFinalizedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRevVerifiedNull() {
+                return this.IsNull(this.tableCampaign.RevVerifiedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRevVerifiedNull() {
+                this[this.tableCampaign.RevVerifiedColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2285,6 +2417,9 @@ namespace EomApp1.Screens.Final.FinalizeDataSet1TableAdapters {
             tableMapping.ColumnMappings.Add("NumAffiliatesNet15", "NumAffiliatesNet15");
             tableMapping.ColumnMappings.Add("NumAffiliatesNet30", "NumAffiliatesNet30");
             tableMapping.ColumnMappings.Add("NumAffiliatesNetBiWeekly", "NumAffiliatesNetBiWeekly");
+            tableMapping.ColumnMappings.Add("RevDefault", "RevDefault");
+            tableMapping.ColumnMappings.Add("RevFinalized", "RevFinalized");
+            tableMapping.ColumnMappings.Add("RevVerified", "RevVerified");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -2303,67 +2438,76 @@ namespace EomApp1.Screens.Final.FinalizeDataSet1TableAdapters {
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modifie" +
                 "d, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Cu" +
-                "rr, \r\n                         SUM(Item.total_revenue) AS Revenue, CampaignStatu" +
-                "s.name AS Status, LatestCampaignNote.note AS Note, CampaignStatus_1.name AS Item" +
-                "CampaignStatus, \r\n                         COUNT(DISTINCT Item.affid) AS NumAffi" +
-                "liates, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 1 THEN Item.affid EL" +
-                "SE NULL END) AS NumAffiliatesNet7, \r\n                         COUNT(DISTINCT CAS" +
-                "E Affiliate.net_term_type_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumAffilia" +
-                "tesNet15, \r\n                         COUNT(DISTINCT CASE Affiliate.net_term_type" +
-                "_id WHEN 3 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet30, \r\n             " +
-                "            COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 4 THEN Item.affi" +
-                "d ELSE NULL END) AS NumAffiliatesNetBiWeekly, \r\n                         COUNT(D" +
-                "ISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS Nu" +
-                "mDefault, \r\n                         COUNT(DISTINCT CASE Item.campaign_status_id" +
-                " WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, \r\n                      " +
-                "   COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL " +
-                "END) AS NumVerified\r\nFROM            Campaign INNER JOIN\r\n                      " +
-                "   AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN\r" +
-                "\n                         Advertiser ON Campaign.advertiser_id = Advertiser.id I" +
-                "NNER JOIN\r\n                         CampaignStatus ON Campaign.campaign_status_i" +
-                "d = CampaignStatus.id INNER JOIN\r\n                         Item ON Campaign.pid " +
-                "= Item.pid INNER JOIN\r\n                         Currency ON Item.revenue_currenc" +
-                "y_id = Currency.id INNER JOIN\r\n                         CampaignStatus AS Campai" +
-                "gnStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN\r\n   " +
-                "                      LatestCampaignNote ON Campaign.pid = LatestCampaignNote.ca" +
-                "mpaign_id INNER JOIN\r\n                         Affiliate ON Item.affid = Affilia" +
-                "te.affid\r\nGROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.m" +
-                "odified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.nam" +
-                "e, \r\n                         LatestCampaignNote.note, CampaignStatus_1.name\r\nOR" +
-                "DER BY Campaign.campaign_name";
+                "rr, \r\n                         SUM(Item.total_revenue) AS Revenue, SUM(CASE Item" +
+                ".campaign_status_id WHEN 1 THEN Item.total_revenue ELSE 0 END) AS RevDefault, \r\n" +
+                "                         SUM(CASE Item.campaign_status_id WHEN 2 THEN Item.total" +
+                "_revenue ELSE 0 END) AS RevFinalized, \r\n                         SUM(CASE Item.c" +
+                "ampaign_status_id WHEN 4 THEN Item.total_revenue ELSE 0 END) AS RevVerified, Cam" +
+                "paignStatus.name AS Status, \r\n                         LatestCampaignNote.note A" +
+                "S Note, CampaignStatus_1.name AS ItemCampaignStatus, COUNT(DISTINCT Item.affid) " +
+                "AS NumAffiliates, \r\n                         COUNT(DISTINCT CASE Affiliate.net_t" +
+                "erm_type_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet7, \r\n      " +
+                "                   COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 2 THEN It" +
+                "em.affid ELSE NULL END) AS NumAffiliatesNet15, \r\n                         COUNT(" +
+                "DISTINCT CASE Affiliate.net_term_type_id WHEN 3 THEN Item.affid ELSE NULL END) A" +
+                "S NumAffiliatesNet30, \r\n                         COUNT(DISTINCT CASE Affiliate.n" +
+                "et_term_type_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumAffiliatesNetBiWeekl" +
+                "y, \r\n                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1" +
+                " THEN Item.affid ELSE NULL END) AS NumDefault, \r\n                         COUNT(" +
+                "DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS N" +
+                "umFinalized, \r\n                         COUNT(DISTINCT CASE Item.campaign_status" +
+                "_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified\r\nFROM            Campai" +
+                "gn INNER JOIN\r\n                         AccountManager ON Campaign.account_manag" +
+                "er_id = AccountManager.id INNER JOIN\r\n                         Advertiser ON Cam" +
+                "paign.advertiser_id = Advertiser.id INNER JOIN\r\n                         Campaig" +
+                "nStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN\r\n         " +
+                "                Item ON Campaign.pid = Item.pid INNER JOIN\r\n                    " +
+                "     Currency ON Item.revenue_currency_id = Currency.id INNER JOIN\r\n            " +
+                "             CampaignStatus AS CampaignStatus_1 ON Item.campaign_status_id = Cam" +
+                "paignStatus_1.id LEFT OUTER JOIN\r\n                         LatestCampaignNote ON" +
+                " Campaign.pid = LatestCampaignNote.campaign_id INNER JOIN\r\n                     " +
+                "    Affiliate ON Item.affid = Affiliate.affid\r\nGROUP BY Campaign.id, Campaign.pi" +
+                "d, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.na" +
+                "me, Currency.name, CampaignStatus.name, \r\n                         LatestCampaig" +
+                "nNote.note, CampaignStatus_1.name\r\nORDER BY Campaign.campaign_name";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
             this._commandCollection[1].CommandText = "SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modifie" +
                 "d, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Cu" +
-                "rr, \r\n                         SUM(Item.total_revenue) AS Revenue, CampaignStatu" +
-                "s.name AS Status, LatestCampaignNote.note AS Note, CampaignStatus_1.name AS Item" +
-                "CampaignStatus, \r\n                         COUNT(DISTINCT Item.affid) AS NumAffi" +
-                "liates, COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 1 THEN Item.affid EL" +
-                "SE NULL END) AS NumAffiliatesNet7, \r\n                         COUNT(DISTINCT CAS" +
-                "E Affiliate.net_term_type_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumAffilia" +
-                "tesNet15, \r\n                         COUNT(DISTINCT CASE Affiliate.net_term_type" +
-                "_id WHEN 3 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet30, \r\n             " +
-                "            COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 4 THEN Item.affi" +
-                "d ELSE NULL END) AS NumAffiliatesNetBiWeekly, \r\n                         COUNT(D" +
-                "ISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS Nu" +
-                "mDefault, \r\n                         COUNT(DISTINCT CASE Item.campaign_status_id" +
-                " WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, \r\n                      " +
-                "   COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL " +
-                "END) AS NumVerified\r\nFROM            Campaign INNER JOIN\r\n                      " +
-                "   AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN\r" +
-                "\n                         Advertiser ON Campaign.advertiser_id = Advertiser.id I" +
-                "NNER JOIN\r\n                         CampaignStatus ON Campaign.campaign_status_i" +
-                "d = CampaignStatus.id INNER JOIN\r\n                         Item ON Campaign.pid " +
-                "= Item.pid INNER JOIN\r\n                         Currency ON Item.revenue_currenc" +
-                "y_id = Currency.id INNER JOIN\r\n                         CampaignStatus AS Campai" +
-                "gnStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN\r\n   " +
-                "                      LatestCampaignNote ON Campaign.pid = LatestCampaignNote.ca" +
-                "mpaign_id INNER JOIN\r\n                         Affiliate ON Item.affid = Affilia" +
-                "te.affid\r\nGROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.m" +
-                "odified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.nam" +
-                "e, \r\n                         LatestCampaignNote.note, CampaignStatus_1.name\r\nHA" +
-                "VING        (AccountManager.name = @1)\r\nORDER BY Campaign.campaign_name";
+                "rr, \r\n                         SUM(Item.total_revenue) AS Revenue, SUM(CASE Item" +
+                ".campaign_status_id WHEN 1 THEN Item.total_revenue ELSE 0 END) AS RevDefault, \r\n" +
+                "                         SUM(CASE Item.campaign_status_id WHEN 2 THEN Item.total" +
+                "_revenue ELSE 0 END) AS RevFinalized, \r\n                         SUM(CASE Item.c" +
+                "ampaign_status_id WHEN 4 THEN Item.total_revenue ELSE 0 END) AS RevVerified, Cam" +
+                "paignStatus.name AS Status, \r\n                         LatestCampaignNote.note A" +
+                "S Note, CampaignStatus_1.name AS ItemCampaignStatus, COUNT(DISTINCT Item.affid) " +
+                "AS NumAffiliates, \r\n                         COUNT(DISTINCT CASE Affiliate.net_t" +
+                "erm_type_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet7, \r\n      " +
+                "                   COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 2 THEN It" +
+                "em.affid ELSE NULL END) AS NumAffiliatesNet15, \r\n                         COUNT(" +
+                "DISTINCT CASE Affiliate.net_term_type_id WHEN 3 THEN Item.affid ELSE NULL END) A" +
+                "S NumAffiliatesNet30, \r\n                         COUNT(DISTINCT CASE Affiliate.n" +
+                "et_term_type_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumAffiliatesNetBiWeekl" +
+                "y, \r\n                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1" +
+                " THEN Item.affid ELSE NULL END) AS NumDefault, \r\n                         COUNT(" +
+                "DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS N" +
+                "umFinalized, \r\n                         COUNT(DISTINCT CASE Item.campaign_status" +
+                "_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified\r\nFROM            Campai" +
+                "gn INNER JOIN\r\n                         AccountManager ON Campaign.account_manag" +
+                "er_id = AccountManager.id INNER JOIN\r\n                         Advertiser ON Cam" +
+                "paign.advertiser_id = Advertiser.id INNER JOIN\r\n                         Campaig" +
+                "nStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN\r\n         " +
+                "                Item ON Campaign.pid = Item.pid INNER JOIN\r\n                    " +
+                "     Currency ON Item.revenue_currency_id = Currency.id INNER JOIN\r\n            " +
+                "             CampaignStatus AS CampaignStatus_1 ON Item.campaign_status_id = Cam" +
+                "paignStatus_1.id LEFT OUTER JOIN\r\n                         LatestCampaignNote ON" +
+                " Campaign.pid = LatestCampaignNote.campaign_id INNER JOIN\r\n                     " +
+                "    Affiliate ON Item.affid = Affiliate.affid\r\nGROUP BY Campaign.id, Campaign.pi" +
+                "d, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.na" +
+                "me, Currency.name, CampaignStatus.name, \r\n                         LatestCampaig" +
+                "nNote.note, CampaignStatus_1.name\r\nHAVING        (AccountManager.name = @1)\r\nORD" +
+                "ER BY Campaign.campaign_name";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@1", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "AM", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }

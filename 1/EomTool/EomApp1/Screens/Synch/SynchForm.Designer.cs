@@ -263,7 +263,6 @@
             // 
             // loggerBox1
             // 
-            this.loggerBox1.IgnoreItems = null;
             this.loggerBox1.Location = new System.Drawing.Point(12, 156);
             this.loggerBox1.Name = "loggerBox1";
             this.loggerBox1.ShowErrorMessages = true;

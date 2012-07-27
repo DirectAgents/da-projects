@@ -31,13 +31,6 @@ namespace EomApp1
             a.Show();
         }
 
-        // Accounting Currencies
-        private void namesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var a = new Screens.Advertiser.Advertisers();
-            a.Show();
-        }
-
         // Accounting PublisherReports
         private void publisherReportsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -45,6 +38,7 @@ namespace EomApp1
             a.Show();
         }
 
+        // Accounting Currencies
         private void currenciesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var a = new Screens.Accounting.Forms.CurrencyForm();

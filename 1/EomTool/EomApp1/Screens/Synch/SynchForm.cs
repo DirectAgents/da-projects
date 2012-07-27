@@ -16,7 +16,6 @@ namespace EomApp1.Screens.Synch
         public SynchForm()
         {
             InitializeComponent();
-            SetupLoggerBox();
             AddEvents();
             ApplySettings();
         }
@@ -60,13 +59,6 @@ namespace EomApp1.Screens.Synch
         private void SaveSettings()
         {
             Properties.Settings.Default.Save();
-        }
-
-        private void SetupLoggerBox()
-        {
-            loggerBox1.IgnoreItems = new List<Mainn.Controls.Logging.IgnoreItem>(new[] {
-                new IgnoreItem(MatchType.Contains, MessageType.Error, "(404)")
-            });
         }
 
         private void AddEvents()

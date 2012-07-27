@@ -7,7 +7,7 @@ namespace DAgents.Common
 {
     public static class SqlBatchUtil
     {
-        static readonly ILogger Logger = new ConsoleLogger();
+        static ILogger Logger = new ConsoleLogger();
 
         /// <summary>
         /// Uses default separator: "GO"
@@ -16,6 +16,17 @@ namespace DAgents.Common
         /// <param name="batch"></param>
         public static void Execute(string connectionString, string batch)
         {
+            Run(connectionString, batch, "GO");
+        }
+
+        /// <summary>
+        /// Uses default separator: "GO"
+        /// </summary>
+        /// <param name="connectionString"></param>
+        /// <param name="batch"></param>
+        public static void Execute(string connectionString, string batch, ILogger logger)
+        {
+            Logger = logger;
             Run(connectionString, batch, "GO");
         }
 
@@ -88,7 +99,20 @@ namespace DAgents.Common
 
                 Logger.Log("Executing SQL" + sql);
 
-                int rc = cmd.ExecuteNonQuery();
+                int rc = 0;
+
+                try
+                {
+                    rc = cmd.ExecuteNonQuery();
+                }
+                catch (System.Exception e)
+                {
+                    int len = 100;
+                    if (sql.Length < 100)
+                        len = sql.Length;
+                    Logger.LogError("ERROR: [" + sql.Substring(0, len) + "...]" + " - " + e.Message);
+                    continue;
+                }
 
                 Logger.Log("Execution result is " + rc);
             }

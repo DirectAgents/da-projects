@@ -34,16 +34,6 @@ namespace Mainn.Controls.Logging
             set;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<IgnoreItem> IgnoreItems
-        {
-            get { return _ignoreErrorMessageIfContains; }
-            set { _ignoreErrorMessageIfContains = value; }
-        }
-        List<IgnoreItem> _ignoreErrorMessageIfContains = new List<IgnoreItem>();
-
         #region ILogger Members
 
         public void Log(string message)
@@ -98,31 +88,6 @@ namespace Mainn.Controls.Logging
                 secondaryRichTextBox.AppendText(message + "\n");
                 secondaryRichTextBox.ScrollToCaret();
             }
-        }
-
-        private bool ShouldIgnore(string message, MessageType messageType)
-        {
-            Predicate<IgnoreItem> predicate = ignoreItem =>
-            {
-                bool result = false;
-                if (ignoreItem.MessageType == messageType)
-                {
-                    switch (ignoreItem.MatchType)
-                    {
-                        case MatchType.Equals:
-                            result = ignoreItem.Value == message;
-                            break;
-                        case MatchType.Contains:
-                            result = message.Contains(ignoreItem.Value);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                return result;
-            };
-            var shouldIgnore = IgnoreItems.Exists(predicate);
-            return shouldIgnore;
         }
 
         #endregion

@@ -122,49 +122,18 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Screens\AB\Data\ABItem.cs" />
-    <Compile Include="Screens\AB\Data\Advertiser.cs" />
-    <Compile Include="Screens\AB\Data\DAMain1DataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DAMain1DataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\AB\EntityModel\Advertiser.cs" />
-    <Compile Include="Screens\AB\EntityModel\AdvertiserModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AdvertiserModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\AB\Forms\AB.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\AB\Forms\AB.Designer.cs">
-      <DependentUpon>AB.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\AB\Forms\AdvertiserStartingBalances.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\AB\Forms\AdvertiserStartingBalances.Designer.cs">
-      <DependentUpon>AdvertiserStartingBalances.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\AB\Model\ABModel.cs" />
-    <Compile Include="Screens\AB\Model\IABModel.cs" />
-    <Compile Include="Screens\AB\Presenters\ABPresenter.cs" />
-    <Compile Include="Screens\AB\Views\IABView.cs" />
     <Compile Include="Screens\Accounting\Controls\AccountingSheet.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Screens\Accounting\Controls\AccountingSheet.Designer.cs">
       <DependentUpon>AccountingSheet.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Accounting\Controls\Conf.cs" />
     <Compile Include="Screens\Accounting\Controls\Currencies.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Screens\Accounting\Controls\Currencies.Designer.cs">
       <DependentUpon>Currencies.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Accounting\Controls\IFormOverData.cs" />
     <Compile Include="Screens\Accounting\Data\AccountingDataClasses.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -200,7 +169,6 @@
     <Compile Include="Screens\Accounting\Forms\CurrencyForm.Designer.cs">
       <DependentUpon>CurrencyForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Accounting\Forms\IFormContainer.cs" />
     <Compile Include="Screens\Accounting\Forms\UnitCountsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -858,10 +826,6 @@
     <EmbeddedResource Include="UI\CollapsibleSplitter.resx">
       <DependentUpon>CollapsibleSplitter.cs</DependentUpon>
     </EmbeddedResource>
-    <EntityDeploy Include="Screens\AB\EntityModel\AdvertiserModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>AdvertiserModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <None Include="DADatabaseR1DataSet.xsc">
       <DependentUpon>DADatabaseR1DataSet.xsd</DependentUpon>
     </None>
@@ -890,18 +854,6 @@
     <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Group.datasource" />
     <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Permission.datasource" />
     <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Role.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Screens.Synch.Controls.AffiliateItemContainer.datasource" />
-    <None Include="Screens\AB\Data\DAMain1DataSet.xsc">
-      <DependentUpon>DAMain1DataSet.xsd</DependentUpon>
-    </None>
-    <None Include="Screens\AB\Data\DAMain1DataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DAMain1DataSet.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Screens\AB\Data\DAMain1DataSet.xss">
-      <DependentUpon>DAMain1DataSet.xsd</DependentUpon>
-    </None>
     <None Include="Screens\Accounting\Data\AccountingDataClasses.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>AccountingDataClasses.designer.cs</LastGenOutput>
@@ -954,12 +906,6 @@
     <None Include="Screens\Affiliate\Data\AffilaiteDataClasses1.dbml.layout">
       <DependentUpon>AffilaiteDataClasses1.dbml</DependentUpon>
     </None>
-    <EmbeddedResource Include="Screens\AB\Forms\AB.resx">
-      <DependentUpon>AB.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\AB\Forms\AdvertiserStartingBalances.resx">
-      <DependentUpon>AdvertiserStartingBalances.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Accounting\Controls\AccountingSheet.resx">
       <DependentUpon>AccountingSheet.cs</DependentUpon>
     </EmbeddedResource>

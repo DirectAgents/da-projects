@@ -34,11 +34,40 @@ namespace EomApp1.Screens.Final
             this.pubColHeaderTextToFilter.Add("#Net30", "Net 30");
             this.pubColHeaderTextToFilter.Add("#BiWkly", "Net 7/Biweekly");
             this.notesListForm = new NotesListForm1();
-            foreach (var item in this.numPubCols1.Concat(numPubCols2))
-            {
-                item.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
             SetNetTermColumnsVisibility(false);
+            SetNumPubsColumnsStyle();
+            SetRevBreakdownColumnsVisibility(false);
+            SetRevBreakdownColumnsStyle();
+        }
+
+        private void SetNumPubsColumnsStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle style = new System.Windows.Forms.DataGridViewCellStyle();
+            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            style.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            foreach (var item in this.numPubCols1)
+            {
+                item.DefaultCellStyle = style;
+            }
+        }
+
+        private void SetRevBreakdownColumnsStyle()
+        {
+            System.Windows.Forms.DataGridViewCellStyle style = new System.Windows.Forms.DataGridViewCellStyle();
+            style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            style.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            style.Format = "N2";
+            this.RevDefault.DefaultCellStyle = style;
+            this.RevFinalized.DefaultCellStyle = this.RevDefault.DefaultCellStyle;
+            this.RevVerified.DefaultCellStyle = this.RevDefault.DefaultCellStyle;
+        }
+
+        private void SetRevBreakdownColumnsVisibility(bool visible)
+        {
+            this.RevDefault.Visible = visible;
+            this.RevFinalized.Visible = visible;
+            this.RevVerified.Visible = visible;
         }
 
         private void FinalizeForm1_Load(object sender, EventArgs e)
@@ -318,6 +347,12 @@ namespace EomApp1.Screens.Final
         private void finalizedRevenueButton_Click(object sender, EventArgs e)
         {
             MaskedDialog.ShowDialog(this, new Screens.Final.Forms.VerifiedRevenueForm(this));
+        }
+
+        private void revStatusCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            SetRevBreakdownColumnsVisibility(checkBox.Checked);
         }
     }
 }

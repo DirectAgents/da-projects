@@ -41,6 +41,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.revStatusCheckBox = new System.Windows.Forms.CheckBox();
             this.finalizedRevenueButton = new System.Windows.Forms.LinkLabel();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button3 = new System.Windows.Forms.Button();
@@ -55,6 +56,9 @@
             this.campaignnameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Curr = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Revenue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RevDefault = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RevFinalized = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RevVerified = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FinalizeCol = new System.Windows.Forms.DataGridViewButtonColumn();
             this.AMCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NoteDGCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -117,6 +121,7 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.AutoScroll = true;
+            this.splitContainer2.Panel1.Controls.Add(this.revStatusCheckBox);
             this.splitContainer2.Panel1.Controls.Add(this.finalizedRevenueButton);
             this.splitContainer2.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer2.Panel1.Controls.Add(this.button3);
@@ -132,12 +137,24 @@
             this.splitContainer2.SplitterDistance = 307;
             this.splitContainer2.TabIndex = 0;
             // 
+            // revStatusCheckBox
+            // 
+            this.revStatusCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.revStatusCheckBox.AutoSize = true;
+            this.revStatusCheckBox.Location = new System.Drawing.Point(853, 7);
+            this.revStatusCheckBox.Name = "revStatusCheckBox";
+            this.revStatusCheckBox.Size = new System.Drawing.Size(79, 17);
+            this.revStatusCheckBox.TabIndex = 7;
+            this.revStatusCheckBox.Text = "Rev Status";
+            this.revStatusCheckBox.UseVisualStyleBackColor = true;
+            this.revStatusCheckBox.CheckedChanged += new System.EventHandler(this.revStatusCheckBox_CheckedChanged);
+            // 
             // finalizedRevenueButton
             // 
             this.finalizedRevenueButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.finalizedRevenueButton.AutoSize = true;
             this.finalizedRevenueButton.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.finalizedRevenueButton.Location = new System.Drawing.Point(815, 9);
+            this.finalizedRevenueButton.Location = new System.Drawing.Point(758, 8);
             this.finalizedRevenueButton.Name = "finalizedRevenueButton";
             this.finalizedRevenueButton.Size = new System.Drawing.Size(89, 13);
             this.finalizedRevenueButton.TabIndex = 2;
@@ -150,7 +167,7 @@
             // 
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(921, 7);
+            this.checkBox1.Location = new System.Drawing.Point(938, 7);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(75, 17);
             this.checkBox1.TabIndex = 6;
@@ -217,6 +234,9 @@
             this.campaignnameDataGridViewTextBoxColumn,
             this.Curr,
             this.Revenue,
+            this.RevDefault,
+            this.RevFinalized,
+            this.RevVerified,
             this.FinalizeCol,
             this.AMCol,
             this.NoteDGCol,
@@ -291,6 +311,33 @@
             this.Revenue.HeaderText = "Revenue";
             this.Revenue.Name = "Revenue";
             this.Revenue.ReadOnly = true;
+            // 
+            // RevDefault
+            // 
+            this.RevDefault.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.RevDefault.DataPropertyName = "RevDefault";
+            this.RevDefault.HeaderText = "Unfinalized";
+            this.RevDefault.Name = "RevDefault";
+            this.RevDefault.ReadOnly = true;
+            this.RevDefault.Width = 84;
+            // 
+            // RevFinalized
+            // 
+            this.RevFinalized.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.RevFinalized.DataPropertyName = "RevFinalized";
+            this.RevFinalized.HeaderText = "Finalized";
+            this.RevFinalized.Name = "RevFinalized";
+            this.RevFinalized.ReadOnly = true;
+            this.RevFinalized.Width = 73;
+            // 
+            // RevVerified
+            // 
+            this.RevVerified.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.RevVerified.DataPropertyName = "RevVerified";
+            this.RevVerified.HeaderText = "Verified";
+            this.RevVerified.Name = "RevVerified";
+            this.RevVerified.ReadOnly = true;
+            this.RevVerified.Width = 67;
             // 
             // FinalizeCol
             // 
@@ -719,20 +766,6 @@
         private AccountManagersForFinalDataSet1TableAdapters.AccountManagerTableAdapter accountManagerTableAdapter;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn pidCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AdvertiserCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn campaignnameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Curr;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Revenue;
-        private System.Windows.Forms.DataGridViewButtonColumn FinalizeCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AMCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol;
-        private System.Windows.Forms.DataGridViewLinkColumn NumPubsToFinalizeCol;
-        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet7;
-        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet15;
-        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet30;
-        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNetBiWeekly;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn pidCol2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
@@ -750,5 +783,23 @@
         private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn3;
         private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn4;
         private System.Windows.Forms.LinkLabel finalizedRevenueButton;
+        private System.Windows.Forms.CheckBox revStatusCheckBox;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn pidCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AdvertiserCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn campaignnameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Curr;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Revenue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RevDefault;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RevFinalized;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RevVerified;
+        private System.Windows.Forms.DataGridViewButtonColumn FinalizeCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AMCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol;
+        private System.Windows.Forms.DataGridViewLinkColumn NumPubsToFinalizeCol;
+        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet7;
+        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet15;
+        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNet30;
+        private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNetBiWeekly;
     }
 }
