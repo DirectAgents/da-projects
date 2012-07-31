@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="CampaignsRevenueDataSet" targetNamespace="http://tempuri.org/CampaignsRevenueDataSet.xsd" xmlns:mstns="http://tempuri.org/CampaignsRevenueDataSet.xsd" xmlns="http://tempuri.org/CampaignsRevenueDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignWorkflowTableAdapter" GeneratorDataComponentClassName="CampaignWorkflowTableAdapter" Name="CampaignWorkflow" UserDataComponentName="CampaignWorkflowTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="zDADatabaseJuly2012Test.dbo.CampaignWorkflow" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT        id, pid, campaign_name, modified, AM, Advertiser, Curr, Status, Note, SUM(Revenue) AS Revenue, SUM(RevDefault) AS Unfinalized, SUM(RevFinalized) AS Finalized,
+                          SUM(RevVerified) AS Verified
+FROM            CampaignWorkflow
+GROUP BY id, pid, campaign_name, modified, AM, Advertiser, Curr, Status, Note
+ORDER BY campaign_name</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id" DataSetColumn="id" />
+              <Mapping SourceColumn="pid" DataSetColumn="pid" />
+              <Mapping SourceColumn="campaign_name" DataSetColumn="campaign_name" />
+              <Mapping SourceColumn="modified" DataSetColumn="modified" />
+              <Mapping SourceColumn="AM" DataSetColumn="AM" />
+              <Mapping SourceColumn="Advertiser" DataSetColumn="Advertiser" />
+              <Mapping SourceColumn="Curr" DataSetColumn="Curr" />
+              <Mapping SourceColumn="Status" DataSetColumn="Status" />
+              <Mapping SourceColumn="Note" DataSetColumn="Note" />
+              <Mapping SourceColumn="Revenue" DataSetColumn="Revenue" />
+              <Mapping SourceColumn="Unfinalized" DataSetColumn="Unfinalized" />
+              <Mapping SourceColumn="Finalized" DataSetColumn="Finalized" />
+              <Mapping SourceColumn="Verified" DataSetColumn="Verified" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="CampaignsRevenueDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="CampaignsRevenueDataSet" msprop:Generator_UserDSName="CampaignsRevenueDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="CampaignWorkflow" msprop:Generator_TableClassName="CampaignWorkflowDataTable" msprop:Generator_TableVarName="tableCampaignWorkflow" msprop:Generator_TablePropName="CampaignWorkflow" msprop:Generator_RowDeletingName="CampaignWorkflowRowDeleting" msprop:Generator_UserTableName="CampaignWorkflow" msprop:Generator_RowChangingName="CampaignWorkflowRowChanging" msprop:Generator_RowEvHandlerName="CampaignWorkflowRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignWorkflowRowDeleted" msprop:Generator_RowEvArgName="CampaignWorkflowRowChangeEvent" msprop:Generator_RowChangedName="CampaignWorkflowRowChanged" msprop:Generator_RowClassName="CampaignWorkflowRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
+              <xs:element name="pid" msprop:Generator_ColumnVarNameInTable="columnpid" msprop:Generator_ColumnPropNameInRow="pid" msprop:Generator_ColumnPropNameInTable="pidColumn" msprop:Generator_UserColumnName="pid" type="xs:int" />
+              <xs:element name="campaign_name" msprop:Generator_ColumnVarNameInTable="columncampaign_name" msprop:Generator_ColumnPropNameInRow="campaign_name" msprop:Generator_ColumnPropNameInTable="campaign_nameColumn" msprop:Generator_UserColumnName="campaign_name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="255" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="modified" msprop:Generator_ColumnVarNameInTable="columnmodified" msprop:Generator_ColumnPropNameInRow="modified" msprop:Generator_ColumnPropNameInTable="modifiedColumn" msprop:Generator_UserColumnName="modified" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="AM" msprop:Generator_ColumnVarNameInTable="columnAM" msprop:Generator_ColumnPropNameInRow="AM" msprop:Generator_ColumnPropNameInTable="AMColumn" msprop:Generator_UserColumnName="AM">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Advertiser" msprop:Generator_ColumnVarNameInTable="columnAdvertiser" msprop:Generator_ColumnPropNameInRow="Advertiser" msprop:Generator_ColumnPropNameInTable="AdvertiserColumn" msprop:Generator_UserColumnName="Advertiser">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Curr" msprop:Generator_ColumnVarNameInTable="columnCurr" msprop:Generator_ColumnPropNameInRow="Curr" msprop:Generator_ColumnPropNameInTable="CurrColumn" msprop:Generator_UserColumnName="Curr">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Note" msprop:Generator_ColumnVarNameInTable="columnNote" msprop:Generator_ColumnPropNameInRow="Note" msprop:Generator_ColumnPropNameInTable="NoteColumn" msprop:Generator_UserColumnName="Note" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Revenue" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRevenue" msprop:Generator_ColumnPropNameInRow="Revenue" msprop:Generator_ColumnPropNameInTable="RevenueColumn" msprop:Generator_UserColumnName="Revenue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Unfinalized" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnUnfinalized" msprop:Generator_ColumnPropNameInRow="Unfinalized" msprop:Generator_ColumnPropNameInTable="UnfinalizedColumn" msprop:Generator_UserColumnName="Unfinalized" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Finalized" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnFinalized" msprop:Generator_ColumnPropNameInRow="Finalized" msprop:Generator_ColumnPropNameInTable="FinalizedColumn" msprop:Generator_UserColumnName="Finalized" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Verified" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnVerified" msprop:Generator_ColumnPropNameInRow="Verified" msprop:Generator_ColumnPropNameInTable="VerifiedColumn" msprop:Generator_UserColumnName="Verified" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:CampaignWorkflow" />
+      <xs:field xpath="mstns:id" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

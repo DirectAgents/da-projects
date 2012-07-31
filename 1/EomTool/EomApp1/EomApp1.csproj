@@ -254,6 +254,17 @@
     <Compile Include="Screens\AutoSynch\Screen.Designer.cs">
       <DependentUpon>Screen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Campaign\CampaignsRevenueDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CampaignsRevenueDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Campaign\CampaignsRevenueForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Campaign\CampaignsRevenueForm.Designer.cs">
+      <DependentUpon>CampaignsRevenueForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Campaign\CampaignSynchDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -802,6 +813,9 @@
     <EmbeddedResource Include="PublisherNameCombine\PublisherCombine.resx">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Campaign\CampaignsRevenueForm.resx">
+      <DependentUpon>CampaignsRevenueForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Final\Controls\PublishersView.resx">
       <DependentUpon>PublishersView.cs</DependentUpon>
     </EmbeddedResource>
@@ -1096,6 +1110,17 @@
     </None>
     <None Include="Screens\Campaign\CampaignDataSet.xss">
       <DependentUpon>CampaignDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\Campaign\CampaignsRevenueDataSet.xsc">
+      <DependentUpon>CampaignsRevenueDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\Campaign\CampaignsRevenueDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>CampaignsRevenueDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Screens\Campaign\CampaignsRevenueDataSet.xss">
+      <DependentUpon>CampaignsRevenueDataSet.xsd</DependentUpon>
     </None>
     <None Include="Screens\Campaign\CampaignSynchDataSet.xsc">
       <DependentUpon>CampaignSynchDataSet.xsd</DependentUpon>

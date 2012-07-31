@@ -52,6 +52,7 @@
             this.utilitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateCampaignAMAndADFromDirectTrackToDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tablesViewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +62,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.sToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.revenueSummaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.class1BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -90,7 +91,8 @@
             this.extraItemsToolStripMenuItem,
             this.synchToolStripMenuItem1,
             this.campaignsToolStripMenuItem,
-            this.notesToolStripMenuItem});
+            this.notesToolStripMenuItem,
+            this.revenueSummaryToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
             this.toolsToolStripMenuItem.Text = "Campaigns";
@@ -98,7 +100,7 @@
             // finalizedCampaignsToolStripMenuItem
             // 
             this.finalizedCampaignsToolStripMenuItem.Name = "finalizedCampaignsToolStripMenuItem";
-            this.finalizedCampaignsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.finalizedCampaignsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.finalizedCampaignsToolStripMenuItem.Tag = "Screens.Workflow";
             this.finalizedCampaignsToolStripMenuItem.Text = "Workflow";
             this.finalizedCampaignsToolStripMenuItem.Click += new System.EventHandler(this.finalizedCampaignsToolStripMenuItem_Click);
@@ -106,7 +108,7 @@
             // extraItemsToolStripMenuItem
             // 
             this.extraItemsToolStripMenuItem.Name = "extraItemsToolStripMenuItem";
-            this.extraItemsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.extraItemsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.extraItemsToolStripMenuItem.Tag = "Screens.ExtraItems";
             this.extraItemsToolStripMenuItem.Text = "Extra Items";
             this.extraItemsToolStripMenuItem.Click += new System.EventHandler(this.extraItemsToolStripMenuItem_Click);
@@ -114,7 +116,7 @@
             // synchToolStripMenuItem1
             // 
             this.synchToolStripMenuItem1.Name = "synchToolStripMenuItem1";
-            this.synchToolStripMenuItem1.Size = new System.Drawing.Size(134, 22);
+            this.synchToolStripMenuItem1.Size = new System.Drawing.Size(173, 22);
             this.synchToolStripMenuItem1.Tag = "Screens.Synch";
             this.synchToolStripMenuItem1.Text = "Synch";
             this.synchToolStripMenuItem1.Click += new System.EventHandler(this.synchToolStripMenuItem1_Click);
@@ -122,7 +124,7 @@
             // campaignsToolStripMenuItem
             // 
             this.campaignsToolStripMenuItem.Name = "campaignsToolStripMenuItem";
-            this.campaignsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.campaignsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.campaignsToolStripMenuItem.Tag = "Screens.Campaigns";
             this.campaignsToolStripMenuItem.Text = "Campaigns";
             this.campaignsToolStripMenuItem.Click += new System.EventHandler(this.campaignsToolStripMenuItem_Click);
@@ -130,7 +132,7 @@
             // notesToolStripMenuItem
             // 
             this.notesToolStripMenuItem.Name = "notesToolStripMenuItem";
-            this.notesToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.notesToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.notesToolStripMenuItem.Tag = "Screens.Notes";
             this.notesToolStripMenuItem.Text = "Notes";
             this.notesToolStripMenuItem.Click += new System.EventHandler(this.notesToolStripMenuItem_Click);
@@ -262,6 +264,13 @@
             this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem.Text = "Synch Media Buyers and Affiliates from DT to DB";
             this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem.Click += new System.EventHandler(this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem_Click);
             // 
+            // sToolStripMenuItem
+            // 
+            this.sToolStripMenuItem.Name = "sToolStripMenuItem";
+            this.sToolStripMenuItem.Size = new System.Drawing.Size(447, 22);
+            this.sToolStripMenuItem.Text = "s";
+            this.sToolStripMenuItem.Click += new System.EventHandler(this.sToolStripMenuItem_Click);
+            // 
             // dBToolStripMenuItem
             // 
             this.dBToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -329,12 +338,12 @@
             this.webBrowser1.Size = new System.Drawing.Size(46, 20);
             this.webBrowser1.TabIndex = 5;
             // 
-            // sToolStripMenuItem
+            // revenueSummaryToolStripMenuItem
             // 
-            this.sToolStripMenuItem.Name = "sToolStripMenuItem";
-            this.sToolStripMenuItem.Size = new System.Drawing.Size(447, 22);
-            this.sToolStripMenuItem.Text = "s";
-            this.sToolStripMenuItem.Click += new System.EventHandler(this.sToolStripMenuItem_Click);
+            this.revenueSummaryToolStripMenuItem.Name = "revenueSummaryToolStripMenuItem";
+            this.revenueSummaryToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.revenueSummaryToolStripMenuItem.Text = "Revenue Summary";
+            this.revenueSummaryToolStripMenuItem.Click += new System.EventHandler(this.revenueSummaryToolStripMenuItem_Click);
             // 
             // EOMForm
             // 
@@ -397,6 +406,7 @@
         private System.Windows.Forms.ToolStripMenuItem notesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verifiedRevenueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem revenueSummaryToolStripMenuItem;
 
     }
 }
