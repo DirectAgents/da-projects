@@ -147,6 +147,7 @@
             this.revStatusCheckBox.TabIndex = 7;
             this.revStatusCheckBox.Text = "Rev Status";
             this.revStatusCheckBox.UseVisualStyleBackColor = true;
+            this.revStatusCheckBox.Visible = false;
             this.revStatusCheckBox.CheckedChanged += new System.EventHandler(this.revStatusCheckBox_CheckedChanged);
             // 
             // finalizedRevenueButton
@@ -222,9 +223,9 @@
             this.campaignDataGridView.AllowUserToAddRows = false;
             this.campaignDataGridView.AllowUserToDeleteRows = false;
             this.campaignDataGridView.AllowUserToResizeRows = false;
-            this.campaignDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.campaignDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.campaignDataGridView.AutoGenerateColumns = false;
             this.campaignDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.campaignDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {

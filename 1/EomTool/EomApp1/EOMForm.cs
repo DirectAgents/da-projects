@@ -200,5 +200,27 @@ namespace EomApp1
         {
             new Screens.Security.Forms.SecuritySetupForm().Show();
         }
+
+        // Campaigns Revenue Summary
+        private void revenueSummaryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchForm<Screens.Campaign.CampaignsRevenueForm>();
+        }
+
+        private static void LaunchForm<T>() where T : Form, new()
+        {
+            var form = Application.OpenForms.OfType<T>().FirstOrDefault();
+            if (form != null)
+            {
+                if (form.WindowState == FormWindowState.Minimized)
+                    form.WindowState = FormWindowState.Normal;
+                form.BringToFront();
+            }
+            else
+            {
+                form = new T();
+                form.Show();
+            }
+        }
     }
 }

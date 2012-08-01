@@ -684,6 +684,9 @@
     <EmbeddedResource Include="Screens\PublisherNameCombine\PublisherCombine.resx">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Campaign\CampaignsRevenueForm.resx">
+      <DependentUpon>CampaignsRevenueForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Final\UI\PublishersView.resx">
       <DependentUpon>PublishersView.cs</DependentUpon>
     </EmbeddedResource>
@@ -924,6 +927,17 @@
     </None>
     <None Include="Screens\Campaign\CampaignDataSet.xss">
       <DependentUpon>CampaignDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\Campaign\CampaignsRevenueDataSet.xsc">
+      <DependentUpon>CampaignsRevenueDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\Campaign\CampaignsRevenueDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>CampaignsRevenueDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Screens\Campaign\CampaignsRevenueDataSet.xss">
+      <DependentUpon>CampaignsRevenueDataSet.xsd</DependentUpon>
     </None>
     <None Include="Screens\Campaign\CampaignSynchDataSet.xsc">
       <DependentUpon>CampaignSynchDataSet.xsd</DependentUpon>
