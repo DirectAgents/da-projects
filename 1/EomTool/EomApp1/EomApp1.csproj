@@ -146,6 +146,7 @@
     </Compile>
     <Compile Include="Screens\Accounting\Data\EddyAccountingView.cs">
       <DependentUpon>EddyAccountingView.xsd</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Screens\Accounting\Data\EddyAccountingView.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -192,29 +193,6 @@
     <Compile Include="Screens\Advertiser2\Forms\AdvertisersForm.Designer.cs">
       <DependentUpon>AdvertisersForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Advertiser\AdvertiserMapping.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Advertiser\AdvertiserMapping.Designer.cs">
-      <DependentUpon>AdvertiserMapping.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Advertiser\AdvertiserMapping2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Advertiser\AdvertiserMapping2.Designer.cs">
-      <DependentUpon>AdvertiserMapping2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Advertiser\Advertisers.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Advertiser\Advertisers.Designer.cs">
-      <DependentUpon>Advertisers.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Advertiser\Data\AdvertisersDataSet1.Designer.cs">
-      <DependentUpon>AdvertisersDataSet1.xsd</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="Screens\Affiliate\Data\AffilaiteDataClasses1.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -233,26 +211,6 @@
     </Compile>
     <Compile Include="Screens\Affiliate\Forms\AffiliatesForm1.Designer.cs">
       <DependentUpon>AffiliatesForm1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\AutoSynch\Items.cs">
-      <DependentUpon>Items.xsd</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Screens\AutoSynch\Items1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Items.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\AutoSynch\Model1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\AutoSynch\Screen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\AutoSynch\Screen.Designer.cs">
-      <DependentUpon>Screen.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Campaign\CampaignSynchDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -311,36 +269,13 @@
     <Compile Include="Screens\DBView\Forms\DBViewForm1.Designer.cs">
       <DependentUpon>DBViewForm1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\ETL\Controls\EditableDataTable.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\ETL\Controls\EditableDataTable.Designer.cs">
-      <DependentUpon>EditableDataTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\ETL\Data\DataSet1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\ETL\Forms\DTRestApi.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\ETL\Forms\DTRestApi.Designer.cs">
-      <DependentUpon>DTRestApi.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Final\Campaign.cs" />
     <Compile Include="Screens\Final\CampaignNotes.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Screens\Final\CampaignNotes.Designer.cs">
       <DependentUpon>CampaignNotes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\CampaignStatusAuditTrailViewUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\Final\CampaignStatusAuditTrailViewUserControl.Designer.cs">
-      <DependentUpon>CampaignStatusAuditTrailViewUserControl.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Screens\Final\CampaignNoteUtility.cs" />
     <Compile Include="Screens\Final\ConfirmActionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -353,82 +288,57 @@
     <Compile Include="Screens\Final\ConfirmActionUserControl.Designer.cs">
       <DependentUpon>ConfirmActionUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\Controls\PublishersView.cs">
+    <Compile Include="Screens\Final\Models\CampaignPublishersBase.cs" />
+    <Compile Include="Screens\Final\Models\CampaignsBase.cs" />
+    <Compile Include="Screens\Final\UI\Extensions.cs" />
+    <Compile Include="Screens\Final\UI\PublishersView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Screens\Final\Controls\PublishersView.Designer.cs">
+    <Compile Include="Screens\Final\UI\PublishersView.Designer.cs">
       <DependentUpon>PublishersView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\Data\DataSet1.cs">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Screens\Final\Data\DataSet1.Designer.cs">
+    <Compile Include="Screens\Final\UI\Data.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DataSet1.xsd</DependentUpon>
+      <DependentUpon>Data.xsd</DependentUpon>
     </Compile>
     <Compile Include="Screens\Final\FinalizeData.cs">
       <DependentUpon>FinalizeData.dbml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\Forms\PublishersForm.cs">
+    <Compile Include="Screens\Final\UI\PublishersForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Screens\Final\Forms\PublishersForm.Designer.cs">
+    <Compile Include="Screens\Final\UI\PublishersForm.Designer.cs">
       <DependentUpon>PublishersForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\Forms\VerifiedRevenueForm.cs">
+    <Compile Include="Screens\Final\UI\VerifiedRevenueForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Screens\Final\Forms\VerifiedRevenueForm.Designer.cs">
+    <Compile Include="Screens\Final\UI\VerifiedRevenueForm.Designer.cs">
       <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\GlobalHelpers.cs" />
-    <Compile Include="Screens\Final\Models\CampaignsModel.cs" />
+    <Compile Include="Screens\Final\Models\Campaigns.cs" />
     <Compile Include="Screens\Final\Models\CampaignStatusId.cs" />
-    <Compile Include="Screens\Final\Models\EomEntities.cs" />
+    <Compile Include="Screens\Final\Models\Eom.cs" />
     <Compile Include="Screens\Final\Models\EomModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EomModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\Models\PublishersModel.cs" />
+    <Compile Include="Screens\Final\Models\CampaignPublishers.cs" />
+    <Compile Include="Screens\Final\Models\Extensions.cs" />
     <Compile Include="Screens\Final\NotesListForm1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Screens\Final\NotesListForm1.Designer.cs">
       <DependentUpon>NotesListForm1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Final\Presenters\PublishersPresenter.cs" />
-    <Compile Include="Screens\Final\PublishersEventArgs.cs" />
-    <Compile Include="Screens\Final\StatusMonitor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Final\StatusMonitor.Designer.cs">
-      <DependentUpon>StatusMonitor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Payment\Controls\AdvertiserListUC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\Payment\Controls\AdvertiserListUC.Designer.cs">
-      <DependentUpon>AdvertiserListUC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Payment\Controls\PaymentListUC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\Payment\Controls\PaymentListUC.Designer.cs">
-      <DependentUpon>PaymentListUC.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Payment\DataSets\PaymentsDataSet.Designer.cs">
+    <Compile Include="Screens\Final\UI\PublishersPresenter.cs" />
+    <Compile Include="Screens\Final\UI\PublishersEventArgs.cs" />
+    <Compile Include="Screens\PublisherNameCombine\PublisherCombineDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PaymentsDataSet.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Payment\Forms\PaymentsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Payment\Forms\PaymentsForm.Designer.cs">
-      <DependentUpon>PaymentsForm.cs</DependentUpon>
+      <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Screens\PubRep1\Components\PendingStatusUpdates.cs">
       <SubType>Component</SubType>
@@ -493,10 +403,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EomToolSecurity.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Screens\SqlExecute.cs">
+    <Compile Include="Screens\Sql\SqlExecute.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Screens\SqlExecute.Designer.cs">
+    <Compile Include="Screens\Sql\SqlExecute.Designer.cs">
       <DependentUpon>SqlExecute.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Synch\AddAffiliateSetupForm.cs">
@@ -562,16 +472,11 @@
     <Compile Include="Screens\Synch\TargetSystemChoice.cs" />
     <Compile Include="Screens\Synch\TargetSystemChoiceChangedEventArgs.cs" />
     <Compile Include="Screens\Campaign\SearchTextChangedEventArgs.cs" />
-    <Compile Include="PublisherNameCombine\PublisherCombine.cs">
+    <Compile Include="Screens\PublisherNameCombine\PublisherCombine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PublisherNameCombine\PublisherCombine.Designer.cs">
+    <Compile Include="Screens\PublisherNameCombine\PublisherCombine.Designer.cs">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PublisherNameCombine\PublisherCombineDataSet.Designer.cs">
-      <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Service References\Cake.WebServices._3.Export\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -587,9 +492,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Final\EomAppService.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Screens\Extra\ExtraItemDataSet.cs">
@@ -641,12 +543,12 @@
     <Compile Include="Screens\Campaign\CampaignsUC.Designer.cs">
       <DependentUpon>CampaignsUC.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\CustomDGV1\DataGridViewBarGraphCell.cs" />
-    <Compile Include="Screens\CustomDGV1\DataGridViewBarGraphColumn.cs" />
-    <Compile Include="Screens\CustomDGV1\Form1.cs">
+    <Compile Include="Misc\CustomDataGridViewCell\DataGridViewBarGraphCell.cs" />
+    <Compile Include="Misc\CustomDataGridViewCell\DataGridViewBarGraphColumn.cs" />
+    <Compile Include="Misc\CustomDataGridViewCell\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Screens\CustomDGV1\Form1.Designer.cs">
+    <Compile Include="Misc\CustomDataGridViewCell\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Extra\AccountManagersDataSet.Designer.cs">
@@ -670,17 +572,6 @@
     </Compile>
     <Compile Include="Screens\Extra\ExtraItemsUserControl.Designer.cs">
       <DependentUpon>ExtraItemsUserControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Final2\DataGridViewReadOnlyButtonColumn.cs" />
-    <Compile Include="Screens\Final2\DataGridViewReadOnlyMoneyColumn.cs" />
-    <Compile Include="Screens\Final2\DataGridViewReadOnlyTextColumnWithFill.cs" />
-    <Compile Include="Screens\Final2\DataGridViewReadOnlyTextColumn.cs" />
-    <Compile Include="Screens\Final2\DataGridViewReadOnlyTextColumnWithFill1.cs" />
-    <Compile Include="Screens\Final2\UserControl1.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\Final2\UserControl1.Designer.cs">
-      <DependentUpon>UserControl1.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Final\AccountManagersForFinalDataSet1.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -790,25 +681,16 @@
     <EmbeddedResource Include="Screens\Advertiser2\Forms\AdvertisersForm.resx">
       <DependentUpon>AdvertisersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Advertiser\AdvertiserMapping.resx">
-      <DependentUpon>AdvertiserMapping.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Advertiser\AdvertiserMapping2.resx">
-      <DependentUpon>AdvertiserMapping2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Advertiser\Advertisers.resx">
-      <DependentUpon>Advertisers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PublisherNameCombine\PublisherCombine.resx">
+    <EmbeddedResource Include="Screens\PublisherNameCombine\PublisherCombine.resx">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Final\Controls\PublishersView.resx">
+    <EmbeddedResource Include="Screens\Final\UI\PublishersView.resx">
       <DependentUpon>PublishersView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Final\Forms\PublishersForm.resx">
+    <EmbeddedResource Include="Screens\Final\UI\PublishersForm.resx">
       <DependentUpon>PublishersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Final\Forms\VerifiedRevenueForm.resx">
+    <EmbeddedResource Include="Screens\Final\UI\VerifiedRevenueForm.resx">
       <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Security\Forms\SecuritySetupForm.resx">
@@ -850,10 +732,6 @@
     </None>
     <None Include="EOMTool-ClickOnce-Manifests-5Years.pfx" />
     <None Include="EOMTool-ClickOnce-Manifests.pfx" />
-    <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.EomToolSecurityEntities.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Group.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Permission.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Screens.Security.Models.Role.datasource" />
     <None Include="Screens\Accounting\Data\AccountingDataClasses.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>AccountingDataClasses.designer.cs</LastGenOutput>
@@ -892,17 +770,6 @@
     <None Include="Screens\Advertiser2\Data\Advertiser2DataSet.xss">
       <DependentUpon>Advertiser2DataSet.xsd</DependentUpon>
     </None>
-    <None Include="Screens\Advertiser\Data\AdvertisersDataSet1.xsc">
-      <DependentUpon>AdvertisersDataSet1.xsd</DependentUpon>
-    </None>
-    <None Include="Screens\Advertiser\Data\AdvertisersDataSet1.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>AdvertisersDataSet1.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Screens\Advertiser\Data\AdvertisersDataSet1.xss">
-      <DependentUpon>AdvertisersDataSet1.xsd</DependentUpon>
-    </None>
     <None Include="Screens\Affiliate\Data\AffilaiteDataClasses1.dbml.layout">
       <DependentUpon>AffilaiteDataClasses1.dbml</DependentUpon>
     </None>
@@ -927,9 +794,6 @@
     <EmbeddedResource Include="Screens\Affiliate\Forms\AffiliatesForm1.resx">
       <DependentUpon>AffiliatesForm1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\AutoSynch\Screen.resx">
-      <DependentUpon>Screen.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Campaign\CampaignSynchForm.resx">
       <DependentUpon>CampaignSynchForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -951,17 +815,8 @@
     <EmbeddedResource Include="Screens\DBView\Forms\DBViewForm1.resx">
       <DependentUpon>DBViewForm1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\ETL\Controls\EditableDataTable.resx">
-      <DependentUpon>EditableDataTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\ETL\Forms\DTRestApi.resx">
-      <DependentUpon>DTRestApi.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Final\CampaignNotes.resx">
       <DependentUpon>CampaignNotes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Final\CampaignStatusAuditTrailViewUserControl.resx">
-      <DependentUpon>CampaignStatusAuditTrailViewUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Final\ConfirmActionDialog.resx">
       <DependentUpon>ConfirmActionDialog.cs</DependentUpon>
@@ -971,9 +826,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Final\NotesListForm1.resx">
       <DependentUpon>NotesListForm1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Final\StatusMonitor.resx">
-      <DependentUpon>StatusMonitor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\PubRep1\Components\PendingStatusUpdates.resx">
       <DependentUpon>PendingStatusUpdates.cs</DependentUpon>
@@ -993,24 +845,9 @@
     <EmbeddedResource Include="Screens\PubRep1\Controls\Report2.resx">
       <DependentUpon>Report2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\SqlExecute.resx">
+    <EmbeddedResource Include="Screens\Sql\SqlExecute.resx">
       <DependentUpon>SqlExecute.cs</DependentUpon>
     </EmbeddedResource>
-    <EntityDeploy Include="Screens\AutoSynch\Model1.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Screens\AutoSynch\Items.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>Items1.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Screens\AutoSynch\Items.xsc">
-      <DependentUpon>Items.xsd</DependentUpon>
-    </None>
-    <None Include="Screens\AutoSynch\Items.xss">
-      <DependentUpon>Items.xsd</DependentUpon>
-    </None>
     <EntityDeploy Include="Screens\Synch\Models\Cake\CakeStaging.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CakeStaging.Designer.cs</LastGenOutput>
@@ -1028,15 +865,6 @@
     <EmbeddedResource Include="Screens\Synch\TargetSystem.resx">
       <DependentUpon>TargetSystem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Payment\Controls\AdvertiserListUC.resx">
-      <DependentUpon>AdvertiserListUC.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Payment\Controls\PaymentListUC.resx">
-      <DependentUpon>PaymentListUC.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Payment\Forms\PaymentsForm.resx">
-      <DependentUpon>PaymentsForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Settings\SelectDatabaseForm.resx">
       <DependentUpon>SelectDatabaseForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1050,7 +878,7 @@
     <EmbeddedResource Include="Screens\Campaign\CampaignsUC.resx">
       <DependentUpon>CampaignsUC.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\CustomDGV1\Form1.resx">
+    <EmbeddedResource Include="Misc\CustomDataGridViewCell\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Extra\ExtraItemsForm.resx">
@@ -1119,42 +947,23 @@
     <None Include="Screens\DBView\Data\DBViewDataSet.xss">
       <DependentUpon>DBViewDataSet.xsd</DependentUpon>
     </None>
-    <None Include="Screens\ETL\Data\DataSet1.xsc">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
-    <None Include="Screens\ETL\Data\DataSet1.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Screens\ETL\Data\DataSet1.xss">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
     <EntityDeploy Include="Screens\Final\Models\EomModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EomModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Screens\Final\Data\DataSet1.xsc">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
+    <None Include="Screens\Final\UI\Data.xsc">
+      <DependentUpon>Data.xsd</DependentUpon>
     </None>
-    <None Include="Screens\Final\Data\DataSet1.xsd">
+    <None Include="Screens\Final\UI\Data.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+      <LastGenOutput>Data.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Screens\Final\Data\DataSet1.xss">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
+    <None Include="Screens\Final\UI\Data.xss">
+      <DependentUpon>Data.xsd</DependentUpon>
     </None>
-    <None Include="Screens\Payment\DataSets\PaymentsDataSet.xsc">
-      <DependentUpon>PaymentsDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="Screens\Payment\DataSets\PaymentsDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>PaymentsDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Screens\Payment\DataSets\PaymentsDataSet.xss">
-      <DependentUpon>PaymentsDataSet.xsd</DependentUpon>
+    <None Include="Screens\PublisherNameCombine\PublisherCombineDataSet.xsc">
+      <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
     </None>
     <None Include="Screens\PubRep1\Controls\PubRepTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -1239,30 +1048,6 @@
     <None Include="Screens\Settings\SettingsDataSet1.xss">
       <DependentUpon>SettingsDataSet1.xsd</DependentUpon>
     </None>
-    <None Include="Properties\DataSources\CampaignStatusAuditTrailView.datasource" />
-    <None Include="Properties\DataSources\CampaignStatusAuditTrailViewEntities.datasource" />
-    <None Include="Properties\DataSources\CampaignStatusAuditView.datasource" />
-    <None Include="Properties\DataSources\DADatabaseJul11Entities.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.AB.Data.ABItem.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.AB.EntityModel.DAMain1Entities1.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.AB2.ExternalDatabase.ExternalDatabaseModel.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.AB2.Model.DirectAgentsEntities.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Accounting.Data.DADatabaseR1Entities.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Affiliate.Data.AffilaiteDataClasses1DataContext.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Affiliate.Data.AffiliatePaymentMethod.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Affiliate.Data.DataItem.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Affiliate.Data.NetTermType.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Affiliate.Forms.AffiliatesForm1.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.AutoSynch.DADatabaseEntities1.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Campaign.Jul11Entities.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Campaign2.Campaigns2Entities.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Campaign2.DADatabase.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Final.StatusMonitor.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Payment.DataSets.DADatabaseR2Entities.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.PubRep1.Components.PendingStatusUpdates.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.PubRep1.Controls.CampaignsForIDs.datasource" />
-    <None Include="Properties\DataSources\EomApp1.Formss.Synch.CampaignSetupItemContainer.datasource" />
-    <None Include="Properties\DataSources\System.Data.DataTable.datasource" />
     <None Include="Screens\Extra\ExtraItemDataSet.xsc">
       <DependentUpon>ExtraItemDataSet.xsd</DependentUpon>
       <CustomToolNamespace>EomApp1.Formss.Extra</CustomToolNamespace>
@@ -1342,16 +1127,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="PublisherNameCombine\PublisherCombineDataSet.xsc">
-      <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="PublisherNameCombine\PublisherCombineDataSet.xsd">
+    <None Include="Screens\PublisherNameCombine\PublisherCombineDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>PublisherCombineDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="PublisherNameCombine\PublisherCombineDataSet.xss">
-      <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
     </None>
     <None Include="Service References\Cake.WebServices._3.Export\EomApp1.Cake.WebServices._3.Export.advertiser_export_response.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -1408,7 +1187,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Screens\ETL\Xsd\" />
+    <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\pic1.jpg" />
@@ -1502,7 +1281,7 @@
     <None Include="Resources\cancel.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Screens\ETL\Xsl\showxml.xslt">
+    <Content Include="Misc\showxml.xslt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Screens\Security\Models\EomToolSecurity.edmx.sql" />

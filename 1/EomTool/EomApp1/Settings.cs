@@ -20,6 +20,9 @@ namespace EomApp1.Properties
             }
             else
             {
+                if (this.DADatabaseName == "Test")
+                    this.DADatabaseName = "Dec 10";
+
                 string name = this.DADatabaseName;
                 var database = DADatabase.ByName(name);
 
@@ -36,40 +39,11 @@ namespace EomApp1.Properties
 
             // TODO: find and remove references
             this["DADatabaseMarch11ConnectionString"] = this["DADatabaseR1ConnectionString"];
-
-#if DEBUG
-            if (EomAppCommon.EomAppSettings.DebugEomDatabase)
-            {
-                var form = new System.Windows.Forms.Form();
-                var grid = new System.Windows.Forms.DataGridView {
-                    AutoGenerateColumns = true,
-                    Dock = System.Windows.Forms.DockStyle.Fill,
-                    DataSource =
-                        (from c in new[] {
-                            Tuple.Create("DADatabaseR1ConnectionString", this.DADatabaseR1ConnectionString),
-                            Tuple.Create("StatsYear", this.StatsYear.ToString()),
-                            Tuple.Create("StatsMonth", this.StatsMonth.ToString()),
-                            Tuple.Create("StatsDaysInMonth", this.StatsDaysInMonth.ToString()),
-                            Tuple.Create("PubReportSubjectLine", this.PubReportSubjectLine),
-                        }
-                         select new
-                         {
-                             Key = c.Item1,
-                             Value = c.Item2,
-                         }).ToList(),
-                    AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill,
-                };
-                form.Controls.AddRange(new[] { grid, });
-                form.ShowDialog();
-            }
-#endif
         }
 
         private bool IsTestMode()
         {
-            bool ovverideConnectionStringHasValue = OverrideConnectionHasValue();
-            bool isValuidTestUser = IsValidTestUser();
-            return (ovverideConnectionStringHasValue && isValuidTestUser && this.TestMode);
+            return (OverrideConnectionHasValue() && IsValidTestUser() && this.TestMode);
         }
 
         private bool OverrideConnectionHasValue()

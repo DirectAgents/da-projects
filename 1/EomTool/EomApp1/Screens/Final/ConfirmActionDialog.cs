@@ -31,19 +31,11 @@ namespace EomApp1.Screens.Final
         // pattern: instance version of functionality
         public bool ShowConfirmationModalDialog(out string notes)
         {
-            
             ShowDialog(Form.ActiveForm);
             notes = confirmActionUserControl1.NotesText;
             return confirmActionUserControl1.IsOk;
         }
 
-        // pattern: static version of functionality depends on instance version of functionality
-        // --> static relieves client from creating an instance
-        // --> saves typing if scope of functionality is a single statement
-        // --> static version takes 2 parameters
-        // --> instance version takes 1 parameter
-        //      --> the instance version moves the parameter to the constructor
-        //
         /// <summary>
         /// intrinsically, functionality has
         ///     inputs
@@ -63,6 +55,12 @@ namespace EomApp1.Screens.Final
         {
             var dialog = new ConfirmationBox(message);
             return dialog.ShowConfirmationModalDialog(out notes);
+        }
+
+        public static bool Confirm(Form owner, string text, string caption)
+        {
+            var dialog = MessageBox.Show(text, caption, MessageBoxButtons.OKCancel);
+            return (dialog == DialogResult.OK);
         }
     }
 }

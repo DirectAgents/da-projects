@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Dynamic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -110,9 +108,6 @@ namespace EomApp1.Screens.Accounting.Controls
         // Provide visual feedback when a cell changes.
         bool _monitorCellChange = false;
 
-        // Save the column widths on per-user basis.
-        bool _watchingColWidths;
-
         void InitGridColumnWidths()
         {
             var xd = this.UserColWidths;
@@ -132,42 +127,6 @@ namespace EomApp1.Screens.Accounting.Controls
                     string val = cols.First(c => c.Attribute("name").Value == column.DataPropertyName).Attribute("val").Value;
                     column.Width = Convert.ToInt32(val);
                 }
-            }
-
-            // TODO: watch for column width changes
-        }
-
-        // Change the color of the cell when it is edited (visual feedback)
-        void Grid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            //if (_monitorCellChange)
-            //{
-            //    var d = (DataGridView)sender;
-            //    var c = d[e.ColumnIndex, e.RowIndex];
-            //    c.Style.BackColor = Color.IndianRed;
-            //}
-        }
-
-        //private void RevPerUnitTextBox_Enter(object sender, EventArgs e)
-        //{
-        //    var textBox = new xControl<TextBox>(sender);
-        //    textBox.Tags.StartText = textBox.Value.Text;
-        //}
-
-        void Grid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
-        {
-            if (_watchingColWidths)
-            {
-                // create a new xdoc to store column widths in on every change
-                // as opposed to updated the current one (simpler, hopefully neg. perf. impact)
-                var xd = new XDocument();
-                var colWidths = new XElement("colwidths");
-                xd.Add(colWidths);
-                foreach (DataGridViewColumn dcol in pROC_SELECT_Eddy_Accounting_View_2DataGridView.Columns)
-                {
-                    colWidths.Add(new XElement("col", new XAttribute("name", dcol.DataPropertyName), new XAttribute("val", dcol.Width)));
-                }
-                this.UserColWidths = xd;
             }
         }
 
@@ -214,23 +173,7 @@ namespace EomApp1.Screens.Accounting.Controls
                 c.Style.BackColor = Color.IndianRed;
             }
         }
-
-        //public Func<XDocument> GetUserColWidths { get; set; }
     }
-
-    //public class xControl<T> where T : class 
-    //{
-    //    public xControl(object sender)
-    //    {
-    //        Value = sender as T;
-    //    }
-    //    public T Value { get; set; }
-    //    public dynamic Tags = new xConf(new Hashtable());
-    //    //public static implicit operator T(Ctl<T> value) 
-    //    //{
-    //    //    return value as T;
-    //    //}
-    //}
 
     public class MyTextBox
     {
@@ -253,35 +196,8 @@ namespace EomApp1.Screens.Accounting.Controls
         }
     }
 
-    public class xConf : DynamicObject
-    {
-        public xConf(Hashtable h)
-        {
-            ht = h;
-        }
-        Hashtable ht = new Hashtable();
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            result = ht[binder.Name];
-            return true;
-        }
-        public override bool TrySetMember(SetMemberBinder binder, object value)
-        {
-            ht[binder.Name] = value;
-            return true;
-        }
-    }
-
     public static class MyExt
     {
-        //public static Conf Tags(this TextBox t)
-        //{
-        //    if (t.Tag == null)
-        //    {
-        //        t.Tag = new xConf(new Hashtable());
-        //    }
-        //    return (Conf)t.Tag;
-        //}
         public static string xFormat(this string s, params string[] args)
         {
             return string.Format(s, args);

@@ -12138,7 +12138,7 @@ WHERE        (Publisher = @Publisher)";
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::EomApp1.Properties.Settings.Default.zDADatabaseJuly2012TestConnectionString;
+            this._connection.ConnectionString = global::EomApp1.Properties.Settings.Default.DADatabaseR1ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

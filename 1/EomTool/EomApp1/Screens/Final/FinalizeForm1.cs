@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using EomApp1.Services;
 using EomApp1.UI;
 using DAgents.Common;
 using EomAppCommon;
@@ -11,7 +10,6 @@ namespace EomApp1.Screens.Final
 {
     public partial class FinalizeForm1 : AppFormBase
     {
-        private EomAppService _eomAppService;
         private DataGridViewLinkColumn[] numPubCols1;
         private DataGridViewLinkColumn[] numPubCols2;
         private int[] pubColIndicies1;
@@ -101,7 +99,7 @@ namespace EomApp1.Screens.Final
                 if (ConfirmationBox.ShowConfirmationModalDialog("Finalize", out note))
                 {
                     FinalizeCampaign(pid);
-                    AddCampaignNote(pid, note); // model
+                    CampaignNoteUtility.AddCampaignNote(pid, note); // model
                     DoFillCampaigns();
                 }
             }
@@ -111,7 +109,7 @@ namespace EomApp1.Screens.Final
                 && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
             )
             {
-                HandleNumPubsClick(e, pid, grid, Forms.PublishersForm.Mode.Finalize);
+                HandleNumPubsClick(e, pid, grid, UI.PublishersForm.Mode.Finalize);
             }
         }
 
@@ -129,7 +127,7 @@ namespace EomApp1.Screens.Final
                 if (ConfirmationBox.ShowConfirmationModalDialog("Verify", out note))
                 {
                     VerifyCampaign(pid);
-                    AddCampaignNote(pid, note);
+                    CampaignNoteUtility.AddCampaignNote(pid, note);
                     FillCampaigns();
                 }
             }
@@ -139,7 +137,7 @@ namespace EomApp1.Screens.Final
                 if (ConfirmationBox.ShowConfirmationModalDialog("Review", out note))
                 {
                     ReviewCampaign(pid);
-                    AddCampaignNote(pid, note);
+                    CampaignNoteUtility.AddCampaignNote(pid, note);
                     FillCampaigns();
                 }
             }
@@ -149,12 +147,12 @@ namespace EomApp1.Screens.Final
                 && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
             )
             {
-                HandleNumPubsClick(e, pid, grid, Forms.PublishersForm.Mode.Verify);
+                HandleNumPubsClick(e, pid, grid, UI.PublishersForm.Mode.Verify);
             }
         }
 
 
-        private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, DataGridView grid, Forms.PublishersForm.Mode mode)
+        private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, DataGridView grid, UI.PublishersForm.Mode mode)
         {
             string filter = null;
             string headerText = grid.Columns[e.ColumnIndex].HeaderText;
@@ -162,29 +160,15 @@ namespace EomApp1.Screens.Final
             {
                 filter = this.pubColHeaderTextToFilter[headerText];
             }
-            var publishersForm = new Forms.PublishersForm(this, pid, mode, filter);
+            var publishersForm = new UI.PublishersForm(this, pid, mode, filter);
             MaskedDialog.ShowDialog(this, publishersForm);
         }
 
-        private void AddCampaignNote(int campaignId, string note)
+        public IEnumerable<CampaignNote> GetCampaignNotes(int campaignId)
         {
-            if (!string.IsNullOrEmpty(note))
-            {
-                TransactionScripts.AddCampaignNote(campaignId, note);
-            }
-        }
-
-        ITxns TransactionScripts
-        {
-            get
-            {
-                return Services.Data.Txns;
-            }
-        }
-
-        public EomAppService Services
-        {
-            get { return _eomAppService ?? (_eomAppService = new EomAppService(new DataService(new Txns()))); }
+            return from c in new FinalizeDataDataContext(true).CampaignNotes
+                   where c.campaign_id == campaignId
+                   select c;
         }
 
         private void ReviewCampaign(int id)
@@ -272,12 +256,6 @@ namespace EomApp1.Screens.Final
             campaignDataGridView.Refresh();
         }
 
-        private void ShowQCDialog(object sender, EventArgs e)
-        {
-            var a = new StatusMonitor();
-            a.Show();
-        }
-
         private void campaignDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == NoteDGCol.Index)
@@ -286,7 +264,7 @@ namespace EomApp1.Screens.Final
                 if (ConfirmationBox.ShowConfirmationModalDialog("Message", out note))
                 {
                     var campaignID = (int)campaignDataGridView["pidCol", e.RowIndex].Value;
-                    AddCampaignNote(campaignID, note);
+                    CampaignNoteUtility.AddCampaignNote(campaignID, note);
                     DoFillCampaigns();
 
                 }
@@ -317,7 +295,7 @@ namespace EomApp1.Screens.Final
         private void FillNotesList(int rowIndex)
         {
             var campaignID = (int)campaignDataGridView["pidCol", rowIndex].Value;
-            this.notesListForm.Fill(TransactionScripts, campaignID);
+            this.notesListForm.Fill(this, campaignID);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -346,7 +324,7 @@ namespace EomApp1.Screens.Final
 
         private void finalizedRevenueButton_Click(object sender, EventArgs e)
         {
-            MaskedDialog.ShowDialog(this, new Screens.Final.Forms.VerifiedRevenueForm(this));
+            MaskedDialog.ShowDialog(this, new Screens.Final.UI.VerifiedRevenueForm(this));
         }
 
         private void revStatusCheckBox_CheckedChanged(object sender, EventArgs e)

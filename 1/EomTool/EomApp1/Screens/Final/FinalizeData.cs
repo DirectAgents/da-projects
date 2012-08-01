@@ -17,11 +17,5 @@ namespace EomApp1.Screens.Final
                 throw new Exception("Connection String Error");
             }
         }
-
-        public new void SubmitChanges()
-        {
-            base.SubmitChanges();
-            GlobalHelpers.ExecutePostSubmitSql();
-        }
     }
 }

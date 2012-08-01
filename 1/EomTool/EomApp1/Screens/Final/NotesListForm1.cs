@@ -17,7 +17,7 @@ namespace EomApp1.Screens.Final
         }
 
         // note: unity for ITxns..
-        internal void Fill(Services.ITxns txns, int campaignId)
+        internal void Fill(FinalizeForm1 txns, int campaignId)
         {
             listView1.Clear();
             var items = txns.GetCampaignNotes(campaignId).Reverse();

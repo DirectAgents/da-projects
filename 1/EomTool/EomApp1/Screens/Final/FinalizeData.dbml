@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="zDADatabaseJuly2012Test" Class="FinalizeDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=biz2\da;Initial Catalog=zDADatabaseJuly2012Test;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="zDADatabaseJuly2012TestConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.ItemReportingStatus" Member="ItemReportingStatus">
     <Type Name="ItemReportingStatus">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

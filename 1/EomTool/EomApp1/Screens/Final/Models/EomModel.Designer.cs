@@ -20,12 +20,12 @@ using System.Runtime.Serialization;
 
 [assembly: EdmRelationshipAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.AccountManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Campaign), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Campaign_Advertiser_id_FK_Advertiser_id_PK", "Advertiser", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.Advertiser), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Campaign), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.CampaignStatu), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Campaign), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_Item_CampaignStatus", "CampaignStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.CampaignStatu), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Item), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Affiliate_NetTermType_id_FK_NetTermType_id_PK", "NetTermType", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomApp1.Screens.Final.Models.NetTermType), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Affiliate), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.CampaignStatu), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Campaign), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.Currency), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Affiliate), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK1", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Item), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.Currency), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Affiliate), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "Affiliate_NetTermType_id_FK_NetTermType_id_PK", "NetTermType", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomApp1.Screens.Final.Models.NetTermType), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Affiliate), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_Item_CampaignStatus", "CampaignStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.CampaignStatu), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Item), true)]
 
 #endregion
 
@@ -36,32 +36,32 @@ namespace EomApp1.Screens.Final.Models
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    public partial class EomEntities : ObjectContext
+    public partial class Eom : ObjectContext
     {
         #region Constructors
     
         /// <summary>
-        /// Initializes a new EomEntities object using the connection string found in the 'EomEntities' section of the application configuration file.
+        /// Initializes a new Eom object using the connection string found in the 'Eom' section of the application configuration file.
         /// </summary>
-        public EomEntities() : base("name=EomEntities", "EomEntities")
+        public Eom() : base("name=Eom", "Eom")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
         }
     
         /// <summary>
-        /// Initialize a new EomEntities object.
+        /// Initialize a new Eom object.
         /// </summary>
-        public EomEntities(string connectionString) : base(connectionString, "EomEntities")
+        public Eom(string connectionString) : base(connectionString, "Eom")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
         }
     
         /// <summary>
-        /// Initialize a new EomEntities object.
+        /// Initialize a new Eom object.
         /// </summary>
-        public EomEntities(EntityConnection connection) : base(connection, "EomEntities")
+        public Eom(EntityConnection connection) : base(connection, "Eom")
         {
             this.ContextOptions.LazyLoadingEnabled = true;
             OnContextCreated();
@@ -112,22 +112,6 @@ namespace EomApp1.Screens.Final.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Campaign> Campaigns
-        {
-            get
-            {
-                if ((_Campaigns == null))
-                {
-                    _Campaigns = base.CreateObjectSet<Campaign>("Campaigns");
-                }
-                return _Campaigns;
-            }
-        }
-        private ObjectSet<Campaign> _Campaigns;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<CampaignStatu> CampaignStatus
         {
             get
@@ -144,50 +128,18 @@ namespace EomApp1.Screens.Final.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Currency> Currencies
+        public ObjectSet<NetTermType> NetTermTypes
         {
             get
             {
-                if ((_Currencies == null))
+                if ((_NetTermTypes == null))
                 {
-                    _Currencies = base.CreateObjectSet<Currency>("Currencies");
+                    _NetTermTypes = base.CreateObjectSet<NetTermType>("NetTermTypes");
                 }
-                return _Currencies;
+                return _NetTermTypes;
             }
         }
-        private ObjectSet<Currency> _Currencies;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Item> Items
-        {
-            get
-            {
-                if ((_Items == null))
-                {
-                    _Items = base.CreateObjectSet<Item>("Items");
-                }
-                return _Items;
-            }
-        }
-        private ObjectSet<Item> _Items;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<LatestCampaignNote> LatestCampaignNotes
-        {
-            get
-            {
-                if ((_LatestCampaignNotes == null))
-                {
-                    _LatestCampaignNotes = base.CreateObjectSet<LatestCampaignNote>("LatestCampaignNotes");
-                }
-                return _LatestCampaignNotes;
-            }
-        }
-        private ObjectSet<LatestCampaignNote> _LatestCampaignNotes;
+        private ObjectSet<NetTermType> _NetTermTypes;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -208,18 +160,66 @@ namespace EomApp1.Screens.Final.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<NetTermType> NetTermTypes
+        public ObjectSet<Campaign> Campaigns
         {
             get
             {
-                if ((_NetTermTypes == null))
+                if ((_Campaigns == null))
                 {
-                    _NetTermTypes = base.CreateObjectSet<NetTermType>("NetTermTypes");
+                    _Campaigns = base.CreateObjectSet<Campaign>("Campaigns");
                 }
-                return _NetTermTypes;
+                return _Campaigns;
             }
         }
-        private ObjectSet<NetTermType> _NetTermTypes;
+        private ObjectSet<Campaign> _Campaigns;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Item> Items
+        {
+            get
+            {
+                if ((_Items == null))
+                {
+                    _Items = base.CreateObjectSet<Item>("Items");
+                }
+                return _Items;
+            }
+        }
+        private ObjectSet<Item> _Items;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Currency> Currencies
+        {
+            get
+            {
+                if ((_Currencies == null))
+                {
+                    _Currencies = base.CreateObjectSet<Currency>("Currencies");
+                }
+                return _Currencies;
+            }
+        }
+        private ObjectSet<Currency> _Currencies;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<VerifiedItemsCampaignRevenueSummary> VerifiedItemsCampaignRevenueSummaries
+        {
+            get
+            {
+                if ((_VerifiedItemsCampaignRevenueSummaries == null))
+                {
+                    _VerifiedItemsCampaignRevenueSummaries = base.CreateObjectSet<VerifiedItemsCampaignRevenueSummary>("VerifiedItemsCampaignRevenueSummaries");
+                }
+                return _VerifiedItemsCampaignRevenueSummaries;
+            }
+        }
+        private ObjectSet<VerifiedItemsCampaignRevenueSummary> _VerifiedItemsCampaignRevenueSummaries;
 
         #endregion
         #region AddTo Methods
@@ -241,14 +241,6 @@ namespace EomApp1.Screens.Final.Models
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Campaigns EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToCampaigns(Campaign campaign)
-        {
-            base.AddObject("Campaigns", campaign);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the CampaignStatus EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToCampaignStatus(CampaignStatu campaignStatu)
@@ -257,27 +249,11 @@ namespace EomApp1.Screens.Final.Models
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the Currencies EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the NetTermTypes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToCurrencies(Currency currency)
+        public void AddToNetTermTypes(NetTermType netTermType)
         {
-            base.AddObject("Currencies", currency);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Items EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToItems(Item item)
-        {
-            base.AddObject("Items", item);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the LatestCampaignNotes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToLatestCampaignNotes(LatestCampaignNote latestCampaignNote)
-        {
-            base.AddObject("LatestCampaignNotes", latestCampaignNote);
+            base.AddObject("NetTermTypes", netTermType);
         }
     
         /// <summary>
@@ -289,11 +265,35 @@ namespace EomApp1.Screens.Final.Models
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the NetTermTypes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the Campaigns EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToNetTermTypes(NetTermType netTermType)
+        public void AddToCampaigns(Campaign campaign)
         {
-            base.AddObject("NetTermTypes", netTermType);
+            base.AddObject("Campaigns", campaign);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Items EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToItems(Item item)
+        {
+            base.AddObject("Items", item);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Currencies EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToCurrencies(Currency currency)
+        {
+            base.AddObject("Currencies", currency);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the VerifiedItemsCampaignRevenueSummaries EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToVerifiedItemsCampaignRevenueSummaries(VerifiedItemsCampaignRevenueSummary verifiedItemsCampaignRevenueSummary)
+        {
+            base.AddObject("VerifiedItemsCampaignRevenueSummaries", verifiedItemsCampaignRevenueSummary);
         }
 
         #endregion
@@ -905,44 +905,6 @@ namespace EomApp1.Screens.Final.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Currency")]
-        public Currency Currency
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Currency").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Currency").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Currency> CurrencyReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Currency");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Currency>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Currency", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomModel", "Affiliate_NetTermType_id_FK_NetTermType_id_PK", "NetTermType")]
         public NetTermType NetTermType
         {
@@ -971,6 +933,44 @@ namespace EomApp1.Screens.Final.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<NetTermType>("EomModel.Affiliate_NetTermType_id_FK_NetTermType_id_PK", "NetTermType", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Currency")]
+        public Currency Currency
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Currency").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Currency").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Currency> CurrencyReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Currency");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Currency>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Currency", value);
                 }
             }
         }
@@ -1607,16 +1607,16 @@ namespace EomApp1.Screens.Final.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus")]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatu")]
         public CampaignStatu CampaignStatu
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatu").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatu").Value = value;
             }
         }
         /// <summary>
@@ -1628,13 +1628,13 @@ namespace EomApp1.Screens.Final.Models
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatu");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatu", value);
                 }
             }
         }
@@ -1883,6 +1883,28 @@ namespace EomApp1.Screens.Final.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate")]
+        public EntityCollection<Affiliate> Affiliates
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Affiliate>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Affiliate>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK", "Item")]
         public EntityCollection<Item> Items
         {
@@ -1920,28 +1942,6 @@ namespace EomApp1.Screens.Final.Models
                 }
             }
         }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate")]
-        public EntityCollection<Affiliate> Affiliates
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Affiliate>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Affiliate>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate", value);
-                }
-            }
-        }
 
         #endregion
     }
@@ -1973,9 +1973,9 @@ namespace EomApp1.Screens.Final.Models
         /// <param name="accounting_notes">Initial value of the accounting_notes property.</param>
         /// <param name="item_accounting_status_id">Initial value of the item_accounting_status_id property.</param>
         /// <param name="item_reporting_status_id">Initial value of the item_reporting_status_id property.</param>
-        /// <param name="campaign_status_id">Initial value of the campaign_status_id property.</param>
         /// <param name="modified">Initial value of the modified property.</param>
-        public static Item CreateItem(global::System.Int32 id, global::System.Int32 pid, global::System.Int32 affid, global::System.Int32 source_id, global::System.Int32 unit_type_id, global::System.Int32 revenue_currency_id, global::System.Int32 cost_currency_id, global::System.Decimal revenue_per_unit, global::System.Decimal cost_per_unit, global::System.Decimal num_units, global::System.String notes, global::System.String accounting_notes, global::System.Int32 item_accounting_status_id, global::System.Int32 item_reporting_status_id, global::System.Int32 campaign_status_id, global::System.DateTime modified)
+        /// <param name="campaign_status_id">Initial value of the campaign_status_id property.</param>
+        public static Item CreateItem(global::System.Int32 id, global::System.Int32 pid, global::System.Int32 affid, global::System.Int32 source_id, global::System.Int32 unit_type_id, global::System.Int32 revenue_currency_id, global::System.Int32 cost_currency_id, global::System.Decimal revenue_per_unit, global::System.Decimal cost_per_unit, global::System.Decimal num_units, global::System.String notes, global::System.String accounting_notes, global::System.Int32 item_accounting_status_id, global::System.Int32 item_reporting_status_id, global::System.DateTime modified, global::System.Int32 campaign_status_id)
         {
             Item item = new Item();
             item.id = id;
@@ -1992,8 +1992,8 @@ namespace EomApp1.Screens.Final.Models
             item.accounting_notes = accounting_notes;
             item.item_accounting_status_id = item_accounting_status_id;
             item.item_reporting_status_id = item_reporting_status_id;
-            item.campaign_status_id = campaign_status_id;
             item.modified = modified;
+            item.campaign_status_id = campaign_status_id;
             return item;
         }
 
@@ -2390,30 +2390,6 @@ namespace EomApp1.Screens.Final.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 campaign_status_id
-        {
-            get
-            {
-                return _campaign_status_id;
-            }
-            set
-            {
-                Oncampaign_status_idChanging(value);
-                ReportPropertyChanging("campaign_status_id");
-                _campaign_status_id = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("campaign_status_id");
-                Oncampaign_status_idChanged();
-            }
-        }
-        private global::System.Int32 _campaign_status_id;
-        partial void Oncampaign_status_idChanging(global::System.Int32 value);
-        partial void Oncampaign_status_idChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public Nullable<global::System.Decimal> total_revenue
@@ -2506,48 +2482,34 @@ namespace EomApp1.Screens.Final.Models
         private global::System.DateTime _modified;
         partial void OnmodifiedChanging(global::System.DateTime value);
         partial void OnmodifiedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 campaign_status_id
+        {
+            get
+            {
+                return _campaign_status_id;
+            }
+            set
+            {
+                Oncampaign_status_idChanging(value);
+                ReportPropertyChanging("campaign_status_id");
+                _campaign_status_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("campaign_status_id");
+                Oncampaign_status_idChanged();
+            }
+        }
+        private global::System.Int32 _campaign_status_id;
+        partial void Oncampaign_status_idChanging(global::System.Int32 value);
+        partial void Oncampaign_status_idChanged();
 
         #endregion
     
         #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Item_CampaignStatus", "CampaignStatus")]
-        public CampaignStatu CampaignStatu
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.FK_Item_CampaignStatus", "CampaignStatus").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.FK_Item_CampaignStatus", "CampaignStatus").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<CampaignStatu> CampaignStatuReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.FK_Item_CampaignStatus", "CampaignStatus");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatu>("EomModel.FK_Item_CampaignStatus", "CampaignStatus", value);
-                }
-            }
-        }
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -2624,92 +2586,46 @@ namespace EomApp1.Screens.Final.Models
                 }
             }
         }
-
-        #endregion
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="LatestCampaignNote")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class LatestCampaignNote : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new LatestCampaignNote object.
-        /// </summary>
-        /// <param name="campaign_id">Initial value of the campaign_id property.</param>
-        /// <param name="note">Initial value of the note property.</param>
-        public static LatestCampaignNote CreateLatestCampaignNote(global::System.Int32 campaign_id, global::System.String note)
-        {
-            LatestCampaignNote latestCampaignNote = new LatestCampaignNote();
-            latestCampaignNote.campaign_id = campaign_id;
-            latestCampaignNote.note = note;
-            return latestCampaignNote;
-        }
-
-        #endregion
-        #region Primitive Properties
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        public global::System.Int32 campaign_id
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Item_CampaignStatus", "CampaignStatu")]
+        public CampaignStatu CampaignStatu
         {
             get
             {
-                return _campaign_id;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.FK_Item_CampaignStatus", "CampaignStatu").Value;
             }
             set
             {
-                if (_campaign_id != value)
-                {
-                    Oncampaign_idChanging(value);
-                    ReportPropertyChanging("campaign_id");
-                    _campaign_id = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("campaign_id");
-                    Oncampaign_idChanged();
-                }
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.FK_Item_CampaignStatus", "CampaignStatu").Value = value;
             }
         }
-        private global::System.Int32 _campaign_id;
-        partial void Oncampaign_idChanging(global::System.Int32 value);
-        partial void Oncampaign_idChanged();
-    
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public global::System.String note
+        public EntityReference<CampaignStatu> CampaignStatuReference
         {
             get
             {
-                return _note;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.FK_Item_CampaignStatus", "CampaignStatu");
             }
             set
             {
-                if (_note != value)
+                if ((value != null))
                 {
-                    OnnoteChanging(value);
-                    ReportPropertyChanging("note");
-                    _note = StructuralObject.SetValidValue(value, false);
-                    ReportPropertyChanged("note");
-                    OnnoteChanged();
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatu>("EomModel.FK_Item_CampaignStatus", "CampaignStatu", value);
                 }
             }
         }
-        private global::System.String _note;
-        partial void OnnoteChanging(global::System.String value);
-        partial void OnnoteChanged();
 
         #endregion
-    
     }
     
     /// <summary>
@@ -2816,6 +2732,196 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="VerifiedItemsCampaignRevenueSummary")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class VerifiedItemsCampaignRevenueSummary : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new VerifiedItemsCampaignRevenueSummary object.
+        /// </summary>
+        /// <param name="pid">Initial value of the pid property.</param>
+        /// <param name="campaignName">Initial value of the CampaignName property.</param>
+        /// <param name="currencyName">Initial value of the CurrencyName property.</param>
+        /// <param name="advertiserName">Initial value of the AdvertiserName property.</param>
+        public static VerifiedItemsCampaignRevenueSummary CreateVerifiedItemsCampaignRevenueSummary(global::System.Int32 pid, global::System.String campaignName, global::System.String currencyName, global::System.String advertiserName)
+        {
+            VerifiedItemsCampaignRevenueSummary verifiedItemsCampaignRevenueSummary = new VerifiedItemsCampaignRevenueSummary();
+            verifiedItemsCampaignRevenueSummary.pid = pid;
+            verifiedItemsCampaignRevenueSummary.CampaignName = campaignName;
+            verifiedItemsCampaignRevenueSummary.CurrencyName = currencyName;
+            verifiedItemsCampaignRevenueSummary.AdvertiserName = advertiserName;
+            return verifiedItemsCampaignRevenueSummary;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 pid
+        {
+            get
+            {
+                return _pid;
+            }
+            set
+            {
+                if (_pid != value)
+                {
+                    OnpidChanging(value);
+                    ReportPropertyChanging("pid");
+                    _pid = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("pid");
+                    OnpidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _pid;
+        partial void OnpidChanging(global::System.Int32 value);
+        partial void OnpidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String CampaignName
+        {
+            get
+            {
+                return _CampaignName;
+            }
+            set
+            {
+                if (_CampaignName != value)
+                {
+                    OnCampaignNameChanging(value);
+                    ReportPropertyChanging("CampaignName");
+                    _CampaignName = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("CampaignName");
+                    OnCampaignNameChanged();
+                }
+            }
+        }
+        private global::System.String _CampaignName;
+        partial void OnCampaignNameChanging(global::System.String value);
+        partial void OnCampaignNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> TotalRevenue
+        {
+            get
+            {
+                return _TotalRevenue;
+            }
+            set
+            {
+                OnTotalRevenueChanging(value);
+                ReportPropertyChanging("TotalRevenue");
+                _TotalRevenue = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("TotalRevenue");
+                OnTotalRevenueChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _TotalRevenue;
+        partial void OnTotalRevenueChanging(Nullable<global::System.Decimal> value);
+        partial void OnTotalRevenueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String CurrencyName
+        {
+            get
+            {
+                return _CurrencyName;
+            }
+            set
+            {
+                if (_CurrencyName != value)
+                {
+                    OnCurrencyNameChanging(value);
+                    ReportPropertyChanging("CurrencyName");
+                    _CurrencyName = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("CurrencyName");
+                    OnCurrencyNameChanged();
+                }
+            }
+        }
+        private global::System.String _CurrencyName;
+        partial void OnCurrencyNameChanging(global::System.String value);
+        partial void OnCurrencyNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ItemIds
+        {
+            get
+            {
+                return _ItemIds;
+            }
+            set
+            {
+                OnItemIdsChanging(value);
+                ReportPropertyChanging("ItemIds");
+                _ItemIds = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ItemIds");
+                OnItemIdsChanged();
+            }
+        }
+        private global::System.String _ItemIds;
+        partial void OnItemIdsChanging(global::System.String value);
+        partial void OnItemIdsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String AdvertiserName
+        {
+            get
+            {
+                return _AdvertiserName;
+            }
+            set
+            {
+                if (_AdvertiserName != value)
+                {
+                    OnAdvertiserNameChanging(value);
+                    ReportPropertyChanging("AdvertiserName");
+                    _AdvertiserName = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("AdvertiserName");
+                    OnAdvertiserNameChanged();
+                }
+            }
+        }
+        private global::System.String _AdvertiserName;
+        partial void OnAdvertiserNameChanging(global::System.String value);
+        partial void OnAdvertiserNameChanged();
+
+        #endregion
+    
     }
 
     #endregion

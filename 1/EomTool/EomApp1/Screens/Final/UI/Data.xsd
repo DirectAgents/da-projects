@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Data" targetNamespace="http://tempuri.org/FinalizePublishersDataSet.xsd" xmlns:mstns="http://tempuri.org/FinalizePublishersDataSet.xsd" xmlns="http://tempuri.org/FinalizePublishersDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="Data" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="Data" msprop:Generator_UserDSName="Data">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Publishers" msprop:Generator_TableClassName="PublishersDataTable" msprop:Generator_TableVarName="tablePublishers" msprop:Generator_TablePropName="Publishers" msprop:Generator_RowDeletingName="PublishersRowDeleting" msprop:Generator_UserTableName="Publishers" msprop:Generator_RowChangingName="PublishersRowChanging" msprop:Generator_RowEvHandlerName="PublishersRowChangeEventHandler" msprop:Generator_RowDeletedName="PublishersRowDeleted" msprop:Generator_RowEvArgName="PublishersRowChangeEvent" msprop:Generator_RowChangedName="PublishersRowChanged" msprop:Generator_RowClassName="PublishersRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Publisher" msprop:Generator_ColumnVarNameInTable="columnPublisher" msprop:Generator_ColumnPropNameInRow="Publisher" msprop:Generator_ColumnPropNameInTable="PublisherColumn" msprop:Generator_UserColumnName="Publisher" type="xs:string" minOccurs="0" />
+              <xs:element name="Curr" msprop:Generator_ColumnVarNameInTable="columnCurr" msprop:Generator_ColumnPropNameInRow="Curr" msprop:Generator_ColumnPropNameInTable="CurrColumn" msprop:Generator_UserColumnName="Curr" type="xs:string" minOccurs="0" />
+              <xs:element name="Revenue" msprop:Generator_ColumnVarNameInTable="columnRevenue" msprop:Generator_ColumnPropNameInRow="Revenue" msprop:Generator_ColumnPropNameInTable="RevenueColumn" msprop:Generator_UserColumnName="Revenue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AffId" msprop:Generator_ColumnVarNameInTable="columnAffId" msprop:Generator_ColumnPropNameInRow="AffId" msprop:Generator_ColumnPropNameInTable="AffIdColumn" msprop:Generator_UserColumnName="AffId" type="xs:int" />
+              <xs:element name="NetTerms" msprop:Generator_ColumnVarNameInTable="columnNetTerms" msprop:Generator_ColumnPropNameInRow="NetTerms" msprop:Generator_ColumnPropNameInTable="NetTermsColumn" msprop:Generator_UserColumnName="NetTerms" type="xs:string" minOccurs="0" />
+              <xs:element name="PID" msprop:Generator_ColumnVarNameInTable="columnPID" msprop:Generator_ColumnPropNameInRow="PID" msprop:Generator_ColumnPropNameInTable="PIDColumn" msprop:Generator_UserColumnName="PID" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Campaigns" msprop:Generator_TableClassName="CampaignsDataTable" msprop:Generator_TableVarName="tableCampaigns" msprop:Generator_TablePropName="Campaigns" msprop:Generator_RowDeletingName="CampaignsRowDeleting" msprop:Generator_UserTableName="Campaigns" msprop:Generator_RowChangingName="CampaignsRowChanging" msprop:Generator_RowEvHandlerName="CampaignsRowChangeEventHandler" msprop:Generator_RowDeletedName="CampaignsRowDeleted" msprop:Generator_RowEvArgName="CampaignsRowChangeEvent" msprop:Generator_RowChangedName="CampaignsRowChanged" msprop:Generator_RowClassName="CampaignsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PID" msprop:Generator_ColumnVarNameInTable="columnPID" msprop:Generator_ColumnPropNameInRow="PID" msprop:Generator_ColumnPropNameInTable="PIDColumn" msprop:Generator_UserColumnName="PID" type="xs:int" />
+              <xs:element name="CampaignName" msprop:Generator_ColumnVarNameInTable="columnCampaignName" msprop:Generator_ColumnPropNameInRow="CampaignName" msprop:Generator_ColumnPropNameInTable="CampaignNameColumn" msprop:Generator_UserColumnName="CampaignName" type="xs:string" minOccurs="0" />
+              <xs:element name="VerifiedRevenue" msprop:nullValue="0" msprop:Generator_ColumnPropNameInRow="VerifiedRevenue" msprop:Generator_ColumnVarNameInTable="columnVerifiedRevenue" msprop:Generator_ColumnPropNameInTable="VerifiedRevenueColumn" msprop:Generator_UserColumnName="VerifiedRevenue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Currency" msprop:nullValue="-" msprop:Generator_ColumnPropNameInRow="Currency" msprop:Generator_ColumnVarNameInTable="columnCurrency" msprop:Generator_ColumnPropNameInTable="CurrencyColumn" msprop:Generator_UserColumnName="Currency" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemIds" msprop:Generator_ColumnVarNameInTable="columnItemIds" msprop:Generator_ColumnPropNameInRow="ItemIds" msprop:Generator_ColumnPropNameInTable="ItemIdsColumn" msprop:Generator_UserColumnName="ItemIds" type="xs:string" minOccurs="0" />
+              <xs:element name="AdvertiserName" msprop:Generator_ColumnVarNameInTable="columnAdvertiserName" msprop:Generator_ColumnPropNameInRow="AdvertiserName" msprop:Generator_ColumnPropNameInTable="AdvertiserNameColumn" msprop:Generator_UserColumnName="AdvertiserName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Publishers" />
+      <xs:field xpath="mstns:AffId" />
+    </xs:unique>
+    <xs:unique name="Campaigns_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Campaigns" />
+      <xs:field xpath="mstns:PID" />
+    </xs:unique>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="Campaigns_Publishers" msdata:parent="Campaigns" msdata:child="Publishers" msdata:parentkey="PID" msdata:childkey="PID" msprop:Generator_UserChildTable="Publishers" msprop:Generator_ChildPropName="GetPublishersRows" msprop:Generator_ParentPropName="CampaignsRow" msprop:Generator_UserRelationName="Campaigns_Publishers" msprop:Generator_RelationVarName="relationCampaigns_Publishers" msprop:Generator_UserParentTable="Campaigns" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

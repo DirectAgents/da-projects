@@ -37,16 +37,16 @@
             this.bindingNavigator = new System.Windows.Forms.BindingNavigator(this.components);
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.gridView = new System.Windows.Forms.DataGridView();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.loggerBox1 = new Mainn.Controls.Logging.LoggerBox();
             this.UpdateDatabaseCheckCol = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.connectionStringCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.loggerBox1 = new Mainn.Controls.Logging.LoggerBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator)).BeginInit();
@@ -136,65 +136,6 @@
             this.gridView.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridView_CellMouseUp);
             this.gridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridView_CellValueChanged);
             // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.BackColor = System.Drawing.Color.DodgerBlue;
-            this.textBox1.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::EomToolDatabaseUpdater.Properties.Settings.Default, "SqlText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBox1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(826, 368);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = global::EomToolDatabaseUpdater.Properties.Settings.Default.SqlText;
-            this.textBox1.WordWrap = false;
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.gridView);
-            this.splitContainer1.Panel2.Controls.Add(this.bindingNavigator);
-            this.splitContainer1.Size = new System.Drawing.Size(1329, 743);
-            this.splitContainer1.SplitterDistance = 829;
-            this.splitContainer1.TabIndex = 3;
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.textBox1);
-            this.splitContainer2.Size = new System.Drawing.Size(829, 743);
-            this.splitContainer2.SplitterDistance = 371;
-            this.splitContainer2.TabIndex = 3;
-            // 
-            // loggerBox1
-            // 
-            this.loggerBox1.Location = new System.Drawing.Point(0, 0);
-            this.loggerBox1.Name = "loggerBox1";
-            this.loggerBox1.ShowErrorMessages = false;
-            this.loggerBox1.ShowLogMessages = false;
-            this.loggerBox1.Size = new System.Drawing.Size(602, 577);
-            this.loggerBox1.TabIndex = 0;
-            // 
             // UpdateDatabaseCheckCol
             // 
             this.UpdateDatabaseCheckCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -242,6 +183,65 @@
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             this.dataGridViewTextBoxColumn5.ReadOnly = true;
             this.dataGridViewTextBoxColumn5.Visible = false;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.BackColor = System.Drawing.Color.DodgerBlue;
+            this.textBox1.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::EomToolDatabaseUpdater.Properties.Settings.Default, "SqlText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.ForeColor = System.Drawing.SystemColors.Window;
+            this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox1.Size = new System.Drawing.Size(826, 367);
+            this.textBox1.TabIndex = 2;
+            this.textBox1.Text = global::EomToolDatabaseUpdater.Properties.Settings.Default.SqlText;
+            this.textBox1.WordWrap = false;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.gridView);
+            this.splitContainer1.Panel2.Controls.Add(this.bindingNavigator);
+            this.splitContainer1.Size = new System.Drawing.Size(1329, 743);
+            this.splitContainer1.SplitterDistance = 829;
+            this.splitContainer1.TabIndex = 3;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.textBox1);
+            this.splitContainer2.Size = new System.Drawing.Size(829, 743);
+            this.splitContainer2.SplitterDistance = 370;
+            this.splitContainer2.TabIndex = 3;
+            // 
+            // loggerBox1
+            // 
+            this.loggerBox1.Location = new System.Drawing.Point(0, 0);
+            this.loggerBox1.Name = "loggerBox1";
+            this.loggerBox1.ShowErrorMessages = false;
+            this.loggerBox1.ShowLogMessages = false;
+            this.loggerBox1.Size = new System.Drawing.Size(602, 577);
+            this.loggerBox1.TabIndex = 0;
             // 
             // SqlExecuteForm
             // 

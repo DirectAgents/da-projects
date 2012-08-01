@@ -76,7 +76,7 @@ namespace EomApp1
         // Affiliate PublisherMap
         private void publisherMapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new PublisherNameCombine.PublisherCombine();
+            var a = new Screens.PublisherNameCombine.PublisherCombine();
             a.Show();
         }
 
@@ -178,7 +178,7 @@ namespace EomApp1
         // Accounting VerifiedRevenue
         private void finalizedRevenueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var a = new Screens.Final.Forms.VerifiedRevenueForm();
+            var a = new Screens.Final.UI.VerifiedRevenueForm();
             a.Show();
         }
 

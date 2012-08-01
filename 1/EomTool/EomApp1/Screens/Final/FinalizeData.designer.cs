@@ -48,7 +48,7 @@ namespace EomApp1.Screens.Final
     #endregion
 		
 		public FinalizeDataDataContext() : 
-				base(global::EomApp1.Properties.Settings.Default.zDADatabaseJuly2012TestConnectionString, mappingSource)
+				base(global::EomApp1.Properties.Settings.Default.DADatabaseR1ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}

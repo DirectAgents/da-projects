@@ -789,8 +789,6 @@
             this.pROC_SELECT_Eddy_Accounting_View_2DataGridView.TabIndex = 0;
             this.pROC_SELECT_Eddy_Accounting_View_2DataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellContentClick);
             this.pROC_SELECT_Eddy_Accounting_View_2DataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.pROC_SELECT_Eddy_Accounting_View_2DataGridView_CellEndEdit);
-            this.pROC_SELECT_Eddy_Accounting_View_2DataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellValueChanged);
-            this.pROC_SELECT_Eddy_Accounting_View_2DataGridView.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.Grid_ColumnWidthChanged);
             // 
             // dataGridViewTextBoxColumn1
             // 
