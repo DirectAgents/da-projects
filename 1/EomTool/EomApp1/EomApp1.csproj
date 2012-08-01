@@ -212,6 +212,17 @@
     <Compile Include="Screens\Affiliate\Forms\AffiliatesForm1.Designer.cs">
       <DependentUpon>AffiliatesForm1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Campaign\CampaignsRevenueDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CampaignsRevenueDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Campaign\CampaignsRevenueForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Campaign\CampaignsRevenueForm.Designer.cs">
+      <DependentUpon>CampaignsRevenueForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Campaign\CampaignSynchDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
