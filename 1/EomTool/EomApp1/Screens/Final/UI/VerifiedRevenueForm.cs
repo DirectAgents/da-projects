@@ -116,7 +116,7 @@ namespace EomApp1.Screens.Final.UI
 
         private CampaignPublishers Publishers
         {
-            get { return new CampaignPublishers(SelectedCampaign.PID); }
+            get { return new CampaignPublishers(SelectedCampaign.PID, SelectedCampaign.Currency); }
         }
 
         private Campaigns Campaigns

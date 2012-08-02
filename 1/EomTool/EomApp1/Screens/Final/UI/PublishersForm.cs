@@ -19,18 +19,18 @@ namespace EomApp1.Screens.Final.UI
             InitializeComponent();
         }
 
-        public PublishersForm(FinalizeForm1 finalizeForm, int pid, Mode mode, string initialFilter)
+        public PublishersForm(FinalizeForm1 finalizeForm, int pid, string currency, Mode mode, string initialFilter)
         {
             InitializeComponent();
             this.parent = finalizeForm;
             this.mode = mode;
             this.initialFilter = initialFilter;
-            InitializeMVP(pid);
+            InitializeMVP(pid, currency);
         }
 
-        private void InitializeMVP(int pid)
+        private void InitializeMVP(int pid, string currency)
         {
-            var model = new CampaignPublishers(pid);
+            var model = new CampaignPublishers(pid, currency);
             this.presenter = new PublishersPresenter(this, model);
             this.Shown += new EventHandler(FormShown);
             this.finalizePublishersView.PublishersActionInvoked += new EventHandler<PublishersEventArgs>(finalizePublishersView_PublishersActionInvoked);

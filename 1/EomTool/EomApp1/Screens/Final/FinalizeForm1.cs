@@ -90,7 +90,8 @@ namespace EomApp1.Screens.Final
             if (e.RowIndex < 0) return;
 
             var grid = sender as DataGridView;
-            var pid = (int)grid["pidCol", e.RowIndex].Value;
+            var pid = (int)grid[pidCol.Index, e.RowIndex].Value;
+            var currency = (string)grid[Curr.Index, e.RowIndex].Value;
 
             // Final Button
             if (e.ColumnIndex == FinalizeCol.Index)
@@ -109,7 +110,7 @@ namespace EomApp1.Screens.Final
                 && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
             )
             {
-                HandleNumPubsClick(e, pid, grid, UI.PublishersForm.Mode.Finalize);
+                HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Finalize);
             }
         }
 
@@ -118,7 +119,8 @@ namespace EomApp1.Screens.Final
             if (e.RowIndex < 0) return;
 
             var grid = sender as DataGridView;
-            var pid = (int)grid["pidCol2", e.RowIndex].Value;
+            var pid = (int)grid[pidCol2.Index, e.RowIndex].Value;
+            var currency = (string)grid[dataGridViewTextBoxColumn6.Index, e.RowIndex].Value;
 
             string note;
             // Verify Button
@@ -147,12 +149,12 @@ namespace EomApp1.Screens.Final
                 && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
             )
             {
-                HandleNumPubsClick(e, pid, grid, UI.PublishersForm.Mode.Verify);
+                HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Verify);
             }
         }
 
 
-        private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, DataGridView grid, UI.PublishersForm.Mode mode)
+        private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, string currency, DataGridView grid, UI.PublishersForm.Mode mode)
         {
             string filter = null;
             string headerText = grid.Columns[e.ColumnIndex].HeaderText;
@@ -160,7 +162,7 @@ namespace EomApp1.Screens.Final
             {
                 filter = this.pubColHeaderTextToFilter[headerText];
             }
-            var publishersForm = new UI.PublishersForm(this, pid, mode, filter);
+            var publishersForm = new UI.PublishersForm(this, pid, currency, mode, filter);
             MaskedDialog.ShowDialog(this, publishersForm);
         }
 

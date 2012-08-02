@@ -7,9 +7,10 @@ namespace EomApp1.Screens.Final.Models
     {
         private bool initialized = false;
 
-        public CampaignPublishersBase(int pid)
+        public CampaignPublishersBase(int pid, string currency)
         {
             this.pid = pid;
+            this.currency = currency;
         }
 
         private void Initialize()
@@ -28,6 +29,9 @@ namespace EomApp1.Screens.Final.Models
 
         private int pid;
         public int Pid { get { return this.pid; } }
+
+        private string currency;
+        public string Currency { get { return currency; } }
 
         private string campaignName;
         public string CampaignName { get { Initialize(); return this.campaignName; } }

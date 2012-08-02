@@ -6,8 +6,8 @@ namespace EomApp1.Screens.Final.Models
 
     public class CampaignPublishers : CampaignPublishersBase
     {
-        public CampaignPublishers(int pid)
-            : base(pid)
+        public CampaignPublishers(int pid, string currency)
+            : base(pid, currency)
         {
         }
 
@@ -23,7 +23,11 @@ namespace EomApp1.Screens.Final.Models
             {
                 var query = from affiliate in db.Affiliates
                             from item in db.Items
-                            where affiliate.affid == item.affid && item.pid == Pid && item.campaign_status_id == (int)campaignStatusID
+                            where 
+                                affiliate.affid == item.affid && 
+                                item.pid == Pid && 
+                                item.campaign_status_id == (int)campaignStatusID &&
+                                item.Currency.name == this.Currency
                             group item by new { Affiliate = affiliate, RevenueCurrency = item.Currency } into g
                             select new
                             {
