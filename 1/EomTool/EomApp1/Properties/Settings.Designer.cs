@@ -245,15 +245,6 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("directagents\\aanodide,directagents\\kslesinsky")]
-        public string TestUserIdentities {
-            get {
-                return ((string)(this["TestUserIdentities"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool TestMode {
             get {
@@ -268,6 +259,15 @@ namespace EomApp1.Properties {
         public string EomToolSecurityConnectionString {
             get {
                 return ((string)(this["EomToolSecurityConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("directagents\\aanodide,directagents\\kslesinsky,aaron-pavillion\\aaron")]
+        public string TestUserIdentities {
+            get {
+                return ((string)(this["TestUserIdentities"]));
             }
         }
     }

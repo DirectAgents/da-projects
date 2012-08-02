@@ -16,7 +16,7 @@ namespace EomApp1.Screens.Final.Models
             var campaign = data.Campaigns.Where(c => c.PID == Pid).FirstOrDefault();
             if (campaign == null)
             {
-                campaign = data.Campaigns.AddCampaignsRow(Pid, CampaignName, 0, null, null, AdvertiserName);
+                campaign = data.Campaigns.AddCampaignsRow(Pid, CampaignName, 0, "", null, AdvertiserName);
             }
 
             using (var db = Eom.Create())
@@ -54,9 +54,9 @@ namespace EomApp1.Screens.Final.Models
             {
                 foreach (var affid in ids)
                 {
-                    var query = from c in db.Items
-                                where c.affid == affid && c.campaign_status_id == (int)fromStatusID
-                                select c;
+                    var query = from i in db.Items
+                                where i.affid == affid && i.campaign_status_id == (int)fromStatusID && i.pid == Pid
+                                select i;
 
                     foreach (var item in query)
                     {

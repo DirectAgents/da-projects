@@ -57,7 +57,7 @@ namespace EomApp1.Screens.Final.UI
         private void ActionButtonClicked(object sender, EventArgs e)
         {
             if (PublishersActionInvoked != null)
-                if (ConfirmationBox.Confirm(this.ParentForm, ActionButtonText + " Publisers?", ActionButtonText))
+                if (ConfirmationBox.Confirm(this.ParentForm, ActionButtonText + " Publishers?", ActionButtonText))
                     PublishersActionInvoked(this, new PublishersEventArgs(affIDs.ToArray()));
         }
 
