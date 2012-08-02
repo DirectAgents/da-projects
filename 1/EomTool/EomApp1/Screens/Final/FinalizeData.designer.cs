@@ -22,7 +22,7 @@ namespace EomApp1.Screens.Final
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="zDADatabaseJuly2012Test")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DADatabaseR1")]
 	public partial class FinalizeDataDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -45,10 +45,13 @@ namespace EomApp1.Screens.Final
     partial void InsertItem(Item instance);
     partial void UpdateItem(Item instance);
     partial void DeleteItem(Item instance);
+    partial void InsertCurrency(Currency instance);
+    partial void UpdateCurrency(Currency instance);
+    partial void DeleteCurrency(Currency instance);
     #endregion
 		
 		public FinalizeDataDataContext() : 
-				base(global::EomApp1.Properties.Settings.Default.DADatabaseR1ConnectionString, mappingSource)
+				base(global::EomApp1.Properties.Settings.Default.DADatabaseR1ConnectionString1, mappingSource)
 		{
 			OnCreated();
 		}
@@ -114,6 +117,14 @@ namespace EomApp1.Screens.Final
 			get
 			{
 				return this.GetTable<Item>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Currency> Currencies
+		{
+			get
+			{
+				return this.GetTable<Currency>();
 			}
 		}
 	}
@@ -1194,6 +1205,10 @@ namespace EomApp1.Screens.Final
 		
 		private EntityRef<ItemReportingStatus> _ItemReportingStatus;
 		
+		private EntityRef<Currency> _Currency;
+		
+		private EntityRef<Currency> _Currency1;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1247,6 +1262,8 @@ namespace EomApp1.Screens.Final
 			this._CampaignStatus = default(EntityRef<CampaignStatus>);
 			this._Campaign = default(EntityRef<Campaign>);
 			this._ItemReportingStatus = default(EntityRef<ItemReportingStatus>);
+			this._Currency = default(EntityRef<Currency>);
+			this._Currency1 = default(EntityRef<Currency>);
 			OnCreated();
 		}
 		
@@ -1405,6 +1422,10 @@ namespace EomApp1.Screens.Final
 			{
 				if ((this._revenue_currency_id != value))
 				{
+					if (this._Currency.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.Onrevenue_currency_idChanging(value);
 					this.SendPropertyChanging();
 					this._revenue_currency_id = value;
@@ -1425,6 +1446,10 @@ namespace EomApp1.Screens.Final
 			{
 				if ((this._cost_currency_id != value))
 				{
+					if (this._Currency1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.Oncost_currency_idChanging(value);
 					this.SendPropertyChanging();
 					this._cost_currency_id = value;
@@ -1784,6 +1809,74 @@ namespace EomApp1.Screens.Final
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Currency_Item", Storage="_Currency", ThisKey="revenue_currency_id", OtherKey="id", IsForeignKey=true)]
+		public Currency Currency
+		{
+			get
+			{
+				return this._Currency.Entity;
+			}
+			set
+			{
+				Currency previousValue = this._Currency.Entity;
+				if (((previousValue != value) 
+							|| (this._Currency.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Currency.Entity = null;
+						previousValue.Items.Remove(this);
+					}
+					this._Currency.Entity = value;
+					if ((value != null))
+					{
+						value.Items.Add(this);
+						this._revenue_currency_id = value.id;
+					}
+					else
+					{
+						this._revenue_currency_id = default(int);
+					}
+					this.SendPropertyChanged("Currency");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Currency_Item1", Storage="_Currency1", ThisKey="cost_currency_id", OtherKey="id", IsForeignKey=true)]
+		public Currency Currency1
+		{
+			get
+			{
+				return this._Currency1.Entity;
+			}
+			set
+			{
+				Currency previousValue = this._Currency1.Entity;
+				if (((previousValue != value) 
+							|| (this._Currency1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Currency1.Entity = null;
+						previousValue.Items1.Remove(this);
+					}
+					this._Currency1.Entity = value;
+					if ((value != null))
+					{
+						value.Items1.Add(this);
+						this._cost_currency_id = value.id;
+					}
+					else
+					{
+						this._cost_currency_id = default(int);
+					}
+					this.SendPropertyChanged("Currency1");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1802,6 +1895,220 @@ namespace EomApp1.Screens.Final
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Currency")]
+	public partial class Currency : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private decimal _to_usd_multiplier;
+		
+		private System.Nullable<decimal> _to_gbp_multiplier;
+		
+		private System.Nullable<decimal> _to_eur_multiplier;
+		
+		private EntitySet<Item> _Items;
+		
+		private EntitySet<Item> _Items1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void Onto_usd_multiplierChanging(decimal value);
+    partial void Onto_usd_multiplierChanged();
+    partial void Onto_gbp_multiplierChanging(System.Nullable<decimal> value);
+    partial void Onto_gbp_multiplierChanged();
+    partial void Onto_eur_multiplierChanging(System.Nullable<decimal> value);
+    partial void Onto_eur_multiplierChanged();
+    #endregion
+		
+		public Currency()
+		{
+			this._Items = new EntitySet<Item>(new Action<Item>(this.attach_Items), new Action<Item>(this.detach_Items));
+			this._Items1 = new EntitySet<Item>(new Action<Item>(this.attach_Items1), new Action<Item>(this.detach_Items1));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_to_usd_multiplier", DbType="Decimal(14,4) NOT NULL")]
+		public decimal to_usd_multiplier
+		{
+			get
+			{
+				return this._to_usd_multiplier;
+			}
+			set
+			{
+				if ((this._to_usd_multiplier != value))
+				{
+					this.Onto_usd_multiplierChanging(value);
+					this.SendPropertyChanging();
+					this._to_usd_multiplier = value;
+					this.SendPropertyChanged("to_usd_multiplier");
+					this.Onto_usd_multiplierChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_to_gbp_multiplier", DbType="Decimal(14,4)")]
+		public System.Nullable<decimal> to_gbp_multiplier
+		{
+			get
+			{
+				return this._to_gbp_multiplier;
+			}
+			set
+			{
+				if ((this._to_gbp_multiplier != value))
+				{
+					this.Onto_gbp_multiplierChanging(value);
+					this.SendPropertyChanging();
+					this._to_gbp_multiplier = value;
+					this.SendPropertyChanged("to_gbp_multiplier");
+					this.Onto_gbp_multiplierChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_to_eur_multiplier", DbType="Decimal(14,4)")]
+		public System.Nullable<decimal> to_eur_multiplier
+		{
+			get
+			{
+				return this._to_eur_multiplier;
+			}
+			set
+			{
+				if ((this._to_eur_multiplier != value))
+				{
+					this.Onto_eur_multiplierChanging(value);
+					this.SendPropertyChanging();
+					this._to_eur_multiplier = value;
+					this.SendPropertyChanged("to_eur_multiplier");
+					this.Onto_eur_multiplierChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Currency_Item", Storage="_Items", ThisKey="id", OtherKey="revenue_currency_id")]
+		public EntitySet<Item> Items
+		{
+			get
+			{
+				return this._Items;
+			}
+			set
+			{
+				this._Items.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Currency_Item1", Storage="_Items1", ThisKey="id", OtherKey="cost_currency_id")]
+		public EntitySet<Item> Items1
+		{
+			get
+			{
+				return this._Items1;
+			}
+			set
+			{
+				this._Items1.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Items(Item entity)
+		{
+			this.SendPropertyChanging();
+			entity.Currency = this;
+		}
+		
+		private void detach_Items(Item entity)
+		{
+			this.SendPropertyChanging();
+			entity.Currency = null;
+		}
+		
+		private void attach_Items1(Item entity)
+		{
+			this.SendPropertyChanging();
+			entity.Currency1 = this;
+		}
+		
+		private void detach_Items1(Item entity)
+		{
+			this.SendPropertyChanging();
+			entity.Currency1 = null;
 		}
 	}
 }

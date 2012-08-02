@@ -5,9 +5,9 @@ namespace EomApp1.Screens.Final.UI
 {
     public static class Extensions
     {
-        public static List<int> ItemIds(this Data.CampaignsDataTable campaigns, int pid)
+        public static List<int> ItemIds(this Data.CampaignsDataTable campaigns, int pid, string currency)
         {
-            return campaigns.Where(c => c.PID == pid).Single().ItemIds
+            return campaigns.Single(c => c.PID == pid && c.Currency == currency).ItemIds
                             .Split(',').Select(c => int.Parse(c))
                             .ToList();
         }

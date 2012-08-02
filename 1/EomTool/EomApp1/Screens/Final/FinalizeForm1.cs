@@ -99,7 +99,7 @@ namespace EomApp1.Screens.Final
                 string note;
                 if (ConfirmationBox.ShowConfirmationModalDialog("Finalize", out note))
                 {
-                    FinalizeCampaign(pid);
+                    FinalizeCampaign(pid, currency);
                     CampaignNoteUtility.AddCampaignNote(pid, note); // model
                     DoFillCampaigns();
                 }
@@ -128,7 +128,7 @@ namespace EomApp1.Screens.Final
             {
                 if (ConfirmationBox.ShowConfirmationModalDialog("Verify", out note))
                 {
-                    VerifyCampaign(pid);
+                    VerifyCampaign(pid, currency);
                     CampaignNoteUtility.AddCampaignNote(pid, note);
                     FillCampaigns();
                 }
@@ -138,7 +138,7 @@ namespace EomApp1.Screens.Final
             {
                 if (ConfirmationBox.ShowConfirmationModalDialog("Review", out note))
                 {
-                    ReviewCampaign(pid);
+                    ReviewCampaign(pid, currency);
                     CampaignNoteUtility.AddCampaignNote(pid, note);
                     FillCampaigns();
                 }
@@ -173,12 +173,12 @@ namespace EomApp1.Screens.Final
                    select c;
         }
 
-        private void ReviewCampaign(int id)
+        private void ReviewCampaign(int id, string currency)
         {
             var db = new FinalizeDataDataContext(true);
 
             var query = from c in db.Items
-                        where c.pid == id && c.CampaignStatus.name == "Finalized"
+                        where c.pid == id && c.CampaignStatus.name == "Finalized" && c.Currency.name == currency
                         select c;
 
             var defaultCampaignStatus = db.CampaignStatus.Single(c => c.name == "default");
@@ -191,12 +191,12 @@ namespace EomApp1.Screens.Final
             db.SubmitChanges();
         }
 
-        private void VerifyCampaign(int id)
+        private void VerifyCampaign(int id, string currency)
         {
             var db = new FinalizeDataDataContext(true);
 
             var query = from c in db.Items
-                        where c.pid == id && c.CampaignStatus.name == "Finalized"
+                        where c.pid == id && c.CampaignStatus.name == "Finalized" && c.Currency.name == currency
                         select c;
 
             var verifyCampaignStatus = db.CampaignStatus.Single(c => c.name == "Verified");
@@ -209,12 +209,12 @@ namespace EomApp1.Screens.Final
             db.SubmitChanges();
         }
 
-        private static void FinalizeCampaign(int id)
+        private static void FinalizeCampaign(int id, string currency)
         {
             var db = new FinalizeDataDataContext(true);
 
             var query = from c in db.Items
-                        where c.pid == id && c.CampaignStatus.name == "default"
+                        where c.pid == id && c.CampaignStatus.name == "default" && c.Currency.name == currency
                         select c;
 
             var finalizeCampaignStatus = db.CampaignStatus.Single(c => c.name == "Finalized");

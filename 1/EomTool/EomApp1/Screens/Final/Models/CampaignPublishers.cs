@@ -55,7 +55,7 @@ namespace EomApp1.Screens.Final.Models
                 foreach (var affid in ids)
                 {
                     var query = from i in db.Items
-                                where i.affid == affid && i.campaign_status_id == (int)fromStatusID && i.pid == Pid
+                                where i.affid == affid && i.campaign_status_id == (int)fromStatusID && i.pid == Pid && i.Currency.name == Currency
                                 select i;
 
                     foreach (var item in query)

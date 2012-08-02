@@ -22,9 +22,9 @@ namespace EomApp1.Screens.Final.Models
             }
         }
 
-        public void UpdateCampaignItemStatus(int pid, CampaignStatusId status)
+        public void UpdateCampaignItemStatus(int pid, string currency, CampaignStatusId status)
         {
-            var ids = Data.Campaigns.ItemIds(pid);
+            var ids = Data.Campaigns.ItemIds(pid, currency);
 
             using (var db = Eom.Create())
             {

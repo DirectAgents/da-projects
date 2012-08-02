@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="FinalizeData">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.125, 8.5" name="FinalizeData">
   <DataContextMoniker Name="/FinalizeDataDataContext" />
   <nestedChildShapes>
     <classShape Id="1770e81c-ffb0-4d2c-865d-41b02817e50b" absoluteBounds="3.125, 3.875, 2, 1.1939925130208333">
@@ -46,24 +46,44 @@
         <elementListCompartment Id="cefc995e-20bb-47d8-81cb-b84ce565b053" absoluteBounds="5.765, 1.335, 1.9700000000000002, 4.2877197265625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.125 : 1.72199625651042); (5.75 : 1.72199625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.125 : 1.72199625651042); (5.75 : 1.72199625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FinalizeDataDataContext/CampaignStatus/CampaignStatus_Item" />
       <nodes>
         <classShapeMoniker Id="4fd9ea79-c145-4b9a-a63d-21fa478770de" />
         <classShapeMoniker Id="6cb5f28e-f2f5-454a-a0cc-cbfbda79eb69" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.625 : 3.09699625651042); (5.75 : 3.09699625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.625 : 3.09699625651042); (5.75 : 3.09699625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FinalizeDataDataContext/Campaign/Campaign_Item" />
       <nodes>
         <classShapeMoniker Id="7cb3a59c-2938-405c-ab06-57b67699cbd4" />
         <classShapeMoniker Id="6cb5f28e-f2f5-454a-a0cc-cbfbda79eb69" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.125 : 4.47199625651042); (5.75 : 4.47199625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.125 : 4.47199625651042); (5.75 : 4.47199625651042)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/FinalizeDataDataContext/ItemReportingStatus/ItemReportingStatus_Item" />
       <nodes>
         <classShapeMoniker Id="1770e81c-ffb0-4d2c-865d-41b02817e50b" />
+        <classShapeMoniker Id="6cb5f28e-f2f5-454a-a0cc-cbfbda79eb69" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="bf9eb1bd-7b98-4a7d-a61c-402e4832b91e" absoluteBounds="8.875, 1.5, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/FinalizeDataDataContext/Currency" />
+      <nestedChildShapes>
+        <elementListCompartment Id="2acd68ab-e166-42da-aba9-ed5d209d87ab" absoluteBounds="8.89, 1.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(8.875 : 2.38544840494792); (7.75 : 2.38544840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FinalizeDataDataContext/Currency/Currency_Item" />
+      <nodes>
+        <classShapeMoniker Id="bf9eb1bd-7b98-4a7d-a61c-402e4832b91e" />
+        <classShapeMoniker Id="6cb5f28e-f2f5-454a-a0cc-cbfbda79eb69" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8.875 : 1.88022420247396); (7.75 : 1.88022420247396)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FinalizeDataDataContext/Currency/Currency_Item1" />
+      <nodes>
+        <classShapeMoniker Id="bf9eb1bd-7b98-4a7d-a61c-402e4832b91e" />
         <classShapeMoniker Id="6cb5f28e-f2f5-454a-a0cc-cbfbda79eb69" />
       </nodes>
     </associationConnector>
