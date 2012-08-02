@@ -100,7 +100,7 @@
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.AdvertiserName,
             this.campaignNameDataGridViewTextBoxColumn,
@@ -143,7 +143,7 @@
             this.dataGridView2.AllowUserToResizeRows = false;
             this.dataGridView2.AutoGenerateColumns = false;
             this.dataGridView2.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.publisherDataGridViewTextBoxColumn,
             this.currDataGridViewTextBoxColumn,
@@ -463,17 +463,18 @@
             // 
             // AdvertiserName
             // 
-            this.AdvertiserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.AdvertiserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.AdvertiserName.DataPropertyName = "AdvertiserName";
+            this.AdvertiserName.FillWeight = 50F;
             this.AdvertiserName.HeaderText = "Advertiser";
             this.AdvertiserName.Name = "AdvertiserName";
             this.AdvertiserName.ReadOnly = true;
-            this.AdvertiserName.Width = 79;
             // 
             // campaignNameDataGridViewTextBoxColumn
             // 
             this.campaignNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.campaignNameDataGridViewTextBoxColumn.DataPropertyName = "CampaignName";
+            this.campaignNameDataGridViewTextBoxColumn.FillWeight = 50F;
             this.campaignNameDataGridViewTextBoxColumn.HeaderText = "Campaign";
             this.campaignNameDataGridViewTextBoxColumn.Name = "campaignNameDataGridViewTextBoxColumn";
             this.campaignNameDataGridViewTextBoxColumn.ReadOnly = true;
@@ -502,7 +503,7 @@
             this.VerifiedRevenue.HeaderText = "Verified Revenue";
             this.VerifiedRevenue.Name = "VerifiedRevenue";
             this.VerifiedRevenue.ReadOnly = true;
-            this.VerifiedRevenue.Width = 114;
+            this.VerifiedRevenue.Width = 105;
             // 
             // UnfinalizeCampaignButtonCol
             // 

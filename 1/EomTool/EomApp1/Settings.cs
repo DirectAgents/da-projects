@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using EomAppModels;
 using DAgents.Common;
+using EomAppModels;
 
 namespace EomApp1.Properties
 {
@@ -9,7 +9,6 @@ namespace EomApp1.Properties
     {
         protected override void OnSettingsLoaded(object sender, System.Configuration.SettingsLoadedEventArgs e)
         {
-            // The common setting specifying the list of databases needs to be set before making any queries.
             EomAppCommon.EomAppSettings.MasterDatabaseListConnectionString = this.DAMain1ConnectionString;
 
             if (IsTestMode())
@@ -28,8 +27,7 @@ namespace EomApp1.Properties
 
                 if (database != null)
                 {
-                    DateTime effectiveDate = database.effective_date.Value;
-                    SetSettings(database.connection_string, effectiveDate, name);
+                    SetSettings(database.connection_string, database.effective_date.Value, name);
                 }
                 else
                 {

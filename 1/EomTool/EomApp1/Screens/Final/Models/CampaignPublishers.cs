@@ -24,7 +24,7 @@ namespace EomApp1.Screens.Final.Models
                 var query = from affiliate in db.Affiliates
                             from item in db.Items
                             where affiliate.affid == item.affid && item.pid == Pid && item.campaign_status_id == (int)campaignStatusID
-                            group item by new { Affiliate = affiliate, RevenueCurrency = item.Currency1 } into g
+                            group item by new { Affiliate = affiliate, RevenueCurrency = item.Currency } into g
                             select new
                             {
                                 AffId = g.Key.Affiliate.affid,
@@ -37,7 +37,7 @@ namespace EomApp1.Screens.Final.Models
                 var merge = new Data.PublishersDataTable();
                 foreach (var row in query)
                 {
-                    merge.AddPublishersRow(row.Affiliate, row.Currency, row.Total.Value, row.AffId, row.NetTerms, campaign);
+                    merge.AddPublishersRow(row.Affiliate, row.Currency, row.Total.Value, row.AffId, row.NetTerms, campaign.PID);
 
                 }
                 data.Publishers.Merge(merge);

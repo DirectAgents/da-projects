@@ -18,7 +18,7 @@ namespace EomApp1.Screens.Final.Models
             {
                 using (var db = Eom.Create())
                 {
-                    var campaign = (from c in db.Campaigns where c.pid == this.pid select c).Single();
+                    var campaign = db.Campaigns.Single(c => c.pid == this.pid);
                     this.campaignName = campaign.campaign_name;
                     this.advertiserName = campaign.Advertiser.name;
                 }
