@@ -30,6 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -37,10 +40,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VerifiedRevenueForm));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.AdvertiserName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.campaignNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Currency = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.VerifiedRevenue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UnfinalizeCampaignButtonCol = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.pIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.campaignsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.data = new EomApp1.Screens.Final.UI.Data();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
@@ -72,12 +78,6 @@
             this.bindingNavigatorMoveLastItem1 = new System.Windows.Forms.ToolStripButton();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AdvertiserName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.campaignNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Currency = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.VerifiedRevenue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UnfinalizeCampaignButtonCol = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.pIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.data)).BeginInit();
@@ -124,6 +124,73 @@
             this.dataGridView1.Size = new System.Drawing.Size(553, 491);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.campaignsGrid_CellClick);
+            // 
+            // AdvertiserName
+            // 
+            this.AdvertiserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.AdvertiserName.DataPropertyName = "AdvertiserName";
+            this.AdvertiserName.FillWeight = 50F;
+            this.AdvertiserName.HeaderText = "Advertiser";
+            this.AdvertiserName.Name = "AdvertiserName";
+            this.AdvertiserName.ReadOnly = true;
+            // 
+            // campaignNameDataGridViewTextBoxColumn
+            // 
+            this.campaignNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.campaignNameDataGridViewTextBoxColumn.DataPropertyName = "CampaignName";
+            this.campaignNameDataGridViewTextBoxColumn.FillWeight = 50F;
+            this.campaignNameDataGridViewTextBoxColumn.HeaderText = "Campaign";
+            this.campaignNameDataGridViewTextBoxColumn.Name = "campaignNameDataGridViewTextBoxColumn";
+            this.campaignNameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // Currency
+            // 
+            this.Currency.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Currency.DataPropertyName = "Currency";
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Currency.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Currency.HeaderText = "Curr";
+            this.Currency.Name = "Currency";
+            this.Currency.ReadOnly = true;
+            this.Currency.Width = 51;
+            // 
+            // VerifiedRevenue
+            // 
+            this.VerifiedRevenue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.VerifiedRevenue.DataPropertyName = "VerifiedRevenue";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.Format = "N2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.VerifiedRevenue.DefaultCellStyle = dataGridViewCellStyle2;
+            this.VerifiedRevenue.HeaderText = "Verified Revenue";
+            this.VerifiedRevenue.Name = "VerifiedRevenue";
+            this.VerifiedRevenue.ReadOnly = true;
+            this.VerifiedRevenue.Width = 105;
+            // 
+            // UnfinalizeCampaignButtonCol
+            // 
+            this.UnfinalizeCampaignButtonCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.UnfinalizeCampaignButtonCol.DefaultCellStyle = dataGridViewCellStyle3;
+            this.UnfinalizeCampaignButtonCol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UnfinalizeCampaignButtonCol.HeaderText = "";
+            this.UnfinalizeCampaignButtonCol.Name = "UnfinalizeCampaignButtonCol";
+            this.UnfinalizeCampaignButtonCol.ReadOnly = true;
+            this.UnfinalizeCampaignButtonCol.Text = "Unfinalize";
+            this.UnfinalizeCampaignButtonCol.UseColumnTextForButtonValue = true;
+            this.UnfinalizeCampaignButtonCol.Width = 70;
+            // 
+            // pIDDataGridViewTextBoxColumn
+            // 
+            this.pIDDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.pIDDataGridViewTextBoxColumn.DataPropertyName = "PID";
+            this.pIDDataGridViewTextBoxColumn.HeaderText = "pid";
+            this.pIDDataGridViewTextBoxColumn.Name = "pIDDataGridViewTextBoxColumn";
+            this.pIDDataGridViewTextBoxColumn.ReadOnly = true;
+            this.pIDDataGridViewTextBoxColumn.Width = 46;
             // 
             // campaignsBindingSource
             // 
@@ -202,7 +269,7 @@
             this.revenueDataGridViewTextBoxColumn.HeaderText = "Verified Revenue";
             this.revenueDataGridViewTextBoxColumn.Name = "revenueDataGridViewTextBoxColumn";
             this.revenueDataGridViewTextBoxColumn.ReadOnly = true;
-            this.revenueDataGridViewTextBoxColumn.Width = 114;
+            this.revenueDataGridViewTextBoxColumn.Width = 105;
             // 
             // UnfinalizeCampaignPublisherButtonCol
             // 
@@ -461,73 +528,6 @@
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
             // 
-            // AdvertiserName
-            // 
-            this.AdvertiserName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.AdvertiserName.DataPropertyName = "AdvertiserName";
-            this.AdvertiserName.FillWeight = 50F;
-            this.AdvertiserName.HeaderText = "Advertiser";
-            this.AdvertiserName.Name = "AdvertiserName";
-            this.AdvertiserName.ReadOnly = true;
-            // 
-            // campaignNameDataGridViewTextBoxColumn
-            // 
-            this.campaignNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.campaignNameDataGridViewTextBoxColumn.DataPropertyName = "CampaignName";
-            this.campaignNameDataGridViewTextBoxColumn.FillWeight = 50F;
-            this.campaignNameDataGridViewTextBoxColumn.HeaderText = "Campaign";
-            this.campaignNameDataGridViewTextBoxColumn.Name = "campaignNameDataGridViewTextBoxColumn";
-            this.campaignNameDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // Currency
-            // 
-            this.Currency.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Currency.DataPropertyName = "Currency";
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Currency.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Currency.HeaderText = "Curr";
-            this.Currency.Name = "Currency";
-            this.Currency.ReadOnly = true;
-            this.Currency.Width = 51;
-            // 
-            // VerifiedRevenue
-            // 
-            this.VerifiedRevenue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.VerifiedRevenue.DataPropertyName = "VerifiedRevenue";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.Format = "N2";
-            dataGridViewCellStyle2.NullValue = null;
-            this.VerifiedRevenue.DefaultCellStyle = dataGridViewCellStyle2;
-            this.VerifiedRevenue.HeaderText = "Verified Revenue";
-            this.VerifiedRevenue.Name = "VerifiedRevenue";
-            this.VerifiedRevenue.ReadOnly = true;
-            this.VerifiedRevenue.Width = 105;
-            // 
-            // UnfinalizeCampaignButtonCol
-            // 
-            this.UnfinalizeCampaignButtonCol.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.UnfinalizeCampaignButtonCol.DefaultCellStyle = dataGridViewCellStyle3;
-            this.UnfinalizeCampaignButtonCol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UnfinalizeCampaignButtonCol.HeaderText = "";
-            this.UnfinalizeCampaignButtonCol.Name = "UnfinalizeCampaignButtonCol";
-            this.UnfinalizeCampaignButtonCol.ReadOnly = true;
-            this.UnfinalizeCampaignButtonCol.Text = "Unfinalize";
-            this.UnfinalizeCampaignButtonCol.UseColumnTextForButtonValue = true;
-            this.UnfinalizeCampaignButtonCol.Width = 70;
-            // 
-            // pIDDataGridViewTextBoxColumn
-            // 
-            this.pIDDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.pIDDataGridViewTextBoxColumn.DataPropertyName = "PID";
-            this.pIDDataGridViewTextBoxColumn.HeaderText = "pid";
-            this.pIDDataGridViewTextBoxColumn.Name = "pIDDataGridViewTextBoxColumn";
-            this.pIDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.pIDDataGridViewTextBoxColumn.Width = 46;
-            // 
             // VerifiedRevenueForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -536,7 +536,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "VerifiedRevenueForm";
             this.ShowIcon = false;
-            this.Text = " ";
+            this.Text = "Verified Revenue";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.data)).EndInit();

@@ -253,7 +253,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panel1);
             this.Name = "CampaignsRevenueForm";
-            this.Text = "CampaignsRevenueForm";
+            this.Text = "Revenue Summary";
             this.Load += new System.EventHandler(this.CampaignsRevenueForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignsRevenueBindingSource)).EndInit();
