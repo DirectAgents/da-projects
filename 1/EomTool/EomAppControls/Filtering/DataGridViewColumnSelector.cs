@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DGVColumnSelector
+namespace EomAppControls
 {
     /// <summary>
     /// Add column show/hide capability to a DataGridView. When user right-clicks 

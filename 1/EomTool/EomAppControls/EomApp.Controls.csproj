@@ -46,6 +46,9 @@
     <Compile Include="Common\UserControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="DataGrid\ExtendedDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Filtering\DataGridViewAutoFilterColumnHeaderCell.cs" />
     <Compile Include="Filtering\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Filtering\DataGridViewColumnSelector.cs" />

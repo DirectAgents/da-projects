@@ -3,13 +3,12 @@ using System.ComponentModel;
 using System.Data.Objects;
 using System.Windows.Forms;
 
-namespace EomAppControls.Common
+namespace EomAppControls
 {
     public class UserControlBase : UserControl
     {
         private Func<ObjectContext> createDB;
 
-        // Parameterless constructor keeps WinForms designer happy.
         public UserControlBase()
         {
             this.createDB = () => null;
@@ -20,7 +19,7 @@ namespace EomAppControls.Common
             this.createDB = createDB;
         }
 
-        protected void WithContext<T>(Action<T> action, bool saveChanges) where T : ObjectContext
+        protected void UsingDB<T>(Action<T> action, bool saveChanges) where T : ObjectContext
         {
             var db = this.createDB();
             if (db != null)
@@ -36,7 +35,7 @@ namespace EomAppControls.Common
             }
         }
 
-        protected bool IsRunning
+        protected bool Running
         {
             get
             {

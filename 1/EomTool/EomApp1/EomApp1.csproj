@@ -68,7 +68,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>EomApp1.Program</StartupObject>
@@ -279,6 +279,9 @@
     </Compile>
     <Compile Include="Screens\DBView\Forms\DBViewForm1.Designer.cs">
       <DependentUpon>DBViewForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Extra\ExtraItemsUserControl.Designer.cs">
+      <DependentUpon>ExtraItemsUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Final\CampaignNotes.cs">
       <SubType>Form</SubType>
@@ -580,9 +583,6 @@
     </Compile>
     <Compile Include="Screens\Extra\ExtraItemsUserControl.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\Extra\ExtraItemsUserControl.Designer.cs">
-      <DependentUpon>ExtraItemsUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Final\AccountManagersForFinalDataSet1.Designer.cs">
       <AutoGen>True</AutoGen>

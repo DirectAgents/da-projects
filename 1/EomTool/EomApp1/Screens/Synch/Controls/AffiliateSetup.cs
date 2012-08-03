@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using EomApp1.Screens.Synch.Models.Eom;
-using EomAppControls.Common;
+using EomAppControls;
 
 namespace EomApp1.Screens.Synch.Controls
 {
@@ -15,7 +15,7 @@ namespace EomApp1.Screens.Synch.Controls
         {
             InitializeComponent();
             SetupReadOnlyColumns();
-            if (base.IsRunning)
+            if (base.Running)
             {
                 InitializeData();
             }
@@ -43,7 +43,7 @@ namespace EomApp1.Screens.Synch.Controls
 
         private void Fill()
         {
-            WithContext<EomDatabaseEntities>(db => {
+            UsingDB<EomDatabaseEntities>(db => {
                 AffiliateItemsQuery(db).ToList().ForEach(c => {
                     this.bindingSource.Add(c);
                 });
@@ -53,7 +53,7 @@ namespace EomApp1.Screens.Synch.Controls
 
         private void Add(int cakeAffilaiteID, int affiliateID)
         {
-            WithContext<EomDatabaseEntities>(db => {
+            UsingDB<EomDatabaseEntities>(db => {
                 var affiliate = db.Affiliates.First(c => c.affid == affiliateID);
                 affiliate.external_id = cakeAffilaiteID;
                 affiliate.TrackingSystem = db.TrackingSystems.First(c => c.name == "Cake Marketing");
@@ -63,7 +63,7 @@ namespace EomApp1.Screens.Synch.Controls
 
         private void Save()
         {
-            WithContext<EomDatabaseEntities>(db => {
+            UsingDB<EomDatabaseEntities>(db => {
                 (from aff in AffiliatesQuery(db).ToList()
                  from containerItem in this.items.Items
                  where aff.affid == containerItem.Id
@@ -113,7 +113,7 @@ namespace EomApp1.Screens.Synch.Controls
         {
             int affid = 0;
 
-            WithContext<EomDatabaseEntities>(db => {
+            UsingDB<EomDatabaseEntities>(db => {
                 var affiliate = Models.Eom.Affiliate.CreateFromCakeWithSafeId(db, cakeAffiliateID);
                 affid = affiliate.affid;
             }, saveChanges: false);

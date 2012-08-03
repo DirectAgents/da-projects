@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView1 = new EomAppControls.ExtendedDataGridView();
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.advertiserDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -63,6 +63,7 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AutoGenerateColumns = false;
+            this.dataGridView1.ColumnFiltersEnabled = true;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.idDataGridViewTextBoxColumn,
@@ -77,6 +78,7 @@
             this.unfinalizedDataGridViewTextBoxColumn,
             this.finalizedDataGridViewTextBoxColumn,
             this.verifiedDataGridViewTextBoxColumn});
+            this.dataGridView1.ColumnSelectorEnabled = true;
             this.dataGridView1.DataSource = this.campaignsRevenueBindingSource;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 28);
@@ -265,7 +267,6 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.BindingSource campaignsRevenueBindingSource;
         private CampaignsRevenueDataSet campaignsRevenueDataSet;
         private CampaignsRevenueDataSetTableAdapters.CampaignWorkflowTableAdapter campaignWorkflowTableAdapter;
@@ -288,5 +289,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn unfinalizedDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn finalizedDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn verifiedDataGridViewTextBoxColumn;
+        private EomAppControls.ExtendedDataGridView dataGridView1;
     }
 }

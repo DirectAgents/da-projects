@@ -244,7 +244,7 @@ namespace EomApp1.Screens.Final
         {
             string am = comboBox1.Text;
 
-            campaignDataGridView.EndEdit();
+            campaignsToFinalizeGrid.EndEdit();
 
             if (am == "default")
             {
@@ -255,7 +255,7 @@ namespace EomApp1.Screens.Final
                 FillCampaigns(am);
             }
 
-            campaignDataGridView.Refresh();
+            campaignsToFinalizeGrid.Refresh();
         }
 
         private void campaignDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -265,7 +265,7 @@ namespace EomApp1.Screens.Final
                 string note;
                 if (ConfirmationBox.ShowConfirmationModalDialog("Message", out note))
                 {
-                    var campaignID = (int)campaignDataGridView["pidCol", e.RowIndex].Value;
+                    var campaignID = (int)campaignsToFinalizeGrid["pidCol", e.RowIndex].Value;
                     CampaignNoteUtility.AddCampaignNote(campaignID, note);
                     DoFillCampaigns();
 
@@ -296,7 +296,7 @@ namespace EomApp1.Screens.Final
 
         private void FillNotesList(int rowIndex)
         {
-            var campaignID = (int)campaignDataGridView["pidCol", rowIndex].Value;
+            var campaignID = (int)campaignsToFinalizeGrid["pidCol", rowIndex].Value;
             this.notesListForm.Fill(this, campaignID);
         }
 

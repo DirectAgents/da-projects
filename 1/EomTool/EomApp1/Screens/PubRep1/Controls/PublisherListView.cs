@@ -5,9 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using DGVColumnSelector;
 using EomApp1.Screens.PubRep1.Data;
 using EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters;
+using EomAppControls;
 
 namespace EomApp1.Screens.PubRep1.Controls
 {
@@ -64,7 +64,7 @@ namespace EomApp1.Screens.PubRep1.Controls
 
             Fill();
 
-            DataGridViewColumnSelector cs = new DataGridViewColumnSelector();
+            var cs = new DataGridViewColumnSelector();
             cs.DataGridView = _dgv;
             cs.MaxHeight = 400;
             cs.Width = 150;

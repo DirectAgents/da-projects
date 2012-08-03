@@ -55,7 +55,7 @@
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.itemBindingNavigatorSaveItem = new System.Windows.Forms.ToolStripButton();
-            this.itemDataGridView = new System.Windows.Forms.DataGridView();
+            this.itemsGrid = new EomAppControls.ExtendedDataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Advertiser = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -90,7 +90,7 @@
             this.itemBindingNavigator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.extraItems)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.itemDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.itemsGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.affiliateBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.unitTypeBindingSource)).BeginInit();
@@ -143,7 +143,7 @@
             this.itemBindingSource.DataMember = "Item";
             this.itemBindingSource.DataSource = this.extraItems;
             // 
-            // dataSet1
+            // extraItems
             // 
             this.extraItems.DataSetName = "DataSet1";
             this.extraItems.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
@@ -233,12 +233,13 @@
             this.itemBindingNavigatorSaveItem.Text = "Save Data";
             this.itemBindingNavigatorSaveItem.Click += new System.EventHandler(this.SaveClicked);
             // 
-            // itemDataGridView
+            // itemsGrid
             // 
-            this.itemDataGridView.AllowUserToOrderColumns = true;
-            this.itemDataGridView.AllowUserToResizeRows = false;
-            this.itemDataGridView.AutoGenerateColumns = false;
-            this.itemDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.itemsGrid.AllowUserToOrderColumns = true;
+            this.itemsGrid.AllowUserToResizeRows = false;
+            this.itemsGrid.AutoGenerateColumns = false;
+            this.itemsGrid.ColumnFiltersEnabled = false;
+            this.itemsGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
             this.Advertiser,
             this.dataGridViewTextBoxColumn3,
@@ -255,12 +256,13 @@
             this.dataGridViewTextBoxColumn4,
             this.dataGridViewTextBoxColumn13,
             this.dataGridViewTextBoxColumn12});
-            this.itemDataGridView.DataSource = this.itemBindingSource;
-            this.itemDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.itemDataGridView.Location = new System.Drawing.Point(0, 25);
-            this.itemDataGridView.Name = "itemDataGridView";
-            this.itemDataGridView.Size = new System.Drawing.Size(978, 529);
-            this.itemDataGridView.TabIndex = 1;
+            this.itemsGrid.ColumnSelectorEnabled = true;
+            this.itemsGrid.DataSource = this.itemBindingSource;
+            this.itemsGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemsGrid.Location = new System.Drawing.Point(0, 25);
+            this.itemsGrid.Name = "itemsGrid";
+            this.itemsGrid.Size = new System.Drawing.Size(978, 529);
+            this.itemsGrid.TabIndex = 1;
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -268,6 +270,7 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "id";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn1.Visible = false;
             // 
             // Advertiser
@@ -280,6 +283,7 @@
             this.Advertiser.HeaderText = "Advertiser";
             this.Advertiser.Name = "Advertiser";
             this.Advertiser.ReadOnly = true;
+            this.Advertiser.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewTextBoxColumn3
             // 
@@ -293,7 +297,7 @@
             this.dataGridViewTextBoxColumn3.HeaderText = "Publisher";
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn3.ValueMember = "affid";
             // 
             // affiliateBindingSource
@@ -313,7 +317,7 @@
             this.dataGridViewTextBoxColumn2.HeaderText = "Campaign";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn2.ValueMember = "pid";
             // 
             // campaignBindingSource
@@ -332,7 +336,7 @@
             this.dataGridViewTextBoxColumn5.HeaderText = "Type";
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             this.dataGridViewTextBoxColumn5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn5.ValueMember = "id";
             this.dataGridViewTextBoxColumn5.Width = 56;
             // 
@@ -351,7 +355,8 @@
             this.dataGridViewTextBoxColumn11.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridViewTextBoxColumn11.HeaderText = "Units";
             this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
-            this.dataGridViewTextBoxColumn11.Width = 56;
+            this.dataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.dataGridViewTextBoxColumn11.Width = 74;
             // 
             // dataGridViewTextBoxColumn7
             // 
@@ -366,7 +371,7 @@
             this.dataGridViewTextBoxColumn7.HeaderText = "Rev Curr.";
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
             this.dataGridViewTextBoxColumn7.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn7.ValueMember = "id";
             this.dataGridViewTextBoxColumn7.Width = 39;
             // 
@@ -385,7 +390,8 @@
             this.dataGridViewTextBoxColumn9.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridViewTextBoxColumn9.HeaderText = "Rev/Unit";
             this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
-            this.dataGridViewTextBoxColumn9.Width = 76;
+            this.dataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.dataGridViewTextBoxColumn9.Width = 94;
             // 
             // dataGridViewTextBoxColumn14
             // 
@@ -399,7 +405,8 @@
             this.dataGridViewTextBoxColumn14.HeaderText = "Revenue";
             this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
             this.dataGridViewTextBoxColumn14.ReadOnly = true;
-            this.dataGridViewTextBoxColumn14.Width = 76;
+            this.dataGridViewTextBoxColumn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.dataGridViewTextBoxColumn14.Width = 94;
             // 
             // dataGridViewTextBoxColumn8
             // 
@@ -414,7 +421,7 @@
             this.dataGridViewTextBoxColumn8.HeaderText = "Cost Curr.";
             this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
             this.dataGridViewTextBoxColumn8.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn8.ValueMember = "id";
             this.dataGridViewTextBoxColumn8.Width = 39;
             // 
@@ -428,7 +435,8 @@
             this.dataGridViewTextBoxColumn10.DefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridViewTextBoxColumn10.HeaderText = "Cost/Unit";
             this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
-            this.dataGridViewTextBoxColumn10.Width = 77;
+            this.dataGridViewTextBoxColumn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.dataGridViewTextBoxColumn10.Width = 95;
             // 
             // dataGridViewTextBoxColumn15
             // 
@@ -442,7 +450,8 @@
             this.dataGridViewTextBoxColumn15.HeaderText = "Cost";
             this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
             this.dataGridViewTextBoxColumn15.ReadOnly = true;
-            this.dataGridViewTextBoxColumn15.Width = 53;
+            this.dataGridViewTextBoxColumn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.dataGridViewTextBoxColumn15.Width = 71;
             // 
             // dataGridViewTextBoxColumn16
             // 
@@ -455,7 +464,8 @@
             this.dataGridViewTextBoxColumn16.HeaderText = "Margin";
             this.dataGridViewTextBoxColumn16.Name = "dataGridViewTextBoxColumn16";
             this.dataGridViewTextBoxColumn16.ReadOnly = true;
-            this.dataGridViewTextBoxColumn16.Width = 64;
+            this.dataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.dataGridViewTextBoxColumn16.Width = 82;
             // 
             // dataGridViewTextBoxColumn4
             // 
@@ -468,7 +478,7 @@
             this.dataGridViewTextBoxColumn4.HeaderText = "Source";
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn4.ValueMember = "id";
             this.dataGridViewTextBoxColumn4.Width = 66;
             // 
@@ -488,7 +498,7 @@
             this.dataGridViewTextBoxColumn13.HeaderText = "Status";
             this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
             this.dataGridViewTextBoxColumn13.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn13.ValueMember = "id";
             this.dataGridViewTextBoxColumn13.Width = 62;
             // 
@@ -506,6 +516,7 @@
             this.dataGridViewTextBoxColumn12.FillWeight = 80F;
             this.dataGridViewTextBoxColumn12.HeaderText = "Notes";
             this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // itemTableAdapter
             // 
@@ -548,20 +559,20 @@
             // 
             this.itemReportingStatusTableAdapter.ClearBeforeFill = true;
             // 
-            // ExtraItemsUserControl1
+            // ExtraItemsUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.itemDataGridView);
+            this.Controls.Add(this.itemsGrid);
             this.Controls.Add(this.itemBindingNavigator);
-            this.Name = "ExtraItemsUserControl1";
+            this.Name = "ExtraItemsUserControl";
             this.Size = new System.Drawing.Size(978, 554);
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingNavigator)).EndInit();
             this.itemBindingNavigator.ResumeLayout(false);
             this.itemBindingNavigator.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.extraItems)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.itemDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.itemsGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.affiliateBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.unitTypeBindingSource)).EndInit();
@@ -592,7 +603,6 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
         private System.Windows.Forms.ToolStripButton itemBindingNavigatorSaveItem;
-        private System.Windows.Forms.DataGridView itemDataGridView;
         private System.Windows.Forms.BindingSource currencyBindingSource;
         private ExtraItemDataSetTableAdapters.CurrencyTableAdapter currencyTableAdapter;
         private System.Windows.Forms.BindingSource unitTypeBindingSource;
@@ -621,5 +631,6 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn13;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+        private EomAppControls.ExtendedDataGridView itemsGrid;
     }
 }

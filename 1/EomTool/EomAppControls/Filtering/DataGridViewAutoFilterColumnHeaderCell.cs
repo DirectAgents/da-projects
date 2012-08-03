@@ -84,7 +84,7 @@ namespace DataGridViewAutoFilter
                 this.FilteringEnabled = filterCell.FilteringEnabled;
                 this.AutomaticSortingEnabled = filterCell.AutomaticSortingEnabled;
                 this.DropDownListBoxMaxLines = filterCell.DropDownListBoxMaxLines;
-                this.currentDropDownButtonPaddingOffset = 
+                this.currentDropDownButtonPaddingOffset =
                     filterCell.currentDropDownButtonPaddingOffset;
             }
         }
@@ -124,9 +124,9 @@ namespace DataGridViewAutoFilter
             if (OwningColumn != null)
             {
                 if (OwningColumn is DataGridViewImageColumn ||
-                (OwningColumn is DataGridViewButtonColumn && 
+                (OwningColumn is DataGridViewButtonColumn &&
                 ((DataGridViewButtonColumn)OwningColumn).UseColumnTextForButtonValue) ||
-                (OwningColumn is DataGridViewLinkColumn && 
+                (OwningColumn is DataGridViewLinkColumn &&
                 ((DataGridViewLinkColumn)OwningColumn).UseColumnTextForLinkValue))
                 {
                     AutomaticSortingEnabled = false;
@@ -351,21 +351,21 @@ namespace DataGridViewAutoFilter
         /// <param name="advancedBorderStyle">A DataGridViewAdvancedBorderStyle that contains border styles for the cell that is being painted.</param>
         /// <param name="paintParts">A bitwise combination of the DataGridViewPaintParts values that specifies which parts of the cell need to be painted.</param>
         protected override void Paint(
-            Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, 
-            int rowIndex, DataGridViewElementStates cellState, 
-            object value, object formattedValue, string errorText, 
-            DataGridViewCellStyle cellStyle, 
-            DataGridViewAdvancedBorderStyle advancedBorderStyle, 
+            Graphics graphics, Rectangle clipBounds, Rectangle cellBounds,
+            int rowIndex, DataGridViewElementStates cellState,
+            object value, object formattedValue, string errorText,
+            DataGridViewCellStyle cellStyle,
+            DataGridViewAdvancedBorderStyle advancedBorderStyle,
             DataGridViewPaintParts paintParts)
         {
             // Use the base method to paint the default appearance. 
-            base.Paint(graphics, clipBounds, cellBounds, rowIndex, 
-                cellState, value, formattedValue, 
+            base.Paint(graphics, clipBounds, cellBounds, rowIndex,
+                cellState, value, formattedValue,
                 errorText, cellStyle, advancedBorderStyle, paintParts);
 
             // Continue only if filtering is enabled and ContentBackground is 
             // part of the paint request. 
-            if (!FilteringEnabled || 
+            if (!FilteringEnabled ||
                 (paintParts & DataGridViewPaintParts.ContentBackground) == 0)
             {
                 return;
@@ -381,7 +381,8 @@ namespace DataGridViewAutoFilter
             // are enabled, using the correct state depending on whether the 
             // filter list is showing and whether there is a filter in effect 
             // for the current column. 
-            if (Application.RenderWithVisualStyles)
+            //if (Application.RenderWithVisualStyles)
+            if (false)
             {
                 ComboBoxState state = ComboBoxState.Normal;
 
@@ -526,7 +527,7 @@ namespace DataGridViewAutoFilter
                 ShowDropDownList();
             }
             else if (AutomaticSortingEnabled &&
-                this.DataGridView.SelectionMode != 
+                this.DataGridView.SelectionMode !=
                 DataGridViewSelectionMode.ColumnHeaderSelect)
             {
                 SortByColumn();
@@ -553,7 +554,7 @@ namespace DataGridViewAutoFilter
 
             // Determine the sort direction and sort by the owning column. 
             ListSortDirection direction = ListSortDirection.Ascending;
-            if (this.DataGridView.SortedColumn == OwningColumn && 
+            if (this.DataGridView.SortedColumn == OwningColumn &&
                 this.DataGridView.SortOrder == SortOrder.Ascending)
             {
                 direction = ListSortDirection.Descending;
@@ -604,7 +605,7 @@ namespace DataGridViewAutoFilter
             dropDownListBox.Visible = true;
             dropDownListBoxShowing = true;
 
-            Debug.Assert(dropDownListBox.Parent == null, 
+            Debug.Assert(dropDownListBox.Parent == null,
                 "ShowDropDownListBox has been called multiple times before HideDropDownListBox");
 
             // Add dropDownListBox to the DataGridView. 
@@ -612,7 +613,7 @@ namespace DataGridViewAutoFilter
 
             // Set the input focus to dropDownListBox. 
             dropDownListBox.Focus();
-         
+
             // Invalidate the cell so that the drop-down button will repaint
             // in the pressed state. 
             this.DataGridView.InvalidateCell(this);
@@ -693,7 +694,7 @@ namespace DataGridViewAutoFilter
             // RightToLeft property value into consideration. 
             if (this.DataGridView.RightToLeft == RightToLeft.No)
             {
-                dropDownListBoxLeft = DropDownButtonBounds.Right - 
+                dropDownListBoxLeft = DropDownButtonBounds.Right -
                     dropDownListBoxWidth + 1;
             }
             else
@@ -705,7 +706,7 @@ namespace DataGridViewAutoFilter
             // width of the DataGridView control. 
             Int32 clientLeft = 1;
             Int32 clientRight = this.DataGridView.ClientRectangle.Right;
-            if (this.DataGridView.DisplayedRowCount(false) < 
+            if (this.DataGridView.DisplayedRowCount(false) <
                 this.DataGridView.RowCount)
             {
                 if (this.DataGridView.RightToLeft == RightToLeft.Yes)
@@ -724,7 +725,7 @@ namespace DataGridViewAutoFilter
             {
                 dropDownListBoxLeft = clientLeft;
             }
-            Int32 dropDownListBoxRight = 
+            Int32 dropDownListBoxRight =
                 dropDownListBoxLeft + dropDownListBoxWidth + 1;
             if (dropDownListBoxRight > clientRight)
             {
@@ -999,7 +1000,7 @@ namespace DataGridViewAutoFilter
                 // will match the display format used for the column's cells. 
                 String formattedValue = null;
                 DataGridViewCellStyle style = OwningColumn.InheritedStyle;
-                formattedValue = (String)GetFormattedValue(value, -1, ref style, 
+                formattedValue = (String)GetFormattedValue(value, -1, ref style,
                     null, null, DataGridViewDataErrorContexts.Formatting);
 
                 if (String.IsNullOrEmpty(formattedValue))
@@ -1097,7 +1098,7 @@ namespace DataGridViewAutoFilter
             selectedFilterValue = dropDownListBox.SelectedItem.ToString();
 
             // Cast the data source to an IBindingListView.
-            IBindingListView data = 
+            IBindingListView data =
                 this.DataGridView.DataSource as IBindingListView;
 
             Debug.Assert(data != null && data.SupportsFiltering,
@@ -1118,7 +1119,7 @@ namespace DataGridViewAutoFilter
 
             // Store the column name in a form acceptable to the Filter property, 
             // using a backslash to escape any closing square brackets. 
-            String columnProperty = 
+            String columnProperty =
                 OwningColumn.DataPropertyName.Replace("]", @"\]");
 
             // Determine the column filter string based on the user selection.
@@ -1141,7 +1142,7 @@ namespace DataGridViewAutoFilter
                     newColumnFilter = String.Format("[{0}]='{1}'",
                         columnProperty,
                         ((String)filters[selectedFilterValue])
-                        .Replace("'", "''"));  
+                        .Replace("'", "''"));
                     break;
             }
 
@@ -1193,8 +1194,8 @@ namespace DataGridViewAutoFilter
 
             // Confirm that the data source is a BindingSource that 
             // supports filtering.
-            if (data == null || 
-                data.DataSource == null || 
+            if (data == null ||
+                data.DataSource == null ||
                 !data.SupportsFiltering)
             {
                 throw new ArgumentException("The DataSource property of the " +
@@ -1237,8 +1238,8 @@ namespace DataGridViewAutoFilter
             // Return String.Empty if there is no appropriate data source or
             // there is no filter in effect. 
             if (String.IsNullOrEmpty(data.Filter) ||
-                data == null || 
-                data.DataSource == null || 
+                data == null ||
+                data.DataSource == null ||
                 !data.SupportsFiltering)
             {
                 return String.Empty;
@@ -1256,7 +1257,7 @@ namespace DataGridViewAutoFilter
             data.Filter = oldFilter;
             data.RaiseListChangedEvents = true;
 
-            Debug.Assert(currentRowCount <= unfilteredRowCount, 
+            Debug.Assert(currentRowCount <= unfilteredRowCount,
                 "current count is greater than unfiltered count");
 
             // Return String.Empty if the filtered and unfiltered counts
@@ -1265,7 +1266,7 @@ namespace DataGridViewAutoFilter
             {
                 return String.Empty;
             }
-            return String.Format("{0} of {1} records found", 
+            return String.Format("{0} of {1} records found",
                 currentRowCount, unfilteredRowCount);
         }
 
@@ -1320,7 +1321,7 @@ namespace DataGridViewAutoFilter
         {
             // Retrieve the cell display rectangle, which is used to 
             // set the position of the drop-down button. 
-            Rectangle cellBounds = 
+            Rectangle cellBounds =
                 this.DataGridView.GetCellDisplayRectangle(
                 this.ColumnIndex, -1, false);
 
@@ -1339,7 +1340,7 @@ namespace DataGridViewAutoFilter
             Boolean visualStylesEnabled =
                 Application.RenderWithVisualStyles &&
                 this.DataGridView.EnableHeadersVisualStyles;
-            if (visualStylesEnabled) 
+            if (visualStylesEnabled)
             {
                 borderAndPaddingHeight += 3;
             }
@@ -1379,7 +1380,7 @@ namespace DataGridViewAutoFilter
 
             // Set the dropDownButtonBoundsValue value using the calculated 
             // values, and adjust the cell padding accordingly.  
-            dropDownButtonBoundsValue = new Rectangle(left, top, 
+            dropDownButtonBoundsValue = new Rectangle(left, top,
                 buttonEdgeLength, buttonEdgeLength);
             AdjustPadding(buttonEdgeLength + leftOffset);
         }
@@ -1392,7 +1393,7 @@ namespace DataGridViewAutoFilter
         {
             // Determine the difference between the new and current 
             // padding adjustment.
-            Int32 widthChange = newDropDownButtonPaddingOffset - 
+            Int32 widthChange = newDropDownButtonPaddingOffset -
                 currentDropDownButtonPaddingOffset;
 
             // If the padding needs to change, store the new value and 
@@ -1401,9 +1402,9 @@ namespace DataGridViewAutoFilter
             {
                 // Store the offset for the drop-down button separately from 
                 // the padding in case the client needs additional padding.
-                currentDropDownButtonPaddingOffset = 
+                currentDropDownButtonPaddingOffset =
                     newDropDownButtonPaddingOffset;
-                
+
                 // Create a new Padding using the adjustment amount, then add it
                 // to the cell's existing Style.Padding property value. 
                 Padding dropDownPadding = new Padding(0, 0, widthChange, 0);
@@ -1432,8 +1433,8 @@ namespace DataGridViewAutoFilter
         [DefaultValue(true)]
         public Boolean FilteringEnabled
         {
-            get 
-            { 
+            get
+            {
                 // Return filteringEnabledValue if (there is no DataGridView
                 // or if (its DataSource property has not been set. 
                 if (this.DataGridView == null ||
@@ -1448,7 +1449,7 @@ namespace DataGridViewAutoFilter
                 Debug.Assert(data != null);
                 return filteringEnabledValue && data.SupportsFiltering;
             }
-            set 
+            set
             {
                 // If filtering is disabled, remove the padding adjustment
                 // and invalidate the button bounds. 
@@ -1457,8 +1458,8 @@ namespace DataGridViewAutoFilter
                     AdjustPadding(0);
                     InvalidateDropDownButtonBounds();
                 }
-                
-                filteringEnabledValue = value; 
+
+                filteringEnabledValue = value;
             }
         }
 
@@ -1473,12 +1474,12 @@ namespace DataGridViewAutoFilter
         [DefaultValue(true)]
         public Boolean AutomaticSortingEnabled
         {
-            get 
-            { 
-                return automaticSortingEnabledValue; 
+            get
+            {
+                return automaticSortingEnabledValue;
             }
-            set 
-            { 
+            set
+            {
                 automaticSortingEnabledValue = value;
                 if (OwningColumn != null)
                 {
@@ -1497,7 +1498,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// The maximum number of lines in the drop-down list. 
         /// </summary>
-        private Int32 dropDownListBoxMaxLinesValue = 20; 
+        private Int32 dropDownListBoxMaxLinesValue = 20;
 
         /// <summary>
         /// Gets or sets the maximum number of lines to display in the drop-down filter list. 
@@ -1527,6 +1528,7 @@ namespace DataGridViewAutoFilter
                 IntegralHeight = true;
                 BorderStyle = BorderStyle.FixedSingle;
                 TabStop = false;
+                BackColor = Color.LightGray;
             }
 
             /// <summary>

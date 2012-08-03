@@ -40,7 +40,7 @@
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.campaignBindingNavigatorSaveItem = new System.Windows.Forms.ToolStripButton();
-            this.campaignDataGridView = new System.Windows.Forms.DataGridView();
+            this.campaignDataGridView = new EomAppControls.ExtendedDataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.accountManagerBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -180,6 +180,7 @@
             // campaignDataGridView
             // 
             this.campaignDataGridView.AutoGenerateColumns = false;
+            this.campaignDataGridView.ColumnFiltersEnabled = true;
             this.campaignDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.campaignDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
@@ -200,11 +201,11 @@
             this.dataGridViewTextBoxColumn9,
             this.dataGridViewTextBoxColumn10,
             this.dataGridViewTextBoxColumn16});
+            this.campaignDataGridView.ColumnSelectorEnabled = true;
             this.campaignDataGridView.DataSource = this.campaignBindingSource;
             this.campaignDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.campaignDataGridView.Location = new System.Drawing.Point(0, 25);
             this.campaignDataGridView.Name = "campaignDataGridView";
-            this.campaignDataGridView.RowHeadersVisible = false;
             this.campaignDataGridView.Size = new System.Drawing.Size(1143, 580);
             this.campaignDataGridView.TabIndex = 1;
             // 
@@ -214,6 +215,7 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "id";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn1.Visible = false;
             // 
             // dataGridViewTextBoxColumn2
@@ -227,7 +229,7 @@
             this.dataGridViewTextBoxColumn2.HeaderText = "Account Manager";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn2.ValueMember = "id";
             // 
             // accountManagerBindingSource
@@ -251,7 +253,7 @@
             this.dataGridViewTextBoxColumn4.HeaderText = "Ad Manager";
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn4.ValueMember = "id";
             // 
             // adManagerBindingSource
@@ -270,7 +272,7 @@
             this.dataGridViewTextBoxColumn5.HeaderText = "Advertiser";
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             this.dataGridViewTextBoxColumn5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn5.ValueMember = "id";
             // 
             // advertiserBindingSource
@@ -283,12 +285,14 @@
             this.dataGridViewTextBoxColumn6.DataPropertyName = "pid";
             this.dataGridViewTextBoxColumn6.HeaderText = "PID";
             this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewTextBoxColumn7
             // 
             this.dataGridViewTextBoxColumn7.DataPropertyName = "campaign_name";
             this.dataGridViewTextBoxColumn7.HeaderText = "Name";
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewTextBoxColumn3
             // 
@@ -301,7 +305,7 @@
             this.dataGridViewTextBoxColumn3.HeaderText = "Status";
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn3.ValueMember = "id";
             // 
             // campaignStatusBindingSource
@@ -320,7 +324,7 @@
             this.dataGridViewTextBoxColumn11.HeaderText = "DT Status";
             this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
             this.dataGridViewTextBoxColumn11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn11.ValueMember = "name";
             // 
             // dTCampaignStatusBindingSource
@@ -333,12 +337,14 @@
             this.dataGridViewTextBoxColumn12.DataPropertyName = "dt_campaign_url";
             this.dataGridViewTextBoxColumn12.HeaderText = "URL";
             this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewTextBoxColumn14
             // 
             this.dataGridViewTextBoxColumn14.DataPropertyName = "dt_allowed_country_names";
             this.dataGridViewTextBoxColumn14.HeaderText = "Allowed Countries";
             this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
+            this.dataGridViewTextBoxColumn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewCheckBoxColumn1
             // 
@@ -369,24 +375,29 @@
             this.dataGridViewTextBoxColumn15.DataPropertyName = "max_scrub";
             this.dataGridViewTextBoxColumn15.HeaderText = "Max Scrub";
             this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
+            this.dataGridViewTextBoxColumn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewTextBoxColumn9
             // 
             this.dataGridViewTextBoxColumn9.DataPropertyName = "modified";
             this.dataGridViewTextBoxColumn9.HeaderText = "Modified";
             this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.ReadOnly = true;
+            this.dataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewTextBoxColumn10
             // 
             this.dataGridViewTextBoxColumn10.DataPropertyName = "created";
             this.dataGridViewTextBoxColumn10.HeaderText = "Created";
             this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.dataGridViewTextBoxColumn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewTextBoxColumn16
             // 
             this.dataGridViewTextBoxColumn16.DataPropertyName = "notes";
             this.dataGridViewTextBoxColumn16.HeaderText = "Notes";
             this.dataGridViewTextBoxColumn16.Name = "dataGridViewTextBoxColumn16";
+            this.dataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dTCampaignTypeBindingSource
             // 
@@ -454,7 +465,6 @@
         private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
         private System.Windows.Forms.ToolStripButton bindingNavigatorDeleteItem;
         private System.Windows.Forms.ToolStripButton campaignBindingNavigatorSaveItem;
-        private System.Windows.Forms.DataGridView campaignDataGridView;
         private System.Windows.Forms.BindingSource accountManagerBindingSource;
         private System.Windows.Forms.BindingSource campaignDataSetBindingSource;
         private System.Windows.Forms.BindingSource campaignStatusBindingSource;
@@ -488,6 +498,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn16;
+        private EomAppControls.ExtendedDataGridView campaignDataGridView;
 
     }
 }

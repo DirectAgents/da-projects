@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace EomApp1.Screens.Campaign
@@ -21,6 +16,8 @@ namespace EomApp1.Screens.Campaign
             finalizedDataGridViewTextBoxColumn.DefaultCellStyle = style;
             verifiedDataGridViewTextBoxColumn.DefaultCellStyle = style;
             dataGridView1.Location = new Point(0, 29);
+
+            
         }
 
         private void CampaignsRevenueForm_Load(object sender, EventArgs e)
