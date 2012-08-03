@@ -31,7 +31,7 @@ namespace EomApp1.Screens.Final.UI
         {
             if (IsUnfinalizeCampaignButton(e) && ConfirmUnfinalizeCampaign())
             {
-                Campaigns.UpdateCampaignItemStatus(SelectedCampaign.PID, CampaignStatusId.Default);
+                Campaigns.UpdateCampaignItemStatus(SelectedCampaign.PID, SelectedCampaign.Currency, CampaignStatusId.Default);
                 ReFill();
             }
         }

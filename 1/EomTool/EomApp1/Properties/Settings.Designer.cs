@@ -269,5 +269,15 @@ namespace EomApp1.Properties {
                 return ((string)(this["TestUserIdentities"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseR1;Integrated Security=True")]
+        public string DADatabaseR1ConnectionString1 {
+            get {
+                return ((string)(this["DADatabaseR1ConnectionString1"]));
+            }
+        }
     }
 }

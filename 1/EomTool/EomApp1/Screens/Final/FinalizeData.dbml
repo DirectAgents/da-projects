@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="zDADatabaseJuly2012Test" Class="FinalizeDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" Class="FinalizeDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=biz2\da;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.ItemReportingStatus" Member="ItemReportingStatus">
     <Type Name="ItemReportingStatus">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -76,6 +76,19 @@
       <Association Name="CampaignStatus_Item" Member="CampaignStatus" ThisKey="campaign_status_id" OtherKey="id" Type="CampaignStatus" IsForeignKey="true" />
       <Association Name="Campaign_Item" Member="Campaign" ThisKey="pid" OtherKey="pid" Type="Campaign" IsForeignKey="true" />
       <Association Name="ItemReportingStatus_Item" Member="ItemReportingStatus" ThisKey="item_reporting_status_id" OtherKey="id" Type="ItemReportingStatus" IsForeignKey="true" />
+      <Association Name="Currency_Item" Member="Currency" ThisKey="revenue_currency_id" OtherKey="id" Type="Currency" IsForeignKey="true" />
+      <Association Name="Currency_Item1" Member="Currency1" ThisKey="cost_currency_id" OtherKey="id" Type="Currency" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Currency" Member="Currencies">
+    <Type Name="Currency">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="to_usd_multiplier" Type="System.Decimal" DbType="Decimal(14,4) NOT NULL" CanBeNull="false" />
+      <Column Name="to_gbp_multiplier" Type="System.Decimal" DbType="Decimal(14,4)" CanBeNull="true" />
+      <Column Name="to_eur_multiplier" Type="System.Decimal" DbType="Decimal(14,4)" CanBeNull="true" />
+      <Association Name="Currency_Item" Member="Items" ThisKey="id" OtherKey="revenue_currency_id" Type="Item" />
+      <Association Name="Currency_Item1" Member="Items1" ThisKey="id" OtherKey="cost_currency_id" Type="Item" />
     </Type>
   </Table>
 </Database>
