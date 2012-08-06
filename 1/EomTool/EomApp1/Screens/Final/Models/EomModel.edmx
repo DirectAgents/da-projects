@@ -20,6 +20,7 @@
       [VerifiedItemsCampaignRevenueSummary].[CampaignName] AS [CampaignName], 
       [VerifiedItemsCampaignRevenueSummary].[TotalRevenue] AS [TotalRevenue], 
       [VerifiedItemsCampaignRevenueSummary].[CurrencyName] AS [CurrencyName], 
+      [VerifiedItemsCampaignRevenueSummary].[CostCurrencyName] AS [CostCurrencyName], 
       [VerifiedItemsCampaignRevenueSummary].[ItemIds] AS [ItemIds], 
       [VerifiedItemsCampaignRevenueSummary].[AdvertiserName] AS [AdvertiserName]
       FROM [dbo].[VerifiedItemsCampaignRevenueSummary] AS [VerifiedItemsCampaignRevenueSummary]</DefiningQuery>
@@ -178,12 +179,14 @@
             <PropertyRef Name="pid" />
             <PropertyRef Name="CampaignName" />
             <PropertyRef Name="CurrencyName" />
+            <PropertyRef Name="CostCurrencyName" />
             <PropertyRef Name="AdvertiserName" />
           </Key>
           <Property Name="pid" Type="int" Nullable="false" />
           <Property Name="CampaignName" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="TotalRevenue" Type="decimal" Precision="38" Scale="10" />
           <Property Name="CurrencyName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="CostCurrencyName" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="ItemIds" Type="nvarchar" />
           <Property Name="AdvertiserName" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
@@ -558,6 +561,7 @@
             <PropertyRef Name="CampaignName" />
             <PropertyRef Name="CurrencyName" />
             <PropertyRef Name="AdvertiserName" />
+            <PropertyRef Name="CostCurrencyName" />
           </Key>
           <Property Type="Int32" Name="pid" Nullable="false" />
           <Property Type="String" Name="CampaignName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
@@ -565,6 +569,7 @@
           <Property Type="String" Name="CurrencyName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ItemIds" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AdvertiserName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CostCurrencyName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -678,6 +683,7 @@
           <EntitySetMapping Name="VerifiedItemsCampaignRevenueSummaries">
             <EntityTypeMapping TypeName="EomModel.VerifiedItemsCampaignRevenueSummary">
               <MappingFragment StoreEntitySet="VerifiedItemsCampaignRevenueSummary">
+                <ScalarProperty Name="CostCurrencyName" ColumnName="CostCurrencyName" />
                 <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
                 <ScalarProperty Name="ItemIds" ColumnName="ItemIds" />
                 <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
@@ -707,7 +713,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="EomModel" ZoomLevel="79">
+      <Diagram Name="EomModel" ZoomLevel="103">
         <EntityTypeShape EntityType="EomModel.AccountManager" Width="1.5" PointX="2.75" PointY="4.5" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="2.75" PointY="0.5" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignStatu" Width="1.5" PointX="2.75" PointY="2.375" Height="1.7879850260416657" IsExpanded="true" />

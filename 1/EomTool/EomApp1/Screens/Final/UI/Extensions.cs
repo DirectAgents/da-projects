@@ -7,9 +7,14 @@ namespace EomApp1.Screens.Final.UI
     {
         public static List<int> ItemIds(this Data.CampaignsDataTable campaigns, int pid, string currency)
         {
-            return campaigns.Single(c => c.PID == pid && c.Currency == currency).ItemIds
-                            .Split(',').Select(c => int.Parse(c))
-                            .ToList();
+            var camp = campaigns.Where(c => c.PID == pid && c.Currency == currency);
+            List<int> ids = new List<int>();
+            foreach (var campaign in camp)
+            {
+                var campIds = campaign.ItemIds.Split(',').Select(c => int.Parse(c));
+                ids.AddRange(campIds);
+            }
+            return ids;
         }
     }
 }

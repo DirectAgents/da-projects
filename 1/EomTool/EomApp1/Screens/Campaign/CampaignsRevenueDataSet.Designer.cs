@@ -502,9 +502,10 @@ namespace EomApp1.Screens.Campaign {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CampaignWorkflowRow FindByid(int id) {
+            public CampaignWorkflowRow FindByidCurr(int id, string Curr) {
                 return ((CampaignWorkflowRow)(this.Rows.Find(new object[] {
-                            id})));
+                            id,
+                            Curr})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -569,9 +570,9 @@ namespace EomApp1.Screens.Campaign {
                 this.columnVerified = new global::System.Data.DataColumn("Verified", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnVerified);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnid}, true));
+                                this.columnid,
+                                this.columnCurr}, true));
                 this.columnid.AllowDBNull = false;
-                this.columnid.Unique = true;
                 this.columnpid.AllowDBNull = false;
                 this.columncampaign_name.AllowDBNull = false;
                 this.columncampaign_name.MaxLength = 255;

@@ -124,5 +124,16 @@ namespace EomApp1.Screens.Final.UI
                     this.netTermsComboBox.SelectedIndex = this.netTermsComboBox.Items.IndexOf(netTermName);
             }
         }
+
+        private void FormatCell(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value != null && e.Value is decimal)
+            {
+                if ((decimal)e.Value == 0 && e.ColumnIndex == MarginPct.Index)
+                {
+                    e.Value = "";
+                }
+            }
+        }
     }
 }
