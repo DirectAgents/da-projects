@@ -18,12 +18,12 @@ using System.Runtime.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("EomToolSecurity", "RolePermission", "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Models.Role), "Permission", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Models.Permission))]
-[assembly: EdmRelationshipAttribute("EomToolSecurity", "RoleGroup", "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Models.Role), "Group", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Models.Group))]
+[assembly: EdmRelationshipAttribute("EomToolSecurity", "RolePermission", "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Role), "Permission", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Permission))]
+[assembly: EdmRelationshipAttribute("EomToolSecurity", "RoleGroup", "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Role), "Group", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Group))]
 
 #endregion
 
-namespace EomApp1.Screens.Security.Models
+namespace EomApp1.Screens.Security
 {
     #region Contexts
     

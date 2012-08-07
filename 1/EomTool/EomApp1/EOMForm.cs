@@ -6,6 +6,8 @@ using DAgents.Synch;
 using EomApp1.UI;
 using EomAppCommon;
 using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace EomApp1
 {
@@ -18,10 +20,17 @@ namespace EomApp1
             // Security
             this.verifiedRevenueToolStripMenuItem.Enabled = WindowsIdentityHelper.IsCurrentUserInGroup(EomAppSettings.AdminGroupName);
 
-            //foreach (var item in this.GetType().GetFields().Where(c => c.FieldType == typeof(ToolStripMenuItem)).Select(c => (c.GetValue(this) as ToolStripMenuItem)))
-            //{
-            //    //EventHandler a = item.;
-            //}
+            //var query =
+            //    this.GetType()
+            //        .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+            //        .Where(c => c.FieldType.FullName == "System.Windows.Forms.ToolStripMenuItem")
+            //        .Select(c => (c.GetValue(this) as ToolStripMenuItem))
+            //        .Where(c => !string.IsNullOrWhiteSpace((string)c.Tag));
+
+            foreach (var item in this.TaggedToolStripMenuItems())
+            {
+                System.Diagnostics.Debug.WriteLine(item.Tag);
+            }
         }
 
         // Campaigns Workflow

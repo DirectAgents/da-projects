@@ -279,5 +279,15 @@ namespace EomApp1.Properties {
                 return ((string)(this["DADatabaseR1ConnectionString1"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=EomToolSecurity;User=sa;Password=sp0ngbOb")]
+        public string OverrideEomToolSecurityConnectionString {
+            get {
+                return ((string)(this["OverrideEomToolSecurityConnectionString"]));
+            }
+        }
     }
 }

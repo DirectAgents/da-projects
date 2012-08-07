@@ -16,6 +16,7 @@ namespace EomApp1.Properties
                 string name = "Test";
                 SetSettings(this.OverrideConnectionString, this.OverrideDate, name);
                 this.DADatabaseName = name;
+                this["EomToolSecurityConnectionString"] = this.OverrideEomToolSecurityConnectionString;
             }
             else
             {

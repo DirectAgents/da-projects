@@ -19,13 +19,9 @@ namespace EomApp1.Screens.Security.Forms
 
         private void SecuritySetupForm_Load(object sender, EventArgs e)
         {
-            // TODO: This line of code loads data into the 'dataSet1.RoleGroup' table. You can move, or remove it, as needed.
             this.roleGroupTableAdapter.Fill(this.dataSet1.RoleGroup);
-            // TODO: This line of code loads data into the 'dataSet1.Roles' table. You can move, or remove it, as needed.
             this.rolesTableAdapter.Fill(this.dataSet1.Roles);
-            // TODO: This line of code loads data into the 'dataSet1.RolePermission' table. You can move, or remove it, as needed.
             this.rolePermissionTableAdapter.Fill(this.dataSet1.RolePermission);
-            // TODO: This line of code loads data into the 'dataSet1.Permissions' table. You can move, or remove it, as needed.
             this.permissionsTableAdapter.Fill(this.dataSet1.Permissions);
         }
 

@@ -37,7 +37,7 @@
             this.rolesIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.permissionsIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.permissionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataSet1 = new EomApp1.Screens.Security.Data.DataSet1();
+            this.dataSet1 = new EomApp1.Screens.Security.Data();
             this.permissionNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.roleNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fKRolePermissionRoleBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -64,7 +64,6 @@
             this.pasteToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.roleGroupBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.rolesDataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -91,11 +90,12 @@
             this.permissionsDataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.permissionsTableAdapter = new EomApp1.Screens.Security.Data.DataSet1TableAdapters.PermissionsTableAdapter();
-            this.tableAdapterManager = new EomApp1.Screens.Security.Data.DataSet1TableAdapters.TableAdapterManager();
-            this.roleGroupTableAdapter = new EomApp1.Screens.Security.Data.DataSet1TableAdapters.RoleGroupTableAdapter();
-            this.rolePermissionTableAdapter = new EomApp1.Screens.Security.Data.DataSet1TableAdapters.RolePermissionTableAdapter();
-            this.rolesTableAdapter = new EomApp1.Screens.Security.Data.DataSet1TableAdapters.RolesTableAdapter();
+            this.roleGroupBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.permissionsTableAdapter = new EomApp1.Screens.Security.DataTableAdapters.PermissionsTableAdapter();
+            this.tableAdapterManager = new EomApp1.Screens.Security.DataTableAdapters.TableAdapterManager();
+            this.roleGroupTableAdapter = new EomApp1.Screens.Security.DataTableAdapters.RoleGroupTableAdapter();
+            this.rolePermissionTableAdapter = new EomApp1.Screens.Security.DataTableAdapters.RolePermissionTableAdapter();
+            this.rolesTableAdapter = new EomApp1.Screens.Security.DataTableAdapters.RolesTableAdapter();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -105,7 +105,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.rolesBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.roleGroupBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rolesDataGridView)).BeginInit();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.permissionsBindingNavigator)).BeginInit();
@@ -113,6 +112,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.rolePermissionDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rolePermissionBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.permissionsDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.roleGroupBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -170,6 +170,7 @@
             this.rolesIdDataGridViewTextBoxColumn.DataPropertyName = "Roles_Id";
             this.rolesIdDataGridViewTextBoxColumn.HeaderText = "Roles_Id";
             this.rolesIdDataGridViewTextBoxColumn.Name = "rolesIdDataGridViewTextBoxColumn";
+            this.rolesIdDataGridViewTextBoxColumn.Visible = false;
             // 
             // permissionsIdDataGridViewTextBoxColumn
             // 
@@ -181,6 +182,7 @@
             this.permissionsIdDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.permissionsIdDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.permissionsIdDataGridViewTextBoxColumn.ValueMember = "Id";
+            this.permissionsIdDataGridViewTextBoxColumn.Visible = false;
             // 
             // permissionsBindingSource
             // 
@@ -194,17 +196,19 @@
             // 
             // permissionNameDataGridViewTextBoxColumn
             // 
+            this.permissionNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.permissionNameDataGridViewTextBoxColumn.DataPropertyName = "PermissionName";
-            this.permissionNameDataGridViewTextBoxColumn.HeaderText = "PermissionName";
+            this.permissionNameDataGridViewTextBoxColumn.HeaderText = "Permission";
             this.permissionNameDataGridViewTextBoxColumn.Name = "permissionNameDataGridViewTextBoxColumn";
-            this.permissionNameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // roleNameDataGridViewTextBoxColumn
             // 
+            this.roleNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.roleNameDataGridViewTextBoxColumn.DataPropertyName = "RoleName";
+            this.roleNameDataGridViewTextBoxColumn.FillWeight = 50F;
             this.roleNameDataGridViewTextBoxColumn.HeaderText = "RoleName";
             this.roleNameDataGridViewTextBoxColumn.Name = "roleNameDataGridViewTextBoxColumn";
-            this.roleNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.roleNameDataGridViewTextBoxColumn.Visible = false;
             // 
             // fKRolePermissionRoleBindingSource
             // 
@@ -423,11 +427,6 @@
             this.helpToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.helpToolStripButton.Text = "He&lp";
             // 
-            // roleGroupBindingSource
-            // 
-            this.roleGroupBindingSource.DataMember = "FK_RoleGroup_Role";
-            this.roleGroupBindingSource.DataSource = this.rolesBindingSource;
-            // 
             // rolesDataGridView
             // 
             this.rolesDataGridView.AutoGenerateColumns = false;
@@ -446,7 +445,7 @@
             this.dataGridViewTextBoxColumn7.DataPropertyName = "Id";
             this.dataGridViewTextBoxColumn7.HeaderText = "Id";
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            this.dataGridViewTextBoxColumn7.Visible = false;
             // 
             // dataGridViewTextBoxColumn8
             // 
@@ -672,6 +671,11 @@
             this.dataGridViewTextBoxColumn2.HeaderText = "Permission";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             // 
+            // roleGroupBindingSource
+            // 
+            this.roleGroupBindingSource.DataMember = "FK_RoleGroup_Role";
+            this.roleGroupBindingSource.DataSource = this.rolesBindingSource;
+            // 
             // permissionsTableAdapter
             // 
             this.permissionsTableAdapter.ClearBeforeFill = true;
@@ -684,7 +688,7 @@
             this.tableAdapterManager.RoleGroupTableAdapter = this.roleGroupTableAdapter;
             this.tableAdapterManager.RolePermissionTableAdapter = this.rolePermissionTableAdapter;
             this.tableAdapterManager.RolesTableAdapter = this.rolesTableAdapter;
-            this.tableAdapterManager.UpdateOrder = EomApp1.Screens.Security.Data.DataSet1TableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
+            this.tableAdapterManager.UpdateOrder = EomApp1.Screens.Security.DataTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
             // 
             // roleGroupTableAdapter
             // 
@@ -718,7 +722,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
             this.bindingNavigator1.ResumeLayout(false);
             this.bindingNavigator1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.roleGroupBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rolesDataGridView)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
@@ -728,6 +731,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.rolePermissionDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rolePermissionBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.permissionsDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.roleGroupBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -738,10 +742,10 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
-        private Data.DataSet1 dataSet1;
+        private Data dataSet1;
         private System.Windows.Forms.BindingSource permissionsBindingSource;
-        private Data.DataSet1TableAdapters.PermissionsTableAdapter permissionsTableAdapter;
-        private Data.DataSet1TableAdapters.TableAdapterManager tableAdapterManager;
+        private DataTableAdapters.PermissionsTableAdapter permissionsTableAdapter;
+        private DataTableAdapters.TableAdapterManager tableAdapterManager;
         private System.Windows.Forms.BindingNavigator permissionsBindingNavigator;
         private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
         private System.Windows.Forms.ToolStripLabel bindingNavigatorCountItem;
@@ -756,7 +760,7 @@
         private System.Windows.Forms.ToolStripSeparator bindingNavigatorSeparator2;
         private System.Windows.Forms.ToolStripButton permissionsBindingNavigatorSaveItem;
         private System.Windows.Forms.DataGridView permissionsDataGridView;
-        private Data.DataSet1TableAdapters.RolePermissionTableAdapter rolePermissionTableAdapter;
+        private DataTableAdapters.RolePermissionTableAdapter rolePermissionTableAdapter;
         private System.Windows.Forms.BindingSource rolePermissionBindingSource;
         private System.Windows.Forms.DataGridView rolePermissionDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
@@ -764,14 +768,20 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
         private System.Windows.Forms.BindingSource rolesBindingSource;
-        private Data.DataSet1TableAdapters.RolesTableAdapter rolesTableAdapter;
+        private DataTableAdapters.RolesTableAdapter rolesTableAdapter;
         private System.Windows.Forms.DataGridView rolesDataGridView;
         private System.Windows.Forms.BindingSource roleGroupBindingSource;
-        private Data.DataSet1TableAdapters.RoleGroupTableAdapter roleGroupTableAdapter;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private DataTableAdapters.RoleGroupTableAdapter roleGroupTableAdapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.BindingSource fKRolePermissionRoleBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn rolesIdDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewComboBoxColumn permissionsIdDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn permissionNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn roleNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
         private System.Windows.Forms.BindingNavigator bindingNavigator1;
         private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem1;
         private System.Windows.Forms.ToolStripLabel bindingNavigatorCountItem1;
@@ -794,11 +804,5 @@
         private System.Windows.Forms.ToolStripButton pasteToolStripButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton helpToolStripButton;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.BindingSource fKRolePermissionRoleBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn rolesIdDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewComboBoxColumn permissionsIdDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn permissionNameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn roleNameDataGridViewTextBoxColumn;
     }
 }
