@@ -20,16 +20,26 @@ namespace EomApp1
             // Security
             this.verifiedRevenueToolStripMenuItem.Enabled = WindowsIdentityHelper.IsCurrentUserInGroup(EomAppSettings.AdminGroupName);
 
-            //var query =
-            //    this.GetType()
-            //        .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-            //        .Where(c => c.FieldType.FullName == "System.Windows.Forms.ToolStripMenuItem")
-            //        .Select(c => (c.GetValue(this) as ToolStripMenuItem))
-            //        .Where(c => !string.IsNullOrWhiteSpace((string)c.Tag));
-
-            foreach (var item in this.TaggedToolStripMenuItems())
+            using (var db = new Security.EomToolSecurityEntities())
             {
-                System.Diagnostics.Debug.WriteLine(item.Tag);
+                var usersGroups = WindowsIdentityHelper.CurrentUsersGroups;
+
+                var allSecurityGroups = db.Groups.ToList();
+
+                var securityGroups = from g in allSecurityGroups
+                                     where usersGroups.CaseInsensitiveContains(g.WindowsIdentity)
+                                     select g;
+
+                var securityRoles = securityGroups.SelectMany(c => c.Roles);
+
+                var securityPermissions = securityRoles.SelectMany(c => c.Permissions);
+                
+                var securityTags = securityPermissions.Select(c => c.Tag);
+
+                foreach (var menuItem in this.TaggedToolStripMenuItems())
+                {
+                    menuItem.Enabled = securityTags.Contains(menuItem.Tag);
+                }
             }
         }
 
@@ -207,7 +217,7 @@ namespace EomApp1
 
         private void sToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Screens.Security.Forms.SecuritySetupForm().Show();
+            //new Screens.Security.Forms.SecuritySetupForm().Show();
         }
 
         // Campaigns Revenue Summary

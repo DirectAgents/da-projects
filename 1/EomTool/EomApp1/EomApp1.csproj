@@ -402,18 +402,7 @@
       <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Screens\Security\Data.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Data.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Security\SecuritySetupForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Security\SecuritySetupForm.Designer.cs">
-      <DependentUpon>SecuritySetupForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Security\EomToolSecurity.Designer.cs">
+    <Compile Include="Security\EomToolSecurity.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EomToolSecurity.edmx</DependentUpon>
@@ -707,9 +696,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Final\UI\VerifiedRevenueForm.resx">
       <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Security\SecuritySetupForm.resx">
-      <DependentUpon>SecuritySetupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Synch\AddAffiliateSetupForm.resx">
       <DependentUpon>AddAffiliateSetupForm.cs</DependentUpon>
@@ -1048,23 +1034,10 @@
     <None Include="Screens\PubRep1\Data\PublisherReportDataSet1.xss">
       <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
     </None>
-    <EntityDeploy Include="Screens\Security\EomToolSecurity.edmx">
+    <EntityDeploy Include="Security\EomToolSecurity.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EomToolSecurity.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Screens\Security\Data.xsc">
-      <DependentUpon>Data.xsd</DependentUpon>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Screens\Security\Data.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>Data.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Screens\Security\Data.xss">
-      <DependentUpon>Data.xsd</DependentUpon>
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Screens\Settings\SettingsDataSet1.xsc">
       <DependentUpon>SettingsDataSet1.xsd</DependentUpon>
     </None>
@@ -1312,7 +1285,7 @@
     <Content Include="Misc\showxml.xslt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screens\Security\EomToolSecurity.edmx.sql" />
+    <Content Include="Security\EomToolSecurity.edmx.sql" />
     <None Include="Service References\Cake.WebServices._4.Reports\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

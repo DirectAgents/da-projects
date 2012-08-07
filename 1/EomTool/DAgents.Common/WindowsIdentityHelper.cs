@@ -22,7 +22,7 @@ namespace DAgents.Common
             return CurrentUsersGroups.Contains(groupName.ToUpper());
         }
 
-        private static List<string> CurrentUsersGroups
+        public static List<string> CurrentUsersGroups
         {
             get
             {

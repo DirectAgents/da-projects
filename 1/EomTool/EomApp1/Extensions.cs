@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using System;
 
 namespace EomApp1
 {
@@ -15,6 +16,16 @@ namespace EomApp1
                                      where !string.IsNullOrWhiteSpace((string)mi.Tag)
                                      select mi)
                 yield return menuItem;
+        }
+
+        public static bool CaseInsensitiveContains(this List<string> source, string toCheck)
+        {
+            foreach (var item in source)
+            {
+                if (item.ToUpper() == toCheck.ToUpper())
+                    return true;
+            }
+            return false;
         }
     }
 }

@@ -18,12 +18,12 @@ using System.Runtime.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("EomToolSecurity", "RolePermission", "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Role), "Permission", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Permission))]
-[assembly: EdmRelationshipAttribute("EomToolSecurity", "RoleGroup", "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Role), "Group", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Security.Group))]
+[assembly: EdmRelationshipAttribute("EomToolSecurity", "RoleGroup", "Group", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Group), "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Role))]
+[assembly: EdmRelationshipAttribute("EomToolSecurity", "RolePermission", "Permission", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Permission), "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Role))]
 
 #endregion
 
-namespace EomApp1.Screens.Security
+namespace EomApp1.Security
 {
     #region Contexts
     
@@ -74,6 +74,22 @@ namespace EomApp1.Screens.Security
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<Group> Groups
+        {
+            get
+            {
+                if ((_Groups == null))
+                {
+                    _Groups = base.CreateObjectSet<Group>("Groups");
+                }
+                return _Groups;
+            }
+        }
+        private ObjectSet<Group> _Groups;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<Permission> Permissions
         {
             get
@@ -102,25 +118,17 @@ namespace EomApp1.Screens.Security
             }
         }
         private ObjectSet<Role> _Roles;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Group> Groups
-        {
-            get
-            {
-                if ((_Groups == null))
-                {
-                    _Groups = base.CreateObjectSet<Group>("Groups");
-                }
-                return _Groups;
-            }
-        }
-        private ObjectSet<Group> _Groups;
 
         #endregion
         #region AddTo Methods
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Groups EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToGroups(Group group)
+        {
+            base.AddObject("Groups", group);
+        }
     
         /// <summary>
         /// Deprecated Method for adding a new object to the Permissions EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
@@ -136,14 +144,6 @@ namespace EomApp1.Screens.Security
         public void AddToRoles(Role role)
         {
             base.AddObject("Roles", role);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Groups EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToGroups(Group group)
-        {
-            base.AddObject("Groups", group);
         }
 
         #endregion
@@ -169,11 +169,13 @@ namespace EomApp1.Screens.Security
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="name">Initial value of the Name property.</param>
-        public static Group CreateGroup(global::System.Int32 id, global::System.String name)
+        /// <param name="windowsIdentity">Initial value of the WindowsIdentity property.</param>
+        public static Group CreateGroup(global::System.Int32 id, global::System.String name, global::System.String windowsIdentity)
         {
             Group group = new Group();
             group.Id = id;
             group.Name = name;
+            group.WindowsIdentity = windowsIdentity;
             return group;
         }
 
@@ -230,6 +232,30 @@ namespace EomApp1.Screens.Security
         private global::System.String _Name;
         partial void OnNameChanging(global::System.String value);
         partial void OnNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String WindowsIdentity
+        {
+            get
+            {
+                return _WindowsIdentity;
+            }
+            set
+            {
+                OnWindowsIdentityChanging(value);
+                ReportPropertyChanging("WindowsIdentity");
+                _WindowsIdentity = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("WindowsIdentity");
+                OnWindowsIdentityChanged();
+            }
+        }
+        private global::System.String _WindowsIdentity;
+        partial void OnWindowsIdentityChanging(global::System.String value);
+        partial void OnWindowsIdentityChanged();
 
         #endregion
     
@@ -275,11 +301,13 @@ namespace EomApp1.Screens.Security
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="name">Initial value of the Name property.</param>
-        public static Permission CreatePermission(global::System.Int32 id, global::System.String name)
+        /// <param name="tag">Initial value of the Tag property.</param>
+        public static Permission CreatePermission(global::System.Int32 id, global::System.String name, global::System.String tag)
         {
             Permission permission = new Permission();
             permission.Id = id;
             permission.Name = name;
+            permission.Tag = tag;
             return permission;
         }
 
@@ -336,6 +364,30 @@ namespace EomApp1.Screens.Security
         private global::System.String _Name;
         partial void OnNameChanging(global::System.String value);
         partial void OnNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Tag
+        {
+            get
+            {
+                return _Tag;
+            }
+            set
+            {
+                OnTagChanging(value);
+                ReportPropertyChanging("Tag");
+                _Tag = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Tag");
+                OnTagChanged();
+            }
+        }
+        private global::System.String _Tag;
+        partial void OnTagChanging(global::System.String value);
+        partial void OnTagChanged();
 
         #endregion
     
@@ -453,28 +505,6 @@ namespace EomApp1.Screens.Security
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomToolSecurity", "RolePermission", "Permission")]
-        public EntityCollection<Permission> Permissions
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Permission>("EomToolSecurity.RolePermission", "Permission");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Permission>("EomToolSecurity.RolePermission", "Permission", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomToolSecurity", "RoleGroup", "Group")]
         public EntityCollection<Group> Groups
         {
@@ -487,6 +517,28 @@ namespace EomApp1.Screens.Security
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Group>("EomToolSecurity.RoleGroup", "Group", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomToolSecurity", "RolePermission", "Permission")]
+        public EntityCollection<Permission> Permissions
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Permission>("EomToolSecurity.RolePermission", "Permission");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Permission>("EomToolSecurity.RolePermission", "Permission", value);
                 }
             }
         }
