@@ -31,11 +31,17 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PublishersView));
             this.grid = new System.Windows.Forms.DataGridView();
             this.publisherDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.currDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.revenueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CostCurrDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.costDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MarginPct = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NetTermsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.finalizePublishersBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.finalizePublishersDataSet = new EomApp1.Screens.Final.UI.Data();
@@ -69,6 +75,9 @@
             this.publisherDataGridViewTextBoxColumn,
             this.currDataGridViewTextBoxColumn,
             this.revenueDataGridViewTextBoxColumn,
+            this.CostCurrDataGridViewTextBoxColumn,
+            this.costDataGridViewTextBoxColumn,
+            this.MarginPct,
             this.NetTermsCol});
             this.grid.DataSource = this.finalizePublishersBindingSource;
             this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -78,6 +87,7 @@
             this.grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.grid.Size = new System.Drawing.Size(818, 248);
             this.grid.TabIndex = 0;
+            this.grid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.FormatCell);
             this.grid.SelectionChanged += new System.EventHandler(this.SelectionChanged);
             // 
             // publisherDataGridViewTextBoxColumn
@@ -90,19 +100,20 @@
             // 
             // currDataGridViewTextBoxColumn
             // 
-            this.currDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.currDataGridViewTextBoxColumn.DataPropertyName = "Curr";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.currDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            this.currDataGridViewTextBoxColumn.HeaderText = "Curr";
+            this.currDataGridViewTextBoxColumn.HeaderText = "RevCurr";
             this.currDataGridViewTextBoxColumn.Name = "currDataGridViewTextBoxColumn";
             this.currDataGridViewTextBoxColumn.ReadOnly = true;
-            this.currDataGridViewTextBoxColumn.Width = 51;
+            this.currDataGridViewTextBoxColumn.Width = 55;
             // 
             // revenueDataGridViewTextBoxColumn
             // 
             this.revenueDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.revenueDataGridViewTextBoxColumn.DataPropertyName = "Revenue";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.Format = "N2";
@@ -112,6 +123,44 @@
             this.revenueDataGridViewTextBoxColumn.Name = "revenueDataGridViewTextBoxColumn";
             this.revenueDataGridViewTextBoxColumn.ReadOnly = true;
             this.revenueDataGridViewTextBoxColumn.Width = 76;
+            // 
+            // CostCurrDataGridViewTextBoxColumn
+            // 
+            this.CostCurrDataGridViewTextBoxColumn.DataPropertyName = "CostCurr";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.CostCurrDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.CostCurrDataGridViewTextBoxColumn.HeaderText = "CostCurr";
+            this.CostCurrDataGridViewTextBoxColumn.Name = "CostCurrDataGridViewTextBoxColumn";
+            this.CostCurrDataGridViewTextBoxColumn.ReadOnly = true;
+            this.CostCurrDataGridViewTextBoxColumn.Width = 55;
+            // 
+            // costDataGridViewTextBoxColumn
+            // 
+            this.costDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.costDataGridViewTextBoxColumn.DataPropertyName = "Cost";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle4.Format = "N2";
+            this.costDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
+            this.costDataGridViewTextBoxColumn.HeaderText = "Cost";
+            this.costDataGridViewTextBoxColumn.Name = "costDataGridViewTextBoxColumn";
+            this.costDataGridViewTextBoxColumn.ReadOnly = true;
+            this.costDataGridViewTextBoxColumn.Width = 53;
+            // 
+            // MarginPct
+            // 
+            this.MarginPct.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
+            this.MarginPct.DataPropertyName = "MarginPct";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle5.Format = "P1";
+            this.MarginPct.DefaultCellStyle = dataGridViewCellStyle5;
+            this.MarginPct.HeaderText = "Margin";
+            this.MarginPct.Name = "MarginPct";
+            this.MarginPct.ReadOnly = true;
+            this.MarginPct.Width = 64;
             // 
             // NetTermsCol
             // 
@@ -268,13 +317,16 @@
         private System.Windows.Forms.ToolStripButton selectNoneButton;
         private System.Windows.Forms.ToolStripButton actionButton;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn publisherDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn currDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn revenueDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NetTermsCol;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripLabel netTermsLabel;
         private System.Windows.Forms.ToolStripComboBox netTermsComboBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn publisherDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn currDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn revenueDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CostCurrDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn costDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MarginPct;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NetTermsCol;
     }
 }

@@ -107,6 +107,7 @@ ORDER BY campaign_name</CommandText>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:CampaignWorkflow" />
       <xs:field xpath="mstns:id" />
+      <xs:field xpath="mstns:Curr" />
     </xs:unique>
   </xs:element>
 </xs:schema>

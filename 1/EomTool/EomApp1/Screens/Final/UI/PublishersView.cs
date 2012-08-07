@@ -10,6 +10,7 @@ namespace EomApp1.Screens.Final.UI
     public partial class PublishersView : UserControl
     {
         private List<int> affIDs = new List<int>();
+        private List<string> costCurrs = new List<string>();
 
         public PublishersView()
         {
@@ -30,12 +31,14 @@ namespace EomApp1.Screens.Final.UI
         {
 
             this.affIDs.Clear();
+            this.costCurrs.Clear();
             DataGridViewSelectedRowCollection selectedRows = this.grid.SelectedRows;
 
             foreach (DataGridViewRow row in selectedRows)
             {
                 var rowView = row.DataBoundItem as DataRowView;
                 affIDs.Add(((Data.PublishersRow)rowView.Row).AffId);
+                costCurrs.Add(((Data.PublishersRow)rowView.Row).CostCurr);
             }
 
             actionButton.Enabled = (grid.SelectedRows.Count > 0);
@@ -58,7 +61,7 @@ namespace EomApp1.Screens.Final.UI
         {
             if (PublishersActionInvoked != null)
                 if (ConfirmationBox.Confirm(this.ParentForm, ActionButtonText + " Publishers?", ActionButtonText))
-                    PublishersActionInvoked(this, new PublishersEventArgs(affIDs.ToArray()));
+                    PublishersActionInvoked(this, new PublishersEventArgs(affIDs.ToArray(), costCurrs.ToArray()));
         }
 
         public void InitializeNetTermsDropdown()
@@ -122,6 +125,17 @@ namespace EomApp1.Screens.Final.UI
                     this.netTermsComboBox.SelectedIndex = 0;
                 else
                     this.netTermsComboBox.SelectedIndex = this.netTermsComboBox.Items.IndexOf(netTermName);
+            }
+        }
+
+        private void FormatCell(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value != null && e.Value is decimal)
+            {
+                if ((decimal)e.Value == 0 && e.ColumnIndex == MarginPct.Index)
+                {
+                    e.Value = "";
+                }
             }
         }
     }

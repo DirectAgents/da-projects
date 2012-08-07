@@ -21,6 +21,9 @@
               <xs:element name="AffId" msprop:Generator_ColumnVarNameInTable="columnAffId" msprop:Generator_ColumnPropNameInRow="AffId" msprop:Generator_ColumnPropNameInTable="AffIdColumn" msprop:Generator_UserColumnName="AffId" type="xs:int" />
               <xs:element name="NetTerms" msprop:Generator_ColumnVarNameInTable="columnNetTerms" msprop:Generator_ColumnPropNameInRow="NetTerms" msprop:Generator_ColumnPropNameInTable="NetTermsColumn" msprop:Generator_UserColumnName="NetTerms" type="xs:string" minOccurs="0" />
               <xs:element name="PID" msprop:Generator_ColumnVarNameInTable="columnPID" msprop:Generator_ColumnPropNameInRow="PID" msprop:Generator_ColumnPropNameInTable="PIDColumn" msprop:Generator_UserColumnName="PID" type="xs:int" />
+              <xs:element name="CostCurr" msprop:Generator_ColumnVarNameInTable="columnCostCurr" msprop:Generator_ColumnPropNameInRow="CostCurr" msprop:Generator_ColumnPropNameInTable="CostCurrColumn" msprop:Generator_UserColumnName="CostCurr" type="xs:string" />
+              <xs:element name="Cost" msprop:Generator_ColumnVarNameInTable="columnCost" msprop:Generator_ColumnPropNameInRow="Cost" msprop:Generator_ColumnPropNameInTable="CostColumn" msprop:Generator_UserColumnName="Cost" type="xs:decimal" minOccurs="0" />
+              <xs:element name="MarginPct" msprop:Generator_ColumnVarNameInTable="columnMarginPct" msprop:Generator_ColumnPropNameInRow="MarginPct" msprop:Generator_ColumnPropNameInTable="MarginPctColumn" msprop:Generator_UserColumnName="MarginPct" type="xs:decimal" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -40,14 +43,15 @@
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:Publishers" />
-      <xs:field xpath="mstns:Curr" />
-      <xs:field xpath="mstns:AffId" />
       <xs:field xpath="mstns:PID" />
+      <xs:field xpath="mstns:AffId" />
+      <xs:field xpath="mstns:Curr" />
+      <xs:field xpath="mstns:CostCurr" />
     </xs:unique>
     <xs:unique name="Campaigns_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:Campaigns" />
-      <xs:field xpath="mstns:Currency" />
       <xs:field xpath="mstns:PID" />
+      <xs:field xpath="mstns:Currency" />
     </xs:unique>
   </xs:element>
   <xs:annotation>

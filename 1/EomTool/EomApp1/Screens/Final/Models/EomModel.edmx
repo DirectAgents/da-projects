@@ -707,7 +707,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="EomModel" ZoomLevel="79">
+      <Diagram Name="EomModel" ZoomLevel="103">
         <EntityTypeShape EntityType="EomModel.AccountManager" Width="1.5" PointX="2.75" PointY="4.5" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="2.75" PointY="0.5" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignStatu" Width="1.5" PointX="2.75" PointY="2.375" Height="1.7879850260416657" IsExpanded="true" />
@@ -751,7 +751,7 @@
           <ConnectorPoint PointX="8.875" PointY="0.125" />
           <ConnectorPoint PointX="9.25" PointY="0.5" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="EomModel.VerifiedItemsCampaignRevenueSummary" Width="1.5" PointX="11.125" PointY="0.5" Height="2.1725878906250031" />
+        <EntityTypeShape EntityType="EomModel.VerifiedItemsCampaignRevenueSummary" Width="1.5" PointX="11.25" PointY="0.625" Height="2.1725878906249996" />
       </Diagram>
     </Diagrams>
   </Designer>
