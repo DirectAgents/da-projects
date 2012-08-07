@@ -237,11 +237,9 @@ namespace EomApp1.Screens.Final.UI {
             base.Tables.Add(this.tableCampaigns);
             this.relationCampaigns_Publishers = new global::System.Data.DataRelation("Campaigns_Publishers", new global::System.Data.DataColumn[] {
                         this.tableCampaigns.PIDColumn,
-                        this.tableCampaigns.CurrencyColumn,
-                        this.tableCampaigns.CostCurrColumn}, new global::System.Data.DataColumn[] {
+                        this.tableCampaigns.CurrencyColumn}, new global::System.Data.DataColumn[] {
                         this.tablePublishers.PIDColumn,
-                        this.tablePublishers.CurrColumn,
-                        this.tablePublishers.CostCurrColumn}, false);
+                        this.tablePublishers.CurrColumn}, false);
             this.Relations.Add(this.relationCampaigns_Publishers);
         }
         
@@ -715,8 +713,6 @@ namespace EomApp1.Screens.Final.UI {
             
             private global::System.Data.DataColumn columnAdvertiserName;
             
-            private global::System.Data.DataColumn columnCostCurr;
-            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CampaignsDataTable() {
@@ -800,14 +796,6 @@ namespace EomApp1.Screens.Final.UI {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CostCurrColumn {
-                get {
-                    return this.columnCostCurr;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -843,7 +831,7 @@ namespace EomApp1.Screens.Final.UI {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CampaignsRow AddCampaignsRow(int PID, string CampaignName, decimal VerifiedRevenue, string Currency, string ItemIds, string AdvertiserName, string CostCurr) {
+            public CampaignsRow AddCampaignsRow(int PID, string CampaignName, decimal VerifiedRevenue, string Currency, string ItemIds, string AdvertiserName) {
                 CampaignsRow rowCampaignsRow = ((CampaignsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         PID,
@@ -851,8 +839,7 @@ namespace EomApp1.Screens.Final.UI {
                         VerifiedRevenue,
                         Currency,
                         ItemIds,
-                        AdvertiserName,
-                        CostCurr};
+                        AdvertiserName};
                 rowCampaignsRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowCampaignsRow);
                 return rowCampaignsRow;
@@ -860,11 +847,10 @@ namespace EomApp1.Screens.Final.UI {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CampaignsRow FindByCostCurrCurrencyPID(string CostCurr, string Currency, int PID) {
+            public CampaignsRow FindByPIDCurrency(int PID, string Currency) {
                 return ((CampaignsRow)(this.Rows.Find(new object[] {
-                            CostCurr,
-                            Currency,
-                            PID})));
+                            PID,
+                            Currency})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -890,7 +876,6 @@ namespace EomApp1.Screens.Final.UI {
                 this.columnCurrency = base.Columns["Currency"];
                 this.columnItemIds = base.Columns["ItemIds"];
                 this.columnAdvertiserName = base.Columns["AdvertiserName"];
-                this.columnCostCurr = base.Columns["CostCurr"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -908,15 +893,11 @@ namespace EomApp1.Screens.Final.UI {
                 base.Columns.Add(this.columnItemIds);
                 this.columnAdvertiserName = new global::System.Data.DataColumn("AdvertiserName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnAdvertiserName);
-                this.columnCostCurr = new global::System.Data.DataColumn("CostCurr", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCostCurr);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnCostCurr,
-                                this.columnCurrency,
-                                this.columnPID}, true));
+                                this.columnPID,
+                                this.columnCurrency}, true));
                 this.columnPID.AllowDBNull = false;
                 this.columnCurrency.AllowDBNull = false;
-                this.columnCostCurr.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1350,17 +1331,6 @@ namespace EomApp1.Screens.Final.UI {
                 }
                 set {
                     this[this.tableCampaigns.AdvertiserNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string CostCurr {
-                get {
-                    return ((string)(this[this.tableCampaigns.CostCurrColumn]));
-                }
-                set {
-                    this[this.tableCampaigns.CostCurrColumn] = value;
                 }
             }
             

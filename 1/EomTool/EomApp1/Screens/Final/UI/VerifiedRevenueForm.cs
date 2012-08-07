@@ -45,7 +45,7 @@ namespace EomApp1.Screens.Final.UI
         {
             if (IsUnfinalizePublisherButton(e) && ConfirmUnfinalizePublisher())
             {
-                Publishers.ChangeCampaignStatus(CampaignStatusId.Verified, CampaignStatusId.Default, SelectedPublisher.AffId);
+                Publishers.ChangeCampaignStatus(CampaignStatusId.Verified, CampaignStatusId.Default, new int[] { SelectedPublisher.AffId }, new string[] { SelectedPublisher.CostCurr });
                 ReFill();
             }
         }

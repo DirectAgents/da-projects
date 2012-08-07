@@ -17,7 +17,7 @@ namespace EomApp1.Screens.Final.Models
             {
                 foreach (var item in db.VerifiedItemsCampaignRevenueSummaries)
                 {
-                    Data.Campaigns.AddCampaignsRow(item.pid, item.CampaignName, item.TotalRevenue.Value, item.CurrencyName, item.ItemIds, item.AdvertiserName, item.CostCurrencyName);
+                    Data.Campaigns.AddCampaignsRow(item.pid, item.CampaignName, item.TotalRevenue.Value, item.CurrencyName, item.ItemIds, item.AdvertiserName);
                 }
             }
         }

@@ -17,7 +17,7 @@ namespace EomApp1.Screens.Final.Models
             var campaign = data.Campaigns.Where(c => c.PID == Pid).FirstOrDefault();
             if (campaign == null)
             {
-                campaign = data.Campaigns.AddCampaignsRow(Pid, CampaignName, 0, "", null, AdvertiserName, "");
+                campaign = data.Campaigns.AddCampaignsRow(Pid, CampaignName, 0, "", null, AdvertiserName);
             }
 
             using (var db = Eom.Create())
@@ -60,16 +60,21 @@ namespace EomApp1.Screens.Final.Models
             }
         }
 
-        public void ChangeCampaignStatus(CampaignStatusId fromStatusID, CampaignStatusId toStatusID, params int[] ids)
+        public void ChangeCampaignStatus(CampaignStatusId fromStatusID, CampaignStatusId toStatusID, int[] affids, string[] costcurrs)
         {
             using (var db = Models.Eom.Create())
             {
-                foreach (var affid in ids)
+                for (var j = 0; j < affids.Length; j++)
                 {
+                    var affid = affids[j];
                     var query = from i in db.Items
                                 where i.affid == affid && i.campaign_status_id == (int)fromStatusID && i.pid == Pid && i.Currency.name == Currency
                                 select i;
-
+                    if (j < costcurrs.Length)
+                    {
+                        var costcurr = costcurrs[j];
+                        query = query.Where(i => i.Currency1.name == costcurr);
+                    }
                     foreach (var item in query)
                     {
                         item.campaign_status_id = (int)toStatusID;

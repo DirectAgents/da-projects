@@ -2751,15 +2751,13 @@ namespace EomApp1.Screens.Final.Models
         /// <param name="campaignName">Initial value of the CampaignName property.</param>
         /// <param name="currencyName">Initial value of the CurrencyName property.</param>
         /// <param name="advertiserName">Initial value of the AdvertiserName property.</param>
-        /// <param name="costCurrencyName">Initial value of the CostCurrencyName property.</param>
-        public static VerifiedItemsCampaignRevenueSummary CreateVerifiedItemsCampaignRevenueSummary(global::System.Int32 pid, global::System.String campaignName, global::System.String currencyName, global::System.String advertiserName, global::System.String costCurrencyName)
+        public static VerifiedItemsCampaignRevenueSummary CreateVerifiedItemsCampaignRevenueSummary(global::System.Int32 pid, global::System.String campaignName, global::System.String currencyName, global::System.String advertiserName)
         {
             VerifiedItemsCampaignRevenueSummary verifiedItemsCampaignRevenueSummary = new VerifiedItemsCampaignRevenueSummary();
             verifiedItemsCampaignRevenueSummary.pid = pid;
             verifiedItemsCampaignRevenueSummary.CampaignName = campaignName;
             verifiedItemsCampaignRevenueSummary.CurrencyName = currencyName;
             verifiedItemsCampaignRevenueSummary.AdvertiserName = advertiserName;
-            verifiedItemsCampaignRevenueSummary.CostCurrencyName = costCurrencyName;
             return verifiedItemsCampaignRevenueSummary;
         }
 
@@ -2921,33 +2919,6 @@ namespace EomApp1.Screens.Final.Models
         private global::System.String _AdvertiserName;
         partial void OnAdvertiserNameChanging(global::System.String value);
         partial void OnAdvertiserNameChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String CostCurrencyName
-        {
-            get
-            {
-                return _CostCurrencyName;
-            }
-            set
-            {
-                if (_CostCurrencyName != value)
-                {
-                    OnCostCurrencyNameChanging(value);
-                    ReportPropertyChanging("CostCurrencyName");
-                    _CostCurrencyName = StructuralObject.SetValidValue(value, false);
-                    ReportPropertyChanged("CostCurrencyName");
-                    OnCostCurrencyNameChanged();
-                }
-            }
-        }
-        private global::System.String _CostCurrencyName;
-        partial void OnCostCurrencyNameChanging(global::System.String value);
-        partial void OnCostCurrencyNameChanged();
 
         #endregion
     

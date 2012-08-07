@@ -36,7 +36,6 @@
               <xs:element name="Currency" msprop:nullValue="-" msprop:Generator_ColumnPropNameInRow="Currency" msprop:Generator_ColumnVarNameInTable="columnCurrency" msprop:Generator_ColumnPropNameInTable="CurrencyColumn" msprop:Generator_UserColumnName="Currency" type="xs:string" />
               <xs:element name="ItemIds" msprop:Generator_ColumnVarNameInTable="columnItemIds" msprop:Generator_ColumnPropNameInRow="ItemIds" msprop:Generator_ColumnPropNameInTable="ItemIdsColumn" msprop:Generator_UserColumnName="ItemIds" type="xs:string" minOccurs="0" />
               <xs:element name="AdvertiserName" msprop:Generator_ColumnVarNameInTable="columnAdvertiserName" msprop:Generator_ColumnPropNameInRow="AdvertiserName" msprop:Generator_ColumnPropNameInTable="AdvertiserNameColumn" msprop:Generator_UserColumnName="AdvertiserName" type="xs:string" minOccurs="0" />
-              <xs:element name="CostCurr" msprop:Generator_ColumnVarNameInTable="columnCostCurr" msprop:Generator_ColumnPropNameInRow="CostCurr" msprop:Generator_ColumnPropNameInTable="CostCurrColumn" msprop:Generator_UserColumnName="CostCurr" type="xs:string" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -51,14 +50,13 @@
     </xs:unique>
     <xs:unique name="Campaigns_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:Campaigns" />
-      <xs:field xpath="mstns:CostCurr" />
-      <xs:field xpath="mstns:Currency" />
       <xs:field xpath="mstns:PID" />
+      <xs:field xpath="mstns:Currency" />
     </xs:unique>
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="Campaigns_Publishers" msdata:parent="Campaigns" msdata:child="Publishers" msdata:parentkey="PID Currency CostCurr" msdata:childkey="PID Curr CostCurr" msprop:Generator_UserChildTable="Publishers" msprop:Generator_ChildPropName="GetPublishersRows" msprop:Generator_ParentPropName="CampaignsRowParent" msprop:Generator_UserRelationName="Campaigns_Publishers" msprop:Generator_RelationVarName="relationCampaigns_Publishers" msprop:Generator_UserParentTable="Campaigns" />
+      <msdata:Relationship name="Campaigns_Publishers" msdata:parent="Campaigns" msdata:child="Publishers" msdata:parentkey="PID Currency" msdata:childkey="PID Curr" msprop:Generator_UserChildTable="Publishers" msprop:Generator_ChildPropName="GetPublishersRows" msprop:Generator_ParentPropName="CampaignsRowParent" msprop:Generator_UserRelationName="Campaigns_Publishers" msprop:Generator_RelationVarName="relationCampaigns_Publishers" msprop:Generator_UserParentTable="Campaigns" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

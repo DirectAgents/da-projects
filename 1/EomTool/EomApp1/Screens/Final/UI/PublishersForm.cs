@@ -40,13 +40,13 @@ namespace EomApp1.Screens.Final.UI
         void finalizePublishersView_PublishersActionInvoked(object sender, PublishersEventArgs e)
         {
             if (PublishersToFinalizeSelected != null)
-                PublishersToFinalizeSelected(this, new PublishersEventArgs(e.AffIds));
+                PublishersToFinalizeSelected(this, e);
         }
 
         void verifyPublishersView_PublishersActionInvoked(object sender, PublishersEventArgs e)
         {
             if (PublishersToFinalizeSelected != null)
-                PublishersToVerifySelected(this, new PublishersEventArgs(e.AffIds));
+                PublishersToVerifySelected(this, e);
         }
 
         void FormShown(object sender, EventArgs e)
