@@ -109,42 +109,60 @@ namespace EomApp1.Screens.PubRep1.Controls
 
         private void UpdateCellTags()
         {
+            var canVerify = Security.CurrentUser.CanDoAccountingVerify;
+            var canApprove = Security.CurrentUser.CanDoAccountingApprove;
+            var canPay = Security.CurrentUser.CanDoAccountingPay;
+
             foreach (DataGridViewRow dataGridViewRow in _dgv.Rows)
             { 
                 var row = (PublisherReportDataSet1.CampaignsPublisherReportSummaryRow)
                     ((DataRowView)dataGridViewRow.DataBoundItem).Row;
-                
-                if (row.Unverified > 0)
+
+                if (row.Unverified > 0 && canVerify)
                 {
                     _dgv[unverifiedColumn.Index, dataGridViewRow.Index].Tag = new Action(() =>
                     {
                         pendingStatusUpdates1.Add(row.Publisher, "Unverified", "Verified", row.Unverified);
                     });
                 }
-                if (row.Verified > 0)
+                else
+                {
+                    DisableLinkCell(unverifiedColumn.Index, dataGridViewRow.Index);
+                }
+
+                if (row.Verified > 0 && canApprove)
                 {
                     _dgv[verifiedColumn.Index, dataGridViewRow.Index].Tag = new Action(() =>
                     {
                         pendingStatusUpdates1.Add(row.Publisher, "Verified", "Approved", row.Verified);
                     });
                 }
-                if (row.Approved > 0)
+                else
+                {
+                    DisableLinkCell(verifiedColumn.Index, dataGridViewRow.Index);
+                }
+
+                if (row.Approved > 0 && canPay)
                 {
                     _dgv[approvedColumn.Index, dataGridViewRow.Index].Tag = new Action(() =>
                     {
                         pendingStatusUpdates1.Add(row.Publisher, "Approved", "Paid", row.Approved);
                     });
                 }
+                else
+                {
+                    DisableLinkCell(approvedColumn.Index, dataGridViewRow.Index);
+                }
             }
         }
 
-        private void DisableLinks(DataGridViewRow dataGridViewRow)
+        private void DisableLinkCell(int colIndex, int rowIndex)
         {
             var textCell = new DataGridViewTextBoxCell()
             {
-                Value = dataGridViewRow.Cells[unverifiedColumn.Index].Value
+                Value = _dgv[colIndex, rowIndex].Value
             };
-            dataGridViewRow.Cells[unverifiedColumn.Index] = textCell;
+            _dgv[colIndex, rowIndex] = textCell;
         }
 
         public void ReFill()
@@ -202,10 +220,13 @@ namespace EomApp1.Screens.PubRep1.Controls
 
         void BindingSource_PositionChanged(object sender, EventArgs e)
         {
-            var drv = ((DataRowView)_bindingSource.Current).Row;
-            var r = (PublisherReportDataSet1.CampaignsPublisherReportSummaryRow)drv;
-            var p = r.Publisher;
-            PublisherSelected(p);
+            if (_bindingSource.Current != null)
+            {
+                var drv = ((DataRowView)_bindingSource.Current).Row;
+                var r = (PublisherReportDataSet1.CampaignsPublisherReportSummaryRow)drv;
+                var p = r.Publisher;
+                PublisherSelected(p);
+            }
         }
 
         void publisherFilterTextBox_TextChanged(object sender, EventArgs e)
@@ -297,10 +318,7 @@ namespace EomApp1.Screens.PubRep1.Controls
 
             if (_payMode)
             {
-                _paySaveButton.Enabled = false;
-
-                //setStatusCheckColumn.Visible = true;
-                //nextStatusComboColumn.Visible = true;
+                //_paySaveButton.Enabled = false;
 
                 _dgv.ReadOnly = false;
 
@@ -313,32 +331,6 @@ namespace EomApp1.Screens.PubRep1.Controls
                 }
 
                 _dgv.SelectionMode = DataGridViewSelectionMode.CellSelect;
-
-                
-                
-                //unverifiedLinkColumn.Visible = true;
-                //unverifiedTextColumn.Visible = false;
-                //unverifiedLinkColumn.LinkBehavior = LinkBehavior.NeverUnderline;
-                //unverifiedLinkColumn.LinkColor = Color.Black;
-                //unverifiedLinkColumn.ActiveLinkColor = Color.Black;
-                //unverifiedLinkColumn.TrackVisitedState = false;
-            }
-            else
-            {
-
-                //setStatusCheckColumn.Visible = false;
-                //nextStatusComboColumn.Visible = false;
-
-                //DataGridViewCellStyle st = new DataGridViewCellStyle();
-                //st.BackColor = Color.Gray;
-                //if (!nextStatusComboColumn.HasDefaultCellStyle)
-                //{
-                //    nextStatusComboColumn.DefaultCellStyle = new DataGridViewCellStyle(st);
-                //}
-                //nextStatusComboColumn.DefaultCellStyle.ApplyStyle(st);
-
-                //unverifiedLinkColumn.Visible = false;
-                //unverifiedTextColumn.Visible = true;
             }
 
             _itemsToChangeDGV.Visible = _payMode;
@@ -383,6 +375,7 @@ namespace EomApp1.Screens.PubRep1.Controls
         private void button1_Click(object sender, EventArgs e)
         {
             pendingStatusUpdates1.Save(string.Join(",", ExcludedItemIDs));
+            _paySaveButton.Enabled = false;
             ReFill();
         }
 

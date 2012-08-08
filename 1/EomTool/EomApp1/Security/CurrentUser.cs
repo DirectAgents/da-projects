@@ -24,5 +24,26 @@ namespace EomApp1.Security
         {
             return RoleNames.Contains("AM: " + accountManagerName);
         }
+        public static bool CanDoAccountingVerify
+        {
+            get
+            {
+                return RoleNames.Contains("Pub Rep: Verify");
+            }
+        }
+        public static bool CanDoAccountingApprove
+        {
+            get
+            {
+                return RoleNames.Contains("Pub Rep: Approve");
+            }
+        }
+        public static bool CanDoAccountingPay
+        {
+            get
+            {
+                return RoleNames.Contains("Pub Rep: Pay");
+            }
+        }
     }
 }
