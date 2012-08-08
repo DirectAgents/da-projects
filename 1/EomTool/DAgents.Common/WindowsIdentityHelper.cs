@@ -17,17 +17,20 @@ namespace DAgents.Common
             return GetWindowsIdentityName().ToLower();
         }
 
-        public static bool IsCurrentUserInGroup(string groupName)
+        public static bool DoesCurrentUserHaveIdentity(string identityName)
         {
-            return CurrentUsersGroups.Contains(groupName.ToUpper());
+            return CurrentUsersGroupsAndIdentity.Contains(identityName.ToUpper());
         }
 
-        public static List<string> CurrentUsersGroups
+        public static List<string> CurrentUsersGroupsAndIdentity
         {
             get
             {
                 if (_CurrentUsersGroups == null)
+                {
                     _CurrentUsersGroups = WindowsIdentity.GetCurrent().Groups.Select(g => ((IdentityReference)g).Translate(typeof(NTAccount)).Value.ToUpper()).ToList();
+                    _CurrentUsersGroups.Add(GetWindowsIdentityName().ToUpper());
+                }
                 return _CurrentUsersGroups;
             }
         }

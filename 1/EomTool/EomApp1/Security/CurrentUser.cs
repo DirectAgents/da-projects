@@ -14,7 +14,7 @@ namespace EomApp1.Security
                 if (_RoleNames == null)
                     using (var db = new Security.EomToolSecurityEntities())
                         _RoleNames = (from g in db.Groups.ToList()
-                                      where WindowsIdentityHelper.IsCurrentUserInGroup(g.WindowsIdentity)
+                                      where WindowsIdentityHelper.DoesCurrentUserHaveIdentity(g.WindowsIdentity)
                                       from r in g.Roles
                                       select r.Name).ToList();
                 return _RoleNames;

@@ -24,7 +24,7 @@ namespace EomApp1.Screens.Final
             InitializeComponent();
 
             // Security
-            this.finalizedRevenueButton.Visible = WindowsIdentityHelper.IsCurrentUserInGroup(EomAppSettings.AdminGroupName);
+            this.finalizedRevenueButton.Visible = WindowsIdentityHelper.DoesCurrentUserHaveIdentity(EomAppSettings.AdminGroupName);
 
             this.numPubCols1 = new[] { NumPubsToFinalizeCol, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly };
             this.numPubCols2 = new[] { NumPubsToVerifyCol, dataGridViewLinkColumn1, dataGridViewLinkColumn2, dataGridViewLinkColumn3, dataGridViewLinkColumn4 };

@@ -18,7 +18,7 @@ namespace EomApp1
             InitializeComponent();
 
             // Security
-            this.verifiedRevenueToolStripMenuItem.Enabled = WindowsIdentityHelper.IsCurrentUserInGroup(EomAppSettings.AdminGroupName);
+            this.verifiedRevenueToolStripMenuItem.Enabled = WindowsIdentityHelper.DoesCurrentUserHaveIdentity(EomAppSettings.AdminGroupName);
 
             // Security
             using (var db = new Security.EomToolSecurityEntities())
@@ -26,7 +26,7 @@ namespace EomApp1
                 var allSecurityGroups = db.Groups.ToList();
 
                 var securityGroups = from g in allSecurityGroups
-                                     where WindowsIdentityHelper.IsCurrentUserInGroup(g.WindowsIdentity)
+                                     where WindowsIdentityHelper.DoesCurrentUserHaveIdentity(g.WindowsIdentity)
                                      select g;
 
                 var securityRoles = securityGroups.SelectMany(c => c.Roles);

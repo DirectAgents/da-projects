@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using EomApp1.Screens.PubRep1.Data;
 using EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters;
 using EomAppControls;
+using System.Drawing;
 
 namespace EomApp1.Screens.PubRep1.Controls
 {
@@ -32,10 +33,6 @@ namespace EomApp1.Screens.PubRep1.Controls
         public void Initialize()
         {
             _perf.Mark("begin Form.Load");
-
-            //setStatusCheckColumn.Visible = false;
-            //nextStatusComboColumn.Visible = false;
-            //nextStatusComboColumn.ValueType = typeof(DataGridViewComboBoxCell);
 
             _itemsToChangeDGV.Visible = false;
 
@@ -139,6 +136,15 @@ namespace EomApp1.Screens.PubRep1.Controls
                     });
                 }
             }
+        }
+
+        private void DisableLinks(DataGridViewRow dataGridViewRow)
+        {
+            var textCell = new DataGridViewTextBoxCell()
+            {
+                Value = dataGridViewRow.Cells[unverifiedColumn.Index].Value
+            };
+            dataGridViewRow.Cells[unverifiedColumn.Index] = textCell;
         }
 
         public void ReFill()
@@ -354,85 +360,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             int rowIndex = e.RowIndex;
             if (e.ColumnIndex == setStatusCheckColumn.Index) // Pay check box  CHECKED or UNCHECKED
             {
-                //int? currentValue = dataGridView[columnIndex, rowIndex].Value as int?;
-                //int? newValue = currentValue == null ? (int?)1 : null;
-                //dataGridView[columnIndex, rowIndex].Value = newValue;
-
-                //if (newValue == null)
-                //{
-                //    // TODO: support unchecking a pending update item
-                //    MessageBox.Show("TODO: support unchecking a pending update item");
-                //}
-            //    else if (newValue == 1)
-            //    {
-            //        // Fill in the cell with a drop down list of choices
-            //        // based on the available status transitions
-
-            //        // Data Table to bind to the drop down that goes into the DGV cell
-            //        //var comboBoxDataSourceTable = new DataTable("NextStatusTable");
-            //        //var dataColumn = comboBoxDataSourceTable.Columns.Add("name", typeof(string));
-
-            //        // DGV row that was clicked
-            //        var row = 
-            //            (PublisherReportDataSet1.CampaignsPublisherReportSummaryRow)((DataRowView)_bindingSource[rowIndex]).Row;
-
-            //        // Populate rows of drop down
-            //        //bool addedDefaultAction = false;
-
-            //        if (row.Unverified > 0)
-            //        {
-            //            //comboBoxDataSourceTable.Rows.Add("Verify " + FormatCurrency(row.PayCurrency, row.Unverified));
-            //            //if (!addedDefaultAction)
-            //            //{
-            //            //    pendingStatusUpdates1.Add(row.Publisher, "Unverified", "Verified", row.Unverified);
-            //            //    addedDefaultAction = true;
-            //            //}
-            //            dataGridView[unverifiedColumn.Index, rowIndex].Tag = new Action(() =>
-            //            {
-            //                pendingStatusUpdates1.Add(row.Publisher, "Unverified", "Verified", row.Unverified);
-            //            });
-            //        }
-            //        if (row.Verified > 0)
-            //        {
-            //            //comboBoxDataSourceTable.Rows.Add("Approve " + FormatCurrency(row.PayCurrency, row.Verified));
-            //            //if (!addedDefaultAction)
-            //            //{
-            //            //    pendingStatusUpdates1.Add(row.Publisher, "Verified", "Approved", row.Verified);
-            //            //    addedDefaultAction = true;
-            //            //}
-            //            dataGridView[verifiedColumn.Index, rowIndex].Tag = new Action(() =>
-            //            {
-            //                pendingStatusUpdates1.Add(row.Publisher, "Verified", "Approved", row.Verified);
-            //            });
-            //        }
-            //        if (row.Approved > 0)
-            //        {
-            //            //comboBoxDataSourceTable.Rows.Add("Pay " + FormatCurrency(row.PayCurrency, row.Approved));
-            //            //if (!addedDefaultAction)
-            //            //{
-            //            //    pendingStatusUpdates1.Add(row.Publisher, "Approved", "Paid", row.Approved);
-            //            //    addedDefaultAction = true;
-            //            //}
-            //            dataGridView[approvedColumn.Index, rowIndex].Tag = new Action(() =>
-            //            {
-            //                pendingStatusUpdates1.Add(row.Publisher, "Approved", "Paid", row.Approved);
-            //            });
-            //        }
-
-            //        // Always give the option to put payment on Hold
-            //        //comboBoxDataSourceTable.Rows.Add("Hold");
-
-            //        // Create the combo box cell and place it in the DGV cell
-            //        //var dataGridViewComboBoxCell = new DataGridViewComboBoxCell();
-            //        //dataGridViewComboBoxCell.ValueMember = "name";
-            //        //dataGridViewComboBoxCell.DisplayMember = "name";
-            //        //dataGridViewComboBoxCell.DataSource = comboBoxDataSourceTable;
-            //        //dataGridViewComboBoxCell.Value = comboBoxDataSourceTable.Rows[0].Field<string>("name");
-            //        //dataGridViewComboBoxCell.FlatStyle = FlatStyle.Flat;
-
-            //        // Push the combo box cell into the DataGridView
-            //        //dataGridView[columnIndex + 1, rowIndex] = dataGridViewComboBoxCell;
-            //    }
+                // used to be a bunch of commented out lines of code...
             }
             else if (e.ColumnIndex == nextStatusComboColumn.Index)
             {
