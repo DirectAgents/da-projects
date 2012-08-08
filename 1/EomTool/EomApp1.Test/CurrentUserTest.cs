@@ -74,7 +74,7 @@ namespace EomApp1.Test
             string accountManagerName = string.Empty; // TODO: Initialize to an appropriate value
             bool expected = false; // TODO: Initialize to an appropriate value
             bool actual;
-            actual = CurrentUser.CanFinalize(accountManagerName);
+            actual = CurrentUser.CanDoWorkflowFinalize(accountManagerName);
             Assert.AreEqual(expected, actual);
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
@@ -86,7 +86,7 @@ namespace EomApp1.Test
         public void CanVerifyTest()
         {
             bool actual;
-            actual = CurrentUser.CanVerify;
+            actual = CurrentUser.CanDoWorkflowVerify;
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
 

@@ -51,7 +51,7 @@ namespace EomApp1.Screens.Final
 
         private void DisableVerifyAndReview()
         {
-            if (!Security.CurrentUser.CanVerify)
+            if (!Security.CurrentUser.CanDoWorkflowVerify)
             {
                 verifyCol.Visible = false;
                 colReview.Visible = false;
@@ -109,7 +109,7 @@ namespace EomApp1.Screens.Final
             if (campaignsToFinalizeGrid.Rows.Count > 0)
                 foreach (var button in from row in campaignsToFinalizeGrid.Rows.Cast<DataGridViewRow>()
                                        let am = ((row.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow).AM
-                                       where !CurrentUser.CanFinalize(am)
+                                       where !CurrentUser.CanDoWorkflowFinalize(am)
                                        select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
                     button.Enabled = false;
         }

@@ -102,6 +102,7 @@
             this.IncludeCampaignCol = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.CampaignColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this._paySaveButton = new System.Windows.Forms.Button();
             this._payModeCheckBox = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
@@ -122,7 +123,6 @@
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.publisherRepSummaryTotalsTableAdapter = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.PublisherRepSummaryTotalsTableAdapter();
             this.campaignsPublisherReportSummarySummaryByNetTermsTableAdapter = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.CampaignsPublisherReportSummarySummaryByNetTermsTableAdapter();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this._dgv)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._dataSet)).BeginInit();
@@ -768,9 +768,21 @@
             this.panel2.Size = new System.Drawing.Size(1412, 22);
             this.panel2.TabIndex = 1;
             // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Dock = System.Windows.Forms.DockStyle.Right;
+            this.checkBox4.Location = new System.Drawing.Point(1173, 0);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(58, 22);
+            this.checkBox4.TabIndex = 10;
+            this.checkBox4.Text = "Margin";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
             // _paySaveButton
             // 
             this._paySaveButton.Dock = System.Windows.Forms.DockStyle.Left;
+            this._paySaveButton.Enabled = false;
             this._paySaveButton.Location = new System.Drawing.Point(77, 0);
             this._paySaveButton.Name = "_paySaveButton";
             this._paySaveButton.Size = new System.Drawing.Size(58, 22);
@@ -967,17 +979,6 @@
             // campaignsPublisherReportSummarySummaryByNetTermsTableAdapter
             // 
             this.campaignsPublisherReportSummarySummaryByNetTermsTableAdapter.ClearBeforeFill = true;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.checkBox4.Location = new System.Drawing.Point(1173, 0);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(58, 22);
-            this.checkBox4.TabIndex = 10;
-            this.checkBox4.Text = "Margin";
-            this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // PublisherListView
             // 

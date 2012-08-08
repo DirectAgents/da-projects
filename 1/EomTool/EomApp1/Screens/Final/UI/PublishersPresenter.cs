@@ -43,11 +43,11 @@ namespace EomApp1.Screens.Final.UI
 
         private void DisableActions()
         {
-            if (!Security.CurrentUser.CanFinalize(Model.AccountManagerName))
+            if (!Security.CurrentUser.CanDoWorkflowFinalize(Model.AccountManagerName))
             {
                 View.DisableFinalize();
             }
-            if (!Security.CurrentUser.CanVerify)
+            if (!Security.CurrentUser.CanDoWorkflowVerify)
             {
                 View.DisableVerify();
             }

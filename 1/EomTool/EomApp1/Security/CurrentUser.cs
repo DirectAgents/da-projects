@@ -54,15 +54,36 @@ namespace EomApp1.Security
                 return _PermissionTags;
             }
         }
-        public static bool CanFinalize(string accountManagerName)
+        public static bool CanDoWorkflowFinalize(string accountManagerName)
         {
             return RoleNames.Contains("AM: " + accountManagerName);
         }
-        public static bool CanVerify
+        public static bool CanDoWorkflowVerify
         {
             get
             {
                 return PermissionTags.Contains("Workflow.Verify");
+	    }
+        }
+        public static bool CanDoAccountingVerify
+        {
+            get
+            {
+                return RoleNames.Contains("Pub Rep: Verify");
+            }
+        }
+        public static bool CanDoAccountingApprove
+        {
+            get
+            {
+                return RoleNames.Contains("Pub Rep: Approve");
+            }
+        }
+        public static bool CanDoAccountingPay
+        {
+            get
+            {
+                return RoleNames.Contains("Pub Rep: Pay");
             }
         }
     }
