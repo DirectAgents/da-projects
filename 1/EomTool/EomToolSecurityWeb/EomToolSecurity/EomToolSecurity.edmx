@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EomToolSecurityModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="EomToolSecurityModelStoreContainer">
+          <EntitySet Name="Groups" EntityType="EomToolSecurityModel.Store.Groups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Permissions" EntityType="EomToolSecurityModel.Store.Permissions" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RoleGroup" EntityType="EomToolSecurityModel.Store.RoleGroup" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="RolePermission" EntityType="EomToolSecurityModel.Store.RolePermission" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Roles" EntityType="EomToolSecurityModel.Store.Roles" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_RoleGroup_Group" Association="EomToolSecurityModel.Store.FK_RoleGroup_Group">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="RoleGroup" EntitySet="RoleGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RoleGroup_Role" Association="EomToolSecurityModel.Store.FK_RoleGroup_Role">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="RoleGroup" EntitySet="RoleGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RolePermission_Permission" Association="EomToolSecurityModel.Store.FK_RolePermission_Permission">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="RolePermission" EntitySet="RolePermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RolePermission_Role" Association="EomToolSecurityModel.Store.FK_RolePermission_Role">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="RolePermission" EntitySet="RolePermission" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Groups">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="WindowsIdentity" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permissions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Tag" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RoleGroup">
+          <Key>
+            <PropertyRef Name="Roles_Id" />
+            <PropertyRef Name="Groups_Id" />
+          </Key>
+          <Property Name="Roles_Id" Type="int" Nullable="false" />
+          <Property Name="Groups_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RolePermission">
+          <Key>
+            <PropertyRef Name="Roles_Id" />
+            <PropertyRef Name="Permissions_Id" />
+          </Key>
+          <Property Name="Roles_Id" Type="int" Nullable="false" />
+          <Property Name="Permissions_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_RoleGroup_Group">
+          <End Role="Groups" Type="EomToolSecurityModel.Store.Groups" Multiplicity="1" />
+          <End Role="RoleGroup" Type="EomToolSecurityModel.Store.RoleGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleGroup">
+              <PropertyRef Name="Groups_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RoleGroup_Role">
+          <End Role="Roles" Type="EomToolSecurityModel.Store.Roles" Multiplicity="1" />
+          <End Role="RoleGroup" Type="EomToolSecurityModel.Store.RoleGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RoleGroup">
+              <PropertyRef Name="Roles_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RolePermission_Permission">
+          <End Role="Permissions" Type="EomToolSecurityModel.Store.Permissions" Multiplicity="1" />
+          <End Role="RolePermission" Type="EomToolSecurityModel.Store.RolePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permissions">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolePermission">
+              <PropertyRef Name="Permissions_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RolePermission_Role">
+          <End Role="Roles" Type="EomToolSecurityModel.Store.Roles" Multiplicity="1" />
+          <End Role="RolePermission" Type="EomToolSecurityModel.Store.RolePermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolePermission">
+              <PropertyRef Name="Roles_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EomToolSecurityModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="EomToolSecurityEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Groups" EntityType="EomToolSecurityModel.Group" />
+          <EntitySet Name="Permissions" EntityType="EomToolSecurityModel.Permission" />
+          <EntitySet Name="Roles" EntityType="EomToolSecurityModel.Role" />
+          <AssociationSet Name="RoleGroup" Association="EomToolSecurityModel.RoleGroup">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+          <AssociationSet Name="RolePermission" Association="EomToolSecurityModel.RolePermission">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="WindowsIdentity" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Roles" Relationship="EomToolSecurityModel.RoleGroup" FromRole="Group" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Tag" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Roles" Relationship="EomToolSecurityModel.RolePermission" FromRole="Permission" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Groups" Relationship="EomToolSecurityModel.RoleGroup" FromRole="Role" ToRole="Group" />
+          <NavigationProperty Name="Permissions" Relationship="EomToolSecurityModel.RolePermission" FromRole="Role" ToRole="Permission" />
+        </EntityType>
+        <Association Name="RoleGroup">
+          <End Type="EomToolSecurityModel.Group" Role="Group" Multiplicity="*" />
+          <End Type="EomToolSecurityModel.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        <Association Name="RolePermission">
+          <End Type="EomToolSecurityModel.Permission" Role="Permission" Multiplicity="*" />
+          <End Type="EomToolSecurityModel.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EomToolSecurityModelStoreContainer" CdmEntityContainer="EomToolSecurityEntities">
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="EomToolSecurityModel.Group">
+              <MappingFragment StoreEntitySet="Groups">
+                <ScalarProperty Name="WindowsIdentity" ColumnName="WindowsIdentity" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permissions">
+            <EntityTypeMapping TypeName="EomToolSecurityModel.Permission">
+              <MappingFragment StoreEntitySet="Permissions">
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="EomToolSecurityModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="RoleGroup" TypeName="EomToolSecurityModel.RoleGroup" StoreEntitySet="RoleGroup">
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="Roles_Id" />
+            </EndProperty>
+            <EndProperty Name="Group">
+              <ScalarProperty Name="Id" ColumnName="Groups_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="RolePermission" TypeName="EomToolSecurityModel.RolePermission" StoreEntitySet="RolePermission">
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="Roles_Id" />
+            </EndProperty>
+            <EndProperty Name="Permission">
+              <ScalarProperty Name="Id" ColumnName="Permissions_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Model1">
+        <EntityTypeShape EntityType="EomToolSecurityModel.Group" Width="1.5" PointX="0.75" PointY="0.875" Height="1.7879850260416657" />
+        <EntityTypeShape EntityType="EomToolSecurityModel.Permission" Width="1.5" PointX="5.375" PointY="0.875" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="EomToolSecurityModel.Role" Width="1.5" PointX="3" PointY="0.875" Height="1.7879850260416674" />
+        <AssociationConnector Association="EomToolSecurityModel.RoleGroup" >
+          <ConnectorPoint PointX="2.25" PointY="1.7689925130208328" />
+          <ConnectorPoint PointX="3" PointY="1.7689925130208328" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomToolSecurityModel.RolePermission" >
+          <ConnectorPoint PointX="5.375" PointY="1.7689925130208337" />
+          <ConnectorPoint PointX="4.5" PointY="1.7689925130208337" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
