@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using System;
 
 namespace EomApp1
 {
@@ -20,12 +19,8 @@ namespace EomApp1
 
         public static bool CaseInsensitiveContains(this List<string> source, string toCheck)
         {
-            foreach (var item in source)
-            {
-                if (item.ToUpper() == toCheck.ToUpper())
-                    return true;
-            }
-            return false;
+            var toCheckUpper = toCheck.ToUpper();
+            return source.Any(c => c.ToUpper() == toCheckUpper);
         }
     }
 }

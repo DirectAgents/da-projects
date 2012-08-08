@@ -46,6 +46,7 @@
     <Compile Include="Common\UserControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="DataGrid\DataGridViewDisableButton.cs" />
     <Compile Include="DataGrid\ExtendedDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>

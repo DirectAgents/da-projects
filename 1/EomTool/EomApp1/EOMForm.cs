@@ -20,14 +20,13 @@ namespace EomApp1
             // Security
             this.verifiedRevenueToolStripMenuItem.Enabled = WindowsIdentityHelper.IsCurrentUserInGroup(EomAppSettings.AdminGroupName);
 
+            // Security
             using (var db = new Security.EomToolSecurityEntities())
             {
-                var usersGroups = WindowsIdentityHelper.CurrentUsersGroups;
-
                 var allSecurityGroups = db.Groups.ToList();
 
                 var securityGroups = from g in allSecurityGroups
-                                     where usersGroups.CaseInsensitiveContains(g.WindowsIdentity)
+                                     where WindowsIdentityHelper.IsCurrentUserInGroup(g.WindowsIdentity)
                                      select g;
 
                 var securityRoles = securityGroups.SelectMany(c => c.Roles);

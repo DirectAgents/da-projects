@@ -59,7 +59,7 @@
             this.RevDefault = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RevFinalized = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RevVerified = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FinalizeCol = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.FinalizeCol = new EomAppControls.DataGrid.DataGridViewDisableButtonColumn();
             this.AMCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NoteDGCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NumPubsToFinalizeCol = new System.Windows.Forms.DataGridViewLinkColumn();

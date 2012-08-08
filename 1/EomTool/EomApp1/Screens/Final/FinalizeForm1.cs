@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using EomApp1.UI;
 using DAgents.Common;
+using EomApp1.UI;
 using EomAppCommon;
+using EomAppControls.DataGrid;
+using System.Data;
+using EomApp1.Security;
 
 namespace EomApp1.Screens.Final
 {
@@ -36,6 +39,10 @@ namespace EomApp1.Screens.Final
             SetNumPubsColumnsStyle();
             SetRevBreakdownColumnsVisibility(false);
             SetRevBreakdownColumnsStyle();
+
+            // Security
+            campaignsToFinalizeGrid.Sorted += (s, e) => DisableFinalizeButtons();
+            campaignBindingSource.ListChanged += (s, e) => DisableFinalizeButtons();
         }
 
         private void SetNumPubsColumnsStyle()
@@ -78,11 +85,28 @@ namespace EomApp1.Screens.Final
         {
             FinalizeDataSet1.CampaignDataTable x = finalizeDataSet1.Campaign;
             campaignTableAdapter.Fill(x);
+
+            // Security
+            DisableFinalizeButtons();
+        }
+
+        // Security        
+        private void DisableFinalizeButtons()
+        {
+            if (campaignsToFinalizeGrid.Rows.Count > 0)
+                foreach (var button in from row in campaignsToFinalizeGrid.Rows.Cast<DataGridViewRow>()
+                                       let am = ((row.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow).AM
+                                       where !CurrentUser.CanFinalize(am)
+                                       select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
+                    button.Enabled = false;
         }
 
         private void FillCampaigns(string am)
         {
             campaignTableAdapter.FillByAM(finalizeDataSet1.Campaign, am);
+
+            // Security
+            DisableFinalizeButtons();
         }
 
         private void CellClickTop(object sender, DataGridViewCellEventArgs e)
@@ -94,7 +118,7 @@ namespace EomApp1.Screens.Final
             var currency = (string)grid[Curr.Index, e.RowIndex].Value;
 
             // Final Button
-            if (e.ColumnIndex == FinalizeCol.Index)
+            if (e.ColumnIndex == FinalizeCol.Index && (grid[FinalizeCol.Index, e.RowIndex] as DataGridViewDisableButtonCell).Enabled) // Security
             {
                 string note;
                 if (ConfirmationBox.ShowConfirmationModalDialog("Finalize", out note))
@@ -152,7 +176,6 @@ namespace EomApp1.Screens.Final
                 HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Verify);
             }
         }
-
 
         private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, string currency, DataGridView grid, UI.PublishersForm.Mode mode)
         {
@@ -227,7 +250,7 @@ namespace EomApp1.Screens.Final
             db.SubmitChanges();
         }
 
-        string selectedAM
+        private string selectedAM
         {
             get
             {
@@ -282,7 +305,7 @@ namespace EomApp1.Screens.Final
                 FillCampaigns(this.selectedAM);
         }
 
-        NotesListForm1 notesListForm { get; set; }
+        private NotesListForm1 notesListForm { get; set; }
 
         private void button3_Click(object sender, EventArgs e)
         {

@@ -9,16 +9,6 @@ namespace EomAppControls
         private Dictionary<DataGridViewColumn, DataGridViewColumnHeaderCell> originalHeaderCells = new Dictionary<DataGridViewColumn, DataGridViewColumnHeaderCell>();
         private bool columnFiltersAdded = false;
 
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-            //if (this.RowHeadersVisible)
-            //{
-            //    Graphics g = e.Graphics;
-            //    g.FillRectangle(Brushes.RoyalBlue, 4, 4, 10, 10);
-            //}
-        }
-
         protected override void OnBindingContextChanged(EventArgs e)
         {
             base.OnBindingContextChanged(e);

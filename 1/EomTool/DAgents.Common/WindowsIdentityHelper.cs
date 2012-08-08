@@ -26,13 +26,11 @@ namespace DAgents.Common
         {
             get
             {
-                if (_CurrentUsersGroups.Count == 0)
-                    _CurrentUsersGroups = WindowsIdentity.GetCurrent().Groups.Select(g => ((IdentityReference)g).Translate(typeof(NTAccount)).Value.ToUpper())
-                        .ToList();
-
+                if (_CurrentUsersGroups == null)
+                    _CurrentUsersGroups = WindowsIdentity.GetCurrent().Groups.Select(g => ((IdentityReference)g).Translate(typeof(NTAccount)).Value.ToUpper()).ToList();
                 return _CurrentUsersGroups;
             }
         }
-        private static List<string> _CurrentUsersGroups = new List<string>();
+        private static List<string> _CurrentUsersGroups;
     }
 }
