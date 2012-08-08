@@ -92,6 +92,16 @@ namespace EomApp1.Screens.Final.UI
             this.verifyPublishersView.InitializeNetTermsDropdown();
         }
 
+        public void DisableFinalize()
+        {
+            this.finalizePublishersView.ActionButtonEnabled = false;
+        }
+
+        public void DisableVerify()
+        {
+            this.verifyPublishersView.ActionButtonEnabled = false;
+        }
+
         public event EventHandler<PublishersEventArgs> PublishersToFinalizeSelected;
         public event EventHandler<PublishersEventArgs> PublishersToVerifySelected;
     }

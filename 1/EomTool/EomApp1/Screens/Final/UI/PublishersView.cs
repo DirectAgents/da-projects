@@ -40,8 +40,8 @@ namespace EomApp1.Screens.Final.UI
                 affIDs.Add(((Data.PublishersRow)rowView.Row).AffId);
                 costCurrs.Add(((Data.PublishersRow)rowView.Row).CostCurr);
             }
-
-            actionButton.Enabled = (grid.SelectedRows.Count > 0);
+            
+            actionButton.Enabled = (this.actionButtonEnabled && grid.SelectedRows.Count > 0);
         }
 
         // Select All
@@ -89,6 +89,18 @@ namespace EomApp1.Screens.Final.UI
         {
             get { return this.actionButton.Text; }
             set { this.actionButton.Text = value; }
+        }
+
+        private bool actionButtonEnabled = true;        
+        public bool ActionButtonEnabled
+        {
+            get { return this.actionButtonEnabled; }
+            set 
+            { 
+                this.actionButtonEnabled = value;
+                if (!value)
+                    this.actionButton.ToolTipText = "You do not have permission to " + this.actionButton.Text;
+            }
         }
 
         public event EventHandler<PublishersEventArgs> PublishersActionInvoked;

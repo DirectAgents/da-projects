@@ -21,6 +21,7 @@ namespace EomApp1.Screens.Final.Models
                 {
                     var campaign = db.Campaigns.Single(c => c.pid == this.pid);
                     this.campaignName = campaign.campaign_name;
+                    this.accountManagerName = campaign.AccountManager.name;
                     this.advertiserName = campaign.Advertiser.name;
                 }
                 this.initialized = true;
@@ -38,5 +39,8 @@ namespace EomApp1.Screens.Final.Models
 
         private string advertiserName;
         public string AdvertiserName { get { Initialize(); return this.advertiserName; } }
+
+        private string accountManagerName;
+        public string AccountManagerName { get { Initialize(); return accountManagerName; } }
     }
 }

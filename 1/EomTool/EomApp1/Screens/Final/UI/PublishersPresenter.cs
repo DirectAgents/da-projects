@@ -37,6 +37,20 @@ namespace EomApp1.Screens.Final.UI
             Model.Fill(View.PublishersToFinalize, CampaignStatusId.Default);
             Model.Fill(View.PublishersToVerify, CampaignStatusId.Finalized);
             View.InitializeNetTermsFilter();
+            // Security
+            DisableActions();
+        }
+
+        private void DisableActions()
+        {
+            if (!Security.CurrentUser.CanFinalize(Model.AccountManagerName))
+            {
+                View.DisableFinalize();
+            }
+            if (!Security.CurrentUser.CanVerify)
+            {
+                View.DisableVerify();
+            }
         }
 
         private PublishersForm View { get; set; }

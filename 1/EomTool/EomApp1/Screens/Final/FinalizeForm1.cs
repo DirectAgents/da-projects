@@ -8,6 +8,7 @@ using EomAppCommon;
 using EomAppControls.DataGrid;
 using System.Data;
 using EomApp1.Security;
+using System.Drawing;
 
 namespace EomApp1.Screens.Final
 {
@@ -43,6 +44,18 @@ namespace EomApp1.Screens.Final
             // Security
             campaignsToFinalizeGrid.Sorted += (s, e) => DisableFinalizeButtons();
             campaignBindingSource.ListChanged += (s, e) => DisableFinalizeButtons();
+
+            // Security
+            DisableVerifyAndReview();
+        }
+
+        private void DisableVerifyAndReview()
+        {
+            if (!Security.CurrentUser.CanVerify)
+            {
+                verifyCol.Visible = false;
+                colReview.Visible = false;
+            }
         }
 
         private void SetNumPubsColumnsStyle()

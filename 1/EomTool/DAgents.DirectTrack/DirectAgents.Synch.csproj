@@ -96,7 +96,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
-      <Name>DAgents.Common</Name>
+      <Name>DirectAgents.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\DirectTrack.Rest\DirectTrack.Rest.csproj">
       <Project>{A5D217FE-1556-4ABD-BFDF-F5A2D65F5D8A}</Project>
