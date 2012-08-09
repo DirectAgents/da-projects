@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using EomAppControls;
+using System.ComponentModel;
 
 namespace EomApp1.Screens.Extra
 {
@@ -43,10 +44,12 @@ namespace EomApp1.Screens.Extra
             if (accountManagerName == "default")
             {
                 itemTableAdapter.Fill(extraItems.Item);
+                //campaignTableAdapter.Fill(extraItems.Campaign);
             }
             else
             {
                 itemTableAdapter.FillBy(extraItems.Item, accountManagerName);
+                //campaignTableAdapter.FillBy(extraItems.Campaign, accountManagerName);
             }
         }
 
@@ -55,6 +58,28 @@ namespace EomApp1.Screens.Extra
             Validate();
             this.itemBindingSource.EndEdit();
             this.tableAdapterManager.UpdateAll(this.extraItems);
+        }
+
+        private void itemsGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == colCampaign.Index)
+            {
+                Sort(colCampaignName, colCampaign);
+            }
+            else if (e.ColumnIndex == colPublisher.Index)
+            {
+                Sort(colPublisherName, colPublisher);
+            }
+        }
+        private void Sort(DataGridViewColumn sortColumn, DataGridViewColumn displayColumn)
+        {
+            ListSortDirection direction = ListSortDirection.Ascending;
+            if (itemsGrid.SortedColumn != null && itemsGrid.SortedColumn.Index == sortColumn.Index && itemsGrid.SortOrder == SortOrder.Ascending)
+            {
+                direction = ListSortDirection.Descending;
+            }
+            itemsGrid.Sort(sortColumn, direction);
+            displayColumn.HeaderCell.SortGlyphDirection = (direction == ListSortDirection.Ascending) ? SortOrder.Ascending : SortOrder.Descending;
         }
     }
 }

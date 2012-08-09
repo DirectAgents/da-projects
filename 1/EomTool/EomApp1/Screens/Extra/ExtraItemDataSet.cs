@@ -1,4 +1,5 @@
-﻿namespace EomApp1.Screens.Extra {
+﻿namespace EomApp1.Screens.Extra
+{
     
     
     public partial class ExtraItemDataSet {
