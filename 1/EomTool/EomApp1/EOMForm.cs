@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows.Forms;
 using DAgents.Common;
 using DAgents.Synch;
 using EomApp1.UI;
 using EomAppCommon;
-using System.Linq;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace EomApp1
 {
@@ -32,14 +30,24 @@ namespace EomApp1
                 var securityRoles = securityGroups.SelectMany(c => c.Roles);
 
                 var securityPermissions = securityRoles.SelectMany(c => c.Permissions);
-                
+
                 var securityTags = securityPermissions.Select(c => c.Tag);
 
                 foreach (var menuItem in this.TaggedToolStripMenuItems())
-                {
                     menuItem.Enabled = securityTags.Contains(menuItem.Tag);
-                }
+
+                foreach (ToolStripMenuItem item in this.menuStrip1.Items)
+                    if (item.DropDownItems.Cast<ToolStripItem>().All(c => !c.Enabled))
+                        DisableMenu(item);
             }
+        }
+
+        private static void DisableMenu(ToolStripMenuItem item)
+        {
+            if (Properties.Settings.Default.TestMode)
+                item.Enabled = false;
+            else
+                item.Visible = false;
         }
 
         // Campaigns Workflow
@@ -227,6 +235,7 @@ namespace EomApp1
 
         private static void LaunchForm<T>() where T : Form, new()
         {
+
             var form = Application.OpenForms.OfType<T>().FirstOrDefault();
             if (form != null)
             {
@@ -239,6 +248,16 @@ namespace EomApp1
                 form = new T();
                 form.Show();
             }
+        }
+
+        private void securityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchForm<Screens.Settings.SecurityForm>();
+        }
+
+        private void testWpfToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchForm<Screens.Wpf.Test>();
         }
     }
 }

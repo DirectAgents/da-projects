@@ -50,9 +50,11 @@
             this.verifiedRevenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.selectDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.securityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.utilitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateCampaignAMAndADFromDirectTrackToDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tablesViewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -231,7 +233,8 @@
             // toolsToolStripMenuItem1
             // 
             this.toolsToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.selectDatabaseToolStripMenuItem});
+            this.selectDatabaseToolStripMenuItem,
+            this.securityToolStripMenuItem});
             this.toolsToolStripMenuItem1.Name = "toolsToolStripMenuItem1";
             this.toolsToolStripMenuItem1.Size = new System.Drawing.Size(61, 20);
             this.toolsToolStripMenuItem1.Tag = "";
@@ -245,11 +248,20 @@
             this.selectDatabaseToolStripMenuItem.Text = "Select Database";
             this.selectDatabaseToolStripMenuItem.Click += new System.EventHandler(this.selectDatabaseToolStripMenuItem_Click);
             // 
+            // securityToolStripMenuItem
+            // 
+            this.securityToolStripMenuItem.Name = "securityToolStripMenuItem";
+            this.securityToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.securityToolStripMenuItem.Tag = "Screens.Security";
+            this.securityToolStripMenuItem.Text = "Security";
+            this.securityToolStripMenuItem.Click += new System.EventHandler(this.securityToolStripMenuItem_Click);
+            // 
             // utilitiesToolStripMenuItem
             // 
             this.utilitiesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.updateCampaignAMAndADFromDirectTrackToDatabaseToolStripMenuItem,
-            this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem});
+            this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem,
+            this.tToolStripMenuItem});
             this.utilitiesToolStripMenuItem.Name = "utilitiesToolStripMenuItem";
             this.utilitiesToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.utilitiesToolStripMenuItem.Text = "Utilities";
@@ -269,6 +281,13 @@
             this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem.Tag = "Commands.SynchMBandAffiliatesFromDT";
             this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem.Text = "Synch Media Buyers and Affiliates from DT to DB";
             this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem.Click += new System.EventHandler(this.synchMediaBuyersAndAffiliatesFromDTToolStripMenuItem_Click);
+            // 
+            // tToolStripMenuItem
+            // 
+            this.tToolStripMenuItem.Name = "tToolStripMenuItem";
+            this.tToolStripMenuItem.Size = new System.Drawing.Size(447, 22);
+            this.tToolStripMenuItem.Text = "Test WPF";
+            this.tToolStripMenuItem.Click += new System.EventHandler(this.testWpfToolStripMenuItem_Click);
             // 
             // dBToolStripMenuItem
             // 
@@ -398,6 +417,8 @@
         private System.Windows.Forms.ToolStripMenuItem notesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verifiedRevenueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem revenueSummaryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem securityToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tToolStripMenuItem;
 
     }
 }

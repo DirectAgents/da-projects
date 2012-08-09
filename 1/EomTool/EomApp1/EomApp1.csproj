@@ -91,6 +91,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -102,6 +104,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -110,6 +113,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DADatabaseR1DataSet.Designer.cs">
@@ -402,6 +407,19 @@
       <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Screens\Settings\SecurityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Settings\SecurityForm.Designer.cs">
+      <DependentUpon>SecurityForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Wpf\Test.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Wpf\Test.Designer.cs">
+      <DependentUpon>Test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Wpf\Utilities.cs" />
     <Compile Include="Security\CurrentUser.cs" />
     <Compile Include="Security\EomToolSecurity.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -698,11 +716,17 @@
     <EmbeddedResource Include="Screens\Final\UI\VerifiedRevenueForm.resx">
       <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Settings\SecurityForm.resx">
+      <DependentUpon>SecurityForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Synch\AddAffiliateSetupForm.resx">
       <DependentUpon>AddAffiliateSetupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Synch\Controls\AffiliateSetup.resx">
       <DependentUpon>AffiliateSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Wpf\Test.resx">
+      <DependentUpon>Test.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\AppFormBase.resx">
       <DependentUpon>AppFormBase.cs</DependentUpon>
@@ -1223,6 +1247,10 @@
     <None Include="Resources\Refresh1.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\EomApp.Controls.Wpf\EomApp.Controls.Wpf.csproj">
+      <Project>{6DE348DC-663F-4251-A8E4-A1107E1B0497}</Project>
+      <Name>EomApp.Controls.Wpf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CakeMarketing\CakeMarketing.csproj">
       <Project>{268E422D-0ED9-4922-AE6E-775534A8EDAC}</Project>
       <Name>CakeMarketing</Name>
