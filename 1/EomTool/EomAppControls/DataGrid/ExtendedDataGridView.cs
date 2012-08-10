@@ -43,13 +43,6 @@ namespace EomAppControls
                             ConvertToFilter(column);
                         }
                     }
-                    else
-                    {
-                        if (column.SortMode != DataGridViewColumnSortMode.Automatic)
-                        {
-                            column.SortMode = DataGridViewColumnSortMode.Automatic;
-                        }
-                    }
                 }
             }
             this.columnFiltersAdded = true;

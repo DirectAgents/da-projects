@@ -1120,7 +1120,7 @@
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>ExtraItemDataSet.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-      <CustomToolNamespace>EomApp1.Formss.Extra</CustomToolNamespace>
+      <CustomToolNamespace>EomApp1.Screens.Extra</CustomToolNamespace>
     </None>
     <None Include="Screens\Final\FinalizeData.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>

@@ -69,6 +69,7 @@ namespace EomApp1.Screens.Extra {
             base.Tables.CollectionChanged += schemaChangedHandler;
             base.Relations.CollectionChanged += schemaChangedHandler;
             this.EndInit();
+            this.InitExpressions();
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -80,6 +81,9 @@ namespace EomApp1.Screens.Extra {
                 global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler1 = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
                 this.Tables.CollectionChanged += schemaChangedHandler1;
                 this.Relations.CollectionChanged += schemaChangedHandler1;
+                if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.ExcludeSchema)) {
+                    this.InitExpressions();
+                }
                 return;
             }
             string strSchema = ((string)(info.GetValue("XmlSchema", typeof(string))));
@@ -121,6 +125,7 @@ namespace EomApp1.Screens.Extra {
             }
             else {
                 this.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
+                this.InitExpressions();
             }
             this.GetSerializationData(info, context);
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -252,6 +257,7 @@ namespace EomApp1.Screens.Extra {
         public override global::System.Data.DataSet Clone() {
             ExtraItemDataSet cln = ((ExtraItemDataSet)(base.Clone()));
             cln.InitVars();
+            cln.InitExpressions();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
         }
@@ -399,7 +405,7 @@ namespace EomApp1.Screens.Extra {
             this.Namespace = "http://tempuri.org/DataSet1.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableItem = new ItemDataTable();
+            this.tableItem = new ItemDataTable(false);
             base.Tables.Add(this.tableItem);
             this.tableAffiliate = new AffiliateDataTable();
             base.Tables.Add(this.tableAffiliate);
@@ -556,6 +562,13 @@ namespace EomApp1.Screens.Extra {
             return type;
         }
         
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitExpressions() {
+            this.Item.CampaignNameColumn.Expression = "Parent(FK_Item_Campaign).campaign_name";
+            this.Item.AffiliateNameColumn.Expression = "Parent(FK_Item_Affiliate).name";
+        }
+        
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public delegate void ItemRowChangeEventHandler(object sender, ItemRowChangeEvent e);
         
@@ -623,12 +636,25 @@ namespace EomApp1.Screens.Extra {
             
             private global::System.Data.DataColumn columnSourceName;
             
+            private global::System.Data.DataColumn columnCampaignName;
+            
+            private global::System.Data.DataColumn columnAffiliateName;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ItemDataTable() {
+            public ItemDataTable() : 
+                    this(false) {
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ItemDataTable(bool initExpressions) {
                 this.TableName = "Item";
                 this.BeginInit();
                 this.InitClass();
+                if ((initExpressions == true)) {
+                    this.InitExpressions();
+                }
                 this.EndInit();
             }
             
@@ -802,6 +828,22 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CampaignNameColumn {
+                get {
+                    return this.columnCampaignName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn AffiliateNameColumn {
+                get {
+                    return this.columnAffiliateName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -854,6 +896,76 @@ namespace EomApp1.Screens.Extra {
                         decimal margin, 
                         string Advertiser, 
                         string name, 
+                        string SourceName, 
+                        string CampaignName, 
+                        string AffiliateName) {
+                ItemRow rowItemRow = ((ItemRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        revenue_per_unit,
+                        cost_per_unit,
+                        num_units,
+                        notes,
+                        null,
+                        total_revenue,
+                        total_cost,
+                        margin,
+                        Advertiser,
+                        name,
+                        SourceName,
+                        CampaignName,
+                        AffiliateName};
+                if ((parentCampaignRowByFK_Item_Campaign != null)) {
+                    columnValuesArray[1] = parentCampaignRowByFK_Item_Campaign[5];
+                }
+                if ((parentAffiliateRowByFK_Item_Affiliate != null)) {
+                    columnValuesArray[2] = parentAffiliateRowByFK_Item_Affiliate[3];
+                }
+                if ((parentSourceRowByFK_Item_Source != null)) {
+                    columnValuesArray[3] = parentSourceRowByFK_Item_Source[0];
+                }
+                if ((parentUnitTypeRowByFK_Item_UnitType != null)) {
+                    columnValuesArray[4] = parentUnitTypeRowByFK_Item_UnitType[0];
+                }
+                if ((parentCurrencyRowByFK_Item_Currency != null)) {
+                    columnValuesArray[5] = parentCurrencyRowByFK_Item_Currency[0];
+                }
+                if ((parentCurrencyRowByFK_Item_Currency1 != null)) {
+                    columnValuesArray[6] = parentCurrencyRowByFK_Item_Currency1[0];
+                }
+                if ((parentItemReportingStatusRowByFK_Item_ItemReportingStatus != null)) {
+                    columnValuesArray[11] = parentItemReportingStatusRowByFK_Item_ItemReportingStatus[0];
+                }
+                rowItemRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowItemRow);
+                return rowItemRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ItemRow AddItemRow(
+                        CampaignRow parentCampaignRowByFK_Item_Campaign, 
+                        AffiliateRow parentAffiliateRowByFK_Item_Affiliate, 
+                        SourceRow parentSourceRowByFK_Item_Source, 
+                        UnitTypeRow parentUnitTypeRowByFK_Item_UnitType, 
+                        CurrencyRow parentCurrencyRowByFK_Item_Currency, 
+                        CurrencyRow parentCurrencyRowByFK_Item_Currency1, 
+                        decimal revenue_per_unit, 
+                        decimal cost_per_unit, 
+                        decimal num_units, 
+                        string notes, 
+                        ItemReportingStatusRow parentItemReportingStatusRowByFK_Item_ItemReportingStatus, 
+                        decimal total_revenue, 
+                        decimal total_cost, 
+                        decimal margin, 
+                        string Advertiser, 
+                        string name, 
                         string SourceName) {
                 ItemRow rowItemRow = ((ItemRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
@@ -874,7 +986,9 @@ namespace EomApp1.Screens.Extra {
                         margin,
                         Advertiser,
                         name,
-                        SourceName};
+                        SourceName,
+                        null,
+                        null};
                 if ((parentCampaignRowByFK_Item_Campaign != null)) {
                     columnValuesArray[1] = parentCampaignRowByFK_Item_Campaign[5];
                 }
@@ -943,6 +1057,8 @@ namespace EomApp1.Screens.Extra {
                 this.columnAdvertiser = base.Columns["Advertiser"];
                 this.columnname = base.Columns["name"];
                 this.columnSourceName = base.Columns["SourceName"];
+                this.columnCampaignName = base.Columns["CampaignName"];
+                this.columnAffiliateName = base.Columns["AffiliateName"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -984,6 +1100,10 @@ namespace EomApp1.Screens.Extra {
                 base.Columns.Add(this.columnname);
                 this.columnSourceName = new global::System.Data.DataColumn("SourceName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSourceName);
+                this.columnCampaignName = new global::System.Data.DataColumn("CampaignName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCampaignName);
+                this.columnAffiliateName = new global::System.Data.DataColumn("AffiliateName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAffiliateName);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnid}, true));
                 this.columnid.AutoIncrement = true;
@@ -1025,6 +1145,8 @@ namespace EomApp1.Screens.Extra {
                 this.columnname.MaxLength = 50;
                 this.columnSourceName.AllowDBNull = false;
                 this.columnSourceName.MaxLength = 50;
+                this.columnCampaignName.ReadOnly = true;
+                this.columnAffiliateName.ReadOnly = true;
                 this.ExtendedProperties.Add("Generator_RowClassName", "ItemRow");
                 this.ExtendedProperties.Add("Generator_RowEvArgName", "ItemRowChangeEvent");
                 this.ExtendedProperties.Add("Generator_RowEvHandlerName", "ItemRowChangeEventHandler");
@@ -1050,6 +1172,13 @@ namespace EomApp1.Screens.Extra {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
                 return typeof(ItemRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private void InitExpressions() {
+                this.CampaignNameColumn.Expression = "Parent(FK_Item_Campaign).campaign_name";
+                this.AffiliateNameColumn.Expression = "Parent(FK_Item_Affiliate).name";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3566,6 +3695,38 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string CampaignName {
+                get {
+                    try {
+                        return ((string)(this[this.tableItem.CampaignNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CampaignName\' in table \'Item\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableItem.CampaignNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string AffiliateName {
+                get {
+                    try {
+                        return ((string)(this[this.tableItem.AffiliateNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AffiliateName\' in table \'Item\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableItem.AffiliateNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public AffiliateRow AffiliateRow {
                 get {
                     return ((AffiliateRow)(this.GetParentRow(this.Table.ParentRelations["FK_Item_Affiliate"])));
@@ -3675,6 +3836,30 @@ namespace EomApp1.Screens.Extra {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetmarginNull() {
                 this[this.tableItem.marginColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCampaignNameNull() {
+                return this.IsNull(this.tableItem.CampaignNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCampaignNameNull() {
+                this[this.tableItem.CampaignNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAffiliateNameNull() {
+                return this.IsNull(this.tableItem.AffiliateNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAffiliateNameNull() {
+                this[this.tableItem.AffiliateNameColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -4825,7 +5010,7 @@ WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) 
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
         public virtual ExtraItemDataSet.ItemDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            ExtraItemDataSet.ItemDataTable dataTable = new ExtraItemDataSet.ItemDataTable();
+            ExtraItemDataSet.ItemDataTable dataTable = new ExtraItemDataSet.ItemDataTable(true);
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -4861,7 +5046,7 @@ WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) 
             else {
                 this.Adapter.SelectCommand.Parameters[0].Value = ((string)(_1));
             }
-            ExtraItemDataSet.ItemDataTable dataTable = new ExtraItemDataSet.ItemDataTable();
+            ExtraItemDataSet.ItemDataTable dataTable = new ExtraItemDataSet.ItemDataTable(true);
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
