@@ -59,7 +59,7 @@
             this.tablesViewsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.databaseLabel = new System.Windows.Forms.Label();
             this.class1BindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -324,17 +324,17 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label1
+            // databaseLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Lime;
-            this.label1.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::EomApp1.Properties.Settings.Default, "DADatabaseName", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.label1.Location = new System.Drawing.Point(587, 271);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = global::EomApp1.Properties.Settings.Default.DADatabaseName;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.databaseLabel.AutoSize = true;
+            this.databaseLabel.BackColor = System.Drawing.Color.Lime;
+            this.databaseLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::EomApp1.Properties.Settings.Default, "DADatabaseName", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.databaseLabel.Location = new System.Drawing.Point(587, 271);
+            this.databaseLabel.Name = "databaseLabel";
+            this.databaseLabel.Size = new System.Drawing.Size(42, 13);
+            this.databaseLabel.TabIndex = 3;
+            this.databaseLabel.Text = global::EomApp1.Properties.Settings.Default.DADatabaseName;
+            this.databaseLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // pictureBox1
             // 
@@ -369,7 +369,7 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.databaseLabel);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "EOMForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
@@ -401,7 +401,7 @@
         private System.Windows.Forms.ToolStripMenuItem publisherMapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem campaignsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectDatabaseToolStripMenuItem;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label databaseLabel;
         private System.Windows.Forms.BindingSource class1BindingSource;
         private System.Windows.Forms.ToolStripMenuItem advertisersToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem utilitiesToolStripMenuItem;

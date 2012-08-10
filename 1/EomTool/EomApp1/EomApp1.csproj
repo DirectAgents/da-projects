@@ -420,7 +420,7 @@
       <DependentUpon>Test.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Wpf\Utilities.cs" />
-    <Compile Include="Security\CurrentUser.cs" />
+    <Compile Include="Security\User.cs" />
     <Compile Include="Security\EomToolSecurity.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -501,6 +501,7 @@
     <Compile Include="Screens\PublisherNameCombine\PublisherCombine.Designer.cs">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
     </Compile>
+    <Compile Include="Security\UserBase.cs" />
     <Compile Include="Service References\Cake.WebServices._3.Export\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

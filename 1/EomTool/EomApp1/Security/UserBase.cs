@@ -4,10 +4,10 @@ using DAgents.Common;
 
 namespace EomApp1.Security
 {
-    public static class CurrentUser
+    public class UserBase
     {
-        private static List<Role> _Roles;
-        public static List<Role> Roles
+        List<Role> _Roles;
+        List<Role> Roles
         {
             get
             {
@@ -20,8 +20,9 @@ namespace EomApp1.Security
                 return _Roles;
             }
         }
-        private static List<string> _RoleNames;
-        public static List<string> RoleNames
+
+        List<string> _RoleNames;
+        List<string> RoleNames
         {
             get
             {
@@ -30,8 +31,9 @@ namespace EomApp1.Security
                 return _RoleNames;
             }
         }
-        private static List<int> _RoleIds;
-        public static List<int> RoleIds
+
+        List<int> _RoleIds;
+        List<int> RoleIds
         {
             get
             {
@@ -40,8 +42,9 @@ namespace EomApp1.Security
                 return _RoleIds;
             }
         }
-        private static List<string> _PermissionTags;
-        public static List<string> PermissionTags
+
+        List<string> _PermissionTags;
+        List<string> PermissionTags
         {
             get
             {
@@ -54,45 +57,10 @@ namespace EomApp1.Security
                 return _PermissionTags;
             }
         }
-        public static bool HasPermission(string permissionTag)
+
+        protected bool HasPermission(string permissionTag)
         {
             return PermissionTags.Contains(permissionTag);
-        }
-        public static bool HasRole(string roleName)
-        {
-            return RoleNames.Contains(roleName);
-        }
-        public static bool CanDoWorkflowFinalize(string accountManagerName)
-        {
-            return RoleNames.Contains("AM: " + accountManagerName);
-        }
-        public static bool CanDoWorkflowVerify
-        {
-            get
-            {
-                return HasPermission("Workflow.Verify");
-            }
-        }
-        public static bool CanDoAccountingVerify
-        {
-            get
-            {
-                return HasRole("Pub Rep: Verify");
-            }
-        }
-        public static bool CanDoAccountingApprove
-        {
-            get
-            {
-                return HasRole("Pub Rep: Approve");
-            }
-        }
-        public static bool CanDoAccountingPay
-        {
-            get
-            {
-                return HasRole("Pub Rep: Pay");
-            }
         }
     }
 }

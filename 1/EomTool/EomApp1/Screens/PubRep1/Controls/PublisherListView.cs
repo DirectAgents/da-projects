@@ -109,9 +109,9 @@ namespace EomApp1.Screens.PubRep1.Controls
 
         private void UpdateCellTags()
         {
-            var canVerify = Security.CurrentUser.CanDoAccountingVerify;
-            var canApprove = Security.CurrentUser.CanDoAccountingApprove;
-            var canPay = Security.CurrentUser.CanDoAccountingPay;
+            var canVerify = Security.User.Current.CanDoAccountingVerify;
+            var canApprove = Security.User.Current.CanDoAccountingApprove;
+            var canPay = Security.User.Current.CanDoAccountingPay;
 
             foreach (DataGridViewRow dataGridViewRow in _dgv.Rows)
             { 

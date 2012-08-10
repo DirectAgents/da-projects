@@ -7,7 +7,6 @@ using EomApp1.UI;
 using EomAppCommon;
 using EomAppControls.DataGrid;
 using System.Data;
-using EomApp1.Security;
 using System.Drawing;
 
 namespace EomApp1.Screens.Final
@@ -46,7 +45,7 @@ namespace EomApp1.Screens.Final
 
         private void DisableVerifyAndReview()
         {
-            if (!Security.CurrentUser.CanDoWorkflowVerify)
+            if (!Security.User.Current.CanDoWorkflowVerify)
             {
                 verifyCol.Visible = false;
                 colReview.Visible = false;
@@ -104,7 +103,7 @@ namespace EomApp1.Screens.Final
             if (campaignsToFinalizeGrid.Rows.Count > 0)
                 foreach (var button in from row in campaignsToFinalizeGrid.Rows.Cast<DataGridViewRow>()
                                        let am = ((row.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow).AM
-                                       where !CurrentUser.CanDoWorkflowFinalize(am)
+                                       where !Security.User.Current.CanDoWorkflowFinalize(am)
                                        select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
                     button.Enabled = false;
         }

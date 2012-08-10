@@ -37,17 +37,18 @@ namespace EomApp1.Screens.Final.UI
             Model.Fill(View.PublishersToFinalize, CampaignStatusId.Default);
             Model.Fill(View.PublishersToVerify, CampaignStatusId.Finalized);
             View.InitializeNetTermsFilter();
+
             // Security
             DisableActions();
         }
 
         private void DisableActions()
         {
-            if (!Security.CurrentUser.CanDoWorkflowFinalize(Model.AccountManagerName))
+            if (!Security.User.Current.CanDoWorkflowFinalize(Model.AccountManagerName))
             {
                 View.DisableFinalize();
             }
-            if (!Security.CurrentUser.CanDoWorkflowVerify)
+            if (!Security.User.Current.CanDoWorkflowVerify)
             {
                 View.DisableVerify();
             }
