@@ -14,7 +14,7 @@ namespace EomApp1.Security
                 if (_Roles == null)
                     using (var db = new Security.EomToolSecurityEntities())
                         _Roles = (from g in db.Groups.ToList()
-                                  where WindowsIdentityHelper.DoesCurrentUserHaveIdentity(g.WindowsIdentity)
+                                  where WindowsIdentityHelper.DoesCurrentUserHaveIdentity(g.WindowsIdentity.ToArray(','))
                                   from r in g.Roles
                                   select r).ToList();
                 return _Roles;
@@ -54,6 +54,14 @@ namespace EomApp1.Security
                 return _PermissionTags;
             }
         }
+        public static bool HasPermission(string permissionTag)
+        {
+            return PermissionTags.Contains(permissionTag);
+        }
+        public static bool HasRole(string roleName)
+        {
+            return RoleNames.Contains(roleName);
+        }
         public static bool CanDoWorkflowFinalize(string accountManagerName)
         {
             return RoleNames.Contains("AM: " + accountManagerName);
@@ -62,28 +70,28 @@ namespace EomApp1.Security
         {
             get
             {
-                return PermissionTags.Contains("Workflow.Verify");
-	    }
+                return HasPermission("Workflow.Verify");
+            }
         }
         public static bool CanDoAccountingVerify
         {
             get
             {
-                return RoleNames.Contains("Pub Rep: Verify");
+                return HasRole("Pub Rep: Verify");
             }
         }
         public static bool CanDoAccountingApprove
         {
             get
             {
-                return RoleNames.Contains("Pub Rep: Approve");
+                return HasRole("Pub Rep: Approve");
             }
         }
         public static bool CanDoAccountingPay
         {
             get
             {
-                return RoleNames.Contains("Pub Rep: Pay");
+                return HasRole("Pub Rep: Pay");
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -21,6 +22,18 @@ namespace EomApp1
         {
             var toCheckUpper = toCheck.ToUpper();
             return source.Any(c => c.ToUpper() == toCheckUpper);
+        }
+
+        public static string[] ToArray(this string s, params char [] seps)
+        {
+            return s.Split(seps, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static IEnumerable<ToolStripItem> DisabledMenus(this MenuStrip menuStrip)
+        {
+            foreach (ToolStripMenuItem item in menuStrip.Items)
+                if (item.DropDownItems.Cast<ToolStripItem>().All(c => !c.Enabled))
+                    yield return item;
         }
     }
 }

@@ -24,9 +24,6 @@ namespace EomApp1.Screens.Final
         {
             InitializeComponent();
 
-            // Security
-            this.finalizedRevenueButton.Visible = WindowsIdentityHelper.DoesCurrentUserHaveIdentity(EomAppSettings.AdminGroupName);
-
             this.numPubCols1 = new[] { NumPubsToFinalizeCol, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly };
             this.numPubCols2 = new[] { NumPubsToVerifyCol, dataGridViewLinkColumn1, dataGridViewLinkColumn2, dataGridViewLinkColumn3, dataGridViewLinkColumn4 };
             this.pubColIndicies1 = this.numPubCols1.Select(c => c.Index).ToArray();
@@ -44,8 +41,6 @@ namespace EomApp1.Screens.Final
             // Security
             campaignsToFinalizeGrid.Sorted += (s, e) => DisableFinalizeButtons();
             campaignBindingSource.ListChanged += (s, e) => DisableFinalizeButtons();
-
-            // Security
             DisableVerifyAndReview();
         }
 

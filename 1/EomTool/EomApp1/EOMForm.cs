@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using DAgents.Common;
 using DAgents.Synch;
 using EomApp1.UI;
-using EomAppCommon;
+using System.Drawing;
 
 namespace EomApp1
 {
@@ -16,38 +16,18 @@ namespace EomApp1
             InitializeComponent();
 
             // Security
-            this.verifiedRevenueToolStripMenuItem.Enabled = WindowsIdentityHelper.DoesCurrentUserHaveIdentity(EomAppSettings.AdminGroupName);
-
-            // Security
-            using (var db = new Security.EomToolSecurityEntities())
-            {
-                var allSecurityGroups = db.Groups.ToList();
-
-                var securityGroups = from g in allSecurityGroups
-                                     where WindowsIdentityHelper.DoesCurrentUserHaveIdentity(g.WindowsIdentity)
-                                     select g;
-
-                var securityRoles = securityGroups.SelectMany(c => c.Roles);
-
-                var securityPermissions = securityRoles.SelectMany(c => c.Permissions);
-
-                var securityTags = securityPermissions.Select(c => c.Tag);
-
-                foreach (var menuItem in this.TaggedToolStripMenuItems())
-                    menuItem.Enabled = securityTags.Contains(menuItem.Tag);
-
-                foreach (ToolStripMenuItem item in this.menuStrip1.Items)
-                    if (item.DropDownItems.Cast<ToolStripItem>().All(c => !c.Enabled))
-                        DisableMenu(item);
-            }
+            DisableMenus();
         }
 
-        private static void DisableMenu(ToolStripMenuItem item)
+        private void DisableMenus()
         {
-            if (Properties.Settings.Default.TestMode)
-                item.Enabled = false;
-            else
-                item.Visible = false;
+            // Disable individual menu items
+            foreach (var menuItem in this.TaggedToolStripMenuItems())
+                menuItem.Enabled = Security.CurrentUser.HasPermission((string)menuItem.Tag);
+
+            // Apply disabled color to top level menus that have all their items disabled
+            foreach (var menu in menuStrip1.DisabledMenus())
+                menu.ForeColor = SystemColors.GrayText;
         }
 
         // Campaigns Workflow

@@ -22,6 +22,11 @@ namespace DAgents.Common
             return CurrentUsersGroupsAndIdentity.Contains(identityName.ToUpper());
         }
 
+        public static bool DoesCurrentUserHaveIdentity(IEnumerable<string> identityNames)
+        {
+            return identityNames.Any(c => CurrentUsersGroupsAndIdentity.Contains(c.ToUpper()));
+        }
+
         public static List<string> CurrentUsersGroupsAndIdentity
         {
             get
