@@ -44,12 +44,24 @@ namespace EomApp1.Screens.Extra
             if (accountManagerName == "default")
             {
                 itemTableAdapter.Fill(extraItems.Item);
-                //campaignTableAdapter.Fill(extraItems.Campaign);
+                campaignTableAdapter.Fill(extraItems.Campaign);
             }
             else
             {
                 itemTableAdapter.FillBy(extraItems.Item, accountManagerName);
-                //campaignTableAdapter.FillBy(extraItems.Campaign, accountManagerName);
+                campaignTableAdapter.FillBy(extraItems.Campaign, accountManagerName);
+            }
+            if (extraItems.Campaign.Rows.Count > 0)
+            {
+                itemsGrid.AllowUserToAddRows = true;
+                bindingNavigatorAddNewItem.Enabled = true;
+                extraItems.Item.pidColumn.DefaultValue = extraItems.Campaign[0][extraItems.Campaign.pidColumn.Ordinal];
+                // ? if removing AM filter, go back to default campaign with pid=99999 ?
+            }
+            else
+            {
+                itemsGrid.AllowUserToAddRows = false;
+                bindingNavigatorAddNewItem.Enabled = false;
             }
         }
 
