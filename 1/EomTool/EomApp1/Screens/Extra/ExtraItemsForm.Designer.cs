@@ -55,16 +55,16 @@
             this.accountManagerBindingSource.DataSource = this.accountManagersDataSet;
             this.accountManagerBindingSource.Filter = "";
             // 
-            // accountManagersForExtraItemsDataSet
+            // accountManagersDataSet
             // 
             this.accountManagersDataSet.DataSetName = "AccountManagersForExtraItemsDataSet";
             this.accountManagersDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // userControl11
+            // extraItemsUserControl
             // 
             this.extraItemsUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.extraItemsUserControl.Location = new System.Drawing.Point(0, 0);
-            this.extraItemsUserControl.Name = "userControl11";
+            this.extraItemsUserControl.Name = "extraItemsUserControl";
             this.extraItemsUserControl.Size = new System.Drawing.Size(920, 627);
             this.extraItemsUserControl.TabIndex = 0;
             // 
@@ -83,7 +83,7 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.RefreshButtonClicked);
             // 
-            // ExtraForm1
+            // ExtraItemsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -91,7 +91,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.extraItemsUserControl);
-            this.Name = "ExtraForm1";
+            this.Name = "ExtraItemsForm";
             this.ShowIcon = false;
             this.Text = "Extra Items";
             this.Load += new System.EventHandler(this.FormLoaded);

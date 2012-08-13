@@ -6428,11 +6428,20 @@ ORDER BY Campaign.campaign_name";
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT id, name FROM dbo.Advertiser";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[1].Connection = this.Connection;
+            this._commandCollection[1].CommandText = @"SELECT        Advertiser.id, Advertiser.name
+FROM            Advertiser INNER JOIN
+                         Campaign ON Advertiser.id = Campaign.advertiser_id INNER JOIN
+                         AccountManager ON Campaign.account_manager_id = AccountManager.id
+WHERE        (AccountManager.name = @1)";
+            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@1", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -6454,6 +6463,42 @@ ORDER BY Campaign.campaign_name";
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
         public virtual ExtraItemDataSet.AdvertiserDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
+            ExtraItemDataSet.AdvertiserDataTable dataTable = new ExtraItemDataSet.AdvertiserDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
+        public virtual int FillByAM(ExtraItemDataSet.AdvertiserDataTable dataTable, string _1) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            if ((_1 == null)) {
+                throw new global::System.ArgumentNullException("_1");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(_1));
+            }
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual ExtraItemDataSet.AdvertiserDataTable GetDataByAM(string _1) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            if ((_1 == null)) {
+                throw new global::System.ArgumentNullException("_1");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(_1));
+            }
             ExtraItemDataSet.AdvertiserDataTable dataTable = new ExtraItemDataSet.AdvertiserDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;

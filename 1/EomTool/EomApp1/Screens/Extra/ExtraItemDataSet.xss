@@ -9,7 +9,7 @@
     <Shape ID="DesignTable:Item" ZOrder="17" X="70" Y="48" Height="499" Width="171" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="406" />
     <Shape ID="DesignTable:Affiliate" ZOrder="16" X="311" Y="70" Height="229" Width="191" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="178" />
     <Shape ID="DesignTable:Campaign" ZOrder="1" X="311" Y="573" Height="286" Width="203" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="216" />
-    <Shape ID="DesignTable:Advertiser" ZOrder="15" X="584" Y="573" Height="115" Width="204" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="64" />
+    <Shape ID="DesignTable:Advertiser" ZOrder="15" X="584" Y="573" Height="153" Width="204" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="64" />
     <Shape ID="DesignTable:Currency" ZOrder="14" X="311" Y="369" Height="134" Width="196" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="83" />
     <Shape ID="DesignTable:UnitType" ZOrder="13" X="311" Y="910" Height="115" Width="197" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="64" />
     <Shape ID="DesignTable:Source" ZOrder="12" X="311" Y="1095" Height="115" Width="184" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="64" />
