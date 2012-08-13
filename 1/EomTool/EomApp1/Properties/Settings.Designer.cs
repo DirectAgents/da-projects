@@ -226,8 +226,8 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseJuly2012Test;User=sa;Password=sp0n" +
-            "gbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseJuly2012Test;Integrated Security=T" +
+            "rue")]
         public string OverrideConnectionString {
             get {
                 return ((string)(this["OverrideConnectionString"]));
@@ -284,7 +284,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=EomToolSecurity;User=sa;Password=sp0ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=EomToolSecurity;Integrated Security=True")]
         public string OverrideEomToolSecurityConnectionString {
             get {
                 return ((string)(this["OverrideEomToolSecurityConnectionString"]));
