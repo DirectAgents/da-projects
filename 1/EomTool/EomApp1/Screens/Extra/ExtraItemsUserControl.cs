@@ -1,16 +1,21 @@
 ﻿using System;
-using System.Windows.Forms;
-using EomAppControls;
 using System.ComponentModel;
+using System.Windows.Forms;
+using DAgents.Common;
+using EomAppControls;
+using EomAppControls.Filtering;
 
 namespace EomApp1.Screens.Extra
 {
     public partial class ExtraItemsUserControl : UserControlBase
     {
+        private BindingSourceFilter itemFilter;
+
         public ExtraItemsUserControl()
         {
             InitializeComponent();
             extraItems.EnforceConstraints = false; // Prevent errors from popping up - need to look into why constraints get violated in first place...
+            this.itemFilter = new BindingSourceFilter(this.itemBindingSource);
         }
 
         public void Initialize()
@@ -18,7 +23,22 @@ namespace EomApp1.Screens.Extra
             if (Running)
             {
                 FillTableAdapters();
+                SetupFilters();
             }
+        }
+
+        private void SetupFilters()
+        {
+            // TODO: Publisers
+            SetupComboBoxColumnFilter(colCampaign, colCampaignName);
+            SetupComboBoxColumnFilter(colPublisher, colPublisherName);
+        }
+
+        private void SetupComboBoxColumnFilter(DataGridViewComboBoxColumn comboBoxColumn, DataGridViewTextBoxColumn textBoxColumn)
+        {
+            var filterHeaderCell = new DataGridViewTextBoxFilterColumnHeaderCell(comboBoxColumn.HeaderCell);
+            filterHeaderCell.FilterChanged += (s, e) => this.itemFilter[textBoxColumn.DataPropertyName] = e.FilterText;
+            comboBoxColumn.HeaderCell = filterHeaderCell;
         }
 
         private void FillTableAdapters()

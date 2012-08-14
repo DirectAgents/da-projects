@@ -53,6 +53,7 @@
     <Compile Include="Filtering\DataGridViewAutoFilterColumnHeaderCell.cs" />
     <Compile Include="Filtering\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Filtering\DataGridViewColumnSelector.cs" />
+    <Compile Include="Filtering\DataGridViewTextBoxFilterColumnHeaderCell.cs" />
     <Compile Include="Logging\LoggerBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
