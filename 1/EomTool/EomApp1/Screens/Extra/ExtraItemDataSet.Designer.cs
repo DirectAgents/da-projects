@@ -6428,21 +6428,23 @@ ORDER BY Campaign.campaign_name";
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = "DELETE FROM [dbo].[Advertiser] WHERE (([id] = @Original_id) AND ([name] = @Origin" +
-                "al_name))";
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM [Advertiser] WHERE (([id] = @Original_id) AND ([name] = @Original_nam" +
+                "e))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_name", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "name", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[Advertiser] ([name]) VALUES (@name);\r\nSELECT id, name FROM Adv" +
-                "ertiser WHERE (id = SCOPE_IDENTITY())";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [Advertiser] ([name]) VALUES (@name);\r\nSELECT DISTINCT Advertiser.id," +
+                " Advertiser.name FROM Advertiser INNER JOIN Campaign ON Advertiser.id = Campaign" +
+                ".advertiser_id WHERE (Advertiser.id = SCOPE_IDENTITY()) AND (Advertiser.id = SCO" +
+                "PE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@name", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = "UPDATE [dbo].[Advertiser] SET [name] = @name WHERE (([id] = @Original_id) AND ([n" +
-                "ame] = @Original_name));\r\nSELECT id, name FROM Advertiser WHERE (id = @id)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [Advertiser] SET [name] = @name WHERE (([id] = @Original_id) AND ([name] = @Original_name));
+SELECT DISTINCT Advertiser.id, Advertiser.name FROM Advertiser INNER JOIN Campaign ON Advertiser.id = Campaign.advertiser_id WHERE (Advertiser.id = @id) AND (Advertiser.id = @id)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@name", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -6463,15 +6465,18 @@ ORDER BY Campaign.campaign_name";
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT id, name FROM dbo.Advertiser";
+            this._commandCollection[0].CommandText = "SELECT DISTINCT Advertiser.id, Advertiser.name\r\nFROM            Advertiser INNER " +
+                "JOIN\r\n                         Campaign ON Advertiser.id = Campaign.advertiser_i" +
+                "d\r\nORDER BY Advertiser.name";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = @"SELECT        Advertiser.id, Advertiser.name
+            this._commandCollection[1].CommandText = @"SELECT DISTINCT Advertiser.id, Advertiser.name
 FROM            Advertiser INNER JOIN
                          Campaign ON Advertiser.id = Campaign.advertiser_id INNER JOIN
                          AccountManager ON Campaign.account_manager_id = AccountManager.id
-WHERE        (AccountManager.name = @1)";
+WHERE        (AccountManager.name = @1)
+ORDER BY Advertiser.name";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@1", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }

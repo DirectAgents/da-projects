@@ -4,12 +4,15 @@ using System.Windows.Forms;
 using DAgents.Common;
 using EomAppControls;
 using EomAppControls.Filtering;
+using System.Collections.Generic;
+using System.Data;
 
 namespace EomApp1.Screens.Extra
 {
     public partial class ExtraItemsUserControl : UserControlBase
     {
         private BindingSourceFilter itemFilter;
+        private BindingSource campaignFilterBindingSource;
 
         public ExtraItemsUserControl()
         {
@@ -24,12 +27,78 @@ namespace EomApp1.Screens.Extra
             {
                 FillTableAdapters();
                 SetupFilters();
+                SetupCampaignBindings();
+            }
+        }
+
+        private void SetupCampaignBindings()
+        {
+            DataView dv = new DataView(extraItems.Campaign);
+            campaignFilterBindingSource = new BindingSource();
+            campaignFilterBindingSource.DataSource = dv;
+        }
+
+        private void itemsGrid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            if (e.ColumnIndex == colCampaign.Index && itemsGrid[colAdvertiser.Index, e.RowIndex].Value != null)
+            {
+                DataGridViewComboBoxCell cell = (DataGridViewComboBoxCell)itemsGrid[e.ColumnIndex, e.RowIndex];
+                int advertiser_id = (int)itemsGrid[colAdvertiser.Index, e.RowIndex].Value;
+                if (advertiser_id > 1)
+                {
+                    cell.DataSource = campaignFilterBindingSource;
+                    cell.ValueMember = "pid";
+                    cell.DisplayMember = "campaign_name";
+                    campaignFilterBindingSource.Filter = "advertiser_id=" + advertiser_id;
+                }
+                else
+                {
+                    cell.DataSource = campaignBindingSource;
+                }
+                CheckValidCampaignForRow(e.RowIndex);
+            }
+        }
+
+        private void itemsGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == colCampaign.Index)
+            {
+                campaignFilterBindingSource.RemoveFilter();
+                DataGridViewComboBoxCell cell = (DataGridViewComboBoxCell)itemsGrid[e.ColumnIndex, e.RowIndex];
+                cell.DataSource = campaignBindingSource;
+            }
+            else if (e.ColumnIndex == colAdvertiser.Index)
+            {
+                CheckValidCampaignForRow(e.RowIndex);
+            }
+        }
+
+        // See if the row's pid is valid based on the row's advertiser id. If not, give it a valid one.
+        private void CheckValidCampaignForRow(int rowIndex)
+        {
+            if (itemsGrid[colAdvertiser.Index, rowIndex] != null)
+            {
+                int advertiser_id = (int)itemsGrid[colAdvertiser.Index, rowIndex].Value;
+                if (advertiser_id > 1)
+                {
+                    int pid = (int)itemsGrid[colCampaign.Index, rowIndex].Value;
+                    var rows = extraItems.Campaign.Select("advertiser_id=" + advertiser_id + " AND pid=" + pid);
+                    if (rows.Length == 0)
+                    {
+                        rows = extraItems.Campaign.Select("advertiser_id=" + advertiser_id);
+                        if (rows.Length > 0)
+                        {
+                            itemsGrid[colCampaign.Index, rowIndex].Value = rows[0][colCampaign.Index];
+                        }
+                        // if no campaigns for the advertiser, do nothing
+                    }
+                }
             }
         }
 
         private void SetupFilters()
         {
-            // TODO: Publisers
+            SetupComboBoxColumnFilter(colAdvertiser, colAdvertiserName);
             SetupComboBoxColumnFilter(colCampaign, colCampaignName);
             SetupComboBoxColumnFilter(colPublisher, colPublisherName);
         }
@@ -65,17 +134,20 @@ namespace EomApp1.Screens.Extra
             if (accountManagerName == "default")
             {
                 itemTableAdapter.Fill(extraItems.Item);
+                advertiserTableAdapter.Fill(extraItems.Advertiser);
                 campaignTableAdapter.Fill(extraItems.Campaign);
             }
             else
             {
                 itemTableAdapter.FillBy(extraItems.Item, accountManagerName);
+                advertiserTableAdapter.FillByAM(extraItems.Advertiser, accountManagerName);
                 campaignTableAdapter.FillBy(extraItems.Campaign, accountManagerName);
             }
-            if (extraItems.Campaign.Rows.Count > 0)
+            if (extraItems.Advertiser.Rows.Count > 0 && extraItems.Campaign.Rows.Count > 0)
             {
                 itemsGrid.AllowUserToAddRows = true;
                 bindingNavigatorAddNewItem.Enabled = true;
+                extraItems.Item.advertiser_idColumn.DefaultValue = extraItems.Advertiser[0][extraItems.Advertiser.idColumn.Ordinal];
                 extraItems.Item.pidColumn.DefaultValue = extraItems.Campaign[0][extraItems.Campaign.pidColumn.Ordinal];
                 // ? if removing AM filter, go back to default campaign with pid=99999 ?
             }
@@ -102,6 +174,10 @@ namespace EomApp1.Screens.Extra
             else if (e.ColumnIndex == colPublisher.Index)
             {
                 Sort(colPublisherName, colPublisher);
+            }
+            else if (e.ColumnIndex == colAdvertiser.Index)
+            {
+                Sort(colAdvertiserName, colAdvertiser);
             }
         }
         private void Sort(DataGridViewColumn sortColumn, DataGridViewColumn displayColumn)
