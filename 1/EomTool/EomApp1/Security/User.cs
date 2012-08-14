@@ -15,7 +15,7 @@
 
         public bool CanDoWorkflowFinalize(string accountManagerName)
         {
-            return HasPermission("Workflow.Finalize." + accountManagerName);
+            return HasPermission("Workflow.Finalize." + accountManagerName.Trim());
         }
 
         public bool CanDoWorkflowVerify
