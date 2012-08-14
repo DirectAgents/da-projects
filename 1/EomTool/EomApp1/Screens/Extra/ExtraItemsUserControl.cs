@@ -45,6 +45,7 @@ namespace EomApp1.Screens.Extra
         {
             currencyTableAdapter.Fill(extraItems.Currency);
             unitTypeTableAdapter.Fill(extraItems.UnitType);
+            advertiserTableAdapter.Fill(extraItems.Advertiser);
             campaignTableAdapter.Fill(extraItems.Campaign);
             affiliateTableAdapter.Fill(extraItems.Affiliate);
             sourceTableAdapter.Fill(extraItems.Source);
