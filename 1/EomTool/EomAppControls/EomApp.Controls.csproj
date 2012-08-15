@@ -60,6 +60,12 @@
     <Compile Include="Logging\LoggerBox.Designer.cs">
       <DependentUpon>LoggerBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logging\LoggerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Logging\LoggerDialog.Designer.cs">
+      <DependentUpon>LoggerDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sorting\SortableBindingList.cs" />
     <Compile Include="Typing\TextEventArgs.cs" />
@@ -70,6 +76,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Logging\LoggerBox.resx">
       <DependentUpon>LoggerBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Logging\LoggerDialog.resx">
+      <DependentUpon>LoggerDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -64,7 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BindingSourceFilter.cs" />
     <Compile Include="ConsoleHelper.cs">
       <SubType>Code</SubType>
     </Compile>

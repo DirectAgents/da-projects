@@ -18,7 +18,8 @@ namespace EomApp1.Screens.Extra
         {
             InitializeComponent();
             extraItems.EnforceConstraints = false; // Prevent errors from popping up - need to look into why constraints get violated in first place...
-            this.itemFilter = new BindingSourceFilter(this.itemBindingSource);
+            this.itemFilter = new BindingSourceFilter(this.itemBindingSource, this.itemsGrid);
+
         }
 
         public void Initialize()
@@ -189,6 +190,14 @@ namespace EomApp1.Screens.Extra
             }
             itemsGrid.Sort(sortColumn, direction);
             displayColumn.HeaderCell.SortGlyphDirection = (direction == ListSortDirection.Ascending) ? SortOrder.Ascending : SortOrder.Descending;
+        }
+
+        private void itemsGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (this.itemsGrid.ReadOnly)
+            {
+                MessageBox.Show("Editing is disabled while filters are active.", "Filters Active");
+            }
         }
     }
 }

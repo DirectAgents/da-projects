@@ -286,6 +286,7 @@
     <Compile Include="Screens\DBView\Forms\DBViewForm1.Designer.cs">
       <DependentUpon>DBViewForm1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Extra\BindingSourceFilter.cs" />
     <Compile Include="Screens\Extra\ExtraItemsUserControl.Designer.cs">
       <DependentUpon>ExtraItemsUserControl.cs</DependentUpon>
     </Compile>
