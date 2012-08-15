@@ -270,8 +270,8 @@
             this.itemsGrid.Size = new System.Drawing.Size(978, 529);
             this.itemsGrid.TabIndex = 1;
             this.itemsGrid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.itemsGrid_CellBeginEdit);
-            this.itemsGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellDoubleClick);
             this.itemsGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellEndEdit);
+            this.itemsGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellValueChanged);
             this.itemsGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.itemsGrid_ColumnHeaderMouseClick);
             // 
             // colAdvertiser
@@ -322,6 +322,7 @@
             this.colAdvertiserName.FillWeight = 80F;
             this.colAdvertiserName.HeaderText = "AdvertiserName";
             this.colAdvertiserName.Name = "colAdvertiserName";
+            this.colAdvertiserName.ReadOnly = true;
             this.colAdvertiserName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.colAdvertiserName.Visible = false;
             // 

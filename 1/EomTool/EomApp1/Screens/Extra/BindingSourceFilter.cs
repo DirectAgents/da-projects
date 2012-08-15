@@ -8,10 +8,9 @@ namespace EomApp1.Screens.Extra
 {
     public class BindingSourceFilter
     {
-        public BindingSourceFilter(BindingSource bindingSource, DataGridView dataGridView)
+        public BindingSourceFilter(BindingSource bindingSource)
         {
             this.BindingSource = bindingSource;
-            this.DataGridView = dataGridView;
         }
 
         public void SetColumnFilter(string columnName, string filterText)
@@ -28,10 +27,8 @@ namespace EomApp1.Screens.Extra
         {
             string filter = this.FilterText;
 
-            // This is commented out because the logic to remember edited IDs is in place - can be removed if it works..
-            //DataGridView.ReadOnly = !string.IsNullOrWhiteSpace(filter);
-
-            this.BindingSource.Filter = filter;
+            if (this.BindingSource.Filter != filter)
+                this.BindingSource.Filter = filter;
         }
 
         public string this[string columnName]
@@ -75,8 +72,6 @@ namespace EomApp1.Screens.Extra
 
         Dictionary<string, string> columnFilters = new Dictionary<string, string>();
         public Dictionary<string, string> ColumnFilters { get { return columnFilters; } }
-
-        public DataGridView DataGridView { get; set; }
 
         ISet<int> editedIds = new HashSet<int>();
         public ISet<int> EditedIds

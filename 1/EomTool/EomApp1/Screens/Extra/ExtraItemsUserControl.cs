@@ -18,8 +18,7 @@ namespace EomApp1.Screens.Extra
         {
             InitializeComponent();
             extraItems.EnforceConstraints = false; // Prevent errors from popping up - need to look into why constraints get violated in first place...
-            this.itemFilter = new BindingSourceFilter(this.itemBindingSource, this.itemsGrid);
-
+            this.itemFilter = new BindingSourceFilter(this.itemBindingSource);
         }
 
         public void Initialize()
@@ -41,21 +40,6 @@ namespace EomApp1.Screens.Extra
 
         private void itemsGrid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            if (
-                (
-                    e.ColumnIndex == colCampaign.Index ||
-                    e.ColumnIndex == colPublisher.Index ||
-                    e.ColumnIndex == colAdvertiser.Index
-                )
-            )
-            {
-                // Make sure the edited row is always displayed
-                var cell = itemsGrid[colID.Index, e.RowIndex];
-                int id = (int)cell.Value;
-                if (id >= 0)
-                    this.itemFilter.EditedIds.Add(id);
-            }
-
             if (e.ColumnIndex == colCampaign.Index && itemsGrid[colAdvertiser.Index, e.RowIndex].Value != null)
             {
                 DataGridViewComboBoxCell cell = (DataGridViewComboBoxCell)itemsGrid[e.ColumnIndex, e.RowIndex];
@@ -84,11 +68,24 @@ namespace EomApp1.Screens.Extra
                 DataGridViewComboBoxCell cell = (DataGridViewComboBoxCell)itemsGrid[e.ColumnIndex, e.RowIndex];
                 cell.DataSource = campaignBindingSource;
             }
-            else if (e.ColumnIndex == colAdvertiser.Index)
+        }
+
+        private void itemsGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1)
             {
-                CheckValidCampaignForRow(e.RowIndex);
+                // Make sure the edited row is always displayed
+                var cell = itemsGrid[colID.Index, e.RowIndex];
+                int id = (int)cell.Value;
+                if (id >= 0)
+                    this.itemFilter.EditedIds.Add(id);
+
+                if (e.ColumnIndex == colAdvertiser.Index)
+                {
+                    CheckValidCampaignForRow(e.RowIndex);
+                }
+                this.itemFilter.Apply();
             }
-            this.itemFilter.Apply();
         }
 
         // See if the row's pid is valid based on the row's advertiser id. If not, give it a valid one.
@@ -211,14 +208,6 @@ namespace EomApp1.Screens.Extra
             }
             itemsGrid.Sort(sortColumn, direction);
             displayColumn.HeaderCell.SortGlyphDirection = (direction == ListSortDirection.Ascending) ? SortOrder.Ascending : SortOrder.Descending;
-        }
-
-        private void itemsGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (this.itemsGrid.ReadOnly)
-            {
-                MessageBox.Show("Editing is disabled while filters are active.", "Filters Active");
-            }
         }
     }
 }
