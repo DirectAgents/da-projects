@@ -52,7 +52,8 @@ namespace EomApp1.Screens.Extra
                 // Make sure the edited row is always displayed
                 var cell = itemsGrid[colID.Index, e.RowIndex];
                 int id = (int)cell.Value;
-                this.itemFilter.EditedIds.Add(id);
+                if (id >= 0)
+                    this.itemFilter.EditedIds.Add(id);
             }
 
             if (e.ColumnIndex == colCampaign.Index && itemsGrid[colAdvertiser.Index, e.RowIndex].Value != null)
@@ -141,6 +142,7 @@ namespace EomApp1.Screens.Extra
         private void SaveClicked(object sender, EventArgs e)
         {
             SaveData();
+            this.itemFilter.Apply();
         }
 
         public void SaveAndFilterByAccountManager(string accountManagerName)
@@ -172,6 +174,8 @@ namespace EomApp1.Screens.Extra
                 itemsGrid.AllowUserToAddRows = false;
                 bindingNavigatorAddNewItem.Enabled = false;
             }
+
+            this.itemFilter.Apply();
         }
 
         private void SaveData()
@@ -179,6 +183,7 @@ namespace EomApp1.Screens.Extra
             Validate();
             this.itemBindingSource.EndEdit();
             this.tableAdapterManager.UpdateAll(this.extraItems);
+            this.itemFilter.EditedIds.Clear();
         }
 
         private void itemsGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -217,8 +222,8 @@ namespace EomApp1.Screens.Extra
 
         private void itemsGrid_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            if(this.itemFilter.EditedIds.Count > 0)
-                this.itemFilter.Apply();
+            //if(this.itemFilter.EditedIds.Count > 0)
+            //    this.itemFilter.Apply();
         }
     }
 }
