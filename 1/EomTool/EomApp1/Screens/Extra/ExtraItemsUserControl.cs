@@ -6,6 +6,8 @@ using EomAppControls;
 using EomAppControls.Filtering;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
+using System.Resources;
 
 namespace EomApp1.Screens.Extra
 {
@@ -208,6 +210,22 @@ namespace EomApp1.Screens.Extra
             }
             itemsGrid.Sort(sortColumn, direction);
             displayColumn.HeaderCell.SortGlyphDirection = (direction == ListSortDirection.Ascending) ? SortOrder.Ascending : SortOrder.Descending;
+        }
+
+        private void itemsGrid_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            if (NeedsEditIcon(e.RowIndex))
+                e.Graphics.DrawImage(Properties.Resources.editing, e.RowBounds.Left + 2, e.RowBounds.Top + 2);
+        }
+
+        private bool NeedsEditIcon(int rowIndex)
+        {
+            int rowID = (int)(itemsGrid.Rows[rowIndex].Cells[colID.Index].Value ?? 0);
+            
+            bool rowIsEdited = this.itemFilter.EditedIds.Contains(rowID);
+            bool rowIsNew = rowID < 0;
+
+            return rowIsEdited || rowIsNew;
         }
     }
 }
