@@ -56,8 +56,8 @@ SELECT id, pid, affid, source_id, unit_type_id, revenue_currency_id, cost_curren
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
                     <CommandText>SELECT        Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
-                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, Advertiser.name AS AdvertiserName, UnitType.name, 
-                         Source.name AS SourceName, Advertiser.id AS advertiser_id
+                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
+                         Advertiser.id AS advertiser_id
 FROM            Item INNER JOIN
                          Campaign ON Item.pid = Campaign.pid INNER JOIN
                          Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
@@ -126,7 +126,6 @@ SELECT id, pid, affid, source_id, unit_type_id, revenue_currency_id, cost_curren
               <Mapping SourceColumn="margin" DataSetColumn="margin" />
               <Mapping SourceColumn="name" DataSetColumn="name" />
               <Mapping SourceColumn="SourceName" DataSetColumn="SourceName" />
-              <Mapping SourceColumn="AdvertiserName" DataSetColumn="AdvertiserName" />
               <Mapping SourceColumn="advertiser_id" DataSetColumn="advertiser_id" />
             </Mappings>
             <Sources>
@@ -134,8 +133,8 @@ SELECT id, pid, affid, source_id, unit_type_id, revenue_currency_id, cost_curren
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
                     <CommandText>SELECT        Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
-                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, Advertiser.name AS AdvertiserName, UnitType.name, 
-                         Source.name AS SourceName, Advertiser.id AS advertiser_id
+                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
+                         Advertiser.id AS advertiser_id
 FROM            Item INNER JOIN
                          Campaign ON Item.pid = Campaign.pid INNER JOIN
                          Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
@@ -648,14 +647,8 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
               </xs:element>
               <xs:element name="CampaignName" msdata:ReadOnly="true" msdata:Expression="Parent(FK_Item_Campaign).campaign_name" msprop:Generator_ColumnVarNameInTable="columnCampaignName" msprop:Generator_ColumnPropNameInRow="CampaignName" msprop:Generator_ColumnPropNameInTable="CampaignNameColumn" msprop:Generator_UserColumnName="CampaignName" type="xs:string" minOccurs="0" />
               <xs:element name="AffiliateName" msdata:ReadOnly="true" msdata:Expression="Parent(FK_Item_Affiliate).name" msprop:Generator_ColumnVarNameInTable="columnAffiliateName" msprop:Generator_ColumnPropNameInRow="AffiliateName" msprop:Generator_ColumnPropNameInTable="AffiliateNameColumn" msprop:Generator_UserColumnName="AffiliateName" type="xs:string" minOccurs="0" />
-              <xs:element name="AdvertiserName" msprop:Generator_ColumnVarNameInTable="columnAdvertiserName" msprop:Generator_ColumnPropNameInRow="AdvertiserName" msprop:Generator_ColumnPropNameInTable="AdvertiserNameColumn" msprop:Generator_UserColumnName="AdvertiserName">
-                <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                    <xs:maxLength value="50" />
-                  </xs:restriction>
-                </xs:simpleType>
-              </xs:element>
               <xs:element name="advertiser_id" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnadvertiser_id" msprop:Generator_ColumnPropNameInRow="advertiser_id" msprop:Generator_ColumnPropNameInTable="advertiser_idColumn" msprop:Generator_UserColumnName="advertiser_id" type="xs:int" default="1" />
+              <xs:element name="AdvertiserName" msdata:ReadOnly="true" msdata:Expression="Parent(FK_Item_Campaign).AdvertiserName" msprop:Generator_ColumnVarNameInTable="columnAdvertiserName" msprop:Generator_ColumnPropNameInRow="AdvertiserName" msprop:Generator_ColumnPropNameInTable="AdvertiserNameColumn" msprop:Generator_UserColumnName="AdvertiserName" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -722,6 +715,7 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
               </xs:element>
               <xs:element name="modified" msprop:Generator_ColumnVarNameInTable="columnmodified" msprop:Generator_ColumnPropNameInRow="modified" msprop:Generator_ColumnPropNameInTable="modifiedColumn" msprop:Generator_UserColumnName="modified" type="xs:dateTime" minOccurs="0" />
               <xs:element name="created" msprop:Generator_ColumnVarNameInTable="columncreated" msprop:Generator_ColumnPropNameInRow="created" msprop:Generator_ColumnPropNameInTable="createdColumn" msprop:Generator_UserColumnName="created" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="AdvertiserName" msdata:ReadOnly="true" msdata:Expression="Parent(FK_Campaign_Advertiser).name" msprop:Generator_ColumnVarNameInTable="columnAdvertiserName" msprop:Generator_ColumnPropNameInRow="AdvertiserName" msprop:Generator_ColumnPropNameInTable="AdvertiserNameColumn" msprop:Generator_UserColumnName="AdvertiserName" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -833,15 +827,15 @@ SELECT id, name FROM ItemReportingStatus WHERE (id = @id)</CommandText>
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="FK_Item_Affiliate" msdata:parent="Affiliate" msdata:child="Item" msdata:parentkey="affid" msdata:childkey="affid" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_ParentPropName="AffiliateRow" msprop:Generator_UserRelationName="FK_Item_Affiliate" msprop:Generator_RelationVarName="relationFK_Item_Affiliate" msprop:Generator_UserParentTable="Affiliate" />
-      <msdata:Relationship name="FK_Item_Campaign" msdata:parent="Campaign" msdata:child="Item" msdata:parentkey="pid" msdata:childkey="pid" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_ParentPropName="CampaignRow" msprop:Generator_UserRelationName="FK_Item_Campaign" msprop:Generator_RelationVarName="relationFK_Item_Campaign" msprop:Generator_UserParentTable="Campaign" />
-      <msdata:Relationship name="FK_Campaign_Advertiser" msdata:parent="Advertiser" msdata:child="Campaign" msdata:parentkey="id" msdata:childkey="advertiser_id" msprop:Generator_UserChildTable="Campaign" msprop:Generator_ChildPropName="GetCampaignRows" msprop:Generator_ParentPropName="AdvertiserRow" msprop:Generator_UserRelationName="FK_Campaign_Advertiser" msprop:Generator_RelationVarName="relationFK_Campaign_Advertiser" msprop:Generator_UserParentTable="Advertiser" />
-      <msdata:Relationship name="FK_Item_Currency" msdata:parent="Currency" msdata:child="Item" msdata:parentkey="id" msdata:childkey="revenue_currency_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRowsByFK_Item_Currency" msprop:Generator_ParentPropName="CurrencyRowByFK_Item_Currency" msprop:Generator_UserRelationName="FK_Item_Currency" msprop:Generator_RelationVarName="relationFK_Item_Currency" msprop:Generator_UserParentTable="Currency" />
-      <msdata:Relationship name="FK_Item_Currency1" msdata:parent="Currency" msdata:child="Item" msdata:parentkey="id" msdata:childkey="cost_currency_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRowsByFK_Item_Currency1" msprop:Generator_ParentPropName="CurrencyRowByFK_Item_Currency1" msprop:Generator_UserRelationName="FK_Item_Currency1" msprop:Generator_RelationVarName="relationFK_Item_Currency1" msprop:Generator_UserParentTable="Currency" />
-      <msdata:Relationship name="FK_Affiliate_Currency" msdata:parent="Currency" msdata:child="Affiliate" msdata:parentkey="id" msdata:childkey="currency_id" msprop:Generator_UserChildTable="Affiliate" msprop:Generator_ChildPropName="GetAffiliateRows" msprop:Generator_ParentPropName="CurrencyRow" msprop:Generator_UserRelationName="FK_Affiliate_Currency" msprop:Generator_RelationVarName="relationFK_Affiliate_Currency" msprop:Generator_UserParentTable="Currency" />
-      <msdata:Relationship name="FK_Item_UnitType" msdata:parent="UnitType" msdata:child="Item" msdata:parentkey="id" msdata:childkey="unit_type_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_ParentPropName="UnitTypeRow" msprop:Generator_UserRelationName="FK_Item_UnitType" msprop:Generator_RelationVarName="relationFK_Item_UnitType" msprop:Generator_UserParentTable="UnitType" />
-      <msdata:Relationship name="FK_Item_Source" msdata:parent="Source" msdata:child="Item" msdata:parentkey="id" msdata:childkey="source_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_ParentPropName="SourceRow" msprop:Generator_UserRelationName="FK_Item_Source" msprop:Generator_RelationVarName="relationFK_Item_Source" msprop:Generator_UserParentTable="Source" />
-      <msdata:Relationship name="FK_Item_ItemReportingStatus" msdata:parent="ItemReportingStatus" msdata:child="Item" msdata:parentkey="id" msdata:childkey="item_reporting_status_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_ParentPropName="ItemReportingStatusRow" msprop:Generator_UserRelationName="FK_Item_ItemReportingStatus" msprop:Generator_RelationVarName="relationFK_Item_ItemReportingStatus" msprop:Generator_UserParentTable="ItemReportingStatus" />
+      <msdata:Relationship name="FK_Item_Affiliate" msdata:parent="Affiliate" msdata:child="Item" msdata:parentkey="affid" msdata:childkey="affid" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserParentTable="Affiliate" msprop:Generator_UserRelationName="FK_Item_Affiliate" msprop:Generator_RelationVarName="relationFK_Item_Affiliate" msprop:Generator_ParentPropName="AffiliateRow" />
+      <msdata:Relationship name="FK_Item_Campaign" msdata:parent="Campaign" msdata:child="Item" msdata:parentkey="pid" msdata:childkey="pid" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserParentTable="Campaign" msprop:Generator_UserRelationName="FK_Item_Campaign" msprop:Generator_RelationVarName="relationFK_Item_Campaign" msprop:Generator_ParentPropName="CampaignRow" />
+      <msdata:Relationship name="FK_Campaign_Advertiser" msdata:parent="Advertiser" msdata:child="Campaign" msdata:parentkey="id" msdata:childkey="advertiser_id" msprop:Generator_UserChildTable="Campaign" msprop:Generator_ChildPropName="GetCampaignRows" msprop:Generator_UserParentTable="Advertiser" msprop:Generator_UserRelationName="FK_Campaign_Advertiser" msprop:Generator_RelationVarName="relationFK_Campaign_Advertiser" msprop:Generator_ParentPropName="AdvertiserRow" />
+      <msdata:Relationship name="FK_Item_Currency" msdata:parent="Currency" msdata:child="Item" msdata:parentkey="id" msdata:childkey="revenue_currency_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRowsByFK_Item_Currency" msprop:Generator_UserParentTable="Currency" msprop:Generator_UserRelationName="FK_Item_Currency" msprop:Generator_RelationVarName="relationFK_Item_Currency" msprop:Generator_ParentPropName="CurrencyRowByFK_Item_Currency" />
+      <msdata:Relationship name="FK_Item_Currency1" msdata:parent="Currency" msdata:child="Item" msdata:parentkey="id" msdata:childkey="cost_currency_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRowsByFK_Item_Currency1" msprop:Generator_UserParentTable="Currency" msprop:Generator_UserRelationName="FK_Item_Currency1" msprop:Generator_RelationVarName="relationFK_Item_Currency1" msprop:Generator_ParentPropName="CurrencyRowByFK_Item_Currency1" />
+      <msdata:Relationship name="FK_Affiliate_Currency" msdata:parent="Currency" msdata:child="Affiliate" msdata:parentkey="id" msdata:childkey="currency_id" msprop:Generator_UserChildTable="Affiliate" msprop:Generator_ChildPropName="GetAffiliateRows" msprop:Generator_UserParentTable="Currency" msprop:Generator_UserRelationName="FK_Affiliate_Currency" msprop:Generator_RelationVarName="relationFK_Affiliate_Currency" msprop:Generator_ParentPropName="CurrencyRow" />
+      <msdata:Relationship name="FK_Item_UnitType" msdata:parent="UnitType" msdata:child="Item" msdata:parentkey="id" msdata:childkey="unit_type_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserParentTable="UnitType" msprop:Generator_UserRelationName="FK_Item_UnitType" msprop:Generator_RelationVarName="relationFK_Item_UnitType" msprop:Generator_ParentPropName="UnitTypeRow" />
+      <msdata:Relationship name="FK_Item_Source" msdata:parent="Source" msdata:child="Item" msdata:parentkey="id" msdata:childkey="source_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserParentTable="Source" msprop:Generator_UserRelationName="FK_Item_Source" msprop:Generator_RelationVarName="relationFK_Item_Source" msprop:Generator_ParentPropName="SourceRow" />
+      <msdata:Relationship name="FK_Item_ItemReportingStatus" msdata:parent="ItemReportingStatus" msdata:child="Item" msdata:parentkey="id" msdata:childkey="item_reporting_status_id" msprop:Generator_UserChildTable="Item" msprop:Generator_ChildPropName="GetItemRows" msprop:Generator_UserParentTable="ItemReportingStatus" msprop:Generator_UserRelationName="FK_Item_ItemReportingStatus" msprop:Generator_RelationVarName="relationFK_Item_ItemReportingStatus" msprop:Generator_ParentPropName="ItemReportingStatusRow" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

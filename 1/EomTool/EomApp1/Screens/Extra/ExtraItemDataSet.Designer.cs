@@ -409,7 +409,7 @@ namespace EomApp1.Screens.Extra {
             base.Tables.Add(this.tableItem);
             this.tableAffiliate = new AffiliateDataTable();
             base.Tables.Add(this.tableAffiliate);
-            this.tableCampaign = new CampaignDataTable();
+            this.tableCampaign = new CampaignDataTable(false);
             base.Tables.Add(this.tableCampaign);
             this.tableAdvertiser = new AdvertiserDataTable();
             base.Tables.Add(this.tableAdvertiser);
@@ -567,6 +567,8 @@ namespace EomApp1.Screens.Extra {
         private void InitExpressions() {
             this.Item.CampaignNameColumn.Expression = "Parent(FK_Item_Campaign).campaign_name";
             this.Item.AffiliateNameColumn.Expression = "Parent(FK_Item_Affiliate).name";
+            this.Item.AdvertiserNameColumn.Expression = "Parent(FK_Item_Campaign).AdvertiserName";
+            this.Campaign.AdvertiserNameColumn.Expression = "Parent(FK_Campaign_Advertiser).name";
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -638,9 +640,9 @@ namespace EomApp1.Screens.Extra {
             
             private global::System.Data.DataColumn columnAffiliateName;
             
-            private global::System.Data.DataColumn columnAdvertiserName;
-            
             private global::System.Data.DataColumn columnadvertiser_id;
+            
+            private global::System.Data.DataColumn columnAdvertiserName;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -838,17 +840,17 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn AdvertiserNameColumn {
+            public global::System.Data.DataColumn advertiser_idColumn {
                 get {
-                    return this.columnAdvertiserName;
+                    return this.columnadvertiser_id;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn advertiser_idColumn {
+            public global::System.Data.DataColumn AdvertiserNameColumn {
                 get {
-                    return this.columnadvertiser_id;
+                    return this.columnAdvertiserName;
                 }
             }
             
@@ -908,8 +910,8 @@ namespace EomApp1.Screens.Extra {
                         string SourceName, 
                         string CampaignName, 
                         string AffiliateName, 
-                        string AdvertiserName, 
-                        int advertiser_id) {
+                        int advertiser_id, 
+                        string AdvertiserName) {
                 ItemRow rowItemRow = ((ItemRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -931,8 +933,8 @@ namespace EomApp1.Screens.Extra {
                         SourceName,
                         CampaignName,
                         AffiliateName,
-                        AdvertiserName,
-                        advertiser_id};
+                        advertiser_id,
+                        AdvertiserName};
                 if ((parentCampaignRowByFK_Item_Campaign != null)) {
                     columnValuesArray[1] = parentCampaignRowByFK_Item_Campaign[5];
                 }
@@ -978,7 +980,6 @@ namespace EomApp1.Screens.Extra {
                         decimal margin, 
                         string name, 
                         string SourceName, 
-                        string AdvertiserName, 
                         int advertiser_id) {
                 ItemRow rowItemRow = ((ItemRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
@@ -1001,8 +1002,8 @@ namespace EomApp1.Screens.Extra {
                         SourceName,
                         null,
                         null,
-                        AdvertiserName,
-                        advertiser_id};
+                        advertiser_id,
+                        null};
                 if ((parentCampaignRowByFK_Item_Campaign != null)) {
                     columnValuesArray[1] = parentCampaignRowByFK_Item_Campaign[5];
                 }
@@ -1072,8 +1073,8 @@ namespace EomApp1.Screens.Extra {
                 this.columnSourceName = base.Columns["SourceName"];
                 this.columnCampaignName = base.Columns["CampaignName"];
                 this.columnAffiliateName = base.Columns["AffiliateName"];
-                this.columnAdvertiserName = base.Columns["AdvertiserName"];
                 this.columnadvertiser_id = base.Columns["advertiser_id"];
+                this.columnAdvertiserName = base.Columns["AdvertiserName"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1117,10 +1118,10 @@ namespace EomApp1.Screens.Extra {
                 base.Columns.Add(this.columnCampaignName);
                 this.columnAffiliateName = new global::System.Data.DataColumn("AffiliateName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnAffiliateName);
-                this.columnAdvertiserName = new global::System.Data.DataColumn("AdvertiserName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnAdvertiserName);
                 this.columnadvertiser_id = new global::System.Data.DataColumn("advertiser_id", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnadvertiser_id);
+                this.columnAdvertiserName = new global::System.Data.DataColumn("AdvertiserName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAdvertiserName);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnid}, true));
                 this.columnid.AutoIncrement = true;
@@ -1161,12 +1162,11 @@ namespace EomApp1.Screens.Extra {
                 this.columnSourceName.MaxLength = 50;
                 this.columnCampaignName.ReadOnly = true;
                 this.columnAffiliateName.ReadOnly = true;
-                this.columnAdvertiserName.AllowDBNull = false;
-                this.columnAdvertiserName.MaxLength = 50;
                 this.columnadvertiser_id.AutoIncrementSeed = -1;
                 this.columnadvertiser_id.AutoIncrementStep = -1;
                 this.columnadvertiser_id.AllowDBNull = false;
                 this.columnadvertiser_id.DefaultValue = ((int)(1));
+                this.columnAdvertiserName.ReadOnly = true;
                 this.ExtendedProperties.Add("Generator_RowClassName", "ItemRow");
                 this.ExtendedProperties.Add("Generator_RowEvArgName", "ItemRowChangeEvent");
                 this.ExtendedProperties.Add("Generator_RowEvHandlerName", "ItemRowChangeEventHandler");
@@ -1199,6 +1199,7 @@ namespace EomApp1.Screens.Extra {
             private void InitExpressions() {
                 this.CampaignNameColumn.Expression = "Parent(FK_Item_Campaign).campaign_name";
                 this.AffiliateNameColumn.Expression = "Parent(FK_Item_Affiliate).name";
+                this.AdvertiserNameColumn.Expression = "Parent(FK_Item_Campaign).AdvertiserName";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1708,12 +1709,23 @@ namespace EomApp1.Screens.Extra {
             
             private global::System.Data.DataColumn columncreated;
             
+            private global::System.Data.DataColumn columnAdvertiserName;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CampaignDataTable() {
+            public CampaignDataTable() : 
+                    this(false) {
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public CampaignDataTable(bool initExpressions) {
                 this.TableName = "Campaign";
                 this.BeginInit();
                 this.InitClass();
+                if ((initExpressions == true)) {
+                    this.InitExpressions();
+                }
                 this.EndInit();
             }
             
@@ -1823,6 +1835,14 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn AdvertiserNameColumn {
+                get {
+                    return this.columnAdvertiserName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1858,6 +1878,30 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public CampaignRow AddCampaignRow(int account_manager_id, int campaign_status_id, int ad_manager_id, AdvertiserRow parentAdvertiserRowByFK_Campaign_Advertiser, int pid, string campaign_name, string campaign_type, System.DateTime modified, System.DateTime created, string AdvertiserName) {
+                CampaignRow rowCampaignRow = ((CampaignRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        null,
+                        account_manager_id,
+                        campaign_status_id,
+                        ad_manager_id,
+                        null,
+                        pid,
+                        campaign_name,
+                        campaign_type,
+                        modified,
+                        created,
+                        AdvertiserName};
+                if ((parentAdvertiserRowByFK_Campaign_Advertiser != null)) {
+                    columnValuesArray[4] = parentAdvertiserRowByFK_Campaign_Advertiser[0];
+                }
+                rowCampaignRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowCampaignRow);
+                return rowCampaignRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CampaignRow AddCampaignRow(int account_manager_id, int campaign_status_id, int ad_manager_id, AdvertiserRow parentAdvertiserRowByFK_Campaign_Advertiser, int pid, string campaign_name, string campaign_type, System.DateTime modified, System.DateTime created) {
                 CampaignRow rowCampaignRow = ((CampaignRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
@@ -1870,7 +1914,8 @@ namespace EomApp1.Screens.Extra {
                         campaign_name,
                         campaign_type,
                         modified,
-                        created};
+                        created,
+                        null};
                 if ((parentAdvertiserRowByFK_Campaign_Advertiser != null)) {
                     columnValuesArray[4] = parentAdvertiserRowByFK_Campaign_Advertiser[0];
                 }
@@ -1913,6 +1958,7 @@ namespace EomApp1.Screens.Extra {
                 this.columncampaign_type = base.Columns["campaign_type"];
                 this.columnmodified = base.Columns["modified"];
                 this.columncreated = base.Columns["created"];
+                this.columnAdvertiserName = base.Columns["AdvertiserName"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1938,6 +1984,8 @@ namespace EomApp1.Screens.Extra {
                 base.Columns.Add(this.columnmodified);
                 this.columncreated = new global::System.Data.DataColumn("created", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncreated);
+                this.columnAdvertiserName = new global::System.Data.DataColumn("AdvertiserName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAdvertiserName);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnid}, true));
                 this.columnid.AutoIncrement = true;
@@ -1955,6 +2003,7 @@ namespace EomApp1.Screens.Extra {
                 this.columncampaign_name.MaxLength = 255;
                 this.columncampaign_type.AllowDBNull = false;
                 this.columncampaign_type.MaxLength = 3;
+                this.columnAdvertiserName.ReadOnly = true;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1973,6 +2022,12 @@ namespace EomApp1.Screens.Extra {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
                 return typeof(CampaignRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private void InitExpressions() {
+                this.AdvertiserNameColumn.Expression = "Parent(FK_Campaign_Advertiser).name";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3736,23 +3791,28 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string AdvertiserName {
-                get {
-                    return ((string)(this[this.tableItem.AdvertiserNameColumn]));
-                }
-                set {
-                    this[this.tableItem.AdvertiserNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int advertiser_id {
                 get {
                     return ((int)(this[this.tableItem.advertiser_idColumn]));
                 }
                 set {
                     this[this.tableItem.advertiser_idColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string AdvertiserName {
+                get {
+                    try {
+                        return ((string)(this[this.tableItem.AdvertiserNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AdvertiserName\' in table \'Item\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableItem.AdvertiserNameColumn] = value;
                 }
             }
             
@@ -3891,6 +3951,18 @@ namespace EomApp1.Screens.Extra {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetAffiliateNameNull() {
                 this[this.tableItem.AffiliateNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAdvertiserNameNull() {
+                return this.IsNull(this.tableItem.AdvertiserNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAdvertiserNameNull() {
+                this[this.tableItem.AdvertiserNameColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -4172,6 +4244,22 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string AdvertiserName {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaign.AdvertiserNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AdvertiserName\' in table \'Campaign\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaign.AdvertiserNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public AdvertiserRow AdvertiserRow {
                 get {
                     return ((AdvertiserRow)(this.GetParentRow(this.Table.ParentRelations["FK_Campaign_Advertiser"])));
@@ -4203,6 +4291,18 @@ namespace EomApp1.Screens.Extra {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetcreatedNull() {
                 this[this.tableCampaign.createdColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAdvertiserNameNull() {
+                return this.IsNull(this.tableCampaign.AdvertiserNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAdvertiserNameNull() {
+                this[this.tableCampaign.AdvertiserNameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4904,7 +5004,6 @@ namespace EomApp1.Screens.Extra.ExtraItemDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("margin", "margin");
             tableMapping.ColumnMappings.Add("name", "name");
             tableMapping.ColumnMappings.Add("SourceName", "SourceName");
-            tableMapping.ColumnMappings.Add("AdvertiserName", "AdvertiserName");
             tableMapping.ColumnMappings.Add("advertiser_id", "advertiser_id");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
@@ -4994,8 +5093,8 @@ SELECT id, pid, affid, source_id, unit_type_id, revenue_currency_id, cost_curren
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = @"SELECT        Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
-                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, Advertiser.name AS AdvertiserName, UnitType.name, 
-                         Source.name AS SourceName, Advertiser.id AS advertiser_id
+                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
+                         Advertiser.id AS advertiser_id
 FROM            Item INNER JOIN
                          Campaign ON Item.pid = Campaign.pid INNER JOIN
                          Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
@@ -5008,8 +5107,8 @@ WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (Item.item_reporting_status
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
             this._commandCollection[1].CommandText = @"SELECT        Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
-                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, Advertiser.name AS AdvertiserName, UnitType.name, 
-                         Source.name AS SourceName, Advertiser.id AS advertiser_id
+                         Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
+                         Advertiser.id AS advertiser_id
 FROM            Item INNER JOIN
                          Campaign ON Item.pid = Campaign.pid INNER JOIN
                          Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
@@ -5994,7 +6093,7 @@ ORDER BY Campaign.campaign_name";
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
         public virtual ExtraItemDataSet.CampaignDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            ExtraItemDataSet.CampaignDataTable dataTable = new ExtraItemDataSet.CampaignDataTable();
+            ExtraItemDataSet.CampaignDataTable dataTable = new ExtraItemDataSet.CampaignDataTable(true);
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -6030,7 +6129,7 @@ ORDER BY Campaign.campaign_name";
             else {
                 this.Adapter.SelectCommand.Parameters[0].Value = ((string)(_1));
             }
-            ExtraItemDataSet.CampaignDataTable dataTable = new ExtraItemDataSet.CampaignDataTable();
+            ExtraItemDataSet.CampaignDataTable dataTable = new ExtraItemDataSet.CampaignDataTable(true);
             this.Adapter.Fill(dataTable);
             return dataTable;
         }

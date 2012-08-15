@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtraItemsUserControl));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -42,10 +42,9 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             this.itemBindingNavigator = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
-            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.extraItems = new EomApp1.Screens.Extra.ExtraItemDataSet();
             this.bindingNavigatorCountItem = new System.Windows.Forms.ToolStripLabel();
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveFirstItem = new System.Windows.Forms.ToolStripButton();
@@ -58,9 +57,10 @@
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.itemBindingNavigatorSaveItem = new System.Windows.Forms.ToolStripButton();
             this.itemsGrid = new EomAppControls.ExtendedDataGridView();
-            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAdvertiser = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.advertiserBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.extraItems = new EomApp1.Screens.Extra.ExtraItemDataSet();
             this.colAdvertiserName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPublisher = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.affiliateBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -83,6 +83,8 @@
             this.dataGridViewTextBoxColumn13 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.itemReportingStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.itemBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sourceBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -97,15 +99,15 @@
             this.advertiserTableAdapter = new EomApp1.Screens.Extra.ExtraItemDataSetTableAdapters.AdvertiserTableAdapter();
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingNavigator)).BeginInit();
             this.itemBindingNavigator.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.extraItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemsGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.advertiserBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.extraItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.affiliateBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.unitTypeBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.currencyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemReportingStatusBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sourceBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -148,16 +150,6 @@
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
             this.bindingNavigatorAddNewItem.Text = "Add new";
-            // 
-            // itemBindingSource
-            // 
-            this.itemBindingSource.DataMember = "Item";
-            this.itemBindingSource.DataSource = this.extraItems;
-            // 
-            // extraItems
-            // 
-            this.extraItems.DataSetName = "DataSet1";
-            this.extraItems.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // bindingNavigatorCountItem
             // 
@@ -281,20 +273,6 @@
             this.itemsGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellDoubleClick);
             this.itemsGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellEndEdit);
             this.itemsGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.itemsGrid_ColumnHeaderMouseClick);
-            this.itemsGrid.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.itemsGrid_RowsRemoved);
-            // 
-            // colID
-            // 
-            this.colID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colID.DataPropertyName = "id";
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.colID.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colID.FillWeight = 80F;
-            this.colID.HeaderText = "id";
-            this.colID.Name = "colID";
-            this.colID.ReadOnly = true;
-            this.colID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.colID.Visible = false;
             // 
             // colAdvertiser
             // 
@@ -312,10 +290,28 @@
             this.colAdvertiser.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.colAdvertiser.ValueMember = "id";
             // 
+            // colID
+            // 
+            this.colID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colID.DataPropertyName = "id";
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.colID.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colID.FillWeight = 80F;
+            this.colID.HeaderText = "id";
+            this.colID.Name = "colID";
+            this.colID.ReadOnly = true;
+            this.colID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colID.Visible = false;
+            // 
             // advertiserBindingSource
             // 
             this.advertiserBindingSource.DataMember = "Advertiser";
             this.advertiserBindingSource.DataSource = this.extraItems;
+            // 
+            // extraItems
+            // 
+            this.extraItems.DataSetName = "DataSet1";
+            this.extraItems.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // colAdvertiserName
             // 
@@ -569,6 +565,23 @@
             this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
             this.dataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
+            // itemBindingSource
+            // 
+            this.itemBindingSource.DataMember = "Item";
+            this.itemBindingSource.DataSource = this.extraItems;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "AdvertiserName";
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle13;
+            this.dataGridViewTextBoxColumn1.FillWeight = 80F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "AdvertiserName";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
             // dataGridViewTextBoxColumn2
             // 
             this.dataGridViewTextBoxColumn2.DataPropertyName = "CampaignName";
@@ -649,15 +662,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.itemBindingNavigator)).EndInit();
             this.itemBindingNavigator.ResumeLayout(false);
             this.itemBindingNavigator.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.extraItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemsGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.advertiserBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.extraItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.affiliateBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.unitTypeBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.currencyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemReportingStatusBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.itemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sourceBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -719,5 +732,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn13;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
     }
 }

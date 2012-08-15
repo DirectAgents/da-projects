@@ -88,6 +88,7 @@ namespace EomApp1.Screens.Extra
             {
                 CheckValidCampaignForRow(e.RowIndex);
             }
+            this.itemFilter.Apply();
         }
 
         // See if the row's pid is valid based on the row's advertiser id. If not, give it a valid one.
@@ -218,12 +219,6 @@ namespace EomApp1.Screens.Extra
             {
                 MessageBox.Show("Editing is disabled while filters are active.", "Filters Active");
             }
-        }
-
-        private void itemsGrid_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
-        {
-            //if(this.itemFilter.EditedIds.Count > 0)
-            //    this.itemFilter.Apply();
         }
     }
 }
