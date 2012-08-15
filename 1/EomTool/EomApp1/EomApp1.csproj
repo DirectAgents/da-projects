@@ -1316,6 +1316,7 @@
     <Content Include="Misc\showxml.xslt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\editing.bmp" />
     <Content Include="Security\EomToolSecurity.edmx.sql" />
     <None Include="Service References\Cake.WebServices._4.Reports\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
