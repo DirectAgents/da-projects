@@ -41,10 +41,25 @@ namespace EomApp1.Screens.Extra
 
         private void itemsGrid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
+            if (
+                (
+                    e.ColumnIndex == colCampaign.Index ||
+                    e.ColumnIndex == colPublisher.Index ||
+                    e.ColumnIndex == colAdvertiser.Index
+                )
+            )
+            {
+                // Make sure the edited row is always displayed
+                var cell = itemsGrid[colID.Index, e.RowIndex];
+                int id = (int)cell.Value;
+                this.itemFilter.EditedIds.Add(id);
+            }
+
             if (e.ColumnIndex == colCampaign.Index && itemsGrid[colAdvertiser.Index, e.RowIndex].Value != null)
             {
                 DataGridViewComboBoxCell cell = (DataGridViewComboBoxCell)itemsGrid[e.ColumnIndex, e.RowIndex];
                 int advertiser_id = (int)itemsGrid[colAdvertiser.Index, e.RowIndex].Value;
+  
                 if (advertiser_id > 1)
                 {
                     cell.DataSource = campaignFilterBindingSource;
@@ -198,6 +213,12 @@ namespace EomApp1.Screens.Extra
             {
                 MessageBox.Show("Editing is disabled while filters are active.", "Filters Active");
             }
+        }
+
+        private void itemsGrid_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            if(this.itemFilter.EditedIds.Count > 0)
+                this.itemFilter.Apply();
         }
     }
 }

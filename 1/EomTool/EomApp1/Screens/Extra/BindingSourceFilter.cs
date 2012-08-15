@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System;
 
 namespace EomApp1.Screens.Extra
 {
@@ -20,15 +21,16 @@ namespace EomApp1.Screens.Extra
             else if (this.ColumnFilters.ContainsKey(columnName))
                 this.ColumnFilters.Remove(columnName);
 
-            ApplyFilter();
+            Apply();
         }
 
-        private void ApplyFilter()
+        public void Apply()
         {
             string filter = this.FilterText;
 
-            // if there is a filter, the datagridview is readonly to prevent magically disappearing rows
-            DataGridView.ReadOnly = !string.IsNullOrWhiteSpace(filter);
+            // This is commented out because the logic to remember edited IDs is in place - can be removed if it works..
+            //DataGridView.ReadOnly = !string.IsNullOrWhiteSpace(filter);
+
             this.BindingSource.Filter = filter;
         }
 
@@ -52,9 +54,18 @@ namespace EomApp1.Screens.Extra
 
                 string filter = sb.ToString();
 
-                // Never filter newly added rows
+                // Do not filter edited rows
+                string editedFilter = string.Empty;
+                if (this.EditedIds.Count > 0)
+                    editedFilter = "id=" + String.Join(" OR id=", this.EditedIds);
+
+                // Do not filter newly added rows
                 if (filter.Length > 0)
+                {
                     filter += " OR id < 0";
+                    if (editedFilter.Length > 0)
+                        filter += " OR " + editedFilter;
+                }
 
                 return filter;
             }
@@ -66,5 +77,12 @@ namespace EomApp1.Screens.Extra
         public Dictionary<string, string> ColumnFilters { get { return columnFilters; } }
 
         public DataGridView DataGridView { get; set; }
+
+        ISet<int> editedIds = new HashSet<int>();
+        public ISet<int> EditedIds
+        {
+            get { return editedIds; }
+            set { editedIds = value; }
+        }
     }
 }
