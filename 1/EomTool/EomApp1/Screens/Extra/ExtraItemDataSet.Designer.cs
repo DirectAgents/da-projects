@@ -1165,7 +1165,7 @@ namespace EomApp1.Screens.Extra {
                 this.columnadvertiser_id.AutoIncrementSeed = -1;
                 this.columnadvertiser_id.AutoIncrementStep = -1;
                 this.columnadvertiser_id.AllowDBNull = false;
-                this.columnadvertiser_id.DefaultValue = ((int)(1));
+                this.columnadvertiser_id.DefaultValue = ((int)(-1));
                 this.columnAdvertiserName.ReadOnly = true;
                 this.ExtendedProperties.Add("Generator_RowClassName", "ItemRow");
                 this.ExtendedProperties.Add("Generator_RowEvArgName", "ItemRowChangeEvent");
