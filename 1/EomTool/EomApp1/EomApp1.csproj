@@ -218,6 +218,15 @@
     <Compile Include="Screens\Affiliate\Forms\AffiliatesForm1.Designer.cs">
       <DependentUpon>AffiliatesForm1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Audit\CampaignFinailzationAuditBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Audit\CampaignFinalizationAudit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\Audit\CampaignFinalizationAudit.Designer.cs">
+      <DependentUpon>CampaignFinalizationAudit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Campaign\CampaignsRevenueDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -702,6 +711,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Advertiser2\Forms\AdvertisersForm.resx">
       <DependentUpon>AdvertisersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\Audit\CampaignFinalizationAudit.resx">
+      <DependentUpon>CampaignFinalizationAudit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\PublisherNameCombine\PublisherCombine.resx">
       <DependentUpon>PublisherCombine.cs</DependentUpon>

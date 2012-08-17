@@ -243,5 +243,10 @@ namespace EomApp1
         {
             LaunchForm<Screens.Wpf.Test>();
         }
+
+        private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchForm<Screens.Audit.CampaignFinalizationAudit>();
+        }
     }
 }

@@ -48,6 +48,8 @@
             this.currenciesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountingSheetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.verifiedRevenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.auditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.itemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.selectDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.securityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -193,7 +195,8 @@
             this.publisherReportsToolStripMenuItem,
             this.currenciesToolStripMenuItem,
             this.accountingSheetToolStripMenuItem1,
-            this.verifiedRevenueToolStripMenuItem});
+            this.verifiedRevenueToolStripMenuItem,
+            this.auditToolStripMenuItem});
             this.accountingToolStripMenuItem.Name = "accountingToolStripMenuItem";
             this.accountingToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.accountingToolStripMenuItem.Text = "Accounting";
@@ -229,6 +232,23 @@
             this.verifiedRevenueToolStripMenuItem.Tag = "Screens.VerifiedRevenue";
             this.verifiedRevenueToolStripMenuItem.Text = "Verified Revenue";
             this.verifiedRevenueToolStripMenuItem.Click += new System.EventHandler(this.finalizedRevenueToolStripMenuItem_Click);
+            // 
+            // auditToolStripMenuItem
+            // 
+            this.auditToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.itemsToolStripMenuItem});
+            this.auditToolStripMenuItem.Name = "auditToolStripMenuItem";
+            this.auditToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.auditToolStripMenuItem.Tag = "Screens.Audit";
+            this.auditToolStripMenuItem.Text = "Audit";
+            // 
+            // itemsToolStripMenuItem
+            // 
+            this.itemsToolStripMenuItem.Name = "itemsToolStripMenuItem";
+            this.itemsToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.itemsToolStripMenuItem.Tag = "Screens.Audit.Items";
+            this.itemsToolStripMenuItem.Text = "Campaign Finalization";
+            this.itemsToolStripMenuItem.Click += new System.EventHandler(this.itemsToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem1
             // 
@@ -419,6 +439,8 @@
         private System.Windows.Forms.ToolStripMenuItem revenueSummaryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem securityToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem auditToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem itemsToolStripMenuItem;
 
     }
 }
