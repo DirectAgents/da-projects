@@ -423,13 +423,13 @@
     <Compile Include="Screens\Settings\SecurityForm.Designer.cs">
       <DependentUpon>SecurityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Wpf\Test.cs">
+    <Compile Include="Misc\Wpf\Test.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Screens\Wpf\Test.Designer.cs">
+    <Compile Include="Misc\Wpf\Test.Designer.cs">
       <DependentUpon>Test.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Wpf\Utilities.cs" />
+    <Compile Include="Misc\Wpf\Utilities.cs" />
     <Compile Include="Security\User.cs" />
     <Compile Include="Security\EomToolSecurity.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -669,27 +669,27 @@
     <Compile Include="Screens\PubRep1\Forms\PubRep.Designer.cs">
       <DependentUpon>PubRep.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\ttt\GameBoardUserControl1.cs">
+    <Compile Include="Misc\ttt\GameBoardUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Screens\ttt\GameBoardUserControl1.Designer.cs">
+    <Compile Include="Misc\ttt\GameBoardUserControl1.Designer.cs">
       <DependentUpon>GameBoardUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\ttt\GameSquareUserControl1.cs">
+    <Compile Include="Misc\ttt\GameSquareUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Screens\ttt\GameSquareUserControl1.Designer.cs">
+    <Compile Include="Misc\ttt\GameSquareUserControl1.Designer.cs">
       <DependentUpon>GameSquareUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\ttt\TttDataClasses1.designer.cs">
+    <Compile Include="Misc\ttt\TttDataClasses1.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TttDataClasses1.dbml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\ttt\TttGameForm1.cs">
+    <Compile Include="Misc\ttt\TttGameForm1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Screens\ttt\TttGameForm1.Designer.cs">
+    <Compile Include="Misc\ttt\TttGameForm1.Designer.cs">
       <DependentUpon>TttGameForm1.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -739,7 +739,7 @@
     <EmbeddedResource Include="Screens\Synch\Controls\AffiliateSetup.resx">
       <DependentUpon>AffiliateSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Wpf\Test.resx">
+    <EmbeddedResource Include="Misc\Wpf\Test.resx">
       <DependentUpon>Test.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\AppFormBase.resx">
@@ -1102,16 +1102,16 @@
     <EmbeddedResource Include="Screens\Final\FinalizeForm1.resx">
       <DependentUpon>FinalizeForm1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\ttt\GameBoardUserControl1.resx">
+    <EmbeddedResource Include="Misc\ttt\GameBoardUserControl1.resx">
       <DependentUpon>GameBoardUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\ttt\GameSquareUserControl1.resx">
+    <EmbeddedResource Include="Misc\ttt\GameSquareUserControl1.resx">
       <DependentUpon>GameSquareUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Screens\ttt\TttDataClasses1.dbml.layout">
+    <None Include="Misc\ttt\TttDataClasses1.dbml.layout">
       <DependentUpon>TttDataClasses1.dbml</DependentUpon>
     </None>
-    <EmbeddedResource Include="Screens\ttt\TttGameForm1.resx">
+    <EmbeddedResource Include="Misc\ttt\TttGameForm1.resx">
       <DependentUpon>TttGameForm1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EOMForm.resx">
@@ -1152,7 +1152,7 @@
     <None Include="Screens\Final\FinalizeDataSet1.xss">
       <DependentUpon>FinalizeDataSet1.xsd</DependentUpon>
     </None>
-    <None Include="Screens\ttt\TttDataClasses1.dbml">
+    <None Include="Misc\ttt\TttDataClasses1.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>TttDataClasses1.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>

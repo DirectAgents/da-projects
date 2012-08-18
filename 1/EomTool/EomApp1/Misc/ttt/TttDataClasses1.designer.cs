@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EomApp1.Screens.ttt
+namespace EomApp1.Misc.ttt
 {
 	using System.Data.Linq;
 	using System.Data.Linq.Mapping;

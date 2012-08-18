@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Windows.Forms;
+using EomApp1.Misc.ttt;
 
 namespace EomApp1.Screens.ttt
 {
