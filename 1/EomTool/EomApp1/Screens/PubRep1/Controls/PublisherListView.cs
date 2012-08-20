@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,6 @@ using System.Windows.Forms;
 using EomApp1.Screens.PubRep1.Data;
 using EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters;
 using EomAppControls;
-using System.Drawing;
 
 namespace EomApp1.Screens.PubRep1.Controls
 {
@@ -17,46 +17,76 @@ namespace EomApp1.Screens.PubRep1.Controls
         Filter<string> _filter = new Filter<string>();
         bool _payMode;
         bool _allCampaignsMode;
-        StopClock _perf = new StopClock();
+        StopClock _stopClock = new StopClock();
         DateTime _timeOfLastKeyPress;
-
         public event PublisherSelected PublisherSelected;
         public event PayModeChanged PayModeChanged;
 
+        enum StatusChangeMode
+        {
+            Promote,
+            Demote
+        }
+
+        private Color LinkColor(StatusChangeMode mode)
+        {
+            return mode == StatusChangeMode.Promote ? Color.Blue : Color.Red;
+        }
+
+        // Status mode is based on the checked state of the Undo check box
+        private StatusChangeMode StatusMode
+        {
+            get { return this.undoCheckBox.Checked ? StatusChangeMode.Demote : StatusChangeMode.Promote; }
+        }
+
         public PublisherListView()
         {
-            _perf.Mark("begin constructor");
+            _stopClock.Mark("begin constructor");
             InitializeComponent();
-            _perf.Mark("end constructor");
+            _stopClock.Mark("end constructor");
         }
 
         public void Initialize()
         {
-            _perf.Mark("begin Form.Load");
+            _stopClock.Mark("begin Form.Load");
 
+            // Hide the unit of work view
             _itemsToChangeDGV.Visible = false;
 
-            pendingStatusUpdates1.DataGridView = _itemsToChangeDGV;
+            // Give the pending status updates component the datagridview so it can clear the selection when it needs to
+            pendingStatusUpdates.DataGridView = _itemsToChangeDGV;
 
+            // Hide the campaign status column (TODO: make sure this is the campaign ITEM status)
             CampaignStatusCol.Visible = false;
 
-            //_includeCampaignsDGV.Visible = false;
-            splitContainer3.Panel2Collapsed = true;
+            // Hide the right half of the top vertical splitter
+            _topVerticalSplitContainer.Panel2Collapsed = true;
 
+            // Hide the save button
             _paySaveButton.Visible = false;
 
-            totalDataGridViewTextBoxColumn.Visible = checkBox2.Checked;
+            // Hide the Undo check box
+            undoCheckBox.Visible = false;
 
-            netTermsCol.Visible = checkBox3.Checked;
+            // Visibility of Total column reflects state of Total checkbox
+            totalDataGridViewTextBoxColumn.Visible = _totalCheckBox.Checked;
+
+            // Visibility of net terms column reflects state of net terms check box
+            netTermsCol.Visible = netTermsCheckBox.Checked;
 
             ShowUnShowStatusCols();
 
+            // Set some misc grid properties
             _dgv.AllowUserToResizeRows = false;
             _dgv.MultiSelect = false;
             _dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             _dgv.RowHeadersVisible = true;
             _dgv.KeyPress += new KeyPressEventHandler(dataGridView1_KeyPress);
+
+            // Initialize the time of the last key press
             _timeOfLastKeyPress = DateTime.Now;
+
+            // Hook up to binding source position change event
             _bindingSource.PositionChanged += new EventHandler(BindingSource_PositionChanged);
 
             Fill();
@@ -66,13 +96,39 @@ namespace EomApp1.Screens.PubRep1.Controls
             cs.MaxHeight = 400;
             cs.Width = 150;
 
-            _perf.Mark("end Form.Load");
+            _stopClock.Mark("end Form.Load");
+        }
+
+        // The status columns reflect the state of the status check box
+        private void ShowUnShowStatusCols()
+        {
+            bool statusCheckBoxChecked = statusCheckBox.Checked;
+            unverifiedColumn.Visible = statusCheckBoxChecked;
+            verifiedColumn.Visible = statusCheckBoxChecked;
+            approvedColumn.Visible = statusCheckBoxChecked;
+
+            // The to be paid column is visible when the status columns are not and vice versa
+            toBePaidDataGridViewTextBoxColumn.Visible = !statusCheckBoxChecked;
+        }
+
+        void BindingSource_PositionChanged(object sender, EventArgs e)
+        {
+            if (_bindingSource.Current != null)
+            {
+                var dataRow = ((DataRowView)_bindingSource.Current).Row;
+                var row = (PublisherReportDataSet1.CampaignsPublisherReportSummaryRow)dataRow;
+                var publisher = row.Publisher;
+                if (PublisherSelected != null)
+                {
+                    PublisherSelected(publisher);
+                }
+            }
         }
 
         public void Fill()
         {
-            _perf.Mark("begin Fill");
-            _perf.Mark("begin FillByPublishersWithLineItemsOfVerifiedCampaigns");
+            _stopClock.Mark("begin Fill");
+            _stopClock.Mark("begin FillByPublishersWithLineItemsOfVerifiedCampaigns");
 
             if (_allCampaignsMode)
             {
@@ -88,7 +144,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             // only fetch rows representing publishers of verified campaigns
             _tableAdapter.FillByPublishersWithLineItemsOfVerifiedCampaigns(_dataSet.CampaignsPublisherReportSummary);
 
-            _perf.Mark("end FillByPublishersWithLineItemsOfVerifiedCampaigns");
+            _stopClock.Mark("end FillByPublishersWithLineItemsOfVerifiedCampaigns");
 
             // populate the currency filter list box
             foreach (var c in _dataSet.CampaignsPublisherReportSummary.Select(c => c.PayCurrency).Distinct())
@@ -104,55 +160,68 @@ namespace EomApp1.Screens.PubRep1.Controls
 
             UpdateCellTags();
 
-            _perf.Mark("end Fill");
+            _stopClock.Mark("end Fill");
         }
 
         private void UpdateCellTags()
         {
-            var canVerify = Security.User.Current.CanDoAccountingVerify;
-            var canApprove = Security.User.Current.CanDoAccountingApprove;
-            var canPay = Security.User.Current.CanDoAccountingPay;
+            bool canVerify = Security.User.Current.CanDoAccountingVerify;
+            bool canApprove = Security.User.Current.CanDoAccountingApprove;
+            bool canPay = Security.User.Current.CanDoAccountingPay;
+            bool canUnverify = canVerify;
+            bool canUnapprove = canApprove;
+            bool canUnpay = canPay;
+            bool promoting = (this.StatusMode == StatusChangeMode.Promote);
+            bool demoting = (this.StatusMode == StatusChangeMode.Demote);
 
+            verifiedColumn.LinkColor = LinkColor(this.StatusMode);
+            approvedColumn.LinkColor = LinkColor(this.StatusMode);
+
+            // Loop through all the rows
             foreach (DataGridViewRow dataGridViewRow in _dgv.Rows)
-            { 
-                var row = (PublisherReportDataSet1.CampaignsPublisherReportSummaryRow)
-                    ((DataRowView)dataGridViewRow.DataBoundItem).Row;
+            {
+                var row = (PublisherReportDataSet1.CampaignsPublisherReportSummaryRow)((DataRowView)dataGridViewRow.DataBoundItem).Row;
+                var unverifiedCell = _dgv[unverifiedColumn.Index, dataGridViewRow.Index];
+                var verifiedCell = _dgv[verifiedColumn.Index, dataGridViewRow.Index];
+                var approvedCell = _dgv[approvedColumn.Index, dataGridViewRow.Index];
+                var paidCell = _dgv[paidColumn.Index, dataGridViewRow.Index];
 
-                if (row.Unverified > 0 && canVerify)
+                // Verify
+                if (row.Unverified > 0 && promoting && canVerify)
+                    unverifiedCell.Tag = new Action(() => pendingStatusUpdates.Add(row.Publisher, "Unverified", "Verified", row.Unverified));
+
+                // Approve/Unverify
+                if (row.Verified > 0)
                 {
-                    _dgv[unverifiedColumn.Index, dataGridViewRow.Index].Tag = new Action(() =>
-                    {
-                        pendingStatusUpdates1.Add(row.Publisher, "Unverified", "Verified", row.Unverified);
-                    });
+                    string fromStatus = "Verified";
+                    string toStatus = (promoting && canApprove) ? "Approved" : (demoting && canUnverify) ? "Unverified" : null;
+                    if (toStatus != null)
+                        verifiedCell.Tag = new Action(() => pendingStatusUpdates.Add(row.Publisher, fromStatus, toStatus, row.Verified));
                 }
-                else
+
+                // Pay/Unapprove
+                if (row.Approved > 0)
                 {
+                    string fromStatus = "Approved";
+                    string toStatus = (promoting && canPay) ? "Paid" : (demoting && canUnpay) ? "Verified" : null;
+                    if (toStatus != null)
+                        approvedCell.Tag = new Action(() => pendingStatusUpdates.Add(row.Publisher, fromStatus, toStatus, row.Approved));
+                }
+
+                // Unpay
+                if (row.Paid > 0 && demoting && canUnpay)
+                {
+                    paidCell = EnableLinkCell(paidColumn.Index, dataGridViewRow.Index);
+                    paidCell.Tag = new Action(() => pendingStatusUpdates.Add(row.Publisher, "Paid", "Verified", row.Paid));
+                }
+
+                // Unlink cells without actions
+                if (unverifiedCell.Tag == null)
                     DisableLinkCell(unverifiedColumn.Index, dataGridViewRow.Index);
-                }
-
-                if (row.Verified > 0 && canApprove)
-                {
-                    _dgv[verifiedColumn.Index, dataGridViewRow.Index].Tag = new Action(() =>
-                    {
-                        pendingStatusUpdates1.Add(row.Publisher, "Verified", "Approved", row.Verified);
-                    });
-                }
-                else
-                {
+                if (verifiedCell.Tag == null)
                     DisableLinkCell(verifiedColumn.Index, dataGridViewRow.Index);
-                }
-
-                if (row.Approved > 0 && canPay)
-                {
-                    _dgv[approvedColumn.Index, dataGridViewRow.Index].Tag = new Action(() =>
-                    {
-                        pendingStatusUpdates1.Add(row.Publisher, "Approved", "Paid", row.Approved);
-                    });
-                }
-                else
-                {
+                if (approvedCell.Tag == null)
                     DisableLinkCell(approvedColumn.Index, dataGridViewRow.Index);
-                }
             }
         }
 
@@ -160,9 +229,20 @@ namespace EomApp1.Screens.PubRep1.Controls
         {
             var textCell = new DataGridViewTextBoxCell()
             {
-                Value = _dgv[colIndex, rowIndex].Value
+                Value = _dgv[colIndex, rowIndex].Value,
             };
             _dgv[colIndex, rowIndex] = textCell;
+        }
+
+        private DataGridViewLinkCell EnableLinkCell(int colIndex, int rowIndex)
+        {
+            var linkCell = new DataGridViewLinkCell()
+            {
+                Value = _dgv[colIndex, rowIndex].Value,
+                LinkColor = LinkColor(this.StatusMode)
+            };
+            _dgv[colIndex, rowIndex] = linkCell;
+            return linkCell;
         }
 
         public void ReFill()
@@ -216,17 +296,6 @@ namespace EomApp1.Screens.PubRep1.Controls
             }
 
             e.Handled = true;
-        }
-
-        void BindingSource_PositionChanged(object sender, EventArgs e)
-        {
-            if (_bindingSource.Current != null)
-            {
-                var drv = ((DataRowView)_bindingSource.Current).Row;
-                var r = (PublisherReportDataSet1.CampaignsPublisherReportSummaryRow)drv;
-                var p = r.Publisher;
-                PublisherSelected(p);
-            }
         }
 
         void publisherFilterTextBox_TextChanged(object sender, EventArgs e)
@@ -286,16 +355,11 @@ namespace EomApp1.Screens.PubRep1.Controls
 
         private void listBox1_SelectedIndexChanged_netterms(object sender, EventArgs e)
         {
-            var lb = (ListBox)sender;
-            string[] selected = lb.GetSelectedStrings();
-            _filter.Add((string)lb.Tag, selected);
+            var listBox = (ListBox)sender;
+            string[] selectedStrings = listBox.GetSelectedStrings();
+            _filter.Add((string)listBox.Tag, selectedStrings);
             _bindingSource.Filter = _filter.ToString();
-
-            string filter = (selected.Length != 1 ? "%" : selected[0]);
-
-            //campaignsPublisherReportSummarySummaryByNetTermsTableAdapter.Fill(
-            //    _dataSet.CampaignsPublisherReportSummarySummaryByNetTerms, filter);
-
+            string filter = (selectedStrings.Length != 1 ? "%" : selectedStrings[0]);
             if (_allCampaignsMode)
             {
                 campaignsPublisherReportSummarySummaryByNetTermsTableAdapter.FillByAllRevenue(_dataSet.CampaignsPublisherReportSummarySummaryByNetTerms, filter);
@@ -304,10 +368,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             {
                 campaignsPublisherReportSummarySummaryByNetTermsTableAdapter.Fill(_dataSet.CampaignsPublisherReportSummarySummaryByNetTerms, filter);
             }
-
-            UpdateCellTags(); // TODO: move this call to an event that occurs when the table adapter is filled?
-            // NOTE: if using DI container, could contral the table adapter class, and put an override of Fill?
-
+            UpdateCellTags();
             _summaryDGV.ClearSelection();
         }
 
@@ -336,9 +397,10 @@ namespace EomApp1.Screens.PubRep1.Controls
             _itemsToChangeDGV.Visible = _payMode;
             splitContainer2.Panel1Collapsed = _payMode;
             _paySaveButton.Visible = _payMode;
-            
+            undoCheckBox.Visible = _payMode;
+
             //_includeCampaignsDGV.Visible = false;
-            splitContainer3.Panel2Collapsed = true;
+            _topVerticalSplitContainer.Panel2Collapsed = true;
 
             //_bindingSource.ResetBindings(false);
 
@@ -361,20 +423,19 @@ namespace EomApp1.Screens.PubRep1.Controls
             }
             else if (e.ColumnIndex == approvedColumn.Index
                 || e.ColumnIndex == unverifiedColumn.Index
-                || e.ColumnIndex == verifiedColumn.Index)
+                || e.ColumnIndex == verifiedColumn.Index
+                || e.ColumnIndex == paidColumn.Index)
             {
-                object tag = dataGridView[columnIndex, rowIndex].Tag;
-                if (tag is Action)
-                {
-                    ((Action)tag)();
-                }
+                var action = dataGridView[columnIndex, rowIndex].Tag as Action;
+                if (action != null)
+                    action();
             }
         }
 
         // Save pending changes
         private void button1_Click(object sender, EventArgs e)
         {
-            pendingStatusUpdates1.Save(string.Join(",", ExcludedItemIDs));
+            pendingStatusUpdates.Save(string.Join(",", ExcludedItemIDs));
             _paySaveButton.Enabled = false;
             ReFill();
         }
@@ -406,9 +467,9 @@ namespace EomApp1.Screens.PubRep1.Controls
         {
             if (e.ColumnIndex == ItemIDs.Index) // The link column containing item IDs has been clicked
             {
-                if (splitContainer3.Panel2Collapsed != false)
+                if (_topVerticalSplitContainer.Panel2Collapsed != false)
                 {
-                    splitContainer3.Panel2Collapsed = false;
+                    _topVerticalSplitContainer.Panel2Collapsed = false;
                 }
                 var dt = new DataTable("CampaignsForItems");
                 var included = dt.Columns.Add("Included");
@@ -454,25 +515,24 @@ namespace EomApp1.Screens.PubRep1.Controls
             ShowUnShowStatusCols();
         }
 
-        private void ShowUnShowStatusCols()
-        {
-            bool b = checkBox1.Checked;
-            unverifiedColumn.Visible = b;
-            verifiedColumn.Visible = b;
-            approvedColumn.Visible = b;
-            toBePaidDataGridViewTextBoxColumn.Visible = !b;
-        }
-
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            totalDataGridViewTextBoxColumn.Visible = checkBox2.Checked;
+            totalDataGridViewTextBoxColumn.Visible = _totalCheckBox.Checked;
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            netTermsCol.Visible = checkBox3.Checked;
+            netTermsCol.Visible = netTermsCheckBox.Checked;
+        }
+
+        private void undoCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            ReFill();
         }
     }
+
+    public delegate void PublisherSelected(string publisher);
+    public delegate void PayModeChanged(bool payMode);
 
     public class Filter<T> : Dictionary<T, T[]>
     {
@@ -507,17 +567,13 @@ namespace EomApp1.Screens.PubRep1.Controls
     {
         public static string[] GetSelectedStrings(this ListBox lb)
         {
-            return 
+            return
                 (lb.SelectedIndices.Cast<int>()
                     .Select(c => lb.Items[c]))
                         .Cast<string>().ToArray();
         }
     }
 
-    public delegate void PublisherSelected(string publisher);
-    public delegate void PayModeChanged(bool payMode);
-
-    
     class StopClock
     {
         class Stop
@@ -555,21 +611,6 @@ namespace EomApp1.Screens.PubRep1.Controls
                 lb.Items.Add(s);
             }
             f.ShowDialog();
-        }
-    }
-
-    public class WatchableBool
-    {
-        private bool _value;
-
-        public WatchableBool(bool b)
-        {
-            _value = b;
-        }
-
-        static public implicit operator bool(WatchableBool wb)
-        {
-            return wb._value;
         }
     }
 }

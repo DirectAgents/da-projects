@@ -32,11 +32,11 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.lastRefreshTimeStatusValue = new System.Windows.Forms.ToolStripStatusLabel();
             this.publisherListView1 = new EomApp1.Screens.PubRep1.Controls.PublisherListView();
             this.pubReport1 = new EomApp1.Screens.PubRep1.Controls.Report2();
             this.accountingView1 = new EomApp1.Screens.PubRep1.Controls.AccountingView();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lastRefreshTimeStatusValue = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -110,30 +110,11 @@
             this.toolStripButton1.Text = "toolStripButton1";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.BackColor = System.Drawing.SystemColors.Info;
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lastRefreshTimeStatusValue});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 663);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1099, 24);
-            this.statusStrip1.TabIndex = 2;
-            // 
-            // lastRefreshTimeStatusValue
-            // 
-            this.lastRefreshTimeStatusValue.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.lastRefreshTimeStatusValue.Name = "lastRefreshTimeStatusValue";
-            this.lastRefreshTimeStatusValue.Size = new System.Drawing.Size(85, 19);
-            this.lastRefreshTimeStatusValue.Text = "Refresh Status";
-            // 
             // publisherListView1
             // 
-            this.publisherListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.publisherListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.publisherListView1.Location = new System.Drawing.Point(0, 0);
             this.publisherListView1.Margin = new System.Windows.Forms.Padding(0);
             this.publisherListView1.Name = "publisherListView1";
@@ -159,6 +140,25 @@
             this.accountingView1.Name = "accountingView1";
             this.accountingView1.Size = new System.Drawing.Size(1099, 156);
             this.accountingView1.TabIndex = 2;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.BackColor = System.Drawing.SystemColors.Info;
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lastRefreshTimeStatusValue});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 663);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1099, 24);
+            this.statusStrip1.TabIndex = 2;
+            // 
+            // lastRefreshTimeStatusValue
+            // 
+            this.lastRefreshTimeStatusValue.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.lastRefreshTimeStatusValue.Name = "lastRefreshTimeStatusValue";
+            this.lastRefreshTimeStatusValue.Size = new System.Drawing.Size(85, 19);
+            this.lastRefreshTimeStatusValue.Text = "Refresh Status";
             // 
             // PubRep
             // 

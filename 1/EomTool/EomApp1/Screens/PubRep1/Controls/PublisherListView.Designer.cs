@@ -88,7 +88,7 @@
             this.gBPDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.aUDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.publisherRepSummaryTotalsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this._topVerticalSplitContainer = new System.Windows.Forms.SplitContainer();
             this._itemsToChangeDGV = new System.Windows.Forms.DataGridView();
             this.publisherDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.fromStatusDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -97,17 +97,18 @@
             this.amountDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Saved = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemIDs = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.pendingStatusUpdates1 = new EomApp1.Screens.PubRep1.Components.PendingStatusUpdates(this.components);
+            this.pendingStatusUpdates = new EomApp1.Screens.PubRep1.Components.PendingStatusUpdates(this.components);
             this._includeCampaignsDGV = new System.Windows.Forms.DataGridView();
             this.IncludeCampaignCol = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.CampaignColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.undoCheckBox = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this._paySaveButton = new System.Windows.Forms.Button();
             this._payModeCheckBox = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.netTermsCheckBox = new System.Windows.Forms.CheckBox();
+            this.statusCheckBox = new System.Windows.Forms.CheckBox();
+            this._totalCheckBox = new System.Windows.Forms.CheckBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.publisherFilterTextBox = new System.Windows.Forms.ToolStripTextBox();
@@ -140,10 +141,10 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._summaryDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.publisherRepSummaryTotalsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._topVerticalSplitContainer)).BeginInit();
+            this._topVerticalSplitContainer.Panel1.SuspendLayout();
+            this._topVerticalSplitContainer.Panel2.SuspendLayout();
+            this._topVerticalSplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._itemsToChangeDGV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this._includeCampaignsDGV)).BeginInit();
             this.panel2.SuspendLayout();
@@ -154,9 +155,9 @@
             // 
             this._dgv.AllowUserToAddRows = false;
             this._dgv.AllowUserToDeleteRows = false;
-            this._dgv.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._dgv.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._dgv.AutoGenerateColumns = false;
             this._dgv.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._dgv.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
@@ -434,7 +435,7 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
+            this.splitContainer2.Panel2.Controls.Add(this._topVerticalSplitContainer);
             this.splitContainer2.Size = new System.Drawing.Size(1412, 150);
             this.splitContainer2.SplitterDistance = 473;
             this.splitContainer2.TabIndex = 6;
@@ -596,27 +597,26 @@
             this.publisherRepSummaryTotalsBindingSource.DataMember = "CampaignsPublisherReportSummarySummaryByNetTerms";
             this.publisherRepSummaryTotalsBindingSource.DataSource = this._dataSet;
             // 
-            // splitContainer3
+            // _topVerticalSplitContainer
             // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
+            this._topVerticalSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._topVerticalSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this._topVerticalSplitContainer.Name = "_topVerticalSplitContainer";
             // 
-            // splitContainer3.Panel1
+            // _topVerticalSplitContainer.Panel1
             // 
-            this.splitContainer3.Panel1.Controls.Add(this._itemsToChangeDGV);
+            this._topVerticalSplitContainer.Panel1.Controls.Add(this._itemsToChangeDGV);
             // 
-            // splitContainer3.Panel2
+            // _topVerticalSplitContainer.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this._includeCampaignsDGV);
-            this.splitContainer3.Size = new System.Drawing.Size(935, 150);
-            this.splitContainer3.SplitterDistance = 569;
-            this.splitContainer3.TabIndex = 7;
+            this._topVerticalSplitContainer.Panel2.Controls.Add(this._includeCampaignsDGV);
+            this._topVerticalSplitContainer.Size = new System.Drawing.Size(935, 150);
+            this._topVerticalSplitContainer.SplitterDistance = 569;
+            this._topVerticalSplitContainer.TabIndex = 7;
             // 
             // _itemsToChangeDGV
             // 
             this._itemsToChangeDGV.AllowUserToAddRows = false;
-            this._itemsToChangeDGV.AllowUserToDeleteRows = false;
             this._itemsToChangeDGV.AutoGenerateColumns = false;
             this._itemsToChangeDGV.BackgroundColor = System.Drawing.SystemColors.Window;
             this._itemsToChangeDGV.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -639,7 +639,7 @@
             this.amountDataGridViewTextBoxColumn,
             this.Saved,
             this.ItemIDs});
-            this._itemsToChangeDGV.DataSource = this.pendingStatusUpdates1;
+            this._itemsToChangeDGV.DataSource = this.pendingStatusUpdates;
             dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -656,6 +656,7 @@
             this._itemsToChangeDGV.ReadOnly = true;
             this._itemsToChangeDGV.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this._itemsToChangeDGV.RowHeadersVisible = false;
+            this._itemsToChangeDGV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this._itemsToChangeDGV.Size = new System.Drawing.Size(569, 150);
             this._itemsToChangeDGV.TabIndex = 5;
             this._itemsToChangeDGV.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this._itemsToChangeDGV_CellContentClick);
@@ -718,9 +719,9 @@
             this.ItemIDs.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.ItemIDs.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
-            // pendingStatusUpdates1
+            // pendingStatusUpdates
             // 
-            this.pendingStatusUpdates1.DataGridView = null;
+            this.pendingStatusUpdates.DataGridView = null;
             // 
             // _includeCampaignsDGV
             // 
@@ -755,18 +756,32 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.panel2.Controls.Add(this.undoCheckBox);
             this.panel2.Controls.Add(this.checkBox4);
             this.panel2.Controls.Add(this._paySaveButton);
             this.panel2.Controls.Add(this._payModeCheckBox);
-            this.panel2.Controls.Add(this.checkBox3);
-            this.panel2.Controls.Add(this.checkBox1);
-            this.panel2.Controls.Add(this.checkBox2);
+            this.panel2.Controls.Add(this.netTermsCheckBox);
+            this.panel2.Controls.Add(this.statusCheckBox);
+            this.panel2.Controls.Add(this._totalCheckBox);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.panel2.Size = new System.Drawing.Size(1412, 22);
             this.panel2.TabIndex = 1;
+            // 
+            // undoCheckBox
+            // 
+            this.undoCheckBox.AutoSize = true;
+            this.undoCheckBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.undoCheckBox.Location = new System.Drawing.Point(135, 0);
+            this.undoCheckBox.Name = "undoCheckBox";
+            this.undoCheckBox.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.undoCheckBox.Size = new System.Drawing.Size(62, 22);
+            this.undoCheckBox.TabIndex = 11;
+            this.undoCheckBox.Text = "Undo";
+            this.undoCheckBox.UseVisualStyleBackColor = true;
+            this.undoCheckBox.CheckedChanged += new System.EventHandler(this.undoCheckBox_CheckedChanged);
             // 
             // checkBox4
             // 
@@ -803,41 +818,41 @@
             this._payModeCheckBox.UseVisualStyleBackColor = true;
             this._payModeCheckBox.CheckedChanged += new System.EventHandler(this._payModeCheckBox_CheckedChanged);
             // 
-            // checkBox3
+            // netTermsCheckBox
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.checkBox3.Location = new System.Drawing.Point(1231, 0);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(75, 22);
-            this.checkBox3.TabIndex = 9;
-            this.checkBox3.Text = "Net Terms";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            this.netTermsCheckBox.AutoSize = true;
+            this.netTermsCheckBox.Dock = System.Windows.Forms.DockStyle.Right;
+            this.netTermsCheckBox.Location = new System.Drawing.Point(1231, 0);
+            this.netTermsCheckBox.Name = "netTermsCheckBox";
+            this.netTermsCheckBox.Size = new System.Drawing.Size(75, 22);
+            this.netTermsCheckBox.TabIndex = 9;
+            this.netTermsCheckBox.Text = "Net Terms";
+            this.netTermsCheckBox.UseVisualStyleBackColor = true;
+            this.netTermsCheckBox.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
-            // checkBox1
+            // statusCheckBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.checkBox1.Location = new System.Drawing.Point(1306, 0);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(56, 22);
-            this.checkBox1.TabIndex = 7;
-            this.checkBox1.Text = "Status";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.statusCheckBox.AutoSize = true;
+            this.statusCheckBox.Dock = System.Windows.Forms.DockStyle.Right;
+            this.statusCheckBox.Location = new System.Drawing.Point(1306, 0);
+            this.statusCheckBox.Name = "statusCheckBox";
+            this.statusCheckBox.Size = new System.Drawing.Size(56, 22);
+            this.statusCheckBox.TabIndex = 7;
+            this.statusCheckBox.Text = "Status";
+            this.statusCheckBox.UseVisualStyleBackColor = true;
+            this.statusCheckBox.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // checkBox2
+            // _totalCheckBox
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.checkBox2.Location = new System.Drawing.Point(1362, 0);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(50, 22);
-            this.checkBox2.TabIndex = 8;
-            this.checkBox2.Text = "Total";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this._totalCheckBox.AutoSize = true;
+            this._totalCheckBox.Dock = System.Windows.Forms.DockStyle.Right;
+            this._totalCheckBox.Location = new System.Drawing.Point(1362, 0);
+            this._totalCheckBox.Name = "_totalCheckBox";
+            this._totalCheckBox.Size = new System.Drawing.Size(50, 22);
+            this._totalCheckBox.TabIndex = 8;
+            this._totalCheckBox.Text = "Total";
+            this._totalCheckBox.UseVisualStyleBackColor = true;
+            this._totalCheckBox.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // menuStrip1
             // 
@@ -1007,10 +1022,10 @@
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._summaryDGV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.publisherRepSummaryTotalsBindingSource)).EndInit();
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
+            this._topVerticalSplitContainer.Panel1.ResumeLayout(false);
+            this._topVerticalSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this._topVerticalSplitContainer)).EndInit();
+            this._topVerticalSplitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._itemsToChangeDGV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this._includeCampaignsDGV)).EndInit();
             this.panel2.ResumeLayout(false);
@@ -1057,10 +1072,10 @@
         private System.Windows.Forms.CheckBox _payModeCheckBox;
         private System.Windows.Forms.DataGridView _itemsToChangeDGV;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private Components.PendingStatusUpdates pendingStatusUpdates1;
+        private Components.PendingStatusUpdates pendingStatusUpdates;
         private System.Windows.Forms.Button _paySaveButton;
         private System.Windows.Forms.CheckBox _allRevenueCheckBox;
-        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.SplitContainer _topVerticalSplitContainer;
         private System.Windows.Forms.DataGridView _includeCampaignsDGV;
         private System.Windows.Forms.DataGridViewCheckBoxColumn IncludeCampaignCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn CampaignColumn;
@@ -1071,9 +1086,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn amountDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Saved;
         private System.Windows.Forms.DataGridViewLinkColumn ItemIDs;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox statusCheckBox;
+        private System.Windows.Forms.CheckBox _totalCheckBox;
+        private System.Windows.Forms.CheckBox netTermsCheckBox;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataGridViewTextBoxColumn CampaignStatusCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn publisherDataGridViewTextBoxColumn;
@@ -1089,5 +1104,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn paidColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn totalDataGridViewTextBoxColumn;
         private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox undoCheckBox;
     }
 }

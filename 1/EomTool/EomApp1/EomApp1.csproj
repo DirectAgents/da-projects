@@ -388,13 +388,6 @@
     <Compile Include="Screens\PubRep1\Controls\CampaignsForIDs.Designer.cs">
       <DependentUpon>CampaignsForIDs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PercentageColorPicker.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PercentageColorPicker.Designer.cs">
-      <DependentUpon>PercentageColorPicker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PublisherDetails.cs" />
     <Compile Include="Screens\PubRep1\Controls\PublisherListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -650,12 +643,6 @@
     <Compile Include="Screens\PubRep1\Controls\LineItems.Designer.cs">
       <DependentUpon>LineItems.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\PubRep1\Controls\Publishers.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\PubRep1\Controls\Publishers.Designer.cs">
-      <DependentUpon>Publishers.cs</DependentUpon>
-    </Compile>
     <Compile Include="Screens\PubRep1\Controls\Report.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -876,9 +863,6 @@
     <EmbeddedResource Include="Screens\PubRep1\Controls\CampaignsForIDs.resx">
       <DependentUpon>CampaignsForIDs.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\PubRep1\Controls\PercentageColorPicker.resx">
-      <DependentUpon>PercentageColorPicker.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\PubRep1\Controls\PublisherListView.resx">
       <DependentUpon>PublisherListView.cs</DependentUpon>
     </EmbeddedResource>
@@ -1030,9 +1014,6 @@
     </None>
     <EmbeddedResource Include="Screens\PubRep1\Controls\LineItems.resx">
       <DependentUpon>LineItems.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\PubRep1\Controls\Publishers.resx">
-      <DependentUpon>Publishers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\PubRep1\Controls\Report.resx">
       <DependentUpon>Report.cs</DependentUpon>

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace EomApp1.Screens.PubRep1.Components
 {
     public partial class PendingStatusUpdates : Component, IListSource
-    { 
+    {
         public PendingStatusUpdates()
         {
             InitializeComponent();
@@ -34,8 +34,12 @@ namespace EomApp1.Screens.PubRep1.Components
 
         #endregion
 
-        public void Add(string publisher, string from, string to, decimal amount)
+        public void Add(string publisher, string fromStatus, string toStatus, decimal amount)
         {
+            var existing = publisherReportDataSet11.StatusChangeAction.Where(c => c.Publisher == publisher && c.Amount == amount);
+            foreach (var item in existing.ToList())
+                item.Delete();
+
             // maps name of status in the app to name of status in the DB
             //6	Approved
             //4	Check Cut
@@ -53,24 +57,19 @@ namespace EomApp1.Screens.PubRep1.Components
                 {"Paid", "Check Signed and Paid"},              
             };
 
-            var o = itemIDsForStatusChangeTableAdapter1.GetData(publisher, map[from], "Verified");
+            // This query ensures that only verified item IDs are changed
+            var o = itemIDsForStatusChangeTableAdapter1.GetData(publisher, map[fromStatus], "Verified");
 
             if (o.Count != 1)
             {
                 throw new Exception("expecting one row");
             }
 
-            publisherReportDataSet11.StatusChangeAction.AddStatusChangeActionRow(
-                publisher, 
-                from, 
-                to, 
-                amount,
-                o.First().ItemIDs,
-                "-", // Saved
-                "-" // By
-                );
-
-            DataGridView.ClearSelection();
+            if (!publisherReportDataSet11.StatusChangeAction.Any(c => c.Publisher == publisher && c.FromStatus == fromStatus && c.ToStatus == toStatus && c.Amount == amount))
+            {
+                publisherReportDataSet11.StatusChangeAction.AddStatusChangeActionRow(publisher, fromStatus, toStatus, amount, o.First().ItemIDs, "-", "-");
+                DataGridView.ClearSelection();
+            }
         }
 
         public void Save(string excludedItemIDs)
@@ -95,17 +94,17 @@ namespace EomApp1.Screens.PubRep1.Components
                 if (item.Saved == "-")
                 {
                     int to = map[item.ToStatus];
-                    
+
                     string query;
 
-                    if(string.IsNullOrEmpty(excludedItemIDs))
+                    if (string.IsNullOrEmpty(excludedItemIDs))
                     {
-                         query = 
-                            @"update Item set item_accounting_status_id={0} where id in (" + item.ItemIDs + ")";
+                        query =
+                           @"update Item set item_accounting_status_id={0} where id in (" + item.ItemIDs + ")";
                     }
                     else
                     {
-                        query = 
+                        query =
                             @"update Item set item_accounting_status_id={0} where id in (" + item.ItemIDs + ")" +
                             @" and not id in (" + excludedItemIDs + ")";
                     }
@@ -126,6 +125,23 @@ namespace EomApp1.Screens.PubRep1.Components
                         item.EndEdit();
                     }
                 }
+            }
+        }
+
+        static private LinkedList<string> _StatusList = null;
+        static private LinkedList<string> StatusList
+        {
+            get
+            {
+                if (_StatusList == null)
+                {
+                    _StatusList = new LinkedList<string>();
+                    _StatusList.AddLast("Unverified");
+                    _StatusList.AddLast("Verified");
+                    _StatusList.AddLast("Approved");
+                    _StatusList.AddLast("Paid");
+                }
+                return _StatusList;
             }
         }
 
