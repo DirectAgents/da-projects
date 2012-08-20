@@ -1,5 +1,5 @@
 
-USE AdventureWorks2008  -- edit for your database
+USE DADatabaseJuly2012  -- edit for your database
 
 /* 
 Please read completely and test on your database.
