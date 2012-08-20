@@ -212,7 +212,7 @@ namespace EomApp1.Screens.PubRep1.Controls
                 if (row.Paid > 0 && demoting && canUnpay)
                 {
                     paidCell = EnableLinkCell(paidColumn.Index, dataGridViewRow.Index);
-                    paidCell.Tag = new Action(() => pendingStatusUpdates.Add(row.Publisher, "Paid", "Verified", row.Paid));
+                    paidCell.Tag = new Action(() => pendingStatusUpdates.Add(row.Publisher, "Paid", "Approved", row.Paid));
                 }
 
                 // Unlink cells without actions
@@ -239,7 +239,8 @@ namespace EomApp1.Screens.PubRep1.Controls
             var linkCell = new DataGridViewLinkCell()
             {
                 Value = _dgv[colIndex, rowIndex].Value,
-                LinkColor = LinkColor(this.StatusMode)
+                LinkColor = LinkColor(this.StatusMode),
+                LinkBehavior = LinkBehavior.NeverUnderline
             };
             _dgv[colIndex, rowIndex] = linkCell;
             return linkCell;
