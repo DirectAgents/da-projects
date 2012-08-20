@@ -1,5 +1,4 @@
-use July2012Test2
-go
+USE DADatabaseJuly2012
 
 DECLARE @RC int
 DECLARE @SchemaName sysname
@@ -16,7 +15,7 @@ set @LogSQL = 0
 set @BaseTableDDL = 0
 set @LogInsert = 1
 
-EXECUTE @RC = July2012Test2.[dbo].[pAutoAudit] 
+EXECUTE @RC = dbo.[pAutoAudit] 
    @SchemaName
   ,@TableName
   ,@StrictUserContext

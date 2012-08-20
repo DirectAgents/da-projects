@@ -1,4 +1,7 @@
-CREATE VIEW [dbo].[ItemAudit]
+USE DADatabaseJuly2012
+GO
+
+CREATE VIEW [dbo].[CampaignFinalizationAudit]
 AS
 SELECT     TOP (100) PERCENT dbo.Campaign.campaign_name AS Campaign, dbo.CampaignStatus.name AS [From], CampaignStatus_1.name AS [To], 
                       dbo.Audit.SysUser AS [User], CONVERT(varchar, dbo.Audit.AuditDate, 101) AS Date, CONVERT(varchar, dbo.Audit.AuditDate, 108) AS Time
