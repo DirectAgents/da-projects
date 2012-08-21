@@ -24,9 +24,21 @@ namespace EomApp1
             return source.Any(c => c.ToUpper() == toCheckUpper);
         }
 
-        public static string[] ToArray(this string s, params char [] seps)
+        public static string[] ToArray(this string s, params char[] seps)
         {
-            return s.Split(seps, StringSplitOptions.RemoveEmptyEntries);
+            return s.Split(seps.Length > 0 ? seps : new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static T[] ToArray<T>(this string s, params char[] seps)
+        {
+            if (typeof(T) == typeof(int))
+            {
+                return s.Split(seps.Length > 0 ? seps : new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                            .Select(id => int.Parse(id))
+                            .Cast<T>()
+                            .ToArray();
+            }
+            else throw new Exception("cannot convert to " + typeof(T).Name);
         }
 
         public static IEnumerable<ToolStripItem> DisabledMenus(this MenuStrip menuStrip)

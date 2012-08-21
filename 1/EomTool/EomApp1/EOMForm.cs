@@ -174,8 +174,10 @@ namespace EomApp1
         // Accounting AccountingSheet
         private void accountingSheetToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var a = new Screens.Accounting.Forms.AccountingSheetForm();
-            a.Show();
+            //var a = new Screens.Accounting.Forms.AccountingSheetForm();
+            //a.Show();
+
+            LaunchForm<Screens.Accounting.Forms.AccountingSheet2>();
         }
 
         // Campaigns Notes
