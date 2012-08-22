@@ -68,7 +68,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>EomApp1.Program</StartupObject>
@@ -128,12 +128,6 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Extensions.cs" />
-    <Compile Include="Screens\Accounting\Controls\AccountingSheet.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\Accounting\Controls\AccountingSheet.Designer.cs">
-      <DependentUpon>AccountingSheet.cs</DependentUpon>
-    </Compile>
     <Compile Include="Screens\Accounting\Controls\Currencies.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -178,23 +172,11 @@
     <Compile Include="Screens\Accounting\Forms\AccountingSheet2Base.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Screens\Accounting\Forms\AccountingSheetForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Accounting\Forms\AccountingSheetForm.Designer.cs">
-      <DependentUpon>AccountingSheetForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Screens\Accounting\Forms\CurrencyForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Screens\Accounting\Forms\CurrencyForm.Designer.cs">
       <DependentUpon>CurrencyForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Accounting\Forms\UnitCountsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Accounting\Forms\UnitCountsForm.Designer.cs">
-      <DependentUpon>UnitCountsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Advertiser2\Controls\Advertisers2Control.cs">
       <SubType>UserControl</SubType>
@@ -828,23 +810,14 @@
     <None Include="Screens\Affiliate\Data\AffilaiteDataClasses1.dbml.layout">
       <DependentUpon>AffilaiteDataClasses1.dbml</DependentUpon>
     </None>
-    <EmbeddedResource Include="Screens\Accounting\Controls\AccountingSheet.resx">
-      <DependentUpon>AccountingSheet.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Accounting\Controls\Currencies.resx">
       <DependentUpon>Currencies.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Screens\Accounting\Data\AccountingDataClasses.dbml.layout">
       <DependentUpon>AccountingDataClasses.dbml</DependentUpon>
     </None>
-    <EmbeddedResource Include="Screens\Accounting\Forms\AccountingSheetForm.resx">
-      <DependentUpon>AccountingSheetForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Accounting\Forms\CurrencyForm.resx">
       <DependentUpon>CurrencyForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Accounting\Forms\UnitCountsForm.resx">
-      <DependentUpon>UnitCountsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Affiliate\Forms\AffiliatesForm1.resx">
       <DependentUpon>AffiliatesForm1.cs</DependentUpon>
