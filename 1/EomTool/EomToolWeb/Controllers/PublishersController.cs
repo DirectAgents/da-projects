@@ -11,7 +11,7 @@ namespace EomToolWeb.Controllers
 {
     public class PublishersController : Controller
     {
-        public int PageSize = 10;
+        public int PageSize = 25;
         private IAffiliateRepository affiliatesRepository;
         public PublishersController(IAffiliateRepository affiliatesRepository)
         {

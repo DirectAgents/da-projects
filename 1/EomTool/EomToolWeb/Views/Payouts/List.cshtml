@@ -1,0 +1,60 @@
+﻿@model PayoutsListViewModel
+
+@{
+    ViewBag.Title = "Payouts";
+}
+
+<h2>Payouts</h2>
+
+<table>
+<tr>
+    <th>Publisher</th>
+    <th>Campaign Name</th>
+    <th>Affiliate<br />Payout<br />Currency</th>
+    <th>Affiliate<br />Payout</th>
+    <th>Actions</th>
+    <th>Unit<br />Type</th>
+    <th>%Margin</th>
+    <th>Media Buyer</th>
+    <th>Payment<br />Status</th>
+    <th>Payment<br />Currency</th>
+    <th>Publisher<br />Payment</th>
+    <th>Source</th>
+    <th>Status</th>
+    <th>Accting<br />Status</th>
+    <th>MBA<br />Status</th>
+    <th>affid</th>
+    <th>pid</th>
+    <th></th>
+    <th>ItemIds</th>
+</tr>
+@foreach (var payout in Model.Payouts)
+{
+<tr>
+    <td>@payout.Publisher</td>
+    <td>@payout.Campaign_Name</td>
+    <td>@payout.Cost_Currency</td>
+    <td>@payout.Cost_Unit</td>
+    <td>@payout.Units</td>
+    <td>@payout.Unit_Type</td>
+    <td>@payout.MarginPct</td>
+    <td>@payout.Media_Buyer</td>
+    <td>@payout.Net_Terms</td>
+    <td>@payout.Pub_Pay_Curr</td>
+    <td>@payout.Pub_Payout</td>
+    <td>@payout.Source</td>
+    <td>@payout.Status</td>
+    <td>@payout.Accounting_Status</td>
+    <td>@payout.Media_Buyer_Approval_Status</td>
+    <td>@payout.affid</td>
+    <td>@payout.pid</td>
+    <td>@Html.ActionLink("Approve", "Approve", new {itemids = payout.ItemIds})</td>
+    <td>@payout.ItemIds</td>
+</tr>
+}
+</table>
+
+<br />
+<div class="pager">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new {page = x}))
+</div>

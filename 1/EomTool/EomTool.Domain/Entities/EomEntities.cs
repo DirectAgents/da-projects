@@ -11,7 +11,7 @@ namespace EomTool.Domain.Entities
         public static EomEntities Create()
         {
             //TODO: unhardcode!
-            GlobalSettings.ConnStr = @"data source=biz2\da;initial catalog=DADatabaseJuly2012;integrated security=True";
+            GlobalSettings.ConnStr = @"data source=biz2\da;initial catalog=zDADatabaseJuly2012Test2;integrated security=True";
 
             return new EomEntities(new EntityConnectionStringBuilder
             {

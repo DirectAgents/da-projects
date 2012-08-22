@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="EomModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="EomModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="EomModelStoreContainer">
           <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
@@ -18,6 +18,39 @@
           <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UnitType" EntityType="EomModel.Store.UnitType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AccountingView2" EntityType="EomModel.Store.AccountingView2" store:Type="Views" store:Schema="dbo" store:Name="AccountingView2">
+            <DefiningQuery>SELECT 
+      [AccountingView2].[Publisher] AS [Publisher], 
+      [AccountingView2].[Advertiser] AS [Advertiser], 
+      [AccountingView2].[Campaign Number] AS [Campaign Number], 
+      [AccountingView2].[Campaign Name] AS [Campaign Name], 
+      [AccountingView2].[Rev Currency] AS [Rev Currency], 
+      [AccountingView2].[Cost Currency] AS [Cost Currency], 
+      [AccountingView2].[Rev/Unit] AS [Rev/Unit], 
+      [AccountingView2].[Rev/Unit USD] AS [Rev/Unit USD], 
+      [AccountingView2].[Cost/Unit] AS [Cost/Unit], 
+      [AccountingView2].[Cost/Unit USD] AS [Cost/Unit USD], 
+      [AccountingView2].[Units] AS [Units], 
+      [AccountingView2].[Unit Type] AS [Unit Type], 
+      [AccountingView2].[Revenue] AS [Revenue], 
+      [AccountingView2].[Revenue USD] AS [Revenue USD], 
+      [AccountingView2].[Cost] AS [Cost], 
+      [AccountingView2].[Cost USD] AS [Cost USD], 
+      [AccountingView2].[Margin] AS [Margin], 
+      [AccountingView2].[%Margin] AS [%Margin], 
+      [AccountingView2].[Media Buyer] AS [Media Buyer], 
+      [AccountingView2].[Ad Manager] AS [Ad Manager], 
+      [AccountingView2].[Account Manager] AS [Account Manager], 
+      [AccountingView2].[Status] AS [Status], 
+      [AccountingView2].[Accounting Status] AS [Accounting Status], 
+      [AccountingView2].[name] AS [name], 
+      [AccountingView2].[Aff Pay Method] AS [Aff Pay Method], 
+      [AccountingView2].[Pub Pay Curr] AS [Pub Pay Curr], 
+      [AccountingView2].[Pub Payout] AS [Pub Payout], 
+      [AccountingView2].[CampaignNotes] AS [CampaignNotes], 
+      [AccountingView2].[Source] AS [Source]
+      FROM [dbo].[AccountingView2] AS [AccountingView2]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="CampaignsPublisherReportDetails" EntityType="EomModel.Store.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportDetails">
             <DefiningQuery>SELECT 
       [CampaignsPublisherReportDetails].[ItemIDs] AS [ItemIDs], 
@@ -49,6 +82,42 @@
       [CampaignsPublisherReportSummary].[ToBePaid] AS [ToBePaid], 
       [CampaignsPublisherReportSummary].[Total] AS [Total]
       FROM [dbo].[CampaignsPublisherReportSummary] AS [CampaignsPublisherReportSummary]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PublisherPayouts" EntityType="EomModel.Store.PublisherPayouts" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayouts">
+            <DefiningQuery>SELECT 
+      [PublisherPayouts].[affid] AS [affid], 
+      [PublisherPayouts].[Publisher] AS [Publisher], 
+      [PublisherPayouts].[Advertiser] AS [Advertiser], 
+      [PublisherPayouts].[pid] AS [pid], 
+      [PublisherPayouts].[Campaign Name] AS [Campaign Name], 
+      [PublisherPayouts].[Rev Currency] AS [Rev Currency], 
+      [PublisherPayouts].[Cost Currency] AS [Cost Currency], 
+      [PublisherPayouts].[Rev/Unit] AS [Rev/Unit], 
+      [PublisherPayouts].[Rev/Unit USD] AS [Rev/Unit USD], 
+      [PublisherPayouts].[Cost/Unit] AS [Cost/Unit], 
+      [PublisherPayouts].[Cost/Unit USD] AS [Cost/Unit USD], 
+      [PublisherPayouts].[Units] AS [Units], 
+      [PublisherPayouts].[Unit Type] AS [Unit Type], 
+      [PublisherPayouts].[Revenue] AS [Revenue], 
+      [PublisherPayouts].[Revenue USD] AS [Revenue USD], 
+      [PublisherPayouts].[Cost] AS [Cost], 
+      [PublisherPayouts].[Cost USD] AS [Cost USD], 
+      [PublisherPayouts].[Margin] AS [Margin], 
+      [PublisherPayouts].[MarginPct] AS [MarginPct], 
+      [PublisherPayouts].[Media Buyer] AS [Media Buyer], 
+      [PublisherPayouts].[Ad Manager] AS [Ad Manager], 
+      [PublisherPayouts].[Account Manager] AS [Account Manager], 
+      [PublisherPayouts].[Status] AS [Status], 
+      [PublisherPayouts].[Accounting Status] AS [Accounting Status], 
+      [PublisherPayouts].[Media Buyer Approval Status] AS [Media Buyer Approval Status], 
+      [PublisherPayouts].[Net Terms] AS [Net Terms], 
+      [PublisherPayouts].[Aff Pay Method] AS [Aff Pay Method], 
+      [PublisherPayouts].[Pub Pay Curr] AS [Pub Pay Curr], 
+      [PublisherPayouts].[Pub Payout] AS [Pub Payout], 
+      [PublisherPayouts].[CampaignNotes] AS [CampaignNotes], 
+      [PublisherPayouts].[Source] AS [Source], 
+      [PublisherPayouts].[ItemIds] AS [ItemIds]
+      FROM [dbo].[PublisherPayouts] AS [PublisherPayouts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherReportDetails" EntityType="EomModel.Store.PublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportDetails">
             <DefiningQuery>SELECT 
@@ -242,6 +311,7 @@
           <Property Name="margin" Type="money" StoreGeneratedPattern="Computed" />
           <Property Name="modified" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="campaign_status_id" Type="int" Nullable="false" />
+          <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ItemAccountingStatus">
           <Key>
@@ -286,7 +356,57 @@
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'DADatabaseJuly2012.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.AccountingView2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="AccountingView2">
+          <Key>
+            <PropertyRef Name="Publisher" />
+            <PropertyRef Name="Advertiser" />
+            <PropertyRef Name="Campaign Number" />
+            <PropertyRef Name="Campaign Name" />
+            <PropertyRef Name="Rev Currency" />
+            <PropertyRef Name="Cost Currency" />
+            <PropertyRef Name="Rev/Unit" />
+            <PropertyRef Name="Cost/Unit" />
+            <PropertyRef Name="Unit Type" />
+            <PropertyRef Name="Ad Manager" />
+            <PropertyRef Name="Account Manager" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="Accounting Status" />
+            <PropertyRef Name="Source" />
+          </Key>
+          <Property Name="Publisher" Type="varchar" Nullable="false" MaxLength="358" />
+          <Property Name="Advertiser" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Campaign Number" Type="int" Nullable="false" />
+          <Property Name="Campaign Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Rev Currency" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Cost Currency" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Rev/Unit" Type="money" Nullable="false" />
+          <Property Name="Rev/Unit USD" Type="money" />
+          <Property Name="Cost/Unit" Type="money" Nullable="false" />
+          <Property Name="Cost/Unit USD" Type="money" />
+          <Property Name="Units" Type="decimal" Precision="38" Scale="6" />
+          <Property Name="Unit Type" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Revenue" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="Revenue USD" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="Cost" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="Cost USD" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="Margin" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="%Margin" Type="decimal" Precision="38" Scale="6" />
+          <Property Name="Media Buyer" Type="varchar" MaxLength="50" />
+          <Property Name="Ad Manager" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Account Manager" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Accounting Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="Aff Pay Method" Type="varchar" MaxLength="50" />
+          <Property Name="Pub Pay Curr" Type="varchar" MaxLength="50" />
+          <Property Name="Pub Payout" Type="decimal" Precision="38" Scale="6" />
+          <Property Name="CampaignNotes" Type="nvarchar" />
+          <Property Name="Source" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="CampaignsPublisherReportDetails">
           <Key>
@@ -314,7 +434,7 @@
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'DADatabaseJuly2012.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="CampaignsPublisherReportSummary">
           <Key>
@@ -334,7 +454,62 @@
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'DADatabaseJuly2012.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="PublisherPayouts">
+          <Key>
+            <PropertyRef Name="affid" />
+            <PropertyRef Name="Publisher" />
+            <PropertyRef Name="Advertiser" />
+            <PropertyRef Name="pid" />
+            <PropertyRef Name="Campaign Name" />
+            <PropertyRef Name="Rev Currency" />
+            <PropertyRef Name="Cost Currency" />
+            <PropertyRef Name="Rev/Unit" />
+            <PropertyRef Name="Cost/Unit" />
+            <PropertyRef Name="Unit Type" />
+            <PropertyRef Name="Ad Manager" />
+            <PropertyRef Name="Account Manager" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="Accounting Status" />
+            <PropertyRef Name="Media Buyer Approval Status" />
+            <PropertyRef Name="Source" />
+          </Key>
+          <Property Name="affid" Type="int" Nullable="false" />
+          <Property Name="Publisher" Type="varchar" Nullable="false" MaxLength="358" />
+          <Property Name="Advertiser" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="Campaign Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Rev Currency" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Cost Currency" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Rev/Unit" Type="money" Nullable="false" />
+          <Property Name="Rev/Unit USD" Type="money" />
+          <Property Name="Cost/Unit" Type="money" Nullable="false" />
+          <Property Name="Cost/Unit USD" Type="money" />
+          <Property Name="Units" Type="decimal" Precision="38" Scale="6" />
+          <Property Name="Unit Type" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Revenue" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="Revenue USD" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="Cost" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="Cost USD" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="Margin" Type="decimal" Precision="38" Scale="10" />
+          <Property Name="MarginPct" Type="decimal" Precision="38" Scale="6" />
+          <Property Name="Media Buyer" Type="varchar" MaxLength="50" />
+          <Property Name="Ad Manager" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Account Manager" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Accounting Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Media Buyer Approval Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Net Terms" Type="varchar" MaxLength="50" />
+          <Property Name="Aff Pay Method" Type="varchar" MaxLength="50" />
+          <Property Name="Pub Pay Curr" Type="varchar" MaxLength="50" />
+          <Property Name="Pub Payout" Type="decimal" Precision="38" Scale="6" />
+          <Property Name="CampaignNotes" Type="nvarchar" />
+          <Property Name="Source" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="ItemIds" Type="nvarchar" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="PublisherReportDetails">
           <Key>
@@ -362,7 +537,7 @@
           <Property Name="ItemIDs" Type="nvarchar" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'DADatabaseJuly2012.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="PublisherReports">
           <Key>
@@ -390,7 +565,7 @@
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'DADatabaseJuly2012.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="PublisherReportSummary">
           <Key>
@@ -548,8 +723,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EomModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -619,6 +793,8 @@
             <End Role="UnitType" EntitySet="UnitTypes" />
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
+          <EntitySet Name="AccountingView2" EntityType="EomModel.AccountingView2" />
+          <EntitySet Name="PublisherPayouts" EntityType="EomModel.PublisherPayout" />
         </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -729,6 +905,7 @@
           <NavigationProperty Name="ItemAccountingStatu" Relationship="EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" FromRole="Item" ToRole="ItemAccountingStatus" />
           <NavigationProperty Name="Source" Relationship="EomModel.Item_Source_id_FK_Source_id_PK" FromRole="Item" ToRole="Source" />
           <NavigationProperty Name="UnitType" Relationship="EomModel.Item_UnitType_id_FK_UnitType_id_PK" FromRole="Item" ToRole="UnitType" />
+          <Property Type="Int32" Name="media_buyer_approval_status_id" Nullable="false" />
         </EntityType>
         <EntityType Name="ItemAccountingStatu">
           <Key>
@@ -1027,6 +1204,105 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="AccountingView2">
+          <Key>
+            <PropertyRef Name="Publisher" />
+            <PropertyRef Name="Advertiser" />
+            <PropertyRef Name="Campaign_Number" />
+            <PropertyRef Name="Campaign_Name" />
+            <PropertyRef Name="Rev_Currency" />
+            <PropertyRef Name="Cost_Currency" />
+            <PropertyRef Name="Rev_Unit" />
+            <PropertyRef Name="Cost_Unit" />
+            <PropertyRef Name="Unit_Type" />
+            <PropertyRef Name="Ad_Manager" />
+            <PropertyRef Name="Account_Manager" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="Accounting_Status" />
+            <PropertyRef Name="Source" />
+          </Key>
+          <Property Type="String" Name="Publisher" Nullable="false" MaxLength="358" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Advertiser" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Campaign_Number" Nullable="false" />
+          <Property Type="String" Name="Campaign_Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Rev_Currency" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Cost_Currency" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="Rev_Unit" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Rev_Unit_USD" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Cost_Unit" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Cost_Unit_USD" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Units" Precision="38" Scale="6" />
+          <Property Type="String" Name="Unit_Type" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="Revenue" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Revenue_USD" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Cost" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Cost_USD" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Margin" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="C_Margin" Precision="38" Scale="6" />
+          <Property Type="String" Name="Media_Buyer" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Ad_Manager" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Account_Manager" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Accounting_Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="name" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Aff_Pay_Method" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Pub_Pay_Curr" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="Pub_Payout" Precision="38" Scale="6" />
+          <Property Type="String" Name="CampaignNotes" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Source" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PublisherPayout">
+          <Key>
+            <PropertyRef Name="affid" />
+            <PropertyRef Name="Publisher" />
+            <PropertyRef Name="Advertiser" />
+            <PropertyRef Name="pid" />
+            <PropertyRef Name="Campaign_Name" />
+            <PropertyRef Name="Rev_Currency" />
+            <PropertyRef Name="Cost_Currency" />
+            <PropertyRef Name="Rev_Unit" />
+            <PropertyRef Name="Cost_Unit" />
+            <PropertyRef Name="Unit_Type" />
+            <PropertyRef Name="Ad_Manager" />
+            <PropertyRef Name="Account_Manager" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="Accounting_Status" />
+            <PropertyRef Name="Media_Buyer_Approval_Status" />
+            <PropertyRef Name="Source" />
+          </Key>
+          <Property Type="Int32" Name="affid" Nullable="false" />
+          <Property Type="String" Name="Publisher" Nullable="false" MaxLength="358" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Advertiser" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="pid" Nullable="false" />
+          <Property Type="String" Name="Campaign_Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Rev_Currency" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Cost_Currency" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="Rev_Unit" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Rev_Unit_USD" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Cost_Unit" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Cost_Unit_USD" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Units" Precision="38" Scale="6" />
+          <Property Type="String" Name="Unit_Type" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="Revenue" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Revenue_USD" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Cost" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Cost_USD" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="Margin" Precision="38" Scale="10" />
+          <Property Type="Decimal" Name="MarginPct" Precision="38" Scale="6" />
+          <Property Type="String" Name="Media_Buyer" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Ad_Manager" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Account_Manager" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Accounting_Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Media_Buyer_Approval_Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Net_Terms" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Aff_Pay_Method" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Pub_Pay_Curr" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="Pub_Payout" Precision="38" Scale="6" />
+          <Property Type="String" Name="CampaignNotes" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Source" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ItemIds" MaxLength="4000" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1086,7 +1362,8 @@
             <ScalarProperty Name="to_usd_multiplier" ColumnName="to_usd_multiplier" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Items"><EntityTypeMapping TypeName="EomModel.Item"><MappingFragment StoreEntitySet="Item">
-            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="media_buyer_approval_status_id" ColumnName="media_buyer_approval_status_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
             <ScalarProperty Name="pid" ColumnName="pid" />
             <ScalarProperty Name="affid" ColumnName="affid" />
@@ -1199,6 +1476,79 @@
             <ScalarProperty Name="Paid" ColumnName="Paid" />
             <ScalarProperty Name="Total" ColumnName="Total" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="AccountingView2">
+            <EntityTypeMapping TypeName="EomModel.AccountingView2">
+              <MappingFragment StoreEntitySet="AccountingView2">
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="CampaignNotes" ColumnName="CampaignNotes" />
+                <ScalarProperty Name="Pub_Payout" ColumnName="Pub Payout" />
+                <ScalarProperty Name="Pub_Pay_Curr" ColumnName="Pub Pay Curr" />
+                <ScalarProperty Name="Aff_Pay_Method" ColumnName="Aff Pay Method" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="Accounting_Status" ColumnName="Accounting Status" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Account_Manager" ColumnName="Account Manager" />
+                <ScalarProperty Name="Ad_Manager" ColumnName="Ad Manager" />
+                <ScalarProperty Name="Media_Buyer" ColumnName="Media Buyer" />
+                <ScalarProperty Name="C_Margin" ColumnName="%Margin" />
+                <ScalarProperty Name="Margin" ColumnName="Margin" />
+                <ScalarProperty Name="Cost_USD" ColumnName="Cost USD" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Revenue_USD" ColumnName="Revenue USD" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="Unit_Type" ColumnName="Unit Type" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="Cost_Unit_USD" ColumnName="Cost/Unit USD" />
+                <ScalarProperty Name="Cost_Unit" ColumnName="Cost/Unit" />
+                <ScalarProperty Name="Rev_Unit_USD" ColumnName="Rev/Unit USD" />
+                <ScalarProperty Name="Rev_Unit" ColumnName="Rev/Unit" />
+                <ScalarProperty Name="Cost_Currency" ColumnName="Cost Currency" />
+                <ScalarProperty Name="Rev_Currency" ColumnName="Rev Currency" />
+                <ScalarProperty Name="Campaign_Name" ColumnName="Campaign Name" />
+                <ScalarProperty Name="Campaign_Number" ColumnName="Campaign Number" />
+                <ScalarProperty Name="Advertiser" ColumnName="Advertiser" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PublisherPayouts">
+            <EntityTypeMapping TypeName="EomModel.PublisherPayout">
+              <MappingFragment StoreEntitySet="PublisherPayouts">
+                <ScalarProperty Name="ItemIds" ColumnName="ItemIds" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="CampaignNotes" ColumnName="CampaignNotes" />
+                <ScalarProperty Name="Pub_Payout" ColumnName="Pub Payout" />
+                <ScalarProperty Name="Pub_Pay_Curr" ColumnName="Pub Pay Curr" />
+                <ScalarProperty Name="Aff_Pay_Method" ColumnName="Aff Pay Method" />
+                <ScalarProperty Name="Net_Terms" ColumnName="Net Terms" />
+                <ScalarProperty Name="Media_Buyer_Approval_Status" ColumnName="Media Buyer Approval Status" />
+                <ScalarProperty Name="Accounting_Status" ColumnName="Accounting Status" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Account_Manager" ColumnName="Account Manager" />
+                <ScalarProperty Name="Ad_Manager" ColumnName="Ad Manager" />
+                <ScalarProperty Name="Media_Buyer" ColumnName="Media Buyer" />
+                <ScalarProperty Name="MarginPct" ColumnName="MarginPct" />
+                <ScalarProperty Name="Margin" ColumnName="Margin" />
+                <ScalarProperty Name="Cost_USD" ColumnName="Cost USD" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Revenue_USD" ColumnName="Revenue USD" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="Unit_Type" ColumnName="Unit Type" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="Cost_Unit_USD" ColumnName="Cost/Unit USD" />
+                <ScalarProperty Name="Cost_Unit" ColumnName="Cost/Unit" />
+                <ScalarProperty Name="Rev_Unit_USD" ColumnName="Rev/Unit USD" />
+                <ScalarProperty Name="Rev_Unit" ColumnName="Rev/Unit" />
+                <ScalarProperty Name="Cost_Currency" ColumnName="Cost Currency" />
+                <ScalarProperty Name="Rev_Currency" ColumnName="Rev Currency" />
+                <ScalarProperty Name="Campaign_Name" ColumnName="Campaign Name" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="Advertiser" ColumnName="Advertiser" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1232,10 +1582,10 @@
         <EntityTypeShape EntityType="EomModel.Source" Width="1.5" PointX="3.75" PointY="10.25" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.TrackingSystem" Width="1.5" PointX="0.75" PointY="11.5" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.UnitType" Width="1.5" PointX="3.75" PointY="12.5" Height="1.5956835937500031" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportDetail" Width="1.5" PointX="8.75" PointY="0.75" Height="3.7109993489583388" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportDetail" Width="1.5" PointX="8.25" PointY="0.75" Height="3.7109993489583388" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportSummary" Width="1.5" PointX="8.75" PointY="5.75" Height="2.9417936197916674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.PublisherReportDetail" Width="1.5" PointX="8.75" PointY="9.75" Height="3.5186979166666674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.PublisherReport" Width="1.5" PointX="10.75" PointY="0.75" Height="3.7109993489583388" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.PublisherReport" Width="1.5" PointX="10" PointY="0.75" Height="3.7109993489583388" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.PublisherReportSummary" Width="1.5" PointX="5.75" PointY="0.75" Height="2.1725878906250031" IsExpanded="true" />
         <AssociationConnector Association="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="5.25" PointY="16.172841796875" />
@@ -1243,15 +1593,13 @@
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="2.25" PointY="6.9612939453125" />
-          <ConnectorPoint PointX="2.4166666666666665" PointY="6.9612939453124989" />
-          <ConnectorPoint PointX="2.5833333333333335" PointY="6.9612939453125" />
+          <ConnectorPoint PointX="2.6041666666666665" PointY="6.9612939453124989" />
+          <ConnectorPoint PointX="2.7708333333333335" PointY="6.9612939453125" />
           <ConnectorPoint PointX="3" PointY="6.9612939453125" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="2.25" PointY="3.9394335937499996" />
-          <ConnectorPoint PointX="2.4166666666666665" PointY="3.9394335937499991" />
-          <ConnectorPoint PointX="2.5833333333333335" PointY="3.9394335937499996" />
-          <ConnectorPoint PointX="2.6666666666666665" PointY="3.9394335937499991" />
+          <ConnectorPoint PointX="2.6041666666666665" PointY="3.9394335937499987" />
           <ConnectorPoint PointX="2.8333333333333335" PointY="3.9394335937499996" />
           <ConnectorPoint PointX="3.34375" PointY="3.9394335937499996" />
           <ConnectorPoint PointX="3.34375" PointY="4.75" />
@@ -1280,22 +1628,18 @@
           <ConnectorPoint PointX="6" PointY="12.367670898437499" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_Currency_id_FK_Currency_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="6.3868949726562487" />
-          <ConnectorPoint PointX="2.4166666666666665" PointY="6.3868949726562478" />
-          <ConnectorPoint PointX="2.5833333333333335" PointY="6.3868949726562487" />
-          <ConnectorPoint PointX="2.75" PointY="6.3868949726562487" />
+          <ConnectorPoint PointX="2.25" PointY="6.6740944589843743" />
+          <ConnectorPoint PointX="2.75" PointY="6.6740944589843743" />
           <ConnectorPoint PointX="2.75" PointY="3.75" />
-          <ConnectorPoint PointX="6.2604146666666667" PointY="3.7499999999999996" />
-          <ConnectorPoint PointX="6.4270813333333328" PointY="3.75" />
-          <ConnectorPoint PointX="6.75" PointY="3.75" />
-          <ConnectorPoint PointX="6.75" PointY="4" />
+          <ConnectorPoint PointX="6.874999" PointY="3.75" />
+          <ConnectorPoint PointX="6.874999" PointY="4" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_Currency_id_FK_Currency_id_PK1" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="7.5356929179687508" />
-          <ConnectorPoint PointX="2.5" PointY="7.5356929179687508" />
-          <ConnectorPoint PointX="2.5" PointY="3.625" />
-          <ConnectorPoint PointX="6.343748" PointY="3.625" />
-          <ConnectorPoint PointX="6.343748" PointY="4" />
+          <ConnectorPoint PointX="2.25" PointY="7.3920931748046881" />
+          <ConnectorPoint PointX="2.6875" PointY="7.3920931748046881" />
+          <ConnectorPoint PointX="2.6875" PointY="3.734375" />
+          <ConnectorPoint PointX="6.4062475" PointY="3.734375" />
+          <ConnectorPoint PointX="6.4062475" PointY="4" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="5.25" PointY="3.2278857421875014" />
@@ -1304,17 +1648,19 @@
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_Source_id_FK_Source_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="4.90625" PointY="10.25" />
-          <ConnectorPoint PointX="4.90625" PointY="9.6556608072916656" />
-          <ConnectorPoint PointX="5.541666666666667" PointY="9.6556608072916656" />
-          <ConnectorPoint PointX="5.708333333333333" PointY="9.6556608072916656" />
-          <ConnectorPoint PointX="6" PointY="9.6556608072916656" />
+          <ConnectorPoint PointX="4.90625" PointY="9.7518115234375" />
+          <ConnectorPoint PointX="5.541666666666667" PointY="9.7518115234375" />
+          <ConnectorPoint PointX="5.708333333333333" PointY="9.7518115234375" />
+          <ConnectorPoint PointX="6" PointY="9.7518115234375" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_UnitType_id_FK_UnitType_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="5.25" PointY="12.501152846153847" />
           <ConnectorPoint PointX="5.625" PointY="12.126152846153847" />
-          <ConnectorPoint PointX="5.625" PointY="6.7965784036458317" />
-          <ConnectorPoint PointX="6" PointY="6.7965784036458317" />
+          <ConnectorPoint PointX="5.625" PointY="6.8446537617187495" />
+          <ConnectorPoint PointX="6" PointY="6.8446537617187495" />
         </AssociationConnector>
+        <EntityTypeShape EntityType="EomModel.AccountingView2" Width="1.5" PointX="10.75" PointY="8" Height="6.5955208333333317" />
+        <EntityTypeShape EntityType="EomModel.PublisherPayout" Width="1.5" PointX="11.875" PointY="0.5" Height="7.1724251302083282" />
       </Diagram>
     </Diagrams>
   </Designer>
