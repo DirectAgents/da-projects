@@ -4904,12 +4904,14 @@ namespace EomTool.Domain.Entities
         /// <param name="unit_Type">Initial value of the Unit_Type property.</param>
         /// <param name="ad_Manager">Initial value of the Ad_Manager property.</param>
         /// <param name="account_Manager">Initial value of the Account_Manager property.</param>
+        /// <param name="status_id">Initial value of the status_id property.</param>
         /// <param name="status">Initial value of the Status property.</param>
+        /// <param name="accounting_status_id">Initial value of the accounting_status_id property.</param>
         /// <param name="accounting_Status">Initial value of the Accounting_Status property.</param>
         /// <param name="media_buyer_approval_status_id">Initial value of the media_buyer_approval_status_id property.</param>
         /// <param name="media_Buyer_Approval_Status">Initial value of the Media_Buyer_Approval_Status property.</param>
         /// <param name="source">Initial value of the Source property.</param>
-        public static PublisherPayout CreatePublisherPayout(global::System.Int32 affid, global::System.String publisher, global::System.String advertiser, global::System.Int32 pid, global::System.String campaign_Name, global::System.String rev_Currency, global::System.String cost_Currency, global::System.Decimal rev_Unit, global::System.Decimal cost_Unit, global::System.String unit_Type, global::System.String ad_Manager, global::System.String account_Manager, global::System.String status, global::System.String accounting_Status, global::System.Int32 media_buyer_approval_status_id, global::System.String media_Buyer_Approval_Status, global::System.String source)
+        public static PublisherPayout CreatePublisherPayout(global::System.Int32 affid, global::System.String publisher, global::System.String advertiser, global::System.Int32 pid, global::System.String campaign_Name, global::System.String rev_Currency, global::System.String cost_Currency, global::System.Decimal rev_Unit, global::System.Decimal cost_Unit, global::System.String unit_Type, global::System.String ad_Manager, global::System.String account_Manager, global::System.Int32 status_id, global::System.String status, global::System.Int32 accounting_status_id, global::System.String accounting_Status, global::System.Int32 media_buyer_approval_status_id, global::System.String media_Buyer_Approval_Status, global::System.String source)
         {
             PublisherPayout publisherPayout = new PublisherPayout();
             publisherPayout.affid = affid;
@@ -4924,7 +4926,9 @@ namespace EomTool.Domain.Entities
             publisherPayout.Unit_Type = unit_Type;
             publisherPayout.Ad_Manager = ad_Manager;
             publisherPayout.Account_Manager = account_Manager;
+            publisherPayout.status_id = status_id;
             publisherPayout.Status = status;
+            publisherPayout.accounting_status_id = accounting_status_id;
             publisherPayout.Accounting_Status = accounting_Status;
             publisherPayout.media_buyer_approval_status_id = media_buyer_approval_status_id;
             publisherPayout.Media_Buyer_Approval_Status = media_Buyer_Approval_Status;
@@ -5504,6 +5508,33 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
+        public global::System.Int32 status_id
+        {
+            get
+            {
+                return _status_id;
+            }
+            set
+            {
+                if (_status_id != value)
+                {
+                    Onstatus_idChanging(value);
+                    ReportPropertyChanging("status_id");
+                    _status_id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("status_id");
+                    Onstatus_idChanged();
+                }
+            }
+        }
+        private global::System.Int32 _status_id;
+        partial void Onstatus_idChanging(global::System.Int32 value);
+        partial void Onstatus_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
         public global::System.String Status
         {
             get
@@ -5525,6 +5556,33 @@ namespace EomTool.Domain.Entities
         private global::System.String _Status;
         partial void OnStatusChanging(global::System.String value);
         partial void OnStatusChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 accounting_status_id
+        {
+            get
+            {
+                return _accounting_status_id;
+            }
+            set
+            {
+                if (_accounting_status_id != value)
+                {
+                    Onaccounting_status_idChanging(value);
+                    ReportPropertyChanging("accounting_status_id");
+                    _accounting_status_id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("accounting_status_id");
+                    Onaccounting_status_idChanged();
+                }
+            }
+        }
+        private global::System.Int32 _accounting_status_id;
+        partial void Onaccounting_status_idChanging(global::System.Int32 value);
+        partial void Onaccounting_status_idChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

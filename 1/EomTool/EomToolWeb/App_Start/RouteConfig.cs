@@ -14,9 +14,15 @@ namespace EomToolWeb
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                null,
-                "Page{page}",
-                new { controller = "Publishers", action = "List" }
+                name: null,
+                url: "Page{page}",
+                defaults: new { controller = "Publishers", action = "List" }
+            );
+
+            routes.MapRoute(
+                name: null,
+                url: "Payouts/List/{mode}",
+                defaults: new { controller = "Payouts", action = "List", mode = UrlParameter.Optional }
             );
 
             routes.MapRoute(

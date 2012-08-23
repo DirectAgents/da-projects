@@ -50,12 +50,14 @@
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Concrete\AffiliateRepository.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
+    <Compile Include="Entities\CampaignStatus.cs" />
     <Compile Include="Entities\EomEntities.cs" />
     <Compile Include="Entities\EomModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EomModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Entities\ItemAccountingStatus.cs" />
     <Compile Include="Entities\MediaBuyerApprovalStatus.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
