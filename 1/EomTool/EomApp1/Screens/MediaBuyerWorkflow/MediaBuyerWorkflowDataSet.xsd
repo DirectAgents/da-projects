@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="MediaBuyerWorkflowDataSet" targetNamespace="http://tempuri.org/MediaBuyerWorkflowDataSet.xsd" xmlns:mstns="http://tempuri.org/MediaBuyerWorkflowDataSet.xsd" xmlns="http://tempuri.org/MediaBuyerWorkflowDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="MediaBuyerWorkflowDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="MediaBuyerWorkflowDataSet" msprop:Generator_UserDSName="MediaBuyerWorkflowDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="MediaBuyers" msprop:Generator_TableClassName="MediaBuyersDataTable" msprop:Generator_TableVarName="tableMediaBuyers" msprop:Generator_TablePropName="MediaBuyers" msprop:Generator_RowDeletingName="MediaBuyersRowDeleting" msprop:Generator_UserTableName="MediaBuyers" msprop:Generator_RowChangingName="MediaBuyersRowChanging" msprop:Generator_RowEvHandlerName="MediaBuyersRowChangeEventHandler" msprop:Generator_RowDeletedName="MediaBuyersRowDeleted" msprop:Generator_RowEvArgName="MediaBuyersRowChangeEvent" msprop:Generator_RowChangedName="MediaBuyersRowChanged" msprop:Generator_RowClassName="MediaBuyersRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MediaBuyerName" msprop:Generator_ColumnVarNameInTable="columnMediaBuyerName" msprop:Generator_ColumnPropNameInRow="MediaBuyerName" msprop:Generator_ColumnPropNameInTable="MediaBuyerNameColumn" msprop:Generator_UserColumnName="MediaBuyerName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Publishers" msprop:Generator_TableClassName="PublishersDataTable" msprop:Generator_TableVarName="tablePublishers" msprop:Generator_TablePropName="Publishers" msprop:Generator_RowDeletingName="PublishersRowDeleting" msprop:Generator_UserTableName="Publishers" msprop:Generator_RowChangingName="PublishersRowChanging" msprop:Generator_RowEvHandlerName="PublishersRowChangeEventHandler" msprop:Generator_RowDeletedName="PublishersRowDeleted" msprop:Generator_RowEvArgName="PublishersRowChangeEvent" msprop:Generator_RowChangedName="PublishersRowChanged" msprop:Generator_RowClassName="PublishersRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PublisherName" msprop:Generator_ColumnVarNameInTable="columnPublisherName" msprop:Generator_ColumnPropNameInRow="PublisherName" msprop:Generator_ColumnPropNameInTable="PublisherNameColumn" msprop:Generator_UserColumnName="PublisherName" type="xs:string" minOccurs="0" />
+              <xs:element name="MediaBuyerName" msprop:Generator_ColumnVarNameInTable="columnMediaBuyerName" msprop:Generator_ColumnPropNameInRow="MediaBuyerName" msprop:Generator_ColumnPropNameInTable="MediaBuyerNameColumn" msprop:Generator_UserColumnName="MediaBuyerName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 
-namespace Extensions
+namespace DataGridViewExtensions
 {
     public class SubformShowingEventArgs : CancelEventArgs
     {

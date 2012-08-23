@@ -8,7 +8,7 @@
     <ProjectGuid>{ACFA074E-254F-482C-90A1-FB0E60497B17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Extensions</RootNamespace>
+    <RootNamespace>DataGridViewExtensions</RootNamespace>
     <AssemblyName>DataGridViewExtension</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

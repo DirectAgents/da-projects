@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
 
-namespace Extensions
+namespace DataGridViewExtensions
 {
     public class DataGridViewSubformCell : DataGridViewCell
     {

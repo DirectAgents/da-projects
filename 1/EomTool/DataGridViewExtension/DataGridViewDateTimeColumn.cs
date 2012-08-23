@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel;
 
-namespace Extensions
+namespace DataGridViewExtensions
 {
     public class DataGridViewDateTimeColumn : DataGridViewTextBoxColumn
     {
