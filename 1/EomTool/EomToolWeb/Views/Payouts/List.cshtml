@@ -16,16 +16,16 @@
     <th>Unit<br />Type</th>
     <th>%Margin</th>
     <th>Media Buyer</th>
-    <th>Payment<br />Status</th>
+    <th>Payment<br />Term</th>
     <th>Payment<br />Currency</th>
     <th>Publisher<br />Payment</th>
     <th>Source</th>
     <th>Status</th>
     <th>Accting<br />Status</th>
     <th>MBA<br />Status</th>
+    <th></th>
     <th>affid</th>
     <th>pid</th>
-    <th></th>
     <th>ItemIds</th>
 </tr>
 @foreach (var payout in Model.Payouts)
@@ -46,9 +46,18 @@
     <td>@payout.Status</td>
     <td>@payout.Accounting_Status</td>
     <td>@payout.Media_Buyer_Approval_Status</td>
+    <td>
+    @if (payout.media_buyer_approval_status_id != MediaBuyerApprovalStatus.Approved)
+    {
+        @Html.ActionLink("Approve", "Approve", new { itemids = payout.ItemIds })
+    }
+    @if (payout.media_buyer_approval_status_id != MediaBuyerApprovalStatus.Hold)
+    {
+        @Html.ActionLink("Hold", "Hold", new { itemids = payout.ItemIds })
+    }
+    </td>
     <td>@payout.affid</td>
     <td>@payout.pid</td>
-    <td>@Html.ActionLink("Approve", "Approve", new {itemids = payout.ItemIds})</td>
     <td>@payout.ItemIds</td>
 </tr>
 }

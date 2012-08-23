@@ -42,13 +42,16 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Approve(string itemids)
         {
-            var itemIdStringArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            List<int> itemIdList = new List<int>();
-            foreach (var itemId in itemIdStringArray)
-            {
-                itemIdList.Add(Int32.Parse(itemId));
-            }
-            mainRepository.MediaApproveItems(itemIdList.ToArray());
+            int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
+            mainRepository.Media_ApproveItems(itemIdsArray);
+
+            return RedirectToAction("List");
+        }
+
+        public ActionResult Hold(string itemids)
+        {
+            int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
+            mainRepository.Media_HoldItems(itemIdsArray);
 
             return RedirectToAction("List");
         }

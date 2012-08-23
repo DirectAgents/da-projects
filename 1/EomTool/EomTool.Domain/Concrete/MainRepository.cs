@@ -20,12 +20,22 @@ namespace EomTool.Domain.Concrete
             get { return context.PublisherPayouts; }
         }
 
-        public void MediaApproveItems(int[] itemIds)
+        public void Media_ApproveItems(int[] itemIds)
         {
             var items = context.Items.Where(item => itemIds.Contains(item.id));
             foreach (var item in items)
             {
-                item.media_buyer_approval_status_id = 4;
+                item.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Approved;
+            }
+            context.SaveChanges();
+        }
+
+        public void Media_HoldItems(int[] itemIds)
+        {
+            var items = context.Items.Where(item => itemIds.Contains(item.id));
+            foreach (var item in items)
+            {
+                item.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Hold;
             }
             context.SaveChanges();
         }

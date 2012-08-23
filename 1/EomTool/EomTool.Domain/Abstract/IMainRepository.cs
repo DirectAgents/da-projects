@@ -10,6 +10,7 @@ namespace EomTool.Domain.Abstract
     {
         IQueryable<PublisherPayout> PublisherPayouts { get; }
 
-        void MediaApproveItems(int[] itemIds);
+        void Media_ApproveItems(int[] itemIds);
+        void Media_HoldItems(int[] itemIds);
     }
 }
