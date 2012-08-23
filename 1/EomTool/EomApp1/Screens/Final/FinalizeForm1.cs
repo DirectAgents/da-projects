@@ -95,6 +95,10 @@ namespace EomApp1.Screens.Final
 
             // Security
             DisableFinalizeButtons();
+
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", ApprovalCol);
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "Approved", verifyCol);
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", colReview);
         }
 
         // Security        
@@ -105,6 +109,16 @@ namespace EomApp1.Screens.Final
                                        let am = ((row.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow).AM
                                        where !Security.User.Current.CanDoWorkflowFinalize(am)
                                        select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
+                    button.Enabled = false;
+        }
+
+        static private void DisableButtons(DataGridView grid, Func<FinalizeDataSet1.CampaignRow, bool> condition, DataGridViewDisableButtonColumn buttonCol)
+        {
+            if (grid.Rows.Count > 0)
+                foreach (var button in from gridRow in grid.Rows.Cast<DataGridViewRow>()
+                                       let dataRow = ((gridRow.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow)
+                                       where condition(dataRow)
+                                       select (DataGridViewDisableButtonCell)gridRow.Cells[buttonCol.Index])
                     button.Enabled = false;
         }
 
@@ -145,6 +159,7 @@ namespace EomApp1.Screens.Final
             }
         }
 
+        // Click handlers for Verification Buttons and MB Workflow
         private void CellClickBottom(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -152,10 +167,18 @@ namespace EomApp1.Screens.Final
             var grid = sender as DataGridView;
             var pid = (int)grid[pidCol2.Index, e.RowIndex].Value;
             var currency = (string)grid[dataGridViewTextBoxColumn6.Index, e.RowIndex].Value;
+            var row = (grid.Rows[e.RowIndex].DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow;
+            string itemIds = row.ItemIds;
 
             string note;
+            // Ready Button
+            if (e.ColumnIndex == ApprovalCol.Index)
+            {
+                UpdateMediaBuyerApprovalStatus("default", "Queued", itemIds);
+                FillCampaigns();
+            }
             // Verify Button
-            if (e.ColumnIndex == grid.Columns["verifyCol"].Index)
+            else if (e.ColumnIndex == grid.Columns["verifyCol"].Index)
             {
                 if (ConfirmationBox.ShowConfirmationModalDialog("Verify", out note))
                 {
@@ -182,6 +205,21 @@ namespace EomApp1.Screens.Final
             {
                 HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Verify);
             }
+        }
+
+        private void UpdateMediaBuyerApprovalStatus(string fromStatus, string toStatus, string itemIds)
+        {
+            string sql = @"
+                                UPDATE Item 
+                                SET media_buyer_approval_status_id = (SELECT id FROM MediaBuyerApprovalStatus WHERE name = '[[ToStatus]]') 
+                                WHERE id IN ([[ItemIds]]) AND media_buyer_approval_status_id = (SELECT id FROM MediaBuyerApprovalStatus WHERE name = '[[FromStatus]]') 
+                            "
+                            .Replace("[[FromStatus]]", fromStatus)
+                            .Replace("[[ToStatus]]", toStatus)
+                            .Replace("[[ItemIds]]", itemIds)
+                            .Trim();
+
+            SqlUtility.ExecuteNonQuery(sql);
         }
 
         private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, string currency, DataGridView grid, UI.PublishersForm.Mode mode)

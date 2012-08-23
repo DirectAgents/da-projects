@@ -5,37 +5,15 @@
       <DataSource DefaultConnectionIndex="1" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
           <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="DADatabaseR1ConnectionString2" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="DADatabaseR1ConnectionString2 (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.EomApp1.Properties.Settings.GlobalReference.Default.DADatabaseR1ConnectionString2" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CampaignTableAdapter" GeneratorDataComponentClassName="CampaignTableAdapter" Name="Campaign" UserDataComponentName="CampaignTableAdapter">
             <MainSource>
-              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.WorkflowView" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
-                         SUM(Item.total_revenue) AS Revenue, SUM(CASE Item.campaign_status_id WHEN 1 THEN Item.total_revenue ELSE 0 END) AS RevDefault, 
-                         SUM(CASE Item.campaign_status_id WHEN 2 THEN Item.total_revenue ELSE 0 END) AS RevFinalized, 
-                         SUM(CASE Item.campaign_status_id WHEN 4 THEN Item.total_revenue ELSE 0 END) AS RevVerified, CampaignStatus.name AS Status, 
-                         LatestCampaignNote.note AS Note, CampaignStatus_1.name AS ItemCampaignStatus, COUNT(DISTINCT Item.affid) AS NumAffiliates, 
-                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet7, 
-                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet15, 
-                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 3 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet30, 
-                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumAffiliatesNetBiWeekly, 
-                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault, 
-                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, 
-                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified
-FROM            Campaign INNER JOIN
-                         AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
-                         Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
-                         CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
-                         Item ON Campaign.pid = Item.pid INNER JOIN
-                         Currency ON Item.revenue_currency_id = Currency.id INNER JOIN
-                         CampaignStatus AS CampaignStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN
-                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id INNER JOIN
-                         Affiliate ON Item.affid = Affiliate.affid
-GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
-                         LatestCampaignNote.note, CampaignStatus_1.name
-ORDER BY Campaign.campaign_name</CommandText>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>select * from WorkflowView order by campaign_name</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -64,38 +42,20 @@ ORDER BY Campaign.campaign_name</CommandText>
               <Mapping SourceColumn="RevDefault" DataSetColumn="RevDefault" />
               <Mapping SourceColumn="RevFinalized" DataSetColumn="RevFinalized" />
               <Mapping SourceColumn="RevVerified" DataSetColumn="RevVerified" />
+              <Mapping SourceColumn="MediaBuyerApprovalStatus" DataSetColumn="MediaBuyerApprovalStatus" />
+              <Mapping SourceColumn="ItemIds" DataSetColumn="ItemIds" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectType="Unknown" FillMethodModifier="Public" FillMethodName="FillByAM" GenerateMethods="Fill" GenerateShortCommands="true" GeneratorSourceName="FillByAM" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillByAM">
+              <DbSource ConnectionRef="DADatabaseR1ConnectionString (Settings)" DbObjectName="DADatabaseR1.dbo.WorkflowView" DbObjectType="View" FillMethodModifier="Public" FillMethodName="FillByAM" GenerateMethods="Fill" GenerateShortCommands="true" GeneratorSourceName="FillByAM" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillByAM">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>SELECT        Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name AS AM, Advertiser.name AS Advertiser, Currency.name AS Curr, 
-                         SUM(Item.total_revenue) AS Revenue, SUM(CASE Item.campaign_status_id WHEN 1 THEN Item.total_revenue ELSE 0 END) AS RevDefault, 
-                         SUM(CASE Item.campaign_status_id WHEN 2 THEN Item.total_revenue ELSE 0 END) AS RevFinalized, 
-                         SUM(CASE Item.campaign_status_id WHEN 4 THEN Item.total_revenue ELSE 0 END) AS RevVerified, CampaignStatus.name AS Status, 
-                         LatestCampaignNote.note AS Note, CampaignStatus_1.name AS ItemCampaignStatus, COUNT(DISTINCT Item.affid) AS NumAffiliates, 
-                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet7, 
-                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet15, 
-                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 3 THEN Item.affid ELSE NULL END) AS NumAffiliatesNet30, 
-                         COUNT(DISTINCT CASE Affiliate.net_term_type_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumAffiliatesNetBiWeekly, 
-                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 1 THEN Item.affid ELSE NULL END) AS NumDefault, 
-                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 2 THEN Item.affid ELSE NULL END) AS NumFinalized, 
-                         COUNT(DISTINCT CASE Item.campaign_status_id WHEN 4 THEN Item.affid ELSE NULL END) AS NumVerified
-FROM            Campaign INNER JOIN
-                         AccountManager ON Campaign.account_manager_id = AccountManager.id INNER JOIN
-                         Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
-                         CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id INNER JOIN
-                         Item ON Campaign.pid = Item.pid INNER JOIN
-                         Currency ON Item.revenue_currency_id = Currency.id INNER JOIN
-                         CampaignStatus AS CampaignStatus_1 ON Item.campaign_status_id = CampaignStatus_1.id LEFT OUTER JOIN
-                         LatestCampaignNote ON Campaign.pid = LatestCampaignNote.campaign_id INNER JOIN
-                         Affiliate ON Item.affid = Affiliate.affid
-GROUP BY Campaign.id, Campaign.pid, Campaign.campaign_name, Campaign.modified, AccountManager.name, Advertiser.name, Currency.name, CampaignStatus.name, 
-                         LatestCampaignNote.note, CampaignStatus_1.name
-HAVING        (AccountManager.name = @1)
-ORDER BY Campaign.campaign_name</CommandText>
+                    <CommandText>SELECT        id, pid, campaign_name, modified, AM, Advertiser, Curr, Revenue, RevDefault, RevFinalized, RevVerified, Status, Note, ItemCampaignStatus, NumAffiliates, 
+                         NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly, NumDefault, NumFinalized, NumVerified, MediaBuyerApprovalStatus, 
+                         ItemIds
+FROM            WorkflowView
+WHERE        (AM = @1)</CommandText>
                     <Parameters>
-                      <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="name" DataSourceName="zDADatabaseJuly2012Test.dbo.AccountManager" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="AM" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="false" AutogeneratedName="1" ColumnName="AM" DataSourceName="DADatabaseR1.dbo.WorkflowView" DataTypeServer="varchar(50)" DbType="AnsiString" Direction="Input" ParameterName="@1" Precision="0" ProviderType="VarChar" Scale="0" Size="50" SourceColumn="AM" SourceColumnNullMapping="false" SourceVersion="Current" />
                     </Parameters>
                   </DbCommand>
                 </SelectCommand>
@@ -281,6 +241,20 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
               <xs:element name="RevDefault" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRevDefault" msprop:Generator_ColumnPropNameInRow="RevDefault" msprop:Generator_ColumnPropNameInTable="RevDefaultColumn" msprop:Generator_UserColumnName="RevDefault" type="xs:decimal" minOccurs="0" />
               <xs:element name="RevFinalized" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRevFinalized" msprop:Generator_ColumnPropNameInRow="RevFinalized" msprop:Generator_ColumnPropNameInTable="RevFinalizedColumn" msprop:Generator_UserColumnName="RevFinalized" type="xs:decimal" minOccurs="0" />
               <xs:element name="RevVerified" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRevVerified" msprop:Generator_ColumnPropNameInRow="RevVerified" msprop:Generator_ColumnPropNameInTable="RevVerifiedColumn" msprop:Generator_UserColumnName="RevVerified" type="xs:decimal" minOccurs="0" />
+              <xs:element name="MediaBuyerApprovalStatus" msprop:Generator_ColumnVarNameInTable="columnMediaBuyerApprovalStatus" msprop:Generator_ColumnPropNameInRow="MediaBuyerApprovalStatus" msprop:Generator_ColumnPropNameInTable="MediaBuyerApprovalStatusColumn" msprop:Generator_UserColumnName="MediaBuyerApprovalStatus">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="ItemIds" msprop:Generator_ColumnVarNameInTable="columnItemIds" msprop:Generator_ColumnPropNameInRow="ItemIds" msprop:Generator_ColumnPropNameInTable="ItemIdsColumn" msprop:Generator_UserColumnName="ItemIds" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="4000" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -337,7 +311,7 @@ SELECT id, campaign_id, note, added_by_system_user FROM CampaignNotes WHERE (id 
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="Campaign_CampaignNotes" msdata:parent="Campaign" msdata:child="CampaignNotes" msdata:parentkey="pid" msdata:childkey="campaign_id" msprop:Generator_UserChildTable="CampaignNotes" msprop:Generator_ChildPropName="GetCampaignNotesRows" msprop:Generator_ParentPropName="CampaignRow" msprop:Generator_UserRelationName="Campaign_CampaignNotes" msprop:Generator_RelationVarName="relationCampaign_CampaignNotes" msprop:Generator_UserParentTable="Campaign" />
+      <msdata:Relationship name="Campaign_CampaignNotes" msdata:parent="Campaign" msdata:child="CampaignNotes" msdata:parentkey="pid" msdata:childkey="campaign_id" msprop:Generator_UserChildTable="CampaignNotes" msprop:Generator_ChildPropName="GetCampaignNotesRows" msprop:Generator_UserParentTable="Campaign" msprop:Generator_UserRelationName="Campaign_CampaignNotes" msprop:Generator_RelationVarName="relationCampaign_CampaignNotes" msprop:Generator_ParentPropName="CampaignRow" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>
