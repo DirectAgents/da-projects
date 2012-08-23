@@ -68,7 +68,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>EomApp1.Program</StartupObject>
@@ -128,12 +128,6 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Extensions.cs" />
-    <Compile Include="Screens\Accounting\Controls\AccountingSheet.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Screens\Accounting\Controls\AccountingSheet.Designer.cs">
-      <DependentUpon>AccountingSheet.cs</DependentUpon>
-    </Compile>
     <Compile Include="Screens\Accounting\Controls\Currencies.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -178,23 +172,11 @@
     <Compile Include="Screens\Accounting\Forms\AccountingSheet2Base.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Screens\Accounting\Forms\AccountingSheetForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Accounting\Forms\AccountingSheetForm.Designer.cs">
-      <DependentUpon>AccountingSheetForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Screens\Accounting\Forms\CurrencyForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Screens\Accounting\Forms\CurrencyForm.Designer.cs">
       <DependentUpon>CurrencyForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Accounting\Forms\UnitCountsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Screens\Accounting\Forms\UnitCountsForm.Designer.cs">
-      <DependentUpon>UnitCountsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Advertiser2\Controls\Advertisers2Control.cs">
       <SubType>UserControl</SubType>
@@ -379,6 +361,29 @@
     </Compile>
     <Compile Include="Screens\Final\UI\PublishersPresenter.cs" />
     <Compile Include="Screens\Final\UI\PublishersEventArgs.cs" />
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MediaBuyerWorkflowDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowEntities.cs" />
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowForm.Designer.cs">
+      <DependentUpon>MediaBuyerWorkflowForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MediaBuyerWorkflowModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowSubform.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowSubform.Designer.cs">
+      <DependentUpon>MediaBuyerWorkflowSubform.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\PublisherNameCombine\PublisherCombineDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -719,6 +724,12 @@
     <EmbeddedResource Include="Screens\Audit\CampaignFinalizationAudit.resx">
       <DependentUpon>CampaignFinalizationAudit.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowForm.resx">
+      <DependentUpon>MediaBuyerWorkflowForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowSubform.resx">
+      <DependentUpon>MediaBuyerWorkflowSubform.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\PublisherNameCombine\PublisherCombine.resx">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
     </EmbeddedResource>
@@ -828,23 +839,14 @@
     <None Include="Screens\Affiliate\Data\AffilaiteDataClasses1.dbml.layout">
       <DependentUpon>AffilaiteDataClasses1.dbml</DependentUpon>
     </None>
-    <EmbeddedResource Include="Screens\Accounting\Controls\AccountingSheet.resx">
-      <DependentUpon>AccountingSheet.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Accounting\Controls\Currencies.resx">
       <DependentUpon>Currencies.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Screens\Accounting\Data\AccountingDataClasses.dbml.layout">
       <DependentUpon>AccountingDataClasses.dbml</DependentUpon>
     </None>
-    <EmbeddedResource Include="Screens\Accounting\Forms\AccountingSheetForm.resx">
-      <DependentUpon>AccountingSheetForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Accounting\Forms\CurrencyForm.resx">
       <DependentUpon>CurrencyForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Screens\Accounting\Forms\UnitCountsForm.resx">
-      <DependentUpon>UnitCountsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Affiliate\Forms\AffiliatesForm1.resx">
       <DependentUpon>AffiliatesForm1.cs</DependentUpon>
@@ -1025,6 +1027,21 @@
     <None Include="Screens\Final\UI\Data.xss">
       <DependentUpon>Data.xsd</DependentUpon>
     </None>
+    <None Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowDataSet.xsc">
+      <DependentUpon>MediaBuyerWorkflowDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MediaBuyerWorkflowDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowDataSet.xss">
+      <DependentUpon>MediaBuyerWorkflowDataSet.xsd</DependentUpon>
+    </None>
+    <EntityDeploy Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MediaBuyerWorkflowModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <None Include="Screens\PublisherNameCombine\PublisherCombineDataSet.xsc">
       <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
     </None>
@@ -1286,6 +1303,10 @@
       <Project>{4C08DC70-20A6-4D3B-AB4B-5AAA04521118}</Project>
       <Name>DirectAgents.Synch</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataGridViewExtension\DataGridViewExtensions.csproj">
+      <Project>{ACFA074E-254F-482C-90A1-FB0E60497B17}</Project>
+      <Name>DataGridViewExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DirectTrack.Rest\DirectTrack.Rest.csproj">
       <Project>{A5D217FE-1556-4ABD-BFDF-F5A2D65F5D8A}</Project>
       <Name>DirectTrack.Rest</Name>
@@ -1297,6 +1318,10 @@
     <ProjectReference Include="..\EomAppModels\EomApp.Models.csproj">
       <Project>{B9F971EA-5F76-474C-B3DC-E00FD3760967}</Project>
       <Name>EomApp.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EomTool.Domain\EomTool.Domain.csproj">
+      <Project>{F41DA2E2-D584-479A-9F24-9B2D3D33F927}</Project>
+      <Name>EomTool.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

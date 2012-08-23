@@ -14,14 +14,6 @@ namespace EomApp1.Screens.Accounting.Forms
 {
     public partial class AccountingSheet2 : AccountingSheet2Base
     {
-        private ToolStrip toolStrip1;
-        private ToolStrip toolStrip2;
-        private ToolStripItem saveButton;
-        private DataGridView gridView2;
-        private ToolStripControlHost filterZeroCostAndRevToolStripItem;
-        private CheckBox filterZeroCostAndRevCheckBox;
-        private ItemsDataSet itemChanges;
-
         public AccountingSheet2()
         {
             InitializeComponent();
@@ -32,16 +24,20 @@ namespace EomApp1.Screens.Accounting.Forms
 
         private void InitControls()
         {
+            // Create data table
             this.DataTable = new DataTable()
             {
                 TableName = this.TableName
             };
 
+            // Create data set and add data table to it
             this.DataSet = new DataSet();
             this.DataSet.Tables.Add(this.DataTable);
 
+            // Create binding source
             this.BindingSource = new BindingSource(this.DataSet, this.TableName);
 
+            // Create grid view for items
             this.GridView = new ExtendedDataGridView()
             {
                 AutoGenerateColumns = true,
@@ -60,31 +56,41 @@ namespace EomApp1.Screens.Accounting.Forms
             this.GridView.ColumnAdded += new DataGridViewColumnEventHandler(GridView_ColumnAdded);
             this.GridView.CellValueChanged += new DataGridViewCellEventHandler(GridView_CellValueChanged);
 
-            this.toolStrip1 = new ToolStrip
+            // Create tool strip for filter
+            this.ToolStrip1 = new ToolStrip
             {
                 Dock = DockStyle.Bottom,
                 GripStyle = ToolStripGripStyle.Hidden
             };
-            this.filterZeroCostAndRevCheckBox = new CheckBox
+
+            // Create check box for filter
+            this.FilterZeroCostAndRevCheckBox = new CheckBox
             {
                 Text = "Filter zero cost and revenue",
                 Checked = true
             };
-            this.filterZeroCostAndRevCheckBox.CheckedChanged += new EventHandler(filterZeroCostAndRevCheckBox_CheckedChanged);
-            this.filterZeroCostAndRevToolStripItem = new ToolStripControlHost(filterZeroCostAndRevCheckBox)
+            this.FilterZeroCostAndRevCheckBox.CheckedChanged += new EventHandler(filterZeroCostAndRevCheckBox_CheckedChanged);
+
+            // Create tool strip control host for filter check box
+            this.FilterZeroCostAndRevToolStripItem = new ToolStripControlHost(FilterZeroCostAndRevCheckBox)
             {
                 Padding = new Padding(10, 0, 0, 0)
             };
-            this.toolStrip1.Items.AddRange(new ToolStripItem[] {
-                this.filterZeroCostAndRevToolStripItem
+
+            // Populate tool strip for filter
+            this.ToolStrip1.Items.AddRange(new ToolStripItem[] {
+                this.FilterZeroCostAndRevToolStripItem
             });
 
-            this.toolStrip2 = new ToolStrip
+            // Create tool strip for button
+            this.ToolStrip2 = new ToolStrip
             {
                 Dock = DockStyle.Top,
                 GripStyle = ToolStripGripStyle.Hidden
             };
-            this.saveButton = new ToolStripControlHost(new Button
+
+            // Create save button
+            this.SaveButton = new ToolStripControlHost(new Button
             {
                 Text = "Save Changes",
                 BackColor = Color.Green,
@@ -94,22 +100,29 @@ namespace EomApp1.Screens.Accounting.Forms
             {
                 Padding = new Padding(10, 0, 0, 0)
             };
-            this.saveButton.Click += new EventHandler(saveButton_Click);
-            this.toolStrip2.Items.Add(saveButton);
+            this.SaveButton.Click += new EventHandler(saveButton_Click);
+
+            // Populate the tool strip with buttons
+            this.ToolStrip2.Items.Add(SaveButton);
             this.splitContainer.Panel1.Controls.AddRange(new Control[] {
                 this.GridView,
-                this.toolStrip1
+                this.ToolStrip1
             });
+
+            // Add the split container to the form
             this.Controls.Add(this.splitContainer);
 
+            // Create data adapter
             this.DataAdapter = new SqlDataAdapter
             {
                 SelectCommand = new SqlCommand(string.Format("SELECT * FROM {0}", this.TableName), new SqlConnection(this.ConnectionString))
             };
 
+            // Fill the data
             Fill();
 
-            this.gridView2 = new DataGridView()
+            // Create grid view for pending changes
+            this.GridView2 = new DataGridView()
             {
                 AutoGenerateColumns = true,
                 Dock = DockStyle.Fill,
@@ -122,85 +135,20 @@ namespace EomApp1.Screens.Accounting.Forms
                 RowHeadersVisible = false,
                 ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize,
             };
-            this.gridView2.ColumnAdded += new DataGridViewColumnEventHandler(GridView2_ColumnAdded);
+            this.GridView2.ColumnAdded += new DataGridViewColumnEventHandler(GridView2_ColumnAdded);
 
+            // Add the pending changes controls to the split container panel
             this.splitContainer.Panel2.Controls.AddRange(new Control[] {
-                this.gridView2,
-                this.toolStrip2
+                this.GridView2,
+                this.ToolStrip2
             });
-        }
-
-        void filterZeroCostAndRevCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            var checkBox = sender as CheckBox;
-            if (this.GridView.Rows.Count > 0)
-            {
-                this.BindingSource.RemoveFilter();
-                if (checkBox.Checked)
-                    ApplyFilterAllZerosFilter();
-            }
-        }
-
-        void GridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            string revPerUnitFieldName = "Rev/Unit";
-            string costPerUnitFieldName = "Cost/Unit";
-
-            if (e.ColumnIndex == this.GridView.Columns[revPerUnitFieldName].Index)
-            {
-                var cell = this.GridView[e.ColumnIndex, e.RowIndex];
-                decimal current = (decimal)cell.Value;
-
-                var row = cell.OwningRow;
-                var dataRow = (row.DataBoundItem as DataRowView).Row;
-                decimal original = dataRow.Field<decimal>(revPerUnitFieldName, DataRowVersion.Original);
-
-                if (original != current)
-                {
-                    cell.Style.BackColor = Color.Red;
-                }
-                FillChanges();
-            }
-            else if (e.ColumnIndex == this.GridView.Columns[costPerUnitFieldName].Index)
-            {
-                var cell = this.GridView[e.ColumnIndex, e.RowIndex];
-                decimal current = (decimal)cell.Value;
-
-                var row = cell.OwningRow;
-                var dataRow = (row.DataBoundItem as DataRowView).Row;
-                decimal original = dataRow.Field<decimal>(costPerUnitFieldName, DataRowVersion.Original);
-
-                if (original != current)
-                {
-                    cell.Style.BackColor = Color.Red;
-                }
-                FillChanges();
-            }
-        }
-
-        void GridView2_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
-        {
-            if (e.Column.Name == "Ids")
-            {
-                e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                e.Column.FillWeight = 100;
-            }
-        }
-
-        void saveButton_Click(object sender, EventArgs e)
-        {
-            this.BindingSource.EndEdit();
-            FillChanges();
-            SaveChanges();
-            Fill();
-            this.splitContainer.Panel2Collapsed = true;
         }
 
         private void SaveChanges()
         {
             var sqlStatements = new List<string>();
             string sqlFormat = "update item set {0}={1} where id in ({2})";
-            foreach (var amountChange in this.itemChanges.AmountChanges)
+            foreach (var amountChange in this.ItemChanges.AmountChanges)
             {
                 if (amountChange.Field == "Cost/Unit")
                 {
@@ -233,6 +181,16 @@ namespace EomApp1.Screens.Accounting.Forms
             }
         }
 
+        private void Fill()
+        {
+            this.DataTable.Clear();
+            this.DataAdapter.FillSchema(this.DataTable, SchemaType.Source);
+            this.DataAdapter.Fill(this.DataTable);
+
+            if (this.FilterZeroCostAndRevCheckBox.Checked)
+                ApplyFilterAllZerosFilter();
+        }
+
         private void FillChanges()
         {
             this.BindingSource.EndEdit();
@@ -263,19 +221,26 @@ namespace EomApp1.Screens.Accounting.Forms
 
             var changes = revPerUnitChanges.Concat(costPerUnitChanges).Where(c => c.From != c.To);
 
-            itemChanges = new ItemsDataSet();
+            ItemChanges = new ItemsDataSet();
 
             foreach (var change in changes.ToList())
             {
-                itemChanges.AmountChanges.AddAmountChangesRow(change.Field, change.From, change.To, change.ItemIds);
+                ItemChanges.AmountChanges.AddAmountChangesRow(change.Field, change.From, change.To, change.ItemIds);
             }
 
-            this.gridView2.DataSource = itemChanges.AmountChanges;
+            this.GridView2.DataSource = ItemChanges.AmountChanges;
 
-            this.saveButton.Enabled = itemChanges.AmountChanges.Count > 0;
+            this.SaveButton.Enabled = ItemChanges.AmountChanges.Count > 0;
 
-            this.gridView2.ClearSelection();
+            this.GridView2.ClearSelection();
         }
+
+        private void ApplyFilterAllZerosFilter()
+        {
+            this.BindingSource.Filter = "[Cost/Unit] <> 0.0 OR [Rev/Unit] <> 0.0";
+        }
+
+        #region Event Handlers
 
         void GridView_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
         {
@@ -347,6 +312,76 @@ namespace EomApp1.Screens.Accounting.Forms
             }
         }
 
+        void GridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            string revPerUnitFieldName = "Rev/Unit";
+            string costPerUnitFieldName = "Cost/Unit";
+
+            if (e.ColumnIndex == this.GridView.Columns[revPerUnitFieldName].Index)
+            {
+                var cell = this.GridView[e.ColumnIndex, e.RowIndex];
+                decimal current = (decimal)cell.Value;
+
+                var row = cell.OwningRow;
+                var dataRow = (row.DataBoundItem as DataRowView).Row;
+                decimal original = dataRow.Field<decimal>(revPerUnitFieldName, DataRowVersion.Original);
+
+                if (original != current)
+                {
+                    cell.Style.BackColor = Color.Red;
+                }
+                FillChanges();
+            }
+            else if (e.ColumnIndex == this.GridView.Columns[costPerUnitFieldName].Index)
+            {
+                var cell = this.GridView[e.ColumnIndex, e.RowIndex];
+                decimal current = (decimal)cell.Value;
+
+                var row = cell.OwningRow;
+                var dataRow = (row.DataBoundItem as DataRowView).Row;
+                decimal original = dataRow.Field<decimal>(costPerUnitFieldName, DataRowVersion.Original);
+
+                if (original != current)
+                {
+                    cell.Style.BackColor = Color.Red;
+                }
+                FillChanges();
+            }
+        }
+
+        void filterZeroCostAndRevCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+            if (this.GridView.Rows.Count > 0)
+            {
+                this.BindingSource.RemoveFilter();
+                if (checkBox.Checked)
+                    ApplyFilterAllZerosFilter();
+            }
+        }
+
+        void saveButton_Click(object sender, EventArgs e)
+        {
+            this.BindingSource.EndEdit();
+            FillChanges();
+            SaveChanges();
+            Fill();
+            this.splitContainer.Panel2Collapsed = true;
+        }
+
+        void GridView2_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
+        {
+            if (e.Column.Name == "Ids")
+            {
+                e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                e.Column.FillWeight = 100;
+            }
+        }
+
+        #endregion
+
+        #region Cell Styles
+        
         private static DataGridViewTextBoxCell BoldNumberCellTemplate
         {
             get
@@ -447,21 +482,8 @@ namespace EomApp1.Screens.Accounting.Forms
                 };
                 return template;
             }
-        }
+        } 
 
-        private void Fill()
-        {
-            this.DataTable.Clear();
-            this.DataAdapter.FillSchema(this.DataTable, SchemaType.Source);
-            this.DataAdapter.Fill(this.DataTable);
-
-            if (this.filterZeroCostAndRevCheckBox.Checked)
-                ApplyFilterAllZerosFilter();
-        }
-
-        private void ApplyFilterAllZerosFilter()
-        {
-            this.BindingSource.Filter = "[Cost/Unit] <> 0.0 OR [Rev/Unit] <> 0.0";
-        }
+        #endregion
     }
 }

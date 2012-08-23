@@ -13,7 +13,9 @@ namespace EomApp1
             try
             {
                 EomAppCommon.EomAppSettings.ConnStr = Properties.Settings.Default.DADatabaseR1ConnectionString;
-                Application.Run(new EOMForm());
+                //Application.Run(new EOMForm());
+                Application.Run(new EomApp1.Screens.MediaBuyerWorkflow.MediaBuyerWorkflowForm());
+
             }
             catch (Exception ex)
             {

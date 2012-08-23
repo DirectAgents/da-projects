@@ -5,11 +5,61 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using System.Data.SqlClient;
+using EomApp1.Screens.Accounting.Data;
 
 namespace EomApp1.Screens.Accounting.Forms
 {
     public class AccountingSheet2Base : Form
     {
+        private ToolStrip toolStrip1;
+        protected ToolStrip ToolStrip1
+        {
+            get { return toolStrip1; }
+            set { toolStrip1 = value; }
+        }
+
+        private ToolStrip toolStrip2;
+        protected ToolStrip ToolStrip2
+        {
+            get { return toolStrip2; }
+            set { toolStrip2 = value; }
+        }
+
+        private ToolStripItem saveButton;
+        protected ToolStripItem SaveButton
+        {
+            get { return saveButton; }
+            set { saveButton = value; }
+        }
+
+        private DataGridView gridView2;
+        protected DataGridView GridView2
+        {
+            get { return gridView2; }
+            set { gridView2 = value; }
+        }
+
+        private ToolStripControlHost filterZeroCostAndRevToolStripItem;
+        protected ToolStripControlHost FilterZeroCostAndRevToolStripItem
+        {
+            get { return filterZeroCostAndRevToolStripItem; }
+            set { filterZeroCostAndRevToolStripItem = value; }
+        }
+
+        private CheckBox filterZeroCostAndRevCheckBox;
+        protected CheckBox FilterZeroCostAndRevCheckBox
+        {
+            get { return filterZeroCostAndRevCheckBox; }
+            set { filterZeroCostAndRevCheckBox = value; }
+        }
+
+        private ItemsDataSet itemChanges;
+        protected ItemsDataSet ItemChanges
+        {
+            get { return itemChanges; }
+            set { itemChanges = value; }
+        }
+
         string tableName = "[AccountingSheet2]";
         protected string TableName
         {

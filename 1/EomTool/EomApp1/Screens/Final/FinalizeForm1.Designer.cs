@@ -32,14 +32,15 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.revStatusCheckBox = new System.Windows.Forms.CheckBox();
             this.finalizedRevenueButton = new System.Windows.Forms.LinkLabel();
@@ -90,8 +91,9 @@
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.modified = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.verifyCol = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colReview = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.ApprovalCol = new EomAppControls.DataGrid.DataGridViewDisableButtonColumn();
+            this.verifyCol = new EomAppControls.DataGrid.DataGridViewDisableButtonColumn();
+            this.colReview = new EomAppControls.DataGrid.DataGridViewDisableButtonColumn();
             this.NoteDGCol2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NumPubsToVerifyCol = new System.Windows.Forms.DataGridViewLinkColumn();
             this.dataGridViewLinkColumn1 = new System.Windows.Forms.DataGridViewLinkColumn();
@@ -223,9 +225,9 @@
             this.campaignsToFinalizeGrid.AllowUserToAddRows = false;
             this.campaignsToFinalizeGrid.AllowUserToDeleteRows = false;
             this.campaignsToFinalizeGrid.AllowUserToResizeRows = false;
-            this.campaignsToFinalizeGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.campaignsToFinalizeGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.campaignsToFinalizeGrid.AutoGenerateColumns = false;
             this.campaignsToFinalizeGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.campaignsToFinalizeGrid.ColumnFiltersEnabled = true;
@@ -456,6 +458,7 @@
             this.dataGridViewTextBoxColumn8,
             this.dataGridViewTextBoxColumn9,
             this.modified,
+            this.ApprovalCol,
             this.verifyCol,
             this.colReview,
             this.NoteDGCol2,
@@ -524,8 +527,8 @@
             // 
             this.dataGridViewTextBoxColumn13.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridViewTextBoxColumn13.DataPropertyName = "campaign_name";
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.dataGridViewTextBoxColumn13.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.dataGridViewTextBoxColumn13.DefaultCellStyle = dataGridViewCellStyle10;
             this.dataGridViewTextBoxColumn13.FillWeight = 75F;
             this.dataGridViewTextBoxColumn13.HeaderText = "Campaign";
             this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
@@ -535,8 +538,8 @@
             // 
             this.dataGridViewTextBoxColumn14.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells;
             this.dataGridViewTextBoxColumn14.DataPropertyName = "Curr";
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.dataGridViewTextBoxColumn14.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.dataGridViewTextBoxColumn14.DefaultCellStyle = dataGridViewCellStyle11;
             this.dataGridViewTextBoxColumn14.HeaderText = "Curr";
             this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
             this.dataGridViewTextBoxColumn14.ReadOnly = true;
@@ -544,11 +547,11 @@
             // dataGridViewTextBoxColumn15
             // 
             this.dataGridViewTextBoxColumn15.DataPropertyName = "Revenue";
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.Format = "N2";
-            dataGridViewCellStyle11.NullValue = null;
-            this.dataGridViewTextBoxColumn15.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.Format = "N2";
+            dataGridViewCellStyle12.NullValue = null;
+            this.dataGridViewTextBoxColumn15.DefaultCellStyle = dataGridViewCellStyle12;
             this.dataGridViewTextBoxColumn15.HeaderText = "Revenue";
             this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
             this.dataGridViewTextBoxColumn15.ReadOnly = true;
@@ -660,11 +663,25 @@
             this.modified.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.modified.Visible = false;
             // 
-            // verifyCol
+            // ApprovalCol
             // 
+            this.ApprovalCol.DataPropertyName = "MediaBuyerApprovalStatus";
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.verifyCol.DefaultCellStyle = dataGridViewCellStyle7;
+            this.ApprovalCol.DefaultCellStyle = dataGridViewCellStyle7;
+            this.ApprovalCol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ApprovalCol.HeaderText = "Approval";
+            this.ApprovalCol.Name = "ApprovalCol";
+            this.ApprovalCol.ReadOnly = true;
+            this.ApprovalCol.Text = "Ready";
+            this.ApprovalCol.ToolTipText = "Queue up these items for sending to Media Buyers for approval.";
+            this.ApprovalCol.Width = 60;
+            // 
+            // verifyCol
+            // 
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.verifyCol.DefaultCellStyle = dataGridViewCellStyle8;
             this.verifyCol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.verifyCol.HeaderText = "Verify";
             this.verifyCol.Name = "verifyCol";
@@ -675,9 +692,9 @@
             // 
             // colReview
             // 
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.colReview.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.colReview.DefaultCellStyle = dataGridViewCellStyle9;
             this.colReview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.colReview.HeaderText = "Review";
             this.colReview.Name = "colReview";
@@ -801,7 +818,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn RevDefault;
         private System.Windows.Forms.DataGridViewTextBoxColumn RevFinalized;
         private System.Windows.Forms.DataGridViewTextBoxColumn RevVerified;
-        private System.Windows.Forms.DataGridViewButtonColumn FinalizeCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn AMCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol;
         private System.Windows.Forms.DataGridViewLinkColumn NumPubsToFinalizeCol;
@@ -811,6 +827,7 @@
         private System.Windows.Forms.DataGridViewLinkColumn NumAffiliatesNetBiWeekly;
         private EomAppControls.ExtendedDataGridView campaignsToFinalizeGrid;
         private EomAppControls.ExtendedDataGridView campaignsToVerifyGrid;
+        private EomAppControls.DataGrid.DataGridViewDisableButtonColumn FinalizeCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn pidCol2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
@@ -819,8 +836,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private System.Windows.Forms.DataGridViewTextBoxColumn modified;
-        private System.Windows.Forms.DataGridViewButtonColumn verifyCol;
-        private System.Windows.Forms.DataGridViewButtonColumn colReview;
+        private EomAppControls.DataGrid.DataGridViewDisableButtonColumn ApprovalCol;
+        private EomAppControls.DataGrid.DataGridViewDisableButtonColumn verifyCol;
+        private EomAppControls.DataGrid.DataGridViewDisableButtonColumn colReview;
         private System.Windows.Forms.DataGridViewTextBoxColumn NoteDGCol2;
         private System.Windows.Forms.DataGridViewLinkColumn NumPubsToVerifyCol;
         private System.Windows.Forms.DataGridViewLinkColumn dataGridViewLinkColumn1;
