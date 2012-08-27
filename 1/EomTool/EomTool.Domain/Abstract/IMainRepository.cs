@@ -9,8 +9,11 @@ namespace EomTool.Domain.Abstract
     public interface IMainRepository
     {
         IQueryable<PublisherPayout> PublisherPayouts { get; }
+        IQueryable<PublisherSummary> PublisherSummaries { get; }
 
         void Media_ApproveItems(int[] itemIds);
         void Media_HoldItems(int[] itemIds);
+
+        IQueryable<Affiliate> AffiliatesForMediaBuyers(string[] mediaBuyers);
     }
 }

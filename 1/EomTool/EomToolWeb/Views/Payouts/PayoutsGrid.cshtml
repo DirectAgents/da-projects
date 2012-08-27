@@ -34,14 +34,14 @@
     <td>@payout.Publisher</td>
     <td>@payout.Campaign_Name</td>
     <td>@payout.Cost_Currency</td>
-    <td>@payout.Cost_Unit</td>
-    <td>@payout.Units</td>
+    <td>@String.Format("{0:N2}", payout.Cost_Unit)</td>
+    <td>@String.Format("{0:N2}", payout.Units)</td>
     <td>@payout.Unit_Type</td>
-    <td>@payout.MarginPct</td>
+    <td>@String.Format("{0:N2}", payout.MarginPct)</td>
     <td>@payout.Media_Buyer</td>
     <td>@payout.Net_Terms</td>
     <td>@payout.Pub_Pay_Curr</td>
-    <td>@payout.Pub_Payout</td>
+    <td>@String.Format("{0:N2}", payout.Pub_Payout)</td>
     <td>@payout.Source</td>
     <td>@payout.Status</td>
     <td>@payout.Accounting_Status</td>

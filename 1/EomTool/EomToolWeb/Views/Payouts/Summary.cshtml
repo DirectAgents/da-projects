@@ -1,0 +1,19 @@
+﻿@model IEnumerable<PublisherSummary>
+
+@{
+    ViewBag.Title = "Publisher Summary";
+}
+
+<h2>Publisher Summary</h2>
+
+<table>
+@foreach (var ps in Model)
+{
+<tr>
+    <td>@ps.affid</td>
+    <td>@Html.ActionLink(ps.PublisherName, "List", new {affid = ps.affid})</td>
+    <td>@ps.Currency</td>
+    <td>@String.Format("{0:N2}", ps.PayoutTotal)</td>
+</tr>
+}
+</table>
