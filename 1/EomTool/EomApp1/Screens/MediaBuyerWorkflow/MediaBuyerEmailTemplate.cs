@@ -18,23 +18,22 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
     {
         public virtual string TransformText()
         {
-            
-            #line 2 "C:\GitHub\da-projects\1\EomTool\EomApp1\Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.tt"
- 
-var x = (MediaBuyerEmail)this;
-
-            
-            #line default
-            #line hidden
             this.Write("<p>Hello ");
             
-            #line 5 "C:\GitHub\da-projects\1\EomTool\EomApp1\Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(x.MediaBuyerName));
+            #line 2 "C:\GitHub\da-projects\1\EomTool\EomApp1\Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MediaBuyerName));
             
             #line default
             #line hidden
             this.Write(",<br/>\r\n<br/>\r\nYou have pending publisher report approvals.<br/>\r\n<br/>\r\nPlease c" +
-                    "lick <a href=\"#\">here</a> to open them.<br/>\r\n<br/>\r\nThank You.</p>\r\n");
+                    "lick <a href=\"");
+            
+            #line 6 "C:\GitHub\da-projects\1\EomTool\EomApp1\Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(UrlToOpen));
+            
+            #line default
+            #line hidden
+            this.Write("\">here</a> to open them.<br/>\r\n<br/>\r\nThank You.</p>\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

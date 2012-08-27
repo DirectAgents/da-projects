@@ -4,6 +4,5 @@ namespace DAgents.Common
     public interface ITransformText
     {
         string TransformText();
-        Dictionary<string, object> Data { get; }
     }
 }

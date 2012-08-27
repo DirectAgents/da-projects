@@ -43,6 +43,8 @@ namespace EomAppCommon
         public string EomAppSettings_MediaBuyerWorkflow_Email_From { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_From"); } }
         
         public string EomAppSettings_MediaBuyerWorkflow_Email_Subject { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_Subject"); } }
+
+        public string EomAppSettings_MediaBuyerWorkflow_Email_Link { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_Link"); } }
         
         private string GetSetting(string settingName)
         {

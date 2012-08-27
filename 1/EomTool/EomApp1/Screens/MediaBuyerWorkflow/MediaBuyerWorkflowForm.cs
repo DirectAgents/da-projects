@@ -29,16 +29,16 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
 
             if (e.ColumnIndex == ApprovalActionCol.Index)
             {
-                // Send Media Buyer Email and Change status to Sent
+                // Send Email to Media Buyer 
                 if (ApprovalActionCol.Value<string>(e) == "Send")
                 {
                     string mediaBuyerName = mediaBuyerNameCol.Value<string>(e).Trim();
                     string mediaBuyerFirstName = mediaBuyerName.Split(' ').First();
 
-                    var emailTemplate = new MediaBuyerEmail(null)
+                    var emailTemplate = new MediaBuyerEmailTemplate()
                     {
                         MediaBuyerName = mediaBuyerFirstName,
-                        UrlToOpen = "http://www.google.com", // TODO: real link to web application
+                        UrlToOpen = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Link,
                     };
 
                     string mediaBuyerEmailAddress = EomApp1.Security.User.GetEmailAddress(mediaBuyerName);
@@ -47,6 +47,7 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
 
                     var result = MaskedDialog.ShowDialog(this, sendDialog);
 
+                    // Change status to Sent
                     if (result == System.Windows.Forms.DialogResult.OK)
                     {
                         string itemIDs = ItemIdsCol.Value<string>(e);

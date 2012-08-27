@@ -374,7 +374,7 @@
     </Compile>
     <Compile Include="Screens\Final\UI\PublishersPresenter.cs" />
     <Compile Include="Screens\Final\UI\PublishersEventArgs.cs" />
-    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerEmail.cs" />
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplatePartial.cs" />
     <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
