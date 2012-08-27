@@ -14,20 +14,39 @@ namespace EomToolWeb.Controllers
     {
         public int PageSize = 15;
         private IMainRepository mainRepository;
-        public PayoutsController(IMainRepository mainRepository)
+        private ISecurityRepository securityRepository;
+        public PayoutsController(IMainRepository mainRepository, ISecurityRepository securityRepository)
         {
             this.mainRepository = mainRepository;
+            this.securityRepository = securityRepository;
         }
 
-        public ActionResult List(string mediabuyer, string mode, int page=1)
+        public ActionResult Summary()
+        {
+            var groups = securityRepository.GroupsByWindowsIdentity(User.Identity.Name);
+            var roleNames = groups.SelectMany(g => g.Roles).Select(r => r.Name).ToArray();
+            var affIds = mainRepository.AffiliatesForMediaBuyers(roleNames).Select(a => a.affid).ToList();
+
+            var model = mainRepository.PublisherSummaries.Where(ps => affIds.Contains(ps.affid)).OrderBy(p => p.PublisherName);
+            return View(model);
+        }
+
+        public ActionResult List(string mode, int? affid, int page=1)
         {
             //testing
             if (Request["test"] != null)
                 Session["TestMode"] = Request["test"];
-            if (String.IsNullOrWhiteSpace(mediabuyer))
-                mediabuyer = "Lyle Srebnick";
 
-            var payouts = mainRepository.PublisherPayouts;
+            var groups = securityRepository.GroupsByWindowsIdentity(User.Identity.Name);
+            var roleNames = groups.SelectMany(g => g.Roles).Select(r => r.Name).ToArray();
+            var affIds = mainRepository.AffiliatesForMediaBuyers(roleNames).Select(a => a.affid).ToList();
+
+            if (affid != null)
+                // TESTING
+                affIds = (new int[] { affid.Value }).ToList();
+                //affIds = affIds.Where(a => a == affid).ToList();
+
+            var payouts = mainRepository.PublisherPayouts.Where(p => affIds.Contains(p.affid));
             PayoutsListViewModel viewModel = new PayoutsListViewModel();
             if (mode == "preapproval")
             {
@@ -49,9 +68,6 @@ namespace EomToolWeb.Controllers
                 viewModel.ShowActions = true;
             }
 
-            if (!String.IsNullOrWhiteSpace(mediabuyer))
-                payouts = payouts.Where(p => p.Media_Buyer == mediabuyer);
-            
             viewModel.Payouts = payouts.OrderBy(p => p.Publisher).ThenBy(p => p.Campaign_Name).Skip((page - 1) * PageSize).Take(PageSize);
             viewModel.PagingInfo = new PagingInfo
             {

@@ -30,6 +30,7 @@ namespace EomToolWeb.Infrastructure
             // put additional bindings here
             ninjectKernel.Bind<IAffiliateRepository>().To<AffiliateRepository>();
             ninjectKernel.Bind<IMainRepository>().To<MainRepository>();
+            ninjectKernel.Bind<ISecurityRepository>().To<SecurityRepository>();
         }
     }
 }

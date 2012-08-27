@@ -48,8 +48,10 @@
   <ItemGroup>
     <Compile Include="Abstract\IAffiliateRepository.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
+    <Compile Include="Abstract\ISecurityRepository.cs" />
     <Compile Include="Concrete\AffiliateRepository.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
+    <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Entities\CampaignStatus.cs" />
     <Compile Include="Entities\EomEntities.cs" />
     <Compile Include="Entities\EomModel.Designer.cs">
@@ -57,8 +59,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EomModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Entities\EomToolSecurity.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EomToolSecurity.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Entities\ItemAccountingStatus.cs" />
     <Compile Include="Entities\MediaBuyerApprovalStatus.cs" />
+    <Compile Include="Entities\PublisherSummary.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -71,6 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
+    <EntityDeploy Include="Entities\EomToolSecurity.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EomToolSecurity.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

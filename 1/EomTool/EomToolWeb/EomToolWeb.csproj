@@ -248,6 +248,7 @@
     <Content Include="Views\Publishers\List.cshtml" />
     <Content Include="Views\Payouts\List.cshtml" />
     <Content Include="Views\Payouts\PayoutsGrid.cshtml" />
+    <Content Include="Views\Payouts\Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
