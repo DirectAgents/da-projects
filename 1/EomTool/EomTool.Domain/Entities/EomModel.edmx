@@ -14,6 +14,7 @@
           <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MediaBuyer" EntityType="EomModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MediaBuyerApprovalStatus" EntityType="EomModel.Store.MediaBuyerApprovalStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" />
@@ -107,8 +108,11 @@
       [PublisherPayouts].[Media Buyer] AS [Media Buyer], 
       [PublisherPayouts].[Ad Manager] AS [Ad Manager], 
       [PublisherPayouts].[Account Manager] AS [Account Manager], 
+      [PublisherPayouts].[status_id] AS [status_id], 
       [PublisherPayouts].[Status] AS [Status], 
+      [PublisherPayouts].[accounting_status_id] AS [accounting_status_id], 
       [PublisherPayouts].[Accounting Status] AS [Accounting Status], 
+      [PublisherPayouts].[media_buyer_approval_status_id] AS [media_buyer_approval_status_id], 
       [PublisherPayouts].[Media Buyer Approval Status] AS [Media Buyer Approval Status], 
       [PublisherPayouts].[Net Terms] AS [Net Terms], 
       [PublisherPayouts].[Aff Pay Method] AS [Aff Pay Method], 
@@ -187,6 +191,10 @@
           <AssociationSet Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Store.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
             <End Role="CampaignStatus" EntitySet="CampaignStatus" />
             <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Item__media_buye__540C7B00" Association="EomModel.Store.FK__Item__media_buye__540C7B00">
+            <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
+            <End Role="Item" EntitySet="Item" />
           </AssociationSet>
           <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomModel.Store.Item_Currency_id_FK_Currency_id_PK">
             <End Role="Currency" EntitySet="Currency" />
@@ -325,6 +333,13 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="MediaBuyerApprovalStatus">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="NetTermType">
@@ -470,8 +485,11 @@
             <PropertyRef Name="Unit Type" />
             <PropertyRef Name="Ad Manager" />
             <PropertyRef Name="Account Manager" />
+            <PropertyRef Name="status_id" />
             <PropertyRef Name="Status" />
+            <PropertyRef Name="accounting_status_id" />
             <PropertyRef Name="Accounting Status" />
+            <PropertyRef Name="media_buyer_approval_status_id" />
             <PropertyRef Name="Media Buyer Approval Status" />
             <PropertyRef Name="Source" />
           </Key>
@@ -497,8 +515,11 @@
           <Property Name="Media Buyer" Type="varchar" MaxLength="50" />
           <Property Name="Ad Manager" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Account Manager" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="status_id" Type="int" Nullable="false" />
           <Property Name="Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="accounting_status_id" Type="int" Nullable="false" />
           <Property Name="Accounting Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
           <Property Name="Media Buyer Approval Status" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Net Terms" Type="varchar" MaxLength="50" />
           <Property Name="Aff Pay Method" Type="varchar" MaxLength="50" />
@@ -651,6 +672,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Item__media_buye__540C7B00">
+          <End Role="MediaBuyerApprovalStatus" Type="EomModel.Store.MediaBuyerApprovalStatus" Multiplicity="1" />
+          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MediaBuyerApprovalStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="media_buyer_approval_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Item_Currency_id_FK_Currency_id_PK">
           <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
           <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
@@ -731,10 +764,10 @@
           <EntitySet Name="Advertisers" EntityType="EomModel.Advertiser" />
           <EntitySet Name="Affiliates" EntityType="EomModel.Affiliate" />
           <EntitySet Name="Campaigns" EntityType="EomModel.Campaign" />
-          <EntitySet Name="CampaignStatus" EntityType="EomModel.CampaignStatu" />
+          <EntitySet Name="CampaignStatuses" EntityType="EomModel.CampaignStatus" />
           <EntitySet Name="Currencies" EntityType="EomModel.Currency" />
           <EntitySet Name="Items" EntityType="EomModel.Item" />
-          <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.ItemAccountingStatu" />
+          <EntitySet Name="ItemAccountingStatuses" EntityType="EomModel.ItemAccountingStatus" />
           <EntitySet Name="MediaBuyers" EntityType="EomModel.MediaBuyer" />
           <EntitySet Name="NetTermTypes" EntityType="EomModel.NetTermType" />
           <EntitySet Name="Sources" EntityType="EomModel.Source" />
@@ -766,7 +799,7 @@
             <End Role="Affiliate" EntitySet="Affiliates" />
           </AssociationSet>
           <AssociationSet Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
-            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="CampaignStatus" EntitySet="CampaignStatuses" />
             <End Role="Campaign" EntitySet="Campaigns" />
           </AssociationSet>
           <AssociationSet Name="tracking_system_fk" Association="EomModel.tracking_system_fk">
@@ -782,7 +815,7 @@
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
           <AssociationSet Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" Association="EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
-            <End Role="ItemAccountingStatus" EntitySet="ItemAccountingStatus" />
+            <End Role="ItemAccountingStatus" EntitySet="ItemAccountingStatuses" />
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
           <AssociationSet Name="Item_Source_id_FK_Source_id_PK" Association="EomModel.Item_Source_id_FK_Source_id_PK">
@@ -794,6 +827,11 @@
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
           <EntitySet Name="AccountingView2" EntityType="EomModel.AccountingView2" />
+          <EntitySet Name="MediaBuyerApprovalStatuses" EntityType="EomModel.MediaBuyerApprovalStatus" />
+          <AssociationSet Name="FK__Item__media_buye__540C7B00" Association="EomModel.FK__Item__media_buye__540C7B00">
+            <End Role="MediaBuyerApprovalStatu" EntitySet="MediaBuyerApprovalStatuses" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
           <EntitySet Name="PublisherPayouts" EntityType="EomModel.PublisherPayout" />
         </EntityContainer>
         <EntityType Name="Advertiser">
@@ -853,10 +891,10 @@
           <Property Name="tracking_system_id" Type="Int32" />
           <Property Name="external_id" Type="Int32" />
           <NavigationProperty Name="Advertiser" Relationship="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" FromRole="Campaign" ToRole="Advertiser" />
-          <NavigationProperty Name="CampaignStatu" Relationship="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="Campaign" ToRole="CampaignStatus" />
+          <NavigationProperty Name="CampaignStatus" Relationship="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="Campaign" ToRole="CampaignStatus" />
           <NavigationProperty Name="TrackingSystem" Relationship="EomModel.tracking_system_fk" FromRole="Campaign" ToRole="TrackingSystem" />
         </EntityType>
-        <EntityType Name="CampaignStatu">
+        <EntityType Name="CampaignStatus">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -902,12 +940,13 @@
           <Property Name="campaign_status_id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Currency" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Item" ToRole="Currency" />
           <NavigationProperty Name="Currency1" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Item" ToRole="Currency" />
-          <NavigationProperty Name="ItemAccountingStatu" Relationship="EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" FromRole="Item" ToRole="ItemAccountingStatus" />
+          <NavigationProperty Name="ItemAccountingStatus" Relationship="EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" FromRole="Item" ToRole="ItemAccountingStatus" />
           <NavigationProperty Name="Source" Relationship="EomModel.Item_Source_id_FK_Source_id_PK" FromRole="Item" ToRole="Source" />
           <NavigationProperty Name="UnitType" Relationship="EomModel.Item_UnitType_id_FK_UnitType_id_PK" FromRole="Item" ToRole="UnitType" />
           <Property Type="Int32" Name="media_buyer_approval_status_id" Nullable="false" />
+          <NavigationProperty Name="MediaBuyerApprovalStatus" Relationship="EomModel.FK__Item__media_buye__540C7B00" FromRole="Item" ToRole="MediaBuyerApprovalStatu" />
         </EntityType>
-        <EntityType Name="ItemAccountingStatu">
+        <EntityType Name="ItemAccountingStatus">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -1121,7 +1160,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
-          <End Role="CampaignStatus" Type="EomModel.CampaignStatu" Multiplicity="1" />
+          <End Role="CampaignStatus" Type="EomModel.CampaignStatus" Multiplicity="1" />
           <End Role="Campaign" Type="EomModel.Campaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CampaignStatus">
@@ -1169,7 +1208,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
-          <End Role="ItemAccountingStatus" Type="EomModel.ItemAccountingStatu" Multiplicity="1" />
+          <End Role="ItemAccountingStatus" Type="EomModel.ItemAccountingStatus" Multiplicity="1" />
           <End Role="Item" Type="EomModel.Item" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ItemAccountingStatus">
@@ -1251,6 +1290,26 @@
           <Property Type="String" Name="CampaignNotes" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Source" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="MediaBuyerApprovalStatus">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Items" Relationship="EomModel.FK__Item__media_buye__540C7B00" FromRole="MediaBuyerApprovalStatu" ToRole="Item" />
+        </EntityType>
+        <Association Name="FK__Item__media_buye__540C7B00">
+          <End Type="EomModel.MediaBuyerApprovalStatus" Role="MediaBuyerApprovalStatu" Multiplicity="1" />
+          <End Type="EomModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MediaBuyerApprovalStatu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="media_buyer_approval_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="PublisherPayout">
           <Key>
             <PropertyRef Name="affid" />
@@ -1265,8 +1324,11 @@
             <PropertyRef Name="Unit_Type" />
             <PropertyRef Name="Ad_Manager" />
             <PropertyRef Name="Account_Manager" />
+            <PropertyRef Name="status_id" />
             <PropertyRef Name="Status" />
+            <PropertyRef Name="accounting_status_id" />
             <PropertyRef Name="Accounting_Status" />
+            <PropertyRef Name="media_buyer_approval_status_id" />
             <PropertyRef Name="Media_Buyer_Approval_Status" />
             <PropertyRef Name="Source" />
           </Key>
@@ -1292,8 +1354,11 @@
           <Property Type="String" Name="Media_Buyer" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Ad_Manager" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Account_Manager" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="status_id" Nullable="false" />
           <Property Type="String" Name="Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="accounting_status_id" Nullable="false" />
           <Property Type="String" Name="Accounting_Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="media_buyer_approval_status_id" Nullable="false" />
           <Property Type="String" Name="Media_Buyer_Approval_Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Net_Terms" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Aff_Pay_Method" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -1352,7 +1417,7 @@
             <ScalarProperty Name="tracking_system_id" ColumnName="tracking_system_id" />
             <ScalarProperty Name="external_id" ColumnName="external_id" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="CampaignStatus"><EntityTypeMapping TypeName="EomModel.CampaignStatu"><MappingFragment StoreEntitySet="CampaignStatus">
+          <EntitySetMapping Name="CampaignStatuses"><EntityTypeMapping TypeName="EomModel.CampaignStatus"><MappingFragment StoreEntitySet="CampaignStatus">
             <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
@@ -1385,7 +1450,7 @@
             <ScalarProperty Name="modified" ColumnName="modified" />
             <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="ItemAccountingStatus"><EntityTypeMapping TypeName="EomModel.ItemAccountingStatu"><MappingFragment StoreEntitySet="ItemAccountingStatus">
+          <EntitySetMapping Name="ItemAccountingStatuses"><EntityTypeMapping TypeName="EomModel.ItemAccountingStatus"><MappingFragment StoreEntitySet="ItemAccountingStatus">
             <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
@@ -1511,6 +1576,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MediaBuyerApprovalStatuses">
+            <EntityTypeMapping TypeName="EomModel.MediaBuyerApprovalStatus">
+              <MappingFragment StoreEntitySet="MediaBuyerApprovalStatus">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="PublisherPayouts">
             <EntityTypeMapping TypeName="EomModel.PublisherPayout">
               <MappingFragment StoreEntitySet="PublisherPayouts">
@@ -1522,8 +1595,11 @@
                 <ScalarProperty Name="Aff_Pay_Method" ColumnName="Aff Pay Method" />
                 <ScalarProperty Name="Net_Terms" ColumnName="Net Terms" />
                 <ScalarProperty Name="Media_Buyer_Approval_Status" ColumnName="Media Buyer Approval Status" />
+                <ScalarProperty Name="media_buyer_approval_status_id" ColumnName="media_buyer_approval_status_id" />
                 <ScalarProperty Name="Accounting_Status" ColumnName="Accounting Status" />
+                <ScalarProperty Name="accounting_status_id" ColumnName="accounting_status_id" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
                 <ScalarProperty Name="Account_Manager" ColumnName="Account Manager" />
                 <ScalarProperty Name="Ad_Manager" ColumnName="Ad Manager" />
                 <ScalarProperty Name="Media_Buyer" ColumnName="Media Buyer" />
@@ -1570,37 +1646,40 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="EomModel">
-        <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="3.75" PointY="15.375" Height="1.5956835937500014" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="2" PointY="14.25" Height="1.5956835937500014" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Affiliate" Width="1.5" PointX="3" PointY="4.75" Height="4.480205078125" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.Campaign" Width="1.5" PointX="6" PointY="11.5" Height="5.634013671875" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.CampaignStatu" Width="1.5" PointX="3.75" PointY="17.75" Height="1.5956835937500031" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Campaign" Width="2" PointX="5.75" PointY="11.5" Height="5.634013671875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.CampaignStatus" Width="1.5" PointX="3.875" PointY="15.5" Height="1.5956835937500031" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Currency" Width="1.5" PointX="0.75" PointY="5.875" Height="2.1725878906250005" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.Item" Width="1.5" PointX="6" PointY="4" Height="6.0186165364583317" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.ItemAccountingStatu" Width="1.5" PointX="3.75" PointY="1.875" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Item" Width="2.375" PointX="6" PointY="4" Height="6.4032194010416656" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.ItemAccountingStatus" Width="1.5" PointX="3.75" PointY="1.875" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.MediaBuyer" Width="1.5" PointX="0.75" PointY="2.75" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.NetTermType" Width="1.5" PointX="0.75" PointY="9.125" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Source" Width="1.5" PointX="3.75" PointY="10.25" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.TrackingSystem" Width="1.5" PointX="0.75" PointY="11.5" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.UnitType" Width="1.5" PointX="3.75" PointY="12.5" Height="1.5956835937500031" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportDetail" Width="1.5" PointX="8.25" PointY="0.75" Height="3.7109993489583388" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportSummary" Width="1.5" PointX="8.75" PointY="5.75" Height="2.9417936197916674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.PublisherReportDetail" Width="1.5" PointX="8.75" PointY="9.75" Height="3.5186979166666674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportDetail" Width="1.5" PointX="9.875" PointY="4.75" Height="3.7109993489583388" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportSummary" Width="1.5" PointX="8.375" PointY="0.5" Height="2.9417936197916674" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.PublisherReportDetail" Width="1.5" PointX="9.875" PointY="8.625" Height="3.5186979166666674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.PublisherReport" Width="1.5" PointX="10" PointY="0.75" Height="3.7109993489583388" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.PublisherReportSummary" Width="1.5" PointX="5.75" PointY="0.75" Height="2.1725878906250031" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.PublisherReportSummary" Width="1.5" PointX="6.75" PointY="0.5" Height="2.1725878906250031" IsExpanded="true" />
         <AssociationConnector Association="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.25" PointY="16.172841796875" />
-          <ConnectorPoint PointX="6" PointY="16.172841796875" />
+          <ConnectorPoint PointX="3.5" PointY="14.84375" />
+          <ConnectorPoint PointX="5.75" PointY="14.84375" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="6.9612939453125" />
-          <ConnectorPoint PointX="2.6041666666666665" PointY="6.9612939453124989" />
-          <ConnectorPoint PointX="2.7708333333333335" PointY="6.9612939453125" />
+          <ConnectorPoint PointX="2.25" PointY="6.5843446195068349" />
+          <ConnectorPoint PointX="2.6666666666666665" PointY="6.9612939453125" />
+          <ConnectorPoint PointX="2.6666666666666665" PointY="6.9612939453124989" />
+          <ConnectorPoint PointX="2.6666666666666665" PointY="6.961293945312498" />
+          <ConnectorPoint PointX="2.8333333333333335" PointY="6.9612939453124989" />
+          <ConnectorPoint PointX="2.8333333333333335" PointY="6.9612939453125" />
           <ConnectorPoint PointX="3" PointY="6.9612939453125" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="2.25" PointY="3.9394335937499996" />
-          <ConnectorPoint PointX="2.6041666666666665" PointY="3.9394335937499987" />
-          <ConnectorPoint PointX="2.8333333333333335" PointY="3.9394335937499996" />
+          <ConnectorPoint PointX="2.6666666666666665" PointY="3.9394335937499987" />
+          <ConnectorPoint PointX="2.9583333333333335" PointY="3.9394335937499996" />
           <ConnectorPoint PointX="3.34375" PointY="3.9394335937499996" />
           <ConnectorPoint PointX="3.34375" PointY="4.75" />
         </AssociationConnector>
@@ -1617,50 +1696,71 @@
           <ConnectorPoint PointX="3.1406225" PointY="9.230205078125" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.25" PointY="18.547841796875" />
-          <ConnectorPoint PointX="6.75" PointY="18.547841796875" />
-          <ConnectorPoint PointX="6.75" PointY="17.134013671875" />
+          <ConnectorPoint PointX="5.375" PointY="16.297841796875" />
+          <ConnectorPoint PointX="5.75" PointY="16.297841796875" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.tracking_system_fk" ManuallyRouted="false">
           <ConnectorPoint PointX="2.25" PointY="12.367670898437499" />
-          <ConnectorPoint PointX="5.3001486143830148" PointY="12.367670898437499" />
-          <ConnectorPoint PointX="5.4668152810496808" PointY="12.367670898437499" />
-          <ConnectorPoint PointX="6" PointY="12.367670898437499" />
+          <ConnectorPoint PointX="5.416666666666667" PointY="12.367670898437499" />
+          <ConnectorPoint PointX="5.583333333333333" PointY="12.367670898437499" />
+          <ConnectorPoint PointX="5.75" PointY="12.367670898437499" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_Currency_id_FK_Currency_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="6.6740944589843743" />
-          <ConnectorPoint PointX="2.75" PointY="6.6740944589843743" />
-          <ConnectorPoint PointX="2.75" PointY="3.75" />
-          <ConnectorPoint PointX="6.874999" PointY="3.75" />
-          <ConnectorPoint PointX="6.874999" PointY="4" />
+          <ConnectorPoint PointX="1.5" PointY="8.047587890625" />
+          <ConnectorPoint PointX="1.5" PointY="8.297587890625" />
+          <ConnectorPoint PointX="2.6666666666666665" PointY="8.297587890625" />
+          <ConnectorPoint PointX="2.8333333333333335" PointY="8.297587890625" />
+          <ConnectorPoint PointX="2.875" PointY="8.297587890625" />
+          <ConnectorPoint PointX="2.875" PointY="9.480205078125" />
+          <ConnectorPoint PointX="3.0572891666666666" PointY="9.480205078125" />
+          <ConnectorPoint PointX="3.2239558333333336" PointY="9.480205078125" />
+          <ConnectorPoint PointX="3.2604166666666665" PointY="9.480205078125" />
+          <ConnectorPoint PointX="3.4270833333333335" PointY="9.480205078125" />
+          <ConnectorPoint PointX="5.5" PointY="9.480205078125" />
+          <ConnectorPoint PointX="5.5" PointY="5.5695528502604166" />
+          <ConnectorPoint PointX="6" PointY="5.5695528502604166" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_Currency_id_FK_Currency_id_PK1" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="7.3920931748046881" />
-          <ConnectorPoint PointX="2.6875" PointY="7.3920931748046881" />
-          <ConnectorPoint PointX="2.6875" PointY="3.734375" />
-          <ConnectorPoint PointX="6.4062475" PointY="3.734375" />
-          <ConnectorPoint PointX="6.4062475" PointY="4" />
+          <ConnectorPoint PointX="1.5" PointY="5.875" />
+          <ConnectorPoint PointX="1.5" PointY="5.625" />
+          <ConnectorPoint PointX="2.75" PointY="5.625" />
+          <ConnectorPoint PointX="2.75" PointY="9.495830078125" />
+          <ConnectorPoint PointX="3.0572891666666666" PointY="9.495830078125" />
+          <ConnectorPoint PointX="3.2239558333333336" PointY="9.495830078125" />
+          <ConnectorPoint PointX="3.2604166666666665" PointY="9.495830078125" />
+          <ConnectorPoint PointX="3.4270833333333335" PointY="9.495830078125" />
+          <ConnectorPoint PointX="5.375" PointY="9.495830078125" />
+          <ConnectorPoint PointX="5.375" PointY="8.5372621197916665" />
+          <ConnectorPoint PointX="5.416666666666667" PointY="8.5372621197916665" />
+          <ConnectorPoint PointX="5.583333333333333" PointY="8.5372621197916665" />
+          <ConnectorPoint PointX="6" PointY="8.5372621197916665" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.25" PointY="3.2278857421875014" />
-          <ConnectorPoint PointX="7.40625" PointY="3.2278857421875014" />
-          <ConnectorPoint PointX="7.40625" PointY="4" />
+          <ConnectorPoint PointX="5.25" PointY="3.1028857421875014" />
+          <ConnectorPoint PointX="6.34375" PointY="3.1028857421875014" />
+          <ConnectorPoint PointX="6.34375" PointY="4" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_Source_id_FK_Source_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="4.90625" PointY="10.25" />
-          <ConnectorPoint PointX="4.90625" PointY="9.7518115234375" />
-          <ConnectorPoint PointX="5.541666666666667" PointY="9.7518115234375" />
-          <ConnectorPoint PointX="5.708333333333333" PointY="9.7518115234375" />
-          <ConnectorPoint PointX="6" PointY="9.7518115234375" />
+          <ConnectorPoint PointX="4.90625" PointY="9.8729145390625" />
+          <ConnectorPoint PointX="6" PointY="9.8729145390625" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_UnitType_id_FK_UnitType_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.25" PointY="12.501152846153847" />
-          <ConnectorPoint PointX="5.625" PointY="12.126152846153847" />
-          <ConnectorPoint PointX="5.625" PointY="6.8446537617187495" />
-          <ConnectorPoint PointX="6" PointY="6.8446537617187495" />
+          <ConnectorPoint PointX="5.25" PointY="13.297841796875002" />
+          <ConnectorPoint PointX="5.5" PointY="13.297841796875002" />
+          <ConnectorPoint PointX="5.5" PointY="11.25" />
+          <ConnectorPoint PointX="6.562498" PointY="11.25" />
+          <ConnectorPoint PointX="6.562498" PointY="10.403219401041666" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="EomModel.AccountingView2" Width="1.5" PointX="10.75" PointY="8" Height="6.5955208333333317" />
-        <EntityTypeShape EntityType="EomModel.PublisherPayout" Width="1.5" PointX="11.875" PointY="0.5" Height="7.1724251302083282" />
+        <EntityTypeShape EntityType="EomModel.AccountingView2" Width="1.5" PointX="11.625" PointY="8.625" Height="6.5955208333333317" />
+        <EntityTypeShape EntityType="EomModel.MediaBuyerApprovalStatus" Width="1.5" PointX="8.25" PointY="10.875" Height="1.595683593749996" />
+        <AssociationConnector Association="EomModel.FK__Item__media_buye__540C7B00" >
+          <ConnectorPoint PointX="9" PointY="10.875" />
+          <ConnectorPoint PointX="9" PointY="10.653219401041666" />
+          <ConnectorPoint PointX="7.1875" PointY="10.653219401041666" />
+          <ConnectorPoint PointX="7.1875" PointY="10.403219401041666" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="EomModel.PublisherPayout" Width="2.375" PointX="11.625" PointY="0.5" Height="7.7493294270833264" />
       </Diagram>
     </Diagrams>
   </Designer>

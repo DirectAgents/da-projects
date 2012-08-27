@@ -23,13 +23,14 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK", "MediaBuyer", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.MediaBuyer), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Affiliate), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Affiliate_NetTermType_id_FK_NetTermType_id_PK", "NetTermType", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.NetTermType), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Affiliate), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "affiliate_tracking_system_fk", "TrackingSystem", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.TrackingSystem), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Affiliate), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.CampaignStatu), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.CampaignStatus), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "tracking_system_fk", "TrackingSystem", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.TrackingSystem), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK1", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.ItemAccountingStatu), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.ItemAccountingStatus), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_Source_id_FK_Source_id_PK", "Source", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Source), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_UnitType_id_FK_UnitType_id_PK", "UnitType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.UnitType), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 
 #endregion
 
@@ -132,18 +133,18 @@ namespace EomTool.Domain.Entities
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<CampaignStatu> CampaignStatus
+        public ObjectSet<CampaignStatus> CampaignStatuses
         {
             get
             {
-                if ((_CampaignStatus == null))
+                if ((_CampaignStatuses == null))
                 {
-                    _CampaignStatus = base.CreateObjectSet<CampaignStatu>("CampaignStatus");
+                    _CampaignStatuses = base.CreateObjectSet<CampaignStatus>("CampaignStatuses");
                 }
-                return _CampaignStatus;
+                return _CampaignStatuses;
             }
         }
-        private ObjectSet<CampaignStatu> _CampaignStatus;
+        private ObjectSet<CampaignStatus> _CampaignStatuses;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -180,18 +181,18 @@ namespace EomTool.Domain.Entities
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<ItemAccountingStatu> ItemAccountingStatus
+        public ObjectSet<ItemAccountingStatus> ItemAccountingStatuses
         {
             get
             {
-                if ((_ItemAccountingStatus == null))
+                if ((_ItemAccountingStatuses == null))
                 {
-                    _ItemAccountingStatus = base.CreateObjectSet<ItemAccountingStatu>("ItemAccountingStatus");
+                    _ItemAccountingStatuses = base.CreateObjectSet<ItemAccountingStatus>("ItemAccountingStatuses");
                 }
-                return _ItemAccountingStatus;
+                return _ItemAccountingStatuses;
             }
         }
-        private ObjectSet<ItemAccountingStatu> _ItemAccountingStatus;
+        private ObjectSet<ItemAccountingStatus> _ItemAccountingStatuses;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -372,6 +373,22 @@ namespace EomTool.Domain.Entities
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<MediaBuyerApprovalStatus> MediaBuyerApprovalStatuses
+        {
+            get
+            {
+                if ((_MediaBuyerApprovalStatuses == null))
+                {
+                    _MediaBuyerApprovalStatuses = base.CreateObjectSet<MediaBuyerApprovalStatus>("MediaBuyerApprovalStatuses");
+                }
+                return _MediaBuyerApprovalStatuses;
+            }
+        }
+        private ObjectSet<MediaBuyerApprovalStatus> _MediaBuyerApprovalStatuses;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<PublisherPayout> PublisherPayouts
         {
             get
@@ -413,11 +430,11 @@ namespace EomTool.Domain.Entities
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the CampaignStatus EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the CampaignStatuses EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToCampaignStatus(CampaignStatu campaignStatu)
+        public void AddToCampaignStatuses(CampaignStatus campaignStatus)
         {
-            base.AddObject("CampaignStatus", campaignStatu);
+            base.AddObject("CampaignStatuses", campaignStatus);
         }
     
         /// <summary>
@@ -437,11 +454,11 @@ namespace EomTool.Domain.Entities
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the ItemAccountingStatus EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the ItemAccountingStatuses EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToItemAccountingStatus(ItemAccountingStatu itemAccountingStatu)
+        public void AddToItemAccountingStatuses(ItemAccountingStatus itemAccountingStatus)
         {
-            base.AddObject("ItemAccountingStatus", itemAccountingStatu);
+            base.AddObject("ItemAccountingStatuses", itemAccountingStatus);
         }
     
         /// <summary>
@@ -530,6 +547,14 @@ namespace EomTool.Domain.Entities
         public void AddToAccountingView2(AccountingView2 accountingView2)
         {
             base.AddObject("AccountingView2", accountingView2);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the MediaBuyerApprovalStatuses EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToMediaBuyerApprovalStatuses(MediaBuyerApprovalStatus mediaBuyerApprovalStatus)
+        {
+            base.AddObject("MediaBuyerApprovalStatuses", mediaBuyerApprovalStatus);
         }
     
         /// <summary>
@@ -2576,15 +2601,15 @@ namespace EomTool.Domain.Entities
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomModel", "Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus")]
-        public CampaignStatu CampaignStatu
+        public CampaignStatus CampaignStatus
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatus>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatus>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus").Value = value;
             }
         }
         /// <summary>
@@ -2592,17 +2617,17 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<CampaignStatu> CampaignStatuReference
+        public EntityReference<CampaignStatus> CampaignStatusReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatus>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatu>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatus>("EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", value);
                 }
             }
         }
@@ -3329,24 +3354,24 @@ namespace EomTool.Domain.Entities
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="CampaignStatu")]
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="CampaignStatus")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class CampaignStatu : EntityObject
+    public partial class CampaignStatus : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new CampaignStatu object.
+        /// Create a new CampaignStatus object.
         /// </summary>
         /// <param name="id">Initial value of the id property.</param>
         /// <param name="name">Initial value of the name property.</param>
-        public static CampaignStatu CreateCampaignStatu(global::System.Int32 id, global::System.String name)
+        public static CampaignStatus CreateCampaignStatus(global::System.Int32 id, global::System.String name)
         {
-            CampaignStatu campaignStatu = new CampaignStatu();
-            campaignStatu.id = id;
-            campaignStatu.name = name;
-            return campaignStatu;
+            CampaignStatus campaignStatus = new CampaignStatus();
+            campaignStatus.id = id;
+            campaignStatus.name = name;
+            return campaignStatus;
         }
 
         #endregion
@@ -4282,15 +4307,15 @@ namespace EomTool.Domain.Entities
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus")]
-        public ItemAccountingStatu ItemAccountingStatu
+        public ItemAccountingStatus ItemAccountingStatus
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<ItemAccountingStatu>("EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<ItemAccountingStatus>("EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<ItemAccountingStatu>("EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<ItemAccountingStatus>("EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus").Value = value;
             }
         }
         /// <summary>
@@ -4298,17 +4323,17 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<ItemAccountingStatu> ItemAccountingStatuReference
+        public EntityReference<ItemAccountingStatus> ItemAccountingStatusReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<ItemAccountingStatu>("EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<ItemAccountingStatus>("EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<ItemAccountingStatu>("EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<ItemAccountingStatus>("EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatus", value);
                 }
             }
         }
@@ -4388,6 +4413,44 @@ namespace EomTool.Domain.Entities
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu")]
+        public MediaBuyerApprovalStatus MediaBuyerApprovalStatus
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<MediaBuyerApprovalStatus> MediaBuyerApprovalStatusReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu", value);
+                }
+            }
+        }
 
         #endregion
     }
@@ -4395,24 +4458,24 @@ namespace EomTool.Domain.Entities
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="ItemAccountingStatu")]
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="ItemAccountingStatus")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class ItemAccountingStatu : EntityObject
+    public partial class ItemAccountingStatus : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new ItemAccountingStatu object.
+        /// Create a new ItemAccountingStatus object.
         /// </summary>
         /// <param name="id">Initial value of the id property.</param>
         /// <param name="name">Initial value of the name property.</param>
-        public static ItemAccountingStatu CreateItemAccountingStatu(global::System.Int32 id, global::System.String name)
+        public static ItemAccountingStatus CreateItemAccountingStatus(global::System.Int32 id, global::System.String name)
         {
-            ItemAccountingStatu itemAccountingStatu = new ItemAccountingStatu();
-            itemAccountingStatu.id = id;
-            itemAccountingStatu.name = name;
-            return itemAccountingStatu;
+            ItemAccountingStatus itemAccountingStatus = new ItemAccountingStatus();
+            itemAccountingStatus.id = id;
+            itemAccountingStatus.name = name;
+            return itemAccountingStatus;
         }
 
         #endregion
@@ -4607,6 +4670,112 @@ namespace EomTool.Domain.Entities
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="MediaBuyerApprovalStatus")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class MediaBuyerApprovalStatus : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new MediaBuyerApprovalStatus object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="name">Initial value of the name property.</param>
+        public static MediaBuyerApprovalStatus CreateMediaBuyerApprovalStatus(global::System.Int32 id, global::System.String name)
+        {
+            MediaBuyerApprovalStatus mediaBuyerApprovalStatus = new MediaBuyerApprovalStatus();
+            mediaBuyerApprovalStatus.id = id;
+            mediaBuyerApprovalStatus.name = name;
+            return mediaBuyerApprovalStatus;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK__Item__media_buye__540C7B00", "Item")]
+        public EntityCollection<Item> Items
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.FK__Item__media_buye__540C7B00", "Item");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.FK__Item__media_buye__540C7B00", "Item", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="NetTermType")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -4735,11 +4904,14 @@ namespace EomTool.Domain.Entities
         /// <param name="unit_Type">Initial value of the Unit_Type property.</param>
         /// <param name="ad_Manager">Initial value of the Ad_Manager property.</param>
         /// <param name="account_Manager">Initial value of the Account_Manager property.</param>
+        /// <param name="status_id">Initial value of the status_id property.</param>
         /// <param name="status">Initial value of the Status property.</param>
+        /// <param name="accounting_status_id">Initial value of the accounting_status_id property.</param>
         /// <param name="accounting_Status">Initial value of the Accounting_Status property.</param>
+        /// <param name="media_buyer_approval_status_id">Initial value of the media_buyer_approval_status_id property.</param>
         /// <param name="media_Buyer_Approval_Status">Initial value of the Media_Buyer_Approval_Status property.</param>
         /// <param name="source">Initial value of the Source property.</param>
-        public static PublisherPayout CreatePublisherPayout(global::System.Int32 affid, global::System.String publisher, global::System.String advertiser, global::System.Int32 pid, global::System.String campaign_Name, global::System.String rev_Currency, global::System.String cost_Currency, global::System.Decimal rev_Unit, global::System.Decimal cost_Unit, global::System.String unit_Type, global::System.String ad_Manager, global::System.String account_Manager, global::System.String status, global::System.String accounting_Status, global::System.String media_Buyer_Approval_Status, global::System.String source)
+        public static PublisherPayout CreatePublisherPayout(global::System.Int32 affid, global::System.String publisher, global::System.String advertiser, global::System.Int32 pid, global::System.String campaign_Name, global::System.String rev_Currency, global::System.String cost_Currency, global::System.Decimal rev_Unit, global::System.Decimal cost_Unit, global::System.String unit_Type, global::System.String ad_Manager, global::System.String account_Manager, global::System.Int32 status_id, global::System.String status, global::System.Int32 accounting_status_id, global::System.String accounting_Status, global::System.Int32 media_buyer_approval_status_id, global::System.String media_Buyer_Approval_Status, global::System.String source)
         {
             PublisherPayout publisherPayout = new PublisherPayout();
             publisherPayout.affid = affid;
@@ -4754,8 +4926,11 @@ namespace EomTool.Domain.Entities
             publisherPayout.Unit_Type = unit_Type;
             publisherPayout.Ad_Manager = ad_Manager;
             publisherPayout.Account_Manager = account_Manager;
+            publisherPayout.status_id = status_id;
             publisherPayout.Status = status;
+            publisherPayout.accounting_status_id = accounting_status_id;
             publisherPayout.Accounting_Status = accounting_Status;
+            publisherPayout.media_buyer_approval_status_id = media_buyer_approval_status_id;
             publisherPayout.Media_Buyer_Approval_Status = media_Buyer_Approval_Status;
             publisherPayout.Source = source;
             return publisherPayout;
@@ -5333,6 +5508,33 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
+        public global::System.Int32 status_id
+        {
+            get
+            {
+                return _status_id;
+            }
+            set
+            {
+                if (_status_id != value)
+                {
+                    Onstatus_idChanging(value);
+                    ReportPropertyChanging("status_id");
+                    _status_id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("status_id");
+                    Onstatus_idChanged();
+                }
+            }
+        }
+        private global::System.Int32 _status_id;
+        partial void Onstatus_idChanging(global::System.Int32 value);
+        partial void Onstatus_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
         public global::System.String Status
         {
             get
@@ -5360,6 +5562,33 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
+        public global::System.Int32 accounting_status_id
+        {
+            get
+            {
+                return _accounting_status_id;
+            }
+            set
+            {
+                if (_accounting_status_id != value)
+                {
+                    Onaccounting_status_idChanging(value);
+                    ReportPropertyChanging("accounting_status_id");
+                    _accounting_status_id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("accounting_status_id");
+                    Onaccounting_status_idChanged();
+                }
+            }
+        }
+        private global::System.Int32 _accounting_status_id;
+        partial void Onaccounting_status_idChanging(global::System.Int32 value);
+        partial void Onaccounting_status_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
         public global::System.String Accounting_Status
         {
             get
@@ -5381,6 +5610,33 @@ namespace EomTool.Domain.Entities
         private global::System.String _Accounting_Status;
         partial void OnAccounting_StatusChanging(global::System.String value);
         partial void OnAccounting_StatusChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 media_buyer_approval_status_id
+        {
+            get
+            {
+                return _media_buyer_approval_status_id;
+            }
+            set
+            {
+                if (_media_buyer_approval_status_id != value)
+                {
+                    Onmedia_buyer_approval_status_idChanging(value);
+                    ReportPropertyChanging("media_buyer_approval_status_id");
+                    _media_buyer_approval_status_id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("media_buyer_approval_status_id");
+                    Onmedia_buyer_approval_status_idChanged();
+                }
+            }
+        }
+        private global::System.Int32 _media_buyer_approval_status_id;
+        partial void Onmedia_buyer_approval_status_idChanging(global::System.Int32 value);
+        partial void Onmedia_buyer_approval_status_idChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
