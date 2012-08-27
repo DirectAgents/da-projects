@@ -26,8 +26,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=aaron\\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=Tru" +
-            "e")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseR1;User=sa;Password=sp0ngbOb")]
         public string DADatabaseR1ConnectionString {
             get {
                 return ((string)(this["DADatabaseR1ConnectionString"]));
@@ -226,8 +225,8 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseJuly2012Test;Integrated Security=T" +
-            "rue")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseJuly2012Test2;User=sa;Password=sp0" +
+            "ngbOb")]
         public string OverrideConnectionString {
             get {
                 return ((string)(this["OverrideConnectionString"]));
@@ -245,7 +244,7 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool TestMode {
             get {
                 return ((bool)(this["TestMode"]));
@@ -288,6 +287,18 @@ namespace EomApp1.Properties {
         public string OverrideEomToolSecurityConnectionString {
             get {
                 return ((string)(this["OverrideEomToolSecurityConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
+        public string SettingsConnectionString {
+            get {
+                return ((string)(this["SettingsConnectionString"]));
+            }
+            set {
+                this["SettingsConnectionString"] = value;
             }
         }
     }

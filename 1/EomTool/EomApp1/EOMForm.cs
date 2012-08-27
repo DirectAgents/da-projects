@@ -250,5 +250,10 @@ namespace EomApp1
         {
             LaunchForm<Screens.Audit.CampaignFinalizationAudit>();
         }
+
+        private void mBApprovalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchForm<Screens.MediaBuyerWorkflow.MediaBuyerWorkflowForm>();
+        }
     }
 }

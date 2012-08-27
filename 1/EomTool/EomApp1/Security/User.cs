@@ -1,4 +1,7 @@
-﻿namespace EomApp1.Security
+﻿using System.Linq;
+using System;
+
+namespace EomApp1.Security
 {
     public class User : UserBase
     {
@@ -53,6 +56,22 @@
         public bool CanDoMenuItem(string tag)
         {
             return HasPermission(tag);
+        }
+
+        public static string GetEmailAddress(string name)
+        {
+            using (var db = new Security.EomToolSecurityEntities())
+            {
+                var group = db.Groups.Where(c => c.Name == name).FirstOrDefault();
+                if (group != null)
+                {
+                    return group.EmailAddress;
+                }
+                else
+                {
+                    throw new Exception("There is no group named " + name);
+                }
+            }
         }
     }
 }

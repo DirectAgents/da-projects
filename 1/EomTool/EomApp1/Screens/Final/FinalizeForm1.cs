@@ -390,6 +390,15 @@ namespace EomApp1.Screens.Final
                     e.Value = "";
                 }
             }
+
+            if (sender == campaignsToVerifyGrid)
+            {
+                if (e.ColumnIndex == ApprovalCol.Index)
+                {
+                    if (e.Value.ToString() == "default")
+                        e.Value = EomAppCommon.EomAppSettings.Screens.Workflow.ApprovalColumn.TextOnButtonWhenMediaBuyerApprovalStatusIsDefault;
+                }
+            }
         }
 
         private void finalizedRevenueButton_Click(object sender, EventArgs e)
@@ -401,6 +410,11 @@ namespace EomApp1.Screens.Final
         {
             var checkBox = sender as CheckBox;
             SetRevBreakdownColumnsVisibility(checkBox.Checked);
+        }
+
+        private void mbApprovalButton_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.LaunchForm<Screens.MediaBuyerWorkflow.MediaBuyerWorkflowForm>();
         }
     }
 }

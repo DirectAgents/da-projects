@@ -10,6 +10,7 @@ namespace EomApp1.Properties
         protected override void OnSettingsLoaded(object sender, System.Configuration.SettingsLoadedEventArgs e)
         {
             EomAppCommon.EomAppSettings.MasterDatabaseListConnectionString = this.DAMain1ConnectionString;
+            EomAppCommon.EomAppSettings.SettingsConnectionString = this.SettingsConnectionString;
 
             if (IsTestMode())
             {

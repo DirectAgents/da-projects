@@ -33,16 +33,17 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="WindowsIdentity" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="WindowsIdentity" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Permissions">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Tag" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Tag" Type="varchar" Nullable="false" MaxLength="255" />
         </EntityType>
         <EntityType Name="RoleGroup">
           <Key>
@@ -65,7 +66,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
         </EntityType>
         <Association Name="FK_RoleGroup_Group">
           <End Role="Groups" Type="EomToolSecurityModel.Store.Groups" Multiplicity="1" />
@@ -140,6 +141,7 @@
           <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="WindowsIdentity" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Roles" Relationship="EomToolSecurityModel.RoleGroup" FromRole="Group" ToRole="Role" />
+          <Property Type="String" Name="EmailAddress" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Permission">
           <Key>
@@ -176,6 +178,7 @@
           <EntitySetMapping Name="Groups">
             <EntityTypeMapping TypeName="EomToolSecurityModel.Group">
               <MappingFragment StoreEntitySet="Groups">
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
                 <ScalarProperty Name="WindowsIdentity" ColumnName="WindowsIdentity" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

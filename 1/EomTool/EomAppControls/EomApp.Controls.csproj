@@ -31,10 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,6 +50,11 @@
     <Compile Include="Common\UserControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="DAMain1DataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DAMain1DataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DataGrid\DataGridViewDisableButton.cs" />
     <Compile Include="DataGrid\ExtendedDataGridView.cs">
       <SubType>Component</SubType>
@@ -54,6 +63,9 @@
     <Compile Include="Filtering\DataGridViewAutoFilterTextBoxColumn.cs" />
     <Compile Include="Filtering\DataGridViewColumnSelector.cs" />
     <Compile Include="Filtering\DataGridViewTextBoxFilterColumnHeaderCell.cs" />
+    <Compile Include="Filtering\RadioButtonPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Logging\LoggerBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -67,6 +79,11 @@
       <DependentUpon>LoggerDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Sorting\SortableBindingList.cs" />
     <Compile Include="Typing\TextEventArgs.cs" />
     <Compile Include="Typing\TypingTracker.cs">
@@ -86,6 +103,25 @@
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
       <Name>DirectAgents.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="DAMain1DataSet.xsc">
+      <DependentUpon>DAMain1DataSet.xsd</DependentUpon>
+    </None>
+    <None Include="DAMain1DataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DAMain1DataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DAMain1DataSet.xss">
+      <DependentUpon>DAMain1DataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Properties\DataSources\EomAppCommon.EomAppSettings+Settings.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

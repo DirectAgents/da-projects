@@ -1,0 +1,11 @@
+﻿<#@ template language="C#" #>
+<# 
+var x = (MediaBuyerEmail)this;
+#>
+<p>Hello <#=x.MediaBuyerName#>,<br/>
+<br/>
+You have pending publisher report approvals.<br/>
+<br/>
+Please click <a href="#">here</a> to open them.<br/>
+<br/>
+Thank You.</p>

@@ -11,7 +11,8 @@
     <RootNamespace>EomApp1</RootNamespace>
     <AssemblyName>EomApp1</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>\\biz3\EomToolInstall\</PublishUrl>
@@ -90,6 +91,9 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\Solution\packages\AutoMapper.2.1.267\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -103,6 +107,9 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -126,6 +133,12 @@
       <DependentUpon>DAMain1DataSetForSqlExecute.xsd</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\SendMailDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\SendMailDialog.Designer.cs">
+      <DependentUpon>SendMailDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="Screens\Accounting\Controls\Currencies.cs">
@@ -361,6 +374,12 @@
     </Compile>
     <Compile Include="Screens\Final\UI\PublishersPresenter.cs" />
     <Compile Include="Screens\Final\UI\PublishersEventArgs.cs" />
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerEmail.cs" />
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MediaBuyerEmailTemplate.tt</DependentUpon>
+    </Compile>
     <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -373,16 +392,23 @@
     <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowForm.Designer.cs">
       <DependentUpon>MediaBuyerWorkflowForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowModel.cs" />
     <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MediaBuyerWorkflowModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowSubform.cs">
+    <Compile Include="Screens\MediaBuyerWorkflow\PublisherPayoutsSubform.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowSubform.Designer.cs">
-      <DependentUpon>MediaBuyerWorkflowSubform.cs</DependentUpon>
+    <Compile Include="Screens\MediaBuyerWorkflow\PublisherPayoutsSubform.Designer.cs">
+      <DependentUpon>PublisherPayoutsSubform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\PublishersSubform.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Screens\MediaBuyerWorkflow\PublishersSubform.Designer.cs">
+      <DependentUpon>PublishersSubform.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\PublisherNameCombine\PublisherCombineDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -712,6 +738,9 @@
     <Compile Include="UI\MaskedDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="Screens\MediaBuyerWorkflow\SendMailDialog.resx">
+      <DependentUpon>SendMailDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\Accounting\Forms\AccountingSheet2.resx">
       <DependentUpon>AccountingSheet2.cs</DependentUpon>
     </EmbeddedResource>
@@ -727,8 +756,11 @@
     <EmbeddedResource Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowForm.resx">
       <DependentUpon>MediaBuyerWorkflowForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowSubform.resx">
-      <DependentUpon>MediaBuyerWorkflowSubform.cs</DependentUpon>
+    <EmbeddedResource Include="Screens\MediaBuyerWorkflow\PublisherPayoutsSubform.resx">
+      <DependentUpon>PublisherPayoutsSubform.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\MediaBuyerWorkflow\PublishersSubform.resx">
+      <DependentUpon>PublishersSubform.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\PublisherNameCombine\PublisherCombine.resx">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
@@ -787,6 +819,7 @@
     </None>
     <None Include="EOMTool-ClickOnce-Manifests-5Years.pfx" />
     <None Include="EOMTool-ClickOnce-Manifests.pfx" />
+    <None Include="packages.config" />
     <None Include="Screens\Accounting\Data\AccountingDataClasses.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>AccountingDataClasses.designer.cs</LastGenOutput>
@@ -1026,6 +1059,10 @@
     </None>
     <None Include="Screens\Final\UI\Data.xss">
       <DependentUpon>Data.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>MediaBuyerEmailTemplate.cs</LastGenOutput>
     </None>
     <None Include="Screens\MediaBuyerWorkflow\MediaBuyerWorkflowDataSet.xsc">
       <DependentUpon>MediaBuyerWorkflowDataSet.xsd</DependentUpon>
@@ -1314,6 +1351,7 @@
     <ProjectReference Include="..\EomAppControls\EomApp.Controls.csproj">
       <Project>{1594F5F0-0810-4CD2-8C1E-439BA340EC2E}</Project>
       <Name>EomApp.Controls</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <ProjectReference Include="..\EomAppModels\EomApp.Models.csproj">
       <Project>{B9F971EA-5F76-474C-B3DC-E00FD3760967}</Project>
@@ -1322,6 +1360,10 @@
     <ProjectReference Include="..\EomTool.Domain\EomTool.Domain.csproj">
       <Project>{F41DA2E2-D584-479A-9F24-9B2D3D33F927}</Project>
       <Name>EomTool.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HtmlEditorControl\HTMLEditorControl.csproj">
+      <Project>{5873DE0F-6853-4C8E-91A4-7A6861069A9A}</Project>
+      <Name>HTMLEditorControl</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -66,6 +66,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.mBApprovalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.class1BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -196,7 +197,8 @@
             this.currenciesToolStripMenuItem,
             this.accountingSheetToolStripMenuItem1,
             this.verifiedRevenueToolStripMenuItem,
-            this.auditToolStripMenuItem});
+            this.auditToolStripMenuItem,
+            this.mBApprovalToolStripMenuItem});
             this.accountingToolStripMenuItem.Name = "accountingToolStripMenuItem";
             this.accountingToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.accountingToolStripMenuItem.Text = "Accounting";
@@ -376,6 +378,13 @@
             this.webBrowser1.Size = new System.Drawing.Size(46, 20);
             this.webBrowser1.TabIndex = 5;
             // 
+            // mBApprovalToolStripMenuItem
+            // 
+            this.mBApprovalToolStripMenuItem.Name = "mBApprovalToolStripMenuItem";
+            this.mBApprovalToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.mBApprovalToolStripMenuItem.Text = "MB Approval";
+            this.mBApprovalToolStripMenuItem.Click += new System.EventHandler(this.mBApprovalToolStripMenuItem_Click);
+            // 
             // EOMForm
             // 
             this.AllowDrop = true;
@@ -441,6 +450,7 @@
         private System.Windows.Forms.ToolStripMenuItem tToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem auditToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem itemsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mBApprovalToolStripMenuItem;
 
     }
 }

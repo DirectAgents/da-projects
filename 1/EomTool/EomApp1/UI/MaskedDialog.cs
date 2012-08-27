@@ -25,13 +25,14 @@ namespace EomApp1.UI
             this.Location = parent.PointToScreen(System.Drawing.Point.Empty);
             this.ClientSize = parent.ClientSize;
         }
-        public static void ShowDialog(Form parent, Form dialog)
+        public static DialogResult ShowDialog(Form parent, Form dialog)
         {
             var mask = new MaskedDialog(parent, dialog);
             dialog.StartPosition = FormStartPosition.CenterParent;
             mask.Show();
-            dialog.ShowDialog(mask);
+            var result = dialog.ShowDialog(mask);
             mask.Close();
+            return result;
         }
     } 
 

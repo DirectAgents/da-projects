@@ -24,6 +24,8 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
     public partial class MediaBuyerWorkflowDataSet : global::System.Data.DataSet {
         
+        private PublisherPayoutsDataTable tablePublisherPayouts;
+        
         private MediaBuyersDataTable tableMediaBuyers;
         
         private PublishersDataTable tablePublishers;
@@ -56,6 +58,9 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
+                if ((ds.Tables["PublisherPayouts"] != null)) {
+                    base.Tables.Add(new PublisherPayoutsDataTable(ds.Tables["PublisherPayouts"]));
+                }
                 if ((ds.Tables["MediaBuyers"] != null)) {
                     base.Tables.Add(new MediaBuyersDataTable(ds.Tables["MediaBuyers"]));
                 }
@@ -78,6 +83,16 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
             base.Tables.CollectionChanged += schemaChangedHandler;
             this.Relations.CollectionChanged += schemaChangedHandler;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public PublisherPayoutsDataTable PublisherPayouts {
+            get {
+                return this.tablePublisherPayouts;
+            }
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -167,6 +182,9 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
+                if ((ds.Tables["PublisherPayouts"] != null)) {
+                    base.Tables.Add(new PublisherPayoutsDataTable(ds.Tables["PublisherPayouts"]));
+                }
                 if ((ds.Tables["MediaBuyers"] != null)) {
                     base.Tables.Add(new MediaBuyersDataTable(ds.Tables["MediaBuyers"]));
                 }
@@ -206,6 +224,12 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         internal void InitVars(bool initTable) {
+            this.tablePublisherPayouts = ((PublisherPayoutsDataTable)(base.Tables["PublisherPayouts"]));
+            if ((initTable == true)) {
+                if ((this.tablePublisherPayouts != null)) {
+                    this.tablePublisherPayouts.InitVars();
+                }
+            }
             this.tableMediaBuyers = ((MediaBuyersDataTable)(base.Tables["MediaBuyers"]));
             if ((initTable == true)) {
                 if ((this.tableMediaBuyers != null)) {
@@ -228,10 +252,18 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             this.Namespace = "http://tempuri.org/MediaBuyerWorkflowDataSet.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
+            this.tablePublisherPayouts = new PublisherPayoutsDataTable();
+            base.Tables.Add(this.tablePublisherPayouts);
             this.tableMediaBuyers = new MediaBuyersDataTable();
             base.Tables.Add(this.tableMediaBuyers);
             this.tablePublishers = new PublishersDataTable();
             base.Tables.Add(this.tablePublishers);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private bool ShouldSerializePublisherPayouts() {
+            return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -302,6 +334,9 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public delegate void PublisherPayoutsRowChangeEventHandler(object sender, PublisherPayoutsRowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public delegate void MediaBuyersRowChangeEventHandler(object sender, MediaBuyersRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -312,9 +347,757 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class PublisherPayoutsDataTable : global::System.Data.TypedTableBase<PublisherPayoutsRow> {
+            
+            private global::System.Data.DataColumn columnaffid;
+            
+            private global::System.Data.DataColumn columnPublisher;
+            
+            private global::System.Data.DataColumn columnAdvertiser;
+            
+            private global::System.Data.DataColumn columnpid;
+            
+            private global::System.Data.DataColumn columnCampaign_Name;
+            
+            private global::System.Data.DataColumn columnRev_Currency;
+            
+            private global::System.Data.DataColumn columnCost_Currency;
+            
+            private global::System.Data.DataColumn _columnRev_Unit;
+            
+            private global::System.Data.DataColumn _columnRev_Unit_USD;
+            
+            private global::System.Data.DataColumn _columnCost_Unit;
+            
+            private global::System.Data.DataColumn _columnCost_Unit_USD;
+            
+            private global::System.Data.DataColumn columnUnits;
+            
+            private global::System.Data.DataColumn columnUnit_Type;
+            
+            private global::System.Data.DataColumn columnRevenue;
+            
+            private global::System.Data.DataColumn columnRevenue_USD;
+            
+            private global::System.Data.DataColumn columnCost;
+            
+            private global::System.Data.DataColumn columnCost_USD;
+            
+            private global::System.Data.DataColumn columnMargin;
+            
+            private global::System.Data.DataColumn columnMarginPct;
+            
+            private global::System.Data.DataColumn columnMedia_Buyer;
+            
+            private global::System.Data.DataColumn columnAd_Manager;
+            
+            private global::System.Data.DataColumn columnAccount_Manager;
+            
+            private global::System.Data.DataColumn columnStatus;
+            
+            private global::System.Data.DataColumn columnAccounting_Status;
+            
+            private global::System.Data.DataColumn columnMedia_Buyer_Approval_Status;
+            
+            private global::System.Data.DataColumn columnNet_Terms;
+            
+            private global::System.Data.DataColumn columnAff_Pay_Method;
+            
+            private global::System.Data.DataColumn columnPub_Pay_Curr;
+            
+            private global::System.Data.DataColumn columnPub_Payout;
+            
+            private global::System.Data.DataColumn columnSource;
+            
+            private global::System.Data.DataColumn columnItemIds;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public PublisherPayoutsDataTable() {
+                this.TableName = "PublisherPayouts";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal PublisherPayoutsDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected PublisherPayoutsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn affidColumn {
+                get {
+                    return this.columnaffid;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PublisherColumn {
+                get {
+                    return this.columnPublisher;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn AdvertiserColumn {
+                get {
+                    return this.columnAdvertiser;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn pidColumn {
+                get {
+                    return this.columnpid;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Campaign_NameColumn {
+                get {
+                    return this.columnCampaign_Name;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Rev_CurrencyColumn {
+                get {
+                    return this.columnRev_Currency;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Cost_CurrencyColumn {
+                get {
+                    return this.columnCost_Currency;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn _Rev_UnitColumn {
+                get {
+                    return this._columnRev_Unit;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn _Rev_Unit_USDColumn {
+                get {
+                    return this._columnRev_Unit_USD;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn _Cost_UnitColumn {
+                get {
+                    return this._columnCost_Unit;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn _Cost_Unit_USDColumn {
+                get {
+                    return this._columnCost_Unit_USD;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn UnitsColumn {
+                get {
+                    return this.columnUnits;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Unit_TypeColumn {
+                get {
+                    return this.columnUnit_Type;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RevenueColumn {
+                get {
+                    return this.columnRevenue;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Revenue_USDColumn {
+                get {
+                    return this.columnRevenue_USD;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CostColumn {
+                get {
+                    return this.columnCost;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Cost_USDColumn {
+                get {
+                    return this.columnCost_USD;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn MarginColumn {
+                get {
+                    return this.columnMargin;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn MarginPctColumn {
+                get {
+                    return this.columnMarginPct;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Media_BuyerColumn {
+                get {
+                    return this.columnMedia_Buyer;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Ad_ManagerColumn {
+                get {
+                    return this.columnAd_Manager;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Account_ManagerColumn {
+                get {
+                    return this.columnAccount_Manager;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn StatusColumn {
+                get {
+                    return this.columnStatus;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Accounting_StatusColumn {
+                get {
+                    return this.columnAccounting_Status;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Media_Buyer_Approval_StatusColumn {
+                get {
+                    return this.columnMedia_Buyer_Approval_Status;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Net_TermsColumn {
+                get {
+                    return this.columnNet_Terms;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Aff_Pay_MethodColumn {
+                get {
+                    return this.columnAff_Pay_Method;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Pub_Pay_CurrColumn {
+                get {
+                    return this.columnPub_Pay_Curr;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn Pub_PayoutColumn {
+                get {
+                    return this.columnPub_Payout;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn SourceColumn {
+                get {
+                    return this.columnSource;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ItemIdsColumn {
+                get {
+                    return this.columnItemIds;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public PublisherPayoutsRow this[int index] {
+                get {
+                    return ((PublisherPayoutsRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event PublisherPayoutsRowChangeEventHandler PublisherPayoutsRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event PublisherPayoutsRowChangeEventHandler PublisherPayoutsRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event PublisherPayoutsRowChangeEventHandler PublisherPayoutsRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event PublisherPayoutsRowChangeEventHandler PublisherPayoutsRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void AddPublisherPayoutsRow(PublisherPayoutsRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public PublisherPayoutsRow AddPublisherPayoutsRow(
+                        int affid, 
+                        string Publisher, 
+                        string Advertiser, 
+                        int pid, 
+                        string Campaign_Name, 
+                        string Rev_Currency, 
+                        string Cost_Currency, 
+                        decimal _Rev_Unit, 
+                        decimal _Rev_Unit_USD, 
+                        decimal _Cost_Unit, 
+                        decimal _Cost_Unit_USD, 
+                        decimal Units, 
+                        string Unit_Type, 
+                        decimal Revenue, 
+                        decimal Revenue_USD, 
+                        decimal Cost, 
+                        decimal Cost_USD, 
+                        decimal Margin, 
+                        decimal MarginPct, 
+                        string Media_Buyer, 
+                        string Ad_Manager, 
+                        string Account_Manager, 
+                        string Status, 
+                        string Accounting_Status, 
+                        string Media_Buyer_Approval_Status, 
+                        string Net_Terms, 
+                        string Aff_Pay_Method, 
+                        string Pub_Pay_Curr, 
+                        decimal Pub_Payout, 
+                        string Source, 
+                        string ItemIds) {
+                PublisherPayoutsRow rowPublisherPayoutsRow = ((PublisherPayoutsRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        affid,
+                        Publisher,
+                        Advertiser,
+                        pid,
+                        Campaign_Name,
+                        Rev_Currency,
+                        Cost_Currency,
+                        _Rev_Unit,
+                        _Rev_Unit_USD,
+                        _Cost_Unit,
+                        _Cost_Unit_USD,
+                        Units,
+                        Unit_Type,
+                        Revenue,
+                        Revenue_USD,
+                        Cost,
+                        Cost_USD,
+                        Margin,
+                        MarginPct,
+                        Media_Buyer,
+                        Ad_Manager,
+                        Account_Manager,
+                        Status,
+                        Accounting_Status,
+                        Media_Buyer_Approval_Status,
+                        Net_Terms,
+                        Aff_Pay_Method,
+                        Pub_Pay_Curr,
+                        Pub_Payout,
+                        Source,
+                        ItemIds};
+                rowPublisherPayoutsRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowPublisherPayoutsRow);
+                return rowPublisherPayoutsRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                PublisherPayoutsDataTable cln = ((PublisherPayoutsDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new PublisherPayoutsDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal void InitVars() {
+                this.columnaffid = base.Columns["affid"];
+                this.columnPublisher = base.Columns["Publisher"];
+                this.columnAdvertiser = base.Columns["Advertiser"];
+                this.columnpid = base.Columns["pid"];
+                this.columnCampaign_Name = base.Columns["Campaign Name"];
+                this.columnRev_Currency = base.Columns["Rev Currency"];
+                this.columnCost_Currency = base.Columns["Cost Currency"];
+                this._columnRev_Unit = base.Columns["Rev/Unit"];
+                this._columnRev_Unit_USD = base.Columns["Rev/Unit USD"];
+                this._columnCost_Unit = base.Columns["Cost/Unit"];
+                this._columnCost_Unit_USD = base.Columns["Cost/Unit USD"];
+                this.columnUnits = base.Columns["Units"];
+                this.columnUnit_Type = base.Columns["Unit Type"];
+                this.columnRevenue = base.Columns["Revenue"];
+                this.columnRevenue_USD = base.Columns["Revenue USD"];
+                this.columnCost = base.Columns["Cost"];
+                this.columnCost_USD = base.Columns["Cost USD"];
+                this.columnMargin = base.Columns["Margin"];
+                this.columnMarginPct = base.Columns["MarginPct"];
+                this.columnMedia_Buyer = base.Columns["Media Buyer"];
+                this.columnAd_Manager = base.Columns["Ad Manager"];
+                this.columnAccount_Manager = base.Columns["Account Manager"];
+                this.columnStatus = base.Columns["Status"];
+                this.columnAccounting_Status = base.Columns["Accounting Status"];
+                this.columnMedia_Buyer_Approval_Status = base.Columns["Media Buyer Approval Status"];
+                this.columnNet_Terms = base.Columns["Net Terms"];
+                this.columnAff_Pay_Method = base.Columns["Aff Pay Method"];
+                this.columnPub_Pay_Curr = base.Columns["Pub Pay Curr"];
+                this.columnPub_Payout = base.Columns["Pub Payout"];
+                this.columnSource = base.Columns["Source"];
+                this.columnItemIds = base.Columns["ItemIds"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private void InitClass() {
+                this.columnaffid = new global::System.Data.DataColumn("affid", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnaffid);
+                this.columnPublisher = new global::System.Data.DataColumn("Publisher", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPublisher);
+                this.columnAdvertiser = new global::System.Data.DataColumn("Advertiser", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAdvertiser);
+                this.columnpid = new global::System.Data.DataColumn("pid", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnpid);
+                this.columnCampaign_Name = new global::System.Data.DataColumn("Campaign Name", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCampaign_Name);
+                this.columnRev_Currency = new global::System.Data.DataColumn("Rev Currency", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRev_Currency);
+                this.columnCost_Currency = new global::System.Data.DataColumn("Cost Currency", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCost_Currency);
+                this._columnRev_Unit = new global::System.Data.DataColumn("Rev/Unit", typeof(decimal), null, global::System.Data.MappingType.Element);
+                this._columnRev_Unit.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnRev_Unit");
+                this._columnRev_Unit.ExtendedProperties.Add("Generator_UserColumnName", "Rev/Unit");
+                base.Columns.Add(this._columnRev_Unit);
+                this._columnRev_Unit_USD = new global::System.Data.DataColumn("Rev/Unit USD", typeof(decimal), null, global::System.Data.MappingType.Element);
+                this._columnRev_Unit_USD.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnRev_Unit_USD");
+                this._columnRev_Unit_USD.ExtendedProperties.Add("Generator_UserColumnName", "Rev/Unit USD");
+                base.Columns.Add(this._columnRev_Unit_USD);
+                this._columnCost_Unit = new global::System.Data.DataColumn("Cost/Unit", typeof(decimal), null, global::System.Data.MappingType.Element);
+                this._columnCost_Unit.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnCost_Unit");
+                this._columnCost_Unit.ExtendedProperties.Add("Generator_UserColumnName", "Cost/Unit");
+                base.Columns.Add(this._columnCost_Unit);
+                this._columnCost_Unit_USD = new global::System.Data.DataColumn("Cost/Unit USD", typeof(decimal), null, global::System.Data.MappingType.Element);
+                this._columnCost_Unit_USD.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnCost_Unit_USD");
+                this._columnCost_Unit_USD.ExtendedProperties.Add("Generator_UserColumnName", "Cost/Unit USD");
+                base.Columns.Add(this._columnCost_Unit_USD);
+                this.columnUnits = new global::System.Data.DataColumn("Units", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnUnits);
+                this.columnUnit_Type = new global::System.Data.DataColumn("Unit Type", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnUnit_Type);
+                this.columnRevenue = new global::System.Data.DataColumn("Revenue", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRevenue);
+                this.columnRevenue_USD = new global::System.Data.DataColumn("Revenue USD", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRevenue_USD);
+                this.columnCost = new global::System.Data.DataColumn("Cost", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCost);
+                this.columnCost_USD = new global::System.Data.DataColumn("Cost USD", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCost_USD);
+                this.columnMargin = new global::System.Data.DataColumn("Margin", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMargin);
+                this.columnMarginPct = new global::System.Data.DataColumn("MarginPct", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMarginPct);
+                this.columnMedia_Buyer = new global::System.Data.DataColumn("Media Buyer", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMedia_Buyer);
+                this.columnAd_Manager = new global::System.Data.DataColumn("Ad Manager", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAd_Manager);
+                this.columnAccount_Manager = new global::System.Data.DataColumn("Account Manager", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAccount_Manager);
+                this.columnStatus = new global::System.Data.DataColumn("Status", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStatus);
+                this.columnAccounting_Status = new global::System.Data.DataColumn("Accounting Status", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAccounting_Status);
+                this.columnMedia_Buyer_Approval_Status = new global::System.Data.DataColumn("Media Buyer Approval Status", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMedia_Buyer_Approval_Status);
+                this.columnNet_Terms = new global::System.Data.DataColumn("Net Terms", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNet_Terms);
+                this.columnAff_Pay_Method = new global::System.Data.DataColumn("Aff Pay Method", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAff_Pay_Method);
+                this.columnPub_Pay_Curr = new global::System.Data.DataColumn("Pub Pay Curr", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPub_Pay_Curr);
+                this.columnPub_Payout = new global::System.Data.DataColumn("Pub Payout", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPub_Payout);
+                this.columnSource = new global::System.Data.DataColumn("Source", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSource);
+                this.columnItemIds = new global::System.Data.DataColumn("ItemIds", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnItemIds);
+                this.columnaffid.AllowDBNull = false;
+                this.columnPublisher.ReadOnly = true;
+                this.columnPublisher.MaxLength = 358;
+                this.columnAdvertiser.AllowDBNull = false;
+                this.columnAdvertiser.MaxLength = 50;
+                this.columnpid.AllowDBNull = false;
+                this.columnCampaign_Name.AllowDBNull = false;
+                this.columnCampaign_Name.MaxLength = 255;
+                this.columnRev_Currency.AllowDBNull = false;
+                this.columnRev_Currency.MaxLength = 50;
+                this.columnCost_Currency.AllowDBNull = false;
+                this.columnCost_Currency.MaxLength = 50;
+                this._columnRev_Unit.AllowDBNull = false;
+                this._columnCost_Unit.AllowDBNull = false;
+                this.columnUnit_Type.AllowDBNull = false;
+                this.columnUnit_Type.MaxLength = 50;
+                this.columnMargin.ReadOnly = true;
+                this.columnMarginPct.ReadOnly = true;
+                this.columnMedia_Buyer.MaxLength = 50;
+                this.columnAd_Manager.AllowDBNull = false;
+                this.columnAd_Manager.MaxLength = 50;
+                this.columnAccount_Manager.AllowDBNull = false;
+                this.columnAccount_Manager.MaxLength = 50;
+                this.columnStatus.AllowDBNull = false;
+                this.columnStatus.MaxLength = 50;
+                this.columnAccounting_Status.AllowDBNull = false;
+                this.columnAccounting_Status.MaxLength = 50;
+                this.columnMedia_Buyer_Approval_Status.AllowDBNull = false;
+                this.columnMedia_Buyer_Approval_Status.MaxLength = 50;
+                this.columnNet_Terms.MaxLength = 50;
+                this.columnAff_Pay_Method.MaxLength = 50;
+                this.columnPub_Pay_Curr.MaxLength = 50;
+                this.columnPub_Payout.ReadOnly = true;
+                this.columnSource.AllowDBNull = false;
+                this.columnSource.MaxLength = 50;
+                this.columnItemIds.MaxLength = 4000;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public PublisherPayoutsRow NewPublisherPayoutsRow() {
+                return ((PublisherPayoutsRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new PublisherPayoutsRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(PublisherPayoutsRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.PublisherPayoutsRowChanged != null)) {
+                    this.PublisherPayoutsRowChanged(this, new PublisherPayoutsRowChangeEvent(((PublisherPayoutsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.PublisherPayoutsRowChanging != null)) {
+                    this.PublisherPayoutsRowChanging(this, new PublisherPayoutsRowChangeEvent(((PublisherPayoutsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.PublisherPayoutsRowDeleted != null)) {
+                    this.PublisherPayoutsRowDeleted(this, new PublisherPayoutsRowChangeEvent(((PublisherPayoutsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.PublisherPayoutsRowDeleting != null)) {
+                    this.PublisherPayoutsRowDeleting(this, new PublisherPayoutsRowChangeEvent(((PublisherPayoutsRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void RemovePublisherPayoutsRow(PublisherPayoutsRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                MediaBuyerWorkflowDataSet ds = new MediaBuyerWorkflowDataSet();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "PublisherPayoutsDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class MediaBuyersDataTable : global::System.Data.TypedTableBase<MediaBuyersRow> {
             
             private global::System.Data.DataColumn columnMediaBuyerName;
+            
+            private global::System.Data.DataColumn columnNumPublishers;
+            
+            private global::System.Data.DataColumn columnAmount;
+            
+            private global::System.Data.DataColumn columnItemIds;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -359,6 +1142,30 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn NumPublishersColumn {
+                get {
+                    return this.columnNumPublishers;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn AmountColumn {
+                get {
+                    return this.columnAmount;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ItemIdsColumn {
+                get {
+                    return this.columnItemIds;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -394,10 +1201,13 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public MediaBuyersRow AddMediaBuyersRow(string MediaBuyerName) {
+            public MediaBuyersRow AddMediaBuyersRow(string MediaBuyerName, int NumPublishers, string Amount, string ItemIds) {
                 MediaBuyersRow rowMediaBuyersRow = ((MediaBuyersRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        MediaBuyerName};
+                        MediaBuyerName,
+                        NumPublishers,
+                        Amount,
+                        ItemIds};
                 rowMediaBuyersRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowMediaBuyersRow);
                 return rowMediaBuyersRow;
@@ -421,6 +1231,9 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
                 this.columnMediaBuyerName = base.Columns["MediaBuyerName"];
+                this.columnNumPublishers = base.Columns["NumPublishers"];
+                this.columnAmount = base.Columns["Amount"];
+                this.columnItemIds = base.Columns["ItemIds"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -428,6 +1241,12 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             private void InitClass() {
                 this.columnMediaBuyerName = new global::System.Data.DataColumn("MediaBuyerName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMediaBuyerName);
+                this.columnNumPublishers = new global::System.Data.DataColumn("NumPublishers", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNumPublishers);
+                this.columnAmount = new global::System.Data.DataColumn("Amount", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAmount);
+                this.columnItemIds = new global::System.Data.DataColumn("ItemIds", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnItemIds);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -818,6 +1637,634 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
+        public partial class PublisherPayoutsRow : global::System.Data.DataRow {
+            
+            private PublisherPayoutsDataTable tablePublisherPayouts;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal PublisherPayoutsRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tablePublisherPayouts = ((PublisherPayoutsDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int affid {
+                get {
+                    return ((int)(this[this.tablePublisherPayouts.affidColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.affidColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Publisher {
+                get {
+                    try {
+                        return ((string)(this[this.tablePublisherPayouts.PublisherColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Publisher\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.PublisherColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Advertiser {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.AdvertiserColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.AdvertiserColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int pid {
+                get {
+                    return ((int)(this[this.tablePublisherPayouts.pidColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.pidColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Campaign_Name {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.Campaign_NameColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.Campaign_NameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Rev_Currency {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.Rev_CurrencyColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.Rev_CurrencyColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Cost_Currency {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.Cost_CurrencyColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.Cost_CurrencyColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal _Rev_Unit {
+                get {
+                    return ((decimal)(this[this.tablePublisherPayouts._Rev_UnitColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts._Rev_UnitColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal _Rev_Unit_USD {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts._Rev_Unit_USDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Rev/Unit USD\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts._Rev_Unit_USDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal _Cost_Unit {
+                get {
+                    return ((decimal)(this[this.tablePublisherPayouts._Cost_UnitColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts._Cost_UnitColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal _Cost_Unit_USD {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts._Cost_Unit_USDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Cost/Unit USD\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts._Cost_Unit_USDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal Units {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts.UnitsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Units\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.UnitsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Unit_Type {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.Unit_TypeColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.Unit_TypeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal Revenue {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts.RevenueColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Revenue\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.RevenueColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal Revenue_USD {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts.Revenue_USDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Revenue USD\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.Revenue_USDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal Cost {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts.CostColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Cost\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.CostColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal Cost_USD {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts.Cost_USDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Cost USD\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.Cost_USDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal Margin {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts.MarginColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Margin\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.MarginColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal MarginPct {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts.MarginPctColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'MarginPct\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.MarginPctColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Media_Buyer {
+                get {
+                    try {
+                        return ((string)(this[this.tablePublisherPayouts.Media_BuyerColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Media Buyer\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.Media_BuyerColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Ad_Manager {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.Ad_ManagerColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.Ad_ManagerColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Account_Manager {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.Account_ManagerColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.Account_ManagerColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Status {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.StatusColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.StatusColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Accounting_Status {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.Accounting_StatusColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.Accounting_StatusColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Media_Buyer_Approval_Status {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.Media_Buyer_Approval_StatusColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.Media_Buyer_Approval_StatusColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Net_Terms {
+                get {
+                    try {
+                        return ((string)(this[this.tablePublisherPayouts.Net_TermsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Net Terms\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.Net_TermsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Aff_Pay_Method {
+                get {
+                    try {
+                        return ((string)(this[this.tablePublisherPayouts.Aff_Pay_MethodColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Aff Pay Method\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.Aff_Pay_MethodColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Pub_Pay_Curr {
+                get {
+                    try {
+                        return ((string)(this[this.tablePublisherPayouts.Pub_Pay_CurrColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Pub Pay Curr\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.Pub_Pay_CurrColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal Pub_Payout {
+                get {
+                    try {
+                        return ((decimal)(this[this.tablePublisherPayouts.Pub_PayoutColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Pub Payout\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.Pub_PayoutColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Source {
+                get {
+                    return ((string)(this[this.tablePublisherPayouts.SourceColumn]));
+                }
+                set {
+                    this[this.tablePublisherPayouts.SourceColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string ItemIds {
+                get {
+                    try {
+                        return ((string)(this[this.tablePublisherPayouts.ItemIdsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ItemIds\' in table \'PublisherPayouts\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablePublisherPayouts.ItemIdsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPublisherNull() {
+                return this.IsNull(this.tablePublisherPayouts.PublisherColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPublisherNull() {
+                this[this.tablePublisherPayouts.PublisherColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool Is_Rev_Unit_USDNull() {
+                return this.IsNull(this.tablePublisherPayouts._Rev_Unit_USDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void Set_Rev_Unit_USDNull() {
+                this[this.tablePublisherPayouts._Rev_Unit_USDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool Is_Cost_Unit_USDNull() {
+                return this.IsNull(this.tablePublisherPayouts._Cost_Unit_USDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void Set_Cost_Unit_USDNull() {
+                this[this.tablePublisherPayouts._Cost_Unit_USDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsUnitsNull() {
+                return this.IsNull(this.tablePublisherPayouts.UnitsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetUnitsNull() {
+                this[this.tablePublisherPayouts.UnitsColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRevenueNull() {
+                return this.IsNull(this.tablePublisherPayouts.RevenueColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRevenueNull() {
+                this[this.tablePublisherPayouts.RevenueColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRevenue_USDNull() {
+                return this.IsNull(this.tablePublisherPayouts.Revenue_USDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRevenue_USDNull() {
+                this[this.tablePublisherPayouts.Revenue_USDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCostNull() {
+                return this.IsNull(this.tablePublisherPayouts.CostColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCostNull() {
+                this[this.tablePublisherPayouts.CostColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCost_USDNull() {
+                return this.IsNull(this.tablePublisherPayouts.Cost_USDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCost_USDNull() {
+                this[this.tablePublisherPayouts.Cost_USDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsMarginNull() {
+                return this.IsNull(this.tablePublisherPayouts.MarginColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetMarginNull() {
+                this[this.tablePublisherPayouts.MarginColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsMarginPctNull() {
+                return this.IsNull(this.tablePublisherPayouts.MarginPctColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetMarginPctNull() {
+                this[this.tablePublisherPayouts.MarginPctColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsMedia_BuyerNull() {
+                return this.IsNull(this.tablePublisherPayouts.Media_BuyerColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetMedia_BuyerNull() {
+                this[this.tablePublisherPayouts.Media_BuyerColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNet_TermsNull() {
+                return this.IsNull(this.tablePublisherPayouts.Net_TermsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNet_TermsNull() {
+                this[this.tablePublisherPayouts.Net_TermsColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAff_Pay_MethodNull() {
+                return this.IsNull(this.tablePublisherPayouts.Aff_Pay_MethodColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAff_Pay_MethodNull() {
+                this[this.tablePublisherPayouts.Aff_Pay_MethodColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPub_Pay_CurrNull() {
+                return this.IsNull(this.tablePublisherPayouts.Pub_Pay_CurrColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPub_Pay_CurrNull() {
+                this[this.tablePublisherPayouts.Pub_Pay_CurrColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPub_PayoutNull() {
+                return this.IsNull(this.tablePublisherPayouts.Pub_PayoutColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPub_PayoutNull() {
+                this[this.tablePublisherPayouts.Pub_PayoutColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsItemIdsNull() {
+                return this.IsNull(this.tablePublisherPayouts.ItemIdsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetItemIdsNull() {
+                this[this.tablePublisherPayouts.ItemIdsColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
         public partial class MediaBuyersRow : global::System.Data.DataRow {
             
             private MediaBuyersDataTable tableMediaBuyers;
@@ -847,6 +2294,54 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int NumPublishers {
+                get {
+                    try {
+                        return ((int)(this[this.tableMediaBuyers.NumPublishersColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'NumPublishers\' in table \'MediaBuyers\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableMediaBuyers.NumPublishersColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Amount {
+                get {
+                    try {
+                        return ((string)(this[this.tableMediaBuyers.AmountColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Amount\' in table \'MediaBuyers\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableMediaBuyers.AmountColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string ItemIds {
+                get {
+                    try {
+                        return ((string)(this[this.tableMediaBuyers.ItemIdsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ItemIds\' in table \'MediaBuyers\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableMediaBuyers.ItemIdsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsMediaBuyerNameNull() {
                 return this.IsNull(this.tableMediaBuyers.MediaBuyerNameColumn);
             }
@@ -855,6 +2350,42 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetMediaBuyerNameNull() {
                 this[this.tableMediaBuyers.MediaBuyerNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNumPublishersNull() {
+                return this.IsNull(this.tableMediaBuyers.NumPublishersColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNumPublishersNull() {
+                this[this.tableMediaBuyers.NumPublishersColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAmountNull() {
+                return this.IsNull(this.tableMediaBuyers.AmountColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAmountNull() {
+                this[this.tableMediaBuyers.AmountColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsItemIdsNull() {
+                return this.IsNull(this.tableMediaBuyers.ItemIdsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetItemIdsNull() {
+                this[this.tableMediaBuyers.ItemIdsColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -933,6 +2464,40 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public class PublisherPayoutsRowChangeEvent : global::System.EventArgs {
+            
+            private PublisherPayoutsRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public PublisherPayoutsRowChangeEvent(PublisherPayoutsRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public PublisherPayoutsRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public class MediaBuyersRowChangeEvent : global::System.EventArgs {
             
             private MediaBuyersRow eventRow;
@@ -993,6 +2558,597 @@ namespace EomApp1.Screens.MediaBuyerWorkflow {
             public global::System.Data.DataRowAction Action {
                 get {
                     return this.eventAction;
+                }
+            }
+        }
+    }
+}
+namespace EomApp1.Screens.MediaBuyerWorkflow.MediaBuyerWorkflowDataSetTableAdapters {
+    
+    
+    /// <summary>
+    ///Represents the connection and commands used to retrieve and save data.
+    ///</summary>
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DataObjectAttribute(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
+        ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+    public partial class PublisherPayoutsTableAdapter : global::System.ComponentModel.Component {
+        
+        private global::System.Data.SqlClient.SqlDataAdapter _adapter;
+        
+        private global::System.Data.SqlClient.SqlConnection _connection;
+        
+        private global::System.Data.SqlClient.SqlTransaction _transaction;
+        
+        private global::System.Data.SqlClient.SqlCommand[] _commandCollection;
+        
+        private bool _clearBeforeFill;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public PublisherPayoutsTableAdapter() {
+            this.ClearBeforeFill = true;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected internal global::System.Data.SqlClient.SqlDataAdapter Adapter {
+            get {
+                if ((this._adapter == null)) {
+                    this.InitAdapter();
+                }
+                return this._adapter;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::System.Data.SqlClient.SqlConnection Connection {
+            get {
+                if ((this._connection == null)) {
+                    this.InitConnection();
+                }
+                return this._connection;
+            }
+            set {
+                this._connection = value;
+                if ((this.Adapter.InsertCommand != null)) {
+                    this.Adapter.InsertCommand.Connection = value;
+                }
+                if ((this.Adapter.DeleteCommand != null)) {
+                    this.Adapter.DeleteCommand.Connection = value;
+                }
+                if ((this.Adapter.UpdateCommand != null)) {
+                    this.Adapter.UpdateCommand.Connection = value;
+                }
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    if ((this.CommandCollection[i] != null)) {
+                        ((global::System.Data.SqlClient.SqlCommand)(this.CommandCollection[i])).Connection = value;
+                    }
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        internal global::System.Data.SqlClient.SqlTransaction Transaction {
+            get {
+                return this._transaction;
+            }
+            set {
+                this._transaction = value;
+                for (int i = 0; (i < this.CommandCollection.Length); i = (i + 1)) {
+                    this.CommandCollection[i].Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.DeleteCommand != null))) {
+                    this.Adapter.DeleteCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.InsertCommand != null))) {
+                    this.Adapter.InsertCommand.Transaction = this._transaction;
+                }
+                if (((this.Adapter != null) 
+                            && (this.Adapter.UpdateCommand != null))) {
+                    this.Adapter.UpdateCommand.Transaction = this._transaction;
+                }
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected global::System.Data.SqlClient.SqlCommand[] CommandCollection {
+            get {
+                if ((this._commandCollection == null)) {
+                    this.InitCommandCollection();
+                }
+                return this._commandCollection;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public bool ClearBeforeFill {
+            get {
+                return this._clearBeforeFill;
+            }
+            set {
+                this._clearBeforeFill = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitAdapter() {
+            this._adapter = new global::System.Data.SqlClient.SqlDataAdapter();
+            global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
+            tableMapping.SourceTable = "Table";
+            tableMapping.DataSetTable = "PublisherPayouts";
+            tableMapping.ColumnMappings.Add("affid", "affid");
+            tableMapping.ColumnMappings.Add("Publisher", "Publisher");
+            tableMapping.ColumnMappings.Add("Advertiser", "Advertiser");
+            tableMapping.ColumnMappings.Add("pid", "pid");
+            tableMapping.ColumnMappings.Add("Campaign Name", "Campaign Name");
+            tableMapping.ColumnMappings.Add("Rev Currency", "Rev Currency");
+            tableMapping.ColumnMappings.Add("Cost Currency", "Cost Currency");
+            tableMapping.ColumnMappings.Add("Rev/Unit", "Rev/Unit");
+            tableMapping.ColumnMappings.Add("Rev/Unit USD", "Rev/Unit USD");
+            tableMapping.ColumnMappings.Add("Cost/Unit", "Cost/Unit");
+            tableMapping.ColumnMappings.Add("Cost/Unit USD", "Cost/Unit USD");
+            tableMapping.ColumnMappings.Add("Units", "Units");
+            tableMapping.ColumnMappings.Add("Unit Type", "Unit Type");
+            tableMapping.ColumnMappings.Add("Revenue", "Revenue");
+            tableMapping.ColumnMappings.Add("Revenue USD", "Revenue USD");
+            tableMapping.ColumnMappings.Add("Cost", "Cost");
+            tableMapping.ColumnMappings.Add("Cost USD", "Cost USD");
+            tableMapping.ColumnMappings.Add("Margin", "Margin");
+            tableMapping.ColumnMappings.Add("MarginPct", "MarginPct");
+            tableMapping.ColumnMappings.Add("Media Buyer", "Media Buyer");
+            tableMapping.ColumnMappings.Add("Ad Manager", "Ad Manager");
+            tableMapping.ColumnMappings.Add("Account Manager", "Account Manager");
+            tableMapping.ColumnMappings.Add("Status", "Status");
+            tableMapping.ColumnMappings.Add("Accounting Status", "Accounting Status");
+            tableMapping.ColumnMappings.Add("Media Buyer Approval Status", "Media Buyer Approval Status");
+            tableMapping.ColumnMappings.Add("Net Terms", "Net Terms");
+            tableMapping.ColumnMappings.Add("Aff Pay Method", "Aff Pay Method");
+            tableMapping.ColumnMappings.Add("Pub Pay Curr", "Pub Pay Curr");
+            tableMapping.ColumnMappings.Add("Pub Payout", "Pub Payout");
+            tableMapping.ColumnMappings.Add("Source", "Source");
+            tableMapping.ColumnMappings.Add("ItemIds", "ItemIds");
+            this._adapter.TableMappings.Add(tableMapping);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitConnection() {
+            this._connection = new global::System.Data.SqlClient.SqlConnection();
+            this._connection.ConnectionString = global::EomApp1.Properties.Settings.Default.DADatabaseR1ConnectionString;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private void InitCommandCollection() {
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[0].Connection = this.Connection;
+            this._commandCollection[0].CommandText = @"SELECT        affid, Publisher, Advertiser, pid, [Campaign Name], [Rev Currency], [Cost Currency], [Rev/Unit], [Rev/Unit USD], [Cost/Unit], [Cost/Unit USD], Units, [Unit Type], 
+                         Revenue, [Revenue USD], Cost, [Cost USD], Margin, MarginPct, [Media Buyer], [Ad Manager], [Account Manager], Status, [Accounting Status], 
+                         [Media Buyer Approval Status], [Net Terms], [Aff Pay Method], [Pub Pay Curr], [Pub Payout], Source, ItemIds
+FROM            dbo.PublisherPayouts
+WHERE        (Publisher = @1) AND ([Media Buyer Approval Status] = @2)";
+            this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@1", global::System.Data.SqlDbType.VarChar, 358, global::System.Data.ParameterDirection.Input, 0, 0, "Publisher", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@2", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "Media Buyer Approval Status", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
+        public virtual int Fill(MediaBuyerWorkflowDataSet.PublisherPayoutsDataTable dataTable, string _1, string _2) {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            if ((_1 == null)) {
+                throw new global::System.ArgumentNullException("_1");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(_1));
+            }
+            if ((_2 == null)) {
+                throw new global::System.ArgumentNullException("_2");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[1].Value = ((string)(_2));
+            }
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
+        public virtual MediaBuyerWorkflowDataSet.PublisherPayoutsDataTable GetData(string _1, string _2) {
+            this.Adapter.SelectCommand = this.CommandCollection[0];
+            if ((_1 == null)) {
+                throw new global::System.ArgumentNullException("_1");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((string)(_1));
+            }
+            if ((_2 == null)) {
+                throw new global::System.ArgumentNullException("_2");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[1].Value = ((string)(_2));
+            }
+            MediaBuyerWorkflowDataSet.PublisherPayoutsDataTable dataTable = new MediaBuyerWorkflowDataSet.PublisherPayoutsDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+    }
+    
+    /// <summary>
+    ///TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
+    ///</summary>
+    [global::System.ComponentModel.DesignerCategoryAttribute("code")]
+    [global::System.ComponentModel.ToolboxItem(true)]
+    [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterManagerDesigner, Microsoft.VSD" +
+        "esigner, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
+    [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapterManager")]
+    public partial class TableAdapterManager : global::System.ComponentModel.Component {
+        
+        private UpdateOrderOption _updateOrder;
+        
+        private bool _backupDataSetBeforeUpdate;
+        
+        private global::System.Data.IDbConnection _connection;
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public UpdateOrderOption UpdateOrder {
+            get {
+                return this._updateOrder;
+            }
+            set {
+                this._updateOrder = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public bool BackupDataSetBeforeUpdate {
+            get {
+                return this._backupDataSetBeforeUpdate;
+            }
+            set {
+                this._backupDataSetBeforeUpdate = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        public global::System.Data.IDbConnection Connection {
+            get {
+                if ((this._connection != null)) {
+                    return this._connection;
+                }
+                return null;
+            }
+            set {
+                this._connection = value;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        public int TableAdapterInstanceCount {
+            get {
+                int count = 0;
+                return count;
+            }
+        }
+        
+        /// <summary>
+        ///Update rows in top-down order.
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private int UpdateUpdatedRows(MediaBuyerWorkflowDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+            int result = 0;
+            return result;
+        }
+        
+        /// <summary>
+        ///Insert rows in top-down order.
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private int UpdateInsertedRows(MediaBuyerWorkflowDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+            int result = 0;
+            return result;
+        }
+        
+        /// <summary>
+        ///Delete rows in bottom-up order.
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private int UpdateDeletedRows(MediaBuyerWorkflowDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
+            int result = 0;
+            return result;
+        }
+        
+        /// <summary>
+        ///Remove inserted rows that become updated rows after calling TableAdapter.Update(inserted rows) first
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private global::System.Data.DataRow[] GetRealUpdatedRows(global::System.Data.DataRow[] updatedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+            if (((updatedRows == null) 
+                        || (updatedRows.Length < 1))) {
+                return updatedRows;
+            }
+            if (((allAddedRows == null) 
+                        || (allAddedRows.Count < 1))) {
+                return updatedRows;
+            }
+            global::System.Collections.Generic.List<global::System.Data.DataRow> realUpdatedRows = new global::System.Collections.Generic.List<global::System.Data.DataRow>();
+            for (int i = 0; (i < updatedRows.Length); i = (i + 1)) {
+                global::System.Data.DataRow row = updatedRows[i];
+                if ((allAddedRows.Contains(row) == false)) {
+                    realUpdatedRows.Add(row);
+                }
+            }
+            return realUpdatedRows.ToArray();
+        }
+        
+        /// <summary>
+        ///Update all changes to the dataset.
+        ///</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public virtual int UpdateAll(MediaBuyerWorkflowDataSet dataSet) {
+            if ((dataSet == null)) {
+                throw new global::System.ArgumentNullException("dataSet");
+            }
+            if ((dataSet.HasChanges() == false)) {
+                return 0;
+            }
+            global::System.Data.IDbConnection workConnection = this.Connection;
+            if ((workConnection == null)) {
+                throw new global::System.ApplicationException("TableAdapterManager contains no connection information. Set each TableAdapterMana" +
+                        "ger TableAdapter property to a valid TableAdapter instance.");
+            }
+            bool workConnOpened = false;
+            if (((workConnection.State & global::System.Data.ConnectionState.Broken) 
+                        == global::System.Data.ConnectionState.Broken)) {
+                workConnection.Close();
+            }
+            if ((workConnection.State == global::System.Data.ConnectionState.Closed)) {
+                workConnection.Open();
+                workConnOpened = true;
+            }
+            global::System.Data.IDbTransaction workTransaction = workConnection.BeginTransaction();
+            if ((workTransaction == null)) {
+                throw new global::System.ApplicationException("The transaction cannot begin. The current data connection does not support transa" +
+                        "ctions or the current state is not allowing the transaction to begin.");
+            }
+            global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows = new global::System.Collections.Generic.List<global::System.Data.DataRow>();
+            global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows = new global::System.Collections.Generic.List<global::System.Data.DataRow>();
+            global::System.Collections.Generic.List<global::System.Data.Common.DataAdapter> adaptersWithAcceptChangesDuringUpdate = new global::System.Collections.Generic.List<global::System.Data.Common.DataAdapter>();
+            global::System.Collections.Generic.Dictionary<object, global::System.Data.IDbConnection> revertConnections = new global::System.Collections.Generic.Dictionary<object, global::System.Data.IDbConnection>();
+            int result = 0;
+            global::System.Data.DataSet backupDataSet = null;
+            if (this.BackupDataSetBeforeUpdate) {
+                backupDataSet = new global::System.Data.DataSet();
+                backupDataSet.Merge(dataSet);
+            }
+            try {
+                // ---- Prepare for update -----------
+                //
+                // 
+                //---- Perform updates -----------
+                //
+                if ((this.UpdateOrder == UpdateOrderOption.UpdateInsertDelete)) {
+                    result = (result + this.UpdateUpdatedRows(dataSet, allChangedRows, allAddedRows));
+                    result = (result + this.UpdateInsertedRows(dataSet, allAddedRows));
+                }
+                else {
+                    result = (result + this.UpdateInsertedRows(dataSet, allAddedRows));
+                    result = (result + this.UpdateUpdatedRows(dataSet, allChangedRows, allAddedRows));
+                }
+                result = (result + this.UpdateDeletedRows(dataSet, allChangedRows));
+                // 
+                //---- Commit updates -----------
+                //
+                workTransaction.Commit();
+                if ((0 < allAddedRows.Count)) {
+                    global::System.Data.DataRow[] rows = new System.Data.DataRow[allAddedRows.Count];
+                    allAddedRows.CopyTo(rows);
+                    for (int i = 0; (i < rows.Length); i = (i + 1)) {
+                        global::System.Data.DataRow row = rows[i];
+                        row.AcceptChanges();
+                    }
+                }
+                if ((0 < allChangedRows.Count)) {
+                    global::System.Data.DataRow[] rows = new System.Data.DataRow[allChangedRows.Count];
+                    allChangedRows.CopyTo(rows);
+                    for (int i = 0; (i < rows.Length); i = (i + 1)) {
+                        global::System.Data.DataRow row = rows[i];
+                        row.AcceptChanges();
+                    }
+                }
+            }
+            catch (global::System.Exception ex) {
+                workTransaction.Rollback();
+                // ---- Restore the dataset -----------
+                if (this.BackupDataSetBeforeUpdate) {
+                    global::System.Diagnostics.Debug.Assert((backupDataSet != null));
+                    dataSet.Clear();
+                    dataSet.Merge(backupDataSet);
+                }
+                else {
+                    if ((0 < allAddedRows.Count)) {
+                        global::System.Data.DataRow[] rows = new System.Data.DataRow[allAddedRows.Count];
+                        allAddedRows.CopyTo(rows);
+                        for (int i = 0; (i < rows.Length); i = (i + 1)) {
+                            global::System.Data.DataRow row = rows[i];
+                            row.AcceptChanges();
+                            row.SetAdded();
+                        }
+                    }
+                }
+                throw ex;
+            }
+            finally {
+                if (workConnOpened) {
+                    workConnection.Close();
+                }
+                if ((0 < adaptersWithAcceptChangesDuringUpdate.Count)) {
+                    global::System.Data.Common.DataAdapter[] adapters = new System.Data.Common.DataAdapter[adaptersWithAcceptChangesDuringUpdate.Count];
+                    adaptersWithAcceptChangesDuringUpdate.CopyTo(adapters);
+                    for (int i = 0; (i < adapters.Length); i = (i + 1)) {
+                        global::System.Data.Common.DataAdapter adapter = adapters[i];
+                        adapter.AcceptChangesDuringUpdate = true;
+                    }
+                }
+            }
+            return result;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected virtual void SortSelfReferenceRows(global::System.Data.DataRow[] rows, global::System.Data.DataRelation relation, bool childFirst) {
+            global::System.Array.Sort<global::System.Data.DataRow>(rows, new SelfReferenceComparer(relation, childFirst));
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        protected virtual bool MatchTableAdapterConnection(global::System.Data.IDbConnection inputConnection) {
+            if ((this._connection != null)) {
+                return true;
+            }
+            if (((this.Connection == null) 
+                        || (inputConnection == null))) {
+                return true;
+            }
+            if (string.Equals(this.Connection.ConnectionString, inputConnection.ConnectionString, global::System.StringComparison.Ordinal)) {
+                return true;
+            }
+            return false;
+        }
+        
+        /// <summary>
+        ///Update Order Option
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public enum UpdateOrderOption {
+            
+            InsertUpdateDelete = 0,
+            
+            UpdateInsertDelete = 1,
+        }
+        
+        /// <summary>
+        ///Used to sort self-referenced table's rows
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private class SelfReferenceComparer : object, global::System.Collections.Generic.IComparer<global::System.Data.DataRow> {
+            
+            private global::System.Data.DataRelation _relation;
+            
+            private int _childFirst;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal SelfReferenceComparer(global::System.Data.DataRelation relation, bool childFirst) {
+                this._relation = relation;
+                if (childFirst) {
+                    this._childFirst = -1;
+                }
+                else {
+                    this._childFirst = 1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private global::System.Data.DataRow GetRoot(global::System.Data.DataRow row, out int distance) {
+                global::System.Diagnostics.Debug.Assert((row != null));
+                global::System.Data.DataRow root = row;
+                distance = 0;
+
+                global::System.Collections.Generic.IDictionary<global::System.Data.DataRow, global::System.Data.DataRow> traversedRows = new global::System.Collections.Generic.Dictionary<global::System.Data.DataRow, global::System.Data.DataRow>();
+                traversedRows[row] = row;
+
+                global::System.Data.DataRow parent = row.GetParentRow(this._relation, global::System.Data.DataRowVersion.Default);
+                for (
+                ; ((parent != null) 
+                            && (traversedRows.ContainsKey(parent) == false)); 
+                ) {
+                    distance = (distance + 1);
+                    root = parent;
+                    traversedRows[parent] = parent;
+                    parent = parent.GetParentRow(this._relation, global::System.Data.DataRowVersion.Default);
+                }
+
+                if ((distance == 0)) {
+                    traversedRows.Clear();
+                    traversedRows[row] = row;
+                    parent = row.GetParentRow(this._relation, global::System.Data.DataRowVersion.Original);
+                    for (
+                    ; ((parent != null) 
+                                && (traversedRows.ContainsKey(parent) == false)); 
+                    ) {
+                        distance = (distance + 1);
+                        root = parent;
+                        traversedRows[parent] = parent;
+                        parent = parent.GetParentRow(this._relation, global::System.Data.DataRowVersion.Original);
+                    }
+                }
+
+                return root;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Compare(global::System.Data.DataRow row1, global::System.Data.DataRow row2) {
+                if (object.ReferenceEquals(row1, row2)) {
+                    return 0;
+                }
+                if ((row1 == null)) {
+                    return -1;
+                }
+                if ((row2 == null)) {
+                    return 1;
+                }
+
+                int distance1 = 0;
+                global::System.Data.DataRow root1 = this.GetRoot(row1, out distance1);
+
+                int distance2 = 0;
+                global::System.Data.DataRow root2 = this.GetRoot(row2, out distance2);
+
+                if (object.ReferenceEquals(root1, root2)) {
+                    return (this._childFirst * distance1.CompareTo(distance2));
+                }
+                else {
+                    global::System.Diagnostics.Debug.Assert(((root1.Table != null) 
+                                    && (root2.Table != null)));
+                    if ((root1.Table.Rows.IndexOf(root1) < root2.Table.Rows.IndexOf(root2))) {
+                        return -1;
+                    }
+                    else {
+                        return 1;
+                    }
                 }
             }
         }

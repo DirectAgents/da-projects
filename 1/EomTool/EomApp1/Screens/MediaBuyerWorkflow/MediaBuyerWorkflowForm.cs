@@ -1,31 +1,143 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using EomApp1.UI;
+using EomAppControls.DataGrid;
+using EomAppControls.Filtering;
 
 namespace EomApp1.Screens.MediaBuyerWorkflow
 {
     public partial class MediaBuyerWorkflowForm : Form
     {
+        private MediaBuyerWorkflowModel model = new MediaBuyerWorkflowModel();
+        private RadioButtonPanel<FilterStatus> radioButtons;
+
         public MediaBuyerWorkflowForm()
         {
             InitializeComponent();
+            SetupFilter();
+            PublishersSubformCol.Subform = typeof(PublishersSubform);
+            PublishersSubformCol.SubformShowing += new DataGridViewExtensions.DataGridViewSubformColumn.SubformShowingHandler(PublishersSubformCol_SubformShowing);
             Fill();
+            this.dataGridViewExtension1.CellClick += new DataGridViewCellEventHandler(dataGridViewExtension1_CellClick);
+        }
+
+        void dataGridViewExtension1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!this.dataGridViewExtension1.HasRows() || e.ColumnIndex < 0 || e.RowIndex < 0)
+                return;
+
+            if (e.ColumnIndex == ApprovalActionCol.Index)
+            {
+                // Send Media Buyer Email and Change status to Sent
+                if (ApprovalActionCol.Value<string>(e) == "Send")
+                {
+                    string mediaBuyerName = mediaBuyerNameCol.Value<string>(e).Trim();
+                    string mediaBuyerFirstName = mediaBuyerName.Split(' ').First();
+
+                    var emailTemplate = new MediaBuyerEmail(null)
+                    {
+                        MediaBuyerName = mediaBuyerFirstName,
+                        UrlToOpen = "http://www.google.com", // TODO: real link to web application
+                    };
+
+                    string mediaBuyerEmailAddress = EomApp1.Security.User.GetEmailAddress(mediaBuyerName);
+
+                    var sendDialog = new EomApp1.Screens.MediaBuyerWorkflow.SendMailDialog(mediaBuyerEmailAddress, emailTemplate);
+
+                    var result = MaskedDialog.ShowDialog(this, sendDialog);
+
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        string itemIDs = ItemIdsCol.Value<string>(e);
+                        this.model.UpdateMediaBuyerApprovalStatus("Queued", "Sent", itemIDs);
+                        this.Fill();
+                    }
+                }
+            }
+        }
+
+        private void SetupFilter()
+        {
+            this.radioButtons = new RadioButtonPanel<FilterStatus>();
+            radioButtons.Selected += new RadioButtonPanel<FilterStatus>.SelectedEvent(radioButtons_Selected);
+            this.toolStrip1.Items.Add(new ToolStripControlHost(radioButtons)
+            {
+                Margin = new Padding(0),
+                Padding = new Padding(0)
+            });
+        }
+
+        void PublishersSubformCol_SubformShowing(DataGridViewExtensions.DataGridViewSubformCell sender, DataGridViewExtensions.SubformShowingEventArgs e)
+        {
+            e.DataBoundItem = Tuple.Create(this.bindingSource1.Current, this.FilterStatusString);
+        }
+
+        void radioButtons_Selected(MediaBuyerWorkflowForm.FilterStatus t)
+        {
+            Fill();
+        }
+
+        public enum FilterStatus
+        {
+            Checked,
+            Sent,
         }
 
         private void Fill()
         {
-            using (var db = MediaBuyerWorkflowEntities.Create())
+            this.mediaBuyerWorkflowDataSet1.MediaBuyers.Clear();
+            this.mediaBuyerWorkflowDataSet1.MediaBuyers.Load(this.model.MediaBuyers(this.FilterStatusString).CreateDataReader());
+            this.ApprovalActionCol.Text = this.ActionStatusString;
+            DisableButtons();
+        }
+
+        private void DisableButtons()
+        {
+            this.dataGridViewExtension1.ForEachCellInColumn<DataGridViewDisableButtonCell>(ApprovalActionCol.Index, cell =>
             {
-                var mediaBuyerNames = db.PublisherPayouts.Select(c => c.Media_Buyer).Distinct();
-                foreach (var item in mediaBuyerNames)
+                if ((string)cell.Value != "Send")
+                    cell.Enabled = false;
+            });
+        }
+
+        public string FilterStatusString
+        {
+            get
+            {
+                string statusString = null;
+                switch (this.radioButtons.Current)
                 {
-                    this.mediaBuyerWorkflowDataSet1.MediaBuyers.AddMediaBuyersRow(item);
+                    case FilterStatus.Checked:
+                        statusString = "Queued";
+                        break;
+                    case FilterStatus.Sent:
+                        statusString = "Sent";
+                        break;
+                    default:
+                        break;
                 }
+                return statusString;
+            }
+        }
+
+        public string ActionStatusString
+        {
+            get
+            {
+                string statusString = null;
+                switch (this.radioButtons.Current)
+                {
+                    case FilterStatus.Checked:
+                        statusString = "Send";
+                        break;
+                    case FilterStatus.Sent:
+                        statusString = "Waiting...";
+                        break;
+                    default:
+                        break;
+                }
+                return statusString;
             }
         }
     }

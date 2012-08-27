@@ -69,7 +69,9 @@
     </Compile>
     <Compile Include="ConsoleProgramTemplate.cs" />
     <Compile Include="ConsoleUtility.cs" />
+    <Compile Include="EmailUtility.cs" />
     <Compile Include="EomAppSettings.cs" />
+    <Compile Include="ITransformText.cs" />
     <Compile Include="SqlBatch.cs" />
     <Compile Include="IAccessor.cs" />
     <Compile Include="IConfigure.cs" />

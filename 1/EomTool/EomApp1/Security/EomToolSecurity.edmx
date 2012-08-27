@@ -33,16 +33,17 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="WindowsIdentity" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="WindowsIdentity" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Permissions">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Tag" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="Tag" Type="varchar" Nullable="false" MaxLength="255" />
         </EntityType>
         <EntityType Name="RoleGroup">
           <Key>
@@ -65,7 +66,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
         </EntityType>
         <Association Name="FK_RoleGroup_Group">
           <End Role="Groups" Type="EomToolSecurity.Store.Groups" Multiplicity="1" />
@@ -120,27 +121,18 @@
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="EomToolSecurity" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
         <EntityContainer Name="EomToolSecurityEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Groups" EntityType="EomToolSecurity.Group" />
           <EntitySet Name="Permissions" EntityType="EomToolSecurity.Permission" />
           <EntitySet Name="Roles" EntityType="EomToolSecurity.Role" />
-          <AssociationSet Name="RoleGroup" Association="EomToolSecurity.RoleGroup">
-            <End Role="Group" EntitySet="Groups" />
-            <End Role="Role" EntitySet="Roles" />
-          </AssociationSet>
           <AssociationSet Name="RolePermission" Association="EomToolSecurity.RolePermission">
             <End Role="Permission" EntitySet="Permissions" />
             <End Role="Role" EntitySet="Roles" />
           </AssociationSet>
+          <EntitySet Name="Groups" EntityType="EomToolSecurity.Group" />
+          <AssociationSet Name="RoleGroup" Association="EomToolSecurity.RoleGroup">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="Role" EntitySet="Roles" />
+          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Group">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="WindowsIdentity" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Roles" Relationship="EomToolSecurity.RoleGroup" FromRole="Group" ToRole="Role" />
-        </EntityType>
         <EntityType Name="Permission">
           <Key>
             <PropertyRef Name="Id" />
@@ -156,15 +148,25 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Groups" Relationship="EomToolSecurity.RoleGroup" FromRole="Role" ToRole="Group" />
           <NavigationProperty Name="Permissions" Relationship="EomToolSecurity.RolePermission" FromRole="Role" ToRole="Permission" />
+          <NavigationProperty Name="Groups" Relationship="EomToolSecurity.RoleGroup" FromRole="Role" ToRole="Group" />
+        </EntityType>
+        <Association Name="RolePermission">
+          <End Type="EomToolSecurity.Permission" Role="Permission" Multiplicity="*" />
+          <End Type="EomToolSecurity.Role" Role="Role" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="WindowsIdentity" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="EmailAddress" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Roles" Relationship="EomToolSecurity.RoleGroup" FromRole="Group" ToRole="Role" />
         </EntityType>
         <Association Name="RoleGroup">
           <End Type="EomToolSecurity.Group" Role="Group" Multiplicity="*" />
-          <End Type="EomToolSecurity.Role" Role="Role" Multiplicity="*" />
-        </Association>
-        <Association Name="RolePermission">
-          <End Type="EomToolSecurity.Permission" Role="Permission" Multiplicity="*" />
           <End Type="EomToolSecurity.Role" Role="Role" Multiplicity="*" />
         </Association>
         </Schema>
@@ -173,15 +175,6 @@
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="EomToolSecurityStoreContainer" CdmEntityContainer="EomToolSecurityEntities">
-          <EntitySetMapping Name="Groups">
-            <EntityTypeMapping TypeName="EomToolSecurity.Group">
-              <MappingFragment StoreEntitySet="Groups">
-                <ScalarProperty Name="WindowsIdentity" ColumnName="WindowsIdentity" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Permissions">
             <EntityTypeMapping TypeName="EomToolSecurity.Permission">
               <MappingFragment StoreEntitySet="Permissions">
@@ -199,20 +192,30 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="RoleGroup" TypeName="EomToolSecurity.RoleGroup" StoreEntitySet="RoleGroup">
-            <EndProperty Name="Role">
-              <ScalarProperty Name="Id" ColumnName="Roles_Id" />
-            </EndProperty>
-            <EndProperty Name="Group">
-              <ScalarProperty Name="Id" ColumnName="Groups_Id" />
-            </EndProperty>
-          </AssociationSetMapping>
           <AssociationSetMapping Name="RolePermission" TypeName="EomToolSecurity.RolePermission" StoreEntitySet="RolePermission">
             <EndProperty Name="Role">
               <ScalarProperty Name="Id" ColumnName="Roles_Id" />
             </EndProperty>
             <EndProperty Name="Permission">
               <ScalarProperty Name="Id" ColumnName="Permissions_Id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="EomToolSecurity.Group">
+              <MappingFragment StoreEntitySet="Groups">
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="WindowsIdentity" ColumnName="WindowsIdentity" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="RoleGroup" TypeName="EomToolSecurity.RoleGroup" StoreEntitySet="RoleGroup">
+            <EndProperty Name="Role">
+              <ScalarProperty Name="Id" ColumnName="Roles_Id" />
+            </EndProperty>
+            <EndProperty Name="Group">
+              <ScalarProperty Name="Id" ColumnName="Groups_Id" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>
@@ -236,16 +239,16 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram Name="EomToolSecurity" >
-        <EntityTypeShape EntityType="EomToolSecurity.Group" Width="1.5" PointX="1" PointY="0.5" Height="1.7879850260416657" />
         <EntityTypeShape EntityType="EomToolSecurity.Permission" Width="1.5" PointX="5.625" PointY="0.5" Height="1.7879850260416674" />
         <EntityTypeShape EntityType="EomToolSecurity.Role" Width="1.5" PointX="3.25" PointY="0.5" Height="1.7879850260416674" />
-        <AssociationConnector Association="EomToolSecurity.RoleGroup" >
-          <ConnectorPoint PointX="2.5" PointY="1.3939925130208328" />
-          <ConnectorPoint PointX="3.25" PointY="1.3939925130208328" />
-        </AssociationConnector>
         <AssociationConnector Association="EomToolSecurity.RolePermission" >
-          <ConnectorPoint PointX="5.625" PointY="1.3939925130208337" />
-          <ConnectorPoint PointX="4.75" PointY="1.3939925130208337" />
+          <ConnectorPoint PointX="5.625" PointY="1.3939925130208333" />
+          <ConnectorPoint PointX="4.75" PointY="1.3939925130208333" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="EomToolSecurity.Group" Width="1.5" PointX="1" PointY="0.5" Height="1.9802864583333335" />
+        <AssociationConnector Association="EomToolSecurity.RoleGroup" >
+          <ConnectorPoint PointX="2.5" PointY="1.3939925130208333" />
+          <ConnectorPoint PointX="3.25" PointY="1.3939925130208333" />
         </AssociationConnector>
       </Diagram>
     </edmx:Diagrams>

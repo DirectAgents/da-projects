@@ -18,8 +18,8 @@ using System.Runtime.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("EomToolSecurity", "RoleGroup", "Group", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Group), "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Role))]
 [assembly: EdmRelationshipAttribute("EomToolSecurity", "RolePermission", "Permission", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Permission), "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Role))]
+[assembly: EdmRelationshipAttribute("EomToolSecurity", "RoleGroup", "Group", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Group), "Role", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Security.Role))]
 
 #endregion
 
@@ -74,22 +74,6 @@ namespace EomApp1.Security
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Group> Groups
-        {
-            get
-            {
-                if ((_Groups == null))
-                {
-                    _Groups = base.CreateObjectSet<Group>("Groups");
-                }
-                return _Groups;
-            }
-        }
-        private ObjectSet<Group> _Groups;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<Permission> Permissions
         {
             get
@@ -118,17 +102,25 @@ namespace EomApp1.Security
             }
         }
         private ObjectSet<Role> _Roles;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Group> Groups
+        {
+            get
+            {
+                if ((_Groups == null))
+                {
+                    _Groups = base.CreateObjectSet<Group>("Groups");
+                }
+                return _Groups;
+            }
+        }
+        private ObjectSet<Group> _Groups;
 
         #endregion
         #region AddTo Methods
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Groups EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToGroups(Group group)
-        {
-            base.AddObject("Groups", group);
-        }
     
         /// <summary>
         /// Deprecated Method for adding a new object to the Permissions EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
@@ -144,6 +136,14 @@ namespace EomApp1.Security
         public void AddToRoles(Role role)
         {
             base.AddObject("Roles", role);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Groups EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToGroups(Group group)
+        {
+            base.AddObject("Groups", group);
         }
 
         #endregion
@@ -256,6 +256,30 @@ namespace EomApp1.Security
         private global::System.String _WindowsIdentity;
         partial void OnWindowsIdentityChanging(global::System.String value);
         partial void OnWindowsIdentityChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String EmailAddress
+        {
+            get
+            {
+                return _EmailAddress;
+            }
+            set
+            {
+                OnEmailAddressChanging(value);
+                ReportPropertyChanging("EmailAddress");
+                _EmailAddress = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("EmailAddress");
+                OnEmailAddressChanged();
+            }
+        }
+        private global::System.String _EmailAddress;
+        partial void OnEmailAddressChanging(global::System.String value);
+        partial void OnEmailAddressChanged();
 
         #endregion
     
@@ -505,28 +529,6 @@ namespace EomApp1.Security
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomToolSecurity", "RoleGroup", "Group")]
-        public EntityCollection<Group> Groups
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Group>("EomToolSecurity.RoleGroup", "Group");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Group>("EomToolSecurity.RoleGroup", "Group", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomToolSecurity", "RolePermission", "Permission")]
         public EntityCollection<Permission> Permissions
         {
@@ -539,6 +541,28 @@ namespace EomApp1.Security
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Permission>("EomToolSecurity.RolePermission", "Permission", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomToolSecurity", "RoleGroup", "Group")]
+        public EntityCollection<Group> Groups
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Group>("EomToolSecurity.RoleGroup", "Group");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Group>("EomToolSecurity.RoleGroup", "Group", value);
                 }
             }
         }
