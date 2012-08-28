@@ -711,6 +711,10 @@ a.selected
 {
     font-weight: bold;
 }
+tr.highlighted
+{
+    background-color: #CCCCFF;
+}
 
 .lineitems {font-size: 100%; border: 1px solid black; border-collapse:collapse; clear: both}
 .lineitems2 {border: 1px solid black; padding:1px; width: 387px}

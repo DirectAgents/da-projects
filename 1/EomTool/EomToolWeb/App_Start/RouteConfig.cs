@@ -15,12 +15,6 @@ namespace EomToolWeb
                 defaults: new { controller = "Payouts", action = "Summary", mode = UrlParameter.Optional }
             );
 
-            //routes.MapRoute(
-            //    name: null,
-            //    url: "Payouts/ListPartial/{mode}",
-            //    defaults: new { controller = "Payouts", action = "ListPartial", mode = UrlParameter.Optional }
-            //);
-
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
