@@ -19,7 +19,19 @@
 <script type="text/javascript">
     function ShowDetails(affid) {
         $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
+            $('#tblSummary tr').removeClass('highlighted');
+            $('#pub' + affid).addClass('highlighted');
             $('#pubDetails').html(data);
+        });
+    }
+    function ApprovePub(affid) {
+        $.get('@Url.Action("Approve", "Publishers")?affid=' + affid, function (data) {
+            $('#tdPubActions' + affid).html('(approved)');
+        });
+    }
+    function HoldPub(affid) {
+        $.get('@Url.Action("Hold", "Publishers")?affid=' + affid, function (data) {
+            $('#tdPubActions' + affid).html('(held)');
         });
     }
 </script>

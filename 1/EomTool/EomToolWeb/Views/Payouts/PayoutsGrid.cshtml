@@ -54,14 +54,22 @@
             </td>
             @if (Model.ShowActions)
             {
-                <td>
+                <td id="tdCampActions@(payout.pid)">
                     @if (payout.media_buyer_approval_status_id != MediaBuyerApprovalStatus.Approved)
                     {
-                        @Html.ActionLink("Approve", "Approve", new { itemids = payout.ItemIds })
+                        @Ajax.ActionLink("Approve", "Approve", new { itemids = payout.ItemIds },
+                            new AjaxOptions {
+                                Url = Url.Action("Approve", new { itemids = payout.ItemIds }),
+                                UpdateTargetId = "tdCampActions" + payout.pid
+                            });
                     }
                     @if (payout.media_buyer_approval_status_id != MediaBuyerApprovalStatus.Hold)
                     {
-                        @Html.ActionLink("Hold", "Hold", new { itemids = payout.ItemIds })
+                        @Ajax.ActionLink("Hold", "Hold", new { itemids = payout.ItemIds },
+                            new AjaxOptions {
+                                Url = Url.Action("Hold", new { itemids = payout.ItemIds }),
+                                UpdateTargetId = "tdCampActions" + payout.pid
+                            });
                     }
                 </td>
             }

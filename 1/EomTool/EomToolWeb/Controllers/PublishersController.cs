@@ -34,13 +34,19 @@ namespace EomToolWeb.Controllers
         public ActionResult Approve(int affid)
         {
             mainRepository.ApproveItemsByAffId(affid);
-            return RedirectToAction("Summary", "Payouts");
+            if (Request.IsAjaxRequest())
+                return Content("(approved)");
+            else
+                return RedirectToAction("Summary", "Payouts");
         }
 
         public ActionResult Hold(int affid)
         {
             mainRepository.HoldItemsByAffId(affid);
-            return RedirectToAction("Summary", "Payouts");
+            if (Request.IsAjaxRequest())
+                return Content("(held)");
+            else
+                return RedirectToAction("Summary", "Payouts");
         }
     }
 }

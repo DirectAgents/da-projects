@@ -1,9 +1,9 @@
 ﻿@model PublisherSummaryViewModel
 
-<table>
+<table id="tblSummary">
     @foreach (var ps in Model.PublisherSummaries)
     {
-        <tr>
+        <tr id="pub@(ps.affid)">
             <td>@ps.affid
             </td>
             <td>
@@ -15,9 +15,9 @@
             </td>
             @if (Model.ShowActions)
             {
-                <td>
-                    @Html.ActionLink("Approve", "Approve", "Publishers", new { affid = ps.affid }, null)
-                    @Html.ActionLink("Hold", "Hold", "Publishers", new { affid = ps.affid }, null)
+                <td id="tdPubActions@(ps.affid)">
+                    <a href="#" onclick="ApprovePub(@ps.affid); return false;">Approve</a>
+                    <a href="#" onclick="HoldPub(@ps.affid); return false;">Hold</a>
                 </td>
             }
         </tr>

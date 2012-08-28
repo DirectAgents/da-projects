@@ -11,7 +11,7 @@ namespace EomToolWeb.Controllers
 {
     public class PayoutsController : Controller
     {
-        public int PageSize = 15;
+        public int PageSize = 100;
         private IMainRepository mainRepository;
         private ISecurityRepository securityRepository;
         public PayoutsController(IMainRepository mainRepository, ISecurityRepository securityRepository)
@@ -170,7 +170,10 @@ namespace EomToolWeb.Controllers
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
             mainRepository.Media_ApproveItems(itemIdsArray);
 
-            return RedirectToAction("List");
+            if (Request.IsAjaxRequest())
+                return Content("(approved)");
+            else
+                return RedirectToAction("List");
         }
 
         public ActionResult Hold(string itemids)
@@ -178,7 +181,10 @@ namespace EomToolWeb.Controllers
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
             mainRepository.Media_HoldItems(itemIdsArray);
 
-            return RedirectToAction("List");
+            if (Request.IsAjaxRequest())
+                return Content("(held)");
+            else
+                return RedirectToAction("List");
         }
     }
 }
