@@ -18,7 +18,7 @@
 </div>
 <script type="text/javascript">
     function ShowDetails(affid) {
-        $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid, function (data) {
+        $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
             $('#pubDetails').html(data);
         });
     }
