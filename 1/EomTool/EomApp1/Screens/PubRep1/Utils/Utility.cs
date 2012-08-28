@@ -4,14 +4,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Eom.Common;
 
 namespace EomApp1.Screens.PubRep1.Utils
 {
     static class Utility
     {
         internal static string GeneratePublisherReport(
-            Data.PublisherReportDataSet1.VerifiedLineItemsDataTable lis,
-            Data.PublisherReportDataSet1.AffiliatesHavingReportsRow cur,
+            PublisherReportDataSet1.VerifiedLineItemsDataTable lis,
+            PublisherReportDataSet1.AffiliatesHavingReportsRow cur,
             bool payInterface)
         {
             string path = Path.Combine(Path.GetTempPath(), "pubreport" + Guid.NewGuid().ToString() + ".html");
@@ -119,7 +120,7 @@ namespace EomApp1.Screens.PubRep1.Utils
         }
 
         private static object GeneratePublisherReportGetUnverifiedCampaignsXElements(
-            Data.PublisherReportDataSet1.VerifiedLineItemsDataTable lis)
+            PublisherReportDataSet1.VerifiedLineItemsDataTable lis)
         {
             // Need at least 1 line item to produce any result
             if (lis.Count < 1)
@@ -169,7 +170,7 @@ namespace EomApp1.Screens.PubRep1.Utils
         }
 
         private static object GeneratePublisherReportGetLineItemsXElements(
-            Data.PublisherReportDataSet1.VerifiedLineItemsDataTable lis,
+            PublisherReportDataSet1.VerifiedLineItemsDataTable lis,
             string realStatus,
             int accountingStatusID,
             string status,
@@ -293,7 +294,7 @@ namespace EomApp1.Screens.PubRep1.Utils
         }
 
         private static string GeneratePublisherReportFormatMoney(
-            Data.PublisherReportDataSet1.VerifiedLineItemsRow item,
+            PublisherReportDataSet1.VerifiedLineItemsRow item,
             decimal p,
             string cur)
         {

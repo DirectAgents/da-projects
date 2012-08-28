@@ -147,50 +147,31 @@ namespace DAgents.Common
 
         public static class CopyUtility
         {
-            public static void Copy(object source, object target)
+            public static void Copy(object sourceObject, object targetObject, bool deepCopy = true)
             {
-                if (source != null && target != null)
+                if (sourceObject != null && targetObject != null)
                 {
-                    (
-                        from s in Properties(source)
-                        from t in Properties(target)
-                        where Matches(s, t)
-                        let sVal = s.GetValue(source, null)
-                        let tVal = t.GetValue(target, null)
-                        where sVal != null && !sVal.Equals(tVal)
-                        select Action(t, target, sVal)
-                    )
-                    .ToList().ForEach(c => c());
+                    (from sourceProperty in sourceObject.GetType().GetProperties().AsEnumerable()
+                     from targetProperty in targetObject.GetType().GetProperties().AsEnumerable()
+                     where sourceProperty.Name == targetProperty.Name
+                     let sourceValue = sourceProperty.GetValue(sourceObject, null)
+                     let targetValue = targetProperty.GetValue(targetObject, null)
+                     where sourceValue != null && !sourceValue.Equals(targetValue)
+                     select Action(targetProperty, targetObject, sourceValue, deepCopy))
+                    .ToList()
+                    .ForEach(c => c());
                 }
             }
 
-            static IEnumerable<PropertyInfo> Properties(object source)
-            {
-                return source.GetType().GetProperties().AsEnumerable();
-            }
-
-            static bool Matches(PropertyInfo source, PropertyInfo target)
-            {
-                return source.Name == target.Name;
-            }
-
-            static Action Action(PropertyInfo tProp, object tObj, object sVal)
+            static Action Action(PropertyInfo propertyInfo, object targetObject, object sourceValue, bool deepCopy)
             {
                 Action action;
-
-                if (sVal == null)
-                {
+                if (sourceValue == null)
                     action = () => { };
-                }
-                else if (sVal.GetType().FullName.StartsWith("System."))
-                {
-                    action = () => tProp.SetValue(tObj, sVal, null);
-                }
+                else if (!deepCopy || sourceValue.GetType().FullName.StartsWith("System."))
+                    action = () => propertyInfo.SetValue(targetObject, sourceValue, null);
                 else
-                {
-                    action = () => Copy(sVal, tProp.GetValue(tObj, null));
-                }
-
+                    action = () => Copy(sourceValue, propertyInfo.GetValue(targetObject, null));
                 return action;
             }
         }

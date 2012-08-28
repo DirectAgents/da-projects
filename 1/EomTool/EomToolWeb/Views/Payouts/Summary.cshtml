@@ -1,19 +1,40 @@
-﻿@model IEnumerable<PublisherSummary>
-
+﻿@model PublisherSummaryViewModel
 @{
     ViewBag.Title = "Publisher Summary";
 }
-
-<h2>Publisher Summary</h2>
-
+@Html.ActionLink("PreApproval", "Summary", new { mode = "preapproval" }, new { @class = Model.Mode == "preapproval" ? "selected" : "notselected" })
+|
+@Html.ActionLink("ActionNeeded", "Summary", new { mode = (string)null }, new { @class = string.IsNullOrWhiteSpace(Model.Mode) ? "selected" : "notselected" })
+|
+@Html.ActionLink("Held", "Summary", new { mode = "held" }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
+|
+@Html.ActionLink("Approved", "Summary", new { mode = "approved" }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
+<h2>
+    Publisher Summary</h2>
 <table>
-@foreach (var ps in Model)
-{
-<tr>
-    <td>@ps.affid</td>
-    <td>@Html.ActionLink(ps.PublisherName, "List", new {affid = ps.affid})</td>
-    <td>@ps.Currency</td>
-    <td>@String.Format("{0:N2}", ps.PayoutTotal)</td>
-</tr>
-}
+    @foreach (var ps in Model.PublisherSummaries)
+    {
+        <tr>
+            <td>@ps.affid
+            </td>
+            <td>
+                <a href="#" onclick="ShowDetails(@ps.affid); return false;">@ps.PublisherName</a>
+            </td>
+            <td>@ps.Currency
+            </td>
+            <td>@String.Format("{0:N2}", ps.PayoutTotal)
+            </td>
+        </tr>
+    }
 </table>
+<div id="pubDetails">
+</div>
+<script type="text/javascript">
+
+    function ShowDetails(affid) {
+        $.get('@Url.Action("ListPartial", new { mode = Model.Mode })?affid=' + affid, function (data) {
+            $('#pubDetails').html(data);
+        });
+    }
+
+</script>

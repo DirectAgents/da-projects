@@ -439,21 +439,16 @@
     <Compile Include="Screens\PubRep1\Controls\PublisherListView.Designer.cs">
       <DependentUpon>PublisherListView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PubRepTemplate.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PubRepTemplate.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PubRepTemplatePartial.cs" />
     <Compile Include="Screens\PubRep1\Controls\Report2.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Screens\PubRep1\Controls\Report2.Designer.cs">
       <DependentUpon>Report2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\PubRep1\Data\PublisherReportDataSet1.cs">
+    <Compile Include="Screens\PubRep1\Data\PublisherReportDataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Screens\Settings\SecurityForm.cs">
       <SubType>Form</SubType>
@@ -674,11 +669,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PRData.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\PubRep1\Data\PublisherReportDataSet1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
     </Compile>
     <Compile Include="Screens\PubRep1\Data\Vendor.cs" />
     <Compile Include="Screens\PubRep1\Utils\EmailUtility.cs" />
@@ -1082,10 +1072,6 @@
     <None Include="Screens\PublisherNameCombine\PublisherCombineDataSet.xsc">
       <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
     </None>
-    <None Include="Screens\PubRep1\Controls\PubRepTemplate.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>PubRepTemplate.cs</LastGenOutput>
-    </None>
     <None Include="Screens\PubRep1\Data\PRData.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>PRData.designer.cs</LastGenOutput>
@@ -1133,13 +1119,13 @@
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>PublisherReportDataSet1.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Screens\PubRep1\Data\PublisherReportDataSet1.xss">
-      <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
-    </None>
     <EntityDeploy Include="Security\EomToolSecurity.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EomToolSecurity.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Screens\PubRep1\Data\PublisherReportDataSet1.xss">
+      <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
+    </None>
     <None Include="Screens\Settings\SettingsDataSet1.xsc">
       <DependentUpon>SettingsDataSet1.xsd</DependentUpon>
     </None>
@@ -1347,6 +1333,10 @@
     <ProjectReference Include="..\DirectTrack.Rest\DirectTrack.Rest.csproj">
       <Project>{A5D217FE-1556-4ABD-BFDF-F5A2D65F5D8A}</Project>
       <Name>DirectTrack.Rest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Eom.Common\Eom.Common.csproj">
+      <Project>{7C8D69E8-324C-43ED-958A-2248778DD89E}</Project>
+      <Name>Eom.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\EomAppControls\EomApp.Controls.csproj">
       <Project>{1594F5F0-0810-4CD2-8C1E-439BA340EC2E}</Project>

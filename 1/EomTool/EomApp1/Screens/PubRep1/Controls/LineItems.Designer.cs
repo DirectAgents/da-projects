@@ -1,4 +1,5 @@
-﻿namespace EomApp1.Screens.PubRep1.Controls
+﻿using Eom.Common;
+namespace EomApp1.Screens.PubRep1.Controls
 {
     partial class LineItems
     {
@@ -33,7 +34,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.verifiedLineItemsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.publisherReportDataSet1 = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1();
+            this.publisherReportDataSet1 = new PublisherReportDataSet1();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.payToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verifiedLineItemsTableAdapter = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.VerifiedLineItemsTableAdapter();
@@ -390,8 +391,8 @@
 
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.BindingSource verifiedLineItemsBindingSource;
-        private Data.PublisherReportDataSet1 publisherReportDataSet1;
-        private Data.PublisherReportDataSet1TableAdapters.VerifiedLineItemsTableAdapter verifiedLineItemsTableAdapter;
+        private PublisherReportDataSet1 publisherReportDataSet1;
+        private EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.VerifiedLineItemsTableAdapter verifiedLineItemsTableAdapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;

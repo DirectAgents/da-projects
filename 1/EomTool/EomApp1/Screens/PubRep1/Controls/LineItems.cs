@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Eom.Common;
 
 namespace EomApp1.Screens.PubRep1.Controls
 {
@@ -44,7 +45,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             dataGridView1.ClearSelection();
         }
 
-        public Data.PublisherReportDataSet1.VerifiedLineItemsDataTable VerifiedLineItemsDataTable
+        public PublisherReportDataSet1.VerifiedLineItemsDataTable VerifiedLineItemsDataTable
         {
             get
             {

@@ -6,6 +6,7 @@ using EomApp1.Screens.PubRep1.Data;
 using EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters;
 using EomApp1.Screens.PubRep1.Utils;
 using EomApp1.Properties;
+using Eom.Common.PublisherReports;
 
 namespace EomApp1.Screens.PubRep1.Controls
 {
@@ -31,7 +32,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             set
             {
                 var adapter = new CampaignsPublisherReportDetailsTableAdapter();
-                var pr = new PubRepTemplate();
+                var pr = new PubRepTemplate(PubRepTemplateHtmlMode.FullHtml);
                 var data = adapter.GetData(value);
                 pr.Data = data;
                 bindingSource1.DataSource = data;

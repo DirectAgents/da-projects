@@ -1,4 +1,5 @@
-﻿namespace EomApp1.Screens.PubRep1.Components
+﻿using Eom.Common;
+namespace EomApp1.Screens.PubRep1.Components
 {
     partial class PendingStatusUpdates
     {
@@ -28,7 +29,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.publisherReportDataSet11 = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1();
+            this.publisherReportDataSet11 = new PublisherReportDataSet1();
             this.itemIDsForStatusChangeTableAdapter1 = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.ItemIDsForStatusChangeTableAdapter();
             ((System.ComponentModel.ISupportInitialize)(this.publisherReportDataSet11)).BeginInit();
             // 
@@ -47,7 +48,7 @@
 
         #endregion
 
-        private Data.PublisherReportDataSet1 publisherReportDataSet11;
-        private Data.PublisherReportDataSet1TableAdapters.ItemIDsForStatusChangeTableAdapter itemIDsForStatusChangeTableAdapter1;
+        private PublisherReportDataSet1 publisherReportDataSet11;
+        private EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.ItemIDsForStatusChangeTableAdapter itemIDsForStatusChangeTableAdapter1;
     }
 }

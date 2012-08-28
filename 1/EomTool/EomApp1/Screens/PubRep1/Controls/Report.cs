@@ -5,9 +5,9 @@ using System.Linq;
 using System.Security.Permissions;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using EomApp1.Screens.PubRep1.Data;
 using EomApp1.Screens.PubRep1.Utils;
 using EomApp1.Properties;
+using Eom.Common;
 
 namespace EomApp1.Screens.PubRep1.Controls
 {
@@ -15,8 +15,8 @@ namespace EomApp1.Screens.PubRep1.Controls
     [System.Runtime.InteropServices.ComVisibleAttribute(true)]
     public partial class Report : UserControl
     {
-        private Data.PublisherReportDataSet1.VerifiedLineItemsDataTable _lis;
-        private Data.PublisherReportDataSet1.AffiliatesHavingReportsRow _cur;
+        private PublisherReportDataSet1.VerifiedLineItemsDataTable _lis;
+        private PublisherReportDataSet1.AffiliatesHavingReportsRow _cur;
 
         public event EventHandler ClickedOnEmail;
         public event EventHandler ClickedOnSave;
@@ -37,7 +37,7 @@ namespace EomApp1.Screens.PubRep1.Controls
         // NOTE: This is called from javascript in the embedded browser so don't change the signature here without changing it there.
         public void PayItems(string message)
         {
-            var db = new PRDataDataContext();
+            var db = new EomApp1.Screens.PubRep1.Data.PRDataDataContext();
             var query = "update Item set item_accounting_status_id=5 where id in (" + message + ")";
             db.ExecuteCommand(query);
 
@@ -50,8 +50,8 @@ namespace EomApp1.Screens.PubRep1.Controls
         public string ReportSavePath { get; set; }
 
         public void GenerateReport(
-            Data.PublisherReportDataSet1.VerifiedLineItemsDataTable lis,
-            Data.PublisherReportDataSet1.AffiliatesHavingReportsRow cur,
+            PublisherReportDataSet1.VerifiedLineItemsDataTable lis,
+            PublisherReportDataSet1.AffiliatesHavingReportsRow cur,
             bool payInterface)
         {
             this._lis = lis;

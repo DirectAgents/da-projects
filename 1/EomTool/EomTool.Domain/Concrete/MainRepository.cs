@@ -20,13 +20,54 @@ namespace EomTool.Domain.Concrete
             get { return context.PublisherPayouts; }
         }
 
+        public IQueryable<CampaignsPublisherReportDetail> CampaignPublisherReportDetails
+        {
+            get { return context.CampaignsPublisherReportDetails; }
+        }
+
+        public IQueryable<PublisherPayout> PublisherPayoutsByMode(string mode)
+        {
+            var payouts = this.PublisherPayouts;
+
+            if (mode == "preapproval")
+            {
+                payouts = payouts.Where(p => p.status_id == CampaignStatus.Default || p.status_id == CampaignStatus.Active
+                    || (p.status_id == CampaignStatus.Finalized &&
+                    (p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Default || p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Queued)));
+            }
+            else if (mode == "held")
+            {
+                payouts = payouts.Where(p => p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Hold);
+            }
+            else if (mode == "approved")
+            {
+                payouts = payouts.Where(p => (p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Approved)
+                    || p.status_id == CampaignStatus.Verified);
+            }
+            else // normal view - show payouts needing action
+            {
+                payouts = payouts.Where(p => p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Sent);
+            }
+
+            return payouts;
+        }
+
         public IQueryable<PublisherSummary> PublisherSummaries
         {
             get
             {
-                return PublisherPayouts.GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).Select(p => new PublisherSummary { affid = p.Key.affid, PublisherName = p.Key.Publisher, Currency = p.Key.Currency, PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0 });
-                //PublisherPayouts.ToLookup(p => p.Publisher,
+                return PublisherPayouts
+                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr })
+                    .Select(p => new PublisherSummary { affid = p.Key.affid, PublisherName = p.Key.Publisher, Currency = p.Key.Currency, PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0 });
             }
+        }
+
+        public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode)
+        {
+            var result = PublisherPayoutsByMode(mode)
+                 .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr })
+                    .Select(p => new PublisherSummary { affid = p.Key.affid, PublisherName = p.Key.Publisher, Currency = p.Key.Currency, PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0 });
+            return result;
         }
 
         public void Media_ApproveItems(int[] itemIds)

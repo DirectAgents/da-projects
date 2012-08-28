@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using EomTool.Domain.Entities;
 
 namespace EomToolWeb.Models
@@ -12,5 +10,6 @@ namespace EomToolWeb.Models
         public PagingInfo PagingInfo { get; set; }
         public bool ShowActions { get; set; }
         public bool TestMode { get; set; }
+        public MvcHtmlString PublisherReport { get; set; }
     }
 }

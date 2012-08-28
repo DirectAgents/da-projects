@@ -1,4 +1,5 @@
-﻿namespace EomApp1.Screens.PubRep1.Controls
+﻿using Eom.Common;
+namespace EomApp1.Screens.PubRep1.Controls
 {
     partial class AccountingView
     {
@@ -33,7 +34,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountingView));
             this._gridView = new System.Windows.Forms.DataGridView();
             this._bindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this._dataSet = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1();
+            this._dataSet = new PublisherReportDataSet1();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -623,7 +624,7 @@
 
         private System.Windows.Forms.DataGridView _gridView;
         private System.Windows.Forms.BindingSource _bindingSource;
-        private Data.PublisherReportDataSet1 _dataSet;
+        private PublisherReportDataSet1 _dataSet;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;

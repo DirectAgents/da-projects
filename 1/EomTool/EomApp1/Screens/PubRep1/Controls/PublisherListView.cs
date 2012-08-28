@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using EomApp1.Screens.PubRep1.Data;
 using EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters;
 using EomAppControls;
+using Eom.Common;
 
 namespace EomApp1.Screens.PubRep1.Controls
 {

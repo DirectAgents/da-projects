@@ -7,6 +7,7 @@ using EomTool.Domain.Abstract;
 using EomTool.Domain.Concrete;
 using EomToolWeb.Models;
 using EomTool.Domain.Entities;
+using System.Reflection;
 
 namespace EomToolWeb.Controllers
 {
@@ -21,17 +22,34 @@ namespace EomToolWeb.Controllers
             this.securityRepository = securityRepository;
         }
 
-        public ActionResult Summary()
+        public ActionResult Summary(string mode)
         {
             var groups = securityRepository.GroupsByWindowsIdentity(User.Identity.Name);
             var roleNames = groups.SelectMany(g => g.Roles).Select(r => r.Name).ToArray();
             var affIds = mainRepository.AffiliatesForMediaBuyers(roleNames).Select(a => a.affid).ToList();
 
-            var model = mainRepository.PublisherSummaries.Where(ps => affIds.Contains(ps.affid)).OrderBy(p => p.PublisherName);
+            var model = new PublisherSummaryViewModel
+            {
+                PublisherSummaries = mainRepository.PublisherSummariesByMode(mode).Where(ps => affIds.Contains(ps.affid)).OrderBy(p => p.PublisherName),
+                Mode = mode
+            };
+
             return View(model);
         }
 
-        public ActionResult List(string mode, int? affid, int page=1)
+        public ActionResult List(string mode, int? affid, int page = 1)
+        {
+            var model = DoList(mode, affid, page);
+            return View(model);
+        }
+
+        public ActionResult ListPartial(string mode, int? affid, int page = 1)
+        {
+            var model = DoList(mode, affid, page);
+            return PartialView("PayoutsGrid", model);
+        }
+
+        private PayoutsListViewModel DoList(string mode, int? affid, int page)
         {
             //testing
             if (Request["test"] != null)
@@ -44,27 +62,14 @@ namespace EomToolWeb.Controllers
             if (affid != null)
                 // TESTING
                 affIds = (new int[] { affid.Value }).ToList();
-                //affIds = affIds.Where(a => a == affid).ToList();
+            //affIds = affIds.Where(a => a == affid).ToList();
 
-            var payouts = mainRepository.PublisherPayouts.Where(p => affIds.Contains(p.affid));
+            var payouts = mainRepository.PublisherPayoutsByMode(mode).Where(p => affIds.Contains(p.affid));
+
             PayoutsListViewModel viewModel = new PayoutsListViewModel();
-            if (mode == "preapproval")
+
+            if (string.IsNullOrWhiteSpace(mode))
             {
-                payouts = payouts.Where(p => p.status_id == CampaignStatus.Default || p.status_id == CampaignStatus.Active
-                    || (p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id < MediaBuyerApprovalStatus.Sent));
-            }
-            else if (mode == "held")
-            {
-                payouts = payouts.Where(p => p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Hold);
-            }
-            else if (mode == "approved")
-            {
-                payouts = payouts.Where(p => (p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Approved)
-                    || p.status_id == CampaignStatus.Verified);
-            }
-            else // normal view - show payouts needing action
-            {
-                payouts = payouts.Where(p => p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Sent);
                 viewModel.ShowActions = true;
             }
 
@@ -77,7 +82,55 @@ namespace EomToolWeb.Controllers
             };
             viewModel.TestMode = (Session["TestMode"] != null && Session["TestMode"].ToString() == "1");
 
-            return View(viewModel);
+            // HACK: converting publisher name2 field to publisher name fields by splitting on left paren
+            //       a lookup using affid might be better but then again we don't want to tie a publisher name to a single affid...
+            string publisherName = viewModel.Payouts.First().Publisher.Split('(').First();
+
+            viewModel.PublisherReport = MvcHtmlString.Create(GetPublisherReport(publisherName));
+
+            return viewModel;
+        }
+
+        private string GetPublisherReport(string publisherName)
+        {
+            var table = new Eom.Common.PublisherReportDataSet1.CampaignsPublisherReportDetailsDataTable();
+            var details = this.mainRepository.CampaignPublisherReportDetails.Where(c => c.Publisher == publisherName);
+            foreach (var detail in details)
+            {
+                var row = table.NewCampaignsPublisherReportDetailsRow();
+                Copy(detail, row, false);
+
+            }
+            //table.NewCampaignsPublisherReportDetailsRow()
+            return "foo";
+        }
+
+        static void Copy(object sourceObject, object targetObject, bool deepCopy = true)
+        {
+            if (sourceObject != null && targetObject != null)
+            {
+                (from sourceProperty in sourceObject.GetType().GetProperties().AsEnumerable()
+                 from targetProperty in targetObject.GetType().GetProperties().AsEnumerable()
+                 where sourceProperty.Name == targetProperty.Name
+                 let sourceValue = sourceProperty.GetValue(sourceObject, null)
+                 let targetValue = targetProperty.GetValue(targetObject, null)
+                 where sourceValue != null && !sourceValue.Equals(targetValue)
+                 select Action(targetProperty, targetObject, sourceValue, deepCopy))
+                .ToList()
+                .ForEach(c => c());
+            }
+        }
+
+        static Action Action(PropertyInfo propertyInfo, object targetObject, object sourceValue, bool deepCopy)
+        {
+            Action action;
+            if (sourceValue == null)
+                action = () => { };
+            else if (!deepCopy || sourceValue.GetType().FullName.StartsWith("System."))
+                action = () => propertyInfo.SetValue(targetObject, sourceValue, null);
+            else
+                action = () => Copy(sourceValue, propertyInfo.GetValue(targetObject, null));
+            return action;
         }
 
         public ActionResult Approve(string itemids)

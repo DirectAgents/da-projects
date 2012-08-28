@@ -596,6 +596,10 @@ DIV.pager A { font-size: 1.1em; color: #666; text-decoration: none;
 DIV.pager A:hover { background-color: Silver; }
 DIV.pager A.selected { background-color: #353535; color: White; }
 
+a.selected 
+{
+    font-weight: bold
+}
 
 /********************
 *   Mobile Styles   *

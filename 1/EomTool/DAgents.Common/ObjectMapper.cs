@@ -6,37 +6,25 @@ namespace DAgents.Common
 {
     public class ObjectMapper<TFromType, TToType>
     {
-        private ISet<TFromType> _from;
-        private ISet<TToType> _to;
+        private ISet<TFromType> fromSet;
+        private ISet<TToType> toSet;
 
-        public ObjectMapper(
-            ISet<TFromType> fromSet,
-            ISet<TToType> toSet
-            )
+        public ObjectMapper(ISet<TFromType> from, ISet<TToType> to)
         {
-            _from = fromSet;
-            _to = toSet;
+            this.fromSet = from;
+            this.toSet = to;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rules"></param>
-        /// <param name="factory"></param>
-        /// <returns></returns>
-        public ISet<TToType> Map(
-            List<Func<TFromType, TToType, Tuple<bool, Func<TFromType, TToType, TToType>>>> rules,
-            Func<TToType> factory
-            )
+        public ISet<TToType> Map(List<Func<TFromType, TToType, Tuple<bool, Func<TFromType, TToType, TToType>>>> rules, Func<TToType> factory)
         {
             var resultSet = new HashSet<TToType>();
 
-            var results = from @from in _from
-                          from to in _to
+            var results = from f in this.fromSet
+                          from t in this.toSet
                           from rule in rules
-                          let mapper = rule(@from, to)
+                          let mapper = rule(f, t)
                           where mapper.Item1 == true
-                          select mapper.Item2(@from, to);
+                          select mapper.Item2(f, t);
 
             foreach (var result in results)
                 resultSet.Add(result);

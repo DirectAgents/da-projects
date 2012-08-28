@@ -1,4 +1,5 @@
-﻿namespace EomApp1.Screens.PubRep1.Controls
+﻿using Eom.Common;
+namespace EomApp1.Screens.PubRep1.Controls
 {
     partial class PublisherListView
     {
@@ -72,7 +73,7 @@
             this.paidColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this._bindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this._dataSet = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1();
+            this._dataSet = new PublisherReportDataSet1();
             this._tableAdapter = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.CampaignsPublisherReportSummaryTableAdapter();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -1039,8 +1040,8 @@
         #endregion
 
         private System.Windows.Forms.BindingSource _bindingSource;
-        private Data.PublisherReportDataSet1 _dataSet;
-        private Data.PublisherReportDataSet1TableAdapters.CampaignsPublisherReportSummaryTableAdapter _tableAdapter;
+        private PublisherReportDataSet1 _dataSet;
+        private EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.CampaignsPublisherReportSummaryTableAdapter _tableAdapter;
         private System.Windows.Forms.DataGridView _dgv;
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
         private System.Windows.Forms.MenuStrip menuStrip1;

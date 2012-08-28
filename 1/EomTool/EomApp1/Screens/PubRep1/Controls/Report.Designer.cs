@@ -1,4 +1,5 @@
-﻿namespace EomApp1.Screens.PubRep1.Controls
+﻿using Eom.Common;
+namespace EomApp1.Screens.PubRep1.Controls
 {
     partial class Report
     {
@@ -50,7 +51,7 @@
             this.vendoridDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEmailStatusMsg = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pubReportInstanceBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.publisherReportDataSet1 = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1();
+            this.publisherReportDataSet1 = new PublisherReportDataSet1();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sent_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -493,8 +494,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.BindingSource pubReportInstanceBindingSource;
-        private Data.PublisherReportDataSet1 publisherReportDataSet1;
-        private Data.PublisherReportDataSet1TableAdapters.PubReportInstanceTableAdapter pubReportInstanceTableAdapter;
+        private PublisherReportDataSet1 publisherReportDataSet1;
+        private EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.PubReportInstanceTableAdapter pubReportInstanceTableAdapter;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
