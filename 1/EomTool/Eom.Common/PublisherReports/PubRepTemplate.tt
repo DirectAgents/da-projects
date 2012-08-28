@@ -5,9 +5,7 @@ var items = Data.Where(c => c.Publisher == Publisher).ToList();
 var first = items.First();
 string currency = first.PayCurrency;
 #>
-<#
-if(this.HtmlMode == PubRepTemplateHtmlMode.FullHtml) {
-#>
+<# if(this.HtmlMode == PubRepTemplateHtmlMode.FullHtml) { #>
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -37,9 +35,7 @@ h2 {border-width: thin; border-style: solid; text-align: center;}
 </style>
   </head>
   <body>
-<#
-}
-#>
+<#}#>
     <div id="outer">
       <div id="title">
         <img src="http://www.directagents.com/publisherreportheader.png" />
@@ -103,10 +99,7 @@ foreach(var i in new [] {
 <#}#>
     </div>
 <#
-if(this.HtmlMode == PubRepTemplateHtmlMode.FullHtml) {
-#>
+if(this.HtmlMode == PubRepTemplateHtmlMode.FullHtml) {#>
   </body>
 </html>
-<#
-}
-#>
+<#}#>

@@ -31,9 +31,7 @@ string currency = first.PayCurrency;
             #line hidden
             
             #line 8 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
-
-if(this.HtmlMode == PubRepTemplateHtmlMode.FullHtml) {
-
+ if(this.HtmlMode == PubRepTemplateHtmlMode.FullHtml) { 
             
             #line default
             #line hidden
@@ -68,10 +66,8 @@ h2 {border-width: thin; border-style: solid; text-align: center;}
   <body>
 ");
             
-            #line 40 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
-
+            #line 38 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 }
-
             
             #line default
             #line hidden
@@ -85,14 +81,14 @@ h2 {border-width: thin; border-style: solid; text-align: center;}
       <div id=""info1"">
         <span id=""info11"">");
             
-            #line 51 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 47 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(first.Publisher));
             
             #line default
             #line hidden
             this.Write(" </span>\r\n      </div>\r\n      <div id=\"info2\">\r\n        <span id=\"info21\">");
             
-            #line 54 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 50 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(first.MediaBuyer));
             
             #line default
@@ -100,21 +96,21 @@ h2 {border-width: thin; border-style: solid; text-align: center;}
             this.Write("</span>\r\n      </div>\r\n      <div id=\"info3\">\r\n        <span id=\"info31\">Report F" +
                     "or: ");
             
-            #line 57 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 53 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(FormatDate(FromDate)));
             
             #line default
             #line hidden
             this.Write(" to ");
             
-            #line 57 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 53 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(FormatDate(ToDate)));
             
             #line default
             #line hidden
             this.Write("</span>\r\n      </div>\r\n");
             
-            #line 59 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 55 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 
 foreach(var i in new [] {
     new { q = (items.Where(c=>c.IsCPM=="No" && c.Paid > 0 && c.CampaignStatus == "Verified")), s = "Paid" },
@@ -132,7 +128,7 @@ foreach(var i in new [] {
             this.Write("\t<div>\r\n        <br />\r\n        <table class=\"lineitems\">\r\n          <tr class=\"l" +
                     "ineitems1\">\r\n            <td class=\"lineitems2\">Campaign: ");
             
-            #line 74 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 70 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(c.CampaignName));
             
             #line default
@@ -141,69 +137,69 @@ foreach(var i in new [] {
                     "eitems4\">Actions</td>\r\n            <td class=\"lineitems5\">Revenue</td>\r\n        " +
                     "  </tr>\r\n          <tr class=\"lineitems1\">\r\n            <td class=\"lineitems2\">");
             
-            #line 80 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 76 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(c.CampaignName));
             
             #line default
             #line hidden
             this.Write(" - ");
             
-            #line 80 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 76 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(c.AddCode));
             
             #line default
             #line hidden
             this.Write("</td>\r\n            <td class=\"lineitems3\">");
             
-            #line 81 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 77 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(FormatCurrency(currency, c.CostPerUnit)));
             
             #line default
             #line hidden
             this.Write("</td>\r\n            <td class=\"lineitems4\">");
             
-            #line 82 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 78 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture((int)c.NumUnits));
             
             #line default
             #line hidden
             this.Write("</td>\r\n            <td class=\"lineitems5\">\r\n              <span>");
             
-            #line 84 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 80 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(FormatCurrency(currency, c.Total)));
             
             #line default
             #line hidden
             this.Write("</span>\r\n            </td>\r\n          </tr>\r\n        </table>\r\n\t</div>\r\n\t");
             
-            #line 89 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 85 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("\t<div id=\"info4\"><span id=\"info51\">Status: ");
             
-            #line 90 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 86 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.s));
             
             #line default
             #line hidden
             this.Write("</span></div>\r\n\t<div id=\"info5\"><a id=\"info61\">Total: ");
             
-            #line 91 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 87 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(FormatCurrency(currency, list.Sum(c => c.Total))));
             
             #line default
             #line hidden
             this.Write("</a></div>\r\n");
             
-            #line 92 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 88 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 }
             
             #line default
             #line hidden
             
-            #line 93 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 89 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 
 foreach(var i in new [] {
 	new { q = (items.Where(c=>c.CampaignStatus != "Verified")), s = "Not Yet Final" }
@@ -217,46 +213,43 @@ foreach(var i in new [] {
             #line hidden
             this.Write("    <table class=\"lineitems\"><tr><td>");
             
-            #line 101 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 97 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i.s));
             
             #line default
             #line hidden
             this.Write("</td><td>");
             
-            #line 101 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 97 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(c.CampaignName));
             
             #line default
             #line hidden
             this.Write("</td></tr></table>\r\n\t");
             
-            #line 102 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 98 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 }
             
             #line default
             #line hidden
             
-            #line 103 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 99 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 }
             
             #line default
             #line hidden
             this.Write("    </div>\r\n");
             
-            #line 105 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
+            #line 101 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 
 if(this.HtmlMode == PubRepTemplateHtmlMode.FullHtml) {
-
             
             #line default
             #line hidden
             this.Write("  </body>\r\n</html>\r\n");
             
-            #line 110 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
-
+            #line 105 "C:\GitHub\da-projects\1\EomTool\Eom.Common\PublisherReports\PubRepTemplate.tt"
 }
-
             
             #line default
             #line hidden
