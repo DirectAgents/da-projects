@@ -9,29 +9,16 @@
 @Html.ActionLink("Held", "Summary", new { mode = "held" }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
 |
 @Html.ActionLink("Approved", "Summary", new { mode = "approved" }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
-<h2>
-    Publisher Summary</h2>
-<table>
-    @foreach (var ps in Model.PublisherSummaries)
-    {
-        <tr>
-            <td>@ps.affid
-            </td>
-            <td>
-                <a href="#" onclick="ShowDetails(@ps.affid); return false;">@ps.PublisherName</a>
-            </td>
-            <td>@ps.Currency
-            </td>
-            <td>@String.Format("{0:N2}", ps.PayoutTotal)
-            </td>
-        </tr>
-    }
-</table>
+
+<h2>Publisher Summary</h2>
+
+@Html.Partial("SummaryGrid", Model)
+
 <div id="pubDetails">
 </div>
 <script type="text/javascript">
     function ShowDetails(affid) {
-        $.get('@Url.Action("ListPartial", new { mode = Model.Mode })?affid=' + affid, function (data) {
+        $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid, function (data) {
             $('#pubDetails').html(data);
         });
     }

@@ -1,0 +1,15 @@
+﻿@model PayoutsListViewModel
+@Styles.Render("~/PubRep/css")
+
+<table style="border: 1px solid black; font-size: small">
+    <tr>
+        <td>
+            @Model.PublisherReport
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.Partial("PayoutsGrid", Model)
+        </td>
+    </tr>
+</table>
