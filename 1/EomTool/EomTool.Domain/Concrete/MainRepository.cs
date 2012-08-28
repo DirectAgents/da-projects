@@ -90,6 +90,32 @@ namespace EomTool.Domain.Concrete
             context.SaveChanges();
         }
 
+        // only approve finalized items that are "Sent"
+        public void ApproveItemsByAffId(int affId)
+        {
+            var items = context.Items.Where(i => i.affid == affId &&
+                                            i.campaign_status_id == CampaignStatus.Finalized &&
+                                            i.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Sent);
+            foreach (var item in items)
+            {
+                item.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Approved;
+            }
+            context.SaveChanges();
+        }
+
+        // only hold finalized items that are "Sent"
+        public void HoldItemsByAffId(int affId)
+        {
+            var items = context.Items.Where(i => i.affid == affId &&
+                                            i.campaign_status_id == CampaignStatus.Finalized &&
+                                            i.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Sent);
+            foreach (var item in items)
+            {
+                item.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Hold;
+            }
+            context.SaveChanges();
+        }
+
         public IQueryable<Affiliate> AffiliatesForMediaBuyers(string[] mediaBuyers)
         {
             var affs = from a in context.Affiliates

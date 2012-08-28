@@ -9,9 +9,11 @@ namespace EomToolWeb.Controllers
     {
         public int PageSize = 25;
         private IAffiliateRepository affiliatesRepository;
-        public PublishersController(IAffiliateRepository affiliatesRepository)
+        private IMainRepository mainRepository;
+        public PublishersController(IAffiliateRepository affiliatesRepository, IMainRepository mainRepository)
         {
             this.affiliatesRepository = affiliatesRepository;
+            this.mainRepository = mainRepository;
         }
 
         public ActionResult List(int page=1)
@@ -29,5 +31,16 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
+        public ActionResult Approve(int affid)
+        {
+            mainRepository.ApproveItemsByAffId(affid);
+            return RedirectToAction("Summary", "Payouts");
+        }
+
+        public ActionResult Hold(int affid)
+        {
+            mainRepository.HoldItemsByAffId(affid);
+            return RedirectToAction("Summary", "Payouts");
+        }
     }
 }

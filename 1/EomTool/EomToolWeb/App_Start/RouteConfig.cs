@@ -11,14 +11,20 @@ namespace EomToolWeb
 
             routes.MapRoute(
                 name: null,
-                url: "Payouts/Summary/{mode}",
+                url: "{controller}/{action}/{mode}",
                 defaults: new { controller = "Payouts", action = "Summary", mode = UrlParameter.Optional }
             );
 
+            //routes.MapRoute(
+            //    name: null,
+            //    url: "Payouts/ListPartial/{mode}",
+            //    defaults: new { controller = "Payouts", action = "ListPartial", mode = UrlParameter.Optional }
+            //);
+
             routes.MapRoute(
-                name: null,
-                url: "Payouts/ListPartial/{mode}",
-                defaults: new { controller = "Payouts", action = "ListPartial", mode = UrlParameter.Optional }
+                name: "Default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

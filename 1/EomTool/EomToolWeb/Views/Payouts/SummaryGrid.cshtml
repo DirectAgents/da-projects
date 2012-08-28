@@ -1,0 +1,25 @@
+﻿@model PublisherSummaryViewModel
+
+<table>
+    @foreach (var ps in Model.PublisherSummaries)
+    {
+        <tr>
+            <td>@ps.affid
+            </td>
+            <td>
+                <a href="#" onclick="ShowDetails(@ps.affid); return false;">@ps.PublisherName</a>
+            </td>
+            <td>@ps.Currency
+            </td>
+            <td>@String.Format("{0:N2}", ps.PayoutTotal)
+            </td>
+            @if (Model.ShowActions)
+            {
+                <td>
+                    @Html.ActionLink("Approve", "Approve", "Publishers", new { affid = ps.affid }, null)
+                    @Html.ActionLink("Hold", "Hold", "Publishers", new { affid = ps.affid }, null)
+                </td>
+            }
+        </tr>
+    }
+</table>

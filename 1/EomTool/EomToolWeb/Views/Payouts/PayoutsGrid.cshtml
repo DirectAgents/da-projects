@@ -1,127 +1,83 @@
 ﻿@model PayoutsListViewModel
-@Styles.Render("~/PubRep/css")
-<table style="border: 1px solid black; font-size: small">
+
+<table>
     <tr>
-        <td>
-            @Model.PublisherReport
-        </td>
+        <th>Publisher</th>
+        <th>Campaign</th>
+        <th>Cost<br />Curr</th>
+        <th>Payout</th>
+        <th>Actions</th>
+        <th>%Margin</th>
+        <th>Payment<br />Term</th>
+        <th>Pay<br />Curr</th>
+        <th>Payout</th>
+        <th>Status</th>
+        <th>Accting<br />Status</th>
+        <th>Approval</th>
+        @if (Model.ShowActions)
+        {
+            <th></th>
+        }
+        @if (Model.TestMode)
+        {
+            <th>affid</th>
+            <th>pid</th>
+            <th>ItemIds</th>
+        }
     </tr>
-    <tr>
-        <td>
-            <table>
-                <tr>
-                    <th>
-                        Publisher
-                    </th>
-                    <th>
-                        Campaign
-                    </th>
-                    <th>
-                        Cost Curr
-                    </th>
-                    <th>
-                        Payout
-                    </th>
-                    <th>
-                        Actions
-                    </th>
-                    <th>
-                        %Margin
-                    </th>
-                    <th>
-                        Payment<br />
-                        Term
-                    </th>
-                    <th>
-                        Pay Curr
-                    </th>
-                    <th>
-                        Payout
-                    </th>
-                    <th>
-                        Status
-                    </th>
-                    <th>
-                        Accting<br />
-                        Status
-                    </th>
-                    <th>
-                        Approval
-                    </th>
-                    @if (Model.ShowActions)
+    @foreach (var payout in Model.Payouts)
+    {
+        <tr>
+            <td>@payout.Publisher
+            </td>
+            <td>@payout.Campaign_Name
+            </td>
+            <td>@payout.Cost_Currency
+            </td>
+            <td>@String.Format("{0:N2}", payout.Cost_Unit)
+            </td>
+            <td>@String.Format("{0:N2}", payout.Units)
+            </td>
+            <td>@String.Format("{0:N2}", payout.MarginPct)
+            </td>
+            <td>@payout.Net_Terms
+            </td>
+            <td>@payout.Pub_Pay_Curr
+            </td>
+            <td>@String.Format("{0:N2}", payout.Pub_Payout)
+            </td>
+            <td>@payout.Status
+            </td>
+            <td>@payout.Accounting_Status
+            </td>
+            <td>@payout.Media_Buyer_Approval_Status
+            </td>
+            @if (Model.ShowActions)
+            {
+                <td>
+                    @if (payout.media_buyer_approval_status_id != MediaBuyerApprovalStatus.Approved)
                     {
-                        <th>
-                        </th>
+                        @Html.ActionLink("Approve", "Approve", new { itemids = payout.ItemIds })
                     }
-                    @if (Model.TestMode)
+                    @if (payout.media_buyer_approval_status_id != MediaBuyerApprovalStatus.Hold)
                     {
-                        <th>
-                            affid
-                        </th>
-                        <th>
-                            pid
-                        </th>
-                        <th>
-                            ItemIds
-                        </th>
+                        @Html.ActionLink("Hold", "Hold", new { itemids = payout.ItemIds })
                     }
-                </tr>
-                @foreach (var payout in Model.Payouts)
-                {
-                    <tr>
-                        <td>@payout.Publisher
-                        </td>
-                        <td>@payout.Campaign_Name
-                        </td>
-                        <td>@payout.Cost_Currency
-                        </td>
-                        <td>@String.Format("{0:N2}", payout.Cost_Unit)
-                        </td>
-                        <td>@String.Format("{0:N2}", payout.Units)
-                        </td>
-                        <td>@String.Format("{0:N2}", payout.MarginPct)
-                        </td>
-                        <td>@payout.Net_Terms
-                        </td>
-                        <td>@payout.Pub_Pay_Curr
-                        </td>
-                        <td>@String.Format("{0:N2}", payout.Pub_Payout)
-                        </td>
-                        <td>@payout.Status
-                        </td>
-                        <td>@payout.Accounting_Status
-                        </td>
-                        <td>@payout.Media_Buyer_Approval_Status
-                        </td>
-                        @if (Model.ShowActions)
-                        {
-                            <td>
-                                @if (payout.media_buyer_approval_status_id != MediaBuyerApprovalStatus.Approved)
-                                {
-                                    @Html.ActionLink("Approve", "Approve", new { itemids = payout.ItemIds })
-                                }
-                                @if (payout.media_buyer_approval_status_id != MediaBuyerApprovalStatus.Hold)
-                                {
-                                    @Html.ActionLink("Hold", "Hold", new { itemids = payout.ItemIds })
-                                }
-                            </td>
-                        }
-                        @if (Model.TestMode)
-                        {
-                            <td>@payout.affid
-                            </td>
-                            <td>@payout.pid
-                            </td>
-                            <td>@payout.ItemIds
-                            </td>
-                        }
-                    </tr>
-                }
-            </table>
-            <br />
-            <div class="pager">
-                @Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new { page = x }))
-            </div>
-        </td>
-    </tr>
+                </td>
+            }
+            @if (Model.TestMode)
+            {
+                <td>@payout.affid
+                </td>
+                <td>@payout.pid
+                </td>
+                <td>@payout.ItemIds
+                </td>
+            }
+        </tr>
+    }
 </table>
+<br />
+<div class="pager">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new { page = x }))
+</div>

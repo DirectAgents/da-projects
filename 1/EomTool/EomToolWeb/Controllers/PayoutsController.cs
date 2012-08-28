@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomToolWeb.Models;
+using System.Collections.Generic;
 
 namespace EomToolWeb.Controllers
 {
@@ -18,56 +19,61 @@ namespace EomToolWeb.Controllers
             this.securityRepository = securityRepository;
         }
 
-        public ActionResult Summary(string mode)
+        private List<int> AffIdsForCurrentUser()
         {
             var groups = securityRepository.GroupsByWindowsIdentity(User.Identity.Name);
             var roleNames = groups.SelectMany(g => g.Roles).Select(r => r.Name).ToArray();
             var affIds = mainRepository.AffiliatesForMediaBuyers(roleNames).Select(a => a.affid).ToList();
+            return affIds;
+        }
 
-            var model = new PublisherSummaryViewModel
+        public ActionResult Summary(string mode)
+        {
+            var affIds = AffIdsForCurrentUser();
+
+            var viewModel = new PublisherSummaryViewModel
             {
                 PublisherSummaries = mainRepository.PublisherSummariesByMode(mode).Where(ps => affIds.Contains(ps.affid)).OrderBy(p => p.PublisherName),
                 Mode = mode
             };
 
-            return View(model);
+            return View(viewModel);
+        }
+
+        public ActionResult Details(string mode, int? affid, int page = 1)
+        {
+            var model = CreatePayoutsListViewModel(mode, affid, page);
+            return PartialView(model);
         }
 
         public ActionResult List(string mode, int? affid, int page = 1)
         {
-            var model = DoList(mode, affid, page);
+            var model = CreatePayoutsListViewModel(mode, affid, page);
             return View(model);
         }
 
         public ActionResult ListPartial(string mode, int? affid, int page = 1)
         {
-            var model = DoList(mode, affid, page);
+            var model = CreatePayoutsListViewModel(mode, affid, page);
             return PartialView("PayoutsGrid", model);
         }
 
-        private PayoutsListViewModel DoList(string mode, int? affid, int page)
+        private PayoutsListViewModel CreatePayoutsListViewModel(string mode, int? affid, int page)
         {
             //testing
             if (Request["test"] != null)
                 Session["TestMode"] = Request["test"];
 
-            var groups = securityRepository.GroupsByWindowsIdentity(User.Identity.Name);
-            var roleNames = groups.SelectMany(g => g.Roles).Select(r => r.Name).ToArray();
-            var affIds = mainRepository.AffiliatesForMediaBuyers(roleNames).Select(a => a.affid).ToList();
-
+            var affIds = AffIdsForCurrentUser();
             if (affid != null)
-                // TESTING
-                affIds = (new int[] { affid.Value }).ToList();
-            //affIds = affIds.Where(a => a == affid).ToList();
+                affIds = affIds.Where(a => a == affid).ToList();
 
             var payouts = mainRepository.PublisherPayoutsByMode(mode).Where(p => affIds.Contains(p.affid));
 
-            PayoutsListViewModel viewModel = new PayoutsListViewModel();
-
-            if (string.IsNullOrWhiteSpace(mode))
+            PayoutsListViewModel viewModel = new PayoutsListViewModel()
             {
-                viewModel.ShowActions = true;
-            }
+                ShowActions = string.IsNullOrWhiteSpace(mode) // default mode, ActionNeeded
+            };
 
             viewModel.Payouts = payouts.OrderBy(p => p.Publisher).ThenBy(p => p.Campaign_Name).Skip((page - 1) * PageSize).Take(PageSize);
             viewModel.PagingInfo = new PagingInfo
