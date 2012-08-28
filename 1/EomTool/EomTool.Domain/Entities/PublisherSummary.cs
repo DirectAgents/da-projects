@@ -11,5 +11,7 @@ namespace EomTool.Domain.Entities
         public string PublisherName { get; set; }
         public string Currency { get; set; }
         public decimal PayoutTotal { get; set; }
+        public decimal MinPctMargin { get; set; }
+        public decimal MaxPctMargin { get; set; }
     }
 }

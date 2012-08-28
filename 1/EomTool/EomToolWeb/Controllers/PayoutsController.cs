@@ -135,36 +135,6 @@ namespace EomToolWeb.Controllers
             return reportHTML;
         }
 
-        static void Copy(object sourceObject, object targetObject, bool deepCopy = true)
-        {
-            if (sourceObject != null && targetObject != null)
-            {
-                (from sourceProperty in sourceObject.GetType().GetProperties().AsEnumerable()
-                 from targetProperty in targetObject.GetType().GetProperties().AsEnumerable()
-                 where sourceProperty.Name.ToUpper() == targetProperty.Name.ToUpper()
-                 let sourceValue = sourceProperty.GetValue(sourceObject, null)
-                 select CopyAction(targetProperty, targetObject, sourceValue, deepCopy))
-                .ToList()
-                .ForEach(c => c());
-            }
-        }
-
-        static Action CopyAction(PropertyInfo propertyInfo, object targetObject, object sourceValue, bool deepCopy)
-        {
-            Action action;
-            if (sourceValue == null)
-                action = () => { };
-            else if (!deepCopy || sourceValue.GetType().FullName.StartsWith("System."))
-            {
-                if (sourceValue is string)
-                    sourceValue = (sourceValue as string).Trim();
-                action = () => propertyInfo.SetValue(targetObject, sourceValue, null);
-            }
-            else
-                action = () => Copy(sourceValue, propertyInfo.GetValue(targetObject, null));
-            return action;
-        }
-
         public ActionResult Approve(string itemids)
         {
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();

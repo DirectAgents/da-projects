@@ -13,6 +13,8 @@
             </td>
             <td>@String.Format("{0:N2}", ps.PayoutTotal)
             </td>
+            <td>@String.Format("{0:N2}%", ps.MinPctMargin) - @String.Format("{0:N2}", ps.MaxPctMargin)%
+            </td>
             @if (Model.ShowActions)
             {
                 <td id="tdPubActions@(ps.affid)">

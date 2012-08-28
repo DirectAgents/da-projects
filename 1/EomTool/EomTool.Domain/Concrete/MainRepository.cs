@@ -64,9 +64,19 @@ namespace EomTool.Domain.Concrete
 
         public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode)
         {
-            var result = PublisherPayoutsByMode(mode)
-                 .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr })
-                    .Select(p => new PublisherSummary { affid = p.Key.affid, PublisherName = p.Key.Publisher, Currency = p.Key.Currency, PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0 });
+            var result =
+                PublisherPayoutsByMode(mode)
+                    .Where(c => c.Pub_Payout > 0)
+                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr })
+                    .Select(p => new PublisherSummary
+                    {
+                        affid = p.Key.affid,
+                        PublisherName = p.Key.Publisher,
+                        Currency = p.Key.Currency,
+                        PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
+                        MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
+                        MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
+                    });
             return result;
         }
 
