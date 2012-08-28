@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomToolWeb.Models;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace EomToolWeb.Controllers
 {
@@ -84,26 +85,43 @@ namespace EomToolWeb.Controllers
             };
             viewModel.TestMode = (Session["TestMode"] != null && Session["TestMode"].ToString() == "1");
 
-            // HACK: converting publisher name2 field to publisher name fields by splitting on left paren
-            //       a lookup using affid might be better but then again we don't want to tie a publisher name to a single affid...
-            string publisherName = viewModel.Payouts.First().Publisher.Split('(').First().Trim();
-
-            viewModel.PublisherReport = MvcHtmlString.Create(GetPublisherReport(publisherName));
+            viewModel.PublisherReport = MvcHtmlString.Create(GetPublisherReport(payouts));
 
             return viewModel;
         }
 
-        private string GetPublisherReport(string publisherName)
+        private string GetPublisherReport(IEnumerable<EomTool.Domain.Entities.PublisherPayout> payouts)
         {
             var table = new Eom.Common.PublisherReportDataSet1.CampaignsPublisherReportDetailsDataTable();
-            var details = this.mainRepository.CampaignPublisherReportDetails.Where(c => c.Publisher == publisherName);
-            foreach (var detail in details)
+            string publisherName = null;
+
+            foreach (var payout in payouts/*.Where(c => c.Pub_Payout > 0)*/)
             {
+                var rx = new Regex(@"(?'name'((\w+)\W+)+)\((?'addcode'((CD|CA)(?'cdnumber'([0-9]+))))\)");
+                var publisher = rx.Match(payout.Publisher).Groups;
+                if (publisherName == null)
+                    publisherName = publisher["name"].Value;
+
                 var row = table.NewCampaignsPublisherReportDetailsRow();
-                Copy(detail, row, false);
+                row.ItemIDs = payout.ItemIds;
+                row.IsCPM = payout.Unit_Type == "CPM" ? "Yes" : "No";
+                row.Publisher = publisherName;
                 row.CampaignStatus = "Verified";
+                row.CampaignName = payout.Campaign_Name;
+                row.AddCode = publisher["addcode"].Value;
+                row.NumUnits = payout.Units ?? 0;
+                row.CostPerUnit = row.NumUnits == 0 ? 0 : (payout.Pub_Payout ?? 0) / row.NumUnits;
+                row.NetTerms = payout.Net_Terms;
+                row.PayCurrency = payout.Pub_Pay_Curr;
+                row.MediaBuyer = payout.Media_Buyer;
+                row.ToBePaid = payout.Pub_Payout ?? 0;
+                row.Paid = 0;
+                row.Total = row.ToBePaid + row.Paid;
+
                 table.AddCampaignsPublisherReportDetailsRow(row);
             }
+
+            // TODO: get the correct FromDate and ToDate (should not be based on current date...)
             var report = new Eom.Common.PublisherReports.PubRepTemplate(Eom.Common.PublisherReports.PubRepTemplateHtmlMode.InnerHtml)
             {
                 Publisher = publisherName,
@@ -111,7 +129,9 @@ namespace EomToolWeb.Controllers
                 FromDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
                 ToDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month))
             };
+
             string reportHTML = report.TransformText();
+
             return reportHTML;
         }
 
