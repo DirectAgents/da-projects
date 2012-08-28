@@ -60,12 +60,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EomTool.Domain\EomTool.Domain.csproj">
-      <Project>{F41DA2E2-D584-479A-9F24-9B2D3D33F927}</Project>
-      <Name>EomTool.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

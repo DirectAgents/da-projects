@@ -30,11 +30,9 @@
 <div id="pubDetails">
 </div>
 <script type="text/javascript">
-
     function ShowDetails(affid) {
         $.get('@Url.Action("ListPartial", new { mode = Model.Mode })?affid=' + affid, function (data) {
             $('#pubDetails').html(data);
         });
     }
-
 </script>

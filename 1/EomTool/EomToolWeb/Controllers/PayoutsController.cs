@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Reflection;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
-using EomTool.Domain.Concrete;
 using EomToolWeb.Models;
-using EomTool.Domain.Entities;
-using System.Reflection;
 
 namespace EomToolWeb.Controllers
 {
@@ -84,7 +80,7 @@ namespace EomToolWeb.Controllers
 
             // HACK: converting publisher name2 field to publisher name fields by splitting on left paren
             //       a lookup using affid might be better but then again we don't want to tie a publisher name to a single affid...
-            string publisherName = viewModel.Payouts.First().Publisher.Split('(').First();
+            string publisherName = viewModel.Payouts.First().Publisher.Split('(').First().Trim();
 
             viewModel.PublisherReport = MvcHtmlString.Create(GetPublisherReport(publisherName));
 
@@ -99,10 +95,18 @@ namespace EomToolWeb.Controllers
             {
                 var row = table.NewCampaignsPublisherReportDetailsRow();
                 Copy(detail, row, false);
-
+                row.CampaignStatus = "Verified";
+                table.AddCampaignsPublisherReportDetailsRow(row);
             }
-            //table.NewCampaignsPublisherReportDetailsRow()
-            return "foo";
+            var report = new Eom.Common.PublisherReports.PubRepTemplate(Eom.Common.PublisherReports.PubRepTemplateHtmlMode.InnerHtml)
+            {
+                Publisher = publisherName,
+                Data = table,
+                FromDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
+                ToDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month))
+            };
+            string reportHTML = report.TransformText();
+            return reportHTML;
         }
 
         static void Copy(object sourceObject, object targetObject, bool deepCopy = true)
@@ -111,23 +115,25 @@ namespace EomToolWeb.Controllers
             {
                 (from sourceProperty in sourceObject.GetType().GetProperties().AsEnumerable()
                  from targetProperty in targetObject.GetType().GetProperties().AsEnumerable()
-                 where sourceProperty.Name == targetProperty.Name
+                 where sourceProperty.Name.ToUpper() == targetProperty.Name.ToUpper()
                  let sourceValue = sourceProperty.GetValue(sourceObject, null)
-                 let targetValue = targetProperty.GetValue(targetObject, null)
-                 where sourceValue != null && !sourceValue.Equals(targetValue)
-                 select Action(targetProperty, targetObject, sourceValue, deepCopy))
+                 select CopyAction(targetProperty, targetObject, sourceValue, deepCopy))
                 .ToList()
                 .ForEach(c => c());
             }
         }
 
-        static Action Action(PropertyInfo propertyInfo, object targetObject, object sourceValue, bool deepCopy)
+        static Action CopyAction(PropertyInfo propertyInfo, object targetObject, object sourceValue, bool deepCopy)
         {
             Action action;
             if (sourceValue == null)
                 action = () => { };
             else if (!deepCopy || sourceValue.GetType().FullName.StartsWith("System."))
+            {
+                if (sourceValue is string)
+                    sourceValue = (sourceValue as string).Trim();
                 action = () => propertyInfo.SetValue(targetObject, sourceValue, null);
+            }
             else
                 action = () => Copy(sourceValue, propertyInfo.GetValue(targetObject, null));
             return action;

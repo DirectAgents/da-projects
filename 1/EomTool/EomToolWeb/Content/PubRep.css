@@ -1,0 +1,19 @@
+﻿h2 {border-width: thin; border-style: solid; text-align: center;}
+#outer {width: 700px; margin: 0px auto;}
+#title {font-weight: bold; background-color:#ffffff; border-width: thin; border-style: none; text-align: center}
+#title1 {font-size: 200%; font-style: italic; color: #000000}
+#title2 {font-size: 200%; color: #000000}
+#title3 {font-size: 140%; color: #000000}
+#subtitle {text-align: center; padding: 1em;}
+#info1 {padding: 0.7em;}
+#info2 {padding: 0.7em;}
+#info3 {padding: 0.7em;}
+.lineitems {font-size: 100%; border: 1px solid black; border-collapse:collapse; clear: both}
+.lineitems2 {border: 1px solid black; padding:1px; width: 387px}
+.lineitems3 {border: 1px solid black; padding:1px; width: 100px; text-align: center}
+.lineitems4 {border: 1px solid black; padding:1px; width: 100px; text-align: center}
+.lineitems5 {border: 1px solid black; padding:1px; width: 100px; text-align: center}
+.lineitems6 {border: 1px solid black; padding:1px; width: 100px; text-align: center; background-color:#cccccc}
+.noshow {display: none;}
+#info4 {padding: 0.7em; float: left}
+#info5 {padding: 0.7em; float: right}
