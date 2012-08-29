@@ -1,5 +1,4 @@
 ﻿@model PublisherSummaryViewModel
-
 <table id="tblSummary">
     @foreach (var ps in Model.PublisherSummaries)
     {
@@ -18,8 +17,8 @@
             @if (Model.ShowActions)
             {
                 <td id="tdPubActions@(ps.affid)">
-                    <a href="#" onclick="ApprovePub(@ps.affid); return false;">Approve</a>
-                    <a href="#" onclick="HoldPub(@ps.affid); return false;">Hold</a>
+                    <a href="#" onclick="ApprovePub(@ps.affid); return false;">Approve</a> <a href="#" onclick="HoldPub(@ps.affid); return false;">
+                        Hold</a>
                 </td>
             }
         </tr>

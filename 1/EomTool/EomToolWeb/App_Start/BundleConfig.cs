@@ -25,9 +25,6 @@ namespace EomToolWeb
 
             bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
 
-            bundles.Add(new StyleBundle("~/PubRep/css").Include("~/Content/PubRep.css"));
-
-
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                         "~/Content/themes/base/jquery.ui.core.css",
                         "~/Content/themes/base/jquery.ui.resizable.css",
@@ -41,6 +38,16 @@ namespace EomToolWeb
                         "~/Content/themes/base/jquery.ui.datepicker.css",
                         "~/Content/themes/base/jquery.ui.progressbar.css",
                         "~/Content/themes/base/jquery.ui.theme.css"));
+
+            // Publisher report style sheet
+            bundles.Add(new StyleBundle("~/PubRep/css").Include("~/Content/PubRep.css"));
+
+            // Slick Grid styles
+            bundles.Add(new StyleBundle("~/Content/SlickGrid/css").Include(
+                        "~/Scripts/SlickGrid/slick.grid.css",
+                        "~/Scripts/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css"
+                        //"~/Scripts/SlickGrid/examples/examples.css"
+                        ));
         }
     }
 }

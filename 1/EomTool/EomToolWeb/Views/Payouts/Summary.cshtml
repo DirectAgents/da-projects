@@ -9,70 +9,65 @@
 @Html.ActionLink("Held", "Summary", new { mode = "held" }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
 |
 @Html.ActionLink("Approved", "Summary", new { mode = "approved" }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
-
-<h2>Publisher Summary</h2>
-
+<h2>
+    Publisher Summary</h2>
 @Html.Partial("SummaryGrid", Model)
-
 <div id="pubDetails">
 </div>
-
 <div id="dialog-form" title="Add Notes">
     Enter Notes:
     <form>
-        <input id="dlgAffId" type="hidden" value="" />
-        <input id="dlgAction" type="hidden" value="" />
-        <input type="text" />
+    <input id="dlgAffId" type="hidden" value="" />
+    <input id="dlgAction" type="hidden" value="" />
+    <input type="text" />
     </form>
 </div>
-
 @section scripts {
-<script type="text/javascript">
-    function ShowDetails(affid) {
-        $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
-            $('#tblSummary tr').removeClass('highlighted');
-            $('#pub' + affid).addClass('highlighted');
-            $('#pubDetails').html(data);
-        });
-    }
-    function ApprovePub(affid) {
-        $('#dlgAction').val("Approve");
-        $('#dlgAffId').val(affid);
-        $('#dialog-form').dialog("open");
-    }
-    function HoldPub(affid) {
-        $('#dlgAction').val("Hold");
-        $('#dlgAffId').val(affid);
-        $('#dialog-form').dialog("open");
-    }
-
-    $(function () {
-        $("#dialog-form").dialog({
-            autoOpen: false,
-            height: 300,
-            width: 350,
-            modal: true,
-            buttons: {
-                "OK": function () {
-                    var affid = $('#dlgAffId').val();
-                    var url;
-                    if ($('#dlgAction').val() == "Approve")
-                        url = '@Url.Action("Approve", "Publishers")';
-                    else
-                        url = '@Url.Action("Hold", "Publishers")';
-                    $.get(url + '?affid=' + affid, function (data) {
-                        $('#tdPubActions' + affid).html(data);
-                        $('#dialog-form').dialog("close");
-                    });
+    <script type="text/javascript">
+        function ShowDetails(affid) {
+            $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
+                $('#tblSummary tr').removeClass('highlighted');
+                $('#pub' + affid).addClass('highlighted');
+                $('#pubDetails').html(data);
+            });
+        }
+        function ApprovePub(affid) {
+            $('#dlgAction').val("Approve");
+            $('#dlgAffId').val(affid);
+            $('#dialog-form').dialog("open");
+        }
+        function HoldPub(affid) {
+            $('#dlgAction').val("Hold");
+            $('#dlgAffId').val(affid);
+            $('#dialog-form').dialog("open");
+        }
+        $(function () {
+            $("#dialog-form").dialog({
+                autoOpen: false,
+                height: 300,
+                width: 350,
+                modal: true,
+                buttons: {
+                    "OK": function () {
+                        var affid = $('#dlgAffId').val();
+                        var url;
+                        if ($('#dlgAction').val() == "Approve")
+                            url = '@Url.Action("Approve", "Publishers")';
+                        else
+                            url = '@Url.Action("Hold", "Publishers")';
+                        $.get(url + '?affid=' + affid, function (data) {
+                            $('#tdPubActions' + affid).html(data);
+                            $('#dialog-form').dialog("close");
+                        });
+                    },
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
                 },
-                Cancel: function () {
-                    $(this).dialog("close");
+                close: function () {
+                    //allFields.val("").removeClass("ui-state-error");
                 }
-            },
-            close: function () {
-                //allFields.val("").removeClass("ui-state-error");
-            }
+            });
         });
-    });
-</script>
+    </script>
 }

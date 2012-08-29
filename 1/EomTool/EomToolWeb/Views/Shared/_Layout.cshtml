@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/SlickGrid/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -36,6 +37,11 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+    @Scripts.Render("~/Scripts/SlickGrid/lib/jquery.event.drag-2.0.min.js")
+    @Scripts.Render("~/Scripts/SlickGrid/slick.core.js")
+@*    @Scripts.Render("~/Scripts/SlickGrid/slick.formatters.js")*@
+    @Scripts.Render("~/Scripts/SlickGrid/slick.grid.js")
     @RenderSection("scripts", required: false)
+    @RenderSection("fillgrid", required: false)
 </body>
 </html>

@@ -145,7 +145,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\PubRep.css" />
-    <Content Include="dalogo2.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -402,7 +401,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>58631</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
