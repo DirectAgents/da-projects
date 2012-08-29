@@ -15,11 +15,11 @@ namespace EomTool.Domain.Concrete
             db = new EomToolSecurityEntities();
         }
 
-        public IEnumerable<Entities.Group> GroupsByWindowsIdentity(string windowsIdentity)
+        public Group WindowsIdentityGroup(string windowsIdentity)
         {
             var groups = db.Groups.ToList();
-            groups.Where(c => c.WindowsIdentity.Split(',').Any(d => d.ToUpper() == windowsIdentity.ToUpper()));
-            return groups;
+            var identityGroups = groups.Where(c => c.WindowsIdentity.Split(',').Any(d => d.ToUpper() == windowsIdentity.ToUpper()));
+            return identityGroups.FirstOrDefault();
         }
     }
 }
