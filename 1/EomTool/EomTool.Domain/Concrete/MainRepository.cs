@@ -101,29 +101,56 @@ namespace EomTool.Domain.Concrete
         }
 
         // only approve finalized items that are "Sent"
-        public void ApproveItemsByAffId(int affId)
+        public void ApproveItemsByAffId(int affId, string note, string author)
         {
-            var items = context.Items.Where(i => i.affid == affId &&
-                                            i.campaign_status_id == CampaignStatus.Finalized &&
-                                            i.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Sent);
-            foreach (var item in items)
-            {
-                item.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Approved;
-            }
-            context.SaveChanges();
+            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Approved);
         }
 
         // only hold finalized items that are "Sent"
-        public void HoldItemsByAffId(int affId)
+        public void HoldItemsByAffId(int affId, string note, string author)
+        {
+            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Hold);
+        }
+
+        private void SetMediaBuyerApprovalStatus(int affId, string note, string author, int mediaBuyerApprovalStatus)
         {
             var items = context.Items.Where(i => i.affid == affId &&
                                             i.campaign_status_id == CampaignStatus.Finalized &&
                                             i.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Sent);
             foreach (var item in items)
             {
-                item.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Hold;
+                item.media_buyer_approval_status_id = mediaBuyerApprovalStatus;
             }
+            SetNoteForItems(note, author, items);
             context.SaveChanges();
+        }
+        private void SetNoteForItems(string note, string author, IQueryable<Item> items)
+        {
+            var batches = items.Where(i => i.Batch != null).Select(i => i.Batch).Distinct().ToList();
+            var itemsWithNoBatch = items.Where(i => i.batch_id == null);
+            if (itemsWithNoBatch.Count() > 0)
+            {
+                if (batches.Count() == 1)
+                {
+                    var batch = batches.First();
+                    foreach (var item in itemsWithNoBatch)
+                        item.Batch = batch;
+                }
+                else // could be 0 or >1 existing batches
+                {
+                    var newBatch = context.Batches.CreateObject();
+                    foreach (var item in itemsWithNoBatch)
+                        item.Batch = newBatch;
+                    batches.Add(newBatch);
+                }
+            }
+            foreach (var batch in batches)
+            {
+                var batchNote = context.BatchNotes.CreateObject();
+                batchNote.note = note;
+                batchNote.author = author;
+                batchNote.Batch = batch;
+            }
         }
 
         public IQueryable<Affiliate> AffiliatesForMediaBuyers(string[] mediaBuyers)

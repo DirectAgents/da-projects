@@ -31,6 +31,8 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "Item_Source_id_FK_Source_id_PK", "Source", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Source), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_UnitType_id_FK_UnitType_id_PK", "UnitType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.UnitType), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_Item_Batch", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.Batch), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_BatchNote_Batch", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Batch), "BatchNote", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchNote), true)]
 
 #endregion
 
@@ -401,6 +403,38 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<PublisherPayout> _PublisherPayouts;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Batch> Batches
+        {
+            get
+            {
+                if ((_Batches == null))
+                {
+                    _Batches = base.CreateObjectSet<Batch>("Batches");
+                }
+                return _Batches;
+            }
+        }
+        private ObjectSet<Batch> _Batches;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<BatchNote> BatchNotes
+        {
+            get
+            {
+                if ((_BatchNotes == null))
+                {
+                    _BatchNotes = base.CreateObjectSet<BatchNote>("BatchNotes");
+                }
+                return _BatchNotes;
+            }
+        }
+        private ObjectSet<BatchNote> _BatchNotes;
 
         #endregion
         #region AddTo Methods
@@ -563,6 +597,22 @@ namespace EomTool.Domain.Entities
         public void AddToPublisherPayouts(PublisherPayout publisherPayout)
         {
             base.AddObject("PublisherPayouts", publisherPayout);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Batches EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToBatches(Batch batch)
+        {
+            base.AddObject("Batches", batch);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the BatchNotes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToBatchNotes(BatchNote batchNote)
+        {
+            base.AddObject("BatchNotes", batchNote);
         }
 
         #endregion
@@ -2002,6 +2052,332 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<TrackingSystem>("EomModel.affiliate_tracking_system_fk", "TrackingSystem", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="Batch")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Batch : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Batch object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        public static Batch CreateBatch(global::System.Int32 id)
+        {
+            Batch batch = new Batch();
+            batch.id = id;
+            return batch;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Item_Batch", "Item")]
+        public EntityCollection<Item> Items
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.FK_Item_Batch", "Item");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.FK_Item_Batch", "Item", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchNote_Batch", "BatchNote")]
+        public EntityCollection<BatchNote> BatchNotes
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<BatchNote>("EomModel.FK_BatchNote_Batch", "BatchNote");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BatchNote>("EomModel.FK_BatchNote_Batch", "BatchNote", value);
+                }
+            }
+        }
+
+        #endregion
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="BatchNote")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class BatchNote : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new BatchNote object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="batch_id">Initial value of the batch_id property.</param>
+        /// <param name="note">Initial value of the note property.</param>
+        /// <param name="author">Initial value of the author property.</param>
+        /// <param name="date_created">Initial value of the date_created property.</param>
+        public static BatchNote CreateBatchNote(global::System.Int32 id, global::System.Int32 batch_id, global::System.String note, global::System.String author, global::System.DateTime date_created)
+        {
+            BatchNote batchNote = new BatchNote();
+            batchNote.id = id;
+            batchNote.batch_id = batch_id;
+            batchNote.note = note;
+            batchNote.author = author;
+            batchNote.date_created = date_created;
+            return batchNote;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 batch_id
+        {
+            get
+            {
+                return _batch_id;
+            }
+            set
+            {
+                Onbatch_idChanging(value);
+                ReportPropertyChanging("batch_id");
+                _batch_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("batch_id");
+                Onbatch_idChanged();
+            }
+        }
+        private global::System.Int32 _batch_id;
+        partial void Onbatch_idChanging(global::System.Int32 value);
+        partial void Onbatch_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String note
+        {
+            get
+            {
+                return _note;
+            }
+            set
+            {
+                OnnoteChanging(value);
+                ReportPropertyChanging("note");
+                _note = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("note");
+                OnnoteChanged();
+            }
+        }
+        private global::System.String _note;
+        partial void OnnoteChanging(global::System.String value);
+        partial void OnnoteChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String author
+        {
+            get
+            {
+                return _author;
+            }
+            set
+            {
+                OnauthorChanging(value);
+                ReportPropertyChanging("author");
+                _author = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("author");
+                OnauthorChanged();
+            }
+        }
+        private global::System.String _author;
+        partial void OnauthorChanging(global::System.String value);
+        partial void OnauthorChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime date_created
+        {
+            get
+            {
+                return _date_created;
+            }
+            set
+            {
+                Ondate_createdChanging(value);
+                ReportPropertyChanging("date_created");
+                _date_created = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("date_created");
+                Ondate_createdChanged();
+            }
+        }
+        private global::System.DateTime _date_created;
+        partial void Ondate_createdChanging(global::System.DateTime value);
+        partial void Ondate_createdChanged();
+
+        #endregion
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchNote_Batch", "Batch")]
+        public Batch Batch
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_BatchNote_Batch", "Batch").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_BatchNote_Batch", "Batch").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Batch> BatchReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_BatchNote_Batch", "Batch");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Batch>("EomModel.FK_BatchNote_Batch", "Batch", value);
                 }
             }
         }
@@ -4219,6 +4595,30 @@ namespace EomTool.Domain.Entities
         private global::System.Int32 _media_buyer_approval_status_id;
         partial void Onmedia_buyer_approval_status_idChanging(global::System.Int32 value);
         partial void Onmedia_buyer_approval_status_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> batch_id
+        {
+            get
+            {
+                return _batch_id;
+            }
+            set
+            {
+                Onbatch_idChanging(value);
+                ReportPropertyChanging("batch_id");
+                _batch_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("batch_id");
+                Onbatch_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _batch_id;
+        partial void Onbatch_idChanging(Nullable<global::System.Int32> value);
+        partial void Onbatch_idChanged();
 
         #endregion
     
@@ -4448,6 +4848,44 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Item_Batch", "Batch")]
+        public Batch Batch
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_Item_Batch", "Batch").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_Item_Batch", "Batch").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Batch> BatchReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_Item_Batch", "Batch");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Batch>("EomModel.FK_Item_Batch", "Batch", value);
                 }
             }
         }

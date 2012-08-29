@@ -31,18 +31,18 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        public ActionResult Approve(int affid, string notes)
+        public ActionResult Approve(int affid, string note)
         {
-            mainRepository.ApproveItemsByAffId(affid);
+            mainRepository.ApproveItemsByAffId(affid, note, User.Identity.Name);
             if (Request.IsAjaxRequest())
                 return Content("(approved)");
             else
                 return RedirectToAction("Summary", "Payouts");
         }
 
-        public ActionResult Hold(int affid, string notes)
+        public ActionResult Hold(int affid, string note)
         {
-            mainRepository.HoldItemsByAffId(affid);
+            mainRepository.HoldItemsByAffId(affid, note, User.Identity.Name);
             if (Request.IsAjaxRequest())
                 return Content("(held)");
             else
