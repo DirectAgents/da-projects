@@ -122,7 +122,8 @@
       [PublisherPayouts].[Pub Payout] AS [Pub Payout], 
       [PublisherPayouts].[CampaignNotes] AS [CampaignNotes], 
       [PublisherPayouts].[Source] AS [Source], 
-      [PublisherPayouts].[ItemIds] AS [ItemIds]
+      [PublisherPayouts].[ItemIds] AS [ItemIds], 
+      [PublisherPayouts].[BatchIds] AS [BatchIds]
       FROM [dbo].[PublisherPayouts] AS [PublisherPayouts]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherReportDetails" EntityType="EomModel.Store.PublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportDetails">
@@ -556,6 +557,7 @@
           <Property Name="CampaignNotes" Type="nvarchar" />
           <Property Name="Source" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="ItemIds" Type="nvarchar" />
+          <Property Name="BatchIds" Type="nvarchar" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -1431,6 +1433,7 @@
           <Property Type="String" Name="CampaignNotes" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Source" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ItemIds" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="BatchIds" MaxLength="4000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Batch">
           <Key>
@@ -1696,6 +1699,7 @@
           <EntitySetMapping Name="PublisherPayouts">
             <EntityTypeMapping TypeName="EomModel.PublisherPayout">
               <MappingFragment StoreEntitySet="PublisherPayouts">
+                <ScalarProperty Name="BatchIds" ColumnName="BatchIds" />
                 <ScalarProperty Name="ItemIds" ColumnName="ItemIds" />
                 <ScalarProperty Name="Source" ColumnName="Source" />
                 <ScalarProperty Name="CampaignNotes" ColumnName="CampaignNotes" />

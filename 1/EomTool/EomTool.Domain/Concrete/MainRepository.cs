@@ -57,17 +57,7 @@ namespace EomTool.Domain.Concrete
             get
             {
                 return PublisherPayouts
-                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr })
-                    .Select(p => new PublisherSummary { affid = p.Key.affid, PublisherName = p.Key.Publisher, Currency = p.Key.Currency, PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0 });
-            }
-        }
-
-        public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode)
-        {
-            var result =
-                PublisherPayoutsByMode(mode)
-                    .Where(c => c.Pub_Payout > 0)
-                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr })
+                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr, BatchIds = p.BatchIds })
                     .Select(p => new PublisherSummary
                     {
                         affid = p.Key.affid,
@@ -76,6 +66,26 @@ namespace EomTool.Domain.Concrete
                         PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
                         MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
                         MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
+                        BatchIds = p.Key.BatchIds
+                    });
+            }
+        }
+
+        public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode)
+        {
+            var result =
+                PublisherPayoutsByMode(mode)
+                    .Where(c => c.Pub_Payout > 0)
+                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr, BatchIds = p.BatchIds })
+                    .Select(p => new PublisherSummary
+                    {
+                        affid = p.Key.affid,
+                        PublisherName = p.Key.Publisher,
+                        Currency = p.Key.Currency,
+                        PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
+                        MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
+                        MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
+                        BatchIds = p.Key.BatchIds
                     });
             return result;
         }
@@ -159,6 +169,12 @@ namespace EomTool.Domain.Concrete
                        where mediaBuyers.Contains(a.MediaBuyer.name)
                        select a;
             return affs;
+        }
+
+        public IQueryable<Batch> BatchesByBatchIds(int[] batchIds)
+        {
+            var batches = context.Batches.Where(b => batchIds.Contains(b.id));
+            return batches;
         }
     }
 }

@@ -22,6 +22,9 @@
     <textarea style="width:315px;height:135px" name="note"></textarea>
     </form>
 </div>
+<div id="divNotesSummary" title="Notes">
+    <div id="divNotesSummaryInner"></div>
+</div>
 @section scripts {
     <script type="text/javascript">
         function ShowDetails(affid) {
@@ -56,6 +59,12 @@
                 $('#divNotes').dialog("close");
             });
         }
+        function ShowNotes(batchids) {
+            $.get('@Url.Action("ShowNotes", "Publishers")', { batchids: batchids }, function (data) {
+                $('#divNotesSummaryInner').html(data);
+                $('#divNotesSummary').dialog("open");
+            });
+        }
         $(function () {
             $("#divNotes").dialog({
                 autoOpen: false,
@@ -71,6 +80,12 @@
                 close: function () {
                     //allFields.val("").removeClass("ui-state-error");
                 }
+            });
+            $("#divNotesSummary").dialog({
+                autoOpen: false,
+                height: 500,
+                width: 350,
+                modal: true
             });
         });
     </script>

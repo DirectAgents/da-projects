@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomToolWeb.Models;
+using System.Text;
 
 namespace EomToolWeb.Controllers
 {
@@ -47,6 +49,24 @@ namespace EomToolWeb.Controllers
                 return Content("(held)");
             else
                 return RedirectToAction("Summary", "Payouts");
+        }
+
+        public ActionResult ShowNotes(string batchids)
+        {
+            int[] batchIdsArray = batchids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
+            var batches = mainRepository.BatchesByBatchIds(batchIdsArray);
+            StringBuilder notes = new StringBuilder();
+            foreach (var batch in batches.OrderBy(b => b.id))
+            {
+                foreach (var batchNote in batch.BatchNotes.OrderBy(bn => bn.date_created))
+                {
+                    notes.Append("BATCH " + batch.id + "<br/>");
+                    notes.Append(batchNote.date_created.ToString() + "<br/>");
+                    notes.Append(batchNote.author + "<br/>");
+                    notes.Append(batchNote.note + "<br/><br/>");
+                }
+            }
+            return Content(notes.ToString());
         }
     }
 }

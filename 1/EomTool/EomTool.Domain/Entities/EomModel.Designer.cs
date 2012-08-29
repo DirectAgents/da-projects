@@ -6273,6 +6273,30 @@ namespace EomTool.Domain.Entities
         private global::System.String _ItemIds;
         partial void OnItemIdsChanging(global::System.String value);
         partial void OnItemIdsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String BatchIds
+        {
+            get
+            {
+                return _BatchIds;
+            }
+            set
+            {
+                OnBatchIdsChanging(value);
+                ReportPropertyChanging("BatchIds");
+                _BatchIds = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("BatchIds");
+                OnBatchIdsChanged();
+            }
+        }
+        private global::System.String _BatchIds;
+        partial void OnBatchIdsChanging(global::System.String value);
+        partial void OnBatchIdsChanged();
 
         #endregion
     

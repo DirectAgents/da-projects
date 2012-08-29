@@ -13,5 +13,6 @@ namespace EomTool.Domain.Entities
         public decimal PayoutTotal { get; set; }
         public decimal MinPctMargin { get; set; }
         public decimal MaxPctMargin { get; set; }
+        public string BatchIds { get; set; }
     }
 }
