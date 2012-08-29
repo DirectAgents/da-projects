@@ -54,10 +54,10 @@ h2 {border-width: thin; border-style: solid; text-align: center;}
       </div>
 <#
 foreach(var i in new [] {
-    new { q = (items.Where(c=>c.IsCPM=="No" && c.Paid > 0 && c.CampaignStatus == "Verified")), s = "Paid" },
-    new { q = (items.Where(c=>c.IsCPM=="No" && c.ToBePaid > 0 && c.CampaignStatus == "Verified")), s= "To Be Paid" },
-    new { q = (items.Where(c=>c.IsCPM=="Yes" && c.Paid > 0 && c.CampaignStatus == "Verified")), s = "CPM Paid" },
-    new { q = (items.Where(c=>c.IsCPM=="Yes" && c.ToBePaid > 0 && c.CampaignStatus == "Verified")), s = "CPM To Be Paid" }
+    new { q = (items.Where(c=>c.IsCPM=="No" && c.Paid != 0 && c.CampaignStatus == "Verified")), s = "Paid" },
+    new { q = (items.Where(c=>c.IsCPM=="No" && c.ToBePaid != 0 && c.CampaignStatus == "Verified")), s= "To Be Paid" },
+    new { q = (items.Where(c=>c.IsCPM=="Yes" && c.Paid != 0 && c.CampaignStatus == "Verified")), s = "CPM Paid" },
+    new { q = (items.Where(c=>c.IsCPM=="Yes" && c.ToBePaid != 0 && c.CampaignStatus == "Verified")), s = "CPM To Be Paid" }
 }) {
 	var list = i.q.ToList();
 	if(list.Count == 0) continue;
