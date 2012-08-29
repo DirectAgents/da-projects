@@ -1,13 +1,15 @@
 ﻿@model PayoutsListViewModel
 <style type="text/css">
-.active
-{
-    background-color: Gray;
-}
+    .active
+    {
+        background-color: Gray;
+    }
 </style>
 <div id="payoutGrid" style="height: 300px; border: 1px solid black">
 </div>
 <script type="text/javascript">
+function RenderGrid(data)
+{
     var columns = [
              //{ id: "publisher", name: "Publisher", field: "Publisher", width: 200 }
              { id: "campaign", name: "Campaign", field: "Campaign_Name", width: 300, cssClass: "cell-title", sortable: true }
@@ -27,7 +29,6 @@
         autoHeight: false,
         enableTextSelectionOnCells: true
     };
-    var data = @Html.Raw(Json.Encode(Model.Payouts));
     var grid = new Slick.Grid("#payoutGrid", data, columns, options);
     grid.onSort.subscribe(function(e, args){ // args: sort information. 
         var field = args.sortCol.field;
@@ -43,4 +44,5 @@
         grid.updateRowCount();
         grid.render();         
     });
+}
 </script>

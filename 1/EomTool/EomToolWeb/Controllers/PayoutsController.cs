@@ -51,6 +51,12 @@ namespace EomToolWeb.Controllers
             return PartialView(model);
         }
 
+        public JsonResult DetailsJson(string mode, int? affid, int page = 1)
+        {
+            var model = CreatePayoutsListViewModel(mode, affid, page);
+            return Json(model.Payouts, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult List(string mode, int? affid, int page = 1)
         {
             var model = CreatePayoutsListViewModel(mode, affid, page);

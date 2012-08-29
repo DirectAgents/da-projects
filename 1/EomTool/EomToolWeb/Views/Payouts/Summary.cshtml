@@ -25,10 +25,13 @@
 @section scripts {
     <script type="text/javascript">
         function ShowDetails(affid) {
-            $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
+            $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (content) {
                 $('#tblSummary tr').removeClass('highlighted');
                 $('#pub' + affid).addClass('highlighted');
-                $('#pubDetails').html(data);
+                $('#pubDetails').html(content);
+                $.get('@Url.Action("DetailsJson", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
+                    RenderGrid(data);
+                });
             });
         }
         function ApprovePub(affid) {
