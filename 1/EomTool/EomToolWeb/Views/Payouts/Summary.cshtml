@@ -14,12 +14,12 @@
 @Html.Partial("SummaryGrid", Model)
 <div id="pubDetails">
 </div>
-<div id="dialog-form" title="Add Notes">
+<div id="divNotes" title="Add Notes">
     Enter Notes:
-    <form>
-    <input id="dlgAffId" type="hidden" value="" />
+    <form id="frmNotes">
+    <input id="dlgAffId" type="hidden" name="affid" value="" />
     <input id="dlgAction" type="hidden" value="" />
-    <input type="text" />
+    <textarea style="width:315px;height:135px" id="dlgNotes" name="notes"></textarea>
     </form>
 </div>
 @section scripts {
@@ -34,32 +34,33 @@
         function ApprovePub(affid) {
             $('#dlgAction').val("Approve");
             $('#dlgAffId').val(affid);
-            $('#dialog-form').dialog("open");
+            $('#divNotes').dialog("open");
         }
         function HoldPub(affid) {
             $('#dlgAction').val("Hold");
             $('#dlgAffId').val(affid);
-            $('#dialog-form').dialog("open");
+            $('#divNotes').dialog("open");
+        }
+        function SaveNotes() {
+            var affid = $('#dlgAffId').val();
+            var url;
+            if ($('#dlgAction').val() == "Approve")
+                url = '@Url.Action("Approve", "Publishers")';
+            else
+                url = '@Url.Action("Hold", "Publishers")';
+            $.get(url, $('#frmNotes').serialize(), function (data) {
+                $('#tdPubActions' + affid).html(data);
+                $('#divNotes').dialog("close");
+            });
         }
         $(function () {
-            $("#dialog-form").dialog({
+            $("#divNotes").dialog({
                 autoOpen: false,
                 height: 300,
                 width: 350,
                 modal: true,
                 buttons: {
-                    "OK": function () {
-                        var affid = $('#dlgAffId').val();
-                        var url;
-                        if ($('#dlgAction').val() == "Approve")
-                            url = '@Url.Action("Approve", "Publishers")';
-                        else
-                            url = '@Url.Action("Hold", "Publishers")';
-                        $.get(url + '?affid=' + affid, function (data) {
-                            $('#tdPubActions' + affid).html(data);
-                            $('#dialog-form').dialog("close");
-                        });
-                    },
+                    "OK": SaveNotes,
                     Cancel: function () {
                         $(this).dialog("close");
                     }

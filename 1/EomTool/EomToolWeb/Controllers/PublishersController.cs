@@ -31,7 +31,7 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        public ActionResult Approve(int affid)
+        public ActionResult Approve(int affid, string notes)
         {
             mainRepository.ApproveItemsByAffId(affid);
             if (Request.IsAjaxRequest())
@@ -40,7 +40,7 @@ namespace EomToolWeb.Controllers
                 return RedirectToAction("Summary", "Payouts");
         }
 
-        public ActionResult Hold(int affid)
+        public ActionResult Hold(int affid, string notes)
         {
             mainRepository.HoldItemsByAffId(affid);
             if (Request.IsAjaxRequest())

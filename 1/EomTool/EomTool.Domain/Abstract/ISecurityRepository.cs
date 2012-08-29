@@ -8,6 +8,6 @@ namespace EomTool.Domain.Abstract
 {
     public interface ISecurityRepository
     {
-        IEnumerable<Group> GroupsByWindowsIdentity(string windowsIdentity);
+        Group WindowsIdentityGroup(string windowsIdentity);
     }
 }
