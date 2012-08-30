@@ -20,7 +20,7 @@ namespace EomToolWeb.Controllers
         {
             int[] batchIdsArray = batchids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
             var batches = batchRepository.BatchesByBatchIds(batchIdsArray, true);
-            var batchNotes = batches.SelectMany(b => b.BatchNotes).OrderBy(n => n.date_created);
+            var batchNotes = batches.SelectMany(b => b.BatchNotes).OrderByDescending(n => n.date_created);
             return PartialView(batchNotes);
         }
     }

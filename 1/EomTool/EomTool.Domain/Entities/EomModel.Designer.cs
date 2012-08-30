@@ -2364,6 +2364,30 @@ namespace EomTool.Domain.Entities
         private Nullable<global::System.Int32> _media_buyer_approval_status_id;
         partial void Onmedia_buyer_approval_status_idChanging(Nullable<global::System.Int32> value);
         partial void Onmedia_buyer_approval_status_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String extra
+        {
+            get
+            {
+                return _extra;
+            }
+            set
+            {
+                OnextraChanging(value);
+                ReportPropertyChanging("extra");
+                _extra = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("extra");
+                OnextraChanged();
+            }
+        }
+        private global::System.String _extra;
+        partial void OnextraChanging(global::System.String value);
+        partial void OnextraChanged();
 
         #endregion
     

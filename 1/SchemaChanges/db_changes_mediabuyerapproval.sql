@@ -50,6 +50,7 @@ CREATE TABLE [dbo].[BatchNote](
 	[author] [varchar](255) NOT NULL,
 	[date_created] [datetime] NOT NULL,
 	[media_buyer_approval_status_id] [int] NULL,
+	[extra] [varchar](255) NULL,
  CONSTRAINT [PK_BatchNote] PRIMARY KEY CLUSTERED
 (
 	[id] ASC

@@ -282,6 +282,7 @@
           <Property Name="author" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="date_created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="media_buyer_approval_status_id" Type="int" />
+          <Property Name="extra" Type="varchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
@@ -1490,6 +1491,7 @@
           <NavigationProperty Name="Batch" Relationship="EomModel.FK_BatchNote_Batch" FromRole="BatchNote" ToRole="Batch" />
           <Property Type="Int32" Name="media_buyer_approval_status_id" />
           <NavigationProperty Name="MediaBuyerApprovalStatus" Relationship="EomModel.FK_BatchNote_MediaBuyerApprovalStatus" FromRole="BatchNote" ToRole="MediaBuyerApprovalStatus" />
+          <Property Type="String" Name="extra" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_BatchNote_Batch">
           <End Type="EomModel.Batch" Role="Batch" Multiplicity="1" />
@@ -1785,6 +1787,7 @@
           <EntitySetMapping Name="BatchNotes">
             <EntityTypeMapping TypeName="EomModel.BatchNote">
               <MappingFragment StoreEntitySet="BatchNote">
+                <ScalarProperty Name="extra" ColumnName="extra" />
                 <ScalarProperty Name="media_buyer_approval_status_id" ColumnName="media_buyer_approval_status_id" />
                 <ScalarProperty Name="date_created" ColumnName="date_created" />
                 <ScalarProperty Name="author" ColumnName="author" />
@@ -1923,19 +1926,19 @@
           <ConnectorPoint PointX="8.375" PointY="6.7689925130208328" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EomModel.PublisherPayout" Width="2.375" PointX="11.625" PointY="0.5" Height="7.7493294270833264" />
-        <EntityTypeShape EntityType="EomModel.Batch" Width="1.5" PointX="9" PointY="3.5" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="EomModel.Batch" Width="1.5" PointX="9" PointY="3.625" Height="1.7879850260416674" />
         <AssociationConnector Association="EomModel.FK_Item_Batch" >
-          <ConnectorPoint PointX="9" PointY="4.6439925130208337" />
-          <ConnectorPoint PointX="8.375" PointY="4.6439925130208337" />
+          <ConnectorPoint PointX="9" PointY="4.7064925130208337" />
+          <ConnectorPoint PointX="8.375" PointY="4.7064925130208337" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EomModel.BatchNote" Width="2.375" PointX="8.875" PointY="0.5" Height="2.5571907552083331" />
         <AssociationConnector Association="EomModel.FK_BatchNote_Batch" >
-          <ConnectorPoint PointX="9.75" PointY="3.5" />
-          <ConnectorPoint PointX="9.75" PointY="3.0571907552083331" />
+          <ConnectorPoint PointX="9.75" PointY="3.625" />
+          <ConnectorPoint PointX="9.75" PointY="3.2494921875" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.FK_BatchNote_MediaBuyerApprovalStatus" >
           <ConnectorPoint PointX="10.84375" PointY="5.875" />
-          <ConnectorPoint PointX="10.84375" PointY="3.0571907552083331" />
+          <ConnectorPoint PointX="10.84375" PointY="3.2494921875" />
         </AssociationConnector>
       </Diagram>
     </Diagrams>

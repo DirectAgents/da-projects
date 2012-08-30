@@ -57,7 +57,7 @@ namespace EomTool.Domain.Concrete
             get
             {
                 return PublisherPayouts
-                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr, BatchIds = p.BatchIds })
+                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
                     .Select(p => new PublisherSummary
                     {
                         affid = p.Key.affid,
@@ -66,8 +66,8 @@ namespace EomTool.Domain.Concrete
                         PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
                         MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
                         MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
-                        BatchIds = p.Key.BatchIds
-                    });
+                        BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct())
+                    }).AsQueryable();
             }
         }
 
@@ -76,7 +76,7 @@ namespace EomTool.Domain.Concrete
             var result =
                 PublisherPayoutsByMode(mode)
                     .Where(c => c.Pub_Payout > 0)
-                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr, BatchIds = p.BatchIds })
+                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
                     .Select(p => new PublisherSummary
                     {
                         affid = p.Key.affid,
@@ -85,9 +85,9 @@ namespace EomTool.Domain.Concrete
                         PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
                         MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
                         MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
-                        BatchIds = p.Key.BatchIds
+                        BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Distinct())
                     });
-            return result;
+            return result.AsQueryable();
         }
 
         public void Media_ApproveItems(int[] itemIds)
@@ -131,10 +131,14 @@ namespace EomTool.Domain.Concrete
             {
                 item.media_buyer_approval_status_id = mediaBuyerApprovalStatus;
             }
-            SetNoteForItems(items, note, author, mediaBuyerApprovalStatus);
+            string extra = null;
+            var aff = context.Affiliates.Where(a => a.affid == affId);
+            if (aff.Count() > 0)
+                extra = aff.First().name2;
+            SetNoteForItems(items, note, author, mediaBuyerApprovalStatus, extra);
             context.SaveChanges();
         }
-        private void SetNoteForItems(IQueryable<Item> items, string note, string author, int mediaBuyerApprovalStatus)
+        private void SetNoteForItems(IQueryable<Item> items, string note, string author, int mediaBuyerApprovalStatus, string extra)
         {
             var batches = items.Where(i => i.Batch != null).Select(i => i.Batch).Distinct().ToList();
             var itemsWithNoBatch = items.Where(i => i.batch_id == null);
@@ -160,6 +164,7 @@ namespace EomTool.Domain.Concrete
                 batchNote.note = note;
                 batchNote.author = author;
                 batchNote.media_buyer_approval_status_id = mediaBuyerApprovalStatus;
+                batchNote.extra = extra;
                 batchNote.Batch = batch;
             }
         }
