@@ -1,0 +1,11 @@
+﻿@model IEnumerable<BatchNote>
+
+@foreach (var note in Model) {
+<p>
+    Batch: @note.batch_id<br />
+    @note.date_created<br />
+    @note.author<br />
+    ACTION: @(note.MediaBuyerApprovalStatus != null ? note.MediaBuyerApprovalStatus.name : "")<br />
+    @Html.Raw(note.note.Replace("\n","<br />"))
+</p>
+}

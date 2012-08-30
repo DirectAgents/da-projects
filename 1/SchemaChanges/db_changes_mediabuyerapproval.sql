@@ -49,6 +49,7 @@ CREATE TABLE [dbo].[BatchNote](
 	[note] [varchar](max) NOT NULL,
 	[author] [varchar](255) NOT NULL,
 	[date_created] [datetime] NOT NULL,
+	[media_buyer_approval_status_id] [int] NULL,
  CONSTRAINT [PK_BatchNote] PRIMARY KEY CLUSTERED
 (
 	[id] ASC
@@ -59,6 +60,11 @@ ALTER TABLE [dbo].[BatchNote]  WITH CHECK ADD  CONSTRAINT [FK_BatchNote_Batch] F
 REFERENCES [dbo].[Batch] ([id])
 GO
 ALTER TABLE [dbo].[BatchNote] CHECK CONSTRAINT [FK_BatchNote_Batch]
+GO
+ALTER TABLE [dbo].[BatchNote]  WITH CHECK ADD  CONSTRAINT [FK_BatchNote_MediaBuyerApprovalStatus] FOREIGN KEY([media_buyer_approval_status_id])
+REFERENCES [dbo].[MediaBuyerApprovalStatus] ([id])
+GO
+ALTER TABLE [dbo].[BatchNote] CHECK CONSTRAINT [FK_BatchNote_MediaBuyerApprovalStatus]
 GO
 ALTER TABLE [dbo].[BatchNote] ADD  CONSTRAINT [DF_BatchNote_created]  DEFAULT (getdate()) FOR [date_created]
 GO

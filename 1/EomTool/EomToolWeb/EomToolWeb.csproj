@@ -129,6 +129,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BatchesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PayoutsController.cs" />
     <Compile Include="Controllers\PublishersController.cs" />
@@ -373,6 +374,7 @@
     <Content Include="Views\Payouts\Summary.cshtml" />
     <Content Include="Views\Payouts\SummaryGrid.cshtml" />
     <Content Include="Views\Payouts\Details.cshtml" />
+    <Content Include="Views\Batches\ShowNotes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

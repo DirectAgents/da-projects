@@ -20,6 +20,5 @@ namespace EomTool.Domain.Abstract
         void HoldItemsByAffId(int affId, string note, string author);
 
         IQueryable<Affiliate> AffiliatesForMediaBuyers(string[] mediaBuyers);
-        IQueryable<Batch> BatchesByBatchIds(int[] batchIds);
     }
 }

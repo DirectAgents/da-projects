@@ -60,7 +60,7 @@
             });
         }
         function ShowNotes(batchids) {
-            $.get('@Url.Action("ShowNotes", "Publishers")', { batchids: batchids }, function (data) {
+            $.get('@Url.Action("ShowNotes", "Batches")', { batchids: batchids }, function (data) {
                 $('#divNotesSummaryInner').html(data);
                 $('#divNotesSummary').dialog("open");
             });

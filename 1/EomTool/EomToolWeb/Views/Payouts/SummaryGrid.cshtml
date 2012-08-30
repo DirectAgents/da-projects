@@ -14,7 +14,10 @@
             </td>
             <td>@String.Format("{0:N2}%", ps.MinPctMargin) - @String.Format("{0:N2}", ps.MaxPctMargin)%
             </td>
-            <td><a href="#" onclick="ShowNotes(@ps.BatchIds); return false;">Notes</a>
+            <td>@if (!String.IsNullOrWhiteSpace(@ps.BatchIds))
+                {
+                    <a href="#" onclick="ShowNotes(@ps.BatchIds); return false;">Notes</a>
+                }
             </td>
             @if (Model.ShowActions)
             {

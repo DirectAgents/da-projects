@@ -131,10 +131,10 @@ namespace EomTool.Domain.Concrete
             {
                 item.media_buyer_approval_status_id = mediaBuyerApprovalStatus;
             }
-            SetNoteForItems(note, author, items);
+            SetNoteForItems(items, note, author, mediaBuyerApprovalStatus);
             context.SaveChanges();
         }
-        private void SetNoteForItems(string note, string author, IQueryable<Item> items)
+        private void SetNoteForItems(IQueryable<Item> items, string note, string author, int mediaBuyerApprovalStatus)
         {
             var batches = items.Where(i => i.Batch != null).Select(i => i.Batch).Distinct().ToList();
             var itemsWithNoBatch = items.Where(i => i.batch_id == null);
@@ -159,6 +159,7 @@ namespace EomTool.Domain.Concrete
                 var batchNote = context.BatchNotes.CreateObject();
                 batchNote.note = note;
                 batchNote.author = author;
+                batchNote.media_buyer_approval_status_id = mediaBuyerApprovalStatus;
                 batchNote.Batch = batch;
             }
         }
@@ -169,12 +170,6 @@ namespace EomTool.Domain.Concrete
                        where mediaBuyers.Contains(a.MediaBuyer.name)
                        select a;
             return affs;
-        }
-
-        public IQueryable<Batch> BatchesByBatchIds(int[] batchIds)
-        {
-            var batches = context.Batches.Where(b => batchIds.Contains(b.id));
-            return batches;
         }
     }
 }
