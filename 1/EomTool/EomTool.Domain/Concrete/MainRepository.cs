@@ -73,7 +73,7 @@ namespace EomTool.Domain.Concrete
 
         public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode)
         {
-            var result =
+            var pubSummaries =
                 PublisherPayoutsByMode(mode)
                     .Where(c => c.Pub_Payout > 0)
                     .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
@@ -85,9 +85,19 @@ namespace EomTool.Domain.Concrete
                         PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
                         MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
                         MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
-                        BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Distinct())
-                    });
-            return result.AsQueryable();
+                        BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct())
+                    }).ToList();
+            var batchIds = String.Join(",", pubSummaries.Select(ps => ps.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).Distinct().ToList();
+            var batchesList = context.Batches.Include("BatchNotes").Where(b => batchIds.Contains(b.id)).ToList();
+            for (var i=0; i < pubSummaries.Count(); i++)
+            {
+                var pubSummary = pubSummaries[i];
+                var batches = batchesList.Where(b => pubSummary.BatchIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).Contains(b.id));
+                var latestBatchNote = batches.SelectMany(b => b.BatchNotes).OrderByDescending(bn => bn.date_created).FirstOrDefault();
+                if (latestBatchNote != null)
+                    pubSummary.LatestNote = latestBatchNote.note;
+            }
+            return pubSummaries.AsQueryable();
         }
 
         public void Media_ApproveItems(int[] itemIds)
