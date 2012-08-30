@@ -47,9 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAffiliateRepository.cs" />
+    <Compile Include="Abstract\IBatchRepository.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\ISecurityRepository.cs" />
     <Compile Include="Concrete\AffiliateRepository.cs" />
+    <Compile Include="Concrete\BatchRepository.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Entities\CampaignStatus.cs" />
