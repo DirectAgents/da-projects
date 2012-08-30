@@ -728,7 +728,7 @@ tr.highlighted
 {
 
     /* header
-            ----------------------------------------------------------*/
+                ----------------------------------------------------------*/
     header .float-left, header .float-right
     {
         float: none;
@@ -798,7 +798,7 @@ tr.highlighted
 
 
     /* main layout
-            ----------------------------------------------------------*/
+                ----------------------------------------------------------*/
     .main-content, .featured + .main-content
     {
         background-position: 10px 0;
@@ -885,7 +885,7 @@ tr.highlighted
 
 
     /* footer
-            ----------------------------------------------------------*/
+                ----------------------------------------------------------*/
     footer .float-left, footer .float-right
     {
         float: none;
@@ -902,4 +902,15 @@ tr.highlighted
     {
         margin: 0;
     }
+}
+
+.active
+{
+    background-color: Gray;
+}
+.resizing-helper
+{
+    border-style: none;
+    border-bottom: 1px dashed Red;
+    border-right: 1px dashed Red;
 }

@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -1040,7 +1039,7 @@ namespace MSDN.Html.Editor
                     if (range != null)
                     {
                         // encode the text to encode any html markup
-                        string html = HttpUtility.HtmlEncode(value);
+                        string html = WebUtility.HtmlEncode(value);
                         // once have a range execute the pasteHtml command
                         // this will overwrite the current selection
                         range.pasteHTML(html);

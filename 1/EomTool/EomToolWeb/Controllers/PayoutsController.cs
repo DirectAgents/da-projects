@@ -47,8 +47,7 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Details(string mode, int? affid, int page = 1)
         {
-            var model = CreatePayoutsListViewModel(mode, affid, page);
-            return PartialView(model);
+            return PartialView();
         }
 
         public JsonResult DetailsJson(string mode, int? affid, int page = 1)
@@ -67,6 +66,12 @@ namespace EomToolWeb.Controllers
         {
             var model = CreatePayoutsListViewModel(mode, affid, page);
             return PartialView("PayoutsGrid", model);
+        }
+
+        public ActionResult PublisherReport(string mode, int? affid, int page = 1)
+        {
+            var model = CreatePayoutsListViewModel(mode, affid, page);
+            return PartialView("PublisherReport", model);
         }
 
         private PayoutsListViewModel CreatePayoutsListViewModel(string mode, int? affid, int page)
@@ -105,7 +110,7 @@ namespace EomToolWeb.Controllers
             var table = new Eom.Common.PublisherReportDataSet1.CampaignsPublisherReportDetailsDataTable();
             string publisherName = null;
 
-            foreach (var payout in payouts/*.Where(c => c.Pub_Payout > 0)*/)
+            foreach (var payout in payouts.Where(c => c.Pub_Payout != 0))
             {
                 var rx = new Regex(@"(?'name'((\w+)\W+)+)\((?'addcode'((CD|CA)(?'cdnumber'([0-9]+))))\)");
                 var publisher = rx.Match(payout.Publisher).Groups;

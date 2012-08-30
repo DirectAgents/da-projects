@@ -11,15 +11,41 @@
 @Html.ActionLink("Approved", "Summary", new { mode = "approved" }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
 <h2>
     Publisher Summary</h2>
-@Html.Partial("SummaryGrid", Model)
-<div id="pubDetails">
-</div>
+<style type="text/css">
+    #publisherSummaryContainer
+    {
+    }
+    #publisherReportContainer
+    {
+    }
+</style>
+<table>
+    <tr>
+        <td>
+            <div id="publisherSummaryContainer">
+                @Html.Partial("SummaryGrid", Model)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="publisherDetailsContainer">
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="publisherReportContainer">
+            </div>
+        </td>
+    </tr>
+</table>
 <div id="divNotes" title="Add Notes">
     Enter Notes:
     <form id="frmNotes">
     <input id="dlgAffId" type="hidden" name="affid" value="" />
     <input id="dlgAction" type="hidden" value="" />
-    <textarea style="width:315px;height:135px" id="dlgNotes" name="notes"></textarea>
+    <textarea style="width: 315px; height: 135px" id="dlgNotes" name="notes"></textarea>
     </form>
 </div>
 @section scripts {
@@ -28,9 +54,12 @@
             $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (content) {
                 $('#tblSummary tr').removeClass('highlighted');
                 $('#pub' + affid).addClass('highlighted');
-                $('#pubDetails').html(content);
+                $('#publisherDetailsContainer').html(content);
                 $.get('@Url.Action("DetailsJson", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
                     RenderGrid(data);
+                });
+                $.get('@Url.Action("PublisherReport", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (publisherReportContent) {
+                    $('#publisherReportContainer').html(publisherReportContent);
                 });
             });
         }
@@ -71,6 +100,12 @@
                 close: function () {
                     //allFields.val("").removeClass("ui-state-error");
                 }
+            });
+        });
+        $(function () {
+            $("#publisherSummaryContainer").resizable({
+                handles: "s, se",
+                helper: "resizing-helper"
             });
         });
     </script>

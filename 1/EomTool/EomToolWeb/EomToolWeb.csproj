@@ -373,6 +373,7 @@
     <Content Include="Views\Payouts\Summary.cshtml" />
     <Content Include="Views\Payouts\SummaryGrid.cshtml" />
     <Content Include="Views\Payouts\Details.cshtml" />
+    <Content Include="Views\Payouts\PublisherReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -386,6 +387,9 @@
       <Project>{F41DA2E2-D584-479A-9F24-9B2D3D33F927}</Project>
       <Name>EomTool.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

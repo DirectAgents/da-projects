@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="conversion_report_response" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>EomApp1.Cake.WebServices._4.Reports.conversion_report_response</TypeInfo>
+   <TypeInfo>EomApp1.Cake.WebServices._4.Reports.conversion_report_response, EomApp1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
 </GenericObjectDataSource>

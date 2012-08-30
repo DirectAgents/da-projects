@@ -123,6 +123,7 @@ namespace EomApp1.Screens.Synch
 
             var existingItems = from c in this.eomEntities.Items
                                 where
+                                  (c.campaign_status_id == 1 || c.campaign_status_id == 2) &&
                                    c.item_accounting_status_id == 1 &&
                                    c.item_reporting_status_id == 1 &&
                                    c.pid == this.parameters.CampaignId &&
@@ -168,7 +169,8 @@ namespace EomApp1.Screens.Synch
         {
             this.logger.Log("Staging extracted conversions...");
 
-            this.extractedConversions.ForEach(extractedConversion => {
+            this.extractedConversions.ForEach(extractedConversion =>
+            {
                 var cakeConversion = this.cakeEntities.CakeConversions.Create(extractedConversion.IdAsInt);
                 cakeConversion.Update(extractedConversion);
                 updatedCakeConversions.Add(cakeConversion);

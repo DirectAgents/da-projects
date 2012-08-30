@@ -1,18 +1,19 @@
-﻿@model PayoutsListViewModel
-<style type="text/css">
-    .active
-    {
-        background-color: Gray;
+﻿<style type="text/css">
+    #payoutGrid
+    {                                 
+        height: 300px;
+        width: 1400px;
+        border: 1px solid Gray;
     }
 </style>
-<div id="payoutGrid" style="height: 300px; border: 1px solid black">
+<div id="payoutGridResizable">
+    <div id="payoutGrid">
+    </div>
 </div>
 <script type="text/javascript">
-function RenderGrid(data)
-{
-    var columns = [
-             //{ id: "publisher", name: "Publisher", field: "Publisher", width: 200 }
-             { id: "campaign", name: "Campaign", field: "Campaign_Name", width: 300, cssClass: "cell-title", sortable: true }
+    function RenderGrid(data) {
+        var columns = [
+             {id: "campaign", name: "Campaign", field: "Campaign_Name", width: 300, cssClass: "cell-title", sortable: true }
             ,{ id: "costperunit", name: "Cost/Unit", field: "Cost_Unit", width: 120, sortable: true }
             ,{ id: "units", name: "Units", field: "Units", width: 120, sortable: true }
             ,{ id: "pctmargin", name: "%Margin", field: "MarginPct", width: 120, sortable: true }
@@ -23,26 +24,37 @@ function RenderGrid(data)
             ,{ id: "acctgstatus", name: "Acctng Status", field: "Accounting_Status", width: 120, sortable: true }
             ,{ id: "approval", name: "Approval", field: "Media_Buyer_Approval_Status", width: 120, sortable: true }
         ];
-    var options = {
-        enableCellNavigation: true,
-        enableColumnReorder: false,
-        autoHeight: false,
-        enableTextSelectionOnCells: true
-    };
-    var grid = new Slick.Grid("#payoutGrid", data, columns, options);
-    grid.onSort.subscribe(function(e, args){ // args: sort information. 
-        var field = args.sortCol.field;
-        data.sort(function(a, b){
-            var result = 
+        var options = {
+            enableCellNavigation: true,
+            enableColumnReorder: false,
+            autoHeight: false,
+            enableTextSelectionOnCells: true
+        };
+        var grid = new Slick.Grid("#payoutGrid", data, columns, options);
+        grid.onSort.subscribe(function (e, args) { // args: sort information. 
+            var field = args.sortCol.field;
+            data.sort(function (a, b) {
+                var result =
                 a[field] > b[field] ? 1 :
                 a[field] < b[field] ? -1 :
                 0
-            ; 
-            return args.sortAsc ? result : -result;
+            ;
+                return args.sortAsc ? result : -result;
+            });
+            grid.setData(data);
+            grid.updateRowCount();
+            grid.render();
         });
-        grid.setData(data);
-        grid.updateRowCount();
-        grid.render();         
-    });
-}
+        $("#payoutGridResizable").resizable({
+            stop: function (event, ui) {
+                var outerHeight = $("#payoutGridResizable").height();
+                var outerWidth = $("#payoutGridResizable").width();
+                $("#payoutGrid").height(outerHeight);
+                $("#payoutGrid").width(outerWidth);
+                grid.resizeCanvas();
+            },
+            handles: "n, s, se, e",
+            helper: "resizing-helper"
+        });
+    }
 </script>

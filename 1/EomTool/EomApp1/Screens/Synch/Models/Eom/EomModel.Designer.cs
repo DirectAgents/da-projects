@@ -18,12 +18,6 @@ using System.Runtime.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_Currency_id_FK_Currency_id_PK", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
-[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_Currency_id_FK_Currency_id_PK1", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
-[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_Source_id_FK_Source_id_PK", "Source", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.Source), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
-[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_UnitType_id_FK_UnitType_id_PK", "UnitType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.UnitType), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
-[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.ItemAccountingStatu), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
-[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK", "ItemReportingStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.ItemReportingStatu), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.AccountManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Campaign), true)]
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "Campaign_AdManager_id_FK_AdManager_id_PK", "AdManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.AdManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Campaign), true)]
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "Campaign_Advertiser_id_FK_Advertiser_id_PK", "Advertiser", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.Advertiser), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Campaign), true)]
@@ -34,6 +28,12 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK", "MediaBuyer", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.MediaBuyer), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Affiliate), true)]
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "Affiliate_NetTermType_id_FK_NetTermType_id_PK", "NetTermType", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomApp1.Screens.Synch.Models.Eom.NetTermType), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Affiliate), true)]
 [assembly: EdmRelationshipAttribute("EomDatabaseModel", "affiliate_tracking_system_fk", "TrackingSystem", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomApp1.Screens.Synch.Models.Eom.TrackingSystem), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Affiliate), true)]
+[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_Currency_id_FK_Currency_id_PK", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
+[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_Currency_id_FK_Currency_id_PK1", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
+[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.ItemAccountingStatu), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
+[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK", "ItemReportingStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.ItemReportingStatu), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
+[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_Source_id_FK_Source_id_PK", "Source", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.Source), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
+[assembly: EdmRelationshipAttribute("EomDatabaseModel", "Item_UnitType_id_FK_UnitType_id_PK", "UnitType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Synch.Models.Eom.UnitType), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Synch.Models.Eom.Item), true)]
 
 #endregion
 
@@ -184,22 +184,6 @@ namespace EomApp1.Screens.Synch.Models.Eom
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Item> Items
-        {
-            get
-            {
-                if ((_Items == null))
-                {
-                    _Items = base.CreateObjectSet<Item>("Items");
-                }
-                return _Items;
-            }
-        }
-        private ObjectSet<Item> _Items;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<NetTermType> NetTermTypes
         {
             get
@@ -340,6 +324,22 @@ namespace EomApp1.Screens.Synch.Models.Eom
             }
         }
         private ObjectSet<Affiliate> _Affiliates;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Item> Items
+        {
+            get
+            {
+                if ((_Items == null))
+                {
+                    _Items = base.CreateObjectSet<Item>("Items");
+                }
+                return _Items;
+            }
+        }
+        private ObjectSet<Item> _Items;
 
         #endregion
         #region AddTo Methods
@@ -390,14 +390,6 @@ namespace EomApp1.Screens.Synch.Models.Eom
         public void AddToCurrencies(Currency currency)
         {
             base.AddObject("Currencies", currency);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Items EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToItems(Item item)
-        {
-            base.AddObject("Items", item);
         }
     
         /// <summary>
@@ -470,6 +462,14 @@ namespace EomApp1.Screens.Synch.Models.Eom
         public void AddToAffiliates(Affiliate affiliate)
         {
             base.AddObject("Affiliates", affiliate);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Items EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToItems(Item item)
+        {
+            base.AddObject("Items", item);
         }
 
         #endregion
@@ -2439,6 +2439,28 @@ namespace EomApp1.Screens.Synch.Models.Eom
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate")]
+        public EntityCollection<Affiliate> Affiliates
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Affiliate>("EomDatabaseModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Affiliate>("EomDatabaseModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "Item_Currency_id_FK_Currency_id_PK", "Item")]
         public EntityCollection<Item> Items
         {
@@ -2476,28 +2498,6 @@ namespace EomApp1.Screens.Synch.Models.Eom
                 }
             }
         }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate")]
-        public EntityCollection<Affiliate> Affiliates
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Affiliate>("EomDatabaseModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Affiliate>("EomDatabaseModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate", value);
-                }
-            }
-        }
 
         #endregion
     }
@@ -2530,7 +2530,9 @@ namespace EomApp1.Screens.Synch.Models.Eom
         /// <param name="item_accounting_status_id">Initial value of the item_accounting_status_id property.</param>
         /// <param name="item_reporting_status_id">Initial value of the item_reporting_status_id property.</param>
         /// <param name="modified">Initial value of the modified property.</param>
-        public static Item CreateItem(global::System.Int32 id, global::System.Int32 pid, global::System.Int32 affid, global::System.Int32 source_id, global::System.Int32 unit_type_id, global::System.Int32 revenue_currency_id, global::System.Int32 cost_currency_id, global::System.Decimal revenue_per_unit, global::System.Decimal cost_per_unit, global::System.Decimal num_units, global::System.String notes, global::System.String accounting_notes, global::System.Int32 item_accounting_status_id, global::System.Int32 item_reporting_status_id, global::System.DateTime modified)
+        /// <param name="campaign_status_id">Initial value of the campaign_status_id property.</param>
+        /// <param name="media_buyer_approval_status_id">Initial value of the media_buyer_approval_status_id property.</param>
+        public static Item CreateItem(global::System.Int32 id, global::System.Int32 pid, global::System.Int32 affid, global::System.Int32 source_id, global::System.Int32 unit_type_id, global::System.Int32 revenue_currency_id, global::System.Int32 cost_currency_id, global::System.Decimal revenue_per_unit, global::System.Decimal cost_per_unit, global::System.Decimal num_units, global::System.String notes, global::System.String accounting_notes, global::System.Int32 item_accounting_status_id, global::System.Int32 item_reporting_status_id, global::System.DateTime modified, global::System.Int32 campaign_status_id, global::System.Int32 media_buyer_approval_status_id)
         {
             Item item = new Item();
             item.id = id;
@@ -2548,6 +2550,8 @@ namespace EomApp1.Screens.Synch.Models.Eom
             item.item_accounting_status_id = item_accounting_status_id;
             item.item_reporting_status_id = item_reporting_status_id;
             item.modified = modified;
+            item.campaign_status_id = campaign_status_id;
+            item.media_buyer_approval_status_id = media_buyer_approval_status_id;
             return item;
         }
 
@@ -3036,6 +3040,78 @@ namespace EomApp1.Screens.Synch.Models.Eom
         private global::System.DateTime _modified;
         partial void OnmodifiedChanging(global::System.DateTime value);
         partial void OnmodifiedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 campaign_status_id
+        {
+            get
+            {
+                return _campaign_status_id;
+            }
+            set
+            {
+                Oncampaign_status_idChanging(value);
+                ReportPropertyChanging("campaign_status_id");
+                _campaign_status_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("campaign_status_id");
+                Oncampaign_status_idChanged();
+            }
+        }
+        private global::System.Int32 _campaign_status_id;
+        partial void Oncampaign_status_idChanging(global::System.Int32 value);
+        partial void Oncampaign_status_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 media_buyer_approval_status_id
+        {
+            get
+            {
+                return _media_buyer_approval_status_id;
+            }
+            set
+            {
+                Onmedia_buyer_approval_status_idChanging(value);
+                ReportPropertyChanging("media_buyer_approval_status_id");
+                _media_buyer_approval_status_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("media_buyer_approval_status_id");
+                Onmedia_buyer_approval_status_idChanged();
+            }
+        }
+        private global::System.Int32 _media_buyer_approval_status_id;
+        partial void Onmedia_buyer_approval_status_idChanging(global::System.Int32 value);
+        partial void Onmedia_buyer_approval_status_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> batch_id
+        {
+            get
+            {
+                return _batch_id;
+            }
+            set
+            {
+                Onbatch_idChanging(value);
+                ReportPropertyChanging("batch_id");
+                _batch_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("batch_id");
+                Onbatch_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _batch_id;
+        partial void Onbatch_idChanging(Nullable<global::System.Int32> value);
+        partial void Onbatch_idChanged();
 
         #endregion
     
@@ -3123,82 +3199,6 @@ namespace EomApp1.Screens.Synch.Models.Eom
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "Item_Source_id_FK_Source_id_PK", "Source")]
-        public Source Source
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Source>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Source").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Source>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Source").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Source> SourceReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Source>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Source");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Source>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Source", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "Item_UnitType_id_FK_UnitType_id_PK", "UnitType")]
-        public UnitType UnitType
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK", "UnitType").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK", "UnitType").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<UnitType> UnitTypeReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK", "UnitType");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<UnitType>("EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK", "UnitType", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK", "ItemAccountingStatu")]
         public ItemAccountingStatu ItemAccountingStatu
         {
@@ -3265,6 +3265,82 @@ namespace EomApp1.Screens.Synch.Models.Eom
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<ItemReportingStatu>("EomDatabaseModel.Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK", "ItemReportingStatu", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "Item_Source_id_FK_Source_id_PK", "Source")]
+        public Source Source
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Source>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Source").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Source>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Source").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Source> SourceReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Source>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Source");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Source>("EomDatabaseModel.Item_Source_id_FK_Source_id_PK", "Source", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomDatabaseModel", "Item_UnitType_id_FK_UnitType_id_PK", "UnitType")]
+        public UnitType UnitType
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK", "UnitType").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK", "UnitType").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<UnitType> UnitTypeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK", "UnitType");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<UnitType>("EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK", "UnitType", value);
                 }
             }
         }

@@ -205,6 +205,9 @@
           <Property Name="total_cost" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
           <Property Name="margin" Type="money" StoreGeneratedPattern="Computed" />
           <Property Name="modified" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="campaign_status_id" Type="int" Nullable="false" />
+          <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
+          <Property Name="batch_id" Type="int" />
         </EntityType>
         <EntityType Name="ItemAccountingStatus">
           <Key>
@@ -458,36 +461,11 @@
           <EntitySet Name="AffiliatePaymentMethods" EntityType="EomDatabaseModel.AffiliatePaymentMethod" />
           <EntitySet Name="CampaignStatus" EntityType="EomDatabaseModel.CampaignStatu" />
           <EntitySet Name="Currencies" EntityType="EomDatabaseModel.Currency" />
-          <EntitySet Name="Items" EntityType="EomDatabaseModel.Item" />
           <EntitySet Name="NetTermTypes" EntityType="EomDatabaseModel.NetTermType" />
           <EntitySet Name="Sources" EntityType="EomDatabaseModel.Source" />
           <EntitySet Name="UnitTypes" EntityType="EomDatabaseModel.UnitType" />
-          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK">
-            <End Role="Currency" EntitySet="Currencies" />
-            <End Role="Item" EntitySet="Items" />
-          </AssociationSet>
-          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK1" Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1">
-            <End Role="Currency" EntitySet="Currencies" />
-            <End Role="Item" EntitySet="Items" />
-          </AssociationSet>
-          <AssociationSet Name="Item_Source_id_FK_Source_id_PK" Association="EomDatabaseModel.Item_Source_id_FK_Source_id_PK">
-            <End Role="Source" EntitySet="Sources" />
-            <End Role="Item" EntitySet="Items" />
-          </AssociationSet>
-          <AssociationSet Name="Item_UnitType_id_FK_UnitType_id_PK" Association="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK">
-            <End Role="UnitType" EntitySet="UnitTypes" />
-            <End Role="Item" EntitySet="Items" />
-          </AssociationSet>
           <EntitySet Name="ItemAccountingStatus" EntityType="EomDatabaseModel.ItemAccountingStatu" />
           <EntitySet Name="ItemReportingStatus" EntityType="EomDatabaseModel.ItemReportingStatu" />
-          <AssociationSet Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" Association="EomDatabaseModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
-            <End Role="ItemAccountingStatu" EntitySet="ItemAccountingStatus" />
-            <End Role="Item" EntitySet="Items" />
-          </AssociationSet>
-          <AssociationSet Name="Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK" Association="EomDatabaseModel.Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK">
-            <End Role="ItemReportingStatu" EntitySet="ItemReportingStatus" />
-            <End Role="Item" EntitySet="Items" />
-          </AssociationSet>
           <EntitySet Name="MediaBuyers" EntityType="EomDatabaseModel.MediaBuyer" />
           <EntitySet Name="Campaigns" EntityType="EomDatabaseModel.Campaign" />
           <EntitySet Name="TrackingSystems" EntityType="EomDatabaseModel.TrackingSystem" />
@@ -531,6 +509,31 @@
           <AssociationSet Name="affiliate_tracking_system_fk" Association="EomDatabaseModel.affiliate_tracking_system_fk">
             <End Role="TrackingSystem" EntitySet="TrackingSystems" />
             <End Role="Affiliate" EntitySet="Affiliates" />
+          </AssociationSet>
+          <EntitySet Name="Items" EntityType="EomDatabaseModel.Item" />
+          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK1" Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" Association="EomDatabaseModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
+            <End Role="ItemAccountingStatu" EntitySet="ItemAccountingStatus" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK" Association="EomDatabaseModel.Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK">
+            <End Role="ItemReportingStatu" EntitySet="ItemReportingStatus" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="Item_Source_id_FK_Source_id_PK" Association="EomDatabaseModel.Item_Source_id_FK_Source_id_PK">
+            <End Role="Source" EntitySet="Sources" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="Item_UnitType_id_FK_UnitType_id_PK" Association="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK">
+            <End Role="UnitType" EntitySet="UnitTypes" />
+            <End Role="Item" EntitySet="Items" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="AccountManager">
@@ -580,40 +583,9 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="to_usd_multiplier" Type="Decimal" Nullable="false" Precision="14" Scale="4" />
+          <NavigationProperty Name="Affiliates" Relationship="EomDatabaseModel.Affiliate_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Affiliate" />
           <NavigationProperty Name="Items" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Item" />
           <NavigationProperty Name="Items1" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Currency" ToRole="Item" />
-          <NavigationProperty Name="Affiliates" Relationship="EomDatabaseModel.Affiliate_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Affiliate" />
-        </EntityType>
-        <EntityType Name="Item">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="300" Unicode="false" FixedLength="false" />
-          <Property Name="pid" Type="Int32" Nullable="false" />
-          <Property Name="affid" Type="Int32" Nullable="false" />
-          <Property Name="source_id" Type="Int32" Nullable="false" />
-          <Property Name="unit_type_id" Type="Int32" Nullable="false" />
-          <Property Name="stat_id_n" Type="Int32" />
-          <Property Name="revenue_currency_id" Type="Int32" Nullable="false" />
-          <Property Name="cost_currency_id" Type="Int32" Nullable="false" />
-          <Property Name="revenue_per_unit" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <Property Name="cost_per_unit" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <Property Name="num_units" Type="Decimal" Nullable="false" Precision="16" Scale="6" />
-          <Property Name="notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="accounting_notes" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="item_accounting_status_id" Type="Int32" Nullable="false" />
-          <Property Name="item_reporting_status_id" Type="Int32" Nullable="false" />
-          <Property Name="total_revenue" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="total_cost" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="margin" Type="Decimal" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="modified" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="Currency" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Item" ToRole="Currency" />
-          <NavigationProperty Name="Currency1" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Item" ToRole="Currency" />
-          <NavigationProperty Name="Source" Relationship="EomDatabaseModel.Item_Source_id_FK_Source_id_PK" FromRole="Item" ToRole="Source" />
-          <NavigationProperty Name="UnitType" Relationship="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK" FromRole="Item" ToRole="UnitType" />
-          <NavigationProperty Name="ItemAccountingStatu" Relationship="EomDatabaseModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" FromRole="Item" ToRole="ItemAccountingStatu" />
-          <NavigationProperty Name="ItemReportingStatu" Relationship="EomDatabaseModel.Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK" FromRole="Item" ToRole="ItemReportingStatu" />
         </EntityType>
         <EntityType Name="NetTermType">
           <Key>
@@ -639,54 +611,6 @@
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Items" Relationship="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK" FromRole="UnitType" ToRole="Item" />
         </EntityType>
-        <Association Name="Item_Currency_id_FK_Currency_id_PK">
-          <End Role="Currency" Type="EomDatabaseModel.Currency" Multiplicity="1" />
-          <End Role="Item" Type="EomDatabaseModel.Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Currency">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="revenue_currency_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Item_Currency_id_FK_Currency_id_PK1">
-          <End Role="Currency" Type="EomDatabaseModel.Currency" Multiplicity="1" />
-          <End Role="Item" Type="EomDatabaseModel.Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Currency">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="cost_currency_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Item_Source_id_FK_Source_id_PK">
-          <End Role="Source" Type="EomDatabaseModel.Source" Multiplicity="1" />
-          <End Role="Item" Type="EomDatabaseModel.Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Source">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="source_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Item_UnitType_id_FK_UnitType_id_PK">
-          <End Role="UnitType" Type="EomDatabaseModel.UnitType" Multiplicity="1" />
-          <End Role="Item" Type="EomDatabaseModel.Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UnitType">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="unit_type_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="ItemAccountingStatu">
           <Key>
             <PropertyRef Name="id" />
@@ -703,30 +627,6 @@
           <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Items" Relationship="EomDatabaseModel.Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK" FromRole="ItemReportingStatu" ToRole="Item" />
         </EntityType>
-        <Association Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
-          <End Type="EomDatabaseModel.ItemAccountingStatu" Role="ItemAccountingStatu" Multiplicity="1" />
-          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ItemAccountingStatu">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="item_accounting_status_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK">
-          <End Type="EomDatabaseModel.ItemReportingStatu" Role="ItemReportingStatu" Multiplicity="1" />
-          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ItemReportingStatu">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Item">
-              <PropertyRef Name="item_reporting_status_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="MediaBuyer">
           <Key>
             <PropertyRef Name="id" />
@@ -919,6 +819,112 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="pid" Nullable="false" />
+          <Property Type="Int32" Name="affid" Nullable="false" />
+          <Property Type="Int32" Name="source_id" Nullable="false" />
+          <Property Type="Int32" Name="unit_type_id" Nullable="false" />
+          <Property Type="Int32" Name="stat_id_n" />
+          <Property Type="Int32" Name="revenue_currency_id" Nullable="false" />
+          <Property Type="Int32" Name="cost_currency_id" Nullable="false" />
+          <Property Type="Decimal" Name="revenue_per_unit" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="cost_per_unit" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="num_units" Nullable="false" Precision="16" Scale="6" />
+          <Property Type="String" Name="notes" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="accounting_notes" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="item_accounting_status_id" Nullable="false" />
+          <Property Type="Int32" Name="item_reporting_status_id" Nullable="false" />
+          <Property Type="Decimal" Name="total_revenue" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Decimal" Name="total_cost" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Decimal" Name="margin" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="DateTime" Name="modified" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Int32" Name="campaign_status_id" Nullable="false" />
+          <Property Type="Int32" Name="media_buyer_approval_status_id" Nullable="false" />
+          <Property Type="Int32" Name="batch_id" />
+          <NavigationProperty Name="Currency" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Item" ToRole="Currency" />
+          <NavigationProperty Name="Currency1" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Item" ToRole="Currency" />
+          <NavigationProperty Name="ItemAccountingStatu" Relationship="EomDatabaseModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" FromRole="Item" ToRole="ItemAccountingStatu" />
+          <NavigationProperty Name="ItemReportingStatu" Relationship="EomDatabaseModel.Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK" FromRole="Item" ToRole="ItemReportingStatu" />
+          <NavigationProperty Name="Source" Relationship="EomDatabaseModel.Item_Source_id_FK_Source_id_PK" FromRole="Item" ToRole="Source" />
+          <NavigationProperty Name="UnitType" Relationship="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK" FromRole="Item" ToRole="UnitType" />
+        </EntityType>
+        <Association Name="Item_Currency_id_FK_Currency_id_PK">
+          <End Type="EomDatabaseModel.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="revenue_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_Currency_id_FK_Currency_id_PK1">
+          <End Type="EomDatabaseModel.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="cost_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK">
+          <End Type="EomDatabaseModel.ItemAccountingStatu" Role="ItemAccountingStatu" Multiplicity="1" />
+          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemAccountingStatu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="item_accounting_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK">
+          <End Type="EomDatabaseModel.ItemReportingStatu" Role="ItemReportingStatu" Multiplicity="1" />
+          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemReportingStatu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="item_reporting_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_Source_id_FK_Source_id_PK">
+          <End Type="EomDatabaseModel.Source" Role="Source" Multiplicity="1" />
+          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Source">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="source_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_UnitType_id_FK_UnitType_id_PK">
+          <End Type="EomDatabaseModel.UnitType" Role="UnitType" Multiplicity="1" />
+          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnitType">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="unit_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -949,28 +955,6 @@
             <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
             <ScalarProperty Name="to_usd_multiplier" ColumnName="to_usd_multiplier" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Items"><EntityTypeMapping TypeName="EomDatabaseModel.Item"><MappingFragment StoreEntitySet="Item">
-            <ScalarProperty Name="id" ColumnName="id" />
-            <ScalarProperty Name="name" ColumnName="name" />
-            <ScalarProperty Name="pid" ColumnName="pid" />
-            <ScalarProperty Name="affid" ColumnName="affid" />
-            <ScalarProperty Name="source_id" ColumnName="source_id" />
-            <ScalarProperty Name="unit_type_id" ColumnName="unit_type_id" />
-            <ScalarProperty Name="stat_id_n" ColumnName="stat_id_n" />
-            <ScalarProperty Name="revenue_currency_id" ColumnName="revenue_currency_id" />
-            <ScalarProperty Name="cost_currency_id" ColumnName="cost_currency_id" />
-            <ScalarProperty Name="revenue_per_unit" ColumnName="revenue_per_unit" />
-            <ScalarProperty Name="cost_per_unit" ColumnName="cost_per_unit" />
-            <ScalarProperty Name="num_units" ColumnName="num_units" />
-            <ScalarProperty Name="notes" ColumnName="notes" />
-            <ScalarProperty Name="accounting_notes" ColumnName="accounting_notes" />
-            <ScalarProperty Name="item_accounting_status_id" ColumnName="item_accounting_status_id" />
-            <ScalarProperty Name="item_reporting_status_id" ColumnName="item_reporting_status_id" />
-            <ScalarProperty Name="total_revenue" ColumnName="total_revenue" />
-            <ScalarProperty Name="total_cost" ColumnName="total_cost" />
-            <ScalarProperty Name="margin" ColumnName="margin" />
-            <ScalarProperty Name="modified" ColumnName="modified" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="NetTermTypes"><EntityTypeMapping TypeName="EomDatabaseModel.NetTermType"><MappingFragment StoreEntitySet="NetTermType">
             <ScalarProperty Name="id" ColumnName="id" />
@@ -1063,6 +1047,35 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Items">
+            <EntityTypeMapping TypeName="EomDatabaseModel.Item">
+              <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="batch_id" ColumnName="batch_id" />
+                <ScalarProperty Name="media_buyer_approval_status_id" ColumnName="media_buyer_approval_status_id" />
+                <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
+                <ScalarProperty Name="modified" ColumnName="modified" />
+                <ScalarProperty Name="margin" ColumnName="margin" />
+                <ScalarProperty Name="total_cost" ColumnName="total_cost" />
+                <ScalarProperty Name="total_revenue" ColumnName="total_revenue" />
+                <ScalarProperty Name="item_reporting_status_id" ColumnName="item_reporting_status_id" />
+                <ScalarProperty Name="item_accounting_status_id" ColumnName="item_accounting_status_id" />
+                <ScalarProperty Name="accounting_notes" ColumnName="accounting_notes" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="num_units" ColumnName="num_units" />
+                <ScalarProperty Name="cost_per_unit" ColumnName="cost_per_unit" />
+                <ScalarProperty Name="revenue_per_unit" ColumnName="revenue_per_unit" />
+                <ScalarProperty Name="cost_currency_id" ColumnName="cost_currency_id" />
+                <ScalarProperty Name="revenue_currency_id" ColumnName="revenue_currency_id" />
+                <ScalarProperty Name="stat_id_n" ColumnName="stat_id_n" />
+                <ScalarProperty Name="unit_type_id" ColumnName="unit_type_id" />
+                <ScalarProperty Name="source_id" ColumnName="source_id" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1090,36 +1103,11 @@
         <EntityTypeShape EntityType="EomDatabaseModel.AffiliatePaymentMethod" Width="1.5" PointX="0.5" PointY="2.75" Height="1.59568359375" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.CampaignStatu" Width="1.5" PointX="9.125" PointY="2.75" Height="1.59568359375" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.Currency" Width="1.5" PointX="4.875" PointY="3" Height="2.172587890625" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomDatabaseModel.Item" Width="1.875" PointX="4.75" PointY="5.75" Height="6.0186165364583335" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.NetTermType" Width="1.5" PointX="0.5" PointY="4.875" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomDatabaseModel.Source" Width="1.5" PointX="5.875" PointY="12.25" Height="1.5956835937500031" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomDatabaseModel.UnitType" Width="1.5" PointX="4" PointY="12.25" Height="1.5956835937500031" IsExpanded="true" />
-        <AssociationConnector Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.625" PointY="5.172587890625" />
-          <ConnectorPoint PointX="5.625" PointY="5.75" />
-        </AssociationConnector>
-        <AssociationConnector Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1" ManuallyRouted="false">
-          <ConnectorPoint PointX="6.0625" PointY="5.172587890625" />
-          <ConnectorPoint PointX="6.0625" PointY="5.75" />
-        </AssociationConnector>
-        <AssociationConnector Association="EomDatabaseModel.Item_Source_id_FK_Source_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="6.25" PointY="12.25" />
-          <ConnectorPoint PointX="6.25" PointY="11.768616536458334" />
-        </AssociationConnector>
-        <AssociationConnector Association="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.125" PointY="12.25" />
-          <ConnectorPoint PointX="5.125" PointY="11.768616536458334" />
-        </AssociationConnector>
+        <EntityTypeShape EntityType="EomDatabaseModel.Source" Width="1.5" PointX="5.875" PointY="13.125" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomDatabaseModel.UnitType" Width="1.5" PointX="4" PointY="13.125" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomDatabaseModel.ItemAccountingStatu" Width="1.5" PointX="2.875" PointY="8" Height="1.5956835937500031" />
         <EntityTypeShape EntityType="EomDatabaseModel.ItemReportingStatu" Width="1.5" PointX="2.875" PointY="10" Height="1.5956835937500031" />
-        <AssociationConnector Association="EomDatabaseModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" >
-          <ConnectorPoint PointX="4.375" PointY="8.7978417968750016" />
-          <ConnectorPoint PointX="4.75" PointY="8.7978417968750016" />
-        </AssociationConnector>
-        <AssociationConnector Association="EomDatabaseModel.Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK" >
-          <ConnectorPoint PointX="4.375" PointY="10.797841796875002" />
-          <ConnectorPoint PointX="4.75" PointY="10.797841796875002" />
-        </AssociationConnector>
         <EntityTypeShape EntityType="EomDatabaseModel.MediaBuyer" Width="1.5" PointX="0.875" PointY="7.75" Height="1.5956835937499996" />
         <EntityTypeShape EntityType="EomDatabaseModel.Campaign" Width="1.5" PointX="7" PointY="2.75" Height="6.0186165364583388" />
         <EntityTypeShape EntityType="EomDatabaseModel.TrackingSystem" Width="1.5" PointX="4.875" PointY="0.5" Height="1.7879850260416657" />
@@ -1163,6 +1151,31 @@
         <AssociationConnector Association="EomDatabaseModel.affiliate_tracking_system_fk" >
           <ConnectorPoint PointX="4.875" PointY="2.2879850260416656" />
           <ConnectorPoint PointX="4.25" PointY="2.75" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="EomDatabaseModel.Item" Width="1.5" PointX="5" PointY="5.875" Height="6.5955208333333388" />
+        <AssociationConnector Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK" >
+          <ConnectorPoint PointX="5.6875" PointY="5.172587890625" />
+          <ConnectorPoint PointX="5.6875" PointY="5.875" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1" >
+          <ConnectorPoint PointX="6.09375" PointY="5.172587890625" />
+          <ConnectorPoint PointX="6.09375" PointY="5.875" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomDatabaseModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" >
+          <ConnectorPoint PointX="4.375" PointY="8.797841796875" />
+          <ConnectorPoint PointX="5" PointY="8.797841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomDatabaseModel.Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK" >
+          <ConnectorPoint PointX="4.375" PointY="10.797841796875" />
+          <ConnectorPoint PointX="5" PointY="10.797841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomDatabaseModel.Item_Source_id_FK_Source_id_PK" >
+          <ConnectorPoint PointX="6.1875" PointY="13.125" />
+          <ConnectorPoint PointX="6.1875" PointY="12.470520833333339" />
+        </AssociationConnector>
+        <AssociationConnector Association="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK" >
+          <ConnectorPoint PointX="5.25" PointY="13.125" />
+          <ConnectorPoint PointX="5.25" PointY="12.470520833333339" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>
