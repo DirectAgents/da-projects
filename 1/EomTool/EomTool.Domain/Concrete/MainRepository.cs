@@ -73,7 +73,7 @@ namespace EomTool.Domain.Concrete
 
         public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode)
         {
-            var result =
+            var pubSummaries =
                 PublisherPayoutsByMode(mode)
                     .Where(c => c.Pub_Payout > 0)
                     .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
@@ -85,9 +85,19 @@ namespace EomTool.Domain.Concrete
                         PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
                         MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
                         MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
-                        BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Distinct())
-                    });
-            return result.AsQueryable();
+                        BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct())
+                    }).ToList();
+            var batchIds = String.Join(",", pubSummaries.Select(ps => ps.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).Distinct().ToList();
+            var batchesList = context.Batches.Include("BatchUpdates").Where(b => batchIds.Contains(b.id)).ToList();
+            for (var i=0; i < pubSummaries.Count(); i++)
+            {
+                var pubSummary = pubSummaries[i];
+                var batches = batchesList.Where(b => pubSummary.BatchIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).Contains(b.id));
+                var latestBatchUpdate = batches.SelectMany(b => b.BatchUpdates).Distinct().OrderByDescending(bu => bu.date_created).FirstOrDefault();
+                if (latestBatchUpdate != null)
+                    pubSummary.LatestNote = latestBatchUpdate.note;
+            }
+            return pubSummaries.AsQueryable();
         }
 
         public void Media_ApproveItems(int[] itemIds)
@@ -144,28 +154,21 @@ namespace EomTool.Domain.Concrete
             var itemsWithNoBatch = items.Where(i => i.batch_id == null);
             if (itemsWithNoBatch.Count() > 0)
             {
-                if (batches.Count() == 1)
-                {
-                    var batch = batches.First();
-                    foreach (var item in itemsWithNoBatch)
-                        item.Batch = batch;
-                }
-                else // could be 0 or >1 existing batches
-                {
-                    var newBatch = context.Batches.CreateObject();
-                    foreach (var item in itemsWithNoBatch)
-                        item.Batch = newBatch;
-                    batches.Add(newBatch);
-                }
+                var newBatch = new Batch();
+                foreach (var item in itemsWithNoBatch)
+                    item.Batch = newBatch;
+                batches.Add(newBatch);
             }
+            var batchUpdate = new BatchUpdate()
+            {
+                note = note,
+                author = author,
+                media_buyer_approval_status_id = mediaBuyerApprovalStatus,
+                extra = extra
+            };
             foreach (var batch in batches)
             {
-                var batchNote = context.BatchNotes.CreateObject();
-                batchNote.note = note;
-                batchNote.author = author;
-                batchNote.media_buyer_approval_status_id = mediaBuyerApprovalStatus;
-                batchNote.extra = extra;
-                batchNote.Batch = batch;
+                batch.BatchUpdates.Add(batchUpdate);
             }
         }
 

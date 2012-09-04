@@ -1,5 +1,17 @@
 ﻿@model PublisherSummaryViewModel
 <table id="tblSummary">
+    <tr>
+        <th>affid</th>
+        <th>Publisher</th>
+        <th>Curr</th>
+        <th>Payout</th>
+        <th>Margin Range</th>
+        <th></th>
+        @if (Model.ShowActions) {
+            <th>Action</th>
+        }
+        <th>Latest Note</th>
+    </tr>
     @foreach (var ps in Model.PublisherSummaries)
     {
         <tr id="pub@(ps.affid)">
@@ -16,16 +28,20 @@
             </td>
             <td>@if (!String.IsNullOrWhiteSpace(@ps.BatchIds))
                 {
-                    <a href="#" onclick="ShowNotes(@ps.BatchIds); return false;">Notes</a>
+                    <a href="#" onclick="ShowNotes('@ps.BatchIds'); return false;">Notes</a>
                 }
             </td>
             @if (Model.ShowActions)
             {
                 <td id="tdPubActions@(ps.affid)">
-                    <a href="#" onclick="ApprovePub(@ps.affid); return false;">Approve</a> <a href="#" onclick="HoldPub(@ps.affid); return false;">
-                        Hold</a>
+                    <a href="#" onclick="ApprovePub(@ps.affid); return false;">Approve</a>
+                    <a href="#" onclick="HoldPub(@ps.affid); return false;">Hold</a>
                 </td>
             }
+            <td>@if (ps.LatestNote != null) {
+                    @(ps.LatestNote.Length > 50 ? (ps.LatestNote.Substring(0, 50) + "...") : ps.LatestNote)
+                }
+            </td>
         </tr>
     }
 </table>

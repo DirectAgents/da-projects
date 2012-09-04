@@ -1,11 +1,11 @@
-﻿@model IEnumerable<BatchNote>
+﻿@model IEnumerable<BatchUpdate>
 
-@foreach (var note in Model) {
+@foreach (var update in Model) {
 <p>
-    <b>Date:</b> @note.date_created<br />
-    <b>By:</b> @note.author<br />
-    @if (!String.IsNullOrWhiteSpace(note.extra)) { <b>For:</b> @note.extra<br /> }
-    <b>Action:</b> @(note.MediaBuyerApprovalStatus != null ? note.MediaBuyerApprovalStatus.name : "")<br />
-    @Html.Raw(note.note.Replace("\n","<br />"))
+    <b>Date:</b> @update.date_created<br />
+    <b>By:</b> @update.author<br />
+    @if (!String.IsNullOrWhiteSpace(update.extra)) { <b>For:</b> @update.extra<br /> }
+    <b>Action:</b> @(update.MediaBuyerApprovalStatus != null ? update.MediaBuyerApprovalStatus.name : "")<br />
+    @Html.Raw(update.note.Replace("\n","<br />"))
 </p>
 }
