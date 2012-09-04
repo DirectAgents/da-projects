@@ -1,5 +1,5 @@
 ﻿/*
-Deployment script for DADatabaseJuly2012
+Deployment script for DADatabaseAug2012
 */
 
 GO
@@ -9,7 +9,7 @@ SET NUMERIC_ROUNDABORT OFF;
 
 
 GO
-:setvar DatabaseName "DADatabaseJuly2012"
+:setvar DatabaseName "DADatabaseAug2012"
 :setvar DefaultDataPath "C:\Program Files\Microsoft SQL Server\MSSQL10_50.DA\MSSQL\DATA\"
 :setvar DefaultLogPath "C:\Program Files\Microsoft SQL Server\MSSQL10_50.DA\MSSQL\DATA\"
 
@@ -397,6 +397,46 @@ ALTER TABLE [dbo].[AffiliatePaymentMethod]
 
 
 GO
+PRINT N'Creating [dbo].[Batch]...';
+
+
+GO
+CREATE TABLE [dbo].[Batch] (
+    [id]   INT           IDENTITY (1, 1) NOT NULL,
+    [name] VARCHAR (255) NULL,
+    CONSTRAINT [PK_Batch] PRIMARY KEY CLUSTERED ([id] ASC) WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON, PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF) ON [PRIMARY]
+) ON [PRIMARY];
+
+
+GO
+PRINT N'Creating [dbo].[BatchBatchUpdate]...';
+
+
+GO
+CREATE TABLE [dbo].[BatchBatchUpdate] (
+    [batch_id]        INT NOT NULL,
+    [batch_update_id] INT NOT NULL,
+    CONSTRAINT [PK_BatchBatchUpdate] PRIMARY KEY CLUSTERED ([batch_id] ASC, [batch_update_id] ASC) WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON, PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF) ON [PRIMARY]
+) ON [PRIMARY];
+
+
+GO
+PRINT N'Creating [dbo].[BatchUpdate]...';
+
+
+GO
+CREATE TABLE [dbo].[BatchUpdate] (
+    [id]                             INT           IDENTITY (1, 1) NOT NULL,
+    [note]                           VARCHAR (MAX) NOT NULL,
+    [author]                         VARCHAR (255) NOT NULL,
+    [date_created]                   DATETIME      NOT NULL,
+    [media_buyer_approval_status_id] INT           NULL,
+    [extra]                          VARCHAR (255) NULL,
+    CONSTRAINT [PK_BatchUpdate] PRIMARY KEY CLUSTERED ([id] ASC) WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON, PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF) ON [PRIMARY]
+) ON [PRIMARY];
+
+
+GO
 PRINT N'Creating [dbo].[Campaign]...';
 
 
@@ -693,6 +733,18 @@ ALTER TABLE [dbo].[MediaBuyer]
 
 
 GO
+PRINT N'Creating [dbo].[MediaBuyerApprovalStatus]...';
+
+
+GO
+CREATE TABLE [dbo].[MediaBuyerApprovalStatus] (
+    [id]   INT          NOT NULL,
+    [name] VARCHAR (50) NOT NULL,
+    CONSTRAINT [PK_MediaBuyerApprovalStatus] PRIMARY KEY CLUSTERED ([id] ASC) WITH (ALLOW_PAGE_LOCKS = ON, ALLOW_ROW_LOCKS = ON, PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF) ON [PRIMARY]
+) ON [PRIMARY];
+
+
+GO
 PRINT N'Creating [dbo].[NetTermType]...';
 
 
@@ -969,6 +1021,15 @@ ALTER TABLE [dbo].[Vendor]
 
 
 GO
+PRINT N'Creating DF_BatchUpdate_date_created...';
+
+
+GO
+ALTER TABLE [dbo].[BatchUpdate]
+    ADD CONSTRAINT [DF_BatchUpdate_date_created] DEFAULT (getdate()) FOR [date_created];
+
+
+GO
 PRINT N'Creating On column: created...';
 
 
@@ -1020,6 +1081,33 @@ PRINT N'Creating affiliate_tracking_system_fk...';
 GO
 ALTER TABLE [dbo].[Affiliate] WITH NOCHECK
     ADD CONSTRAINT [affiliate_tracking_system_fk] FOREIGN KEY ([tracking_system_id]) REFERENCES [dbo].[TrackingSystem] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+GO
+PRINT N'Creating FK_BatchBatchUpdate_Batch...';
+
+
+GO
+ALTER TABLE [dbo].[BatchBatchUpdate] WITH NOCHECK
+    ADD CONSTRAINT [FK_BatchBatchUpdate_Batch] FOREIGN KEY ([batch_id]) REFERENCES [dbo].[Batch] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+GO
+PRINT N'Creating FK_BatchBatchUpdate_BatchUpdate...';
+
+
+GO
+ALTER TABLE [dbo].[BatchBatchUpdate] WITH NOCHECK
+    ADD CONSTRAINT [FK_BatchBatchUpdate_BatchUpdate] FOREIGN KEY ([batch_update_id]) REFERENCES [dbo].[BatchUpdate] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+GO
+PRINT N'Creating FK_BatchUpdate_MediaBuyerApprovalStatus...';
+
+
+GO
+ALTER TABLE [dbo].[BatchUpdate] WITH NOCHECK
+    ADD CONSTRAINT [FK_BatchUpdate_MediaBuyerApprovalStatus] FOREIGN KEY ([media_buyer_approval_status_id]) REFERENCES [dbo].[MediaBuyerApprovalStatus] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
 GO
@@ -1331,26 +1419,29 @@ PRINT N'Creating [dbo].[Item]...';
 
 GO
 CREATE TABLE [dbo].[Item] (
-    [id]                        INT             IDENTITY (1, 1) NOT NULL,
-    [name]                      VARCHAR (300)   NULL,
-    [pid]                       INT             NOT NULL,
-    [affid]                     INT             NOT NULL,
-    [source_id]                 INT             NOT NULL,
-    [unit_type_id]              INT             NOT NULL,
-    [stat_id_n]                 INT             NULL,
-    [revenue_currency_id]       INT             NOT NULL,
-    [cost_currency_id]          INT             NOT NULL,
-    [revenue_per_unit]          MONEY           NOT NULL,
-    [cost_per_unit]             MONEY           NOT NULL,
-    [num_units]                 DECIMAL (16, 6) NOT NULL,
-    [notes]                     NVARCHAR (MAX)  NOT NULL,
-    [accounting_notes]          NVARCHAR (255)  NOT NULL,
-    [item_accounting_status_id] INT             NOT NULL,
-    [item_reporting_status_id]  INT             NOT NULL,
-    [total_revenue]             AS              ([num_units] * [revenue_per_unit]),
-    [total_cost]                AS              ([num_units] * [cost_per_unit]),
-    [margin]                    AS              ([dbo].[tousd3]([revenue_currency_id], [num_units] * [revenue_per_unit]) - [dbo].[tousd3]([cost_currency_id], [num_units] * [cost_per_unit])),
-    [modified]                  AS              (GETDATE())
+    [id]                             INT             IDENTITY (1, 1) NOT NULL,
+    [name]                           VARCHAR (300)   NULL,
+    [pid]                            INT             NOT NULL,
+    [affid]                          INT             NOT NULL,
+    [source_id]                      INT             NOT NULL,
+    [unit_type_id]                   INT             NOT NULL,
+    [stat_id_n]                      INT             NULL,
+    [revenue_currency_id]            INT             NOT NULL,
+    [cost_currency_id]               INT             NOT NULL,
+    [revenue_per_unit]               MONEY           NOT NULL,
+    [cost_per_unit]                  MONEY           NOT NULL,
+    [num_units]                      DECIMAL (16, 6) NOT NULL,
+    [notes]                          NVARCHAR (MAX)  NOT NULL,
+    [accounting_notes]               NVARCHAR (255)  NOT NULL,
+    [item_accounting_status_id]      INT             NOT NULL,
+    [item_reporting_status_id]       INT             NOT NULL,
+    [campaign_status_id]             INT             NOT NULL,
+    [total_revenue]                  AS              ([num_units] * [revenue_per_unit]),
+    [total_cost]                     AS              ([num_units] * [cost_per_unit]),
+    [margin]                         AS              ([dbo].[tousd3]([revenue_currency_id], [num_units] * [revenue_per_unit]) - [dbo].[tousd3]([cost_currency_id], [num_units] * [cost_per_unit])),
+    [modified]                       AS              (GETDATE()),
+    [media_buyer_approval_status_id] INT             NOT NULL,
+    [batch_id]                       INT             NULL
 );
 
 
@@ -1438,6 +1529,24 @@ BEGIN
 	AND IT.cost_per_unit = @Cost
 END
 GO
+PRINT N'Creating On column: media_buyer_approval_status_id...';
+
+
+GO
+ALTER TABLE [dbo].[Item] WITH NOCHECK
+    ADD FOREIGN KEY ([media_buyer_approval_status_id]) REFERENCES [dbo].[MediaBuyerApprovalStatus] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+GO
+PRINT N'Creating FK_Item_Batch...';
+
+
+GO
+ALTER TABLE [dbo].[Item] WITH NOCHECK
+    ADD CONSTRAINT [FK_Item_Batch] FOREIGN KEY ([batch_id]) REFERENCES [dbo].[Batch] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+GO
 PRINT N'Creating Item_Affiliate_affid_FK_Affiliate_affid_UK...';
 
 
@@ -1453,6 +1562,15 @@ PRINT N'Creating Item_Campaign_pid_FK_Campaign_pid_UK...';
 GO
 ALTER TABLE [dbo].[Item] WITH NOCHECK
     ADD CONSTRAINT [Item_Campaign_pid_FK_Campaign_pid_UK] FOREIGN KEY ([pid]) REFERENCES [dbo].[Campaign] ([pid]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+GO
+PRINT N'Creating Item_CampaignStatus_id_FK_CampaignStatus_id_PK...';
+
+
+GO
+ALTER TABLE [dbo].[Item] WITH NOCHECK
+    ADD CONSTRAINT [Item_CampaignStatus_id_FK_CampaignStatus_id_PK] FOREIGN KEY ([campaign_status_id]) REFERENCES [dbo].[CampaignStatus] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
 GO
@@ -1525,6 +1643,24 @@ PRINT N'Creating FK_ItemVerificationDate_Item...';
 GO
 ALTER TABLE [dbo].[ItemVerificationDate] WITH NOCHECK
     ADD CONSTRAINT [FK_ItemVerificationDate_Item] FOREIGN KEY ([item_id]) REFERENCES [dbo].[Item] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+GO
+PRINT N'Creating On column: campaign_status_id...';
+
+
+GO
+ALTER TABLE [dbo].[Item]
+    ADD DEFAULT 1 FOR [campaign_status_id];
+
+
+GO
+PRINT N'Creating On column: media_buyer_approval_status_id...';
+
+
+GO
+ALTER TABLE [dbo].[Item]
+    ADD DEFAULT 1 FOR [media_buyer_approval_status_id];
 
 
 GO
@@ -1905,7 +2041,7 @@ FROM
 			INNER JOIN NetTermType ON Affiliate.net_term_type_id = NetTermType.id
 			INNER JOIN Currency AffiliateCurrency ON Affiliate.currency_id = AffiliateCurrency.id
 			INNER JOIN Campaign ON Item.pid = Campaign.pid
-			INNER JOIN CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id
+			INNER JOIN CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
 			LEFT OUTER JOIN Publisher ON Affiliate.affid = Publisher.affid
 		GROUP BY
 			 COALESCE(Publisher.name, Affiliate.name)
@@ -1963,8 +2099,7 @@ FROM
 			INNER JOIN Affiliate ON Item.affid = Affiliate.affid
 			INNER JOIN NetTermType ON Affiliate.net_term_type_id = NetTermType.id
 			INNER JOIN Currency AffiliateCurrency ON Affiliate.currency_id = AffiliateCurrency.id
-			INNER JOIN Campaign ON Item.pid = Campaign.pid
-			INNER JOIN CampaignStatus ON Campaign.campaign_status_id = CampaignStatus.id
+			INNER JOIN CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
 			LEFT OUTER JOIN Publisher ON Affiliate.affid = Publisher.affid
 		GROUP BY
 			 COALESCE(Publisher.name, Affiliate.name)
@@ -4285,6 +4420,14 @@ Post-Deployment Script Template
 --	DADatabaseFeb2012.dbo.[AccountManager]
 --SET IDENTITY_INSERT [$(DatabaseName)].[dbo].[AccountManager] OFF
 
+INSERT INTO [dbo].[MediaBuyerApprovalStatus] VALUES 
+	 ('1', 'default')
+	,('2', 'Queued')
+	,('3', 'Sent')
+	,('4', 'Approved')
+	,('5', 'Hold')
+GO
+
 GO
 PRINT N'Checking existing data against newly created constraints';
 
@@ -4303,6 +4446,12 @@ ALTER TABLE [dbo].[Affiliate] WITH CHECK CHECK CONSTRAINT [Affiliate_MediaBuyer_
 ALTER TABLE [dbo].[Affiliate] WITH CHECK CHECK CONSTRAINT [Affiliate_NetTermType_id_FK_NetTermType_id_PK];
 
 ALTER TABLE [dbo].[Affiliate] WITH CHECK CHECK CONSTRAINT [affiliate_tracking_system_fk];
+
+ALTER TABLE [dbo].[BatchBatchUpdate] WITH CHECK CHECK CONSTRAINT [FK_BatchBatchUpdate_Batch];
+
+ALTER TABLE [dbo].[BatchBatchUpdate] WITH CHECK CHECK CONSTRAINT [FK_BatchBatchUpdate_BatchUpdate];
+
+ALTER TABLE [dbo].[BatchUpdate] WITH CHECK CHECK CONSTRAINT [FK_BatchUpdate_MediaBuyerApprovalStatus];
 
 ALTER TABLE [dbo].[Campaign] WITH CHECK CHECK CONSTRAINT [Campaign_AccountManager_id_FK_AccountManager_id_PK];
 
@@ -4334,25 +4483,35 @@ ALTER TABLE [dbo].[Stat] WITH CHECK CHECK CONSTRAINT [Stat_Payout_id_FK_Payout_i
 
 ALTER TABLE [dbo].[Stat] WITH CHECK CHECK CONSTRAINT [Stat_Payout_id_FK_Payout_id_PK1];
 
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_Affiliate_affid_FK_Affiliate_affid_UK];
-
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_Campaign_pid_FK_Campaign_pid_UK];
-
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_Currency_id_FK_Currency_id_PK];
-
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_Currency_id_FK_Currency_id_PK1];
-
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK];
-
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK];
-
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_Source_id_FK_Source_id_PK];
-
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_Stat_id_FK_Stat_id_PK];
-
-ALTER TABLE [dbo].[Item] WITH CHECK CHECK CONSTRAINT [Item_UnitType_id_FK_UnitType_id_PK];
-
 ALTER TABLE [dbo].[ItemVerificationDate] WITH CHECK CHECK CONSTRAINT [FK_ItemVerificationDate_Item];
+
+
+GO
+CREATE TABLE [#__checkStatus] (
+    [Table]      NVARCHAR (270),
+    [Constraint] NVARCHAR (270),
+    [Where]      NVARCHAR (MAX)
+);
+
+SET NOCOUNT ON;
+
+
+GO
+INSERT INTO [#__checkStatus]
+EXECUTE (N'DBCC CHECKCONSTRAINTS (N''[dbo].[Item]'')
+    WITH NO_INFOMSGS');
+
+IF @@ROWCOUNT > 0
+    BEGIN
+        DROP TABLE [#__checkStatus];
+        RAISERROR (N'An error occured while verifying constraints on table [dbo].[Item]', 16, 127);
+    END
+
+
+GO
+SET NOCOUNT OFF;
+
+DROP TABLE [#__checkStatus];
 
 
 GO

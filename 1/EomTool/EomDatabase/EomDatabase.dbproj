@@ -39,7 +39,7 @@
     <OutputPath>.\sql\debug\</OutputPath>
     <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
     <TargetConnectionString>Data Source=biz2\da;Integrated Security=True;Pooling=False</TargetConnectionString>
-    <TargetDatabase>EOMDatabase</TargetDatabase>
+    <TargetDatabase>zDADatabaseAug2012</TargetDatabase>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <SuppressWarnings>
     </SuppressWarnings>
@@ -768,6 +768,33 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_CampaignStatus_id_FK_CampaignStatus_id_PK.fkey.sql">
       <SubType>Code</SubType>
     </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_BatchUpdate_date_created.defconst.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchBatchUpdate_BatchUpdate.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchBatchUpdate_Batch.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchUpdate_MediaBuyerApprovalStatus.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_Item_Batch.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\BatchBatchUpdate.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\BatchUpdate.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Batch.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\MediaBuyerApprovalStatus.table.sql">
+      <SubType>Code</SubType>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <NotInBuild Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">
@@ -780,9 +807,6 @@
       <SubType>NotInBuild</SubType>
     </Build>
     <NotInBuild Include="Schema Objects\Database Level Objects\Assemblies\DADatabaseSqlServer.dll">
-      <SubType>NotInBuild</SubType>
-    </NotInBuild>
-    <NotInBuild Include="Scripts\ScriptsIgnoredOnImport.sql">
       <SubType>NotInBuild</SubType>
     </NotInBuild>
   </ItemGroup>

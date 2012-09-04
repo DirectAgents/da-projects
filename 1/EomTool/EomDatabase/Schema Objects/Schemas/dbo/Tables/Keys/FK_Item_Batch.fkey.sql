@@ -1,0 +1,11 @@
+﻿ALTER TABLE dbo.Item ADD CONSTRAINT
+	FK_Item_Batch FOREIGN KEY
+	(
+	batch_id
+	) REFERENCES dbo.Batch
+	(
+	id
+	) ON UPDATE  NO ACTION
+	 ON DELETE  NO ACTION
+
+

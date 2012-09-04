@@ -2,22 +2,22 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TargetConnectionString>Data Source=biz2\da;Integrated Security=True;Pooling=False</TargetConnectionString>
-    <TargetDatabase>DADatabaseJuly2012</TargetDatabase>
+    <TargetDatabase>DADatabaseAug2012</TargetDatabase>
     <DeployToDatabase>True</DeployToDatabase>
     <DeployToScript>True</DeployToScript>
     <SourceModel>EomDatabase.dbschema</SourceModel>
     <DeployScriptFileName>EomDatabase.sql</DeployScriptFileName>
-    <DeploymentConfigurationFile>DADatabaseJuly2012_Database.sqldeployment</DeploymentConfigurationFile>
+    <DeploymentConfigurationFile>DADatabaseAug2012_Database.sqldeployment</DeploymentConfigurationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SqlCommandVariablesFile>DADatabaseJuly2012_Database.sqlcmdvars</SqlCommandVariablesFile>
+    <SqlCommandVariablesFile>DADatabaseAug2012_Database.sqlcmdvars</SqlCommandVariablesFile>
   </PropertyGroup>
   <ItemGroup>
-    <DeploymentExtensionConfiguration Include="DADatabaseJuly2012_Script.PostDeployment.sql">
+    <DeploymentExtensionConfiguration Include="DADatabaseAug2012_Script.PostDeployment.sql">
       <__PostdeploymentMetadata>
       </__PostdeploymentMetadata>
     </DeploymentExtensionConfiguration>
-    <DeploymentExtensionConfiguration Include="DADatabaseJuly2012_Script.PreDeployment.sql">
+    <DeploymentExtensionConfiguration Include="DADatabaseAug2012_Script.PreDeployment.sql">
       <__PredeploymentMetadata>
       </__PredeploymentMetadata>
     </DeploymentExtensionConfiguration>

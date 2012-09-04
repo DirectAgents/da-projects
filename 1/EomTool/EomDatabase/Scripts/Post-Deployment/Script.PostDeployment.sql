@@ -34,3 +34,11 @@ Post-Deployment Script Template
 --FROM 
 --	DADatabaseFeb2012.dbo.[AccountManager]
 --SET IDENTITY_INSERT [$(DatabaseName)].[dbo].[AccountManager] OFF
+
+INSERT INTO [dbo].[MediaBuyerApprovalStatus] VALUES 
+	 ('1', 'default')
+	,('2', 'Queued')
+	,('3', 'Sent')
+	,('4', 'Approved')
+	,('5', 'Hold')
+GO

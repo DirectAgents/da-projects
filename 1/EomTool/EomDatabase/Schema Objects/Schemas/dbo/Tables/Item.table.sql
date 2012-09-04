@@ -19,6 +19,8 @@
     [total_revenue]             AS              ([num_units]*[revenue_per_unit]),
     [total_cost]                AS              ([num_units]*[cost_per_unit]),
     [margin]                    AS              ([dbo].[tousd3]([revenue_currency_id],[num_units]*[revenue_per_unit])-[dbo].[tousd3]([cost_currency_id],[num_units]*[cost_per_unit])),
-	[modified]					AS				(GETDATE())
+	[modified]					AS				(GETDATE()),
+	media_buyer_approval_status_id INT			NOT NULL REFERENCES MediaBuyerApprovalStatus(id) DEFAULT 1,
+	batch_id					INT				NULL
 );
 

@@ -1,0 +1,11 @@
+9/4/2012 2:52:49 PM	This log contains information about the import operation of the script 'db_changes_mediabuyerapproval.sql' into project 'EomDatabase' on computer 'AARON' by user'aanodide.
+9/4/2012 2:52:49 PM	Started importing file: C:\GitHub\da-projects\1\SchemaChanges\db_changes_mediabuyerapproval.sql 
+9/4/2012 2:52:49 PM	File name C:\GitHub\da-projects\1\SchemaChanges\db_changes_mediabuyerapproval.sql (size: 2973)
+9/4/2012 2:52:49 PM	Parsing import script
+9/4/2012 2:52:49 PM	Total number of batches in script: 15
+9/4/2012 2:52:49 PM	Total number of statements in script: 15
+9/4/2012 2:52:49 PM	The script was successfully imported into the project.
+9/4/2012 2:52:50 PM	Analyzing schema objects...
+9/4/2012 2:52:50 PM	In the script that you provided to the import operation, one or more statements were not fully understood. These statements were moved to the C:\GitHub\da-projects\1\EomTool\EomDatabase\Scripts\ScriptsIgnoredOnImport.sql file. Review the file contents for additional information.
+9/4/2012 2:52:50 PM	A summary of the import operation was saved to the log file C:\GitHub\da-projects\1\EomTool\EomDatabase\Import Script Logs\db_changes_mediabuye_20120904065249.log.
+9/4/2012 2:52:50 PM	Click Finish to continue...
