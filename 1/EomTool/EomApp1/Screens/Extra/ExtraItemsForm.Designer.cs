@@ -44,7 +44,7 @@
             this.comboBox1.DataSource = this.accountManagerBindingSource;
             this.comboBox1.DisplayMember = "name";
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(287, 1);
+            this.comboBox1.Location = new System.Drawing.Point(338, 1);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(89, 21);
             this.comboBox1.TabIndex = 1;
@@ -76,7 +76,7 @@
             // 
             this.button1.BackgroundImage = global::EomApp1.Properties.Resources.Refresh1;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button1.Location = new System.Drawing.Point(382, 1);
+            this.button1.Location = new System.Drawing.Point(433, 1);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(25, 21);
             this.button1.TabIndex = 2;

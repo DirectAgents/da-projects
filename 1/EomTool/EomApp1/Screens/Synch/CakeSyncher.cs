@@ -233,7 +233,7 @@ namespace EomApp1.Screens.Synch
         {
             logger.Log("Creating item: " + conversionSummary.Name);
 
-            item = new Item();
+            item = new Item() { media_buyer_approval_status_id = 1, campaign_status_id = 1 };
             item.pid = this.parameters.CampaignId;
             eomEntities.Items.AddObject(item);
 

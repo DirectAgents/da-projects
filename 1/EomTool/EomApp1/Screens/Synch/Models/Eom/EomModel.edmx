@@ -58,6 +58,10 @@
             <End Role="CampaignStatus" EntitySet="CampaignStatus" />
             <End Role="Campaign" EntitySet="Campaign" />
           </AssociationSet>
+          <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomDatabaseModel.Store.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
           <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomDatabaseModel.Store.Item_Currency_id_FK_Currency_id_PK">
             <End Role="Currency" EntitySet="Currency" />
             <End Role="Item" EntitySet="Item" />
@@ -201,12 +205,12 @@
           <Property Name="accounting_notes" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="item_accounting_status_id" Type="int" Nullable="false" />
           <Property Name="item_reporting_status_id" Type="int" Nullable="false" />
+          <Property Name="campaign_status_id" Type="int" Nullable="false" />
           <Property Name="total_revenue" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
           <Property Name="total_cost" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
           <Property Name="margin" Type="money" StoreGeneratedPattern="Computed" />
           <Property Name="modified" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
-          <Property Name="campaign_status_id" Type="int" Nullable="false" />
-          <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
+          <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" StoreGeneratedPattern="None" />
           <Property Name="batch_id" Type="int" />
         </EntityType>
         <EntityType Name="ItemAccountingStatus">
@@ -366,6 +370,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+          <End Role="CampaignStatus" Type="EomDatabaseModel.Store.CampaignStatus" Multiplicity="1" />
+          <End Role="Item" Type="EomDatabaseModel.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Item_Currency_id_FK_Currency_id_PK">
           <End Role="Currency" Type="EomDatabaseModel.Store.Currency" Multiplicity="1" />
           <End Role="Item" Type="EomDatabaseModel.Store.Item" Multiplicity="*" />
@@ -511,6 +527,10 @@
             <End Role="Affiliate" EntitySet="Affiliates" />
           </AssociationSet>
           <EntitySet Name="Items" EntityType="EomDatabaseModel.Item" />
+          <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomDatabaseModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+            <End Role="CampaignStatu" EntitySet="CampaignStatus" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
           <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK">
             <End Role="Currency" EntitySet="Currencies" />
             <End Role="Item" EntitySet="Items" />
@@ -575,6 +595,7 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Campaigns" Relationship="EomDatabaseModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="CampaignStatu" ToRole="Campaign" />
+          <NavigationProperty Name="Items" Relationship="EomDatabaseModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="CampaignStatu" ToRole="Item" />
         </EntityType>
         <EntityType Name="Currency">
           <Key>
@@ -586,7 +607,7 @@
           <NavigationProperty Name="Affiliates" Relationship="EomDatabaseModel.Affiliate_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Affiliate" />
           <NavigationProperty Name="Items" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Item" />
           <NavigationProperty Name="Items1" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Currency" ToRole="Item" />
-        </EntityType>
+          </EntityType>
         <EntityType Name="NetTermType">
           <Key>
             <PropertyRef Name="id" />
@@ -839,13 +860,14 @@
           <Property Type="String" Name="accounting_notes" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="item_accounting_status_id" Nullable="false" />
           <Property Type="Int32" Name="item_reporting_status_id" Nullable="false" />
+          <Property Type="Int32" Name="campaign_status_id" Nullable="false" />
           <Property Type="Decimal" Name="total_revenue" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
           <Property Type="Decimal" Name="total_cost" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
           <Property Type="Decimal" Name="margin" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
           <Property Type="DateTime" Name="modified" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <Property Type="Int32" Name="campaign_status_id" Nullable="false" />
-          <Property Type="Int32" Name="media_buyer_approval_status_id" Nullable="false" />
+          <Property Type="Int32" Name="media_buyer_approval_status_id" Nullable="false" annotation:StoreGeneratedPattern="None" />
           <Property Type="Int32" Name="batch_id" />
+          <NavigationProperty Name="CampaignStatu" Relationship="EomDatabaseModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="Item" ToRole="CampaignStatu" />
           <NavigationProperty Name="Currency" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Item" ToRole="Currency" />
           <NavigationProperty Name="Currency1" Relationship="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Item" ToRole="Currency" />
           <NavigationProperty Name="ItemAccountingStatu" Relationship="EomDatabaseModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" FromRole="Item" ToRole="ItemAccountingStatu" />
@@ -853,6 +875,18 @@
           <NavigationProperty Name="Source" Relationship="EomDatabaseModel.Item_Source_id_FK_Source_id_PK" FromRole="Item" ToRole="Source" />
           <NavigationProperty Name="UnitType" Relationship="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK" FromRole="Item" ToRole="UnitType" />
         </EntityType>
+        <Association Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+          <End Type="EomDatabaseModel.CampaignStatu" Role="CampaignStatu" Multiplicity="1" />
+          <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Item_Currency_id_FK_Currency_id_PK">
           <End Type="EomDatabaseModel.Currency" Role="Currency" Multiplicity="1" />
           <End Type="EomDatabaseModel.Item" Role="Item" Multiplicity="*" />
@@ -1052,11 +1086,11 @@
               <MappingFragment StoreEntitySet="Item">
                 <ScalarProperty Name="batch_id" ColumnName="batch_id" />
                 <ScalarProperty Name="media_buyer_approval_status_id" ColumnName="media_buyer_approval_status_id" />
-                <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
                 <ScalarProperty Name="modified" ColumnName="modified" />
                 <ScalarProperty Name="margin" ColumnName="margin" />
                 <ScalarProperty Name="total_cost" ColumnName="total_cost" />
                 <ScalarProperty Name="total_revenue" ColumnName="total_revenue" />
+                <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
                 <ScalarProperty Name="item_reporting_status_id" ColumnName="item_reporting_status_id" />
                 <ScalarProperty Name="item_accounting_status_id" ColumnName="item_accounting_status_id" />
                 <ScalarProperty Name="accounting_notes" ColumnName="accounting_notes" />
@@ -1124,8 +1158,10 @@
           <ConnectorPoint PointX="8.5" PointY="5.672841796875" />
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" >
-          <ConnectorPoint PointX="9.125" PointY="3.547841796875" />
-          <ConnectorPoint PointX="8.5" PointY="3.547841796875" />
+          <ConnectorPoint PointX="9.125" PointY="3.6439925130208328" />
+          <ConnectorPoint PointX="8.8333333333333339" PointY="3.6439925130208324" />
+          <ConnectorPoint PointX="8.6666666666666661" PointY="3.6439925130208328" />
+          <ConnectorPoint PointX="8.5" PointY="3.6439925130208328" />
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.tracking_system_fk" >
           <ConnectorPoint PointX="6.375" PointY="2.2879850260416656" />
@@ -1152,14 +1188,25 @@
           <ConnectorPoint PointX="4.875" PointY="2.2879850260416656" />
           <ConnectorPoint PointX="4.25" PointY="2.75" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="EomDatabaseModel.Item" Width="1.5" PointX="5" PointY="5.875" Height="6.5955208333333388" />
+        <EntityTypeShape EntityType="EomDatabaseModel.Item" Width="1.5" PointX="5" PointY="5.625" Height="6.7878222656250031" />
+        <AssociationConnector Association="EomDatabaseModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" >
+          <ConnectorPoint PointX="9.125" PointY="4.12224076953125" />
+          <ConnectorPoint PointX="8.75" PointY="4.12224076953125" />
+          <ConnectorPoint PointX="8.75" PointY="2.5" />
+          <ConnectorPoint PointX="6.625" PointY="2.5" />
+          <ConnectorPoint PointX="6.625" PointY="5.422587890625" />
+          <ConnectorPoint PointX="6.208333333333333" PointY="5.4225878906249987" />
+          <ConnectorPoint PointX="6.041666666666667" PointY="5.422587890625" />
+          <ConnectorPoint PointX="5.75" PointY="5.422587890625" />
+          <ConnectorPoint PointX="5.75" PointY="5.625" />
+        </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK" >
-          <ConnectorPoint PointX="5.6875" PointY="5.172587890625" />
-          <ConnectorPoint PointX="5.6875" PointY="5.875" />
+          <ConnectorPoint PointX="5.3125" PointY="5.172587890625" />
+          <ConnectorPoint PointX="5.3125" PointY="5.625" />
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Item_Currency_id_FK_Currency_id_PK1" >
-          <ConnectorPoint PointX="6.09375" PointY="5.172587890625" />
-          <ConnectorPoint PointX="6.09375" PointY="5.875" />
+          <ConnectorPoint PointX="6.125" PointY="5.172587890625" />
+          <ConnectorPoint PointX="6.125" PointY="5.625" />
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" >
           <ConnectorPoint PointX="4.375" PointY="8.797841796875" />
@@ -1171,11 +1218,11 @@
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Item_Source_id_FK_Source_id_PK" >
           <ConnectorPoint PointX="6.1875" PointY="13.125" />
-          <ConnectorPoint PointX="6.1875" PointY="12.470520833333339" />
+          <ConnectorPoint PointX="6.1875" PointY="12.412822265625003" />
         </AssociationConnector>
         <AssociationConnector Association="EomDatabaseModel.Item_UnitType_id_FK_UnitType_id_PK" >
           <ConnectorPoint PointX="5.25" PointY="13.125" />
-          <ConnectorPoint PointX="5.25" PointY="12.470520833333339" />
+          <ConnectorPoint PointX="5.25" PointY="12.412822265625003" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>

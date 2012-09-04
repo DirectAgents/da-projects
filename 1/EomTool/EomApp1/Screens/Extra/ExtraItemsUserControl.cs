@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Resources;
+using System.Linq;
 
 namespace EomApp1.Screens.Extra
 {
@@ -46,7 +47,7 @@ namespace EomApp1.Screens.Extra
             {
                 DataGridViewComboBoxCell cell = (DataGridViewComboBoxCell)itemsGrid[e.ColumnIndex, e.RowIndex];
                 int advertiser_id = (int)itemsGrid[colAdvertiser.Index, e.RowIndex].Value;
-  
+
                 if (advertiser_id == -1)
                 {   // if advertiser not selected, show all campaigns
                     cell.DataSource = campaignBindingSource;
@@ -178,7 +179,24 @@ namespace EomApp1.Screens.Extra
 
         public void SaveAndFilterByAccountManager(string accountManagerName)
         {
-            SaveData();
+            Validate();
+            this.itemBindingSource.EndEdit();
+
+            var items = extraItems.Item;
+            var changedItems = items.Where(c => c.RowState == DataRowState.Added || c.RowState == DataRowState.Deleted || c.RowState == DataRowState.Modified);
+            int changeCount = changedItems.Count();
+            if (changeCount > 0)
+            {
+                var result = MessageBox.Show(string.Format("Save changes to {0} items?", changeCount), "Save Changes", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    SaveData();
+                }
+                else
+                {
+                    this.itemFilter.EditedIds.Clear();
+                }
+            }
 
             if (accountManagerName == "default")
             {
@@ -251,11 +269,19 @@ namespace EomApp1.Screens.Extra
         private bool NeedsEditIcon(int rowIndex)
         {
             int rowID = (int)(itemsGrid.Rows[rowIndex].Cells[colID.Index].Value ?? 0);
-            
+
             bool rowIsEdited = this.itemFilter.EditedIds.Contains(rowID);
             bool rowIsNew = rowID < 0;
 
             return rowIsEdited || rowIsNew;
+        }
+
+        private void itemsGrid_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (colID.Value<int>(e) == -1)
+            {
+                itemsGrid.BeginEdit(true);
+            }
         }
     }
 }

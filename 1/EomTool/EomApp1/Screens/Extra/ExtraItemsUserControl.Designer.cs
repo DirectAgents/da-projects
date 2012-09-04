@@ -147,8 +147,9 @@
             this.bindingNavigatorAddNewItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
+            this.bindingNavigatorAddNewItem.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(45, 22);
             this.bindingNavigatorAddNewItem.Text = "Add new";
             // 
             // itemBindingSource
@@ -173,8 +174,9 @@
             this.bindingNavigatorDeleteItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
             this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
+            this.bindingNavigatorDeleteItem.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
             this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(23, 22);
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(45, 22);
             this.bindingNavigatorDeleteItem.Text = "of {0}";
             // 
             // bindingNavigatorMoveFirstItem
@@ -242,7 +244,8 @@
             this.itemBindingNavigatorSaveItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.itemBindingNavigatorSaveItem.Image = ((System.Drawing.Image)(resources.GetObject("itemBindingNavigatorSaveItem.Image")));
             this.itemBindingNavigatorSaveItem.Name = "itemBindingNavigatorSaveItem";
-            this.itemBindingNavigatorSaveItem.Size = new System.Drawing.Size(23, 22);
+            this.itemBindingNavigatorSaveItem.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
+            this.itemBindingNavigatorSaveItem.Size = new System.Drawing.Size(45, 22);
             this.itemBindingNavigatorSaveItem.Text = "Save Data";
             this.itemBindingNavigatorSaveItem.Click += new System.EventHandler(this.SaveClicked);
             // 
@@ -275,12 +278,14 @@
             this.itemsGrid.ColumnSelectorEnabled = true;
             this.itemsGrid.DataSource = this.itemBindingSource;
             this.itemsGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemsGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             this.itemsGrid.Location = new System.Drawing.Point(0, 25);
             this.itemsGrid.Name = "itemsGrid";
             this.itemsGrid.Size = new System.Drawing.Size(978, 529);
             this.itemsGrid.TabIndex = 1;
             this.itemsGrid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.itemsGrid_CellBeginEdit);
             this.itemsGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellEndEdit);
+            this.itemsGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellEnter);
             this.itemsGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellValueChanged);
             this.itemsGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.itemsGrid_ColumnHeaderMouseClick);
             this.itemsGrid.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.itemsGrid_RowPostPaint);
