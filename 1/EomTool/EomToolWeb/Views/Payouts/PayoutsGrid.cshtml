@@ -1,34 +1,35 @@
 ﻿<style type="text/css">
     #payoutGrid
-    {                                 
+    {
         height: 300px;
-        width: 1400px;
-        border: 1px solid Gray;
+        width: 100%;
+        font-size: 11px;
+        background-color: White;
     }
 </style>
-<div id="payoutGridResizable">
-    <div id="payoutGrid">
-    </div>
+<div id="payoutGrid">
+    &nbsp;
 </div>
 <script type="text/javascript">
     function RenderGrid(data) {
         var columns = [
-             {id: "campaign", name: "Campaign", field: "Campaign_Name", width: 300, cssClass: "cell-title", sortable: true }
-            ,{ id: "costperunit", name: "Cost/Unit", field: "Cost_Unit", width: 120, sortable: true }
-            ,{ id: "units", name: "Units", field: "Units", width: 120, sortable: true }
-            ,{ id: "pctmargin", name: "%Margin", field: "MarginPct", width: 120, sortable: true }
-            ,{ id: "netterms", name: "Terms", field: "Net_Terms", width: 120, sortable: true }
-            ,{ id: "paycurr", name: "Pay Curr", field: "Pub_Pay_Curr", width: 120, sortable: true }
-            ,{ id: "pubpayout", name: "Payout", field: "Pub_Payout", width: 120, sortable: true }
-            ,{ id: "cmpnstatus", name: "Campn Status", field: "Status", width: 120, sortable: true }
-            ,{ id: "acctgstatus", name: "Acctng Status", field: "Accounting_Status", width: 120, sortable: true }
-            ,{ id: "approval", name: "Approval", field: "Media_Buyer_Approval_Status", width: 120, sortable: true }
+             { id: "campaign", name: "Campaign", field: "Campaign_Name", width: 300, cssClass: "cell-title", sortable: true }
+            , { id: "costperunit", name: "Cost/Unit", field: "Cost_Unit", width: 120, sortable: true }
+            , { id: "units", name: "Units", field: "Units", width: 120, sortable: true }
+            , { id: "pctmargin", name: "%Margin", field: "MarginPct", width: 120, sortable: true }
+            , { id: "netterms", name: "Terms", field: "Net_Terms", width: 120, sortable: true }
+            , { id: "paycurr", name: "Pay Curr", field: "Pub_Pay_Curr", width: 120, sortable: true }
+            , { id: "pubpayout", name: "Payout", field: "Pub_Payout", width: 120, sortable: true }
+            , { id: "cmpnstatus", name: "Campn Status", field: "Status", width: 120, sortable: true }
+            , { id: "acctgstatus", name: "Acctng Status", field: "Accounting_Status", width: 120, sortable: true }
+            , { id: "approval", name: "Approval", field: "Media_Buyer_Approval_Status", width: 120, sortable: true }
         ];
         var options = {
             enableCellNavigation: true,
             enableColumnReorder: false,
             autoHeight: false,
-            enableTextSelectionOnCells: true
+            enableTextSelectionOnCells: true,
+            rowHeight: 19
         };
         var grid = new Slick.Grid("#payoutGrid", data, columns, options);
         grid.onSort.subscribe(function (e, args) { // args: sort information. 
@@ -45,16 +46,22 @@
             grid.updateRowCount();
             grid.render();
         });
-        $("#payoutGridResizable").resizable({
+
+        $("#publisherDetailsContainer").resizable({
             stop: function (event, ui) {
-                var outerHeight = $("#payoutGridResizable").height();
-                var outerWidth = $("#payoutGridResizable").width();
-                $("#payoutGrid").height(outerHeight);
-                $("#payoutGrid").width(outerWidth);
+
+                // Resize the slick grid
+                var publisherDetailsContainerHeight = $("#publisherDetailsContainer").height();
+                $("#payoutGrid").height(publisherDetailsContainerHeight);
                 grid.resizeCanvas();
+
+                // Resize the publisher report
+                var summaryOuterHeight = $("#summaryOuter").height();
+                $("#publisherReportContainer").height(summaryOuterHeight - publisherDetailsContainerHeight);               
             },
-            handles: "n, s, se, e",
-            helper: "resizing-helper"
+            handles: "n",
+            helper: "resizing-helper",
+            ghost: true
         });
     }
 </script>

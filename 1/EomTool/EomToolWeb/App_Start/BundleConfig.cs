@@ -39,9 +39,6 @@ namespace EomToolWeb
                         "~/Content/themes/base/jquery.ui.progressbar.css",
                         "~/Content/themes/base/jquery.ui.theme.css"));
 
-            // Publisher report style sheet
-            bundles.Add(new StyleBundle("~/PubRep/css").Include("~/Content/PubRep.css"));
-
             // Slick Grid styles
             bundles.Add(new StyleBundle("~/Content/SlickGrid/css").Include(
                         "~/Scripts/SlickGrid/slick.grid.css",

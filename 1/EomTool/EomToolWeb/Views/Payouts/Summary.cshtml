@@ -2,54 +2,67 @@
 @{
     ViewBag.Title = "Publisher Summary";
 }
-@Html.ActionLink("PreApproval", "Summary", new { mode = "preapproval" }, new { @class = Model.Mode == "preapproval" ? "selected" : "notselected" })
-|
-@Html.ActionLink("ActionNeeded", "Summary", new { mode = (string)null }, new { @class = string.IsNullOrWhiteSpace(Model.Mode) ? "selected" : "notselected" })
-|
-@Html.ActionLink("Held", "Summary", new { mode = "held" }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
-|
-@Html.ActionLink("Approved", "Summary", new { mode = "approved" }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
-<h2>
-    Publisher Summary</h2>
 <style type="text/css">
-    #publisherSummaryContainer
+    #summaryOuter
     {
+        /*border: 2px dashed Blue;*/
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+    #summaryGridContainer
+    {
+        /*border: 1px solid Red;*/
+        position: absolute;
+        left: 0;
+        width: 50%;
     }
     #publisherReportContainer
     {
+        border-left: 3px solid Black;
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 50%;
+        width: 50%;
+        overflow: auto;
+    }
+    #publisherDetailsContainer
+    {
+        border-top: 3px solid Black;
+        position: absolute;
+        bottom: 0;
+        height: 50%;
+        width: 100%;
     }
 </style>
-<table>
-    <tr>
-        <td>
-            <div id="publisherSummaryContainer">
-                @Html.Partial("SummaryGrid", Model)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div id="publisherDetailsContainer">
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div id="publisherReportContainer">
-            </div>
-        </td>
-    </tr>
-</table>
+<div id="summaryOuter">
+    <div id="summaryGridContainer">
+        @Html.ActionLink("PreApproval", "Summary", new { mode = "preapproval" }, new { @class = Model.Mode == "preapproval" ? "selected" : "notselected" })
+        |
+        @Html.ActionLink("ActionNeeded", "Summary", new { mode = (string)null }, new { @class = string.IsNullOrWhiteSpace(Model.Mode) ? "selected" : "notselected" })
+        |
+        @Html.ActionLink("Held", "Summary", new { mode = "held" }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
+        |
+        @Html.ActionLink("Approved", "Summary", new { mode = "approved" }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
+        @Html.Partial("SummaryGrid", Model)
+    </div>
+    <div id="publisherReportContainer">
+    </div>
+    <div id="publisherDetailsContainer">
+    </div>
+</div>
 <div id="divNotes" title="Add Notes">
     Enter Notes:
     <form id="frmNotes">
     <input id="dlgAffId" type="hidden" name="affid" value="" />
     <input id="dlgAction" type="hidden" value="" />
-    <textarea style="width:315px;height:135px" name="note"></textarea>
+    <textarea style="width: 315px; height: 135px" name="note"></textarea>
     </form>
 </div>
 <div id="divNotesSummary" title="Notes">
-    <div id="divNotesSummaryInner"></div>
+    <div id="divNotesSummaryInner">
+    </div>
 </div>
 @section scripts {
     <script type="text/javascript">
