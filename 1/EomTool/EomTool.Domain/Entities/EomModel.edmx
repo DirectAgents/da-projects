@@ -9,7 +9,8 @@
           <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Batch" EntityType="EomModel.Store.Batch" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="BatchNote" EntityType="EomModel.Store.BatchNote" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="BatchBatchUpdate" EntityType="EomModel.Store.BatchBatchUpdate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="BatchUpdate" EntityType="EomModel.Store.BatchUpdate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" />
@@ -199,13 +200,17 @@
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
             <End Role="Item" EntitySet="Item" />
           </AssociationSet>
-          <AssociationSet Name="FK_BatchNote_Batch" Association="EomModel.Store.FK_BatchNote_Batch">
+          <AssociationSet Name="FK_BatchBatchUpdate_Batch" Association="EomModel.Store.FK_BatchBatchUpdate_Batch">
             <End Role="Batch" EntitySet="Batch" />
-            <End Role="BatchNote" EntitySet="BatchNote" />
+            <End Role="BatchBatchUpdate" EntitySet="BatchBatchUpdate" />
           </AssociationSet>
-          <AssociationSet Name="FK_BatchNote_MediaBuyerApprovalStatus" Association="EomModel.Store.FK_BatchNote_MediaBuyerApprovalStatus">
+          <AssociationSet Name="FK_BatchBatchUpdate_BatchUpdate" Association="EomModel.Store.FK_BatchBatchUpdate_BatchUpdate">
+            <End Role="BatchUpdate" EntitySet="BatchUpdate" />
+            <End Role="BatchBatchUpdate" EntitySet="BatchBatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BatchUpdate_MediaBuyerApprovalStatus" Association="EomModel.Store.FK_BatchUpdate_MediaBuyerApprovalStatus">
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
-            <End Role="BatchNote" EntitySet="BatchNote" />
+            <End Role="BatchUpdate" EntitySet="BatchUpdate" />
           </AssociationSet>
           <AssociationSet Name="FK_Item_Batch" Association="EomModel.Store.FK_Item_Batch">
             <End Role="Batch" EntitySet="Batch" />
@@ -269,15 +274,22 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" MaxLength="255" />
         </EntityType>
-        <EntityType Name="BatchNote">
+        <EntityType Name="BatchBatchUpdate">
+          <Key>
+            <PropertyRef Name="batch_id" />
+            <PropertyRef Name="batch_update_id" />
+          </Key>
+          <Property Name="batch_id" Type="int" Nullable="false" />
+          <Property Name="batch_update_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BatchUpdate">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="batch_id" Type="int" Nullable="false" />
           <Property Name="note" Type="varchar(max)" Nullable="false" />
           <Property Name="author" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="date_created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
@@ -720,26 +732,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BatchNote_Batch">
+        <Association Name="FK_BatchBatchUpdate_Batch">
           <End Role="Batch" Type="EomModel.Store.Batch" Multiplicity="1" />
-          <End Role="BatchNote" Type="EomModel.Store.BatchNote" Multiplicity="*" />
+          <End Role="BatchBatchUpdate" Type="EomModel.Store.BatchBatchUpdate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Batch">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="BatchNote">
+            <Dependent Role="BatchBatchUpdate">
               <PropertyRef Name="batch_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_BatchNote_MediaBuyerApprovalStatus">
+        <Association Name="FK_BatchBatchUpdate_BatchUpdate">
+          <End Role="BatchUpdate" Type="EomModel.Store.BatchUpdate" Multiplicity="1" />
+          <End Role="BatchBatchUpdate" Type="EomModel.Store.BatchBatchUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BatchUpdate">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="BatchBatchUpdate">
+              <PropertyRef Name="batch_update_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BatchUpdate_MediaBuyerApprovalStatus">
           <End Role="MediaBuyerApprovalStatus" Type="EomModel.Store.MediaBuyerApprovalStatus" Multiplicity="0..1" />
-          <End Role="BatchNote" Type="EomModel.Store.BatchNote" Multiplicity="*" />
+          <End Role="BatchUpdate" Type="EomModel.Store.BatchUpdate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MediaBuyerApprovalStatus">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="BatchNote">
+            <Dependent Role="BatchUpdate">
               <PropertyRef Name="media_buyer_approval_status_id" />
             </Dependent>
           </ReferentialConstraint>
@@ -910,16 +934,16 @@
             <End Role="Batch" EntitySet="Batches" />
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
-          <EntitySet Name="BatchNotes" EntityType="EomModel.BatchNote" />
-          <AssociationSet Name="FK_BatchNote_Batch" Association="EomModel.FK_BatchNote_Batch">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="BatchNote" EntitySet="BatchNotes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BatchNote_MediaBuyerApprovalStatus" Association="EomModel.FK_BatchNote_MediaBuyerApprovalStatus">
+          <EntitySet Name="BatchUpdates" EntityType="EomModel.BatchUpdate" />
+          <AssociationSet Name="FK_BatchUpdate_MediaBuyerApprovalStatus" Association="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus">
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatuses" />
-            <End Role="BatchNote" EntitySet="BatchNotes" />
+            <End Role="BatchUpdate" EntitySet="BatchUpdates" />
           </AssociationSet>
-        </EntityContainer>
+          <AssociationSet Name="BatchBatchUpdate" Association="EomModel.BatchBatchUpdate">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="BatchUpdate" EntitySet="BatchUpdates" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
             <PropertyRef Name="id" />
@@ -1382,10 +1406,10 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Items" Relationship="EomModel.FK__Item__media_buye__540C7B00" FromRole="MediaBuyerApprovalStatu" ToRole="Item" />
-          <NavigationProperty Name="BatchNotes" Relationship="EomModel.FK_BatchNote_MediaBuyerApprovalStatus" FromRole="MediaBuyerApprovalStatus" ToRole="BatchNote" />
+          <NavigationProperty Name="BatchUpdates" Relationship="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus" FromRole="MediaBuyerApprovalStatus" ToRole="BatchUpdate" />
         </EntityType>
         <Association Name="FK__Item__media_buye__540C7B00">
           <End Type="EomModel.MediaBuyerApprovalStatus" Role="MediaBuyerApprovalStatu" Multiplicity="1" />
@@ -1462,10 +1486,10 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="name" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Items" Relationship="EomModel.FK_Item_Batch" FromRole="Batch" ToRole="Item" />
-          <NavigationProperty Name="BatchNotes" Relationship="EomModel.FK_BatchNote_Batch" FromRole="Batch" ToRole="BatchNote" />
+          <NavigationProperty Name="BatchUpdates" Relationship="EomModel.BatchBatchUpdate" FromRole="Batch" ToRole="BatchUpdate" />
         </EntityType>
         <Association Name="FK_Item_Batch">
           <End Type="EomModel.Batch" Role="Batch" Multiplicity="0..1" />
@@ -1479,45 +1503,36 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="BatchNote">
+        <EntityType Name="BatchUpdate">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="batch_id" Nullable="false" />
           <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="author" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="date_created" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="Batch" Relationship="EomModel.FK_BatchNote_Batch" FromRole="BatchNote" ToRole="Batch" />
           <Property Type="Int32" Name="media_buyer_approval_status_id" />
-          <NavigationProperty Name="MediaBuyerApprovalStatus" Relationship="EomModel.FK_BatchNote_MediaBuyerApprovalStatus" FromRole="BatchNote" ToRole="MediaBuyerApprovalStatus" />
           <Property Type="String" Name="extra" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MediaBuyerApprovalStatus" Relationship="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus" FromRole="BatchUpdate" ToRole="MediaBuyerApprovalStatus" />
+          <NavigationProperty Name="Batches" Relationship="EomModel.BatchBatchUpdate" FromRole="BatchUpdate" ToRole="Batch" />
         </EntityType>
-        <Association Name="FK_BatchNote_Batch">
-          <End Type="EomModel.Batch" Role="Batch" Multiplicity="1" />
-          <End Type="EomModel.BatchNote" Role="BatchNote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="BatchNote">
-              <PropertyRef Name="batch_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BatchNote_MediaBuyerApprovalStatus">
+        <Association Name="FK_BatchUpdate_MediaBuyerApprovalStatus">
           <End Type="EomModel.MediaBuyerApprovalStatus" Role="MediaBuyerApprovalStatus" Multiplicity="0..1" />
-          <End Type="EomModel.BatchNote" Role="BatchNote" Multiplicity="*" />
+          <End Type="EomModel.BatchUpdate" Role="BatchUpdate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MediaBuyerApprovalStatus">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="BatchNote">
+            <Dependent Role="BatchUpdate">
               <PropertyRef Name="media_buyer_approval_status_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="BatchBatchUpdate">
+          <End Type="EomModel.Batch" Role="Batch" Multiplicity="*" />
+          <End Type="EomModel.BatchUpdate" Role="BatchUpdate" Multiplicity="*" />
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -1784,19 +1799,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="BatchNotes">
-            <EntityTypeMapping TypeName="EomModel.BatchNote">
-              <MappingFragment StoreEntitySet="BatchNote">
+          <EntitySetMapping Name="BatchUpdates">
+            <EntityTypeMapping TypeName="EomModel.BatchUpdate">
+              <MappingFragment StoreEntitySet="BatchUpdate">
                 <ScalarProperty Name="extra" ColumnName="extra" />
                 <ScalarProperty Name="media_buyer_approval_status_id" ColumnName="media_buyer_approval_status_id" />
                 <ScalarProperty Name="date_created" ColumnName="date_created" />
                 <ScalarProperty Name="author" ColumnName="author" />
                 <ScalarProperty Name="note" ColumnName="note" />
-                <ScalarProperty Name="batch_id" ColumnName="batch_id" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="BatchBatchUpdate" TypeName="EomModel.BatchBatchUpdate" StoreEntitySet="BatchBatchUpdate">
+            <EndProperty Name="BatchUpdate">
+              <ScalarProperty Name="id" ColumnName="batch_update_id" />
+            </EndProperty>
+            <EndProperty Name="Batch">
+              <ScalarProperty Name="id" ColumnName="batch_id" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1848,8 +1870,10 @@
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="2.25" PointY="3.9394335937499996" />
-          <ConnectorPoint PointX="2.6666666666666665" PointY="3.9394335937499987" />
-          <ConnectorPoint PointX="2.9583333333333335" PointY="3.9394335937499996" />
+          <ConnectorPoint PointX="2.4479191666666664" PointY="3.9394335937499991" />
+          <ConnectorPoint PointX="2.6145858333333334" PointY="3.9394335937499996" />
+          <ConnectorPoint PointX="2.7604166666666665" PointY="3.9394335937499991" />
+          <ConnectorPoint PointX="2.9270833333333335" PointY="3.9394335937499996" />
           <ConnectorPoint PointX="3.34375" PointY="3.9394335937499996" />
           <ConnectorPoint PointX="3.34375" PointY="4.75" />
         </AssociationConnector>
@@ -1891,17 +1915,17 @@
         <AssociationConnector Association="EomModel.Item_Currency_id_FK_Currency_id_PK1" ManuallyRouted="false">
           <ConnectorPoint PointX="1.5" PointY="5.875" />
           <ConnectorPoint PointX="1.5" PointY="5.625" />
+          <ConnectorPoint PointX="2.4479191666666664" PointY="5.6249999999999991" />
+          <ConnectorPoint PointX="2.6145858333333334" PointY="5.625" />
           <ConnectorPoint PointX="2.75" PointY="5.625" />
           <ConnectorPoint PointX="2.75" PointY="9.495830078125" />
           <ConnectorPoint PointX="3.0572891666666666" PointY="9.495830078125" />
           <ConnectorPoint PointX="3.2239558333333336" PointY="9.495830078125" />
           <ConnectorPoint PointX="3.2604166666666665" PointY="9.495830078125" />
           <ConnectorPoint PointX="3.4270833333333335" PointY="9.495830078125" />
-          <ConnectorPoint PointX="5.5" PointY="9.495830078125" />
-          <ConnectorPoint PointX="5.5" PointY="7.90567081901041" />
-          <ConnectorPoint PointX="5.541666666666667" PointY="7.9056708190104095" />
-          <ConnectorPoint PointX="5.708333333333333" PointY="7.90567081901041" />
-          <ConnectorPoint PointX="6" PointY="7.90567081901041" />
+          <ConnectorPoint PointX="5.625" PointY="9.495830078125" />
+          <ConnectorPoint PointX="5.625" PointY="8.2671260211588482" />
+          <ConnectorPoint PointX="6" PointY="8.2671260211588482" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" ManuallyRouted="false">
           <ConnectorPoint PointX="5.25" PointY="2.672841796875" />
@@ -1928,19 +1952,19 @@
         <EntityTypeShape EntityType="EomModel.PublisherPayout" Width="2.375" PointX="11.625" PointY="0.5" Height="7.7493294270833264" />
         <EntityTypeShape EntityType="EomModel.Batch" Width="1.5" PointX="9" PointY="3.625" Height="1.7879850260416674" />
         <AssociationConnector Association="EomModel.FK_Item_Batch" >
-          <ConnectorPoint PointX="9" PointY="4.7064925130208337" />
-          <ConnectorPoint PointX="8.375" PointY="4.7064925130208337" />
+          <ConnectorPoint PointX="9" PointY="4.7064925130208328" />
+          <ConnectorPoint PointX="8.375" PointY="4.7064925130208328" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="EomModel.BatchNote" Width="2.375" PointX="8.875" PointY="0.5" Height="2.5571907552083331" />
-        <AssociationConnector Association="EomModel.FK_BatchNote_Batch" >
-          <ConnectorPoint PointX="9.75" PointY="3.625" />
-          <ConnectorPoint PointX="9.75" PointY="3.2494921875" />
-        </AssociationConnector>
-        <AssociationConnector Association="EomModel.FK_BatchNote_MediaBuyerApprovalStatus" >
+        <EntityTypeShape EntityType="EomModel.BatchUpdate" Width="2.375" PointX="9" PointY="0.5" Height="2.5571907552083388" />
+        <AssociationConnector Association="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus" >
           <ConnectorPoint PointX="10.84375" PointY="5.875" />
-          <ConnectorPoint PointX="10.84375" PointY="3.2494921875" />
+          <ConnectorPoint PointX="10.84375" PointY="3.0571907552083388" />
         </AssociationConnector>
-      </Diagram>
+        <AssociationConnector Association="EomModel.BatchBatchUpdate" >
+          <ConnectorPoint PointX="9.75" PointY="3.625" />
+          <ConnectorPoint PointX="9.75" PointY="3.0571907552083388" />
+        </AssociationConnector>
+        </Diagram>
     </Diagrams>
   </Designer>
 </edmx:Edmx>

@@ -28,7 +28,7 @@
             </td>
             <td>@if (!String.IsNullOrWhiteSpace(@ps.BatchIds))
                 {
-                    <a href="#" onclick="ShowNotes(@ps.BatchIds); return false;">Notes</a>
+                    <a href="#" onclick="ShowNotes('@ps.BatchIds'); return false;">Notes</a>
                 }
             </td>
             @if (Model.ShowActions)

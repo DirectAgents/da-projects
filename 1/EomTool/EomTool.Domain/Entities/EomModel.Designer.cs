@@ -32,8 +32,8 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "Item_UnitType_id_FK_UnitType_id_PK", "UnitType", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.UnitType), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK__Item__media_buye__540C7B00", "MediaBuyerApprovalStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_Item_Batch", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.Batch), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_BatchNote_Batch", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Batch), "BatchNote", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchNote), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_BatchNote_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "BatchNote", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchNote), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "BatchBatchUpdate", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Batch), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate))]
 
 #endregion
 
@@ -424,18 +424,18 @@ namespace EomTool.Domain.Entities
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<BatchNote> BatchNotes
+        public ObjectSet<BatchUpdate> BatchUpdates
         {
             get
             {
-                if ((_BatchNotes == null))
+                if ((_BatchUpdates == null))
                 {
-                    _BatchNotes = base.CreateObjectSet<BatchNote>("BatchNotes");
+                    _BatchUpdates = base.CreateObjectSet<BatchUpdate>("BatchUpdates");
                 }
-                return _BatchNotes;
+                return _BatchUpdates;
             }
         }
-        private ObjectSet<BatchNote> _BatchNotes;
+        private ObjectSet<BatchUpdate> _BatchUpdates;
 
         #endregion
         #region AddTo Methods
@@ -609,11 +609,11 @@ namespace EomTool.Domain.Entities
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the BatchNotes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the BatchUpdates EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToBatchNotes(BatchNote batchNote)
+        public void AddToBatchUpdates(BatchUpdate batchUpdate)
         {
-            base.AddObject("BatchNotes", batchNote);
+            base.AddObject("BatchUpdates", batchUpdate);
         }
 
         #endregion
@@ -2167,18 +2167,18 @@ namespace EomTool.Domain.Entities
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchNote_Batch", "BatchNote")]
-        public EntityCollection<BatchNote> BatchNotes
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "BatchBatchUpdate", "BatchUpdate")]
+        public EntityCollection<BatchUpdate> BatchUpdates
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<BatchNote>("EomModel.FK_BatchNote_Batch", "BatchNote");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<BatchUpdate>("EomModel.BatchBatchUpdate", "BatchUpdate");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BatchNote>("EomModel.FK_BatchNote_Batch", "BatchNote", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BatchUpdate>("EomModel.BatchBatchUpdate", "BatchUpdate", value);
                 }
             }
         }
@@ -2189,30 +2189,28 @@ namespace EomTool.Domain.Entities
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="BatchNote")]
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="BatchUpdate")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class BatchNote : EntityObject
+    public partial class BatchUpdate : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new BatchNote object.
+        /// Create a new BatchUpdate object.
         /// </summary>
         /// <param name="id">Initial value of the id property.</param>
-        /// <param name="batch_id">Initial value of the batch_id property.</param>
         /// <param name="note">Initial value of the note property.</param>
         /// <param name="author">Initial value of the author property.</param>
         /// <param name="date_created">Initial value of the date_created property.</param>
-        public static BatchNote CreateBatchNote(global::System.Int32 id, global::System.Int32 batch_id, global::System.String note, global::System.String author, global::System.DateTime date_created)
+        public static BatchUpdate CreateBatchUpdate(global::System.Int32 id, global::System.String note, global::System.String author, global::System.DateTime date_created)
         {
-            BatchNote batchNote = new BatchNote();
-            batchNote.id = id;
-            batchNote.batch_id = batch_id;
-            batchNote.note = note;
-            batchNote.author = author;
-            batchNote.date_created = date_created;
-            return batchNote;
+            BatchUpdate batchUpdate = new BatchUpdate();
+            batchUpdate.id = id;
+            batchUpdate.note = note;
+            batchUpdate.author = author;
+            batchUpdate.date_created = date_created;
+            return batchUpdate;
         }
 
         #endregion
@@ -2244,30 +2242,6 @@ namespace EomTool.Domain.Entities
         private global::System.Int32 _id;
         partial void OnidChanging(global::System.Int32 value);
         partial void OnidChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 batch_id
-        {
-            get
-            {
-                return _batch_id;
-            }
-            set
-            {
-                Onbatch_idChanging(value);
-                ReportPropertyChanging("batch_id");
-                _batch_id = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("batch_id");
-                Onbatch_idChanged();
-            }
-        }
-        private global::System.Int32 _batch_id;
-        partial void Onbatch_idChanging(global::System.Int32 value);
-        partial void Onbatch_idChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -2399,54 +2373,16 @@ namespace EomTool.Domain.Entities
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchNote_Batch", "Batch")]
-        public Batch Batch
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_BatchNote_Batch", "Batch").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_BatchNote_Batch", "Batch").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Batch> BatchReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Batch>("EomModel.FK_BatchNote_Batch", "Batch");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Batch>("EomModel.FK_BatchNote_Batch", "Batch", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchNote_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus")]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus")]
         public MediaBuyerApprovalStatus MediaBuyerApprovalStatus
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchNote_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchNote_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus").Value = value;
             }
         }
         /// <summary>
@@ -2458,13 +2394,35 @@ namespace EomTool.Domain.Entities
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchNote_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchNote_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "BatchBatchUpdate", "Batch")]
+        public EntityCollection<Batch> Batches
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Batch>("EomModel.BatchBatchUpdate", "Batch");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Batch>("EomModel.BatchBatchUpdate", "Batch", value);
                 }
             }
         }
@@ -5301,18 +5259,18 @@ namespace EomTool.Domain.Entities
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchNote_MediaBuyerApprovalStatus", "BatchNote")]
-        public EntityCollection<BatchNote> BatchNotes
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatus", "BatchUpdate")]
+        public EntityCollection<BatchUpdate> BatchUpdates
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<BatchNote>("EomModel.FK_BatchNote_MediaBuyerApprovalStatus", "BatchNote");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<BatchUpdate>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus", "BatchUpdate");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BatchNote>("EomModel.FK_BatchNote_MediaBuyerApprovalStatus", "BatchNote", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BatchUpdate>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus", "BatchUpdate", value);
                 }
             }
         }

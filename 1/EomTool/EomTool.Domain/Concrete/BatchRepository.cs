@@ -15,11 +15,11 @@ namespace EomTool.Domain.Concrete
             context = EomEntities.Create();
         }
 
-        public IQueryable<Batch> BatchesByBatchIds(int[] batchIds, bool includeNotes)
+        public IQueryable<Batch> BatchesByBatchIds(int[] batchIds, bool includeUpdates)
         {
             IQueryable<Batch> batches;
-            if (includeNotes)
-                batches = context.Batches.Include("BatchNotes.MediaBuyerApprovalStatus");
+            if (includeUpdates)
+                batches = context.Batches.Include("BatchUpdates.MediaBuyerApprovalStatus");
             else
                 batches = context.Batches;
             batches = batches.Where(b => batchIds.Contains(b.id));
