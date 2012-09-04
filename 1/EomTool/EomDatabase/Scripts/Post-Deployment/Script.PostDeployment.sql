@@ -42,3 +42,8 @@ INSERT INTO [dbo].[MediaBuyerApprovalStatus] VALUES
 	,('4', 'Approved')
 	,('5', 'Hold')
 GO
+
+insert [TrackingSystem] values 
+  (1, 'Direct Track'),
+  (2, 'Cake Marketing')
+go
