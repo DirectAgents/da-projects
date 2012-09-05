@@ -43,7 +43,6 @@ namespace EomToolWeb
             bundles.Add(new StyleBundle("~/Content/SlickGrid/css").Include(
                         "~/Scripts/SlickGrid/slick.grid.css",
                         "~/Scripts/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css"
-                        //"~/Scripts/SlickGrid/examples/examples.css"
                         ));
         }
     }

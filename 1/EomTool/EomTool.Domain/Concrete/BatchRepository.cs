@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 
@@ -10,6 +7,7 @@ namespace EomTool.Domain.Concrete
     public class BatchRepository : IBatchRepository
     {
         EomEntities context;
+
         public BatchRepository()
         {
             context = EomEntities.Create();
