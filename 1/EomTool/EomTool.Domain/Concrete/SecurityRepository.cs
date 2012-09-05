@@ -2,6 +2,7 @@
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 using System.Security.Principal;
+using System.Collections.Generic;
 
 namespace EomTool.Domain.Concrete
 {
