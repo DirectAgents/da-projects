@@ -39,6 +39,7 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
                     {
                         MediaBuyerName = mediaBuyerFirstName,
                         UrlToOpen = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Link,
+                        TimePeriod = Properties.Settings.Default.DADatabaseName
                     };
 
                     string mediaBuyerEmailAddress = EomApp1.Security.User.GetEmailAddress(mediaBuyerName);

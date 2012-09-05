@@ -6,5 +6,6 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
     {
         public string MediaBuyerName { get; set; }
         public string UrlToOpen { get; set; }
+        public string TimePeriod { get; set; }
     }
 }

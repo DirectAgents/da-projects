@@ -40,7 +40,7 @@ INSERT INTO [dbo].[MediaBuyerApprovalStatus] VALUES
 	,('2', 'Queued')
 	,('3', 'Sent')
 	,('4', 'Approved')
-	,('5', 'Hold')
+	,('5', 'Held')
 GO
 
 insert [TrackingSystem] values 

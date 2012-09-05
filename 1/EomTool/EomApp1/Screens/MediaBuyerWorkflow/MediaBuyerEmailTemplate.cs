@@ -25,8 +25,14 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
             
             #line default
             #line hidden
-            this.Write(",<br/>\r\n<br/>\r\nYou have pending publisher report approvals.<br/>\r\n<br/>\r\nPlease c" +
-                    "lick <a href=\"");
+            this.Write(",<br/>\r\n<br/>\r\nYou have pending publisher report approvals for ");
+            
+            #line 4 "C:\GitHub\da-projects\1\EomTool\EomApp1\Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(TimePeriod));
+            
+            #line default
+            #line hidden
+            this.Write(".<br/>\r\n<br/>\r\nPlease click <a href=\"");
             
             #line 6 "C:\GitHub\da-projects\1\EomTool\EomApp1\Screens\MediaBuyerWorkflow\MediaBuyerEmailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(UrlToOpen));

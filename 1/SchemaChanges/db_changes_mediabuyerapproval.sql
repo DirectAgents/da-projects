@@ -14,7 +14,7 @@ INSERT INTO [dbo].[MediaBuyerApprovalStatus] VALUES
 	,('2', 'Queued')
 	,('3', 'Sent')
 	,('4', 'Approved')
-	,('5', 'Hold')
+	,('5', 'Held')
 GO
 ALTER TABLE Item 
 ADD media_buyer_approval_status_id int NOT NULL

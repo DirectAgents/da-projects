@@ -1,7 +1,7 @@
 ﻿<#@ template language="C#" #>
 <p>Hello <#=MediaBuyerName#>,<br/>
 <br/>
-You have pending publisher report approvals.<br/>
+You have pending publisher report approvals for <#=TimePeriod#>.<br/>
 <br/>
 Please click <a href="<#=UrlToOpen#>">here</a> to open them.<br/>
 <br/>

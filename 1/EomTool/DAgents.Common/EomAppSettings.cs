@@ -19,7 +19,7 @@ namespace EomAppCommon
             {
                 public static class ApprovalColumn
                 {
-                    public static string TextOnButtonWhenMediaBuyerApprovalStatusIsDefault = "Check";
+                    public static string TextOnButtonWhenMediaBuyerApprovalStatusIsDefault = "Queue";
                 }
             }
         }

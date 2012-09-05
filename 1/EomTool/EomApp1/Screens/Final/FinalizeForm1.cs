@@ -98,7 +98,7 @@ namespace EomApp1.Screens.Final
             // Security
             DisableFinalizeButtons();
 
-            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", ApprovalCol);
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default" && row.MediaBuyerApprovalStatus != "Held", ApprovalCol);
             DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "Approved", verifyCol);
             DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", colReview);
         }
@@ -176,7 +176,7 @@ namespace EomApp1.Screens.Final
             // Ready Button
             if (e.ColumnIndex == ApprovalCol.Index)
             {
-                UpdateMediaBuyerApprovalStatus("default", "Queued", itemIds);
+                UpdateMediaBuyerApprovalStatus(null, "Queued", itemIds);
                 FillCampaigns();
             }
             // Verify Button
@@ -211,11 +211,16 @@ namespace EomApp1.Screens.Final
 
         private void UpdateMediaBuyerApprovalStatus(string fromStatus, string toStatus, string itemIds)
         {
-            string sql = @"
+            string fromSql = "";
+            if (!string.IsNullOrWhiteSpace(fromStatus))
+            {
+                fromSql = " AND media_buyer_approval_status_id = (SELECT id FROM MediaBuyerApprovalStatus WHERE name = '[[FromStatus]]')";
+            }
+            string sql = (@"
                                 UPDATE Item 
                                 SET media_buyer_approval_status_id = (SELECT id FROM MediaBuyerApprovalStatus WHERE name = '[[ToStatus]]') 
-                                WHERE id IN ([[ItemIds]]) AND media_buyer_approval_status_id = (SELECT id FROM MediaBuyerApprovalStatus WHERE name = '[[FromStatus]]') 
-                            "
+                                WHERE id IN ([[ItemIds]])
+                            " + fromSql)
                             .Replace("[[FromStatus]]", fromStatus)
                             .Replace("[[ToStatus]]", toStatus)
                             .Replace("[[ItemIds]]", itemIds)
