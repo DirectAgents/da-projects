@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomToolWeb.Models;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace EomToolWeb.Controllers
 {
@@ -14,6 +13,7 @@ namespace EomToolWeb.Controllers
         public int PageSize = 100;
         private IMainRepository mainRepository;
         private ISecurityRepository securityRepository;
+
         public PayoutsController(IMainRepository mainRepository, ISecurityRepository securityRepository)
         {
             this.mainRepository = mainRepository;

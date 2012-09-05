@@ -8,9 +8,9 @@ namespace EomTool.Domain.Concrete
     {
         EomEntities context;
 
-        public BatchRepository()
+        public BatchRepository(EomEntities context)
         {
-            context = EomEntities.Create();
+            this.context = context;
         }
 
         public IQueryable<Batch> BatchesByBatchIds(int[] batchIds, bool includeUpdates)

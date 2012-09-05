@@ -8,9 +8,9 @@ namespace EomTool.Domain.Concrete
     {
         EomEntities context;
 
-        public AffiliateRepository()
+        public AffiliateRepository(EomEntities context)
         {
-            context = EomEntities.Create();
+            this.context = context;
         }
 
         public IQueryable<Affiliate> Affiliates

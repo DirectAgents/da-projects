@@ -9,9 +9,9 @@ namespace EomTool.Domain.Concrete
     {
         EomEntities context;
 
-        public MainRepository()
+        public MainRepository(EomEntities context)
         {
-            context = EomEntities.Create();
+            this.context = context;
         }
 
         public IQueryable<PublisherPayout> PublisherPayouts
