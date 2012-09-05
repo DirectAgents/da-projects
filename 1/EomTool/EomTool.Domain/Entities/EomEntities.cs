@@ -1,24 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.EntityClient;
+﻿using System.Data.EntityClient;
+using Ninject;
 
 namespace EomTool.Domain.Entities
 {
     public partial class EomEntities
     {
-        public static EomEntities Create()
+        [Inject]
+        public EomEntities(IEomEntitiesConfig config)
+            : this(CreateEntityConnection(config.ConnectionString))
         {
-            //TODO: unhardcode!
-            GlobalSettings.ConnStr = @"data source=biz2\da;initial catalog=zDADatabaseJuly2012Test2;User=sa;Password=sp0ngbOb";
+        }
 
-            return new EomEntities(new EntityConnectionStringBuilder
+        private static EntityConnection CreateEntityConnection(string databaseConnectionString)
+        {
+            return new EntityConnection(new EntityConnectionStringBuilder
             {
                 Provider = "System.Data.SqlClient",
-                ProviderConnectionString = GlobalSettings.ConnStr + ";multipleactiveresultsets=True;App=EntityFramework",
+                ProviderConnectionString = databaseConnectionString + ";multipleactiveresultsets=True;App=EntityFramework",
                 Metadata = @"res://*/Entities.EomModel.csdl|res://*/Entities.EomModel.ssdl|res://*/Entities.EomModel.msl"
             }.ConnectionString);
         }
+    }
+
+    public interface IEomEntitiesConfig
+    {
+        string ConnectionString { get; }
     }
 }

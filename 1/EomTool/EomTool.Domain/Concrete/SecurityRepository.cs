@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 using System.Security.Principal;
@@ -11,6 +8,7 @@ namespace EomTool.Domain.Concrete
     public class SecurityRepository : ISecurityRepository
     {
         EomToolSecurityEntities db;
+
         public SecurityRepository()
         {
             db = new EomToolSecurityEntities();

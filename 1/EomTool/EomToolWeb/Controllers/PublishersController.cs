@@ -11,6 +11,7 @@ namespace EomToolWeb.Controllers
         public int PageSize = 25;
         private IAffiliateRepository affiliatesRepository;
         private IMainRepository mainRepository;
+
         public PublishersController(IAffiliateRepository affiliatesRepository, IMainRepository mainRepository)
         {
             this.affiliatesRepository = affiliatesRepository;

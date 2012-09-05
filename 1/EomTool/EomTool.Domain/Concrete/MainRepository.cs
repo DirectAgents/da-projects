@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 
@@ -10,9 +8,10 @@ namespace EomTool.Domain.Concrete
     public class MainRepository : IMainRepository
     {
         EomEntities context;
-        public MainRepository()
+
+        public MainRepository(EomEntities context)
         {
-            context = EomEntities.Create();
+            this.context = context;
         }
 
         public IQueryable<PublisherPayout> PublisherPayouts

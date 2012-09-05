@@ -26,5 +26,7 @@ namespace EomToolWeb
 
             ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
         }
+
+        
     }
 }
