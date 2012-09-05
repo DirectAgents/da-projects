@@ -23,11 +23,11 @@ namespace EomToolWeb.Controllers
         private List<int> AffIdsForCurrentUser()
         {
             var affIds = new List<int>();
-            var group = securityRepository.WindowsIdentityGroup(User.Identity.Name);
-            if (group != null)
+            var groups = securityRepository.GroupsForUser(User);
+            if (groups != null)
             {
-                var roleNames = group.Roles.Select(r => r.Name).ToArray();
-                affIds = mainRepository.AffiliatesForMediaBuyers(roleNames).Select(a => a.affid).ToList();
+                var mediaBuyers = groups.SelectMany(g => g.Roles).Distinct().Where(r => r.Name.StartsWith("MB: ")).Select(r => r.Name.Substring(4)).ToArray();
+                affIds = mainRepository.AffiliatesForMediaBuyers(mediaBuyers).Select(a => a.affid).ToList();
             }
             return affIds;
         }

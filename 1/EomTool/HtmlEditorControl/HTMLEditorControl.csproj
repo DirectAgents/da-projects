@@ -93,6 +93,7 @@
     <Reference Include="Microsoft.mshtml">
       <Name>Microsoft.mshtml</Name>
       <HintPath>..\..\..\..\Program Files\Microsoft.NET\Primary Interop Assemblies\Microsoft.mshtml.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -102,10 +103,6 @@
     </Reference>
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
-    </Reference>
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>

@@ -49,6 +49,8 @@ namespace EomApp1.Screens.Final
             {
                 verifyCol.Visible = false;
                 colReview.Visible = false;
+                ApprovalCol.Visible = false;
+                mbApprovalButton.Visible = false;
             }
         }
 
