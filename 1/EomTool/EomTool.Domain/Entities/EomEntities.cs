@@ -21,9 +21,4 @@ namespace EomTool.Domain.Entities
             }.ConnectionString);
         }
     }
-
-    public interface IEomEntitiesConfig
-    {
-        string ConnectionString { get; }
-    }
 }

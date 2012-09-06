@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Web.SessionState;
-using System.Web.Configuration;
 using System.Configuration;
-using System.Data.SqlClient;
+using System.Linq;
+using System.Web.SessionState;
+using EomToolWeb.Infrastructure;
 
 namespace EomToolWeb
 {
     public static class Extensions
     {
-        public static DateTime FirstDayOfMonth(this DateTime dateTime)
+        public static DateTime FirstDayOfMonth(this DateTime dateTime, int addMonths = 0)
         {
-            return new DateTime(dateTime.Year, dateTime.Month, 1);
+            return new DateTime(dateTime.Year, dateTime.AddMonths(addMonths).Month, 1);
         }
 
         public static void Set(this HttpSessionState session, string key, object value)
@@ -20,21 +20,18 @@ namespace EomToolWeb
                 session[key] = value;
         }
 
-        public static string GetConnectionString(this Configuration config, string connectionStringName)
+        public static T SingleCustomAttribute<T>(this Type type) where T : Attribute
         {
-            ConnectionStringSettings connectionString;
-            if (config.ConnectionStrings.ConnectionStrings.Count > 0)
-            {
-                connectionString = config.ConnectionStrings.ConnectionStrings[connectionStringName];
-                if (connectionString != null)
-                    return connectionString.ConnectionString;
-            }
-            throw new Exception("Failed to obtain connection string for " + connectionStringName);
+            var attrType = typeof(T);
+            var result = (T)type.GetCustomAttributes(attrType, false).FirstOrDefault();
+            if (result == null)
+                throw new Exception("Type " + type.FullName + " does not have the attribute " + attrType.FullName + ".");
+            return result;
         }
 
-        public static SqlConnection GetSqlConnection(this Configuration config, string connectionStringName)
+        public static T GetSection<T>(this Configuration config) where T : ConfigurationSection
         {
-            return new SqlConnection(config.GetConnectionString(connectionStringName));
+           return (T)config.GetSection(typeof(T).SingleCustomAttribute<ConfigurationSectionAttribute>().Name);
         }
     }
 }

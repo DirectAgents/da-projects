@@ -1,48 +1,41 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Web;
 using System.Web.Configuration;
+using DAgents.Common;
 using EomTool.Domain.Entities;
 
 namespace EomToolWeb.Infrastructure
 {
     public class EomEntitiesConfig : IEomEntitiesConfig
     {
+        static string EomDateSessionKey = "EomDate";
+
         public string ConnectionString
         {
             get
             {
-                string eomDateSessionString = "EomDate";
-
                 var session = HttpContext.Current.Session;
-
-                DateTime eomDate = session[eomDateSessionString] == null
-                    ? DateTime.Now.FirstDayOfMonth()
-                    : (DateTime)session[eomDateSessionString];
-
-                session.Set(eomDateSessionString, eomDate);
-
+                var eomDate = session[EomDateSessionKey] == null ? DateTime.Now.FirstDayOfMonth(-1) : (DateTime)session[EomDateSessionKey];
+                session.Set(EomDateSessionKey, eomDate);
                 return ConnectionStringByDate(eomDate);
             }
         }
 
-        private string ConnectionStringByDate(DateTime eomDate)
+        string ConnectionStringByDate(DateTime eomDate)
         {
-
-            using (var con = WebConfigurationManager.OpenWebConfiguration(null).GetSqlConnection("DAMain1"))
-            using (var cmd = new SqlCommand("select top 1 connection_string from DADatabase where effective_date = @eomDate", con))
-            {
-                cmd.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "@eomDate",
-                    SqlDbType = System.Data.SqlDbType.DateTime,
-                    Value = eomDate
-                });
-
-                string connectionString = (string)cmd.ExecuteScalar();
-
-                return connectionString;
-            }
+            var config = WebConfigurationManager.OpenWebConfiguration("/EomToolWeb");
+            var eomToolConfig = config.GetSection<EomToolWebConfigSection>();
+            
+            string query = "select top 1 connection_string from DADatabase where effective_date = @eomDate";
+            string connectionString = SqlUtility.ExecuteScalar<string>(eomToolConfig.MasterConnectionString, query, eomDate);
+            
+            if (connectionString == null)
+                throw new Exception("Cannot determine EOM database connection string for date " + eomDate.ToString());
+            
+            if (eomToolConfig.ReplaceIntegratedSecurityWithSALogin)
+                connectionString = connectionString.Replace("Integrated Security=True", string.Format("User=sa;Password={0}", eomToolConfig.SAPassword));
+            
+            return connectionString;
         }
     }
 }
