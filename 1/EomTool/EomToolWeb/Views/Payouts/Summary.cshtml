@@ -38,7 +38,7 @@
 </style>
 <div id="summaryOuter">
     <div id="summaryGridContainer">
-        @Html.ActionLink("PreApproval", "Summary", new { mode = "preapproval" }, new { @class = Model.Mode == "preapproval" ? "selected" : "notselected" })
+        @Html.ActionLink("Pending", "Summary", new { mode = "preapproval" }, new { @class = Model.Mode == "preapproval" ? "selected" : "notselected" })
         |
         @Html.ActionLink("ActionNeeded", "Summary", new { mode = (string)null }, new { @class = string.IsNullOrWhiteSpace(Model.Mode) ? "selected" : "notselected" })
         |
@@ -59,6 +59,8 @@
     <input id="dlgAffId" type="hidden" name="affid" value="" />
     <input id="dlgReleasing" type="hidden" name="releasing" value="false" />
     <textarea id="txtNote" style="width: 315px; height: 135px" name="note"></textarea>
+    <span id="spnOptional">(Optional)</span>
+    <span id="spnRequired" style="display:none">(Required)</span>
     </form>
 </div>
 <div id="divNotesSummary" title="Notes">
@@ -86,15 +88,19 @@
             $('#dlgReleasing').val(releasing);
             var title = "Approve";
             if (releasing) title = "Release";
-            $('#divNotes').dialog("option","title",title).dialog("open");
+            $('#spnRequired').hide();
+            $('#spnOptional').show();
+            $('#divNotes').dialog("option", "title", title).dialog("open");
         }
         function HoldPub(affid) {
             $('#dlgAction').val("Hold");
             $('#dlgAffId').val(affid);
+            $('#spnRequired').show();
+            $('#spnOptional').hide();
             $('#divNotes').dialog("option","title","Hold").dialog("open");
         }
         function ApproveOrHold() {
-            if ($.trim($('#txtNote').val()) == "") {
+            if ($('#spnRequired').is(":visible") && $.trim($('#txtNote').val()) == "") {
                 alert("Please enter a note.");
                 return;
             }
@@ -118,7 +124,7 @@
         $(function () {
             $("#divNotes").dialog({
                 autoOpen: false,
-                height: 300,
+                height: 320,
                 width: 350,
                 modal: true,
                 buttons: {
