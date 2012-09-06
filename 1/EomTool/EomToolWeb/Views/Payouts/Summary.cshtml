@@ -84,7 +84,9 @@
             $('#dlgAction').val("Approve");
             $('#dlgAffId').val(affid);
             $('#dlgReleasing').val(releasing);
-            $('#divNotes').dialog("option","title","Approve").dialog("open");
+            var title = "Approve";
+            if (releasing) title = "Release";
+            $('#divNotes').dialog("option","title",title).dialog("open");
         }
         function HoldPub(affid) {
             $('#dlgAction').val("Hold");
