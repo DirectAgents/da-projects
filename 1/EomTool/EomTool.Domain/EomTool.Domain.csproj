@@ -66,6 +66,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EomToolSecurity.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Entities\IEomEntitiesConfig.cs" />
     <Compile Include="Entities\ItemAccountingStatus.cs" />
     <Compile Include="Entities\MediaBuyerApprovalStatus.cs" />
     <Compile Include="Entities\PublisherSummary.cs" />

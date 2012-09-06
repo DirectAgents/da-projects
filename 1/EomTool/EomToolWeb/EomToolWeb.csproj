@@ -138,7 +138,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers\PagingHelpers.cs" />
+    <Compile Include="Infrastructure\ConfigurationSectionAttribute.cs" />
     <Compile Include="Infrastructure\EomEntitiesConfig.cs" />
+    <Compile Include="Infrastructure\EomToolWebConfigSection.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
     <Compile Include="Models\AffiliatesListViewModel.cs" />
     <Compile Include="Models\PagingInfo.cs" />
@@ -383,6 +385,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
+      <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
+      <Name>DirectAgents.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Eom.Common\Eom.Common.csproj">
       <Project>{7C8D69E8-324C-43ED-958A-2248778DD89E}</Project>
       <Name>Eom.Common</Name>
