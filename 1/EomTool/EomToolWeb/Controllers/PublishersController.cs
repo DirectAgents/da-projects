@@ -39,11 +39,15 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Approve(int affid, string note, bool releasing)
         {
-            mainRepository.ApproveItemsByAffId(affid, note, User.Identity.Name);
             if (releasing)
             {
+                mainRepository.ReleaseItemsByAffId(affid, note, User.Identity.Name);
                 var affiliate = affiliateRepository.AffiliateByAffId(affid);
                 SendReleaseEmail(affiliate, note, User.Identity.Name);
+            }
+            else
+            {
+                mainRepository.ApproveItemsByAffId(affid, note, User.Identity.Name);
             }
             if (Request.IsAjaxRequest())
                 return Content(releasing ? "(released)" : "(approved)");

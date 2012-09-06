@@ -119,29 +119,35 @@ namespace EomTool.Domain.Concrete
         // only approve finalized items that are "Sent"
         public void ApproveItemsByAffId(int affId, string note, string author)
         {
-            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Approved);
+            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Approved, MediaBuyerApprovalStatus.Sent);
+        }
+
+        // only release finalized items that are on hold
+        public void ReleaseItemsByAffId(int affId, string note, string author)
+        {
+            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Approved, MediaBuyerApprovalStatus.Hold);
         }
 
         // only hold finalized items that are "Sent"
         public void HoldItemsByAffId(int affId, string note, string author)
         {
-            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Hold);
+            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Hold, MediaBuyerApprovalStatus.Sent);
         }
 
-        private void SetMediaBuyerApprovalStatus(int affId, string note, string author, int mediaBuyerApprovalStatus)
+        private void SetMediaBuyerApprovalStatus(int affId, string note, string author, int toMediaBuyerApprovalStatus, int fromMediaBuyerApprovalStatus)
         {
             var items = context.Items.Where(i => i.affid == affId &&
                                             i.campaign_status_id == CampaignStatus.Finalized &&
-                                            i.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Sent);
+                                            i.media_buyer_approval_status_id == fromMediaBuyerApprovalStatus);
             foreach (var item in items)
             {
-                item.media_buyer_approval_status_id = mediaBuyerApprovalStatus;
+                item.media_buyer_approval_status_id = toMediaBuyerApprovalStatus;
             }
             string extra = null;
             var aff = context.Affiliates.Where(a => a.affid == affId);
             if (aff.Count() > 0)
                 extra = aff.First().name2;
-            SetNoteForItems(items, note, author, mediaBuyerApprovalStatus, extra);
+            SetNoteForItems(items, note, author, toMediaBuyerApprovalStatus, extra);
             context.SaveChanges();
         }
         private void SetNoteForItems(IQueryable<Item> items, string note, string author, int mediaBuyerApprovalStatus, string extra)

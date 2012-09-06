@@ -14,6 +14,7 @@ namespace EomTool.Domain.Abstract
         void Media_ApproveItems(int[] itemIds);
         void Media_HoldItems(int[] itemIds);
         void ApproveItemsByAffId(int affId, string note, string author);
+        void ReleaseItemsByAffId(int affId, string note, string author);
         void HoldItemsByAffId(int affId, string note, string author);
 
         IQueryable<Affiliate> AffiliatesForMediaBuyers(string[] mediaBuyers);
