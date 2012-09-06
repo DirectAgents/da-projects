@@ -11,7 +11,7 @@ namespace EomToolWeb.Models
         {
             get
             {
-                return string.IsNullOrWhiteSpace(Mode);
+                return string.IsNullOrWhiteSpace(Mode) || Mode == "held";
             }
         }
     }

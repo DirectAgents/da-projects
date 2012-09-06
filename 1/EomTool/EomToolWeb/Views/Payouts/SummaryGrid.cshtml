@@ -34,8 +34,11 @@
             @if (Model.ShowActions)
             {
                 <td id="tdPubActions@(ps.affid)">
-                    <a href="#" onclick="ApprovePub(@ps.affid); return false;">Approve</a>
-                    <a href="#" onclick="HoldPub(@ps.affid); return false;">Hold</a>
+                    <a href="#" onclick="ApprovePub(@ps.affid, @(Model.Mode=="held" ? "true" : "false")); return false;">@(Model.Mode=="held" ? "Release" : "Approve")</a>
+                    @if (string.IsNullOrWhiteSpace(Model.Mode))
+                    { // can only hold when in default mode (ActionNeeded)
+                        <a href="#" onclick="HoldPub(@ps.affid); return false;">Hold</a>
+                    }
                 </td>
             }
             <td>@if (ps.LatestNote != null) {

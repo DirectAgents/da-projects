@@ -55,37 +55,34 @@ namespace EomTool.Domain.Concrete
         {
             get
             {
-                return PublisherPayouts
-                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
-                    .Select(p => new PublisherSummary
-                    {
-                        affid = p.Key.affid,
-                        PublisherName = p.Key.Publisher,
-                        Currency = p.Key.Currency,
-                        PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
-                        MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
-                        MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
-                        BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct())
-                    }).AsQueryable();
+                var pubSummaries = PubPayoutsToPubSummaries(this.PublisherPayouts);
+                return pubSummaries;
             }
         }
 
         public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode)
         {
-            var pubSummaries =
-                PublisherPayoutsByMode(mode)
-                    .Where(c => c.Pub_Payout > 0)
-                    .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
-                    .Select(p => new PublisherSummary
-                    {
-                        affid = p.Key.affid,
-                        PublisherName = p.Key.Publisher,
-                        Currency = p.Key.Currency,
-                        PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
-                        MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
-                        MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
-                        BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct())
-                    }).ToList();
+            var pubPayouts = PublisherPayoutsByMode(mode);
+            var pubSummaries = PubPayoutsToPubSummaries(pubPayouts);
+            return pubSummaries;
+        }
+        private IQueryable<PublisherSummary> PubPayoutsToPubSummaries(IQueryable<PublisherPayout> publisherPayouts)
+        {
+            var pubSummaries = publisherPayouts
+                .Where(c => c.Pub_Payout > 0)
+                .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
+                .Select(p => new PublisherSummary
+                {
+                    affid = p.Key.affid,
+                    PublisherName = p.Key.Publisher,
+                    Currency = p.Key.Currency,
+                    PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
+                    MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
+                    MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
+                    BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct())
+                }).ToList();
+
+            // Get latest note for each PublisherSummary
             var batchIds = String.Join(",", pubSummaries.Select(ps => ps.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).Distinct().ToList();
             var batchesList = context.Batches.Include("BatchUpdates").Where(b => batchIds.Contains(b.id)).ToList();
             for (var i=0; i < pubSummaries.Count(); i++)

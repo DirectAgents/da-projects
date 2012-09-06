@@ -98,7 +98,7 @@ namespace EomApp1.Screens.Final
             // Security
             DisableFinalizeButtons();
 
-            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default" && row.MediaBuyerApprovalStatus != "Held", ApprovalCol);
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", ApprovalCol);
             DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "Approved", verifyCol);
             DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", colReview);
         }
@@ -176,7 +176,7 @@ namespace EomApp1.Screens.Final
             // Ready Button
             if (e.ColumnIndex == ApprovalCol.Index)
             {
-                UpdateMediaBuyerApprovalStatus(null, "Queued", itemIds);
+                UpdateMediaBuyerApprovalStatus("default", "Queued", itemIds);
                 FillCampaigns();
             }
             // Verify Button

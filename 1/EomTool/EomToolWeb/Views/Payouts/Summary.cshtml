@@ -55,9 +55,10 @@
 <div id="divNotes" title="Add Notes">
     Enter Notes:
     <form id="frmNotes">
-    <input id="dlgAffId" type="hidden" name="affid" value="" />
     <input id="dlgAction" type="hidden" value="" />
-    <textarea style="width: 315px; height: 135px" name="note"></textarea>
+    <input id="dlgAffId" type="hidden" name="affid" value="" />
+    <input id="dlgReleasing" type="hidden" name="releasing" value="false" />
+    <textarea id="txtNote" style="width: 315px; height: 135px" name="note"></textarea>
     </form>
 </div>
 <div id="divNotesSummary" title="Notes">
@@ -79,17 +80,22 @@
                 });
             });
         }
-        function ApprovePub(affid) {
+        function ApprovePub(affid, releasing) {
             $('#dlgAction').val("Approve");
             $('#dlgAffId').val(affid);
-            $('#divNotes').dialog("open");
+            $('#dlgReleasing').val(releasing);
+            $('#divNotes').dialog("option","title","Approve").dialog("open");
         }
         function HoldPub(affid) {
             $('#dlgAction').val("Hold");
             $('#dlgAffId').val(affid);
-            $('#divNotes').dialog("open");
+            $('#divNotes').dialog("option","title","Hold").dialog("open");
         }
-        function SaveNotes() {
+        function ApproveOrHold() {
+            if ($.trim($('#txtNote').val()) == "") {
+                alert("Please enter a note.");
+                return;
+            }
             var affid = $('#dlgAffId').val();
             var url;
             if ($('#dlgAction').val() == "Approve")
@@ -114,7 +120,7 @@
                 width: 350,
                 modal: true,
                 buttons: {
-                    "OK": SaveNotes,
+                    "OK": ApproveOrHold,
                     Cancel: function () {
                         $(this).dialog("close");
                     }

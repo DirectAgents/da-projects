@@ -20,5 +20,10 @@ namespace EomTool.Domain.Concrete
                 return context.Affiliates;
             }
         }
+
+        public Affiliate AffiliateByAffId(int affid)
+        {
+            return context.Affiliates.Where(a => a.affid == affid).FirstOrDefault();
+        }
     }
 }
