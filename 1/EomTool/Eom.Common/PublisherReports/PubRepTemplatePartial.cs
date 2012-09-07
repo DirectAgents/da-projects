@@ -15,6 +15,8 @@ namespace Eom.Common.PublisherReports
 
         public string Publisher { get; set; }
 
+        public string MediaBuyer { get; set; }
+
         public DateTime FromDate { get; set; }
 
         public DateTime ToDate { get; set; }

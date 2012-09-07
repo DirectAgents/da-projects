@@ -24,9 +24,10 @@ namespace EomTool.Domain.Concrete
             get { return context.CampaignsPublisherReportDetails; }
         }
 
-        public IQueryable<PublisherPayout> PublisherPayoutsByMode(string mode)
+        public IQueryable<PublisherPayout> PublisherPayoutsByMode(string mode, bool includeZero)
         {
             var payouts = this.PublisherPayouts;
+            if (!includeZero) payouts = payouts.Where(p => p.Pub_Payout > 0);
 
             if (mode == "preapproval")
             {
@@ -60,16 +61,15 @@ namespace EomTool.Domain.Concrete
             }
         }
 
-        public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode)
+        public IQueryable<PublisherSummary> PublisherSummariesByMode(string mode, bool includeZero)
         {
-            var pubPayouts = PublisherPayoutsByMode(mode);
+            var pubPayouts = PublisherPayoutsByMode(mode, includeZero);
             var pubSummaries = PubPayoutsToPubSummaries(pubPayouts);
             return pubSummaries;
         }
         private IQueryable<PublisherSummary> PubPayoutsToPubSummaries(IQueryable<PublisherPayout> publisherPayouts)
         {
             var pubSummaries = publisherPayouts
-                .Where(c => c.Pub_Payout > 0)
                 .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
                 .Select(p => new PublisherSummary
                 {

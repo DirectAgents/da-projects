@@ -37,6 +37,7 @@ namespace EomApp1.Screens.PubRep1.Controls
                 pr.Data = data;
                 bindingSource1.DataSource = data;
                 pr.Publisher = value;
+                pr.MediaBuyer = (pr.Data.Rows.Count == 0) ? "" : pr.Data[0].MediaBuyer;
                 pr.FromDate = new DateTime(
                                 Properties.Settings.Default.StatsYear,
                                 Properties.Settings.Default.StatsMonth,
@@ -48,7 +49,7 @@ namespace EomApp1.Screens.PubRep1.Controls
                 string text = pr.TransformText();
                 webBrowser1.DocumentText = text;
                 ReportText = text;
-                SendToEmail = (new QueriesTableAdapter()).EmailFromAffiliateAddCodeScalarQuery(pr.Data[0].AddCode);
+                SendToEmail = (pr.Data.Rows.Count == 0) ? "" : (new QueriesTableAdapter()).EmailFromAffiliateAddCodeScalarQuery(pr.Data[0].AddCode);
                 SentStatus = (new QueriesTableAdapter()).PubReportSentStatusFromVendorScalarQuery(value);
                 _publisher = value;
             }

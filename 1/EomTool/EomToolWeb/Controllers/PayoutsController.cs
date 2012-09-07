@@ -32,14 +32,15 @@ namespace EomToolWeb.Controllers
             return affIds;
         }
 
-        public ActionResult Summary(string mode)
+        public ActionResult Summary(string mode, bool includeZero = false)
         {
             var affIds = AffIdsForCurrentUser();
 
             var viewModel = new PublisherSummaryViewModel
             {
-                PublisherSummaries = mainRepository.PublisherSummariesByMode(mode).Where(ps => affIds.Contains(ps.affid)).OrderBy(p => p.PublisherName),
-                Mode = mode
+                PublisherSummaries = mainRepository.PublisherSummariesByMode(mode, includeZero).Where(ps => affIds.Contains(ps.affid)).OrderBy(p => p.PublisherName),
+                Mode = mode,
+                IncludeZero = includeZero
             };
 
             return View(viewModel);
@@ -50,31 +51,31 @@ namespace EomToolWeb.Controllers
             return PartialView("PayoutsGrid");
         }
 
-        public JsonResult DetailsJson(string mode, int? affid, int page = 1)
+        public JsonResult DetailsJson(string mode, int? affid, int page = 1, bool includeZero = false)
         {
-            var model = CreatePayoutsListViewModel(mode, affid, page);
+            var model = CreatePayoutsListViewModel(mode, affid, page, includeZero, false);
             return Json(model.Payouts, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult List(string mode, int? affid, int page = 1)
+        public ActionResult List(string mode, int? affid, int page = 1, bool includeZero = false)
         {
-            var model = CreatePayoutsListViewModel(mode, affid, page);
+            var model = CreatePayoutsListViewModel(mode, affid, page, includeZero, false);
             return View(model);
         }
 
-        public ActionResult ListPartial(string mode, int? affid, int page = 1)
+        public ActionResult ListPartial(string mode, int? affid, int page = 1, bool includeZero = false)
         {
-            var model = CreatePayoutsListViewModel(mode, affid, page);
+            var model = CreatePayoutsListViewModel(mode, affid, page, includeZero, false);
             return PartialView("PayoutsGrid", model);
         }
 
-        public ActionResult PublisherReport(string mode, int? affid, int page = 1)
+        public ActionResult PublisherReport(string mode, int? affid, int page = 1, bool includeZero = false)
         {
-            var model = CreatePayoutsListViewModel(mode, affid, page);
+            var model = CreatePayoutsListViewModel(mode, affid, page, includeZero, true);
             return Content(model.PublisherReport.ToHtmlString());
         }
 
-        private PayoutsListViewModel CreatePayoutsListViewModel(string mode, int? affid, int page)
+        private PayoutsListViewModel CreatePayoutsListViewModel(string mode, int? affid, int page, bool includeZero, bool includePublisherReport)
         {
             //testing
             if (Request["test"] != null)
@@ -84,7 +85,7 @@ namespace EomToolWeb.Controllers
             if (affid != null)
                 affIds = affIds.Where(a => a == affid).ToList();
 
-            var payouts = mainRepository.PublisherPayoutsByMode(mode).Where(p => affIds.Contains(p.affid));
+            var payouts = mainRepository.PublisherPayoutsByMode(mode, includeZero).Where(p => affIds.Contains(p.affid));
 
             PayoutsListViewModel viewModel = new PayoutsListViewModel()
             {
@@ -100,7 +101,7 @@ namespace EomToolWeb.Controllers
             };
             viewModel.TestMode = (Session["TestMode"] != null && Session["TestMode"].ToString() == "1");
 
-            viewModel.PublisherReport = MvcHtmlString.Create(GetPublisherReport(payouts));
+            if (includePublisherReport) viewModel.PublisherReport = MvcHtmlString.Create(GetPublisherReport(payouts));
 
             return viewModel;
         }
@@ -108,14 +109,17 @@ namespace EomToolWeb.Controllers
         private string GetPublisherReport(IEnumerable<EomTool.Domain.Entities.PublisherPayout> payouts)
         {
             var table = new Eom.Common.PublisherReportDataSet1.CampaignsPublisherReportDetailsDataTable();
-            string publisherName = null;
+            string publisherName = "";
+            string mediaBuyer = "";
 
             foreach (var payout in payouts.Where(c => c.Pub_Payout != 0))
             {
                 var rx = new Regex(@"(?'name'((\w+)\W+)+)\((?'addcode'((CD|CA)(?'cdnumber'([0-9]+))))\)");
                 var publisher = rx.Match(payout.Publisher).Groups;
-                if (publisherName == null)
+                if (string.IsNullOrEmpty(publisherName))
                     publisherName = publisher["name"].Value;
+                if (string.IsNullOrEmpty(mediaBuyer))
+                    mediaBuyer = payout.Media_Buyer;
 
                 var row = table.NewCampaignsPublisherReportDetailsRow();
                 row.ItemIDs = payout.ItemIds;
@@ -140,6 +144,7 @@ namespace EomToolWeb.Controllers
             var report = new Eom.Common.PublisherReports.PubRepTemplate(Eom.Common.PublisherReports.PubRepTemplateHtmlMode.InnerHtml)
             {
                 Publisher = publisherName,
+                MediaBuyer = mediaBuyer,
                 Data = table,
                 FromDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
                 ToDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month))

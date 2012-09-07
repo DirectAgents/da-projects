@@ -44,13 +44,13 @@
 </style>
 <div id="summaryOuter">
     <div id="summaryGridContainer">
-        @Html.ActionLink("Pending", "Summary", new { mode = "preapproval" }, new { @class = Model.Mode == "preapproval" ? "selected" : "notselected" })
+        @Html.ActionLink("Pending", "Summary", new { mode = "preapproval", includeZero = Model.IncludeZero }, new { @class = Model.Mode == "preapproval" ? "selected" : "notselected" })
         |
-        @Html.ActionLink("ActionNeeded", "Summary", new { mode = (string)null }, new { @class = string.IsNullOrWhiteSpace(Model.Mode) ? "selected" : "notselected" })
+        @Html.ActionLink("ActionNeeded", "Summary", new { mode = (string)null, includeZero = Model.IncludeZero }, new { @class = string.IsNullOrWhiteSpace(Model.Mode) ? "selected" : "notselected" })
         |
-        @Html.ActionLink("Held", "Summary", new { mode = "held" }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
+        @Html.ActionLink("Held", "Summary", new { mode = "held", includeZero = Model.IncludeZero }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
         |
-        @Html.ActionLink("Approved", "Summary", new { mode = "approved" }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
+        @Html.ActionLink("Approved", "Summary", new { mode = "approved", includeZero = Model.IncludeZero }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
         <div id="summaryGrid" style="width: 100%;">
             @Html.Partial("SummaryGrid", Model)
         </div>
@@ -98,7 +98,7 @@
             $('#pub' + affid).addClass('highlighted');
 
             // Get the data to display inside the grid
-            $.get('@Url.Action("DetailsJson", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
+            $.get('@Url.Action("DetailsJson", new { mode = Model.Mode, includeZero = Model.IncludeZero })&affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
 
                 // Define the grid columns
                 var columns = [
@@ -140,7 +140,7 @@
             });
 
             // Display the publisher report
-            $.get('@Url.Action("PublisherReport", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (publisherReportContent) {
+            $.get('@Url.Action("PublisherReport", new { mode = Model.Mode, includeZero = Model.IncludeZero })&affid=' + affid + '&ts=' + new Date().getTime(), function (publisherReportContent) {
                 $('#publisherReport').empty().html(publisherReportContent);
             });
         }

@@ -7,8 +7,8 @@ namespace EomTool.Domain.Abstract
     {
         IQueryable<PublisherPayout> PublisherPayouts { get; }
         IQueryable<PublisherSummary> PublisherSummaries { get; }
-        IQueryable<PublisherPayout> PublisherPayoutsByMode(string mode);
-        IQueryable<PublisherSummary> PublisherSummariesByMode(string mode);
+        IQueryable<PublisherPayout> PublisherPayoutsByMode(string mode, bool includeZero);
+        IQueryable<PublisherSummary> PublisherSummariesByMode(string mode, bool includeZero);
         IQueryable<CampaignsPublisherReportDetail> CampaignPublisherReportDetails { get; }
 
         void Media_ApproveItems(int[] itemIds);

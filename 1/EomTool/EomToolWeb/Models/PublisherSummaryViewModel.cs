@@ -7,6 +7,7 @@ namespace EomToolWeb.Models
     {
         public IEnumerable<PublisherSummary> PublisherSummaries { get; set; }
         public string Mode { get; set; }
+        public bool IncludeZero { get; set; }
         public bool ShowActions
         {
             get

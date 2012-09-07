@@ -1,9 +1,10 @@
 ﻿<#@ template language="C#" #>
 <#@ import namespace="System.Linq" #>
 <#
-var items = Data.Where(c => c.Publisher == Publisher).ToList(); 
-var first = items.First();
-string currency = first.PayCurrency;
+var items = Data.Where(c => c.Publisher == Publisher).ToList();
+string currency = "";
+var first = items.FirstOrDefault();
+if (first != null) currency = first.PayCurrency;
 #>
 <# if(this.HtmlMode == PubRepTemplateHtmlMode.FullHtml) { #>
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
@@ -44,10 +45,10 @@ h2 {border-width: thin; border-style: solid; text-align: center;}
         <span id="subtitle1">Monthly Performance Report</span>
       </div>
       <div id="info1">
-        <span id="info11"><#=first.Publisher#> </span>
+        <span id="info11"><#=Publisher#> </span>
       </div>
       <div id="info2">
-        <span id="info21"><#=first.MediaBuyer#></span>
+        <span id="info21"><#=MediaBuyer#></span>
       </div>
       <div id="info3">
         <span id="info31">Report For: <#=FormatDate(FromDate)#> to <#=FormatDate(ToDate)#></span>
