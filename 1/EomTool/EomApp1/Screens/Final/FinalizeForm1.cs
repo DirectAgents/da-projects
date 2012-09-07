@@ -4,33 +4,30 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using DAgents.Common;
+using EomApp1.Screens.Final.Models;
 using EomApp1.UI;
 using EomAppControls.DataGrid;
-using EomApp1.Screens.Final.Models;
 
 namespace EomApp1.Screens.Final
 {
     public partial class FinalizeForm1 : AppFormBase
     {
-        private DataGridViewLinkColumn[] numPubCols1;
-        private DataGridViewLinkColumn[] numPubCols2;
-        private int[] pubColIndicies1;
-        private int[] pubColIndicies2;
+        private DataGridViewLinkColumn[] numPubColsTop;
+        private DataGridViewLinkColumn[] numPubColsBottom;
         private Dictionary<string, string> pubColHeaderTextToFilter = new Dictionary<string, string>();
 
         public FinalizeForm1()
         {
             InitializeComponent();
 
-            this.numPubCols1 = new[] { NumPubsToFinalizeCol, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly };
-            this.numPubCols2 = new[] { NumPubsToVerifyCol, dataGridViewLinkColumn1, dataGridViewLinkColumn2, dataGridViewLinkColumn3, dataGridViewLinkColumn4 };
-            this.pubColIndicies1 = this.numPubCols1.Select(c => c.Index).ToArray();
-            this.pubColIndicies2 = this.numPubCols2.Select(c => c.Index).ToArray();
+            this.numPubColsTop = new[] { NumPubsToFinalizeCol, NumAffiliatesNet7, NumAffiliatesNet15, NumAffiliatesNet30, NumAffiliatesNetBiWeekly };
+            this.numPubColsBottom = new[] { NumPubsToVerifyCol, dataGridViewLinkColumn1, dataGridViewLinkColumn2, dataGridViewLinkColumn3, dataGridViewLinkColumn4 };
             this.pubColHeaderTextToFilter.Add("#Net7", "Net 7");
             this.pubColHeaderTextToFilter.Add("#Net15", "Net 15");
             this.pubColHeaderTextToFilter.Add("#Net30", "Net 30");
             this.pubColHeaderTextToFilter.Add("#BiWkly", "Net 7/Biweekly");
             this.notesListForm = new NotesListForm1();
+
             SetNetTermColumnsVisibility(false);
             SetNumPubsColumnsStyle();
             SetRevBreakdownColumnsVisibility(false);
@@ -42,15 +39,16 @@ namespace EomApp1.Screens.Final
             DisableVerifyAndReview();
         }
 
-        private void DisableVerifyAndReview()
+        private void SetNetTermColumnsVisibility(bool visible)
         {
-            if (!Security.User.Current.CanDoWorkflowVerify)
-            {
-                verifyCol.Visible = false;
-                colReview.Visible = false;
-                ApprovalCol.Visible = false;
-                mbApprovalButton.Visible = false;
-            }
+            foreach (DataGridViewLinkColumn linkColumn in NumPubNetTermColumns)
+                linkColumn.Visible = visible;
+        }
+
+        // The first one in each set is the total number of publishers and the rest are the beakdown by net terms.
+        private IEnumerable<DataGridViewLinkColumn> NumPubNetTermColumns
+        {
+            get { return this.numPubColsTop.Skip(1).Concat(numPubColsBottom.Skip(1)); }
         }
 
         private void SetNumPubsColumnsStyle()
@@ -59,9 +57,20 @@ namespace EomApp1.Screens.Final
             style.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             style.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            foreach (var item in this.numPubCols1)
+            foreach (var item in this.numPubColsTop)
             {
                 item.DefaultCellStyle = style;
+            }
+        }
+
+        private void DisableVerifyAndReview()
+        {
+            if (!Security.User.Current.CanDoWorkflowVerify)
+            {
+                verifyCol.Visible = false;
+                colReview.Visible = false;
+                ApprovalCol.Visible = false;
+                mbApprovalButton.Visible = false;
             }
         }
 
@@ -134,7 +143,7 @@ namespace EomApp1.Screens.Final
         // Click handlers for TOP Pane
         private void CellClickTop(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
             var grid = sender as DataGridView; 
             var cell = grid[e.ColumnIndex, e.RowIndex];
@@ -157,10 +166,7 @@ namespace EomApp1.Screens.Final
                 }
             }
             // #Pubs Button
-            else if (
-                this.pubColIndicies1.Contains(e.ColumnIndex)
-                && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
-            )
+            else if (this.numPubColsTop.Indicies().Contains(e.ColumnIndex) && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0/*ignore empty cell*/)
             {
                 HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Finalize, MediaBuyerApprovalStatusId.Approved);
             }
@@ -169,7 +175,7 @@ namespace EomApp1.Screens.Final
         // Click handlers for BOTTOM Pane
         private void CellClickBottom(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
             var grid = sender as DataGridView;
             var cell = grid[e.ColumnIndex, e.RowIndex];
@@ -211,7 +217,7 @@ namespace EomApp1.Screens.Final
                 }
             }
             // #Pubs Button
-            else if (this.pubColIndicies2.Contains(e.ColumnIndex) && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 /*ignore empty cell*/)
+            else if (this.numPubColsBottom.Indicies().Contains(e.ColumnIndex) && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 /*ignore empty cell*/)
             {
                 HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Verify, mbApprovalStatusID);
             }
@@ -392,14 +398,6 @@ namespace EomApp1.Screens.Final
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             SetNetTermColumnsVisibility(checkBox1.Checked);
-        }
-
-        private void SetNetTermColumnsVisibility(bool visible)
-        {
-            foreach (var item in this.numPubCols1.Skip(1).Concat(numPubCols2.Skip(1)))
-            {
-                item.Visible = visible;
-            }
         }
 
         private void FormatCell(object sender, DataGridViewCellFormattingEventArgs e)

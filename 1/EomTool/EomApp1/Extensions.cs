@@ -103,5 +103,10 @@ namespace EomApp1
         {
             return (T)column.DataGridView[column.Index, cellEvent.RowIndex].Value;
         }
+
+        public static int[] Indicies(this DataGridViewColumn[] dataGridViewColumns)
+        {
+            return dataGridViewColumns.Select(c => c.Index).ToArray();
+        }
     }
 }
