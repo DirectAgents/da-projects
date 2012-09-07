@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using DAgents.Common;
 using EomApp1.UI;
-using EomAppCommon;
 using EomAppControls.DataGrid;
-using System.Data;
-using System.Drawing;
+using EomApp1.Screens.Final.Models;
 
 namespace EomApp1.Screens.Final
 {
@@ -132,11 +131,17 @@ namespace EomApp1.Screens.Final
             DisableFinalizeButtons();
         }
 
+        // Click handlers for TOP Pane
         private void CellClickTop(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
-            var grid = sender as DataGridView;
+            var grid = sender as DataGridView; 
+            var cell = grid[e.ColumnIndex, e.RowIndex];
+
+            if (cell is DataGridViewDisableButtonCell && !(cell as DataGridViewDisableButtonCell).Enabled)
+                return;
+            
             var pid = (int)grid[pidCol.Index, e.RowIndex].Value;
             var currency = (string)grid[Curr.Index, e.RowIndex].Value;
 
@@ -157,19 +162,25 @@ namespace EomApp1.Screens.Final
                 && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
             )
             {
-                HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Finalize);
+                HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Finalize, MediaBuyerApprovalStatusId.Approved);
             }
         }
 
-        // Click handlers for Verification Buttons and MB Workflow
+        // Click handlers for BOTTOM Pane
         private void CellClickBottom(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
 
             var grid = sender as DataGridView;
+            var cell = grid[e.ColumnIndex, e.RowIndex];
+            
+            if (cell is DataGridViewDisableButtonCell && !(cell as DataGridViewDisableButtonCell).Enabled)
+                return;
+
             var pid = (int)grid[pidCol2.Index, e.RowIndex].Value;
             var currency = (string)grid[dataGridViewTextBoxColumn6.Index, e.RowIndex].Value;
             var row = (grid.Rows[e.RowIndex].DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow;
+            MediaBuyerApprovalStatusId mbApprovalStatusID = (MediaBuyerApprovalStatusId)Enum.Parse(typeof(MediaBuyerApprovalStatusId), row.MediaBuyerApprovalStatus.Trim(), true);
             string itemIds = row.ItemIds;
 
             string note;
@@ -200,12 +211,9 @@ namespace EomApp1.Screens.Final
                 }
             }
             // #Pubs Button
-            else if (
-                this.pubColIndicies2.Contains(e.ColumnIndex)
-                && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 // ignore empty cell
-            )
+            else if (this.pubColIndicies2.Contains(e.ColumnIndex) && ((int)grid[e.ColumnIndex, e.RowIndex].Value) != 0 /*ignore empty cell*/)
             {
-                HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Verify);
+                HandleNumPubsClick(e, pid, currency, grid, UI.PublishersForm.Mode.Verify, mbApprovalStatusID);
             }
         }
 
@@ -229,15 +237,17 @@ namespace EomApp1.Screens.Final
             SqlUtility.ExecuteNonQuery(sql);
         }
 
-        private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, string currency, DataGridView grid, UI.PublishersForm.Mode mode)
+        private void HandleNumPubsClick(DataGridViewCellEventArgs e, int pid, string currency, DataGridView grid, UI.PublishersForm.Mode mode, MediaBuyerApprovalStatusId? mediaBuyerApprovalStatus)
         {
+            // Set up the Net Terms filter based on the column header that was clicked.
             string filter = null;
             string headerText = grid.Columns[e.ColumnIndex].HeaderText;
             if (this.pubColHeaderTextToFilter.ContainsKey(headerText))
             {
                 filter = this.pubColHeaderTextToFilter[headerText];
             }
-            var publishersForm = new UI.PublishersForm(this, pid, currency, mode, filter);
+
+            var publishersForm = new UI.PublishersForm(this, pid, currency, mode, filter, mediaBuyerApprovalStatus);
             MaskedDialog.ShowDialog(this, publishersForm);
         }
 
@@ -268,20 +278,24 @@ namespace EomApp1.Screens.Final
 
         private void VerifyCampaign(int id, string currency)
         {
-            var db = new FinalizeDataDataContext(true);
-
-            var query = from c in db.Items
-                        where c.pid == id && c.CampaignStatus.name == "Finalized" && c.Currency.name == currency
-                        select c;
-
-            var verifyCampaignStatus = db.CampaignStatus.Single(c => c.name == "Verified");
-
-            foreach (var item in query)
+            using (var eom = Models.Eom.Create())
             {
-                item.CampaignStatus = verifyCampaignStatus;
-            }
+                var query = from c in eom.Items
+                            where 
+                                c.pid == id && c.campaign_status_id == (int)CampaignStatusId.Finalized &&
+                                c.Currency.name == currency && 
+                                c.media_buyer_approval_status_id == (int)MediaBuyerApprovalStatusId.Approved
+                            select c;
 
-            db.SubmitChanges();
+                int verifyCampaignStatus = eom.CampaignStatus.Single(c => c.name == "Verified").id;
+
+                foreach (var item in query)
+                {
+                    item.campaign_status_id = verifyCampaignStatus;
+                }
+
+                eom.SaveChanges();
+            }
         }
 
         private static void FinalizeCampaign(int id, string currency)

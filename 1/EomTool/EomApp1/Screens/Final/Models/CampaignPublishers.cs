@@ -12,7 +12,7 @@ namespace EomApp1.Screens.Final.Models
         {
         }
 
-        public void Fill(Data data, CampaignStatusId campaignStatusID)
+        public void Fill(Data data, CampaignStatusId campaignStatusID, MediaBuyerApprovalStatusId? mediaBuyerStatusID = null)
         {
             var campaign = data.Campaigns.Where(c => c.PID == Pid).FirstOrDefault();
             if (campaign == null)
@@ -22,13 +22,22 @@ namespace EomApp1.Screens.Final.Models
 
             using (var db = Eom.Create())
             {
+                var itemsQuery = from item in db.Items
+                                 where
+                                     item.pid == Pid &&
+                                     item.campaign_status_id == (int)campaignStatusID &&
+                                     item.Currency.name == this.Currency
+                                 select item;
+
+                if (mediaBuyerStatusID != null)
+                {
+                    itemsQuery = itemsQuery.Where(i => i.media_buyer_approval_status_id == (int)mediaBuyerStatusID);
+                }
+ 
                 var query = from affiliate in db.Affiliates
-                            from item in db.Items
+                            from item in itemsQuery
                             where 
-                                affiliate.affid == item.affid && 
-                                item.pid == Pid && 
-                                item.campaign_status_id == (int)campaignStatusID &&
-                                item.Currency.name == this.Currency
+                                affiliate.affid == item.affid
                             group item by new { Affiliate = affiliate, RevenueCurrency = item.Currency, CostCurrency = item.Currency1 } into g
                             select new
                             {

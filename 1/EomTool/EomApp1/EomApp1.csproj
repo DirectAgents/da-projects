@@ -130,6 +130,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="Screens\Final\Models\MediaBuyerApprovalStatusId.cs" />
     <Compile Include="Screens\MediaBuyerWorkflow\SendMailDialog.cs">
       <SubType>Form</SubType>
     </Compile>

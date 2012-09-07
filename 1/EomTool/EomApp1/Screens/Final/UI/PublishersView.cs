@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Windows.Forms;
 using System.Linq;
-using System.Collections;
+using System.Windows.Forms;
 
 namespace EomApp1.Screens.Final.UI
 {
@@ -22,7 +21,7 @@ namespace EomApp1.Screens.Final.UI
             grid.SelectAll();
         }
 
-        internal void SelectNone()
+        public void SelectNone()
         {
             grid.ClearSelection();
         }
@@ -99,7 +98,10 @@ namespace EomApp1.Screens.Final.UI
             { 
                 this.actionButtonEnabled = value;
                 if (!value)
+                {
                     this.actionButton.ToolTipText = "You do not have permission to " + this.actionButton.Text;
+                    this.actionButton.Enabled = false;
+                }
             }
         }
 

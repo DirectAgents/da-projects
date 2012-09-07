@@ -5,8 +5,11 @@ namespace EomApp1.Screens.Final.UI
 {
     public class PublishersPresenter
     {
-        public PublishersPresenter(PublishersForm view, Models.CampaignPublishers model)
+        private MediaBuyerApprovalStatusId? mediaBuyerApprovalStatus;
+
+        public PublishersPresenter(PublishersForm view, Models.CampaignPublishers model, MediaBuyerApprovalStatusId? mediaBuyerApprovalStatus)
         {
+            this.mediaBuyerApprovalStatus = mediaBuyerApprovalStatus;
             View = view;
             Model = model;
             View.PublishersToFinalizeSelected += new EventHandler<PublishersEventArgs>(view_PublishersToFinalizeSelected);
@@ -34,8 +37,8 @@ namespace EomApp1.Screens.Final.UI
         public void Present()
         {
             View.SetWindowText(Model.CampaignName, Model.AdvertiserName);
-            Model.Fill(View.PublishersToFinalize, CampaignStatusId.Default);
-            Model.Fill(View.PublishersToVerify, CampaignStatusId.Finalized);
+            Model.Fill(View.PublishersToFinalize, CampaignStatusId.Default, null);
+            Model.Fill(View.PublishersToVerify, CampaignStatusId.Finalized, this.mediaBuyerApprovalStatus);
             View.InitializeNetTermsFilter();
 
             // Security
@@ -48,7 +51,7 @@ namespace EomApp1.Screens.Final.UI
             {
                 View.DisableFinalize();
             }
-            if (!Security.User.Current.CanDoWorkflowVerify)
+            if (!Security.User.Current.CanDoWorkflowVerify || this.mediaBuyerApprovalStatus != MediaBuyerApprovalStatusId.Approved)
             {
                 View.DisableVerify();
             }
