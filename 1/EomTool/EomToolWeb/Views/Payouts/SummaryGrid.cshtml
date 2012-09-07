@@ -1,22 +1,33 @@
 ﻿@model PublisherSummaryViewModel
 <table id="tblSummary">
     <tr>
-        <th>affid</th>
-        <th>Publisher</th>
-        <th>Curr</th>
-        <th>Payout</th>
-        <th>Margin Range</th>
-        <th></th>
-        @if (Model.ShowActions) {
-            <th>Action</th>
+        <th>
+            Publisher
+        </th>
+        <th>
+            Curr
+        </th>
+        <th>
+            Payout
+        </th>
+        <th>
+            Margin Range
+        </th>
+        <th>
+        </th>
+        @if (Model.ShowActions)
+        {
+            <th>
+                Action
+            </th>
         }
-        <th>Latest Note</th>
+        <th>
+            Latest Note
+        </th>
     </tr>
     @foreach (var ps in Model.PublisherSummaries)
     {
         <tr id="pub@(ps.affid)">
-            <td>@ps.affid
-            </td>
             <td>
                 <a href="#" onclick="ShowDetails(@ps.affid); return false;">@ps.PublisherName</a>
             </td>
@@ -26,7 +37,8 @@
             </td>
             <td>@String.Format("{0:N2}%", ps.MinPctMargin) - @String.Format("{0:N2}", ps.MaxPctMargin)%
             </td>
-            <td>@if (!String.IsNullOrWhiteSpace(@ps.BatchIds))
+            <td>
+                @if (!String.IsNullOrWhiteSpace(@ps.BatchIds))
                 {
                     <a href="#" onclick="ShowNotes('@ps.BatchIds'); return false;">Notes</a>
                 }
@@ -34,14 +46,16 @@
             @if (Model.ShowActions)
             {
                 <td id="tdPubActions@(ps.affid)">
-                    <a href="#" onclick="ApprovePub(@ps.affid, @(Model.Mode=="held" ? "true" : "false")); return false;">@(Model.Mode=="held" ? "Release" : "Approve")</a>
+                    <a href="#" onclick="ApprovePub(@ps.affid, @(Model.Mode == "held" ? "true" : "false")); return false;">@(Model.Mode == "held" ? "Release" : "Approve")</a>
                     @if (string.IsNullOrWhiteSpace(Model.Mode))
                     { // can only hold when in default mode (ActionNeeded)
                         <a href="#" onclick="HoldPub(@ps.affid); return false;">Hold</a>
                     }
                 </td>
             }
-            <td>@if (ps.LatestNote != null) {
+            <td>
+                @if (ps.LatestNote != null)
+                {
                     @(ps.LatestNote.Length > 50 ? (ps.LatestNote.Substring(0, 50) + "...") : ps.LatestNote)
                 }
             </td>

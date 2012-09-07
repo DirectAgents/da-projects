@@ -14,8 +14,8 @@
         position: absolute;
         left: 0;
         width: 50%;
-        height: 50%;        
-        overflow: auto;        
+        height: 50%;
+        overflow: auto;
     }
     #publisherReportContainer
     {
@@ -33,7 +33,13 @@
         position: absolute;
         bottom: 0;
         height: 50%;
-        width: 100%;     
+        width: 100%;
+        font-size: 11px;
+        overflow: auto;
+    }
+    #tblSummary
+    {
+        width: 100%;
     }
 </style>
 <div id="summaryOuter">
@@ -45,11 +51,17 @@
         @Html.ActionLink("Held", "Summary", new { mode = "held" }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
         |
         @Html.ActionLink("Approved", "Summary", new { mode = "approved" }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
-        @Html.Partial("SummaryGrid", Model)
+        <div id="summaryGrid" style="width: 100%;">
+            @Html.Partial("SummaryGrid", Model)
+        </div>
     </div>
     <div id="publisherReportContainer">
+        <div id="publisherReport" style="width: 100%;">
+        </div>
     </div>
     <div id="publisherDetailsContainer">
+        <div id="publisherDetails" style="width: 100%; height: 100%;">
+        </div>
     </div>
 </div>
 <div id="divNotes" title="Add Notes">
@@ -59,8 +71,8 @@
     <input id="dlgAffId" type="hidden" name="affid" value="" />
     <input id="dlgReleasing" type="hidden" name="releasing" value="false" />
     <textarea id="txtNote" style="width: 315px; height: 135px" name="note"></textarea>
-    <span id="spnOptional">(Optional)</span>
-    <span id="spnRequired" style="display:none">(Required)</span>
+    <span id="spnOptional">(Optional)</span> <span id="spnRequired" style="display: none">
+        (Required)</span>
     </form>
 </div>
 <div id="divNotesSummary" title="Notes">
@@ -69,19 +81,70 @@
 </div>
 @section scripts {
     <script type="text/javascript">
+
+        var grid = null;
+
         function ShowDetails(affid) {
-            $.get('@Url.Action("Details", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (content) {
-                $('#tblSummary tr').removeClass('highlighted');
-                $('#pub' + affid).addClass('highlighted');
-                $('#publisherDetailsContainer').html(content);
-                $.get('@Url.Action("DetailsJson", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
-                    RenderGrid(data);
-                });
-                $.get('@Url.Action("PublisherReport", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (publisherReportContent) {
-                    $('#publisherReportContainer').html(publisherReportContent);
+
+            // Display loading icons
+            var loadingHTML = '<img src="@Url.Content("~/Images/loading_lg.gif")" style="position: absolute; left: 50%; top: 50%" />';
+            $('#publisherDetails').empty().html(loadingHTML);
+            $('#publisherReport').empty().html(loadingHTML);
+
+            // Remove current highlighted row
+            $('#tblSummary tr').removeClass('highlighted');
+
+            // Add new highlighted row
+            $('#pub' + affid).addClass('highlighted');
+
+            // Get the data to display inside the grid
+            $.get('@Url.Action("DetailsJson", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (data) {
+
+                // Define the grid columns
+                var columns = [
+                        { id: "campaign", name: "Campaign", field: "Campaign_Name", width: 300, cssClass: "cell-title", sortable: true }
+                    , { id: "costperunit", name: "Cost/Unit", field: "Cost_Unit", width: 120, sortable: true }
+                    , { id: "units", name: "Units", field: "Units", width: 120, sortable: true }
+                    , { id: "pctmargin", name: "%Margin", field: "MarginPct", width: 120, sortable: true }
+                    , { id: "netterms", name: "Terms", field: "Net_Terms", width: 120, sortable: true }
+                    , { id: "paycurr", name: "Pay Curr", field: "Pub_Pay_Curr", width: 120, sortable: true }
+                    , { id: "pubpayout", name: "Payout", field: "Pub_Payout", width: 120, sortable: true }
+                    , { id: "cmpnstatus", name: "Campn Status", field: "Status", width: 120, sortable: true }
+                    , { id: "acctgstatus", name: "Acctng Status", field: "Accounting_Status", width: 120, sortable: true }
+                    , { id: "approval", name: "Approval", field: "Media_Buyer_Approval_Status", width: 120, sortable: true }
+                ];
+
+                // Define the grid options
+                var options = {
+                    enableCellNavigation: true,
+                    enableColumnReorder: false,
+                    autoHeight: false,
+                    enableTextSelectionOnCells: true,
+                    rowHeight: 19
+                };
+
+                // Create the grid
+                grid = new Slick.Grid("#publisherDetails", data, columns, options);
+
+                // Add sorting to the grid
+                grid.onSort.subscribe(function (e, args) {
+                    var field = args.sortCol.field;
+                    data.sort(function (a, b) {
+                        var result = a[field] > b[field] ? 1 : a[field] < b[field] ? -1 : 0;
+                        return args.sortAsc ? result : -result;
+                    });
+                    grid.setData(data);
+                    grid.updateRowCount();
+                    grid.render();
                 });
             });
+
+            // Display the publisher report
+            $.get('@Url.Action("PublisherReport", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (publisherReportContent) {
+                $('#publisherReport').empty().html(publisherReportContent);
+            });
         }
+
         function ApprovePub(affid, releasing) {
             $('#dlgAction').val("Approve");
             $('#dlgAffId').val(affid);
@@ -92,13 +155,15 @@
             $('#spnOptional').show();
             $('#divNotes').dialog("option", "title", title).dialog("open");
         }
+
         function HoldPub(affid) {
             $('#dlgAction').val("Hold");
             $('#dlgAffId').val(affid);
             $('#spnRequired').show();
             $('#spnOptional').hide();
-            $('#divNotes').dialog("option","title","Hold").dialog("open");
+            $('#divNotes').dialog("option", "title", "Hold").dialog("open");
         }
+
         function ApproveOrHold() {
             if ($('#spnRequired').is(":visible") && $.trim($('#txtNote').val()) == "") {
                 alert("Please enter a note.");
@@ -115,12 +180,14 @@
                 $('#divNotes').dialog("close");
             });
         }
+
         function ShowNotes(batchids) {
             $.get('@Url.Action("ShowNotes", "Batches")', { batchids: batchids }, function (data) {
                 $('#divNotesSummaryInner').html(data);
                 $('#divNotesSummary').dialog("open");
             });
         }
+
         $(function () {
             $("#divNotes").dialog({
                 autoOpen: false,
@@ -137,18 +204,32 @@
                     //allFields.val("").removeClass("ui-state-error");
                 }
             });
+
             $("#divNotesSummary").dialog({
                 autoOpen: false,
                 height: 500,
                 width: 400,
                 modal: true
             });
-        });
-        $(function () {
-            $("#publisherSummaryContainer").resizable({
-                handles: "s, se",
-                helper: "resizing-helper"
+
+            // Setup the horizontal resizing splitter
+            $("#publisherDetailsContainer").resizable({
+                stop: function (event, ui) {
+
+                    // Resize the slick grid
+                    var publisherDetailsContainerHeight = $("#publisherDetailsContainer").height();
+                    $("#publisherDetails").height(publisherDetailsContainerHeight);
+                    if (grid != null) grid.resizeCanvas();
+
+                    // Resize the top panes
+                    var summaryOuterHeight = $(window).height();
+                    var topHeight = summaryOuterHeight - publisherDetailsContainerHeight;
+                    $("#publisherReportContainer").height(topHeight);
+                    $("#summaryGridContainer").height(topHeight);
+                },
+                handles: 'n'
             });
         });
+
     </script>
 }

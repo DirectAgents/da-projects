@@ -47,7 +47,7 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Details(string mode, int? affid, int page = 1)
         {
-            return PartialView();
+            return PartialView("PayoutsGrid");
         }
 
         public JsonResult DetailsJson(string mode, int? affid, int page = 1)
@@ -71,7 +71,7 @@ namespace EomToolWeb.Controllers
         public ActionResult PublisherReport(string mode, int? affid, int page = 1)
         {
             var model = CreatePayoutsListViewModel(mode, affid, page);
-            return PartialView("PublisherReport", model);
+            return Content(model.PublisherReport.ToHtmlString());
         }
 
         private PayoutsListViewModel CreatePayoutsListViewModel(string mode, int? affid, int page)
