@@ -37,7 +37,7 @@ namespace EomTool.Domain.Concrete
             }
             else if (mode == "held")
             {
-                payouts = payouts.Where(p => p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Hold);
+                payouts = payouts.Where(p => p.status_id == CampaignStatus.Finalized && p.media_buyer_approval_status_id == MediaBuyerApprovalStatus.Held);
             }
             else if (mode == "approved")
             {
@@ -111,7 +111,7 @@ namespace EomTool.Domain.Concrete
             var items = context.Items.Where(item => itemIds.Contains(item.id));
             foreach (var item in items)
             {
-                item.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Hold;
+                item.media_buyer_approval_status_id = MediaBuyerApprovalStatus.Held;
             }
             context.SaveChanges();
         }
@@ -125,13 +125,13 @@ namespace EomTool.Domain.Concrete
         // only release finalized items that are on hold
         public void ReleaseItemsByAffId(int affId, string note, string author)
         {
-            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Approved, MediaBuyerApprovalStatus.Hold);
+            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Approved, MediaBuyerApprovalStatus.Held);
         }
 
         // only hold finalized items that are "Sent"
         public void HoldItemsByAffId(int affId, string note, string author)
         {
-            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Hold, MediaBuyerApprovalStatus.Sent);
+            SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Held, MediaBuyerApprovalStatus.Sent);
         }
 
         private void SetMediaBuyerApprovalStatus(int affId, string note, string author, int toMediaBuyerApprovalStatus, int fromMediaBuyerApprovalStatus)
@@ -147,10 +147,10 @@ namespace EomTool.Domain.Concrete
             var aff = context.Affiliates.Where(a => a.affid == affId);
             if (aff.Count() > 0)
                 extra = aff.First().name2;
-            SetNoteForItems(items, note, author, toMediaBuyerApprovalStatus, extra);
+            SetNoteForItems(items, note, author, toMediaBuyerApprovalStatus, fromMediaBuyerApprovalStatus, extra);
             context.SaveChanges();
         }
-        private void SetNoteForItems(IQueryable<Item> items, string note, string author, int mediaBuyerApprovalStatus, string extra)
+        private void SetNoteForItems(IQueryable<Item> items, string note, string author, int mediaBuyerApprovalStatus, int fromMediaBuyerApprovalStatus, string extra)
         {
             var batches = items.Where(i => i.Batch != null).Select(i => i.Batch).Distinct().ToList();
             var itemsWithNoBatch = items.Where(i => i.batch_id == null);
@@ -166,6 +166,7 @@ namespace EomTool.Domain.Concrete
                 note = note,
                 author = author,
                 media_buyer_approval_status_id = mediaBuyerApprovalStatus,
+                from_media_buyer_approval_status_id = fromMediaBuyerApprovalStatus,
                 extra = extra
             };
             foreach (var batch in batches)

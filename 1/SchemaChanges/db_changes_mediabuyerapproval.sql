@@ -83,3 +83,17 @@ REFERENCES [dbo].[BatchUpdate] ([id])
 GO
 ALTER TABLE [dbo].[BatchBatchUpdate] CHECK CONSTRAINT [FK_BatchBatchUpdate_BatchUpdate]
 GO
+ALTER TABLE dbo.BatchUpdate ADD
+	from_media_buyer_approval_status_id int NULL
+GO
+ALTER TABLE dbo.BatchUpdate ADD CONSTRAINT
+	FK_BatchUpdate_MediaBuyerApprovalStatusFrom FOREIGN KEY
+	(
+	from_media_buyer_approval_status_id
+	) REFERENCES dbo.MediaBuyerApprovalStatus
+	(
+	id
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+	
+GO
