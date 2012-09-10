@@ -11,6 +11,6 @@ namespace EomTool.Domain.Entities
         public static int Queued = 2;
         public static int Sent = 3;
         public static int Approved = 4;
-        public static int Hold = 5;
+        public static int Held = 5;
     }
 }

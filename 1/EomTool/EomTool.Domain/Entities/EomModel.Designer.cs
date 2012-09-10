@@ -34,6 +34,7 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_Item_Batch", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.Batch), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "BatchBatchUpdate", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Batch), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate))]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "MediaBuyerApprovalStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate), true)]
 
 #endregion
 
@@ -2362,6 +2363,30 @@ namespace EomTool.Domain.Entities
         private global::System.String _extra;
         partial void OnextraChanging(global::System.String value);
         partial void OnextraChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> from_media_buyer_approval_status_id
+        {
+            get
+            {
+                return _from_media_buyer_approval_status_id;
+            }
+            set
+            {
+                Onfrom_media_buyer_approval_status_idChanging(value);
+                ReportPropertyChanging("from_media_buyer_approval_status_id");
+                _from_media_buyer_approval_status_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("from_media_buyer_approval_status_id");
+                Onfrom_media_buyer_approval_status_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _from_media_buyer_approval_status_id;
+        partial void Onfrom_media_buyer_approval_status_idChanging(Nullable<global::System.Int32> value);
+        partial void Onfrom_media_buyer_approval_status_idChanged();
 
         #endregion
     
@@ -2423,6 +2448,44 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Batch>("EomModel.BatchBatchUpdate", "Batch", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "MediaBuyerApprovalStatus")]
+        public MediaBuyerApprovalStatus MediaBuyerApprovalStatusFrom
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "MediaBuyerApprovalStatus").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "MediaBuyerApprovalStatus").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<MediaBuyerApprovalStatus> MediaBuyerApprovalStatusFromReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "MediaBuyerApprovalStatus");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<MediaBuyerApprovalStatus>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "MediaBuyerApprovalStatus", value);
                 }
             }
         }
@@ -5271,6 +5334,28 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BatchUpdate>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus", "BatchUpdate", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "BatchUpdate")]
+        public EntityCollection<BatchUpdate> BatchUpdatesFrom
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<BatchUpdate>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "BatchUpdate");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<BatchUpdate>("EomModel.FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "BatchUpdate", value);
                 }
             }
         }
