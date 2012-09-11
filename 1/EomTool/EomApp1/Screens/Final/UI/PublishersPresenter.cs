@@ -20,17 +20,17 @@ namespace EomApp1.Screens.Final.UI
         {
             Model.ChangeCampaignStatus(CampaignStatusId.Default, CampaignStatusId.Finalized, e.AffIds, e.CostCurrs);
             View.PublishersToFinalize.Clear();
-            Model.Fill(View.PublishersToFinalize, CampaignStatusId.Default);
+            Model.Fill(View.PublishersToFinalize, CampaignStatusId.Default, null);
             View.PublishersToVerify.Clear();
-            Model.Fill(View.PublishersToVerify, CampaignStatusId.Finalized);
+            Model.Fill(View.PublishersToVerify, CampaignStatusId.Finalized, this.mediaBuyerApprovalStatus);
             View.RefreshCampaigns();
         }
 
         void view_PublishersToVerifySelected(object sender, PublishersEventArgs e)
         {
-            Model.ChangeCampaignStatus(CampaignStatusId.Finalized, CampaignStatusId.Verified, e.AffIds, e.CostCurrs);
+            Model.ChangeCampaignStatus(CampaignStatusId.Finalized, CampaignStatusId.Verified, e.AffIds, e.CostCurrs, MediaBuyerApprovalStatusId.Approved);
             View.PublishersToVerify.Clear();
-            Model.Fill(View.PublishersToVerify, CampaignStatusId.Finalized);
+            Model.Fill(View.PublishersToVerify, CampaignStatusId.Finalized, this.mediaBuyerApprovalStatus);
             View.RefreshCampaigns();
         }
 

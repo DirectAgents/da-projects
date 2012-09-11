@@ -200,7 +200,7 @@ namespace EomApp1.Screens.Final
             string itemIds = row.ItemIds;
 
             string note;
-            // Ready Button
+            // Queue Button
             if (e.ColumnIndex == ApprovalCol.Index)
             {
                 UpdateMediaBuyerApprovalStatus("default", "Queued", itemIds);
@@ -276,20 +276,24 @@ namespace EomApp1.Screens.Final
 
         private void ReviewCampaign(int id, string currency)
         {
-            var db = new FinalizeDataDataContext(true);
-
-            var query = from c in db.Items
-                        where c.pid == id && c.CampaignStatus.name == "Finalized" && c.Currency.name == currency
-                        select c;
-
-            var defaultCampaignStatus = db.CampaignStatus.Single(c => c.name == "default");
-
-            foreach (var item in query)
+            using (var eom = Models.Eom.Create())
             {
-                item.CampaignStatus = defaultCampaignStatus;
-            }
+                var query = from c in eom.Items
+                            where
+                                c.pid == id && c.campaign_status_id == (int)CampaignStatusId.Finalized &&
+                                c.Currency.name == currency &&
+                                c.media_buyer_approval_status_id == (int)MediaBuyerApprovalStatusId.Default
+                            select c;
 
-            db.SubmitChanges();
+                var defaultCampaignStatus = eom.CampaignStatus.Single(c => c.name == "default").id;
+
+                foreach (var item in query)
+                {
+                    item.campaign_status_id = defaultCampaignStatus;
+                }
+
+                eom.SaveChanges();
+            }
         }
 
         private void VerifyCampaign(int id, string currency)
