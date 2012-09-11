@@ -8,7 +8,7 @@ using Ninject;
 
 namespace EomToolWeb.Infrastructure
 {
-    public class NinjectControllerFactory : DefaultControllerFactory
+    public partial class NinjectControllerFactory : DefaultControllerFactory
     {
         private IKernel kernel;
 
@@ -30,6 +30,7 @@ namespace EomToolWeb.Infrastructure
             kernel.Bind<IMainRepository>().To<MainRepository>();
             kernel.Bind<ISecurityRepository>().To<SecurityRepository>();
             kernel.Bind<IBatchRepository>().To<BatchRepository>();
+            SetupOther();            
         }
     }
 }

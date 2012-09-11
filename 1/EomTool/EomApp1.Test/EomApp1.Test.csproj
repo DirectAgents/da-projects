@@ -79,7 +79,7 @@
       <Project>{268E422D-0ED9-4922-AE6E-775534A8EDAC}</Project>
       <Name>CakeMarketing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\EomTool\DAgents.Common\DirectAgents.Common.csproj">
+    <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
       <Name>DirectAgents.Common</Name>
     </ProjectReference>

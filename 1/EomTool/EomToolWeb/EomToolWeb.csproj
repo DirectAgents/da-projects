@@ -36,6 +36,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moq">
+      <HintPath>..\..\Solution\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\..\Solution\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
@@ -129,7 +132,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BatchesController.cs" />
+    <Compile Include="Controllers\CampaignsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PayoutsController.cs" />
     <Compile Include="Controllers\PublishersController.cs" />
@@ -142,6 +147,7 @@
     <Compile Include="Infrastructure\EomEntitiesConfig.cs" />
     <Compile Include="Infrastructure\EomToolWebConfigSection.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
+    <Compile Include="Infrastructure\NinjectControllerFactory.partial.cs" />
     <Compile Include="Models\AffiliatesListViewModel.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
@@ -373,11 +379,16 @@
     <Content Include="Views\Payouts\Summary.cshtml" />
     <Content Include="Views\Payouts\SummaryGrid.cshtml" />
     <Content Include="Views\Batches\ShowNotes.cshtml" />
+    <Content Include="Views\Campaigns\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DirectAgents.Domain\DirectAgents.Domain.csproj">
+      <Project>{278911AB-CB92-4316-843E-4571CD0C3410}</Project>
+      <Name>DirectAgents.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
       <Name>DirectAgents.Common</Name>
