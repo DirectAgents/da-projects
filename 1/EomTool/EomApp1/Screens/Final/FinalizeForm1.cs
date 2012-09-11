@@ -39,6 +39,22 @@ namespace EomApp1.Screens.Final
             DisableVerifyAndReview();
         }
 
+        private void DisableVerifyAndReview()
+        {
+            if (Security.User.Current.CanDoWorkflowVerify)
+            {
+                campaignsToVerifyGrid.Sorted += (s, e) => DisableBottomButtons();
+                campaignBindingSource1.ListChanged += (s, e) => DisableBottomButtons();
+            }
+            else
+            {
+                verifyCol.Visible = false;
+                colReview.Visible = false;
+                ApprovalCol.Visible = false;
+                mbApprovalButton.Visible = false;
+            }
+        }
+
         private void SetNetTermColumnsVisibility(bool visible)
         {
             foreach (DataGridViewLinkColumn linkColumn in NumPubNetTermColumns)
@@ -60,17 +76,6 @@ namespace EomApp1.Screens.Final
             foreach (var item in this.numPubColsTop)
             {
                 item.DefaultCellStyle = style;
-            }
-        }
-
-        private void DisableVerifyAndReview()
-        {
-            if (!Security.User.Current.CanDoWorkflowVerify)
-            {
-                verifyCol.Visible = false;
-                colReview.Visible = false;
-                ApprovalCol.Visible = false;
-                mbApprovalButton.Visible = false;
             }
         }
 
@@ -103,12 +108,10 @@ namespace EomApp1.Screens.Final
             FinalizeDataSet1.CampaignDataTable x = finalizeDataSet1.Campaign;
             campaignTableAdapter.Fill(x);
 
-            // Security
+            // Security... Note: maybe it's not necessary to call these here b/c they are called during the Fill when the
+            // "Sorted" and "ListChanged" events are triggered.
             DisableFinalizeButtons();
-
-            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", ApprovalCol);
-            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "Approved", verifyCol);
-            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", colReview);
+            DisableBottomButtons();
         }
 
         // Security        
@@ -120,6 +123,13 @@ namespace EomApp1.Screens.Final
                                        where !Security.User.Current.CanDoWorkflowFinalize(am)
                                        select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
                     button.Enabled = false;
+        }
+
+        private void DisableBottomButtons()
+        {
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", ApprovalCol);
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "Approved", verifyCol);
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", colReview);
         }
 
         static private void DisableButtons(DataGridView grid, Func<FinalizeDataSet1.CampaignRow, bool> condition, DataGridViewDisableButtonColumn buttonCol)
@@ -190,7 +200,7 @@ namespace EomApp1.Screens.Final
             string itemIds = row.ItemIds;
 
             string note;
-            // Ready Button
+            // Queue Button
             if (e.ColumnIndex == ApprovalCol.Index)
             {
                 UpdateMediaBuyerApprovalStatus("default", "Queued", itemIds);
@@ -266,20 +276,24 @@ namespace EomApp1.Screens.Final
 
         private void ReviewCampaign(int id, string currency)
         {
-            var db = new FinalizeDataDataContext(true);
-
-            var query = from c in db.Items
-                        where c.pid == id && c.CampaignStatus.name == "Finalized" && c.Currency.name == currency
-                        select c;
-
-            var defaultCampaignStatus = db.CampaignStatus.Single(c => c.name == "default");
-
-            foreach (var item in query)
+            using (var eom = Models.Eom.Create())
             {
-                item.CampaignStatus = defaultCampaignStatus;
-            }
+                var query = from c in eom.Items
+                            where
+                                c.pid == id && c.campaign_status_id == (int)CampaignStatusId.Finalized &&
+                                c.Currency.name == currency &&
+                                c.media_buyer_approval_status_id == (int)MediaBuyerApprovalStatusId.Default
+                            select c;
 
-            db.SubmitChanges();
+                var defaultCampaignStatus = eom.CampaignStatus.Single(c => c.name == "default").id;
+
+                foreach (var item in query)
+                {
+                    item.campaign_status_id = defaultCampaignStatus;
+                }
+
+                eom.SaveChanges();
+            }
         }
 
         private void VerifyCampaign(int id, string currency)

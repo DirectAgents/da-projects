@@ -69,7 +69,7 @@ namespace EomApp1.Screens.Final.Models
             }
         }
 
-        public void ChangeCampaignStatus(CampaignStatusId fromStatusID, CampaignStatusId toStatusID, int[] affids, string[] costcurrs)
+        public void ChangeCampaignStatus(CampaignStatusId fromStatusID, CampaignStatusId toStatusID, int[] affids, string[] costcurrs, MediaBuyerApprovalStatusId? mbApprovalStatusId = null)
         {
             using (var db = Models.Eom.Create())
             {
@@ -83,6 +83,10 @@ namespace EomApp1.Screens.Final.Models
                     {
                         var costcurr = costcurrs[j];
                         query = query.Where(i => i.Currency1.name == costcurr);
+                    }
+                    if (mbApprovalStatusId != null)
+                    {
+                        query = query.Where(i => i.media_buyer_approval_status_id == (int)mbApprovalStatusId);
                     }
                     foreach (var item in query)
                     {
