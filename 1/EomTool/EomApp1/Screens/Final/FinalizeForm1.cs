@@ -39,6 +39,22 @@ namespace EomApp1.Screens.Final
             DisableVerifyAndReview();
         }
 
+        private void DisableVerifyAndReview()
+        {
+            if (Security.User.Current.CanDoWorkflowVerify)
+            {
+                campaignsToVerifyGrid.Sorted += (s, e) => DisableBottomButtons();
+                campaignBindingSource1.ListChanged += (s, e) => DisableBottomButtons();
+            }
+            else
+            {
+                verifyCol.Visible = false;
+                colReview.Visible = false;
+                ApprovalCol.Visible = false;
+                mbApprovalButton.Visible = false;
+            }
+        }
+
         private void SetNetTermColumnsVisibility(bool visible)
         {
             foreach (DataGridViewLinkColumn linkColumn in NumPubNetTermColumns)
@@ -60,17 +76,6 @@ namespace EomApp1.Screens.Final
             foreach (var item in this.numPubColsTop)
             {
                 item.DefaultCellStyle = style;
-            }
-        }
-
-        private void DisableVerifyAndReview()
-        {
-            if (!Security.User.Current.CanDoWorkflowVerify)
-            {
-                verifyCol.Visible = false;
-                colReview.Visible = false;
-                ApprovalCol.Visible = false;
-                mbApprovalButton.Visible = false;
             }
         }
 
@@ -103,12 +108,10 @@ namespace EomApp1.Screens.Final
             FinalizeDataSet1.CampaignDataTable x = finalizeDataSet1.Campaign;
             campaignTableAdapter.Fill(x);
 
-            // Security
+            // Security... Note: maybe it's not necessary to call these here b/c they are called during the Fill when the
+            // "Sorted" and "ListChanged" events are triggered.
             DisableFinalizeButtons();
-
-            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", ApprovalCol);
-            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "Approved", verifyCol);
-            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", colReview);
+            DisableBottomButtons();
         }
 
         // Security        
@@ -120,6 +123,13 @@ namespace EomApp1.Screens.Final
                                        where !Security.User.Current.CanDoWorkflowFinalize(am)
                                        select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
                     button.Enabled = false;
+        }
+
+        private void DisableBottomButtons()
+        {
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", ApprovalCol);
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "Approved", verifyCol);
+            DisableButtons(campaignsToVerifyGrid, row => row.MediaBuyerApprovalStatus != "default", colReview);
         }
 
         static private void DisableButtons(DataGridView grid, Func<FinalizeDataSet1.CampaignRow, bool> condition, DataGridViewDisableButtonColumn buttonCol)
