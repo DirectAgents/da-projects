@@ -8,7 +8,54 @@
 
 @foreach (var campaign in Model)
 {
-    <div>
+    <p id="camp@(campaign.Pid)">
     @Html.Partial("Show", campaign)
+    </p>
+}
+
+<div id="divEditCampaign" title="Edit Campaign">
+    <div id="divEditCampaignInner">
     </div>
+</div>
+
+@section scripts {
+<script type="text/javascript">
+
+function EditCampaign(pid) {
+    $.get('@Url.Action("Edit", "Campaigns")', { pid: pid }, function (data) {
+        $('#divEditCampaignInner').html(data);
+        $('#divEditCampaign').dialog("open");
+    });
+}
+
+function SaveCampaign() {
+    var url = '@Url.Action("Edit","Campaigns")';
+    $.post(url, $('#frmEditCampaign').serialize(), function (data) {
+        var pid = $('#frmEditCampaign #Pid').val();
+        ReloadCampaign(pid);
+        $('#divEditCampaign').dialog("close");
+    });
+}
+
+function ReloadCampaign(pid) {
+    $.get('@Url.Action("Show", "Campaigns")', { pid: pid }, function (data) {
+        $('#camp' + pid).html(data);
+    });
+}
+
+$(function () {
+    $("#divEditCampaign").dialog({
+        autoOpen: false,
+        height: 800,
+        width: 500,
+        modal: true,
+        buttons: {
+            Save: SaveCampaign,
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+});
+</script>
 }

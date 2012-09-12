@@ -8,7 +8,7 @@
 
 @foreach (var country in Model.Countries.Keys)
 {
-    <h3>@(country):</h3>
+    <h3>@Html.ActionLink(country, "List", new {country = country}):</h3>
     <ol>
     @foreach (var campaign in Model.Countries[country])
     {
