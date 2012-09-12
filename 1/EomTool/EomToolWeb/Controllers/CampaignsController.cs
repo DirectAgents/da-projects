@@ -18,12 +18,17 @@ namespace EomToolWeb.Controllers
             this.campaignRepository = campaignRepository;
         }
 
-        public ActionResult List(string country)
+        public ActionResult List(string country, string pid)
         {
             var campaigns = campaignRepository.Campaigns;
             if (!string.IsNullOrWhiteSpace(country))
             {
                 campaigns = campaigns.Where(c => c.Countries.Contains(country));
+            }
+            int pidInt;
+            if (Int32.TryParse(pid, out pidInt))
+            {
+                campaigns = campaigns.Where(c => c.Pid == pidInt);
             }
             return View(campaigns);
         }
