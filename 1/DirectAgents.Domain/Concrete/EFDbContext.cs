@@ -18,13 +18,13 @@ namespace DirectAgents.Domain.Concrete
                 });
 
             modelBuilder.Entity<Campaign>()
-                .HasMany(u => u.MediaBuyers)
-                .WithMany(t => t.MediaBuyerCampaigns)
+                .HasMany(u => u.AdManagers)
+                .WithMany(t => t.AdManagerCampaigns)
                 .Map(x =>
                 {
                     x.MapLeftKey("PersonId");
                     x.MapRightKey("Pid");
-                    x.ToTable("CampaignMediaBuyers");
+                    x.ToTable("CampaignAdManagers");
                 });
         }
 

@@ -100,22 +100,6 @@ namespace Cake.Model.Staging
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<CakeOffer> CakeOffers
-        {
-            get
-            {
-                if ((_CakeOffers == null))
-                {
-                    _CakeOffers = base.CreateObjectSet<CakeOffer>("CakeOffers");
-                }
-                return _CakeOffers;
-            }
-        }
-        private ObjectSet<CakeOffer> _CakeOffers;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<CakeConversion> CakeConversions
         {
             get
@@ -128,6 +112,22 @@ namespace Cake.Model.Staging
             }
         }
         private ObjectSet<CakeConversion> _CakeConversions;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<CakeOffer> CakeOffers
+        {
+            get
+            {
+                if ((_CakeOffers == null))
+                {
+                    _CakeOffers = base.CreateObjectSet<CakeOffer>("CakeOffers");
+                }
+                return _CakeOffers;
+            }
+        }
+        private ObjectSet<CakeOffer> _CakeOffers;
 
         #endregion
         #region AddTo Methods
@@ -149,19 +149,19 @@ namespace Cake.Model.Staging
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the CakeOffers EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToCakeOffers(CakeOffer cakeOffer)
-        {
-            base.AddObject("CakeOffers", cakeOffer);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the CakeConversions EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToCakeConversions(CakeConversion cakeConversion)
         {
             base.AddObject("CakeConversions", cakeConversion);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the CakeOffers EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToCakeOffers(CakeOffer cakeOffer)
+        {
+            base.AddObject("CakeOffers", cakeOffer);
         }
 
         #endregion
@@ -536,10 +536,12 @@ namespace Cake.Model.Staging
         /// Create a new CakeConversion object.
         /// </summary>
         /// <param name="conversion_Id">Initial value of the Conversion_Id property.</param>
-        public static CakeConversion CreateCakeConversion(global::System.Int32 conversion_Id)
+        /// <param name="deleted">Initial value of the Deleted property.</param>
+        public static CakeConversion CreateCakeConversion(global::System.Int32 conversion_Id, global::System.Boolean deleted)
         {
             CakeConversion cakeConversion = new CakeConversion();
             cakeConversion.Conversion_Id = conversion_Id;
+            cakeConversion.Deleted = deleted;
             return cakeConversion;
         }
 
@@ -578,7 +580,7 @@ namespace Cake.Model.Staging
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String ConversionDate
+        public Nullable<global::System.DateTime> ConversionDate
         {
             get
             {
@@ -588,13 +590,13 @@ namespace Cake.Model.Staging
             {
                 OnConversionDateChanging(value);
                 ReportPropertyChanging("ConversionDate");
-                _ConversionDate = StructuralObject.SetValidValue(value, true);
+                _ConversionDate = StructuralObject.SetValidValue(value);
                 ReportPropertyChanged("ConversionDate");
                 OnConversionDateChanged();
             }
         }
-        private global::System.String _ConversionDate;
-        partial void OnConversionDateChanging(global::System.String value);
+        private Nullable<global::System.DateTime> _ConversionDate;
+        partial void OnConversionDateChanging(Nullable<global::System.DateTime> value);
         partial void OnConversionDateChanged();
     
         /// <summary>
@@ -794,7 +796,7 @@ namespace Cake.Model.Staging
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String PricePaid
+        public Nullable<global::System.Decimal> PricePaid
         {
             get
             {
@@ -804,13 +806,13 @@ namespace Cake.Model.Staging
             {
                 OnPricePaidChanging(value);
                 ReportPropertyChanging("PricePaid");
-                _PricePaid = StructuralObject.SetValidValue(value, true);
+                _PricePaid = StructuralObject.SetValidValue(value);
                 ReportPropertyChanged("PricePaid");
                 OnPricePaidChanged();
             }
         }
-        private global::System.String _PricePaid;
-        partial void OnPricePaidChanging(global::System.String value);
+        private Nullable<global::System.Decimal> _PricePaid;
+        partial void OnPricePaidChanging(Nullable<global::System.Decimal> value);
         partial void OnPricePaidChanged();
     
         /// <summary>
@@ -818,7 +820,7 @@ namespace Cake.Model.Staging
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String PriceReceived
+        public Nullable<global::System.Decimal> PriceReceived
         {
             get
             {
@@ -828,13 +830,13 @@ namespace Cake.Model.Staging
             {
                 OnPriceReceivedChanging(value);
                 ReportPropertyChanging("PriceReceived");
-                _PriceReceived = StructuralObject.SetValidValue(value, true);
+                _PriceReceived = StructuralObject.SetValidValue(value);
                 ReportPropertyChanged("PriceReceived");
                 OnPriceReceivedChanged();
             }
         }
-        private global::System.String _PriceReceived;
-        partial void OnPriceReceivedChanging(global::System.String value);
+        private Nullable<global::System.Decimal> _PriceReceived;
+        partial void OnPriceReceivedChanging(Nullable<global::System.Decimal> value);
         partial void OnPriceReceivedChanged();
     
         /// <summary>
@@ -956,6 +958,30 @@ namespace Cake.Model.Staging
         private global::System.String _PriceReceivedFormattedAmount;
         partial void OnPriceReceivedFormattedAmountChanging(global::System.String value);
         partial void OnPriceReceivedFormattedAmountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean Deleted
+        {
+            get
+            {
+                return _Deleted;
+            }
+            set
+            {
+                OnDeletedChanging(value);
+                ReportPropertyChanging("Deleted");
+                _Deleted = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Deleted");
+                OnDeletedChanged();
+            }
+        }
+        private global::System.Boolean _Deleted;
+        partial void OnDeletedChanging(global::System.Boolean value);
+        partial void OnDeletedChanged();
 
         #endregion
     
@@ -1395,6 +1421,30 @@ namespace Cake.Model.Staging
         private global::System.String _Currency;
         partial void OnCurrencyChanging(global::System.String value);
         partial void OnCurrencyChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String AllowedCountries
+        {
+            get
+            {
+                return _AllowedCountries;
+            }
+            set
+            {
+                OnAllowedCountriesChanging(value);
+                ReportPropertyChanging("AllowedCountries");
+                _AllowedCountries = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("AllowedCountries");
+                OnAllowedCountriesChanged();
+            }
+        }
+        private global::System.String _AllowedCountries;
+        partial void OnAllowedCountriesChanging(global::System.String value);
+        partial void OnAllowedCountriesChanged();
 
         #endregion
     

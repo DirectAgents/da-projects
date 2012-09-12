@@ -81,6 +81,7 @@ namespace CakeUtility
             MapperItem.AddConversion<Cake.Data.Wsdl.ExportService.offer_type, String>(c => (c as Cake.Data.Wsdl.ExportService.offer_type).offer_type_name);
             MapperItem.AddConversion<String, Int32>(c => Int32.Parse(c.ToString()));
             MapperItem.AddConversion<Cake.Data.Wsdl.ExportService.currency, String>(c => (c as Cake.Data.Wsdl.ExportService.currency).currency_abbr);
+            MapperItem.AddConversion<String[], String>(c => String.Join(",", c));
         }
 
         #region Contacts

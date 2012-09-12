@@ -22,7 +22,7 @@ namespace DirectAgents.Domain.Entities
             set;
         }
 
-        public virtual ICollection<Campaign> MediaBuyerCampaigns
+        public virtual ICollection<Campaign> AdManagerCampaigns
         {
             get;
             set;
