@@ -641,6 +641,7 @@
     <Content Include="Views\BlogPost\Create.cshtml" />
     <Content Include="Views\Campaigns\Show.cshtml" />
     <Content Include="Views\Campaigns\ListByCountry.cshtml" />
+    <Content Include="Views\Campaigns\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

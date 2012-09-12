@@ -1,0 +1,73 @@
+﻿@model DirectAgents.Domain.Entities.Campaign
+
+@using (Html.BeginForm("Edit", "Campaigns", FormMethod.Post, new {id = "frmEditCampaign"})) {
+
+<fieldset>
+<p>
+    @Html.LabelFor(c => c.Pid)
+    @Model.Pid
+    @Html.HiddenFor(c => c.Pid)
+</p>
+<p>
+    @Html.LabelFor(c => c.Name)
+    @Html.EditorFor(c => c.Name)
+</p>
+<p>
+    @Html.LabelFor(c => c.Description)
+    @Html.EditorFor(c => c.Description)
+</p>
+<p>
+    @Html.LabelFor(c => c.PayableAction)
+    @Html.EditorFor(c => c.PayableAction)
+</p>
+<p>
+    @Html.LabelFor(c => c.TrafficType)
+    @Html.EditorFor(c => c.TrafficType)
+</p>
+<p>
+    @Html.LabelFor(c => c.Link)
+    @Html.EditorFor(c => c.Link)
+</p>
+<p>
+    @Html.LabelFor(c => c.CostCurrency)
+    @Html.EditorFor(c => c.CostCurrency)
+</p>
+<p>
+    @Html.LabelFor(c => c.Cost)
+    @Html.EditorFor(c => c.Cost)
+</p>
+<p>
+    @Html.LabelFor(c => c.RevenueCurrency)
+    @Html.EditorFor(c => c.RevenueCurrency)
+</p>
+<p>
+    @Html.LabelFor(c => c.Revenue)
+    @Html.EditorFor(c => c.Revenue)
+</p>
+<p>
+    @Html.LabelFor(c => c.ImportantDetails)
+    @Html.EditorFor(c => c.ImportantDetails)
+</p>
+<p>
+    @Html.LabelFor(c => c.BannedNetworks)
+    @Html.EditorFor(c => c.BannedNetworks)
+</p>
+<p>
+    @Html.LabelFor(c => c.CampaignCap)
+    @Html.EditorFor(c => c.CampaignCap)
+</p>
+<p>
+    @Html.LabelFor(c => c.Countries)
+    @Html.EditorFor(c => c.Countries)
+</p>
+<p>
+    @Html.LabelFor(c => c.ScrubPolicy)
+    @Html.EditorFor(c => c.ScrubPolicy)
+</p>
+<p>
+    @Html.LabelFor(c => c.EomNotes)
+    @Html.EditorFor(c => c.EomNotes)
+</p>
+</fieldset>
+
+}

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using EomToolWeb.Models;
+using DirectAgents.Domain.Entities;
 
 namespace EomToolWeb.Controllers
 {
@@ -17,12 +18,17 @@ namespace EomToolWeb.Controllers
             this.campaignRepository = campaignRepository;
         }
 
-        public ActionResult List(string country)
+        public ActionResult List(string country, string pid)
         {
             var campaigns = campaignRepository.Campaigns;
             if (!string.IsNullOrWhiteSpace(country))
             {
                 campaigns = campaigns.Where(c => c.Countries.Contains(country));
+            }
+            int pidInt;
+            if (Int32.TryParse(pid, out pidInt))
+            {
+                campaigns = campaigns.Where(c => c.Pid == pidInt);
             }
             return View(campaigns);
         }
@@ -38,12 +44,42 @@ namespace EomToolWeb.Controllers
         public ActionResult Show(int pid)
         {
             var campaign = campaignRepository.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
-
             if (campaign == null)
             {
                 return Content("campaign not found");
             }
-            return View(campaign);
+            return PartialView(campaign);
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int pid)
+        {
+            var campaign = campaignRepository.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
+            if (campaign == null)
+            {
+                return Content("campaign not found");
+            }
+            return PartialView(campaign);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Campaign campaign)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingCampaign = campaignRepository.FindById(campaign.Pid);
+                if (existingCampaign != null)
+                {
+                    TryUpdateModel(existingCampaign);
+                    campaignRepository.SaveChanges();
+                }
+                // else... set a ModelState error?
+            }
+
+            if (Request.IsAjaxRequest())
+                return Json(new {IsValid = ModelState.IsValid});
+            else
+                return View(campaign);
         }
     }
 }

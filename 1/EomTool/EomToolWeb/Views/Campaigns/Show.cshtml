@@ -3,8 +3,11 @@
     var campaign = Model;
 }
 
-<h3>@Html.ActionLink(campaign.Name, "Show", new {pid = campaign.Pid})</h3>
-Pid - @(campaign.Pid)<br />
+<b style="font-size:large">@campaign.Name</b>
+<a href="#" onclick="EditCampaign(@campaign.Pid); return false">Edit</a><br />
+
+Pid - @campaign.Pid<br />
+Description - @campaign.Description<br />
 Ad Managers -
 @{
     var ad_mgrs = string.Join(", ", campaign.AdManagers.Select(am => am.Name));
@@ -17,4 +20,4 @@ Account Managers -
     @acct_mgrs
 }
 <br />
-Countries - @(campaign.Countries)<br />
+Countries - @campaign.Countries<br />
