@@ -371,9 +371,12 @@
     <Position X="4.5" Y="6.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>jAJMIFCrCwICsFIAIAiKaNQRywUGYKAyAA5EBChh4QA=</HashCode>
+      <HashCode>jAJMIFCrCwICsFIAIAiKaNQRywUOYKAyAA5EBChh4QA=</HashCode>
       <FileName>offer1.partial.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />

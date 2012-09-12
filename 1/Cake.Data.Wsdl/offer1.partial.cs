@@ -1,4 +1,7 @@
 ﻿using System.Linq;
+using System.Xml.Serialization;
+using System.Xml.Linq;
+using System.Xml;
 
 namespace Cake.Data.Wsdl.ExportService
 {
@@ -27,6 +30,38 @@ namespace Cake.Data.Wsdl.ExportService
                 string[] result = this.offer_contracts.SelectMany(oc => oc.geo_targeting.allowed_countries.Select(c => c.country.country_code)).ToArray();
                 string resultCSV = string.Join(",", result);
                 return resultCSV;
+            }
+        }
+
+        public string VerticalName
+        {
+            get
+            {
+                return this.vertical.vertical_name;
+            }
+        }
+
+        public string DefaultPriceFormat
+        {
+            get
+            {
+                return this.offer_contracts[0].price_format.price_format_name;
+            }
+        }
+
+        public string Xml
+        {
+            get
+            {
+                var serializer = new XmlSerializer(typeof(offer1));
+                var xdoc = new XDocument();
+                XmlWriter writer = xdoc.CreateWriter();
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("offer", "http://cakemarketing.com/api/3/");
+                serializer.Serialize(writer, this, ns);
+                writer.Close();
+                string result = xdoc.ToString();
+                return result;
             }
         }
     }

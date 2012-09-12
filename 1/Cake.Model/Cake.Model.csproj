@@ -49,6 +49,7 @@
       <DependentUpon>Cake.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Staging\CakeOffer.cs" />
     <Compile Include="Staging\CakeStaging.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -67,6 +68,12 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CakeStaging.Designer.cs</LastGenOutput>
     </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cake.Data.Wsdl\Cake.Data.Wsdl.csproj">
+      <Project>{8656B9B9-82A6-400A-A7B7-44AF044321E3}</Project>
+      <Name>Cake.Data.Wsdl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,6 +2,8 @@
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities;
 using System.Data.Objects.SqlClient;
+using System.Collections.Generic;
+using Cake.Model;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -77,6 +79,9 @@ namespace DirectAgents.Domain.Concrete
                         campaign.AdManagers.Add(ad);
                     }
 
+                    var offer = (Cake.Data.Wsdl.ExportService.offer1)item.Offer;
+                    campaign.Cost = offer.offer_contracts[0].payout.amount;
+                    
                     daDomain.SaveChanges(); // Do this here so that any people that were created can be reused for other campaigns.
                 }
             }

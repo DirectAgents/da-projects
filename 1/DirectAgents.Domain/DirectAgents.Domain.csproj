@@ -64,6 +64,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cake.Data.Wsdl\Cake.Data.Wsdl.csproj">
+      <Project>{8656B9B9-82A6-400A-A7B7-44AF044321E3}</Project>
+      <Name>Cake.Data.Wsdl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cake.Model\Cake.Model.csproj">
       <Project>{B3B19DA1-2335-4597-8DBE-9C7A12B7E92E}</Project>
       <Name>Cake.Model</Name>

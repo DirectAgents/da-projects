@@ -11,6 +11,7 @@ namespace CakeUtility
         [STAThread]
         public static void Main(string[] args)
         {
+            System.Console.Clear();
             bool hasRun = false;
             try
             {
@@ -58,7 +59,7 @@ namespace CakeUtility
                 foreach (var id in ids)
                 {
                     Console.WriteLine("Logged exception to CakeUtilityError with Id={0}", id);
-                } 
+                }
             }
         }
 
@@ -118,16 +119,31 @@ namespace CakeUtility
         #endregion
 
         [Command]
+        public void ReCreateCakeStagingDatabase()
+        {
+            using (var context = new Cake.Model.Staging.CakeStagingEntities())
+            {
+                if (context.DatabaseExists())
+                {
+                    context.DeleteDatabase();
+                }
+                context.CreateDatabase();
+                Console.WriteLine("Database created");
+            }
+        }
+
+        [Command]
         public void ResetStagingTables()
         {
             using (var context = new Cake.Model.Staging.CakeStagingEntities())
             {
                 context.ExecuteStoreCommand("ResetStagingTables");
+                Console.WriteLine("Staging tables reset");
             }
         }
 
         [Command]
-        public void Refresh()
+        public void RefreshStagingTables()
         {
             ResetStagingTables();
             ExtractAndStageCakeAdvertisers();
@@ -172,7 +188,7 @@ namespace CakeUtility
         {
             this.ExtractAndStageCakeOffers();
             this.LoadCakeOffers();
-        } 
+        }
         #endregion
 
         #region Affiliates
@@ -200,7 +216,7 @@ namespace CakeUtility
         }
         #endregion
 
-        #region Conversions 
+        #region Conversions
         [Command]
         public void ExtractAndStageCakeConversions()
         {

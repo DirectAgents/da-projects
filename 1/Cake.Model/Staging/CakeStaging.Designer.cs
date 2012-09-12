@@ -1445,6 +1445,30 @@ namespace Cake.Model.Staging
         private global::System.String _AllowedCountries;
         partial void OnAllowedCountriesChanging(global::System.String value);
         partial void OnAllowedCountriesChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Xml
+        {
+            get
+            {
+                return _Xml;
+            }
+            set
+            {
+                OnXmlChanging(value);
+                ReportPropertyChanging("Xml");
+                _Xml = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Xml");
+                OnXmlChanged();
+            }
+        }
+        private global::System.String _Xml;
+        partial void OnXmlChanging(global::System.String value);
+        partial void OnXmlChanged();
 
         #endregion
     

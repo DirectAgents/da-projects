@@ -9,6 +9,7 @@ namespace Cake.Data.Wsdl
     public class CakeService : ICakeService
     {
         private string apiKey;
+        private int defaultRowLimit = 0;
 
         public CakeService(string apiKey)
         {
@@ -82,7 +83,7 @@ namespace Cake.Data.Wsdl
                                     offer_status_id: 0,
                                     tag_id: 0,
                                     start_at_row: 0,
-                                    row_limit: 0,
+                                    row_limit: this.defaultRowLimit,
                                     sort_field: OffersSortFields.offer_id,
                                     sort_descending: false);
 

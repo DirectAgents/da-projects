@@ -78,6 +78,7 @@
           <Property Name="DateCreated" Type="nvarchar" MaxLength="255" />
           <Property Name="Currency" Type="nchar" MaxLength="3" />
           <Property Name="AllowedCountries" Type="nvarchar(max)" />
+          <Property Name="Xml" Type="xml" />
         </EntityType>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -156,6 +157,7 @@
           <Property Type="String" Name="DateCreated" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
           <Property Type="String" Name="AllowedCountries" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Xml" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -214,6 +216,7 @@
           <EntitySetMapping Name="CakeOffers">
             <EntityTypeMapping TypeName="CakeStagingModel.CakeOffer">
               <MappingFragment StoreEntitySet="CakeOffers">
+                <ScalarProperty Name="Xml" ColumnName="Xml" />
                 <ScalarProperty Name="AllowedCountries" ColumnName="AllowedCountries" />
                 <ScalarProperty Name="Currency" ColumnName="Currency" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
@@ -258,8 +261,8 @@
       <Diagram Name="CakeStaging" >
         <EntityTypeShape EntityType="CakeStagingModel.CakeAdvertiser" Width="2" PointX="0.5" PointY="0.75" Height="1.787985026041667" />
         <EntityTypeShape EntityType="CakeStagingModel.CakeAffiliate" Width="2.5" PointX="2.75" PointY="0.75" Height="2.3648893229166656" />
-        <EntityTypeShape EntityType="CakeStagingModel.CakeConversion" Width="1.5" PointX="9" PointY="0.75" Height="4.480205078125" />
-        <EntityTypeShape EntityType="CakeStagingModel.CakeOffer" Width="1.5" PointX="6.125" PointY="0.875" Height="4.480205078125" />
+        <EntityTypeShape EntityType="CakeStagingModel.CakeConversion" Width="1.5" PointX="7.25" PointY="0.75" Height="4.480205078125" />
+        <EntityTypeShape EntityType="CakeStagingModel.CakeOffer" Width="1.5" PointX="5.5" PointY="0.75" Height="4.6725065104166674" />
       </Diagram>
     </Diagrams>
   </Designer>
