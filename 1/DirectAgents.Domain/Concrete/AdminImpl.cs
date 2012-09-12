@@ -51,6 +51,8 @@ namespace DirectAgents.Domain.Concrete
                         daDomain.Campaigns.Add(campaign);
                     }
                     campaign.Name = item.Offer.OfferName;
+                    campaign.Countries = item.Offer.AllowedCountries;
+
                     var am = daDomain.People.Where(p => p.Name == item.Advertiser.AccountManagerName).FirstOrDefault();
                     if (am == null)
                     {
@@ -66,7 +68,7 @@ namespace DirectAgents.Domain.Concrete
                     var ad = daDomain.People.Where(p => p.Name == item.Advertiser.AdManagerName).FirstOrDefault();
                     if (ad == null)
                     {
-                        ad = new Person { Name = item.Advertiser.AdvertiserName };
+                        ad = new Person { Name = item.Advertiser.AdManagerName };
                     }
                     // TODO: support multiple admangers
                     if (campaign.AdManagers != null)
@@ -74,8 +76,9 @@ namespace DirectAgents.Domain.Concrete
                         campaign.AdManagers.Clear();
                         campaign.AdManagers.Add(ad);
                     }
+
+                    daDomain.SaveChanges(); // Do this here so that any people that were created can be reused for other campaigns.
                 }
-                daDomain.SaveChanges();
             }
         }
     }

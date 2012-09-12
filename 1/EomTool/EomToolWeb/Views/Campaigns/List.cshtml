@@ -2,24 +2,13 @@
 @{
     ViewBag.Title = "Campaigns";
 }
-<h2>
-    Campaigns List</h2>
+<h2>Campaigns List</h2>
+
+<div>@Model.Count() campaigns</div>
+
 @foreach (var campaign in Model)
 {
     <div>
-        <h3>@campaign.Name</h3>
-        Pid - (@campaign.Pid)<br />
-        Account Managers -
-        @foreach (var am in campaign.AccountManagers)
-        {
-            @am.Name@:,
-                        }
-        <br />
-        Media Buyers -
-        @foreach (var mb in campaign.MediaBuyers)
-        {
-            @mb.Name@:,
-                        }
-        <br />
+    @Html.Partial("Show", campaign)
     </div>
 }

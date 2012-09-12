@@ -43,7 +43,7 @@ namespace DirectAgents.Domain.Entities
 
         public decimal CampaignCap { get; set; } // e.g. 3,500 downloads per month 
 
-        public string Coutries { get; set; } // e.g. United States 
+        public string Countries { get; set; } // e.g. United States 
 
         public string ScrubPolicy { get; set; } // e.g. No Scrub except fraud. 
 

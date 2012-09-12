@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
+using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
 {
@@ -16,9 +17,33 @@ namespace EomToolWeb.Controllers
             this.campaignRepository = campaignRepository;
         }
 
-        public ViewResult List()
+        public ActionResult List(string country)
         {
-            return View(campaignRepository.Campaigns);
+            var campaigns = campaignRepository.Campaigns;
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                campaigns = campaigns.Where(c => c.Countries.Contains(country));
+            }
+            return View(campaigns);
+        }
+
+        public ActionResult ListByCountry()
+        {
+            var campaigns = campaignRepository.Campaigns;
+            var countryCodes = campaignRepository.AllCountryCodes;
+            var model = new CampaignsByCountryViewModel(campaigns, countryCodes);
+            return View(model);
+        }
+
+        public ActionResult Show(int pid)
+        {
+            var campaign = campaignRepository.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
+
+            if (campaign == null)
+            {
+                return Content("campaign not found");
+            }
+            return View(campaign);
         }
     }
 }

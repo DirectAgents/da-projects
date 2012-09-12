@@ -151,6 +151,7 @@
     <Compile Include="Infrastructure\NinjectControllerFactory.partial.cs" />
     <Compile Include="Models\AffiliatesListViewModel.cs" />
     <Compile Include="Models\BlogPost.cs" />
+    <Compile Include="Models\CampaignsByCountryViewModel.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
@@ -638,6 +639,8 @@
     <Content Include="Views\Campaigns\List.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_jquery_full.cshtml" />
     <Content Include="Views\BlogPost\Create.cshtml" />
+    <Content Include="Views\Campaigns\Show.cshtml" />
+    <Content Include="Views\Campaigns\ListByCountry.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

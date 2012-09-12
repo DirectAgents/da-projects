@@ -1,0 +1,18 @@
+﻿@model EomToolWeb.Models.CampaignsByCountryViewModel
+
+@{
+    ViewBag.Title = "Campaigns By Country";
+}
+
+<h2>Campaigns By Country</h2>
+
+@foreach (var country in Model.Countries.Keys)
+{
+    <h3>@(country):</h3>
+    <ol>
+    @foreach (var campaign in Model.Countries[country])
+    {
+        <li>@Html.ActionLink(campaign.Name, "Show", new {pid = campaign.Pid})</li>
+    }
+    </ol>
+}

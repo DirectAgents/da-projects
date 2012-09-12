@@ -1,0 +1,20 @@
+﻿@model DirectAgents.Domain.Entities.Campaign
+@{
+    var campaign = Model;
+}
+
+<h3>@Html.ActionLink(campaign.Name, "Show", new {pid = campaign.Pid})</h3>
+Pid - @(campaign.Pid)<br />
+Ad Managers -
+@{
+    var ad_mgrs = string.Join(", ", campaign.AdManagers.Select(am => am.Name));
+    @ad_mgrs
+}
+<br />
+Account Managers -
+@{
+    var acct_mgrs = string.Join(", ", campaign.AccountManagers.Select(am => am.Name));
+    @acct_mgrs
+}
+<br />
+Countries - @(campaign.Countries)<br />
