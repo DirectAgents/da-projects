@@ -27,7 +27,7 @@ namespace DirectAgents.Domain.Concrete
                     x.ToTable("CampaignAdManagers");
                 });
 
-/*            modelBuilder.Entity<Campaign>()
+            modelBuilder.Entity<Campaign>()
                 .HasMany(c => c.Countries)
                 .WithMany(c => c.Campaigns)
                 .Map(x =>
@@ -36,11 +36,11 @@ namespace DirectAgents.Domain.Concrete
                     x.MapRightKey("CountryCode");
                     x.ToTable("CampaignCountries");
                 });
-*/
+
         }
 
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Person> People { get; set; }
-//        public DbSet<Country> Countries { get; set; }
+        public DbSet<Country> Countries { get; set; }
     }
 }

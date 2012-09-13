@@ -54,11 +54,8 @@ namespace DirectAgents.Domain.Concrete
                         daDomain.Campaigns.Add(campaign);
                     }
                     campaign.Name = item.Offer.OfferName;
-                    campaign.Countries = item.Offer.AllowedCountries;
+                    campaign.CountryCodes = item.Offer.AllowedCountries;
                     campaign.TrafficType = item.Offer.AllowedMediaTypeNames;
-
-//                    campaign.CountryCodes = item.Offer.AllowedCountries;
-
 
                     var am = daDomain.People.Where(p => p.Name == item.Advertiser.AccountManagerName).FirstOrDefault();
                     if (am == null)
@@ -85,12 +82,16 @@ namespace DirectAgents.Domain.Concrete
                     }
 
                     var offer = (Cake.Data.Wsdl.ExportService.offer1)item.Offer;
-                    campaign.Cost = offer.offer_contracts[0].payout.amount;
-                    campaign.ImageUrl = offer.offer_image_link;
-                    campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
+                    if (offer != null)
+                    {
+                        campaign.Cost = offer.offer_contracts[0].payout.amount;
+                        campaign.ImageUrl = offer.offer_image_link;
+                        campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
+                        campaign.Link = offer.offer_contracts[0].offer_link;
+                    }
                     if (string.IsNullOrWhiteSpace(campaign.PayableAction))
                         campaign.PayableAction = "Not Specified";
-                    campaign.Link = offer.offer_contracts[0].offer_link;
+
                     daDomain.SaveChanges(); // Do this here so that any people that were created can be reused for other campaigns.
                 }
             }

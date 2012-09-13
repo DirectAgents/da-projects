@@ -8,6 +8,9 @@ namespace Cake.Model.Staging
     {
         public static explicit operator offer1(CakeOffer cakeOffer)
         {
+            if (string.IsNullOrWhiteSpace(cakeOffer.Xml))
+                return null;
+
             var serializer = new XmlSerializer(typeof(offer1));
             var xdoc = XDocument.Parse(cakeOffer.Xml);
             var reader = xdoc.CreateReader();

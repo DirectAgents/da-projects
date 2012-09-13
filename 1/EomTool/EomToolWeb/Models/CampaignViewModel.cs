@@ -33,7 +33,7 @@ namespace EomToolWeb.Models
             }
         }
 
-        public string Countries { get { return campaign.Countries; } }
+        public string CountryCodes { get { return campaign.CountryCodes; } }
 
         public string Name { get { return campaign.Name; } }
 

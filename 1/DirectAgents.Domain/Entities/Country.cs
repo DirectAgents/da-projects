@@ -9,6 +9,6 @@ namespace DirectAgents.Domain.Entities
         public string CountryCode { get; set; }
         public string Name { get; set; }
 
-//        public virtual ICollection<Campaign> Campaigns { get; set; }
+        public virtual ICollection<Campaign> Campaigns { get; set; }
     }
 }

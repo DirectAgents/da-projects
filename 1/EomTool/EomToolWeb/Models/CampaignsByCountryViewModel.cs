@@ -15,8 +15,7 @@ namespace EomToolWeb.Models
             this.Countries = new Dictionary<string, List<Campaign>>();
             foreach (var countryCode in countryCodes)
             {
-                var countryCampaigns = campaigns.Where(c => c.Countries.Contains(countryCode));
-//                var countryCampaigns = campaigns.Where(c => c.CountryCodes.Contains(countryCode));
+                var countryCampaigns = campaigns.Where(c => c.CountryCodes.Contains(countryCode));
                 this.Countries[countryCode] = countryCampaigns.ToList();
             }
         }
