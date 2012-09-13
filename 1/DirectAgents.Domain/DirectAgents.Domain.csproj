@@ -51,6 +51,7 @@
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Entities\Campaign.cs" />
+    <Compile Include="Entities\Country.cs" />
     <Compile Include="Entities\Person.cs" />
     <Compile Include="Migrations\201209120700454_InitialCreate.cs" />
     <Compile Include="Migrations\201209120700454_InitialCreate.Designer.cs">
@@ -59,6 +60,10 @@
     <Compile Include="Migrations\201209121445521_FixCountrySpelling.cs" />
     <Compile Include="Migrations\201209121445521_FixCountrySpelling.Designer.cs">
       <DependentUpon>201209121445521_FixCountrySpelling.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201209131755312_Countries.cs" />
+    <Compile Include="Migrations\201209131755312_Countries.Designer.cs">
+      <DependentUpon>201209131755312_Countries.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +84,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201209121445521_FixCountrySpelling.resx">
       <DependentUpon>201209121445521_FixCountrySpelling.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201209131755312_Countries.resx">
+      <DependentUpon>201209131755312_Countries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

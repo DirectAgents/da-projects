@@ -52,6 +52,7 @@ namespace DirectAgents.Domain.Concrete
                     }
                     campaign.Name = item.Offer.OfferName;
                     campaign.Countries = item.Offer.AllowedCountries;
+//                    campaign.CountryCodes = item.Offer.AllowedCountries;
 
                     var am = daDomain.People.Where(p => p.Name == item.Advertiser.AccountManagerName).FirstOrDefault();
                     if (am == null)

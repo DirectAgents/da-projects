@@ -24,6 +24,7 @@ namespace EomToolWeb.Controllers
             if (!string.IsNullOrWhiteSpace(country))
             {
                 campaigns = campaigns.Where(c => c.Countries.Contains(country));
+//                campaigns = campaigns.Where(c => c.CountryCodes.Contains(country));
             }
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))
