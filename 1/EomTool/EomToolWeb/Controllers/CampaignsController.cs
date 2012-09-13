@@ -48,7 +48,7 @@ namespace EomToolWeb.Controllers
             {
                 return Content("campaign not found");
             }
-            return PartialView(campaign);
+            return PartialView(new CampaignViewModel(campaign));
         }
 
         [HttpGet]

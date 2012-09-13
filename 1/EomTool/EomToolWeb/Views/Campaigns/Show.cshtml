@@ -1,23 +1,35 @@
-﻿@model DirectAgents.Domain.Entities.Campaign
-@{
-    var campaign = Model;
-}
-
-<b style="font-size:large">@campaign.Name</b>
-<a href="#" onclick="EditCampaign(@campaign.Pid); return false">Edit</a><br />
-
-Pid - @campaign.Pid<br />
-Description - @campaign.Description<br />
-Ad Managers -
-@{
-    var ad_mgrs = string.Join(", ", campaign.AdManagers.Select(am => am.Name));
-    @ad_mgrs
-}
+﻿@model CampaignViewModel
+<img src="@Model.ImageUrl" alt="@Model.Name" /> @Model.AdManagers, @Model.AccountManagers
 <br />
-Account Managers -
-@{
-    var acct_mgrs = string.Join(", ", campaign.AccountManagers.Select(am => am.Name));
-    @acct_mgrs
-}
+<b>@Model.Name</b> <a href="#" onclick="EditCampaign(@Model.Pid); return false">Edit</a>
 <br />
-Countries - @campaign.Countries<br />
+@Model.Description
+<br />
+Payable Action: @Model.PayableAction
+<br />
+Countries: @Model.Countries
+<br />
+Traffic Type: Banners, Email, Contextual, search allowed (with restrictions) 
+
+@*Link: http://www.ziinga.com/landing/au_mega_deals97.php/ 
+
+Payout: $3.00 
+
+Important Details 
+
+No Google, no trademark term bidding, no incentivization or virtual currency traffic
+ 
+Lead Caps: Each partner is capped at 200 leads per day. Must seek approval to run past this point. Please check with AM to make sure pub does not exceed campaigns daily budget.
+ 
+Campaign Budget: 100 leads per day until further notice. 
+
+Payout to Direct Agents: $4.00 
+
+Passed Information: Lead ID 
+
+Countries: Australia 
+
+Scrub Policy: No scrub except fraud 
+
+EOM will be finalized in 10 days. 
+*@
