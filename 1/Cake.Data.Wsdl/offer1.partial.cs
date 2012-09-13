@@ -49,6 +49,14 @@ namespace Cake.Data.Wsdl.ExportService
             }
         }
 
+        public string AllowedMediaTypeNames
+        {
+            get
+            {
+                return string.Join(",", this.allowed_media_types.Select(c => c.media_type_name));
+            }
+        }
+
         public string Xml
         {
             get

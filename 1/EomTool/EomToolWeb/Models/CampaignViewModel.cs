@@ -44,5 +44,9 @@ namespace EomToolWeb.Models
         public string ImageUrl { get { return campaign.ImageUrl; } }
 
         public string PayableAction { get { return campaign.PayableAction; } }
+
+        public string TrafficTypes { get { return campaign.TrafficType; } }
+
+        public string OfferLink { get { return campaign.Link; } }
     }
 }

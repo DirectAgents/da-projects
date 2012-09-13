@@ -4,6 +4,7 @@ using DirectAgents.Domain.Entities;
 using System.Data.Objects.SqlClient;
 using System.Collections.Generic;
 using Cake.Model;
+using System.Net;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -54,6 +55,7 @@ namespace DirectAgents.Domain.Concrete
                     }
                     campaign.Name = item.Offer.OfferName;
                     campaign.Countries = item.Offer.AllowedCountries;
+                    campaign.TrafficType = item.Offer.AllowedMediaTypeNames;
 
                     var am = daDomain.People.Where(p => p.Name == item.Advertiser.AccountManagerName).FirstOrDefault();
                     if (am == null)
@@ -81,7 +83,11 @@ namespace DirectAgents.Domain.Concrete
 
                     var offer = (Cake.Data.Wsdl.ExportService.offer1)item.Offer;
                     campaign.Cost = offer.offer_contracts[0].payout.amount;
-                    
+                    campaign.ImageUrl = offer.offer_image_link;
+                    campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
+                    if (string.IsNullOrWhiteSpace(campaign.PayableAction))
+                        campaign.PayableAction = "Not Specified";
+                    campaign.Link = offer.offer_contracts[0].offer_link;
                     daDomain.SaveChanges(); // Do this here so that any people that were created can be reused for other campaigns.
                 }
             }

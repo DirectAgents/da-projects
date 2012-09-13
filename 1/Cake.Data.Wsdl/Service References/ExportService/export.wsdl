@@ -311,6 +311,7 @@
           <s:enumeration value="offer_id" />
           <s:enumeration value="offer_name" />
           <s:enumeration value="date_created" />
+          <s:enumeration value="expiration_date" />
         </s:restriction>
       </s:simpleType>
       <s:element name="OffersResponse">

@@ -1001,10 +1001,12 @@ namespace Cake.Model.Staging
         /// Create a new CakeOffer object.
         /// </summary>
         /// <param name="offer_Id">Initial value of the Offer_Id property.</param>
-        public static CakeOffer CreateCakeOffer(global::System.Int32 offer_Id)
+        /// <param name="allowedMediaTypeNames">Initial value of the AllowedMediaTypeNames property.</param>
+        public static CakeOffer CreateCakeOffer(global::System.Int32 offer_Id, global::System.String allowedMediaTypeNames)
         {
             CakeOffer cakeOffer = new CakeOffer();
             cakeOffer.Offer_Id = offer_Id;
+            cakeOffer.AllowedMediaTypeNames = allowedMediaTypeNames;
             return cakeOffer;
         }
 
@@ -1469,6 +1471,30 @@ namespace Cake.Model.Staging
         private global::System.String _Xml;
         partial void OnXmlChanging(global::System.String value);
         partial void OnXmlChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String AllowedMediaTypeNames
+        {
+            get
+            {
+                return _AllowedMediaTypeNames;
+            }
+            set
+            {
+                OnAllowedMediaTypeNamesChanging(value);
+                ReportPropertyChanging("AllowedMediaTypeNames");
+                _AllowedMediaTypeNames = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("AllowedMediaTypeNames");
+                OnAllowedMediaTypeNamesChanged();
+            }
+        }
+        private global::System.String _AllowedMediaTypeNames;
+        partial void OnAllowedMediaTypeNamesChanging(global::System.String value);
+        partial void OnAllowedMediaTypeNamesChanged();
 
         #endregion
     

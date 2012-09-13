@@ -21,6 +21,8 @@ namespace DirectAgents.Domain.Entities
 
         public string Description { get; set; } //e.g. Fun and Easy to download Mobile Game
 
+        public string ImageUrl { get; set; }
+
         [DisplayName("Payable Action")]
         public string PayableAction { get; set; } // e.g. Subscribe for 3-day free trial 
 

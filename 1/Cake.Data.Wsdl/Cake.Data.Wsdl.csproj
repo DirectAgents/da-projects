@@ -77,6 +77,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\SignupService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Web References\ReportsService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -113,6 +118,19 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ExportService\export.wsdl" />
+    <None Include="Service References\SignupService\Cake.Data.Wsdl.SignupService.MediaType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SignupService\Cake.Data.Wsdl.SignupService.PriceFormat.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SignupService\Cake.Data.Wsdl.SignupService.TrafficTypes.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SignupService\Cake.Data.Wsdl.SignupService.VerticalCategory.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\SignupService\signup.wsdl" />
     <None Include="Web References\ReportsService\conversion_report_response.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -140,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ExportService\" />
+    <WCFMetadataStorage Include="Service References\SignupService\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ExportService\export.disco" />
@@ -152,6 +171,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ExportService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SignupService\signup.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SignupService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SignupService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\SignupService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

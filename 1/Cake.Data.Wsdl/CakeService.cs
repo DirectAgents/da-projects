@@ -16,6 +16,14 @@ namespace Cake.Data.Wsdl
             this.apiKey = apiKey;
         }
 
+        public Cake.Data.Wsdl.SignupService.MediaType[] ExportMediaTypes()
+        {
+            Cake.Data.Wsdl.SignupService.MediaType[] result = null;
+            var service = new Cake.Data.Wsdl.SignupService.signupSoapClient("signupSoap");
+            var response = service.GetMediaTypes(this.apiKey);
+            return result;
+        }
+
         public Cake.Data.Wsdl.ExportService.advertiser[] ExportAdvertisers()
         {
             Cake.Data.Wsdl.ExportService.advertiser[] result = null;
