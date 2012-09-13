@@ -12,8 +12,8 @@ namespace DirectAgents.Domain.Concrete
                 .WithMany(t => t.AccountManagerCampaigns)
                 .Map(x =>
                 {
-                    x.MapLeftKey("PersonId");
-                    x.MapRightKey("Pid");
+                    x.MapLeftKey("Pid");
+                    x.MapRightKey("PersonId");
                     x.ToTable("CampaignAccountManagers");
                 });
 
@@ -22,13 +22,25 @@ namespace DirectAgents.Domain.Concrete
                 .WithMany(t => t.AdManagerCampaigns)
                 .Map(x =>
                 {
-                    x.MapLeftKey("PersonId");
-                    x.MapRightKey("Pid");
+                    x.MapLeftKey("Pid");
+                    x.MapRightKey("PersonId");
                     x.ToTable("CampaignAdManagers");
                 });
+
+/*            modelBuilder.Entity<Campaign>()
+                .HasMany(c => c.Countries)
+                .WithMany(c => c.Campaigns)
+                .Map(x =>
+                {
+                    x.MapLeftKey("Pid");
+                    x.MapRightKey("CountryCode");
+                    x.ToTable("CampaignCountries");
+                });
+*/
         }
 
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Person> People { get; set; }
+//        public DbSet<Country> Countries { get; set; }
     }
 }

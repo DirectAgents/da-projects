@@ -16,6 +16,7 @@ namespace EomToolWeb.Models
             foreach (var countryCode in countryCodes)
             {
                 var countryCampaigns = campaigns.Where(c => c.Countries.Contains(countryCode));
+//                var countryCampaigns = campaigns.Where(c => c.CountryCodes.Contains(countryCode));
                 this.Countries[countryCode] = countryCampaigns.ToList();
             }
         }

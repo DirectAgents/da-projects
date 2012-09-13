@@ -3,7 +3,7 @@ namespace DirectAgents.Domain.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialCreate : DbMigration
+    public partial class StartOver : DbMigration
     {
         public override void Up()
         {
@@ -24,7 +24,7 @@ namespace DirectAgents.Domain.Migrations
                         ImportantDetails = c.String(),
                         BannedNetworks = c.String(),
                         CampaignCap = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Coutries = c.String(),
+                        Countries = c.String(),
                         ScrubPolicy = c.String(),
                         EomNotes = c.String(),
                     })
@@ -43,40 +43,40 @@ namespace DirectAgents.Domain.Migrations
                 "dbo.CampaignAccountManagers",
                 c => new
                     {
-                        PersonId = c.Int(nullable: false),
                         Pid = c.Int(nullable: false),
+                        PersonId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => new { t.PersonId, t.Pid })
-                .ForeignKey("dbo.Campaigns", t => t.PersonId, cascadeDelete: true)
-                .ForeignKey("dbo.People", t => t.Pid, cascadeDelete: true)
-                .Index(t => t.PersonId)
-                .Index(t => t.Pid);
+                .PrimaryKey(t => new { t.Pid, t.PersonId })
+                .ForeignKey("dbo.Campaigns", t => t.Pid, cascadeDelete: true)
+                .ForeignKey("dbo.People", t => t.PersonId, cascadeDelete: true)
+                .Index(t => t.Pid)
+                .Index(t => t.PersonId);
             
             CreateTable(
                 "dbo.CampaignAdManagers",
                 c => new
                     {
-                        PersonId = c.Int(nullable: false),
                         Pid = c.Int(nullable: false),
+                        PersonId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => new { t.PersonId, t.Pid })
-                .ForeignKey("dbo.Campaigns", t => t.PersonId, cascadeDelete: true)
-                .ForeignKey("dbo.People", t => t.Pid, cascadeDelete: true)
-                .Index(t => t.PersonId)
-                .Index(t => t.Pid);
+                .PrimaryKey(t => new { t.Pid, t.PersonId })
+                .ForeignKey("dbo.Campaigns", t => t.Pid, cascadeDelete: true)
+                .ForeignKey("dbo.People", t => t.PersonId, cascadeDelete: true)
+                .Index(t => t.Pid)
+                .Index(t => t.PersonId);
             
         }
         
         public override void Down()
         {
-            DropIndex("dbo.CampaignAdManagers", new[] { "Pid" });
             DropIndex("dbo.CampaignAdManagers", new[] { "PersonId" });
-            DropIndex("dbo.CampaignAccountManagers", new[] { "Pid" });
+            DropIndex("dbo.CampaignAdManagers", new[] { "Pid" });
             DropIndex("dbo.CampaignAccountManagers", new[] { "PersonId" });
-            DropForeignKey("dbo.CampaignAdManagers", "Pid", "dbo.People");
-            DropForeignKey("dbo.CampaignAdManagers", "PersonId", "dbo.Campaigns");
-            DropForeignKey("dbo.CampaignAccountManagers", "Pid", "dbo.People");
-            DropForeignKey("dbo.CampaignAccountManagers", "PersonId", "dbo.Campaigns");
+            DropIndex("dbo.CampaignAccountManagers", new[] { "Pid" });
+            DropForeignKey("dbo.CampaignAdManagers", "PersonId", "dbo.People");
+            DropForeignKey("dbo.CampaignAdManagers", "Pid", "dbo.Campaigns");
+            DropForeignKey("dbo.CampaignAccountManagers", "PersonId", "dbo.People");
+            DropForeignKey("dbo.CampaignAccountManagers", "Pid", "dbo.Campaigns");
             DropTable("dbo.CampaignAdManagers");
             DropTable("dbo.CampaignAccountManagers");
             DropTable("dbo.People");

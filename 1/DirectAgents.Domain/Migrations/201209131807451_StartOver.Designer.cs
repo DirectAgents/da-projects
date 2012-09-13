@@ -5,13 +5,13 @@ namespace DirectAgents.Domain.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class StartOver : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(StartOver));
         
         string IMigrationMetadata.Id
         {
-            get { return "201209120700454_InitialCreate"; }
+            get { return "201209131807451_StartOver"; }
         }
         
         string IMigrationMetadata.Source
