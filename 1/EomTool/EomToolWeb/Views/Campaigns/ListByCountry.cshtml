@@ -1,4 +1,4 @@
-﻿@model EomToolWeb.Models.CampaignsByCountryViewModel
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Country>
 @{
     ViewBag.Title = "Campaigns By Country";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
@@ -6,11 +6,11 @@
 
 <h2>Campaigns By Country</h2>
 
-@foreach (var country in Model.Countries.Keys)
+@foreach (var country in Model)
 {
-    <h3>@Html.ActionLink(country, "List", new {country = country}):</h3>
+    <h3>@Html.ActionLink(country.CountryCode, "List", new {country = country.CountryCode}):</h3>
     <ol>
-    @foreach (var campaign in Model.Countries[country])
+    @foreach (var campaign in country.Campaigns)
     {
         <li>@Html.ActionLink(campaign.Name, "List", new {pid = campaign.Pid})</li>
     }

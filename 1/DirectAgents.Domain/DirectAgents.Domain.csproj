@@ -65,6 +65,10 @@
     <Compile Include="Migrations\201209131937231_Countries.Designer.cs">
       <DependentUpon>201209131937231_Countries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201209132118115_RmCountryCodes.cs" />
+    <Compile Include="Migrations\201209132118115_RmCountryCodes.Designer.cs">
+      <DependentUpon>201209132118115_RmCountryCodes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -91,6 +95,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201209131937231_Countries.resx">
       <DependentUpon>201209131937231_Countries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201209132118115_RmCountryCodes.resx">
+      <DependentUpon>201209132118115_RmCountryCodes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

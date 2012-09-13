@@ -23,7 +23,7 @@ namespace EomToolWeb.Controllers
             var campaigns = campaignRepository.Campaigns;
             if (!string.IsNullOrWhiteSpace(country))
             {
-                campaigns = campaigns.Where(c => c.CountryCodes.Contains(country));
+                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
             }
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))
@@ -35,10 +35,8 @@ namespace EomToolWeb.Controllers
 
         public ActionResult ListByCountry()
         {
-            var campaigns = campaignRepository.Campaigns;
-            var countryCodes = campaignRepository.AllCountryCodes;
-            var model = new CampaignsByCountryViewModel(campaigns, countryCodes);
-            return View(model);
+            var countries = campaignRepository.Countries;
+            return View(countries);
         }
 
         public ActionResult ShowCountries()

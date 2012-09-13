@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities;
 using System.Data.Objects.SqlClient;
@@ -54,8 +55,19 @@ namespace DirectAgents.Domain.Concrete
                         daDomain.Campaigns.Add(campaign);
                     }
                     campaign.Name = item.Offer.OfferName;
-                    campaign.CountryCodes = item.Offer.AllowedCountries;
                     campaign.TrafficType = item.Offer.AllowedMediaTypeNames;
+
+                    campaign.Countries.Clear();
+                    var countryCodes = item.Offer.AllowedCountries.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct();
+                    foreach (var countryCode in countryCodes)
+                    {
+                        var country = daDomain.Countries.Where(c => c.CountryCode == countryCode).FirstOrDefault();
+                        if (country == null)
+                        {
+                            country = new Country { CountryCode = countryCode, Name = countryCode + "." };
+                        }
+                        campaign.Countries.Add(country);
+                    }
 
                     var am = daDomain.People.Where(p => p.Name == item.Advertiser.AccountManagerName).FirstOrDefault();
                     if (am == null)

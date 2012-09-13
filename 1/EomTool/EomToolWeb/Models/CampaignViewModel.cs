@@ -33,7 +33,14 @@ namespace EomToolWeb.Models
             }
         }
 
-        public string CountryCodes { get { return campaign.CountryCodes; } }
+        public string CountryCodes
+        {
+            get
+            {
+                var countryCodes = campaign.Countries.Select(c => c.CountryCode).ToArray();
+                return string.Join(",", countryCodes);
+            }
+        }
 
         public string Name { get { return campaign.Name; } }
 

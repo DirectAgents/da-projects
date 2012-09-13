@@ -8,7 +8,8 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
         IQueryable<Campaign> Campaigns { get; }
-        List<string> AllCountryCodes { get; }
+        IQueryable<Country> Countries { get; }
+        IQueryable<string> AllCountryCodes { get; }
         Campaign FindById(int pid);
         void SaveCampaign(Campaign campaign);
     }

@@ -1,4 +1,4 @@
-﻿@model List<string>
+﻿@model IEnumerable<string>
 @{
     ViewBag.Title = "Country List";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
@@ -7,7 +7,7 @@
 <h2>Country List</h2>
 
 @{
-    string lastCountry = (Model.Count() > 0) ? Model[0] : null;
+    string lastCountry = Model.FirstOrDefault();
     foreach (var country in Model)
     {
         @Html.ActionLink(country, "List", new { country = country })

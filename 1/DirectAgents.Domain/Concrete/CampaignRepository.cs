@@ -25,14 +25,14 @@ namespace DirectAgents.Domain.Concrete
             get { return context.Campaigns; }
         }
 
-        public List<string> AllCountryCodes
+        public IQueryable<Country> Countries
         {
-            get
-            {
-                var countryCodeCommaStrings = this.Campaigns.Select(c => c.CountryCodes).ToList();
-                var countryCodes = countryCodeCommaStrings.Select(c => c.Split(new char[] { ',' })).SelectMany(c => c).Distinct().Where(c => !string.IsNullOrWhiteSpace(c)).OrderBy(c => c);
-                return countryCodes.ToList();
-            }
+            get { return context.Countries; }
+        }
+
+        public IQueryable<string> AllCountryCodes
+        {
+            get { return context.Countries.Select(c => c.CountryCode); }
         }
 
         public Campaign FindById(int pid)
