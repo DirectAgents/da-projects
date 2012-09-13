@@ -1,0 +1,19 @@
+﻿@model List<string>
+@{
+    ViewBag.Title = "Country List";
+    Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
+}
+
+<h2>Country List</h2>
+
+@{
+    string lastCountry = (Model.Count() > 0) ? Model[0] : null;
+    foreach (var country in Model)
+    {
+        @Html.ActionLink(country, "List", new { country = country })
+        if (country.Substring(0, 1) != lastCountry.Substring(0, 1)) {
+            <br />
+        }
+        lastCountry = country;
+    }
+}

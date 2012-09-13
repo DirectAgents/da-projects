@@ -642,6 +642,8 @@
     <Content Include="Views\Campaigns\Show.cshtml" />
     <Content Include="Views\Campaigns\ListByCountry.cshtml" />
     <Content Include="Views\Campaigns\Edit.cshtml" />
+    <Content Include="Views\Shared\_LayoutCampaignWiki.cshtml" />
+    <Content Include="Views\Campaigns\ShowCountries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -41,6 +41,12 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
+        public ActionResult ShowCountries()
+        {
+            var countryCodes = campaignRepository.AllCountryCodes;
+            return View(countryCodes);
+        }
+
         public ActionResult Show(int pid)
         {
             var campaign = campaignRepository.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
