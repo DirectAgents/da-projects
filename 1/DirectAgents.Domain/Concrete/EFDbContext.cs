@@ -12,8 +12,8 @@ namespace DirectAgents.Domain.Concrete
                 .WithMany(t => t.AccountManagerCampaigns)
                 .Map(x =>
                 {
-                    x.MapLeftKey("PersonId");
-                    x.MapRightKey("Pid");
+                    x.MapLeftKey("Pid");
+                    x.MapRightKey("PersonId");
                     x.ToTable("CampaignAccountManagers");
                 });
 
@@ -22,8 +22,8 @@ namespace DirectAgents.Domain.Concrete
                 .WithMany(t => t.AdManagerCampaigns)
                 .Map(x =>
                 {
-                    x.MapLeftKey("PersonId");
-                    x.MapRightKey("Pid");
+                    x.MapLeftKey("Pid");
+                    x.MapRightKey("PersonId");
                     x.ToTable("CampaignAdManagers");
                 });
 
@@ -41,6 +41,6 @@ namespace DirectAgents.Domain.Concrete
 
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Person> People { get; set; }
-        public DbSet<Country> Countries { get; set; }
+//        public DbSet<Country> Countries { get; set; }
     }
 }
