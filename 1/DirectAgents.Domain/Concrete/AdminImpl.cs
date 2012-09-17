@@ -40,6 +40,8 @@ namespace DirectAgents.Domain.Concrete
             {
                 UpdateVerticals(cake);
 
+                UpdateTrafficTypes(cake);
+
                 foreach (var item in StagedCampaigns(cake))
                 {
                     var campaign = GetOrCreateCampaign(item);
@@ -58,6 +60,8 @@ namespace DirectAgents.Domain.Concrete
                         ExtractFieldsFromWsdlOffer(campaign, offer);
 
                     AddCountries(item, campaign);
+
+                    AddTrafficTypes(item, campaign);
 
                     AddAccountManagers(item, campaign);
 
@@ -79,6 +83,23 @@ namespace DirectAgents.Domain.Concrete
 
             foreach (var item in staged.Except(current))
                 daDomain.Verticals.Add(new Vertical { Name = item });
+
+            daDomain.SaveChanges();
+        }
+
+        private void UpdateTrafficTypes(Cake.Model.Staging.CakeStagingEntities cake)
+        {
+            var trafficTypes = daDomain.TrafficTypes.ToList();
+            var staged = cake.CakeOffers.ToList().SelectMany(c => c.AllowedMediaTypeNames
+                                                                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                                                .Distinct();
+            var current = trafficTypes.Select(c => c.Name);
+
+            foreach (var item in current.Except(staged).Select(c => trafficTypes.Single(d => d.Name == c)))
+                daDomain.TrafficTypes.Remove(item);
+
+            foreach (var item in staged.Except(current))
+                daDomain.TrafficTypes.Add(new TrafficType { Name = item });
 
             daDomain.SaveChanges();
         }
@@ -181,6 +202,29 @@ namespace DirectAgents.Domain.Concrete
                     };
 
                 campaign.Countries.Add(country);
+            }
+        }
+
+        private void AddTrafficTypes(_OfferAndAdvertiser item, Campaign campaign)
+        {
+            campaign.TrafficTypes.Clear();
+
+            var trafficTypes = item.Offer.AllowedMediaTypeNames
+                                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Distinct();
+
+            foreach (var trafficTypeName in trafficTypes)
+            {
+                var trafficType = daDomain.TrafficTypes.Where(c => c.Name == trafficTypeName)
+                                            .FirstOrDefault();
+
+                if (trafficType == null)
+                    trafficType = new TrafficType
+                    {
+                        Name = trafficTypeName
+                    };
+
+                campaign.TrafficTypes.Add(trafficType);
             }
         }
     }
