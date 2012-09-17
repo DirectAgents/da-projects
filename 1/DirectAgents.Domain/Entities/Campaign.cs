@@ -11,6 +11,7 @@ namespace DirectAgents.Domain.Entities
         {
             AccountManagers = new HashSet<Person>();
             AdManagers = new HashSet<Person>();
+            Countries = new HashSet<Country>();
         }
 
         [Key]

@@ -40,7 +40,7 @@ namespace EomToolWeb.Controllers
 
         public ActionResult ListByCountry()
         {
-            var countries = campaignRepository.Countries;
+            var countries = campaignRepository.Countries.OrderByDescending(c => c.Campaigns.Count());
             return View(countries);
         }
 
