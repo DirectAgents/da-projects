@@ -11,28 +11,48 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+    @Styles.Render("~/Scripts/kendo/styles/kendo.common.min.css")
+    @Styles.Render("~/Scripts/kendo/styles/kendo.default.min.css")
+    @Scripts.Render("~/Scripts/kendo/2012.2.710/kendo.web.min.js")
 </head>
 <body>
     <header>
-    <div class="content-wrapper">
-        <div class="float-left">
-            <nav>
-                <ul id="menu">
-                    <li>Show:</li>
-                    <li>@Html.ActionLink("By Country", "ListByCountry", "Campaigns")</li>
-                    <li>@Html.ActionLink("US", "List", "Campaigns", new { country = "US", vertical = "Insurance" }, null)</li>
-                    <li>@Html.ActionLink("All", "List", "Campaigns")</li>
-                    <li>@Html.ActionLink("Country List", "ShowCountries", "Campaigns")</li>
-                </ul>
-            </nav>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <nav>
+                    <ul id="menu">
+                        <li>Show:</li>
+                        <li>@Html.ActionLink("By Country", "ListByCountry", "Campaigns")</li>
+                        <li>@Html.ActionLink("US", "List", "Campaigns", new { country = "US", vertical = "Insurance" }, null)</li>
+                        <li>@Html.ActionLink("All", "List", "Campaigns")</li>
+                        <li>@Html.ActionLink("Country List", "ShowCountries", "Campaigns")</li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
     <div id="body">
         <section class="content-wrapper main-content clear-fix">
+        <div>
+            <input id="verticals" style="width: 250px; margin-top: 10px" />
+        </div>
         @RenderBody()
     </section>
     </div>
     @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#verticals").kendoDropDownList({
+                index: 0,
+                placeholder: "Select vertical",
+                dataTextField: "Name",
+                dataValueField: "VerticalId",
+                dataSource: {
+                    type: "jsonp",
+                    transport: { read: "@Url.Content("~/api/Verticals")" }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

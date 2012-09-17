@@ -9,10 +9,9 @@ namespace EomToolWeb.Controllers
     {
         private EFDbContext db = new EFDbContext();
 
-        // GET api/Verticals
-        public IQueryable<Campaign> Get()
+        public IQueryable<Vertical> Get()
         {
-            return db.Campaigns.AsQueryable();
+            return db.Verticals.AsQueryable();
         }
 
         protected override void Dispose(bool disposing)

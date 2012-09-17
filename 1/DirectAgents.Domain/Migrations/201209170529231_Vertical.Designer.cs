@@ -5,13 +5,13 @@ namespace DirectAgents.Domain.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class addVertical : IMigrationMetadata
+    public sealed partial class Vertical : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addVertical));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Vertical));
         
         string IMigrationMetadata.Id
         {
-            get { return "201209170227499_addVertical"; }
+            get { return "201209170529231_Vertical"; }
         }
         
         string IMigrationMetadata.Source

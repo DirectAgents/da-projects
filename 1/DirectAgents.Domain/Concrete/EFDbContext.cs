@@ -36,11 +36,11 @@ namespace DirectAgents.Domain.Concrete
                     x.MapRightKey("CountryCode");
                     x.ToTable("CampaignCountries");
                 });
-
         }
 
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<Vertical> Verticals { get; set; }
     }
 }

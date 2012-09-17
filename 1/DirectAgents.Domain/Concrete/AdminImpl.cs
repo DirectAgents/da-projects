@@ -38,6 +38,8 @@ namespace DirectAgents.Domain.Concrete
             using (var cake = new Cake.Model.Staging.CakeStagingEntities())
             using (daDomain = new EFDbContext())
             {
+                UpdateVerticals(cake);
+
                 foreach (var item in StagedCampaigns(cake))
                 {
                     var campaign = GetOrCreateCampaign(item);
@@ -46,7 +48,7 @@ namespace DirectAgents.Domain.Concrete
 
                     campaign.TrafficType = item.Offer.AllowedMediaTypeNames;
 
-                    //campaign.Vertical = item.Offer.VerticalName;
+                    campaign.Vertical = daDomain.Verticals.Single(c => c.Name == item.Offer.VerticalName);
 
                     if (string.IsNullOrWhiteSpace(campaign.PayableAction))
                         campaign.PayableAction = "Not Specified";
@@ -64,6 +66,21 @@ namespace DirectAgents.Domain.Concrete
                     daDomain.SaveChanges(); // save created entities so they are re-used
                 }
             }
+        }
+
+        private void UpdateVerticals(Cake.Model.Staging.CakeStagingEntities cake)
+        {
+            var verticals = daDomain.Verticals.ToList();
+            var staged = cake.CakeOffers.Select(c => c.VerticalName).Distinct();
+            var current = verticals.Select(c => c.Name);
+
+            foreach (var item in current.Except(staged).Select(c => verticals.Single(d => d.Name == c)))
+                daDomain.Verticals.Remove(item);
+
+            foreach (var item in staged.Except(current))
+                daDomain.Verticals.Add(new Vertical { Name = item });
+
+            daDomain.SaveChanges();
         }
 
         private class _OfferAndAdvertiser

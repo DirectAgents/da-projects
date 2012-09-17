@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using EomToolWeb.Models;
 using DirectAgents.Domain.Entities;
-
+using System.Data.Entity;
 namespace EomToolWeb.Controllers
 {
     public class CampaignsController : Controller
@@ -21,6 +21,7 @@ namespace EomToolWeb.Controllers
         public ActionResult List(string country, string pid, string vertical)
         {
             var campaigns = campaignRepository.Campaigns;
+            
             if (!string.IsNullOrWhiteSpace(country))
             {
                 campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
@@ -32,7 +33,7 @@ namespace EomToolWeb.Controllers
             }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
-                campaigns = campaigns.Where(c => c.Vertical.Name == vertical);
+                campaigns = campaigns.Include(c => c.Vertical).Where(c => c.Vertical.Name == vertical);
             }
             return View(campaigns);
         }

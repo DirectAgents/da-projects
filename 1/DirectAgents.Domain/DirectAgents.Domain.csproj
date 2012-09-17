@@ -70,9 +70,9 @@
     <Compile Include="Migrations\201209132118115_RmCountryCodes.Designer.cs">
       <DependentUpon>201209132118115_RmCountryCodes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209170227499_addVertical.cs" />
-    <Compile Include="Migrations\201209170227499_addVertical.Designer.cs">
-      <DependentUpon>201209170227499_addVertical.cs</DependentUpon>
+    <Compile Include="Migrations\201209170529231_Vertical.cs" />
+    <Compile Include="Migrations\201209170529231_Vertical.Designer.cs">
+      <DependentUpon>201209170529231_Vertical.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -104,8 +104,8 @@
     <EmbeddedResource Include="Migrations\201209132118115_RmCountryCodes.resx">
       <DependentUpon>201209132118115_RmCountryCodes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209170227499_addVertical.resx">
-      <DependentUpon>201209170227499_addVertical.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201209170529231_Vertical.resx">
+      <DependentUpon>201209170529231_Vertical.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
