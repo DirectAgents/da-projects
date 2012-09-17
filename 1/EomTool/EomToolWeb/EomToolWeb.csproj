@@ -156,6 +156,7 @@
     <Compile Include="Models\AffiliatesListViewModel.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\CampaignsByCountryViewModel.cs" />
+    <Compile Include="Models\CampaignsListViewModel.cs" />
     <Compile Include="Models\CampaignViewModel.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />

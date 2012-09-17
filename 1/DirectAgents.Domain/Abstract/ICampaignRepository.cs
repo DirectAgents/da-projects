@@ -10,6 +10,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Campaign> Campaigns { get; }
         IQueryable<Country> Countries { get; }
         IQueryable<string> AllCountryCodes { get; }
+        IQueryable<Vertical> Verticals { get; }
         Campaign FindById(int pid);
         void SaveCampaign(Campaign campaign);
     }

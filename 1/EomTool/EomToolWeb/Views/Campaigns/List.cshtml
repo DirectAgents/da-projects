@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.Campaign>
+﻿@model CampaignsListViewModel
 @{
     ViewBag.Title = "Campaigns";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
@@ -7,8 +7,12 @@
     <input id="verticals" style="width: 250px; margin-top: 10px" />
 </div>
 <h2>Campaigns List</h2>
-<div>@Model.Count() campaigns</div>
-@foreach (var campaign in Model)
+@if (Model.Country != null)
+{
+    <div>Country: @Model.Country.Name</div>
+}
+<div>@Model.Campaigns.Count() campaigns</div>
+@foreach (var campaign in Model.Campaigns)
 {
     <p id="camp@(campaign.Pid)">
         @Html.Partial("Show", new CampaignViewModel(campaign))
@@ -20,11 +24,17 @@
 </div>
 @section scripts {
     <script type="text/javascript">
-
+@{
+    string currFilter = "";
+    if (Model.Country != null) { currFilter = "&country=" + Model.Country.CountryCode; }
+}
         function ChangeVertical() {
             var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
-            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + dataItem.Name;
-            document.location.href = url;
+            if (dataItem.VerticalId != '')
+            {
+                var url = '@(Url.Action("List", "Campaigns"))?vertical=' + dataItem.Name + '@(new HtmlString(currFilter))';
+                document.location.href = url;
+            }
         }
 
         function EditCampaign(pid) {
@@ -51,7 +61,7 @@
 
         $(function () {
             $("#verticals").kendoDropDownList({
-                index: 0,
+                @((Model.Vertical != null) ? "value: " + Model.Vertical.VerticalId + "," : "")
                 placeholder: "Select vertical",
                 optionLabel: "Select vertical...",
                 dataTextField: "Name",

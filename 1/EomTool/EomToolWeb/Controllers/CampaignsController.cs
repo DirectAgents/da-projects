@@ -20,11 +20,14 @@ namespace EomToolWeb.Controllers
 
         public ActionResult List(string country, string pid, string vertical)
         {
+            var viewModel = new CampaignsListViewModel();
             var campaigns = campaignRepository.Campaigns;
             
             if (!string.IsNullOrWhiteSpace(country))
             {
-                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
+                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+                if (viewModel.Country != null)
+                    campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
             }
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))
@@ -33,9 +36,13 @@ namespace EomToolWeb.Controllers
             }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
-                campaigns = campaigns.Include(c => c.Vertical).Where(c => c.Vertical.Name == vertical);
+                viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
+                if (viewModel.Vertical != null)
+                    campaigns = campaigns.Where(c => c.Vertical.Name == vertical);
             }
-            return View(campaigns);
+
+            viewModel.Campaigns = campaigns.AsEnumerable();
+            return View(viewModel);
         }
 
         public ActionResult ListByCountry()

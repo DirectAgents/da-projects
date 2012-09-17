@@ -35,6 +35,11 @@ namespace DirectAgents.Domain.Concrete
             get { return context.Countries.Select(c => c.CountryCode); }
         }
 
+        public IQueryable<Vertical> Verticals
+        {
+            get { return context.Verticals; }
+        }
+
         public Campaign FindById(int pid)
         {
             var campaign = context.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
