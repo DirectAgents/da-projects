@@ -3,8 +3,10 @@
     ViewBag.Title = "Campaigns";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
 }
-<h2>
-    Campaigns List</h2>
+<div>
+    <input id="verticals" style="width: 250px; margin-top: 10px" />
+</div>
+<h2>Campaigns List</h2>
 <div>@Model.Count() campaigns</div>
 @foreach (var campaign in Model)
 {
@@ -18,6 +20,12 @@
 </div>
 @section scripts {
     <script type="text/javascript">
+
+        function ChangeVertical() {
+            var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
+            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + dataItem.Name;
+            document.location.href = url;
+        }
 
         function EditCampaign(pid) {
             $.get('@Url.Action("Edit", "Campaigns")', { pid: pid }, function (data) {
@@ -42,6 +50,18 @@
         }
 
         $(function () {
+            $("#verticals").kendoDropDownList({
+                index: 0,
+                placeholder: "Select vertical",
+                optionLabel: "Select vertical...",
+                dataTextField: "Name",
+                dataValueField: "VerticalId",
+                dataSource: {
+                    type: "jsonp",
+                    transport: { read: "@Url.Content("~/api/Verticals")" }
+                },
+                change: ChangeVertical
+            });
             $("#divEditCampaign").dialog({
                 autoOpen: false,
                 height: 800,

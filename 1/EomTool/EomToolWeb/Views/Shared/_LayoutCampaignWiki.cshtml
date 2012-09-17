@@ -32,27 +32,10 @@
         </div>
     </header>
     <div id="body">
-        <section class="content-wrapper main-content clear-fix">
-        <div>
-            <input id="verticals" style="width: 250px; margin-top: 10px" />
-        </div>
+    <section class="content-wrapper main-content clear-fix">
         @RenderBody()
     </section>
     </div>
     @RenderSection("scripts", required: false)
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#verticals").kendoDropDownList({
-                index: 0,
-                placeholder: "Select vertical",
-                dataTextField: "Name",
-                dataValueField: "VerticalId",
-                dataSource: {
-                    type: "jsonp",
-                    transport: { read: "@Url.Content("~/api/Verticals")" }
-                }
-            });
-        });
-    </script>
 </body>
 </html>
