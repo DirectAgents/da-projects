@@ -36,11 +36,22 @@ namespace DirectAgents.Domain.Concrete
                     x.MapRightKey("CountryCode");
                     x.ToTable("CampaignCountries");
                 });
+
+            modelBuilder.Entity<Campaign>()
+                .HasMany(c => c.TrafficTypes)
+                .WithMany(c => c.Campaigns)
+                .Map(c =>
+                {
+                    c.MapLeftKey("Pid");
+                    c.MapRightKey("TrafficTypeId");
+                    c.ToTable("CampaignTrafficTypes");
+                });
         }
 
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Vertical> Verticals { get; set; }
+        public DbSet<TrafficType> TrafficTypes { get; set; }
     }
 }

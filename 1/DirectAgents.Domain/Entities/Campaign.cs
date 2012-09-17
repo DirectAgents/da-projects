@@ -11,6 +11,8 @@ namespace DirectAgents.Domain.Entities
         {
             AccountManagers = new HashSet<Person>();
             AdManagers = new HashSet<Person>();
+            Countries = new HashSet<Country>();
+            TrafficTypes = new HashSet<TrafficType>();
         }
 
         [Key]
@@ -61,5 +63,6 @@ namespace DirectAgents.Domain.Entities
         public virtual ICollection<Person> AccountManagers { get; set; }
         public virtual ICollection<Person> AdManagers { get; set; }
         public virtual ICollection<Country> Countries { get; set; }
+        public virtual ICollection<TrafficType> TrafficTypes { get; set; }
     }
 }
