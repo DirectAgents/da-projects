@@ -68,7 +68,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>EomApp1.Program</StartupObject>
@@ -130,6 +130,12 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="Models\Generated\Database.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Database.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PetaPoco.cs" />
     <Compile Include="Screens\Final\Models\MediaBuyerApprovalStatusId.cs" />
     <Compile Include="Screens\MediaBuyerWorkflow\SendMailDialog.cs">
       <SubType>Form</SubType>
@@ -807,6 +813,12 @@
     </None>
     <None Include="EOMTool-ClickOnce-Manifests-5Years.pfx" />
     <None Include="EOMTool-ClickOnce-Manifests.pfx" />
+    <None Include="Models\Generated\Database.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Database.cs</LastGenOutput>
+    </None>
+    <None Include="Models\Generated\PetaPoco.Core.ttinclude" />
+    <None Include="Models\Generated\PetaPoco.Generator.ttinclude" />
     <None Include="packages.config" />
     <None Include="Screens\Accounting\Data\AccountingDataClasses.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>

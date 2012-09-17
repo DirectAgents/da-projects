@@ -55,5 +55,21 @@ namespace EomToolWeb.Models
         public string TrafficTypes { get { return campaign.TrafficType; } }
 
         public string OfferLink { get { return campaign.Link; } }
+
+        public decimal Payout { get { return campaign.Cost; } }
+
+        public decimal Revenue { get { return campaign.Revenue; } }
+
+        public string ImportantDetails { get { return campaign.ImportantDetails; } }
+
+        public string BannedNetworks { get { return campaign.BannedNetworks; } }
+
+        public decimal CampaignCap { get { return campaign.CampaignCap; } }
+
+        public string ScrubPolicy { get { return campaign.ScrubPolicy; } }
+
+        public string EomNotes { get { return campaign.EomNotes; } }
+
+        public string Vertical { get { return campaign.Vertical.Name; } }
     }
 }

@@ -18,7 +18,7 @@ namespace EomToolWeb.Controllers
             this.campaignRepository = campaignRepository;
         }
 
-        public ActionResult List(string country, string pid)
+        public ActionResult List(string country, string pid, string vertical)
         {
             var campaigns = campaignRepository.Campaigns;
             if (!string.IsNullOrWhiteSpace(country))
@@ -29,6 +29,10 @@ namespace EomToolWeb.Controllers
             if (Int32.TryParse(pid, out pidInt))
             {
                 campaigns = campaigns.Where(c => c.Pid == pidInt);
+            }
+            if (!string.IsNullOrWhiteSpace(vertical))
+            {
+                campaigns = campaigns.Where(c => c.Vertical.Name == vertical);
             }
             return View(campaigns);
         }

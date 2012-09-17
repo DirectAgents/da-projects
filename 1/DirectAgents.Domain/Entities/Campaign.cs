@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel;
 
 namespace DirectAgents.Domain.Entities
 {
@@ -55,6 +55,8 @@ namespace DirectAgents.Domain.Entities
 
         [DisplayName("EOM Notes")]
         public string EomNotes { get; set; } // e.g. EOM will be finalized in 5 days. 
+
+        public Vertical Vertical { get; set; }
 
         public virtual ICollection<Person> AccountManagers { get; set; }
         public virtual ICollection<Person> AdManagers { get; set; }

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using EomAppControls;
-using System.Data.SqlClient;
 using EomApp1.Screens.Accounting.Data;
+using EomAppControls;
+using PetaPoco;
 
 namespace EomApp1.Screens.Accounting.Forms
 {
@@ -146,39 +145,80 @@ namespace EomApp1.Screens.Accounting.Forms
 
         private void SaveChanges()
         {
-            var sqlStatements = new List<string>();
+            var perUnitChangeSqlStatements = new List<string>();
+            var numUnitChanges = new List<EomDb.Item>();
+            var db = new Database(EomAppCommon.EomAppSettings.ConnStr, "System.Data.SqlClient");
             string sqlFormat = "update item set {0}={1} where id in ({2})";
+
             foreach (var amountChange in this.ItemChanges.AmountChanges)
             {
                 if (amountChange.Field == "Cost/Unit")
                 {
                     string sql = string.Format(sqlFormat, "cost_per_unit", amountChange.ToAmount, amountChange.Ids);
-                    sqlStatements.Add(sql);
+                    perUnitChangeSqlStatements.Add(sql);
                 }
                 else if (amountChange.Field == "Rev/Unit")
                 {
                     string sql = string.Format(sqlFormat, "revenue_per_unit", amountChange.ToAmount, amountChange.Ids);
-                    sqlStatements.Add(sql);
+                    perUnitChangeSqlStatements.Add(sql);
+                }
+                else if (amountChange.Field == "Units")
+                {
+                    decimal difference = amountChange.ToAmount - amountChange.FromAmount;
+
+                    var query = db.Query<EomDb.Item>(Sql.Builder
+                                    .WhereIn("id", amountChange.Ids.Split(','))
+                                    .OrderBy("num_units desc"));
+
+                    if (difference > 0)
+                    {
+                        var item = query.First();
+                        item.num_units += difference;
+                        db.Update(item, new[] { "num_units" });
+                    }
+                    else if (difference < 0)
+                    {
+                        difference *= -1;
+                        bool success = false;
+                        decimal counted = 0;
+                        foreach (var item in query)
+                        {
+                            decimal needed = difference - counted;
+                            if (needed == 0)
+                            {
+                                success = true;
+                                break;
+                            }
+                            decimal available = item.num_units;
+                            if (available > 0)
+                            {
+                                if (available >= needed)
+                                {
+                                    item.num_units -= needed;
+                                    counted += needed;
+                                    numUnitChanges.Add(item);
+                                }
+                                else
+                                {
+                                    item.num_units = 0;
+                                    counted += item.num_units;
+                                    numUnitChanges.Add(item);
+                                }
+                            }
+                        }
+                        if (!success)
+                            throw new Exception("Failed to adjust unit count.");
+                    }
                 }
                 else
-                {
                     throw new Exception("cannot edit field " + amountChange.Field);
-                }
             }
-            foreach (var sql in sqlStatements)
-            {
-                ExecuteSql(sql);
-            }
-        }
 
-        private void ExecuteSql(string sql)
-        {
-            using (var con = new SqlConnection(EomAppCommon.EomAppSettings.ConnStr))
-            using (var cmd = new SqlCommand(sql, con))
-            {
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
+            foreach (var sql in perUnitChangeSqlStatements)
+                db.Execute(sql);
+
+            foreach (var item in numUnitChanges)
+                db.Update(item, new[] { "num_units" });
         }
 
         private void Fill()
@@ -191,6 +231,21 @@ namespace EomApp1.Screens.Accounting.Forms
                 ApplyFilterAllZerosFilter();
         }
 
+        private class Change
+        {
+            public Change(DataRow row, string field)
+            {
+                Field = field;
+                From = row.Field<decimal>(field, DataRowVersion.Original);
+                To = row.Field<decimal>(field, DataRowVersion.Current);
+                ItemIds = row.Field<string>("ItemIds");
+            }
+            public string Field { get; set; }
+            public decimal From { get; set; }
+            public decimal To { get; set; }
+            public string ItemIds { get; set; }
+        }
+
         private void FillChanges()
         {
             this.BindingSource.EndEdit();
@@ -198,28 +253,14 @@ namespace EomApp1.Screens.Accounting.Forms
             if (this.splitContainer.Panel2Collapsed)
                 this.splitContainer.Panel2Collapsed = false;
 
-            var revPerUnitChanges = from row in this.DataTable.GetChanges(DataRowState.Modified).AsEnumerable()
-                                    let field = "Rev/Unit"
-                                    select new
-                                    {
-                                        Field = field,
-                                        From = row.Field<decimal>(field, DataRowVersion.Original),
-                                        To = row.Field<decimal>(field, DataRowVersion.Current),
-                                        ItemIds = row.Field<string>("ItemIds"),
-                                    };
-
-            var costPerUnitChanges = from row in this.DataTable.GetChanges(DataRowState.Modified).AsEnumerable()
-                                     let field = "Cost/Unit"
-                                     select new
-                                     {
-                                         Field = field,
-                                         From = row.Field<decimal>(field, DataRowVersion.Original),
-                                         To = row.Field<decimal>(field, DataRowVersion.Current),
-                                         ItemIds = row.Field<string>("ItemIds"),
-                                     };
-
-
-            var changes = revPerUnitChanges.Concat(costPerUnitChanges).Where(c => c.From != c.To);
+            var changes = this.DataTable.GetChanges(DataRowState.Modified)
+                            .AsEnumerable()
+                            .Select(row => new[]{ 
+                                        new Change(row, "Rev/Unit"), 
+                                        new Change(row, "Cost/Unit"),
+                                        new Change(row, "Units"), })
+                            .SelectMany(item => item)
+                            .Where(item => item.From != item.To);
 
             ItemChanges = new ItemsDataSet();
 
@@ -257,13 +298,13 @@ namespace EomApp1.Screens.Accounting.Forms
             else if (e.Column.Name == "Cost")
             {
                 e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                e.Column.CellTemplate = NumberCellTemplate;
+                e.Column.CellTemplate = NumberCell;
                 e.Column.ReadOnly = true;
             }
             else if (e.Column.Name == "Rev")
             {
                 e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                e.Column.CellTemplate = NumberCellTemplate;
+                e.Column.CellTemplate = NumberCell;
                 e.Column.ReadOnly = true;
             }
             else if (e.Column.Name == "ItemIds")
@@ -294,8 +335,7 @@ namespace EomApp1.Screens.Accounting.Forms
             {
                 e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                 e.Column.Visible = true;
-                e.Column.CellTemplate = WholeNumberCellTemplate;
-                e.Column.ReadOnly = true;
+                e.Column.CellTemplate = BoldWholeNumberCell;
             }
             else if (e.Column.Name == "Unit Type")
             {
@@ -306,7 +346,7 @@ namespace EomApp1.Screens.Accounting.Forms
             else if (e.Column.Name == "%Margin")
             {
                 e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                e.Column.CellTemplate = NumberCellTemplate;
+                e.Column.CellTemplate = NumberCell;
                 e.Column.Visible = true;
                 e.Column.ReadOnly = true;
             }
@@ -316,35 +356,38 @@ namespace EomApp1.Screens.Accounting.Forms
         {
             string revPerUnitFieldName = "Rev/Unit";
             string costPerUnitFieldName = "Cost/Unit";
+            string unitsFieldName = "Units";
 
             if (e.ColumnIndex == this.GridView.Columns[revPerUnitFieldName].Index)
             {
                 var cell = this.GridView[e.ColumnIndex, e.RowIndex];
                 decimal current = (decimal)cell.Value;
-
                 var row = cell.OwningRow;
                 var dataRow = (row.DataBoundItem as DataRowView).Row;
                 decimal original = dataRow.Field<decimal>(revPerUnitFieldName, DataRowVersion.Original);
-
                 if (original != current)
-                {
                     cell.Style.BackColor = Color.Red;
-                }
                 FillChanges();
             }
             else if (e.ColumnIndex == this.GridView.Columns[costPerUnitFieldName].Index)
             {
                 var cell = this.GridView[e.ColumnIndex, e.RowIndex];
                 decimal current = (decimal)cell.Value;
-
                 var row = cell.OwningRow;
                 var dataRow = (row.DataBoundItem as DataRowView).Row;
                 decimal original = dataRow.Field<decimal>(costPerUnitFieldName, DataRowVersion.Original);
-
                 if (original != current)
-                {
                     cell.Style.BackColor = Color.Red;
-                }
+                FillChanges();
+            }
+            else if (e.ColumnIndex == this.GridView.Columns[unitsFieldName].Index)
+            {
+                var cell = this.GridView[e.ColumnIndex, e.RowIndex];
+                decimal current = (decimal)cell.Value;
+                var dataRow = (cell.OwningRow.DataBoundItem as DataRowView).Row;
+                decimal original = dataRow.Field<decimal>(unitsFieldName, DataRowVersion.Original);
+                if (original != current)
+                    cell.Style.BackColor = Color.Red;
                 FillChanges();
             }
         }
@@ -381,8 +424,8 @@ namespace EomApp1.Screens.Accounting.Forms
         #endregion
 
         #region Cell Styles
-        
-        private static DataGridViewTextBoxCell BoldNumberCellTemplate
+
+        private static DataGridViewTextBoxCell BoldNumberCell
         {
             get
             {
@@ -444,7 +487,7 @@ namespace EomApp1.Screens.Accounting.Forms
             }
         }
 
-        private static DataGridViewTextBoxCell NumberCellTemplate
+        private static DataGridViewTextBoxCell NumberCell
         {
             get
             {
@@ -464,7 +507,7 @@ namespace EomApp1.Screens.Accounting.Forms
             }
         }
 
-        private static DataGridViewTextBoxCell WholeNumberCellTemplate
+        private static DataGridViewTextBoxCell WholeNumberCell
         {
             get
             {
@@ -482,7 +525,27 @@ namespace EomApp1.Screens.Accounting.Forms
                 };
                 return template;
             }
-        } 
+        }
+
+        private static DataGridViewTextBoxCell BoldWholeNumberCell
+        {
+            get
+            {
+                var font = new Font(DataGridView.DefaultFont, FontStyle.Bold);
+
+                var style = new DataGridViewCellStyle
+                {
+                    Font = font,
+                    Format = "N0"
+                };
+
+                var template = new DataGridViewTextBoxCell
+                {
+                    Style = style
+                };
+                return template;
+            }
+        }
 
         #endregion
     }
