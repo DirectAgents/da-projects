@@ -48,8 +48,6 @@ namespace DirectAgents.Domain.Concrete
 
                     campaign.Name = item.Offer.OfferName;
 
-                    campaign.TrafficType = item.Offer.AllowedMediaTypeNames;
-
                     campaign.Vertical = daDomain.Verticals.Single(c => c.Name == item.Offer.VerticalName);
 
                     if (string.IsNullOrWhiteSpace(campaign.PayableAction))

@@ -79,6 +79,10 @@
     <Compile Include="Migrations\201209171922380_TrafficType.Designer.cs">
       <DependentUpon>201209171922380_TrafficType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201209181555255_RmTrafficTypeNvarchar.cs" />
+    <Compile Include="Migrations\201209181555255_RmTrafficTypeNvarchar.Designer.cs">
+      <DependentUpon>201209181555255_RmTrafficTypeNvarchar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -114,6 +118,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201209171922380_TrafficType.resx">
       <DependentUpon>201209171922380_TrafficType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201209181555255_RmTrafficTypeNvarchar.resx">
+      <DependentUpon>201209181555255_RmTrafficTypeNvarchar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

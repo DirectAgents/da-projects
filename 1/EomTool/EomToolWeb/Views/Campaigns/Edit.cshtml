@@ -21,8 +21,8 @@
     @Html.EditorFor(c => c.PayableAction)
 </p>
 <p>
-    @Html.LabelFor(c => c.TrafficType)
-    @Html.EditorFor(c => c.TrafficType)
+    @Html.LabelFor(c => c.TrafficTypes)
+    @string.Join(", ", Model.TrafficTypes.Select(t => t.Name))
 </p>
 <p>
     @Html.LabelFor(c => c.Link)
@@ -30,7 +30,7 @@
 </p>
 <p>
     @Html.LabelFor(c => c.CostCurrency)
-    @Html.EditorFor(c => c.CostCurrency)
+    @Model.CostCurrency
 </p>
 <p>
     @Html.LabelFor(c => c.Cost)
@@ -38,7 +38,7 @@
 </p>
 <p>
     @Html.LabelFor(c => c.RevenueCurrency)
-    @Html.EditorFor(c => c.RevenueCurrency)
+    @Model.RevenueCurrency
 </p>
 <p>
     @Html.LabelFor(c => c.Revenue)

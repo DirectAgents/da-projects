@@ -11,7 +11,7 @@
 {
     <div>Country: @Model.Country.Name</div>
 }
-<div>@Model.Campaigns.Count() campaigns</div>
+<div>@Model.Campaigns.Count() campaign@(Model.Campaigns.Count()==1 ? "" : "s")</div>
 @foreach (var campaign in Model.Campaigns)
 {
     <p id="camp@(campaign.Pid)">
@@ -30,11 +30,11 @@
 }
         function ChangeVertical() {
             var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
-            if (dataItem.VerticalId != '')
-            {
-                var url = '@(Url.Action("List", "Campaigns"))?vertical=' + dataItem.Name + '@(new HtmlString(currFilter))';
-                document.location.href = url;
-            }
+            var vertical = '';
+            if (dataItem.VerticalId != '') vertical = dataItem.Name;
+
+            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '@(new HtmlString(currFilter))';
+            document.location.href = url;
         }
 
         function EditCampaign(pid) {
@@ -62,8 +62,7 @@
         $(function () {
             $("#verticals").kendoDropDownList({
                 @((Model.Vertical != null) ? "value: " + Model.Vertical.VerticalId + "," : "")
-                placeholder: "Select vertical",
-                optionLabel: "Select vertical...",
+                optionLabel: "Show All Verticals",
                 dataTextField: "Name",
                 dataValueField: "VerticalId",
                 dataSource: {

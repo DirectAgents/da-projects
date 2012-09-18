@@ -28,9 +28,6 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("Payable Action")]
         public string PayableAction { get; set; } // e.g. Subscribe for 3-day free trial 
 
-        [DisplayName("Traffic Type")]
-        public string TrafficType { get; set; } // e.g. Mobile traffic only, banners available 
-
         public string Link { get; set; } // e.g. http://dvs.galaxy.gs/land.php?ms=6&key=76591de61b798d096940fae9e025634708f386e1|105&sid=
 
         public decimal CostCurrency { get; set; } // e.g. USD
@@ -63,6 +60,7 @@ namespace DirectAgents.Domain.Entities
         public virtual ICollection<Person> AccountManagers { get; set; }
         public virtual ICollection<Person> AdManagers { get; set; }
         public virtual ICollection<Country> Countries { get; set; }
+        [DisplayName("Traffic Type")]
         public virtual ICollection<TrafficType> TrafficTypes { get; set; }
     }
 }
