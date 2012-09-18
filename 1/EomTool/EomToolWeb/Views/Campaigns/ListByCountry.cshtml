@@ -1,13 +1,28 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.Country>
 @{
     ViewBag.Title = "Campaigns By Country";
+    ViewBag.MenuItem = "ByCountry";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
 }
 
 <h2>Campaigns By Country</h2>
 
+@{
+    List<string> countryCodes = ViewBag.CountryCodes;
+    string lastCountry = countryCodes.FirstOrDefault();
+    foreach (var country in countryCodes)
+    {
+        <a href="#@country">@country</a>
+        if (country.Substring(0, 1) != lastCountry.Substring(0, 1)) {
+            <br />
+        }
+        lastCountry = country;
+    }
+}
+
 @foreach (var country in Model)
 {
+    <span id="@country.CountryCode"></span>
     <h3>@Html.ActionLink(country.CountryCode, "List", new {country = country.CountryCode}):</h3>
     <ol>
     @foreach (var campaign in country.Campaigns)

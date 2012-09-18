@@ -32,6 +32,7 @@ namespace EomToolWeb.Controllers
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))
             {
+                viewModel.Pid = pidInt;
                 campaigns = campaigns.Where(c => c.Pid == pidInt);
             }
             if (!string.IsNullOrWhiteSpace(vertical))
@@ -53,6 +54,8 @@ namespace EomToolWeb.Controllers
 
         public ActionResult ListByCountry()
         {
+            var countryCodes = campaignRepository.AllCountryCodes;
+            ViewBag.CountryCodes = countryCodes.ToList();
             var countries = campaignRepository.Countries.OrderByDescending(c => c.Campaigns.Count());
             return View(countries);
         }

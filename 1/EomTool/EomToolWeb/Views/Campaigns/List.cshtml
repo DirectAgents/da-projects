@@ -2,6 +2,11 @@
 @{
     ViewBag.Title = "Campaigns";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
+    if (Model.Country == null) {
+        if (Model.Pid == null) { ViewBag.MenuItem = "All"; }
+    } else if (Model.Country.CountryCode == "US") {
+        ViewBag.MenuItem = "US";
+    }
 }
 <div>
     <input id="verticals" style="width: 250px; margin-top: 10px" />

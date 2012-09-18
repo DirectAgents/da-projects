@@ -226,6 +226,11 @@ ul#menu li a
     text-decoration: none;
 }
 
+ul#menu li#selitem a
+{
+    color: #933;
+}
+
 ul#menu li a:hover
 {
     color: #333;

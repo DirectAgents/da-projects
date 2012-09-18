@@ -22,10 +22,10 @@
                 <nav>
                     <ul id="menu">
                         <li>Show:</li>
-                        <li>@Html.ActionLink("By Country", "ListByCountry", "Campaigns")</li>
-                        <li>@Html.ActionLink("US", "List", "Campaigns", new { country = "US" }, null)</li>
-                        <li>@Html.ActionLink("All", "List", "Campaigns")</li>
-                        <li>@Html.ActionLink("Country List", "ShowCountries", "Campaigns")</li>
+                        <li id="@(ViewBag.MenuItem == "ByCountry" ? "selitem" : "")">@Html.ActionLink("By Country", "ListByCountry", "Campaigns")</li>
+                        <li id="@(ViewBag.MenuItem == "US" ? "selitem" : "")">@Html.ActionLink("US", "List", "Campaigns", new { country = "US" }, null)</li>
+                        <li id="@(ViewBag.MenuItem == "All" ? "selitem" : "")">@Html.ActionLink("All", "List", "Campaigns")</li>
+                        <li id="@(ViewBag.MenuItem == "CountryList" ? "selitem" : "")">@Html.ActionLink("Country List", "ShowCountries", "Campaigns")</li>
                     </ul>
                 </nav>
             </div>
