@@ -40,6 +40,11 @@ namespace DirectAgents.Domain.Concrete
             get { return context.Verticals; }
         }
 
+        public IQueryable<TrafficType> TrafficTypes
+        {
+            get { return context.TrafficTypes; }
+        }
+
         public Campaign FindById(int pid)
         {
             var campaign = context.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();

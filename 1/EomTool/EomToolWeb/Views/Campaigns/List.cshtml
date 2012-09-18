@@ -5,6 +5,7 @@
 }
 <div>
     <input id="verticals" style="width: 250px; margin-top: 10px" />
+    <input id="traffictypes" style="width: 250px; margin-top: 10px" />
 </div>
 <h2>Campaigns List</h2>
 @if (Model.Country != null)
@@ -25,15 +26,19 @@
 @section scripts {
     <script type="text/javascript">
 @{
-    string currFilter = "";
-    if (Model.Country != null) { currFilter = "&country=" + Model.Country.CountryCode; }
+    string countryFilter = "";
+    if (Model.Country != null) { countryFilter = "&country=" + Model.Country.CountryCode; }
 }
-        function ChangeVertical() {
+        function ChangeFilter() {
             var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
             var vertical = '';
             if (dataItem.VerticalId != '') vertical = dataItem.Name;
 
-            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '@(new HtmlString(currFilter))';
+            dataItem = $('#traffictypes').data("kendoDropDownList").dataItem();
+            var traffictype = '';
+            if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
+
+            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '&traffictype=' + traffictype + '@(new HtmlString(countryFilter))';
             document.location.href = url;
         }
 
@@ -69,7 +74,18 @@
                     type: "jsonp",
                     transport: { read: "@Url.Content("~/api/Verticals")" }
                 },
-                change: ChangeVertical
+                change: ChangeFilter
+            });
+            $("#traffictypes").kendoDropDownList({
+                @((Model.TrafficType != null) ? "value: " + Model.TrafficType.TrafficTypeId + "," : "")
+                optionLabel: "Show All Traffic Types",
+                dataTextField: "Name",
+                dataValueField: "TrafficTypeId",
+                dataSource: {
+                    type: "jsonp",
+                    transport: { read: "@Url.Content("~/api/TrafficTypes")" }
+                },
+                change: ChangeFilter
             });
             $("#divEditCampaign").dialog({
                 autoOpen: false,

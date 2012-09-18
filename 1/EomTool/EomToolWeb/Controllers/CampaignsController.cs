@@ -18,7 +18,7 @@ namespace EomToolWeb.Controllers
             this.campaignRepository = campaignRepository;
         }
 
-        public ActionResult List(string country, string pid, string vertical)
+        public ActionResult List(string country, string pid, string vertical, string traffictype)
         {
             var viewModel = new CampaignsListViewModel();
             var campaigns = campaignRepository.Campaigns;
@@ -39,6 +39,12 @@ namespace EomToolWeb.Controllers
                 viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
                 if (viewModel.Vertical != null)
                     campaigns = campaigns.Where(c => c.Vertical.Name == vertical);
+            }
+            if (!string.IsNullOrWhiteSpace(traffictype))
+            {
+                viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+                if (viewModel.TrafficType != null)
+                    campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
             }
 
             viewModel.Campaigns = campaigns.AsEnumerable();

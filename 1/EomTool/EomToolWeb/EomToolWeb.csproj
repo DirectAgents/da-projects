@@ -142,6 +142,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PayoutsController.cs" />
     <Compile Include="Controllers\PublishersController.cs" />
+    <Compile Include="Controllers\TrafficTypesController.cs" />
     <Compile Include="Controllers\VerticalsController.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
@@ -161,6 +162,7 @@
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
+    <Compile Include="Models\TrafficTypeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
