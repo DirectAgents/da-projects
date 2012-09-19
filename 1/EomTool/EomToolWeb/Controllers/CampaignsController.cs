@@ -117,5 +117,11 @@ namespace EomToolWeb.Controllers
             else
                 return View(campaign);
         }
+
+        public ActionResult TopTenRevenue()
+        {
+            var topTen = campaignRepository.TopCampaignsByRevenue(10);
+            return View(topTen);
+        }
     }
 }

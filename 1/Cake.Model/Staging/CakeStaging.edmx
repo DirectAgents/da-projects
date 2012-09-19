@@ -5,83 +5,120 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="CakeStagingModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
-  <EntityContainer Name="CakeStagingModelStoreContainer">
-    <EntitySet Name="CakeAdvertisers" EntityType="CakeStagingModel.Store.CakeAdvertisers" store:Type="Tables" Schema="staging" />
-    <EntitySet Name="CakeAffiliates" EntityType="CakeStagingModel.Store.CakeAffiliates" store:Type="Tables" Schema="staging" />
-    <EntitySet Name="CakeConversions" EntityType="CakeStagingModel.Store.CakeConversions" store:Type="Tables" Schema="staging" />
-    <EntitySet Name="CakeOffers" EntityType="CakeStagingModel.Store.CakeOffers" store:Type="Tables" Schema="staging" />
-  </EntityContainer>
-  <EntityType Name="CakeAdvertisers">
-    <Key>
-      <PropertyRef Name="Advertiser_Id" />
-    </Key>
-    <Property Name="Advertiser_Id" Type="int" Nullable="false" />
-    <Property Name="AdvertiserName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="AccountManager_Id" Type="int" Nullable="true" />
-    <Property Name="AccountManagerName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="AdManagerName" Type="nvarchar" Nullable="true" MaxLength="255" />
-  </EntityType>
-  <EntityType Name="CakeAffiliates">
-    <Key>
-      <PropertyRef Name="Affiliate_Id" />
-    </Key>
-    <Property Name="Affiliate_Id" Type="int" Nullable="false" />
-    <Property Name="AffiliateName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="AccountManager_Id" Type="int" Nullable="true" />
-    <Property Name="StatusName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Website" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="AccountManagerName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Currency" Type="nchar" Nullable="true" MaxLength="3" />
-  </EntityType>
-  <EntityType Name="CakeConversions">
-    <Key>
-      <PropertyRef Name="Conversion_Id" />
-    </Key>
-    <Property Name="Conversion_Id" Type="int" Nullable="false" />
-    <Property Name="ConversionDate" Type="datetime" Nullable="true" />
-    <Property Name="Affiliate_Id" Type="int" Nullable="true" />
-    <Property Name="Offer_Id" Type="int" Nullable="true" />
-    <Property Name="Advertiser_Id" Type="int" Nullable="true" />
-    <Property Name="Campaign_Id" Type="int" Nullable="true" />
-    <Property Name="Creative_Id" Type="int" Nullable="true" />
-    <Property Name="CreativeName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Subid1" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="ConversionType" Type="nvarchar" Nullable="true" MaxLength="50" />
-    <Property Name="PricePaid" Type="decimal" Nullable="true" Precision="19" Scale="4" />
-    <Property Name="PriceReceived" Type="decimal" Nullable="true" Precision="19" Scale="4" />
-    <Property Name="IpAddress" Type="nvarchar" Nullable="true" MaxLength="50" />
-    <Property Name="PricePaidCurrencyId" Type="int" Nullable="true" />
-    <Property Name="PricePaidFormattedAmount" Type="nvarchar" Nullable="true" MaxLength="50" />
-    <Property Name="PriceReceivedCurrencyId" Type="int" Nullable="true" />
-    <Property Name="PriceReceivedFormattedAmount" Type="nvarchar" Nullable="true" MaxLength="50" />
-    <Property Name="Deleted" Type="bit" Nullable="false" />
-  </EntityType>
-  <EntityType Name="CakeOffers">
-    <Key>
-      <PropertyRef Name="Offer_Id" />
-    </Key>
-    <Property Name="Offer_Id" Type="int" Nullable="false" />
-    <Property Name="OfferName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Advertiser_Id" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="VerticalName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="OfferType" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="StatusName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="DefaultPriceFormat" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="DefaultPayout" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="PriceReceived" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Secure" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="OfferLink" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="ThumbnailImageUrl" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="ExpirationDate" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="CookieDays" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="CookieDaysImpressions" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="DateCreated" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Currency" Type="nchar" Nullable="true" MaxLength="3" />
-    <Property Name="AllowedCountries" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Xml" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="AllowedMediaTypeNames" Type="nvarchar(max)" Nullable="false" />
-  </EntityType>
-</Schema></edmx:StorageModels>
+        <EntityContainer Name="CakeStagingModelStoreContainer">
+          <EntitySet Name="CakeAdvertisers" EntityType="CakeStagingModel.Store.CakeAdvertisers" store:Type="Tables" Schema="staging" />
+          <EntitySet Name="CakeAffiliates" EntityType="CakeStagingModel.Store.CakeAffiliates" store:Type="Tables" Schema="staging" />
+          <EntitySet Name="CakeConversions" EntityType="CakeStagingModel.Store.CakeConversions" store:Type="Tables" Schema="staging" />
+          <EntitySet Name="CakeOffers" EntityType="CakeStagingModel.Store.CakeOffers" store:Type="Tables" Schema="staging" />
+          <EntitySet Name="conversions" EntityType="CakeStagingModel.Store.conversions" store:Type="Tables" Schema="staging" />
+        </EntityContainer>
+        <EntityType Name="CakeAdvertisers">
+          <Key>
+            <PropertyRef Name="Advertiser_Id" />
+          </Key>
+          <Property Name="Advertiser_Id" Type="int" Nullable="false" />
+          <Property Name="AdvertiserName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AccountManager_Id" Type="int" />
+          <Property Name="AccountManagerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AdManagerName" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CakeAffiliates">
+          <Key>
+            <PropertyRef Name="Affiliate_Id" />
+          </Key>
+          <Property Name="Affiliate_Id" Type="int" Nullable="false" />
+          <Property Name="AffiliateName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AccountManager_Id" Type="int" />
+          <Property Name="AccountManagerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="StatusName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Website" Type="nvarchar" MaxLength="255" />
+          <Property Name="Currency" Type="nchar" MaxLength="3" />
+        </EntityType>
+        <EntityType Name="CakeConversions">
+          <Key>
+            <PropertyRef Name="Conversion_Id" />
+          </Key>
+          <Property Name="Conversion_Id" Type="int" Nullable="false" />
+          <Property Name="ConversionDate" Type="datetime" />
+          <Property Name="Affiliate_Id" Type="int" />
+          <Property Name="Offer_Id" Type="int" />
+          <Property Name="Advertiser_Id" Type="int" />
+          <Property Name="Campaign_Id" Type="int" />
+          <Property Name="Creative_Id" Type="int" />
+          <Property Name="CreativeName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Subid1" Type="nvarchar" MaxLength="255" />
+          <Property Name="ConversionType" Type="nvarchar" MaxLength="50" />
+          <Property Name="PricePaid" Type="money" />
+          <Property Name="PriceReceived" Type="money" />
+          <Property Name="IpAddress" Type="nvarchar" MaxLength="50" />
+          <Property Name="PricePaidCurrencyId" Type="int" />
+          <Property Name="PricePaidFormattedAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="PriceReceivedCurrencyId" Type="int" />
+          <Property Name="PriceReceivedFormattedAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CakeOffers">
+          <Key>
+            <PropertyRef Name="Offer_Id" />
+          </Key>
+          <Property Name="Offer_Id" Type="int" Nullable="false" />
+          <Property Name="OfferName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Advertiser_Id" Type="nvarchar" MaxLength="255" />
+          <Property Name="VerticalName" Type="nvarchar" MaxLength="255" />
+          <Property Name="OfferType" Type="nvarchar" MaxLength="255" />
+          <Property Name="StatusName" Type="nvarchar" MaxLength="255" />
+          <Property Name="DefaultPriceFormat" Type="nvarchar" MaxLength="255" />
+          <Property Name="DefaultPayout" Type="nvarchar" MaxLength="255" />
+          <Property Name="PriceReceived" Type="nvarchar" MaxLength="255" />
+          <Property Name="Secure" Type="nvarchar" MaxLength="255" />
+          <Property Name="OfferLink" Type="nvarchar" MaxLength="255" />
+          <Property Name="ThumbnailImageUrl" Type="nvarchar" MaxLength="255" />
+          <Property Name="ExpirationDate" Type="nvarchar" MaxLength="255" />
+          <Property Name="CookieDays" Type="nvarchar" MaxLength="255" />
+          <Property Name="CookieDaysImpressions" Type="nvarchar" MaxLength="255" />
+          <Property Name="DateCreated" Type="nvarchar" MaxLength="255" />
+          <Property Name="Currency" Type="nchar" MaxLength="3" />
+          <Property Name="AllowedCountries" Type="nvarchar(max)" />
+          <Property Name="Xml" Type="xml" />
+          <Property Name="AllowedMediaTypeNames" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="conversions">
+          <Key>
+            <PropertyRef Name="conversion_id" />
+          </Key>
+          <Property Name="conversion_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="visitor_id" Type="int" Nullable="false" />
+          <Property Name="request_session_id" Type="int" Nullable="false" />
+          <Property Name="click_id" Type="int" Nullable="false" />
+          <Property Name="conversion_date" Type="datetime" Nullable="false" />
+          <Property Name="affiliate_affiliate_id" Type="int" Nullable="false" />
+          <Property Name="affiliate_affiliate_name" Type="nvarchar(max)" />
+          <Property Name="advertiser_advertiser_id" Type="int" Nullable="false" />
+          <Property Name="advertiser_advertiser_name" Type="nvarchar(max)" />
+          <Property Name="offer_offer_id" Type="int" Nullable="false" />
+          <Property Name="offer_offer_name" Type="nvarchar(max)" />
+          <Property Name="creative_creative_id" Type="int" Nullable="false" />
+          <Property Name="creative_creative_name" Type="nvarchar(max)" />
+          <Property Name="sub_id_1" Type="nvarchar(max)" />
+          <Property Name="sub_id_2" Type="nvarchar(max)" />
+          <Property Name="sub_id_3" Type="nvarchar(max)" />
+          <Property Name="conversion_type" Type="nvarchar(max)" />
+          <Property Name="paid_currency_id" Type="int" Nullable="false" />
+          <Property Name="paid_amount" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="paid_formatted_amount" Type="nvarchar(max)" />
+          <Property Name="received_currency_id" Type="int" Nullable="false" />
+          <Property Name="received_amount" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="received_formatted_amount" Type="nvarchar(max)" />
+          <Property Name="pixel_dropped" Type="bit" Nullable="false" />
+          <Property Name="suppressed" Type="bit" Nullable="false" />
+          <Property Name="returned" Type="bit" Nullable="false" />
+          <Property Name="test" Type="bit" Nullable="false" />
+          <Property Name="transaction_id" Type="nvarchar(max)" />
+          <Property Name="ip_address" Type="nvarchar(max)" />
+          <Property Name="referrer_url" Type="nvarchar(max)" />
+          <Property Name="note" Type="nvarchar(max)" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CakeStagingModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -90,6 +127,7 @@
           <EntitySet Name="CakeAffiliates" EntityType="CakeStagingModel.CakeAffiliate" />
           <EntitySet Name="CakeConversions" EntityType="CakeStagingModel.CakeConversion" />
           <EntitySet Name="CakeOffers" EntityType="CakeStagingModel.CakeOffer" />
+          <EntitySet Name="conversions" EntityType="CakeStagingModel.conversion" />
         </EntityContainer>
         <EntityType Name="CakeAdvertiser">
           <Key>
@@ -160,6 +198,42 @@
           <Property Type="String" Name="AllowedCountries" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Xml" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AllowedMediaTypeNames" Nullable="false" />
+        </EntityType>
+        <EntityType Name="conversion">
+          <Key>
+            <PropertyRef Name="conversion_id" />
+          </Key>
+          <Property Type="Int32" Name="conversion_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="visitor_id" Nullable="false" />
+          <Property Type="Int32" Name="request_session_id" Nullable="false" />
+          <Property Type="Int32" Name="click_id" Nullable="false" />
+          <Property Type="DateTime" Name="conversion_date" Nullable="false" />
+          <Property Type="Int32" Name="affiliate_affiliate_id" Nullable="false" />
+          <Property Type="String" Name="affiliate_affiliate_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="advertiser_advertiser_id" Nullable="false" />
+          <Property Type="String" Name="advertiser_advertiser_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="offer_offer_id" Nullable="false" />
+          <Property Type="String" Name="offer_offer_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="creative_creative_id" Nullable="false" />
+          <Property Type="String" Name="creative_creative_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_1" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_2" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_3" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="conversion_type" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="paid_currency_id" Nullable="false" />
+          <Property Type="Decimal" Name="paid_amount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="paid_formatted_amount" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="received_currency_id" Nullable="false" />
+          <Property Type="Decimal" Name="received_amount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="received_formatted_amount" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="pixel_dropped" Nullable="false" />
+          <Property Type="Boolean" Name="suppressed" Nullable="false" />
+          <Property Type="Boolean" Name="returned" Nullable="false" />
+          <Property Type="Boolean" Name="test" Nullable="false" />
+          <Property Type="String" Name="transaction_id" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ip_address" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="referrer_url" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="note" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -241,6 +315,43 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+          <EntitySetMapping Name="conversions">
+            <EntityTypeMapping TypeName="CakeStagingModel.conversion">
+              <MappingFragment StoreEntitySet="conversions">
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="referrer_url" ColumnName="referrer_url" />
+                <ScalarProperty Name="ip_address" ColumnName="ip_address" />
+                <ScalarProperty Name="transaction_id" ColumnName="transaction_id" />
+                <ScalarProperty Name="test" ColumnName="test" />
+                <ScalarProperty Name="returned" ColumnName="returned" />
+                <ScalarProperty Name="suppressed" ColumnName="suppressed" />
+                <ScalarProperty Name="pixel_dropped" ColumnName="pixel_dropped" />
+                <ScalarProperty Name="received_formatted_amount" ColumnName="received_formatted_amount" />
+                <ScalarProperty Name="received_amount" ColumnName="received_amount" />
+                <ScalarProperty Name="received_currency_id" ColumnName="received_currency_id" />
+                <ScalarProperty Name="paid_formatted_amount" ColumnName="paid_formatted_amount" />
+                <ScalarProperty Name="paid_amount" ColumnName="paid_amount" />
+                <ScalarProperty Name="paid_currency_id" ColumnName="paid_currency_id" />
+                <ScalarProperty Name="conversion_type" ColumnName="conversion_type" />
+                <ScalarProperty Name="sub_id_3" ColumnName="sub_id_3" />
+                <ScalarProperty Name="sub_id_2" ColumnName="sub_id_2" />
+                <ScalarProperty Name="sub_id_1" ColumnName="sub_id_1" />
+                <ScalarProperty Name="creative_creative_name" ColumnName="creative_creative_name" />
+                <ScalarProperty Name="creative_creative_id" ColumnName="creative_creative_id" />
+                <ScalarProperty Name="offer_offer_name" ColumnName="offer_offer_name" />
+                <ScalarProperty Name="offer_offer_id" ColumnName="offer_offer_id" />
+                <ScalarProperty Name="advertiser_advertiser_name" ColumnName="advertiser_advertiser_name" />
+                <ScalarProperty Name="advertiser_advertiser_id" ColumnName="advertiser_advertiser_id" />
+                <ScalarProperty Name="affiliate_affiliate_name" ColumnName="affiliate_affiliate_name" />
+                <ScalarProperty Name="affiliate_affiliate_id" ColumnName="affiliate_affiliate_id" />
+                <ScalarProperty Name="conversion_date" ColumnName="conversion_date" />
+                <ScalarProperty Name="click_id" ColumnName="click_id" />
+                <ScalarProperty Name="request_session_id" ColumnName="request_session_id" />
+                <ScalarProperty Name="visitor_id" ColumnName="visitor_id" />
+                <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
@@ -266,6 +377,7 @@
         <EntityTypeShape EntityType="CakeStagingModel.CakeAffiliate" Width="2.5" PointX="2.75" PointY="0.75" Height="2.3648893229166656" />
         <EntityTypeShape EntityType="CakeStagingModel.CakeConversion" Width="1.5" PointX="7.25" PointY="0.75" Height="4.480205078125" />
         <EntityTypeShape EntityType="CakeStagingModel.CakeOffer" Width="1.5" PointX="5.5" PointY="0.75" Height="4.8648079427083326" />
+        <EntityTypeShape EntityType="CakeStagingModel.conversion" Width="2" PointX="9.25" PointY="0.5" Height="6.9801236979166674" />
       </Diagram>
     </Diagrams>
   </Designer>

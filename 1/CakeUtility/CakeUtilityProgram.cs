@@ -229,8 +229,6 @@ namespace CakeUtility
             {
                 DateTime extractDate = new DateTime(year, month, day);
 
-                Cake.Data.Wsdl.CakeService.ConversionsExtractDate = extractDate;
-
                 Console.WriteLine(extractDate);
 
                 MergeUtility.Merge<

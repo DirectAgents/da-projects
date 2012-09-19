@@ -10,7 +10,7 @@ namespace ApiClient.Etl.Cake
     public class ConversionsToStaging : IDestination<conversion>
     {
         private ISource<conversion> source;
-        static int LoadBatchSize = 100;
+        static int LoadBatchSize = 200;
 
         public Thread Load(ISource<conversion> source)
         {
@@ -46,9 +46,13 @@ namespace ApiClient.Etl.Cake
                 {
                     Thread.Sleep(250);
                 }
-                Logger.Log("{0}/{1}, Done: {2}", Loaded, source.Total, source.Done);
             }
-            System.Console.WriteLine("here");
+            System.Console.WriteLine("Conversion loading complete.");
+        }
+
+        private void LogStatus()
+        {
+            Logger.Log("{0}/{1}, Done: {2}", Loaded, source.Total, source.Done);
         }
 
         private static void Load(CakeDbContext db, List<conversion> batch)
@@ -56,15 +60,18 @@ namespace ApiClient.Etl.Cake
             Logger.Log("Loading batch of {0}..", batch.Count);
             batch.ForEach(c =>
             {
-                var existing = db.Conversions.Where(d => d.conversion_id == c.conversion_id);
-
-                if (existing.SingleOrDefault() != null)
-                    db.Conversions.Remove(existing.First());
-
                 db.Conversions.Add(c);
-            });     
+            });
         }
 
-        public int Loaded { get; set; }
+        int loaded = 0;
+        public int Loaded {
+            get { return loaded; }
+            set
+            {
+                loaded = value;
+                LogStatus();
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
-using System.Collections.Generic;
 
 namespace DirectAgents.Domain.Abstract
 {
@@ -14,5 +15,6 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<TrafficType> TrafficTypes { get; }
         Campaign FindById(int pid);
         void SaveCampaign(Campaign campaign);
+        IEnumerable<CampaignSummary> TopCampaignsByRevenue(int num);
     }
 }

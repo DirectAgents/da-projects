@@ -1134,6 +1134,7 @@
     <Content Include="Views\Shared\_LayoutCampaignWiki.cshtml" />
     <Content Include="Views\Campaigns\ShowCountries.cshtml" />
     <Content Include="Views\Campaigns\Search.cshtml" />
+    <Content Include="Views\Campaigns\TopTenRevenue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

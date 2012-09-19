@@ -50,6 +50,7 @@
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\TrafficType.cs" />
     <Compile Include="Entities\Country.cs" />

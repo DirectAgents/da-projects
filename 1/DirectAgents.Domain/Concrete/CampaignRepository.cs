@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.DTO;
+using DirectAgents.Domain.Entities;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -63,6 +64,23 @@ namespace DirectAgents.Domain.Concrete
                 context.Campaigns.Add(campaign);
             }
             context.SaveChanges();
+        }
+
+        public IEnumerable<CampaignSummary> TopCampaignsByRevenue(int num)
+        {
+            using (var cake = new Cake.Model.Staging.CakeStagingEntities())
+            {
+                var byRevenue = from c in cake.conversions
+                                group c by new { Pid = c.offer_offer_id, Name = c.offer_offer_name } into g
+                                select new CampaignSummary
+                                {
+                                    Pid = g.Key.Pid,
+                                    CampaignName = g.Key.Name,
+                                    Revenue = g.Sum(r => r.received_amount),
+                                };
+
+                return byRevenue.OrderByDescending(c => c.Revenue).Take(num).ToList();
+            }
         }
     }
 }

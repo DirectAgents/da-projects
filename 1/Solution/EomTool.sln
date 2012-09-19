@@ -60,6 +60,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeUtility", "..\CakeUtili
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectAgents.Domain.Test", "DirectAgents.Domain.Test\DirectAgents.Domain.Test.csproj", "{948AD96B-FECD-4A9A-BF7B-4801B604D1AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClient", "..\ApiClient\ApiClient.csproj", "{D426CB44-8A19-4AA6-B566-82A45A466149}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = EomTool.vsmdi
@@ -963,6 +965,41 @@ Global
 		{948AD96B-FECD-4A9A-BF7B-4801B604D1AF}.Try1 Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{948AD96B-FECD-4A9A-BF7B-4801B604D1AF}.Try1 Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{948AD96B-FECD-4A9A-BF7B-4801B604D1AF}.Try1 Debug|x86.ActiveCfg = Debug|Any CPU
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Client Portal|Any CPU.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Client Portal|Mixed Platforms.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Client Portal|Mixed Platforms.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Client Portal|x86.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Client Portal|x86.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - DADatabaseService|Any CPU.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - DADatabaseService|Mixed Platforms.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - DADatabaseService|Mixed Platforms.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - DADatabaseService|x86.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - DADatabaseService|x86.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Direct Track|Any CPU.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Direct Track|Mixed Platforms.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Direct Track|Mixed Platforms.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Direct Track|x86.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - Direct Track|x86.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - z|Any CPU.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - z|Mixed Platforms.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - z|Mixed Platforms.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - z|x86.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug - z|x86.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug|x86.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Debug|x86.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Release|Any CPU.ActiveCfg = Release|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Release|x86.ActiveCfg = Release|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Release|x86.Build.0 = Release|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Try1 Debug|Any CPU.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Try1 Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Try1 Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Try1 Debug|x86.ActiveCfg = Debug|x86
+		{D426CB44-8A19-4AA6-B566-82A45A466149}.Try1 Debug|x86.Build.0 = Debug|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -989,6 +1026,7 @@ Global
 		{B3B19DA1-2335-4597-8DBE-9C7A12B7E92E} = {E4D73AA0-8CFD-46A0-BE36-3E34D01CEC05}
 		{CB8102D2-EB31-4CEC-80BC-16403FD34D57} = {E4D73AA0-8CFD-46A0-BE36-3E34D01CEC05}
 		{948AD96B-FECD-4A9A-BF7B-4801B604D1AF} = {E4D73AA0-8CFD-46A0-BE36-3E34D01CEC05}
+		{D426CB44-8A19-4AA6-B566-82A45A466149} = {E4D73AA0-8CFD-46A0-BE36-3E34D01CEC05}
 		{AC153EBD-4D65-4B9D-A812-65592DD49508} = {B63CA144-D8E4-4553-BDF6-8268EB9467E7}
 		{87AEC306-A7EC-4F3E-925A-59AB736E60D4} = {B63CA144-D8E4-4553-BDF6-8268EB9467E7}
 		{590BB4FB-CBF2-496C-B408-5D8C1C54CD5F} = {B63CA144-D8E4-4553-BDF6-8268EB9467E7}
