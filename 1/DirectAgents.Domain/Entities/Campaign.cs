@@ -30,15 +30,18 @@ namespace DirectAgents.Domain.Entities
 
         public string Link { get; set; } // e.g. http://dvs.galaxy.gs/land.php?ms=6&key=76591de61b798d096940fae9e025634708f386e1|105&sid=
 
-        public decimal CostCurrency { get; set; } // e.g. USD
+        public string CostCurrency { get; set; } // e.g. $
 
+        [DisplayName("Cost (Payout)")]
         public decimal Cost { get; set; } // e.g. 1.85 
 
-        public decimal RevenueCurrency { get; set; } // e.g. USD
+        public string RevenueCurrency { get; set; } // e.g. $
 
+        [DisplayName("Revenue (Payout to Direct Agents)")]
         public decimal Revenue { get; set; } // e.g. 2.50
 
         [DisplayName("Important Details")]
+        [DataType(DataType.MultilineText)]
         public string ImportantDetails { get; set; } // e.g. Important Details 
         //      Android Only 
         //      No content locking sites 
@@ -47,6 +50,7 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("Banned Networks")]
         public string BannedNetworks { get; set; } // e.g. Adgate Media, Adscend Media, Dollarade
 
+        [DisplayName("Campaign Cap")]
         public decimal CampaignCap { get; set; } // e.g. 3,500 downloads per month 
 
         [DisplayName("Scrub Policy")]
