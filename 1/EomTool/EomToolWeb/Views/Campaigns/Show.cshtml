@@ -17,8 +17,8 @@ Payout: @Model.CostCurrency@Model.Cost
 <br />
 Payout to Direct Agents: @Model.RevenueCurrency@Model.Revenue
 <br />
-<b>Important Details:</b><br />
-@Model.ImportantDetails
+<b>Important Details:</b>
+@if (Model.ImportantDetails != null) { <br />@Model.ImportantDetails }
 <br />
 Banned Networks: @Model.BannedNetworks
 <br />

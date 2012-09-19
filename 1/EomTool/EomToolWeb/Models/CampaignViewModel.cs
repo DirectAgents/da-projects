@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using DirectAgents.Domain.Entities;
+using System.Web.Mvc;
 
 namespace EomToolWeb.Models
 {
@@ -38,7 +39,7 @@ namespace EomToolWeb.Models
             get
             {
                 var countryCodes = campaign.Countries.Select(c => c.CountryCode).ToArray();
-                return string.Join(",", countryCodes);
+                return string.Join(" ", countryCodes);
             }
         }
 
@@ -69,7 +70,16 @@ namespace EomToolWeb.Models
         public string RevenueCurrency { get { return campaign.RevenueCurrency; } }
         public decimal Revenue { get { return campaign.Revenue; } }
 
-        public string ImportantDetails { get { return campaign.ImportantDetails; } }
+        public MvcHtmlString ImportantDetails
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(campaign.ImportantDetails))
+                    return null;
+                else
+                    return MvcHtmlString.Create(campaign.ImportantDetails.Replace(System.Environment.NewLine, "<br />"));
+            }
+        }
 
         public string BannedNetworks { get { return campaign.BannedNetworks; } }
 
