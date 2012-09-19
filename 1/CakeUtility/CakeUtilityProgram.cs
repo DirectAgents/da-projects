@@ -220,10 +220,24 @@ namespace CakeUtility
         [Command]
         public void ExtractAndStageCakeConversions()
         {
-            MergeUtility.Merge<
-                Cake.Data.Wsdl.ReportsService.conversion,
-                Cake.Model.Staging.CakeConversion,
-                Cake.Model.Staging.CakeStagingEntities>();
+            int year = 2012;
+            int month = 9;
+            int startDay = 2;
+            int endDay = 2;
+
+            for (int day = startDay; day <= endDay; day++)
+            {
+                DateTime extractDate = new DateTime(year, month, day);
+
+                Cake.Data.Wsdl.CakeService.ConversionsExtractDate = extractDate;
+
+                Console.WriteLine(extractDate);
+
+                MergeUtility.Merge<
+                    Cake.Data.Wsdl.ReportsService.conversion,
+                    Cake.Model.Staging.CakeConversion,
+                    Cake.Model.Staging.CakeStagingEntities>();
+            }
         }
 
         [Command]

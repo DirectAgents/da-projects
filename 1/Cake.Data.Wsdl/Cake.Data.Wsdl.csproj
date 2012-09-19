@@ -63,6 +63,7 @@
     <Compile Include="advertiser.partial.cs" />
     <Compile Include="affiliate.partial.cs" />
     <Compile Include="CakeService.cs" />
+    <Compile Include="XmlSanitizingStream.cs" />
     <Compile Include="conversion.partial.cs" />
     <Compile Include="ICakeService.cs" />
     <Compile Include="offer1.partial.cs" />
@@ -141,10 +142,10 @@
     <None Include="Web References\ReportsService\reports.wsdl" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="https://sandbox.cakemarketing.com/api/4/reports.asmx">
+    <WebReferenceUrl Include="https://login.directagents.com/api/4/reports.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\ReportsService\</RelPath>
-      <UpdateFromURL>https://sandbox.cakemarketing.com/api/4/reports.asmx</UpdateFromURL>
+      <UpdateFromURL>https://login.directagents.com/api/4/reports.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

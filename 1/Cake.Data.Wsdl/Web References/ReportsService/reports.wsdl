@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://cakemarketing.com/api/4/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="API:id_name_store" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://cakemarketing.com/api/4/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://cakemarketing.com/api/4/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s1="API:id_name_store" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://cakemarketing.com/api/4/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://cakemarketing.com/api/4/">
       <s:import namespace="API:id_name_store" />
@@ -253,16 +253,16 @@
   </wsdl:binding>
   <wsdl:service name="reports">
     <wsdl:port name="reportsSoap" binding="tns:reportsSoap">
-      <soap:address location="https://sandbox.cakemarketing.com/api/4/reports.asmx" />
+      <soap:address location="https://login.directagents.com/api/4/reports.asmx" />
     </wsdl:port>
     <wsdl:port name="reportsSoap12" binding="tns:reportsSoap12">
-      <soap12:address location="https://sandbox.cakemarketing.com/api/4/reports.asmx" />
+      <soap12:address location="https://login.directagents.com/api/4/reports.asmx" />
     </wsdl:port>
     <wsdl:port name="reportsHttpGet" binding="tns:reportsHttpGet">
-      <http:address location="https://sandbox.cakemarketing.com/api/4/reports.asmx" />
+      <http:address location="https://login.directagents.com/api/4/reports.asmx" />
     </wsdl:port>
     <wsdl:port name="reportsHttpPost" binding="tns:reportsHttpPost">
-      <http:address location="https://sandbox.cakemarketing.com/api/4/reports.asmx" />
+      <http:address location="https://login.directagents.com/api/4/reports.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

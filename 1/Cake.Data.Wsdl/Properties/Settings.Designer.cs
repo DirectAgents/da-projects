@@ -26,7 +26,7 @@ namespace Cake.Data.Wsdl.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://sandbox.cakemarketing.com/api/4/reports.asmx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://login.directagents.com/api/4/reports.asmx")]
         public string Cake_Data_Wsdl_ReportsService_reports {
             get {
                 return ((string)(this["Cake_Data_Wsdl_ReportsService_reports"]));
