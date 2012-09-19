@@ -3,7 +3,8 @@
     ViewBag.Title = "Campaigns";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
     if (Model.Country == null) {
-        if (Model.Pid == null) { ViewBag.MenuItem = "All"; }
+        if (Model.SearchString != null && Model.SearchString.ToLower() == "cpm") { ViewBag.MenuItem = "CPM"; }
+        else if (Model.Pid == null && Model.SearchString == null && Model.Vertical == null && Model.TrafficType == null) { ViewBag.MenuItem = "All"; }
     } else if (Model.Country.CountryCode == "US") {
         ViewBag.MenuItem = "US";
     }
@@ -16,6 +17,10 @@
 @if (Model.Country != null)
 {
     <div>Country: @Model.Country.Name</div>
+}
+@if (Model.SearchString != null)
+{
+    <div>Search for: @Model.SearchString</div>
 }
 <div>@Model.Campaigns.Count() campaign@(Model.Campaigns.Count()==1 ? "" : "s")</div>
 @foreach (var campaign in Model.Campaigns)
@@ -31,8 +36,9 @@
 @section scripts {
     <script type="text/javascript">
 @{
-    string countryFilter = "";
-    if (Model.Country != null) { countryFilter = "&country=" + Model.Country.CountryCode; }
+    string currFilter = "";
+    if (Model.Country != null) { currFilter = "&country=" + Model.Country.CountryCode; }
+    if (Model.SearchString != null) { currFilter = "&searchstring=" + Model.SearchString; }
 }
         function ChangeFilter() {
             var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
@@ -43,7 +49,7 @@
             var traffictype = '';
             if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
 
-            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '&traffictype=' + traffictype + '@(new HtmlString(countryFilter))';
+            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '&traffictype=' + traffictype + '@(new HtmlString(currFilter))';
             document.location.href = url;
         }
 
@@ -95,7 +101,7 @@
             $("#divEditCampaign").dialog({
                 autoOpen: false,
                 height: 800,
-                width: 500,
+                width: 600,
                 modal: true,
                 buttons: {
                     Save: SaveCampaign,

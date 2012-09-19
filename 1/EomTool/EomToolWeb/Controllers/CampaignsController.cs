@@ -18,22 +18,27 @@ namespace EomToolWeb.Controllers
             this.campaignRepository = campaignRepository;
         }
 
-        public ActionResult List(string country, string pid, string vertical, string traffictype)
+        public ActionResult List(string searchstring, string pid, string country, string vertical, string traffictype)
         {
             var viewModel = new CampaignsListViewModel();
             var campaigns = campaignRepository.Campaigns;
-            
-            if (!string.IsNullOrWhiteSpace(country))
+
+            if (!string.IsNullOrWhiteSpace(searchstring))
             {
-                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
-                if (viewModel.Country != null)
-                    campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
+                viewModel.SearchString = searchstring;
+                campaigns = campaigns.Where(c => c.Name.Contains(searchstring));
             }
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))
             {
                 viewModel.Pid = pidInt;
                 campaigns = campaigns.Where(c => c.Pid == pidInt);
+            }
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+                if (viewModel.Country != null)
+                    campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
             }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
@@ -58,6 +63,12 @@ namespace EomToolWeb.Controllers
             ViewBag.CountryCodes = countryCodes.ToList();
             var countries = campaignRepository.Countries.OrderByDescending(c => c.Campaigns.Count());
             return View(countries);
+        }
+
+        public ActionResult Search()
+        {
+            var countryCodes = campaignRepository.AllCountryCodes;
+            return View(countryCodes);
         }
 
         public ActionResult ShowCountries()

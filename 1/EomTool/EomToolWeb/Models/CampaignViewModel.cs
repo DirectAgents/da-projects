@@ -63,8 +63,10 @@ namespace EomToolWeb.Models
 
         public string OfferLink { get { return campaign.Link; } }
 
-        public decimal Payout { get { return campaign.Cost; } }
+        public string CostCurrency { get { return campaign.CostCurrency; } }
+        public decimal Cost { get { return campaign.Cost; } }
 
+        public string RevenueCurrency { get { return campaign.RevenueCurrency; } }
         public decimal Revenue { get { return campaign.Revenue; } }
 
         public string ImportantDetails { get { return campaign.ImportantDetails; } }

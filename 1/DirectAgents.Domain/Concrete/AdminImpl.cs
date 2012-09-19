@@ -135,12 +135,15 @@ namespace DirectAgents.Domain.Concrete
 
         private static void ExtractFieldsFromWsdlOffer(Campaign campaign, Cake.Data.Wsdl.ExportService.offer1 offer)
         {
-            campaign.Cost = offer.offer_contracts[0].payout.amount;
             campaign.ImageUrl = offer.offer_image_link;
             campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
             campaign.Link = offer.offer_contracts[0].offer_link;
             campaign.Cost = offer.offer_contracts[0].payout.amount;
             campaign.Revenue = offer.offer_contracts[0].received.amount;
+
+            campaign.CostCurrency = offer.currency.currency_symbol;
+            campaign.RevenueCurrency = offer.currency.currency_symbol;
+            campaign.ImportantDetails = offer.restrictions;
         }
 
         // TODO: support multiple admangers
