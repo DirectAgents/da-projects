@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  attributeFormDefault="unqualified" 
+  elementFormDefault="qualified" 
+  targetNamespace="http://cakemarketing.com/api/4/"
+  xmlns="http://cakemarketing.com/api/4/">
+  <xsd:import namespace="API:id_name_store" />
+  <xsd:element name="affiliate">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element xmlns:q1="API:id_name_store" ref="q1:affiliate_id" />
+        <xsd:element xmlns:q2="API:id_name_store" ref="q2:affiliate_name" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="advertiser">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element xmlns:q3="API:id_name_store" ref="q3:advertiser_id" />
+        <xsd:element xmlns:q4="API:id_name_store" ref="q4:advertiser_name" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="offer">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element xmlns:q5="API:id_name_store" ref="q5:offer_id" />
+        <xsd:element xmlns:q6="API:id_name_store" ref="q6:offer_name" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="creative">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element xmlns:q7="API:id_name_store" ref="q7:creative_id" />
+        <xsd:element xmlns:q8="API:id_name_store" ref="q8:creative_name" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="paid">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="currency_id" type="xsd:int" />
+        <xsd:element name="amount" type="xsd:decimal" />
+        <xsd:element name="formatted_amount" type="xsd:string" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="received">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="currency_id" type="xsd:int" />
+        <xsd:element name="amount" type="xsd:decimal" />
+        <xsd:element name="formatted_amount" type="xsd:string" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="conversion">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="conversion_id" type="xsd:int" />
+        <xsd:element name="visitor_id" type="xsd:int" />
+        <xsd:element name="request_session_id" type="xsd:int" />
+        <xsd:element name="click_id" type="xsd:int" />
+        <xsd:element name="conversion_date" type="xsd:dateTime" />
+        <xsd:element ref="affiliate" />
+        <xsd:element ref="advertiser" />
+        <xsd:element ref="offer" />
+        <xsd:element name="campaign_id" type="xsd:unsignedShort" />
+        <xsd:element ref="creative" />
+        <xsd:element name="sub_id_1" type="xsd:string" />
+        <xsd:element name="sub_id_2" type="xsd:string" />
+        <xsd:element name="sub_id_3" type="xsd:string" />
+        <xsd:element name="conversion_type" type="xsd:string" />
+        <xsd:element ref="paid" />
+        <xsd:element ref="received" />
+        <xsd:element name="pixel_dropped" type="xsd:boolean" />
+        <xsd:element name="suppressed" type="xsd:boolean" />
+        <xsd:element name="returned" type="xsd:boolean" />
+        <xsd:element name="test" type="xsd:boolean" />
+        <xsd:element name="transaction_id" type="xsd:string" />
+        <xsd:element name="ip_address" type="xsd:string" />
+        <xsd:element name="referrer_url" type="xsd:string" />
+        <xsd:element name="note" type="xsd:string" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="conversion_report_response">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="success" type="xsd:boolean" />
+        <xsd:element name="row_count" type="xsd:int" />
+        <xsd:element name="conversions">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element maxOccurs="unbounded" ref="conversion">
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xs:schema>

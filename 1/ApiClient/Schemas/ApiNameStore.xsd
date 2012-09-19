@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="API:id_name_store" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="API:id_name_store" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="affiliate_id" type="xs:int" />
+  <xs:element name="affiliate_name" type="xs:string" />
+  <xs:element name="advertiser_id" type="xs:int" />
+  <xs:element name="advertiser_name" type="xs:string" />
+  <xs:element name="offer_id" type="xs:int" />
+  <xs:element name="offer_name" type="xs:string" />
+  <xs:element name="creative_id" type="xs:int" />
+  <xs:element name="creative_name" type="xs:string" />
+</xs:schema>
