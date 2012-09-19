@@ -42,6 +42,15 @@ namespace EomToolWeb.Models
             }
         }
 
+        public string TrafficTypes
+        {
+            get
+            {
+                var trafficTypes = campaign.TrafficTypes.Select(t => t.Name).ToArray();
+                return string.Join(", ", trafficTypes);
+            }
+        }
+
         public string Name { get { return campaign.Name; } }
 
         public string Description { get { return campaign.Description; } }
@@ -51,8 +60,6 @@ namespace EomToolWeb.Models
         public string ImageUrl { get { return campaign.ImageUrl; } }
 
         public string PayableAction { get { return campaign.PayableAction; } }
-
-        public string TrafficTypes { get { return campaign.TrafficType; } }
 
         public string OfferLink { get { return campaign.Link; } }
 

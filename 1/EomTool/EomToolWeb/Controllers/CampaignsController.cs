@@ -18,28 +18,44 @@ namespace EomToolWeb.Controllers
             this.campaignRepository = campaignRepository;
         }
 
-        public ActionResult List(string country, string pid, string vertical)
+        public ActionResult List(string country, string pid, string vertical, string traffictype)
         {
+            var viewModel = new CampaignsListViewModel();
             var campaigns = campaignRepository.Campaigns;
             
             if (!string.IsNullOrWhiteSpace(country))
             {
-                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
+                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+                if (viewModel.Country != null)
+                    campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
             }
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))
             {
+                viewModel.Pid = pidInt;
                 campaigns = campaigns.Where(c => c.Pid == pidInt);
             }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
-                campaigns = campaigns.Include(c => c.Vertical).Where(c => c.Vertical.Name == vertical);
+                viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
+                if (viewModel.Vertical != null)
+                    campaigns = campaigns.Where(c => c.Vertical.Name == vertical);
             }
-            return View(campaigns);
+            if (!string.IsNullOrWhiteSpace(traffictype))
+            {
+                viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+                if (viewModel.TrafficType != null)
+                    campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
+            }
+
+            viewModel.Campaigns = campaigns.AsEnumerable();
+            return View(viewModel);
         }
 
         public ActionResult ListByCountry()
         {
+            var countryCodes = campaignRepository.AllCountryCodes;
+            ViewBag.CountryCodes = countryCodes.ToList();
             var countries = campaignRepository.Countries.OrderByDescending(c => c.Campaigns.Count());
             return View(countries);
         }

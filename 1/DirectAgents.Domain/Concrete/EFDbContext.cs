@@ -5,6 +5,12 @@ namespace DirectAgents.Domain.Concrete
 {
     public class EFDbContext : DbContext
     {
+        public EFDbContext()
+            : base()
+        {
+//            this.Configuration.LazyLoadingEnabled = false;
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Campaign>()

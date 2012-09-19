@@ -22,37 +22,20 @@
                 <nav>
                     <ul id="menu">
                         <li>Show:</li>
-                        <li>@Html.ActionLink("By Country", "ListByCountry", "Campaigns")</li>
-                        <li>@Html.ActionLink("US", "List", "Campaigns", new { country = "US", vertical = "Insurance" }, null)</li>
-                        <li>@Html.ActionLink("All", "List", "Campaigns")</li>
-                        <li>@Html.ActionLink("Country List", "ShowCountries", "Campaigns")</li>
+                        <li id="@(ViewBag.MenuItem == "ByCountry" ? "selitem" : "")">@Html.ActionLink("By Country", "ListByCountry", "Campaigns")</li>
+                        <li id="@(ViewBag.MenuItem == "US" ? "selitem" : "")">@Html.ActionLink("US", "List", "Campaigns", new { country = "US" }, null)</li>
+                        <li id="@(ViewBag.MenuItem == "All" ? "selitem" : "")">@Html.ActionLink("All", "List", "Campaigns")</li>
+                        <li id="@(ViewBag.MenuItem == "CountryList" ? "selitem" : "")">@Html.ActionLink("Country List", "ShowCountries", "Campaigns")</li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
     <div id="body">
-        <section class="content-wrapper main-content clear-fix">
-        <div>
-            <input id="verticals" style="width: 250px; margin-top: 10px" />
-        </div>
+    <section class="content-wrapper main-content clear-fix">
         @RenderBody()
     </section>
     </div>
     @RenderSection("scripts", required: false)
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#verticals").kendoDropDownList({
-                index: 0,
-                placeholder: "Select vertical",
-                dataTextField: "Name",
-                dataValueField: "VerticalId",
-                dataSource: {
-                    type: "jsonp",
-                    transport: { read: "@Url.Content("~/api/Verticals")" }
-                }
-            });
-        });
-    </script>
 </body>
 </html>

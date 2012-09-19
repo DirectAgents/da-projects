@@ -200,8 +200,8 @@ namespace EomApp1.Screens.Accounting.Forms
                                 }
                                 else
                                 {
-                                    item.num_units = 0;
                                     counted += item.num_units;
+                                    item.num_units = 0;
                                     numUnitChanges.Add(item);
                                 }
                             }

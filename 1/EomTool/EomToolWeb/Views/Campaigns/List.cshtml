@@ -1,12 +1,24 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.Campaign>
+﻿@model CampaignsListViewModel
 @{
     ViewBag.Title = "Campaigns";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
+    if (Model.Country == null) {
+        if (Model.Pid == null) { ViewBag.MenuItem = "All"; }
+    } else if (Model.Country.CountryCode == "US") {
+        ViewBag.MenuItem = "US";
+    }
 }
-<h2>
-    Campaigns List</h2>
-<div>@Model.Count() campaigns</div>
-@foreach (var campaign in Model)
+<div>
+    <input id="verticals" style="width: 250px; margin-top: 10px" />
+    <input id="traffictypes" style="width: 250px; margin-top: 10px" />
+</div>
+<h2>Campaigns List</h2>
+@if (Model.Country != null)
+{
+    <div>Country: @Model.Country.Name</div>
+}
+<div>@Model.Campaigns.Count() campaign@(Model.Campaigns.Count()==1 ? "" : "s")</div>
+@foreach (var campaign in Model.Campaigns)
 {
     <p id="camp@(campaign.Pid)">
         @Html.Partial("Show", new CampaignViewModel(campaign))
@@ -18,6 +30,22 @@
 </div>
 @section scripts {
     <script type="text/javascript">
+@{
+    string countryFilter = "";
+    if (Model.Country != null) { countryFilter = "&country=" + Model.Country.CountryCode; }
+}
+        function ChangeFilter() {
+            var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
+            var vertical = '';
+            if (dataItem.VerticalId != '') vertical = dataItem.Name;
+
+            dataItem = $('#traffictypes').data("kendoDropDownList").dataItem();
+            var traffictype = '';
+            if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
+
+            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '&traffictype=' + traffictype + '@(new HtmlString(countryFilter))';
+            document.location.href = url;
+        }
 
         function EditCampaign(pid) {
             $.get('@Url.Action("Edit", "Campaigns")', { pid: pid }, function (data) {
@@ -42,6 +70,28 @@
         }
 
         $(function () {
+            $("#verticals").kendoDropDownList({
+                @((Model.Vertical != null) ? "value: " + Model.Vertical.VerticalId + "," : "")
+                optionLabel: "Show All Verticals",
+                dataTextField: "Name",
+                dataValueField: "VerticalId",
+                dataSource: {
+                    type: "jsonp",
+                    transport: { read: "@Url.Content("~/api/Verticals")" }
+                },
+                change: ChangeFilter
+            });
+            $("#traffictypes").kendoDropDownList({
+                @((Model.TrafficType != null) ? "value: " + Model.TrafficType.TrafficTypeId + "," : "")
+                optionLabel: "Show All Traffic Types",
+                dataTextField: "Name",
+                dataValueField: "TrafficTypeId",
+                dataSource: {
+                    type: "jsonp",
+                    transport: { read: "@Url.Content("~/api/TrafficTypes")" }
+                },
+                change: ChangeFilter
+            });
             $("#divEditCampaign").dialog({
                 autoOpen: false,
                 height: 800,
