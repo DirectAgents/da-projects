@@ -1,0 +1,76 @@
+﻿@model IEnumerable<string>
+@{
+    ViewBag.Title = "Search";
+    ViewBag.MenuItem = "Search";
+    Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
+}
+
+<h2>Search</h2>
+
+@using (Html.BeginForm("List", "Campaigns", FormMethod.Get))
+{
+    <text>
+    Search for: @Html.TextBox("searchstring")
+    <input type="submit" value="Go" />
+    </text>
+}
+
+<h3>Or Select a Filter:</h3>
+<div>
+    <input id="verticals" style="width: 250px; margin-top: 10px" />
+    <input id="traffictypes" style="width: 250px; margin-top: 10px" />
+</div>
+
+<h3>Or Choose a Country:</h3>
+@{
+    string lastCountry = Model.FirstOrDefault();
+    foreach (var country in Model)
+    {
+        @Html.ActionLink(country, "List", new { country = country })
+        if (country.Substring(0, 1) != lastCountry.Substring(0, 1)) {
+            <br />
+        }
+        lastCountry = country;
+    }
+}
+
+@section scripts {
+    <script type="text/javascript">
+
+        function ChooseFilter() {
+            var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
+            var vertical = '';
+            if (dataItem.VerticalId != '') vertical = dataItem.Name;
+
+            dataItem = $('#traffictypes').data("kendoDropDownList").dataItem();
+            var traffictype = '';
+            if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
+
+            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '&traffictype=' + traffictype;
+            document.location.href = url;
+        }
+
+        $(function () {
+            $("#verticals").kendoDropDownList({
+                optionLabel: "Verticals",
+                dataTextField: "Name",
+                dataValueField: "VerticalId",
+                dataSource: {
+                    type: "jsonp",
+                    transport: { read: "@Url.Content("~/api/Verticals")" }
+                },
+                change: ChooseFilter
+            });
+            $("#traffictypes").kendoDropDownList({
+                optionLabel: "Traffic Types",
+                dataTextField: "Name",
+                dataValueField: "TrafficTypeId",
+                dataSource: {
+                    type: "jsonp",
+                    transport: { read: "@Url.Content("~/api/TrafficTypes")" }
+                },
+                change: ChooseFilter
+            });
+        });
+    </script>
+}

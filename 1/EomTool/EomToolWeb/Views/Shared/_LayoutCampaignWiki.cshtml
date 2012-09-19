@@ -24,8 +24,9 @@
                         <li>Show:</li>
                         <li id="@(ViewBag.MenuItem == "ByCountry" ? "selitem" : "")">@Html.ActionLink("By Country", "ListByCountry", "Campaigns")</li>
                         <li id="@(ViewBag.MenuItem == "US" ? "selitem" : "")">@Html.ActionLink("US", "List", "Campaigns", new { country = "US" }, null)</li>
+                        <li id="@(ViewBag.MenuItem == "CPM" ? "selitem" : "")">@Html.ActionLink("CPM", "List", "Campaigns", new { searchstring = "CPM" }, null)</li>
                         <li id="@(ViewBag.MenuItem == "All" ? "selitem" : "")">@Html.ActionLink("All", "List", "Campaigns")</li>
-                        <li id="@(ViewBag.MenuItem == "CountryList" ? "selitem" : "")">@Html.ActionLink("Country List", "ShowCountries", "Campaigns")</li>
+                        <li id="@(ViewBag.MenuItem == "Search" ? "selitem" : "")">@Html.ActionLink("Search", "Search", "Campaigns")</li>
                     </ul>
                 </nav>
             </div>
