@@ -58,7 +58,18 @@ namespace EomToolWeb.Models
 
         public int Pid { get { return campaign.Pid; } }
 
-        public string ImageUrl { get { return campaign.ImageUrl; } }
+        public string ImageUrl
+        {
+            get
+            {
+                var result = campaign.ImageUrl;
+                if (string.IsNullOrWhiteSpace(result))
+                {
+                    result = UrlHelper.GenerateContentUrl("~/Images/noimage.gif", this.Context);
+                }
+                return result;
+            }
+        }
 
         public string PayableAction { get { return campaign.PayableAction; } }
 
@@ -90,5 +101,7 @@ namespace EomToolWeb.Models
         public string EomNotes { get { return campaign.EomNotes; } }
 
         public string Vertical { get { return campaign.Vertical.Name; } }
+
+        public HttpContextBase Context { get; set; }
     }
 }

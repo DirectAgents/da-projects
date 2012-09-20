@@ -267,6 +267,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Images\loading_lg.gif" />
+    <Content Include="Images\noimage.gif" />
+    <Content Include="Images\wikidalogo.gif" />
     <Content Include="Scripts\jquery-1.7.2-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.2.js" />
     <Content Include="Scripts\jquery-1.7.2.min.js" />
