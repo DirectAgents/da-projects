@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomToolWeb.Models;
+using EomToolWeb.Infrastructure;
 
 namespace EomToolWeb.Controllers
 {
@@ -140,14 +141,14 @@ namespace EomToolWeb.Controllers
                 table.AddCampaignsPublisherReportDetailsRow(row);
             }
 
-            // TODO: get the correct FromDate and ToDate (should not be based on current date...)
+            var eomDate = EomEntitiesConfig.EomDate;
             var report = new Eom.Common.PublisherReports.PubRepTemplate(Eom.Common.PublisherReports.PubRepTemplateHtmlMode.InnerHtml)
             {
                 Publisher = publisherName,
                 MediaBuyer = mediaBuyer,
                 Data = table,
-                FromDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
-                ToDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month))
+                FromDate = eomDate,
+                ToDate = new DateTime(eomDate.Year, eomDate.Month, DateTime.DaysInMonth(eomDate.Year, eomDate.Month))
             };
 
             string reportHTML = report.TransformText();

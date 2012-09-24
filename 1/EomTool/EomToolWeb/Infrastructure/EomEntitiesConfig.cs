@@ -10,14 +10,24 @@ namespace EomToolWeb.Infrastructure
     {
         static string EomDateSessionKey = "EomDate";
 
-        public string ConnectionString
+        public static DateTime EomDate
         {
             get
             {
                 var session = HttpContext.Current.Session;
-                var eomDate = session[EomDateSessionKey] == null ? DateTime.Now.FirstDayOfMonth(-1) : (DateTime)session[EomDateSessionKey];
-                session.Set(EomDateSessionKey, eomDate);
-                return ConnectionStringByDate(eomDate);
+                if (session[EomDateSessionKey] == null)
+                {
+                    session[EomDateSessionKey] = DateTime.Now.FirstDayOfMonth(-1);
+                }
+                return (DateTime)session[EomDateSessionKey];
+            }
+        }
+
+        public string ConnectionString
+        {
+            get
+            {
+                return ConnectionStringByDate(EomDate);
             }
         }
 

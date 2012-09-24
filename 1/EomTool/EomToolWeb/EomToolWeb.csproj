@@ -35,9 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Kendo.Mvc">
-      <HintPath>..\..\..\..\..\Users\aaron\Downloads\Telerik\KendoTrial\kendoui.trial.2012.2.710\wrappers\aspnetmvc\Binaries\Mvc3\Kendo.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\..\Solution\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
