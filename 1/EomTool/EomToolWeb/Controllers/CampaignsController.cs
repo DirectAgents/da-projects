@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
-using EomToolWeb.Models;
+using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
-using System.Data.Entity;
+using EomToolWeb.Models;
+
 namespace EomToolWeb.Controllers
 {
     public class CampaignsController : Controller
@@ -54,6 +54,15 @@ namespace EomToolWeb.Controllers
             }
 
             viewModel.Campaigns = campaigns.AsEnumerable();
+            return View(viewModel);
+        }
+
+        public ActionResult List2()
+        {
+            var viewModel = new CampaignsListViewModel
+            {
+                Campaigns = campaignRepository.Campaigns
+            };
             return View(viewModel);
         }
 
@@ -113,15 +122,30 @@ namespace EomToolWeb.Controllers
             }
 
             if (Request.IsAjaxRequest())
-                return Json(new {IsValid = ModelState.IsValid});
+                return Json(new { IsValid = ModelState.IsValid });
             else
                 return View(campaign);
         }
 
-        public ActionResult TopTenRevenue()
+        public ActionResult Top(TopCampaignsBy by, string traffictype)
         {
-            var topTen = campaignRepository.TopCampaignsByRevenue(10);
-            return View(topTen);
+            TrafficType trafficTypeEntity = null;
+
+            if (traffictype != null)
+                trafficTypeEntity = campaignRepository.TrafficTypes.SingleOrDefault(t => t.Name == traffictype);
+
+            IEnumerable<CampaignSummary> campaignSummaries;
+
+            if (trafficTypeEntity == null) // no matching traffic type
+                campaignSummaries = campaignRepository.TopCampaigns(20, by, null);
+            else
+                campaignSummaries = campaignRepository.TopCampaigns(20, by, traffictype);
+
+            var top = campaignRepository.TopCampaigns(20, by, null);
+
+            var model = new TopViewModel { CampaignSummaries = campaignSummaries, By = by, TrafficType = trafficTypeEntity };
+
+            return View(model);
         }
     }
 }

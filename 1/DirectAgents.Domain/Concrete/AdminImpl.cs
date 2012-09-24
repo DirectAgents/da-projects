@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cake.Data.Wsdl.ExportService;
+using Cake.Model.Staging;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities;
 
@@ -57,58 +59,64 @@ namespace DirectAgents.Domain.Concrete
                     if (offer != null)
                         ExtractFieldsFromWsdlOffer(campaign, offer);
 
-                    AddCountries(item, campaign);
+                    AddCountries(item.Offer.AllowedCountries.SplitCSV().Distinct(), campaign);
 
-                    AddTrafficTypes(item, campaign);
+                    AddTrafficTypes(item.Offer.AllowedMediaTypeNames.SplitCSV().Distinct(), campaign);
 
-                    AddAccountManagers(item, campaign);
+                    AddAccountManagers(item.Advertiser.AccountManagerName, campaign);
 
-                    AddAdManagers(item, campaign);
+                    AddAdManagers(item.Advertiser.AdManagerName, campaign);
 
                     daDomain.SaveChanges(); // save created entities so they are re-used
                 }
             }
         }
 
-        private void UpdateVerticals(Cake.Model.Staging.CakeStagingEntities cake)
+        private static void ExtractFieldsFromWsdlOffer(Campaign campaign, offer1 offer)
+        {
+            campaign.ImageUrl = offer.offer_image_link;
+            campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
+            campaign.Link = offer.offer_contracts[0].offer_link;
+            campaign.Cost = offer.offer_contracts[0].payout.amount;
+            campaign.Revenue = offer.offer_contracts[0].received.amount;
+            campaign.CostCurrency = offer.currency.currency_symbol;
+            campaign.RevenueCurrency = offer.currency.currency_symbol;
+            campaign.ImportantDetails = offer.restrictions;
+        }
+
+        private void UpdateVerticals(CakeStagingEntities cake)
         {
             var verticals = daDomain.Verticals.ToList();
             var staged = cake.CakeOffers.Select(c => c.VerticalName).Distinct();
             var current = verticals.Select(c => c.Name);
-
             foreach (var item in current.Except(staged).Select(c => verticals.Single(d => d.Name == c)))
                 daDomain.Verticals.Remove(item);
-
             foreach (var item in staged.Except(current))
                 daDomain.Verticals.Add(new Vertical { Name = item });
-
             daDomain.SaveChanges();
         }
 
-        private void UpdateTrafficTypes(Cake.Model.Staging.CakeStagingEntities cake)
+        private void UpdateTrafficTypes(CakeStagingEntities cake)
         {
             var trafficTypes = daDomain.TrafficTypes.ToList();
             var staged = cake.CakeOffers.ToList().SelectMany(c => c.AllowedMediaTypeNames
                                                                 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                                                 .Distinct();
             var current = trafficTypes.Select(c => c.Name);
-
             foreach (var item in current.Except(staged).Select(c => trafficTypes.Single(d => d.Name == c)))
                 daDomain.TrafficTypes.Remove(item);
-
             foreach (var item in staged.Except(current))
                 daDomain.TrafficTypes.Add(new TrafficType { Name = item });
-
             daDomain.SaveChanges();
         }
 
         private class _OfferAndAdvertiser
         {
-            public Cake.Model.Staging.CakeOffer Offer { get; set; }
-            public Cake.Model.Staging.CakeAdvertiser Advertiser { get; set; }
+            public CakeOffer Offer { get; set; }
+            public CakeAdvertiser Advertiser { get; set; }
         }
 
-        private static IEnumerable<_OfferAndAdvertiser> StagedCampaigns(Cake.Model.Staging.CakeStagingEntities cake)
+        private static IEnumerable<_OfferAndAdvertiser> StagedCampaigns(CakeStagingEntities cake)
         {
             var query = from offer in cake.CakeOffers.ToList()
                         from advertiser in cake.CakeAdvertisers.ToList()
@@ -132,30 +140,23 @@ namespace DirectAgents.Domain.Concrete
             daDomain.Campaigns.Add(campaign);
             return campaign;
         }
-
-        private static void ExtractFieldsFromWsdlOffer(Campaign campaign, Cake.Data.Wsdl.ExportService.offer1 offer)
+        
+        // TODO: support multiple accountmangers
+        private void AddAccountManagers(string accountManagerName, Campaign campaign)
         {
-            campaign.ImageUrl = offer.offer_image_link;
-            campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
-            campaign.Link = offer.offer_contracts[0].offer_link;
-            campaign.Cost = offer.offer_contracts[0].payout.amount;
-            campaign.Revenue = offer.offer_contracts[0].received.amount;
-
-            campaign.CostCurrency = offer.currency.currency_symbol;
-            campaign.RevenueCurrency = offer.currency.currency_symbol;
-            campaign.ImportantDetails = offer.restrictions;
+            var am = daDomain.People.Where(p => p.Name == accountManagerName).FirstOrDefault();
+            if (am == null)
+                am = new Person { Name = accountManagerName };
+            campaign.AccountManagers.Clear();
+            campaign.AccountManagers.Add(am);
         }
 
         // TODO: support multiple admangers
-        private void AddAdManagers(_OfferAndAdvertiser item, Campaign campaign)
+        private void AddAdManagers(string adManagerName, Campaign campaign)
         {
-            var ad = daDomain.People
-                        .Where(p => p.Name == item.Advertiser.AdManagerName)
-                        .FirstOrDefault();
-
+            var ad = daDomain.People.Where(p => p.Name == adManagerName).FirstOrDefault();
             if (ad == null)
-                ad = new Person { Name = item.Advertiser.AdManagerName };
-
+                ad = new Person { Name = adManagerName };
             if (campaign.AdManagers != null)
             {
                 campaign.AdManagers.Clear();
@@ -163,68 +164,26 @@ namespace DirectAgents.Domain.Concrete
             }
         }
 
-        // TODO: support multiple accountmangers
-        private void AddAccountManagers(_OfferAndAdvertiser item, Campaign campaign)
-        {
-            var am = daDomain.People
-                        .Where(p => p.Name == item.Advertiser.AccountManagerName)
-                        .FirstOrDefault();
-
-            if (am == null)
-            {
-                am = new Person { Name = item.Advertiser.AccountManagerName };
-            }
-
-            if (campaign.AccountManagers != null)
-            {
-                campaign.AccountManagers.Clear();
-                campaign.AccountManagers.Add(am);
-            }
-        }
-
-        private void AddCountries(_OfferAndAdvertiser item, Campaign campaign)
+        private void AddCountries(IEnumerable<string> countryCodes, Campaign campaign)
         {
             campaign.Countries.Clear();
-
-            var countryCodes = item.Offer.AllowedCountries
-                                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Distinct();
-
             foreach (var countryCode in countryCodes)
             {
-                var country = daDomain.Countries.Where(c => c.CountryCode == countryCode)
-                                .FirstOrDefault();
-
+                var country = daDomain.Countries.Where(c => c.CountryCode == countryCode) .FirstOrDefault();
                 if (country == null)
-                    country = new Country
-                    {
-                        CountryCode = countryCode,
-                        Name = countryCode + "."
-                    };
-
+                    country = new Country { CountryCode = countryCode, Name = countryCode + "." };
                 campaign.Countries.Add(country);
             }
         }
 
-        private void AddTrafficTypes(_OfferAndAdvertiser item, Campaign campaign)
+        private void AddTrafficTypes(IEnumerable<string> trafficTypeNames, Campaign campaign)
         {
             campaign.TrafficTypes.Clear();
-
-            var trafficTypes = item.Offer.AllowedMediaTypeNames
-                                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Distinct();
-
-            foreach (var trafficTypeName in trafficTypes)
+            foreach (var trafficTypeName in trafficTypeNames)
             {
-                var trafficType = daDomain.TrafficTypes.Where(c => c.Name == trafficTypeName)
-                                            .FirstOrDefault();
-
+                var trafficType = daDomain.TrafficTypes.Where(c => c.Name == trafficTypeName).FirstOrDefault();
                 if (trafficType == null)
-                    trafficType = new TrafficType
-                    {
-                        Name = trafficTypeName
-                    };
-
+                    trafficType = new TrafficType { Name = trafficTypeName };
                 campaign.TrafficTypes.Add(trafficType);
             }
         }

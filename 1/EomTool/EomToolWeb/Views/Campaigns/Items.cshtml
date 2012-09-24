@@ -1,0 +1,99 @@
+﻿@model EomToolWeb.Models.CampaignsListViewModel
+
+<div id="CampaignListPagerTop" class="k-pager-wrap wikipager-top"></div>
+
+<div id="listView" style="padding-top: 40px; padding-left: 15px"></div>
+
+<div id="CampaignListPagerBottom" class="k-pager-wrap"></div>
+
+<div id="divEditCampaign" title="Edit Campaign">
+    <div id="divEditCampaignInner"></div>
+</div>
+
+<script type="text/javascript">
+
+    function DisplayCampaigns(dataUrl) {
+
+        //--------------------------------------
+        // Campaigns DataSource
+        //--------------------------------------
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: dataUrl,
+                    dataType: "json"
+                }
+            },
+            pageSize: 20
+        });
+
+        //--------------------------------------
+        // Campaigns ListView
+        //--------------------------------------
+        $("#listView").kendoListView({
+            dataSource: dataSource,
+            template: kendo.template($("#listTemplate").html()),
+            dataBound: function () {
+                // Once list items are created, setup 
+                // Edit link to be visible on hover.
+                $("#listView .listitem").hover(
+                    function () { $(this).find("a.editlink").first().show(); },
+                    function () { $(this).find("a.editlink").first().hide(); }
+                );                    
+            }
+        });
+                
+        //--------------------------------------
+        // Top Pager
+        //--------------------------------------
+        $("#CampaignListPagerTop").kendoPager({
+            dataSource: dataSource
+        });
+
+        //--------------------------------------
+        // Bottom Pager
+        //--------------------------------------              
+        $("#CampaignListPagerBottom").kendoPager({
+            dataSource: dataSource
+        });
+    }
+
+    function EditCampaign(pid) {
+        $.get('@Url.Action("Edit", "Campaigns")', { pid: pid }, function (data) {
+            $('#divEditCampaignInner').html(data);
+            $('#divEditCampaign').dialog("open");
+        });
+    }
+
+    function SaveCampaign() {
+        var url = '@Url.Action("Edit", "Campaigns")';
+        $.post(url, $('#frmEditCampaign').serialize(), function (data) {
+            var pid = $('#frmEditCampaign #Pid').val();
+            // TODO: ReloadCampaign(pid);
+            $('#listView div.EditCampaign').dialog("close");
+        });
+    }
+
+    $(document).ready(function () {
+        //--------------------------------------
+        // Edit Dialog
+        //--------------------------------------   
+        $("#divEditCampaign").dialog({
+            autoOpen: false,
+            height: 800,
+            width: 600,
+            modal: true,
+            buttons: {
+                Save: SaveCampaign,
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(document).bind("TemplateLoaded", function(e, path) { 
+            DisplayCampaigns("@Url.Content("~/api/campaignsapi")"); 
+        });
+        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/_List.tmpl.htm")");
+    });
+</script>

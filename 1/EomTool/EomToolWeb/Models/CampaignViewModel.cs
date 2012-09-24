@@ -14,7 +14,7 @@ namespace EomToolWeb.Models
         public CampaignViewModel(Campaign campaign)
         {
             this.campaign = campaign;
-        }
+        } 
 
         public string AdManagers
         {
@@ -62,18 +62,26 @@ namespace EomToolWeb.Models
         {
             get
             {
-                var result = campaign.ImageUrl;
-                if (string.IsNullOrWhiteSpace(result))
-                {
-                    result = UrlHelper.GenerateContentUrl("~/Images/noimage.gif", this.Context);
-                }
-                return result;
+                return string.IsNullOrWhiteSpace(campaign.ImageUrl)
+                    ? VirtualPathUtility.ToAbsolute("~/Images/noimage_sm.gif")
+                    : campaign.ImageUrl; ;
             }
         }
 
         public string PayableAction { get { return campaign.PayableAction; } }
 
-        public string OfferLink { get { return campaign.Link; } }
+        public string OfferLink
+        {
+            get
+            {
+                string link = campaign.Link;
+                if(link.Contains('?'))
+                    return link.Substring(0, link.IndexOf('?'));
+                else
+                    return link;
+            }
+        }
+
 
         public string CostCurrency { get { return campaign.CostCurrency; } }
         public decimal Cost { get { return campaign.Cost; } }
@@ -92,6 +100,17 @@ namespace EomToolWeb.Models
             }
         }
 
+        public string ImportantDetailsAsString
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(campaign.ImportantDetails))
+                    return string.Empty;
+                else
+                    return campaign.ImportantDetails;
+            }
+        }
+
         public string BannedNetworks { get { return campaign.BannedNetworks; } }
 
         public decimal CampaignCap { get { return campaign.CampaignCap; } }
@@ -101,7 +120,5 @@ namespace EomToolWeb.Models
         public string EomNotes { get { return campaign.EomNotes; } }
 
         public string Vertical { get { return campaign.Vertical.Name; } }
-
-        public HttpContextBase Context { get; set; }
     }
 }

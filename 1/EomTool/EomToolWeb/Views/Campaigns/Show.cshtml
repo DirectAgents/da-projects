@@ -1,5 +1,4 @@
 ﻿@model CampaignViewModel
-@{ Model.Context = this.ViewContext.HttpContext; }
 <img src="@Model.ImageUrl" alt="@Model.Name" id="campaign-image-@Model.Pid" class="campaign-image" /> @Model.AdManagers, @Model.AccountManagers
 <br />
 <b>@Model.Name</b> <a href="#" onclick="EditCampaign(@Model.Pid); return false">Edit</a>

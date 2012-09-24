@@ -1,0 +1,67 @@
+﻿@model EomToolWeb.Models.CampaignsListViewModel
+
+<div id="CampaignFilters">
+    <div id="CampaignFiltersInner">
+        <input id="verticals" style="width: 250px" />
+        <input id="traffictypes" style="width: 250px" />
+    </div>
+</div>
+
+<script type="text/javascript">
+
+// Helper variables in C# to construct campaign data url in ChangeFilter()
+// TODO: move this logic to event handler on client in Items.cshtml
+@{
+    string currFilter = "";
+    if (Model.Country != null) { currFilter = "&country=" + Model.Country.CountryCode; }
+    if (Model.SearchString != null) { currFilter = "&searchstring=" + Model.SearchString; }
+}
+
+    function ChangeFilter() {
+        var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
+        var vertical = '';
+        if (dataItem.VerticalId != '') vertical = dataItem.Name;
+
+        dataItem = $('#traffictypes').data("kendoDropDownList").dataItem();
+        var traffictype = '';
+        if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
+
+        var url = '@Url.Content("~/api/campaignsapi")?vertical=' + vertical + '&traffictype=' + traffictype + '@(new HtmlString(currFilter))';
+        DisplayCampaigns(url); // TODO: trigger an event and handle in Items.cshtml
+    }
+
+    $(document).ready(function () {
+
+        //--------------------------------------
+        // Vertical filter DDL
+        //--------------------------------------
+        $("#verticals").kendoDropDownList({
+            @((Model.Vertical != null) ? "value: " + Model.Vertical.VerticalId + "," : "")
+            optionLabel: "Show All Verticals",
+            dataTextField: "Name",
+            dataValueField: "VerticalId",
+            dataSource: {
+                type: "json",
+                transport: { read: "@Url.Content("~/api/Verticals")" }
+            },
+            change: ChangeFilter
+        });
+
+        //--------------------------------------
+        // Traffic filter DDL
+        //--------------------------------------
+        $("#traffictypes").kendoDropDownList({
+            @((Model.TrafficType != null) ? "value: " + Model.TrafficType.TrafficTypeId + "," : "")
+            optionLabel: "Show All Traffic Types",
+            dataTextField: "Name",
+            dataValueField: "TrafficTypeId",
+            dataSource: {
+                type: "json",
+                transport: { read: "@Url.Content("~/api/TrafficTypes")" }
+            },
+            change: ChangeFilter
+        });
+
+    });
+
+</script>

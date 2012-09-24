@@ -15,6 +15,6 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<TrafficType> TrafficTypes { get; }
         Campaign FindById(int pid);
         void SaveCampaign(Campaign campaign);
-        IEnumerable<CampaignSummary> TopCampaignsByRevenue(int num);
+        IEnumerable<CampaignSummary> TopCampaigns(int num, TopCampaignsBy by, string trafficType);
     }
 }

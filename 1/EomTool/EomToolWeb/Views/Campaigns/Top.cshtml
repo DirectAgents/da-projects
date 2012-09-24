@@ -1,0 +1,53 @@
+﻿@model TopViewModel
+
+@{
+    ViewBag.Title = "TopTenRevenue";
+    ViewBag.MenuItem = "Top";    
+    Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
+}
+
+<h2>Top Campaigns by @Model.By.ToString()</h2>
+
+<h3>Select a Filter:</h3>
+<div>
+    <input id="traffictypes" style="width: 250px; margin-top: 10px" />
+</div>
+
+<ul>
+@foreach (var campaignSummary in Model.CampaignSummaries)
+{
+    <li>@Html.ActionLink(@campaignSummary.CampaignName, "List", new { pid = campaignSummary.Pid }) 
+            @(Model.By == DirectAgents.Domain.Abstract.TopCampaignsBy.Revenue ? campaignSummary.Revenue : campaignSummary.Cost)
+    </li>
+}
+</ul>
+@section scripts {
+    <script type="text/javascript">
+@{
+    string byFilter = "";
+    if (Model.By != null) { byFilter = "&by=" + Model.By.ToString(); }
+}
+        function ChooseFilter() {
+            var dataItem = $('#traffictypes').data("kendoDropDownList").dataItem();
+            var traffictype = '';
+            if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
+
+            var url = '@(Url.Action("Top", "Campaigns"))?traffictype=' + traffictype + '@(new HtmlString(byFilter))';
+            document.location.href = url;
+        }
+
+        $(function () {
+            $("#traffictypes").kendoDropDownList({
+             @((Model.TrafficType != null) ? "value: " + Model.TrafficType.TrafficTypeId + "," : "")
+                optionLabel: "Traffic Types",
+                dataTextField: "Name",
+                dataValueField: "TrafficTypeId",
+                dataSource: {
+                    type: "jsonp",
+                    transport: { read: "@Url.Content("~/api/TrafficTypes")" }
+                },
+                change: ChooseFilter
+            });
+        });
+    </script>
+}

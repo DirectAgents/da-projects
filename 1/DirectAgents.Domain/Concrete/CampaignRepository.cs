@@ -4,6 +4,7 @@ using System.Linq;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities;
+using System;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -66,20 +67,36 @@ namespace DirectAgents.Domain.Concrete
             context.SaveChanges();
         }
 
-        public IEnumerable<CampaignSummary> TopCampaignsByRevenue(int num)
+        public IEnumerable<CampaignSummary> TopCampaigns(int num, TopCampaignsBy by, string trafficType)
         {
-            using (var cake = new Cake.Model.Staging.CakeStagingEntities())
-            {
-                var byRevenue = from c in cake.conversions
-                                group c by new { Pid = c.offer_offer_id, Name = c.offer_offer_name } into g
-                                select new CampaignSummary
-                                {
-                                    Pid = g.Key.Pid,
-                                    CampaignName = g.Key.Name,
-                                    Revenue = g.Sum(r => r.received_amount),
-                                };
+            var query = from c in context.Conversions
+                        group c by new { Pid = c.offer.offer_id, Name = c.offer.offer_name, RevenueCurrencyId = c.received.currency_id, CostCurrencyId = c.paid.currency_id } into g
+                        select new CampaignSummary
+                        {
+                            Pid = g.Key.Pid,
+                            CampaignName = g.Key.Name,
+                            RevenueCurrencyId = g.Key.RevenueCurrencyId,
+                            Revenue = g.Sum(r => r.received.amount),
+                            CostCurrencyId = g.Key.CostCurrencyId,
+                            Cost = g.Sum(x => x.paid.amount)
+                        };
 
-                return byRevenue.OrderByDescending(c => c.Revenue).Take(num).ToList();
+            if (trafficType != null)
+            {
+                query = from c in query
+                        join cp in context.Campaigns on c.Pid equals cp.Pid
+                        where cp.TrafficTypes.Select(t => t.Name).Contains(trafficType)
+                        select c;
+            }
+
+            switch (by)
+            {
+                case TopCampaignsBy.Revenue:
+                    return query.OrderByDescending(c => c.Revenue).Take(num).ToList();
+                case TopCampaignsBy.Cost:
+                    return query.OrderByDescending(c => c.Cost).Take(num).ToList();
+                default:
+                    throw new Exception("Invalid TopCampaignsBy: " + by.ToString());
             }
         }
     }

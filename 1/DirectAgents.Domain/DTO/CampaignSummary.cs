@@ -12,5 +12,11 @@ namespace DirectAgents.Domain.DTO
         public decimal Revenue { get; set; }
 
         public string CampaignName { get; set; }
+
+        public int RevenueCurrencyId { get; set; }
+
+        public int CostCurrencyId { get; set; }
+
+        public decimal Cost { get; set; }
     }
 }

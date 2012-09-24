@@ -14,6 +14,7 @@
     @Styles.Render("~/Scripts/kendo/styles/kendo.common.min.css")
     @Styles.Render("~/Scripts/kendo/styles/kendo.default.min.css")
     @Scripts.Render("~/Scripts/kendo/2012.2.710/kendo.web.min.js")
+    @Scripts.Render("~/bundles/templates")
     <style type="text/css">
         ul#menu li
         {
@@ -22,59 +23,41 @@
     </style>
 </head>
 <body>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 0; padding: 0">
-        <tr>
-            <td style="width: 150px; vertical-align: top; margin: 0; padding: 0">
-                <div id="dvLeft">
-                    <img src="@Url.Content("~/Images/wikidalogo.gif")" alt="Direct Agents Media Buyer Wiki" />
-                </div>
-@*                <div id="dvBucket">
-                    <img src="@Url.Content("~/Images/wikidalogo.gif")" alt="Direct Agents Media Buyer Wiki" />
-                </div>*@
-            </td>
-            <td style="vertical-align: top; margin: 0; padding: 0">
-                <div id="dvRight">
-                    <header>
-                        <div class="content-wrapper" style="padding-top: 0; border-left: 1px solid Black">
-                            <div>
-                                <nav>
-                                    <ul id="menu" style="text-align: left; margin-bottom: 0;">
-                                        @*<li>Show:</li>*@
-                                        <li id="@(ViewBag.MenuItem == "ByCountry" ? "selitem" : "")">@Html.ActionLink("By Country", "ListByCountry", "Campaigns", new { style = "" })</li>
-                                        <li id="@(ViewBag.MenuItem == "US" ? "selitem" : "")">@Html.ActionLink("US", "List", "Campaigns", new { country = "US" }, null)</li>
-                                        <li id="@(ViewBag.MenuItem == "CPM" ? "selitem" : "")">@Html.ActionLink("CPM", "List", "Campaigns", new { searchstring = "CPM" }, null)</li>
-                                        <li id="@(ViewBag.MenuItem == "All" ? "selitem" : "")">@Html.ActionLink("All", "List", "Campaigns")</li>
-                                        <li id="@(ViewBag.MenuItem == "Top" ? "selitem" : "")">@Html.ActionLink("Top", "TopTenRevenue", "Campaigns")</li>
-                                        <li id="@(ViewBag.MenuItem == "Search" ? "selitem" : "")">@Html.ActionLink("Search", "Search", "Campaigns")</li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </header>
-                    <div id="body" style="border-top: 1px solid Black; border-bottom: 1px solid Black; position: absolute; top: 40px; height: 90%; overflow: auto; border-left: 1px solid Black">
-                        <section class="content-wrapper main-content clear-fix">
-                            @RenderBody()
-                        </section>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <div style="position: fixed; top: 0; width: 100%; height: 41px; z-index: 500">
+        <ul id="menu" style="text-align: left; margin-bottom: 0;">
+            <li id="@(ViewBag.MenuItem == "ByCountry" ? "selitem" : "")">@Html.ActionLink("By Country", "ListByCountry", "Campaigns", new { style = "" })</li>
+            <li id="@(ViewBag.MenuItem == "US" ? "selitem" : "")">@Html.ActionLink("US", "List", "Campaigns", new { country = "US" }, null)</li>
+            <li id="@(ViewBag.MenuItem == "CPM" ? "selitem" : "")">@Html.ActionLink("CPM", "List", "Campaigns", new { searchstring = "CPM" }, null)</li>
+            <li id="@(ViewBag.MenuItem == "All" ? "selitem" : "")">@Html.ActionLink("All", "List", "Campaigns")</li>
+            <li><span id="@(ViewBag.MenuItem == "Top" ? "parentselitem" : "")">Top</span>
+                <ul>
+                    <li>@Html.ActionLink("Revenue", "Top", "Campaigns", new { by = "Revenue" }, null)</li>
+                    <li>@Html.ActionLink("Cost", "Top", "Campaigns", new { by = "Cost" }, null)</li>
+                </ul>
+            </li>
+            <li id="@(ViewBag.MenuItem == "Search" ? "selitem" : "")">@Html.ActionLink("Search", "Search", "Campaigns")</li>
+        </ul>
+    </div>
+    <div id="body" style="position: absolute; top: 42px; overflow: auto">
+        <section class="content-wrapper clear-fix">
+            @RenderBody()
+        </section>
+    </div>
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         $(document).ready(function () {
             $("#menu").kendoMenu();
             $("img.campaign-image").hover(function () {
                 if (!$(this).hasClass("ui-draggable")) {
-                    $(this).draggable({ containment: "document", revert: true, revertDuration: 100, opacity: 0.35, containment: 'html' });
+                    $(this).draggable({
+                        containment: "document",
+                        revert: true,
+                        revertDuration: 100,
+                        opacity: 0.35,
+                        containment: 'html' 
+                    });
                 }
             });
-//            $("#dvBucket").droppable({
-//                drop: function (event, ui) {
-//                    $(this)
-//					.addClass("ui-state-highlight");
-//                }
-//            });
         });
     </script>
 </body>
