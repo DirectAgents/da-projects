@@ -57,12 +57,30 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        public ActionResult List2()
+        public ActionResult List2(string searchstring, string pid, string country, string vertical, string traffictype)
         {
-            var viewModel = new CampaignsListViewModel
+            var viewModel = new CampaignsListViewModel();
+            if (!string.IsNullOrWhiteSpace(searchstring))
             {
-                Campaigns = campaignRepository.Campaigns
-            };
+                viewModel.SearchString = searchstring;
+            }
+            int pidInt;
+            if (Int32.TryParse(pid, out pidInt))
+            {
+                viewModel.Pid = pidInt;
+            }
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+            }
+            if (!string.IsNullOrWhiteSpace(vertical))
+            {
+                viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
+            }
+            if (!string.IsNullOrWhiteSpace(traffictype))
+            {
+                viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+            }
             return View(viewModel);
         }
 

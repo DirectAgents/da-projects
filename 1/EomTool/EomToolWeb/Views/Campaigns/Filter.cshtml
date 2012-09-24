@@ -13,8 +13,8 @@
 // TODO: move this logic to event handler on client in Items.cshtml
 @{
     string currFilter = "";
-    if (Model.Country != null) { currFilter = "&country=" + Model.Country.CountryCode; }
-    if (Model.SearchString != null) { currFilter = "&searchstring=" + Model.SearchString; }
+    if (Model.Country != null) { currFilter += "&country=" + Model.Country.CountryCode; }
+    if (Model.SearchString != null) { currFilter += "&searchstring=" + Model.SearchString; }
 }
 
     function ChangeFilter() {
