@@ -11,15 +11,9 @@ namespace ApiClient.Etl.Cake
     public class ConversionsFromWebService : ISource<conversion>
     {
         static DateTime Today = DateTime.Now;
-        //static DateRange DateRange = new DateRange(Today.FirstDayOfMonth(), Today.LastDayOfMonth());
-        static DateRange DateRange = new DateRange(Today.FirstDayOfMonth(), Today.FirstDayOfMonth().AddDays(1));
+        static DateRange DateRange = new DateRange(Today.FirstDayOfMonth(), Today.LastDayOfMonth());
+        //static DateRange DateRange = new DateRange(Today.FirstDayOfMonth(), Today.FirstDayOfMonth().AddDays(1));
         static int ExtractBatchSize = 500;
-
-        public ConversionsFromWebService()
-        {
-            Locker = new object();
-            Items = new List<ApiClient.Models.conversion>();
-        }
 
         public Thread Extract()
         {
@@ -30,45 +24,37 @@ namespace ApiClient.Etl.Cake
 
         void DoExtract()
         {
-            var loop = Parallel.ForEach(DateRange.Days, day =>
+            var loop1 = Parallel.ForEach(DateRange.Days, day =>
             {
-                int totalExtracted = 0;
-                int totalToExtract = -1;
-                while (totalToExtract != totalExtracted)
+                int rowCount =  CakeWebService.Conversions(day, 1, 1).row_count;
+                if (rowCount > 0)
                 {
-                    var extracted = CakeWebService.Extract(day, totalExtracted + 1, ExtractBatchSize);
-                    int numExtracted = extracted.conversions.Length;
-
-                    if (numExtracted == 0)
-                        break;
-
-                    totalExtracted += numExtracted;
-                    if (totalToExtract == -1)
+                    Total = rowCount;
+                    var range = Tuple.Create(1, rowCount);
+                    foreach (var item in range.InSetIndiciesOf(ExtractBatchSize))
                     {
-                        int rowCount = extracted.row_count;
-                        totalToExtract = rowCount;
-                        Total += rowCount;
-                    }
-                    lock (Locker)
-                    {
-                        Items.AddRange(extracted.conversions);
+                        var extracted = CakeWebService.Conversions(day, item.Item1, item.Item2);
+                        AddItems(extracted.conversions);
                     }
                 }
             });
 
-            while (!loop.IsCompleted)
+            while (!loop1.IsCompleted)
                 Thread.Sleep(250);
 
             Done = true;
         }
 
-        public List<conversion> Items { get; set; }
+        void AddItems(conversion[] conversions)
+        {
+            lock (Locker)
+                items.AddRange(conversions);
+        }
 
-        IEnumerable<conversion> ISource<conversion>.Items { get { return Items; } }
+        List<conversion> items = new List<conversion>();
+        IEnumerable<conversion> ISource<conversion>.Items { get { return items; } }
 
-        public object Locker { get; set; }
-
-        private int total = 0;
+        int total = 0;
         public int Total
         {
             get
@@ -80,13 +66,13 @@ namespace ApiClient.Etl.Cake
             {
                 lock (Locker)
                 {
-                    total = value;
-                    Logger.Log("Total conversions to extract is {0}.", value);
+                    Logger.Log("Total conversions to extract is {0} + {1} = {2}.", total, value, total + value);
+                    total += value;
                 }
             }
         }
 
-        private bool done = false;
+        bool done = false;
         public bool Done
         {
             get
@@ -104,5 +90,8 @@ namespace ApiClient.Etl.Cake
                 }
             }
         }
+
+        object locker = new object();
+        public object Locker { get { return locker; } }
     }
 }

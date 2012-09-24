@@ -9,6 +9,6 @@ namespace ApiClient.Etl
         Thread Extract();
         int Total { get; }
         bool Done { get; }
-        object Locker { get; set; }
+        object Locker { get; }
     }
 }

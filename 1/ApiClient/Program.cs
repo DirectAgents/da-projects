@@ -1,4 +1,8 @@
 ﻿using ApiClient.Etl.Cake;
+using System.Net;
+using IronPython.Hosting;
+using Microsoft.Scripting;
+using Microsoft.Scripting.Hosting;
 
 namespace ApiClient
 {
@@ -6,6 +10,7 @@ namespace ApiClient
     {
         static void Main(string[] args)
         {
+            ServicePointManager.DefaultConnectionLimit = 50;
             var source = new ConversionsFromWebService();
             var dest = new ConversionsToStaging();
             var extract = source.Extract();
@@ -13,5 +18,21 @@ namespace ApiClient
             extract.Join();
             load.Join();
         }
+
+        //static void Main()
+        //{
+        //    var p = new Program();
+        //    p.foo();
+        //}
+        //void foo()
+        //{
+        //    scope = engine.CreateScope();
+        //    scope.SetVariable("s", "Hello");
+        //    string code = "print s";
+        //    ScriptSource source = engine.CreateScriptSourceFromString(code, SourceCodeKind.SingleStatement);
+        //    source.Execute(scope); 
+        //}
+        //private ScriptEngine engine = Python.CreateEngine();
+        //private ScriptScope scope = null;
     }
 }

@@ -9,7 +9,7 @@ namespace ApiClient.Etl.Cake
         static string ApiKey = "FCjdYAcwQE";
         static string ConversionsUrl = @"http://login.directagents.com/api/4/reports.asmx/Conversions?api_key={api_key}&start_date={start_date}&end_date={end_date}&affiliate_id=0&advertiser_id=0&offer_id=0&campaign_id=0&creative_id=0&include_tests=false&start_at_row={start_at_row}&row_limit={row_limit}&sort_field=conversion_id&sort_descending=false";
         
-        public static conversion_report_response Extract(DateRange dateRange, int startAtRow, int rowLimit)
+        public static conversion_report_response Conversions(DateRange dateRange, int startAtRow, int rowLimit)
         {
             Logger.Log("Extracting {0} conversions starting at row {1}.", rowLimit, startAtRow);
 

@@ -9,5 +9,15 @@ namespace Common
         {
             Console.WriteLine(messageFormat, formatArgs);
         }
+
+        public static void Progress()
+        {
+            //Console.Write(".");
+        }
+
+        internal static void Done()
+        {
+            //Console.WriteLine();
+        }
     }
 }
