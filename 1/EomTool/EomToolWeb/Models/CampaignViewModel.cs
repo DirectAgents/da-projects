@@ -70,7 +70,7 @@ namespace EomToolWeb.Models
 
         public string PayableAction { get { return campaign.PayableAction; } }
 
-        public string OfferLink
+        public string Link
         {
             get
             {

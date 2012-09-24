@@ -1,4 +1,37 @@
-﻿<script type="text/x-kendo-tmpl" id="listTemplate">
+﻿<script type="text/x-kendo-tmpl" id="editTemplate">
+    <div class="listitem" style="overflow: auto">
+        <dl>
+            <dt>Name:</dt>
+            <dd><input type="text" data-bind="value:Name" name="Name" required="required" validationMessage="required" /></dd>
+            <dt>Description:</dt>
+            <dd><input type="text" data-bind="value:Description" name="Description" /></dd>
+            <dt>Payable Action:</dt>
+            <dd><input type="text" data-bind="value:PayableAction" name="PayableAction" /></dd>
+            <dt>Link:</dt>
+            <dd><input type="text" data-bind="value:Link" name="Link" /></dd>
+            <dt>Payout:</dt>
+            <dd><input type="text" data-bind="value:Cost" name="Cost" /></dd>
+            <dt>Pauout to DA:</dt>
+            <dd><input type="text" data-bind="value:Revenue" name="Revenue" /></dd>
+            <dt>Details</dt>
+            <dd><input type="text" data-bind="value:ImportantDetails" name="ImportantDetails" /></dd>
+            <dt>Banned Networks</dt>
+            <dd><input type="text" data-bind="value:BannedNetworks" name="BannedNetworks" /></dd>
+            <dt>Campaign Cap</dt>
+            <dd><input type="text" data-bind="value:CampaignCap" name="CampaignCap" /></dd>
+            <dt>Scrub Policy</dt>
+            <dd><input type="text" data-bind="value:ScrubPolicy" name="ScrubPolicy" /></dd>
+            <dt>Eom Notes</dt>
+            <dd><input type="text" data-bind="value:EomNotes" name="EomNotes" /></dd>
+        </dl>
+        <div class="edit-buttons">
+            <a class="k-button k-button-icontext k-update-button" href="\\#"><span class="k-icon k-update"></span>Save</a>
+            <a class="k-button k-button-icontext k-cancel-button" href="\\#"><span class="k-icon k-cancel"></span>Cancel</a>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-kendo-tmpl" id="listTemplate">
     <div class="listitem">
         <img src="${ImageUrl}" alt="${Name} image" />
         <a href="" onclick="EditCampaign(${Pid}); return false" class="editlink" style="float: right">Edit</a>
@@ -10,7 +43,7 @@
             <dt>Traffic:</dt>
             <dd>${TrafficTypes}</dd>
             <dt>Link:</dt>
-            <dd><a href="${OfferLink}">${OfferLink}</a></dd>
+            <dd><a href="${Link}">${Link}</a></dd>
             <dt>Payout:</dt>
             <dd>${CostCurrency}${Cost}</dd>
             <dt>Payout to DA:</dt>
@@ -28,9 +61,17 @@
             <dt>Countries:</dt>
             <dd>${CountryCodes}</dd>
         </dl>
+        <div class="edit-buttons">
+            <a class="k-button k-button-icontext k-edit-button" href="\\#"><span class="k-icon k-edit"></span>Edit!</a>
+        </div>
     </div>
 </script>
 <style  scoped>
+    .listitem dd input
+    {
+        font-size: .75em;
+        width: 200px;
+    }
     .listitem
     {
         float: left;

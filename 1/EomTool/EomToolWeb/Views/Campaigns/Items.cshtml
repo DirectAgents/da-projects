@@ -12,27 +12,48 @@
 
 <script type="text/javascript">
 
+    var dataSource = null;
+    var kendoListView = null;
+
     function DisplayCampaigns(dataUrl) {
 
         //--------------------------------------
         // Campaigns DataSource
         //--------------------------------------
-        var dataSource = new kendo.data.DataSource({
+        dataSource = new kendo.data.DataSource({
             transport: {
                 read: {
                     url: dataUrl,
                     dataType: "json"
+                },
+                update: {
+                    url: "@Url.Action("Edit2", "Campaigns")",
+                    type: "POST"
                 }
             },
-            pageSize: 20
+            pageSize: 20,
+            schema: {
+                model: {
+                    id: "Pid",
+                    fields: {
+                        Pid: { editable: false },
+                        AdManagers: { editable: false },
+                        AccountManagers: { editable: false },
+                        Countries: { editable: false },
+                        TrafficTypes: { editable: false }
+                    }
+                }
+            }
         });
 
         //--------------------------------------
         // Campaigns ListView
         //--------------------------------------
-        $("#listView").kendoListView({
+        kendoListView = $("#listView").kendoListView({
             dataSource: dataSource,
             template: kendo.template($("#listTemplate").html()),
+            editTemplate: kendo.template($("#editTemplate").html()),
+//            autoBind: false,
             dataBound: function () {
                 // Once list items are created, setup 
                 // Edit link to be visible on hover.
@@ -42,6 +63,7 @@
                 );                    
             }
         });
+//        dataSource.read();
                 
         //--------------------------------------
         // Top Pager
@@ -59,10 +81,15 @@
     }
 
     function EditCampaign(pid) {
-        $.get('@Url.Action("Edit", "Campaigns")', { pid: pid }, function (data) {
-            $('#divEditCampaignInner').html(data);
-            $('#divEditCampaign').dialog("open");
-        });
+        var c = dataSource.get(pid);
+        //c.Name = "testme";
+        kendoListView.edit();
+        //kendoListView.refresh();
+
+//        $.get('@Url.Action("Edit", "Campaigns")', { pid: pid }, function (data) {
+//            $('#divEditCampaignInner').html(data);
+//            $('#divEditCampaign').dialog("open");
+//        });
     }
 
     function SaveCampaign() {
