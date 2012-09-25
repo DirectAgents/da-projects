@@ -10,7 +10,10 @@
 <script type="text/javascript">
 
 @{
-    string currFilter = currFilter = "&country=" + Model.CountryFilterString; 
+    string currFilter = "&country=";
+    if (Model.Country != null) { currFilter += Model.Country.CountryCode; }
+    currFilter += "&pid=";
+    if (Model.Pid != null) { currFilter += Model.Pid; }
 }
 
     function ChangeFilter() {

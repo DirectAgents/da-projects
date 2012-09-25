@@ -14,10 +14,10 @@
         string lastCountry = countryCodes.FirstOrDefault();
         foreach (var country in countryCodes)
         {
-            <a href="#@country">@country</a>
             if (country.Substring(0, 1) != lastCountry.Substring(0, 1)) {
                 <br />
             }
+            <a href="#@country">@country</a>            
             lastCountry = country;
         }
     }
@@ -25,12 +25,15 @@
     @foreach (var country in Model)
     {
         <span id="@country.CountryCode"></span>
-        <h3>@Html.ActionLink(country.CountryCode, "List", new {country = country.CountryCode}):</h3>
+        <hr />
+        <br />        
+        <h3>@Html.ActionLink(country.CountryCode, "List2", new { country = country.CountryCode }):</h3>
         <ol>
         @foreach (var campaign in country.Campaigns)
         {
-            <li>@Html.ActionLink(campaign.Name, "List", new {pid = campaign.Pid})</li>
+            <li>@Html.ActionLink(campaign.Name, "List2", new { pid = campaign.Pid })</li>
         }
         </ol>
     }
 </div>
+Z

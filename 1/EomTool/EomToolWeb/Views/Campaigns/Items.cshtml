@@ -87,15 +87,21 @@
     }
 
 @{
-    string currFilter = "";
-    currFilter += "&country=" + Model.CountryFilterString;
-    currFilter += "&search=" + Model.SearchString;
-    currFilter += "&vertical=";
-    currFilter += "&traffictype=";
+    string filter = "";
+    filter += "?pid=";
+    if (Model.Pid != null) { filter += Model.Pid; }
+    filter += "&country=";
+    if (Model.Country != null) { filter += Model.Country.CountryCode; }
+    filter += "&search=";
+    if (Model.SearchString != null) { filter += Model.SearchString; }
+    filter +=  "&vertical=";
+    if (Model.Vertical != null) { filter += Model.Vertical.Name; }
+    filter += "&traffictype=";
+    if (Model.TrafficType != null) { filter += Model.TrafficType.Name; }
 }
     $(document).ready(function () {
         $(document).bind("TemplateLoaded", function(e, path) { 
-            DisplayCampaigns("@Url.Content("~/api/campaignsapi?")" + '@(new HtmlString(currFilter))');
+            DisplayCampaigns("@Url.Content("~/api/campaignsapi")@(new HtmlString(filter))");
         });
         loader.loadTemplate("@Url.Content("~/Templates/Campaigns/_List.tmpl.htm")");
     });

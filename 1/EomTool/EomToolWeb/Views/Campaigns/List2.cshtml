@@ -2,6 +2,15 @@
 @{
     ViewBag.Title = "List2";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
+    if (Model.Country == null)
+    {
+        if (Model.SearchString != null && Model.SearchString.ToLower() == "cpm") { ViewBag.MenuItem = "CPM"; }
+        else if (Model.Pid == null && Model.SearchString == null && Model.Vertical == null && Model.TrafficType == null) { ViewBag.MenuItem = "All"; }
+    }
+    else if (Model.Country.CountryCode == "US")
+    {
+        ViewBag.MenuItem = "US";
+    }
 }
 @Html.Partial("Filter")
 @Html.Partial("Items")

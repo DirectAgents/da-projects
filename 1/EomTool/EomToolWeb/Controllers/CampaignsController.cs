@@ -57,13 +57,30 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        public ActionResult List2(string country, string search)
+        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype)
         {
-            var viewModel = new CampaignsListViewModel
+            var viewModel = new CampaignsListViewModel();
+            if (!string.IsNullOrWhiteSpace(search))
             {
-                SearchString = search,
-                CountryFilterString = country,
-            };
+                viewModel.SearchString = search;
+            }
+            int pidInt;
+            if (Int32.TryParse(pid, out pidInt))
+            {
+                viewModel.Pid = pidInt;
+            }
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+            }
+            if (!string.IsNullOrWhiteSpace(vertical))
+            {
+                viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
+            }
+            if (!string.IsNullOrWhiteSpace(traffictype))
+            {
+                viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+            }
             return View(viewModel);
         }
 
@@ -164,8 +181,6 @@ namespace EomToolWeb.Controllers
                 campaignSummaries = campaignRepository.TopCampaigns(20, by, null);
             else
                 campaignSummaries = campaignRepository.TopCampaigns(20, by, traffictype);
-
-            var top = campaignRepository.TopCampaigns(20, by, null);
 
             var model = new TopViewModel { CampaignSummaries = campaignSummaries, By = by, TrafficType = trafficTypeEntity };
 

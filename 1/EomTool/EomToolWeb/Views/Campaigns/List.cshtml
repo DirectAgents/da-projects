@@ -37,8 +37,8 @@
     <script type="text/javascript">
 @{
     string currFilter = "";
-    if (Model.Country != null) { currFilter = "&country=" + Model.Country.CountryCode; }
-    if (Model.SearchString != null) { currFilter = "&searchstring=" + Model.SearchString; }
+    if (Model.Country != null) { currFilter += "&country=" + Model.Country.CountryCode; }
+    if (Model.SearchString != null) { currFilter += "&searchstring=" + Model.SearchString; }
 }
         function ChangeFilter() {
             var dataItem = $('#verticals').data("kendoDropDownList").dataItem();

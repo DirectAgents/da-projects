@@ -26,10 +26,10 @@
     string lastCountry = Model.FirstOrDefault();
     foreach (var country in Model)
     {
-        @Html.ActionLink(country, "List", new { country = country })
         if (country.Substring(0, 1) != lastCountry.Substring(0, 1)) {
             <br />
         }
+        @Html.ActionLink(country, "List", new { country = country })
         lastCountry = country;
     }
 }
