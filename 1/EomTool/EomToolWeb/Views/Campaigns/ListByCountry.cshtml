@@ -5,29 +5,32 @@
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
 }
 
-<h2>Campaigns By Country</h2>
+<div style="margin-left: 30px">
 
-@{
-    List<string> countryCodes = ViewBag.CountryCodes;
-    string lastCountry = countryCodes.FirstOrDefault();
-    foreach (var country in countryCodes)
-    {
-        <a href="#@country">@country</a>
-        if (country.Substring(0, 1) != lastCountry.Substring(0, 1)) {
-            <br />
+    <h2>Campaigns By Country</h2>
+
+    @{
+        List<string> countryCodes = ViewBag.CountryCodes;
+        string lastCountry = countryCodes.FirstOrDefault();
+        foreach (var country in countryCodes)
+        {
+            <a href="#@country">@country</a>
+            if (country.Substring(0, 1) != lastCountry.Substring(0, 1)) {
+                <br />
+            }
+            lastCountry = country;
         }
-        lastCountry = country;
     }
-}
 
-@foreach (var country in Model)
-{
-    <span id="@country.CountryCode"></span>
-    <h3>@Html.ActionLink(country.CountryCode, "List", new {country = country.CountryCode}):</h3>
-    <ol>
-    @foreach (var campaign in country.Campaigns)
+    @foreach (var country in Model)
     {
-        <li>@Html.ActionLink(campaign.Name, "List", new {pid = campaign.Pid})</li>
+        <span id="@country.CountryCode"></span>
+        <h3>@Html.ActionLink(country.CountryCode, "List", new {country = country.CountryCode}):</h3>
+        <ol>
+        @foreach (var campaign in country.Campaigns)
+        {
+            <li>@Html.ActionLink(campaign.Name, "List", new {pid = campaign.Pid})</li>
+        }
+        </ol>
     }
-    </ol>
-}
+</div>

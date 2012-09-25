@@ -57,11 +57,12 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        public ActionResult List2()
+        public ActionResult List2(string country, string search)
         {
             var viewModel = new CampaignsListViewModel
             {
-                Campaigns = campaignRepository.Campaigns
+                SearchString = search,
+                CountryFilterString = country,
             };
             return View(viewModel);
         }

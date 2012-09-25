@@ -11,5 +11,6 @@ namespace EomToolWeb.Models
         public Country Country { get; set; }
         public Vertical Vertical { get; set; }
         public TrafficType TrafficType { get; set; }
+        public string CountryFilterString { get; set; }
     }
 }

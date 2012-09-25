@@ -18,7 +18,7 @@ namespace EomToolWeb.Controllers
             return query.AsQueryable();
         }
 
-        public IQueryable<CampaignViewModel> Get(string vertical, string traffictype)
+        public IQueryable<CampaignViewModel> Get(string vertical, string traffictype, string search, string country)
         {
             var campaigns = db.Campaigns.AsQueryable();
 
@@ -34,6 +34,16 @@ namespace EomToolWeb.Controllers
                 var tt = db.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
                 if (tt != null)
                     campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                campaigns = campaigns.Where(c => c.Name.Contains(search) || c.Description.Contains(search));
+            }
+
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
             }
 
             var query = campaigns

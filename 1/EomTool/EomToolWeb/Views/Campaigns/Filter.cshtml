@@ -9,12 +9,8 @@
 
 <script type="text/javascript">
 
-// Helper variables in C# to construct campaign data url in ChangeFilter()
-// TODO: move this logic to event handler on client in Items.cshtml
 @{
-    string currFilter = "";
-    if (Model.Country != null) { currFilter = "&country=" + Model.Country.CountryCode; }
-    if (Model.SearchString != null) { currFilter = "&searchstring=" + Model.SearchString; }
+    string currFilter = currFilter = "&country=" + Model.CountryFilterString; 
 }
 
     function ChangeFilter() {
@@ -26,7 +22,11 @@
         var traffictype = '';
         if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
 
-        var url = '@Url.Content("~/api/campaignsapi")?vertical=' + vertical + '&traffictype=' + traffictype + '@(new HtmlString(currFilter))';
+        dataItem = $('#inputSearch').val();
+        var search = '';
+        if(dataItem != '') search = dataItem;
+
+        var url = '@Url.Content("~/api/campaignsapi")?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search  + '@(new HtmlString(currFilter))';
         DisplayCampaigns(url); // TODO: trigger an event and handle in Items.cshtml
     }
 

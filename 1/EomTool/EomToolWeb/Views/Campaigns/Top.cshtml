@@ -5,22 +5,26 @@
     ViewBag.MenuItem = "Top";    
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
 }
+<div style="margin-left: 30px">
 
-<h2>Top Campaigns by @Model.By.ToString()</h2>
+    <h2>Top Campaigns by @Model.By.ToString()</h2>
 
-<h3>Select a Filter:</h3>
-<div>
-    <input id="traffictypes" style="width: 250px; margin-top: 10px" />
+    <h3>Select a Filter:</h3>
+    <div>
+        <input id="traffictypes" style="width: 250px; margin-top: 10px" />
+    </div>
+
+    <ul>
+    @foreach (var campaignSummary in Model.CampaignSummaries)
+    {
+        <li>
+            @Html.ActionLink(@campaignSummary.CampaignName, "List", new { pid = campaignSummary.Pid }) 
+            @*@(Model.By == DirectAgents.Domain.Abstract.TopCampaignsBy.Revenue ? campaignSummary.Revenue : campaignSummary.Cost)*@
+        </li>
+    }
+    </ul>
+
 </div>
-
-<ul>
-@foreach (var campaignSummary in Model.CampaignSummaries)
-{
-    <li>@Html.ActionLink(@campaignSummary.CampaignName, "List", new { pid = campaignSummary.Pid }) 
-            @(Model.By == DirectAgents.Domain.Abstract.TopCampaignsBy.Revenue ? campaignSummary.Revenue : campaignSummary.Cost)
-    </li>
-}
-</ul>
 @section scripts {
     <script type="text/javascript">
 @{

@@ -12,7 +12,7 @@ namespace EomToolWeb
             routes.MapRoute(
                 name: null,
                 url: "Campaigns",
-                defaults: new { controller = "Campaigns", action = "ListByCountry" }
+                defaults: new { controller = "Campaigns", action = "List2" }
             );
 
             routes.MapRoute(

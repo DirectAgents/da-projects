@@ -1,40 +1,65 @@
 ﻿<script type="text/x-kendo-tmpl" id="editTemplate">
-    <div class="listitem" style="overflow: auto">
-        <dl>
-            <dt>Name:</dt>
-            <dd><input type="text" data-bind="value:Name" name="Name" required="required" validationMessage="required" /></dd>
-            <dt>Description:</dt>
-            <dd><input type="text" data-bind="value:Description" name="Description" /></dd>
-            <dt>Payable Action:</dt>
-            <dd><input type="text" data-bind="value:PayableAction" name="PayableAction" /></dd>
-            <dt>Link:</dt>
-            <dd><input type="text" data-bind="value:Link" name="Link" /></dd>
-            <dt>Payout:</dt>
-            <dd><input type="text" data-bind="value:Cost" name="Cost" /></dd>
-            <dt>Pauout to DA:</dt>
-            <dd><input type="text" data-bind="value:Revenue" name="Revenue" /></dd>
-            <dt>Details</dt>
-            <dd><input type="text" data-bind="value:ImportantDetails" name="ImportantDetails" /></dd>
-            <dt>Banned Networks</dt>
-            <dd><input type="text" data-bind="value:BannedNetworks" name="BannedNetworks" /></dd>
-            <dt>Campaign Cap</dt>
-            <dd><input type="text" data-bind="value:CampaignCap" name="CampaignCap" /></dd>
-            <dt>Scrub Policy</dt>
-            <dd><input type="text" data-bind="value:ScrubPolicy" name="ScrubPolicy" /></dd>
-            <dt>Eom Notes</dt>
-            <dd><input type="text" data-bind="value:EomNotes" name="EomNotes" /></dd>
-        </dl>
-        <div class="edit-buttons">
+    <div class="listitem">
+        <img src="${ImageUrl}" alt="${Name} image" />
+        <div class="edit-buttons" style="float: right; margin-right: 10px; margin-top: 10px;">
             <a class="k-button k-button-icontext k-update-button" href="\\#"><span class="k-icon k-update"></span>Save</a>
             <a class="k-button k-button-icontext k-cancel-button" href="\\#"><span class="k-icon k-cancel"></span>Cancel</a>
         </div>
+        <table>
+            <tr>
+                <td class="fieldName">Name:</td>
+                <td><input type="text" data-bind="value:Name" name="Name" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Description:</td>
+                <td><input type="text" data-bind="value:Description" name="Description" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Payable Action:</td>
+                <td><input type="text" data-bind="value:PayableAction" name="PayableAction" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Link:</td>
+                <td><input type="text" data-bind="value:Link" name="Link" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Payout:</td>
+                <td><input type="text" data-bind="value:Cost" name="Cost" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Pauout to DA:</td>
+                <td><input type="text" data-bind="value:Revenue" name="Revenue" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Details</td>
+                <td><input type="text" data-bind="value:ImportantDetailsAsString" name="ImportantDetails" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Banned Networks</td>
+                <td><input type="text" data-bind="value:BannedNetworks" name="BannedNetworks" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Campaign Cap</td>
+                <td><input type="text" data-bind="value:CampaignCap" name="CampaignCap" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Scrub Policy</td>
+                <td><input type="text" data-bind="value:ScrubPolicy" name="ScrubPolicy" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Eom Notes</td>
+                <td><input type="text" data-bind="value:EomNotes" name="EomNotes" /></td>
+            </tr>
+        </table>
     </div>
 </script>
 
 <script type="text/x-kendo-tmpl" id="listTemplate">
     <div class="listitem">
         <img src="${ImageUrl}" alt="${Name} image" />
-        <a href="" onclick="EditCampaign(${Pid}); return false" class="editlink" style="float: right">Edit</a>
+        <div class="edit-buttons">
+            <a class="k-button k-button-icontext k-edit-button" style="float: right; width: 20px; border-top: 0px; border-right: 0px" href="\\#"><span class="k-icon k-edit" style="margin-left: -5px"></span></a>
+        </div>
         <h5>${Name}<br /><span style="font-weight: normal">${AdManagers}, ${AccountManagers}</span></h5>
         <h6>${Description}</h6>
         <dl>
@@ -61,17 +86,26 @@
             <dt>Countries:</dt>
             <dd>${CountryCodes}</dd>
         </dl>
-        <div class="edit-buttons">
-            <a class="k-button k-button-icontext k-edit-button" href="\\#"><span class="k-icon k-edit"></span>Edit!</a>
-        </div>
     </div>
 </script>
 <style  scoped>
-    .listitem dd input
+    .listitem input
     {
-        font-size: .75em;
-        width: 200px;
+        font-size: .8em;
+        width: 100%;         
     }
+    
+    .listitem table
+    {
+        width: 100%;
+    }
+    
+    .fieldName
+    {
+        width: 100px;
+        text-align: right;
+    }
+    
     .listitem
     {
         float: left;

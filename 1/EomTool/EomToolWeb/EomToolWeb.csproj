@@ -272,6 +272,8 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Images\bg-search-bar.png" />
+    <Content Include="Images\bg-search-bar2.png" />
     <Content Include="Images\da.png" />
     <Content Include="Images\loading_lg.gif" />
     <Content Include="Images\noimage.gif" />
@@ -290,6 +292,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\doTimeout.js" />
     <Content Include="Scripts\kendoui\examples\content\dataviz\dashboards\area-chart.png" />
     <Content Include="Scripts\kendoui\examples\content\dataviz\dashboards\car-dashboard.png" />
     <Content Include="Scripts\kendoui\examples\content\dataviz\dashboards\car.gif" />
