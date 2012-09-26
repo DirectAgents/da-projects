@@ -293,6 +293,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\doTimeout.js" />
+    <Content Include="Scripts\jquery.zclip.min.js" />
     <Content Include="Scripts\kendoui\examples\content\dataviz\dashboards\area-chart.png" />
     <Content Include="Scripts\kendoui\examples\content\dataviz\dashboards\car-dashboard.png" />
     <Content Include="Scripts\kendoui\examples\content\dataviz\dashboards\car.gif" />
@@ -2576,6 +2577,7 @@
     <Content Include="Scripts\tinymce\utils\form_utils.js" />
     <Content Include="Scripts\tinymce\utils\mctabs.js" />
     <Content Include="Scripts\tinymce\utils\validate.js" />
+    <Content Include="Scripts\ZeroClipboard10.swf" />
     <Content Include="Templates\Campaigns\_List.tmpl.htm" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

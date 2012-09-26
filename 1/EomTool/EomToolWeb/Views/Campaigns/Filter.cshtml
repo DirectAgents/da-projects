@@ -33,6 +33,25 @@
         DisplayCampaigns(url); // TODO: trigger an event and handle in Items.cshtml
     }
 
+    var afterSelectedText = "";
+    function CopySelection() {
+        var listView = $("#listView").data("kendoListView");
+        var data = listView.dataSource.view();
+        var selected = $.map(listView.select(), function(item) {
+            var d = data[$(item).index()];
+            return '<b>' + d.Name + '</b><br />' + d.Description + '<br />Action: ' + d.PayableAction + '<br />Traffic: ' + d.TrafficTypes + '<br />Link: <a href="' + d.Link + '">' + d.Link + '</a><br />Payout: ' + d.CostCurrency + d.Cost + '<br />';
+        });
+        if (selected.length > 0)
+            afterSelectedText = "Campaign text copied";
+        else
+            afterSelectedText = "No campaigns selected";
+        var copytext = selected.join("<br />");
+        return copytext;
+    }
+    function AfterCopy() {
+        alert(afterSelectedText);
+    }
+
     $(document).ready(function () {
 
         //--------------------------------------
@@ -63,6 +82,15 @@
                 transport: { read: "@Url.Content("~/api/TrafficTypes")" }
             },
             change: ChangeFilter
+        });
+
+        //--------------------------------------
+        // Copy button
+        //--------------------------------------
+        $('a#copy-campaign').zclip({
+            path: '@Url.Content("~/Scripts/ZeroClipboard10.swf")',
+            copy: CopySelection,
+            afterCopy: AfterCopy
         });
 
     });

@@ -62,11 +62,12 @@
                 dataSource: dataSource,
                 template: kendo.template($("#listTemplate").html()),
                 editTemplate: kendo.template($("#editTemplate").html()),
-                dataBound: function () {                 
+                dataBound: function () {
                 },
                 edit: function(e) {
                     e.item.animate({ height: '540px', width: '800px' }, 1000 );
-                }
+                },
+                selectable: "multiple"
             });
                 
             //--------------------------------------

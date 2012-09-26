@@ -15,6 +15,7 @@
     @Styles.Render("~/Scripts/kendo/styles/kendo.default.min.css")
     @Scripts.Render("~/Scripts/kendo/2012.2.710/kendo.web.min.js")
     @Scripts.Render("~/bundles/templates")
+    @Scripts.Render("~/Scripts/jquery.zclip.min.js")
     <style type="text/css">
         ul#menu li
         {
@@ -42,6 +43,10 @@
                     <input id="inputSearch" style="width: 185px; height: 22px; border: none; margin: 5px 0px 0px 20px; padding: 0; background: transparent; font-size: .8em; outline: none;" id="SearchText" />
                 </div>
             </li>
+            }
+            @if (ViewBag.ShowCopy != null && ViewBag.ShowCopy)
+            {
+            <li style="border-right: 0px"><a href="#" id="copy-campaign">Copy</a></li>
             }
         </ul>
     </div>
