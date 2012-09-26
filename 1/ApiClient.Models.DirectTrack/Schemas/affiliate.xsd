@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/affiliate/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/affiliate/v1_0"
+elementFormDefault="qualified">
+
+<!-- simple elements -->
+	<xs:simpleType name="booleanInt">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="addCode">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="20"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>	
+
+	<xs:element name="email">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+				<xs:minLength value="7"/>
+				<xs:pattern value="[a-zA-Z0-9!#$%&amp;'\*/=\?\^`\{\}\|~_\-\+]+(\.[_a-zA-Z0-9!#$%&amp;'\*/=\?\^`\{\}\|~_\+\-]+)*@[a-zA-Z0-9\-]+(\.[a-zA-Z0-9\-]+)*(\.[a-zA-Z]{2,4})"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>	
+
+	<xs:element name="password">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="15"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="firstName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="20"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="lastName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="30"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="company">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="address">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="80"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="address2">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="80"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="city">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="state">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="2"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="zip">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="20"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="country">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="outsideNA" type="booleanInt"/>
+
+	<xs:element name="stateOther">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="30"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="phone">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="25"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="fax">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="25"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="ssn">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="30"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="filterWebsite" type="booleanInt" />
+
+	<xs:element name="category1">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="155"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="category2">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="155"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="category3">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="155"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="internalComments">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="2000"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="approvalNotes">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="2000"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="watchMe" type="booleanInt" />
+
+	<xs:element name="referredBy">
+		<xs:complexType>
+			<xs:attribute name="location" type="xs:anyURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="agreedTerms">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="w9OnFile" type="booleanInt" />
+
+	<xs:element name="signUpDate">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+				<xs:maxLength value="19"/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 
+
+	<xs:element name="ipAddress">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="20"/>
+				<xs:pattern value="(\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3})?"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="siteType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="32"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="siteDescription">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="siteViews" type="xs:unsignedInt"/>
+
+	<xs:element name="languageContent">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="globalPop" type="booleanInt" />
+
+	<xs:element name="hideAdserving" type="booleanInt" />
+
+	<xs:element name="allowThirdPartyUpload" type="booleanInt" />
+
+	<xs:element name="sendApprovalEmail" type="booleanInt" />
+
+	<xs:element name="redirectURL">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="datafeedApproval" type="booleanInt" />
+
+	<xs:element name="paymentThreshold" type="xs:short"/>
+
+	<xs:element name="paypalEmail">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="form1099Required" type="booleanInt" />
+
+	<xs:element name="taxIDIsSSN" type="booleanInt" />
+
+	<xs:element name="currency">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="3"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bankName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="accountName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bankAccountNumber">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="IBAN">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="routingNumber">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="9"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bankAddress">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bankAddress2">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bankCity">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bankState">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bankZip">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="20"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="bankCountry">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="intBankCode">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="intBankAddress">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="intBankAddress2">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="intBankAddress3">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="instructions">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="wireCurrency">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="terminateAffiliateReason">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="2000"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="resetPassword" type="booleanInt" />
+
+	<xs:element name="manualEmail" type="booleanInt" />
+
+	<xs:element name="updatesNotification" type="booleanInt" />
+
+	<xs:element name="paymentNotification" type="xs:unsignedInt"/>
+
+	<xs:element name="conversionNotification" type="booleanInt" />
+
+	<xs:element name="accessID" type="xs:unsignedInt"/>
+
+<!-- END simple elements -->
+
+<!-- complex elements -->
+	<xs:element name="status">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="approved"/>
+				<xs:enumeration value="inactive"/>
+				<xs:enumeration value="denied"/>
+				<xs:enumeration value="pending"/>
+				<xs:enumeration value="terminated"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="approval">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Sales/Leads Only"/>
+				<xs:enumeration value="Sales/Leads and Clicks"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="website">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:unsignedInt"/>
+			<xs:attribute name="url" type="xs:string" use="required"/>
+			<xs:attribute name="approved" type="booleanInt" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="affiliateWebsites">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="website" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="dateType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="percentType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{1,3}(\.\d{1,2})?"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="commission">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:unsignedInt"/>
+			<xs:attribute name="effectiveDate" type="dateType" use="required"/>
+			<xs:attribute name="percent" type="percentType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="blanketCommissions">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="commission" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="resourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="affiliateGroups">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="resourceURL" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="directDepositDetails">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="bankName" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="accountName" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankAccountNumber" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="IBAN" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="routingNumber" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankAddress" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankAddress2" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankCity" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankState" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankZip" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankCountry" minOccurs="0" maxOccurs="1"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="wireTransferDetails">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="bankName" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="accountName" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankAccountNumber" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="IBAN" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="routingNumber" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankAddress" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankAddress2" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankCity" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankState" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankZip" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankCountry" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="intBankCode" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="intBankAddress" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="intBankAddress2" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="intBankAddress3" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="instructions" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="wireCurrency" minOccurs="0" maxOccurs="1"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="paymentFrequency">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="monthly"/>
+				<xs:enumeration value="weekly"/>
+				<xs:enumeration value="biweekly"/>
+				<xs:enumeration value="quarterly"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="paymentTo">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="personal"/>
+				<xs:enumeration value="company"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="paymentMethod">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="check"/>
+				<xs:enumeration value="paypal"/>
+				<xs:enumeration value="directDeposit"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="paymentStatus" >
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Paid"/>
+				<xs:enumeration value="Under Review"/>
+				<xs:enumeration value="No W9"/>
+				<xs:enumeration value="Pending First Payment"/>
+				<xs:enumeration value="Pending Payment"/>
+				<xs:enumeration value="Approved for First Payment"/>
+				<xs:enumeration value="Terminated"/>
+				<xs:enumeration value="Company Account - Not Paid"/>
+				<xs:enumeration value="Export To Quickbooks"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="customField">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="id" type="xs:unsignedInt" use="required"/>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="customFields">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="customField" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+<!-- END complex elements -->
+
+<!-- PRIMARY ELEMENT -->
+	<xs:element name="affiliate">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="addCode" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="email" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="status" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="approval" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="password" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="firstName" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="lastName" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="company" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="address" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="address2" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="city" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="state" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="zip" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="country" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="outsideNA" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="stateOther" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="phone" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="fax" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="ssn" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="affiliateWebsites" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="filterWebsite" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="category1" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="category2" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="category3" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="blanketCommissions" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="internalComments" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="approvalNotes" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="watchMe" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="referredBy" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="agreedTerms" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="w9OnFile" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="signUpDate" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="ipAddress" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="siteType" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="siteDescription" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="siteViews" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="affiliateGroups" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="languageContent" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="globalPop" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="hideAdserving" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="allowThirdPartyUpload" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="sendApprovalEmail" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="redirectURL" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="datafeedApproval" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="paypalEmail" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="paymentThreshold" minOccurs="0" maxOccurs="1"/>			
+			<xs:element ref="paymentFrequency" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="paymentTo" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="paymentMethod" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="paymentStatus" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="form1099Required" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="taxIDIsSSN" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="currency" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="directDepositDetails" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="wireTransferDetails" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="terminateAffiliateReason" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="resetPassword" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="manualEmail" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="updatesNotification" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="paymentNotification" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="conversionNotification" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="customFields" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="accessID" minOccurs="0" maxOccurs="1"/>
+	    </xs:sequence>
+	    <xs:attribute name="location" type="resourceURI"/>
+	  </xs:complexType>
+	</xs:element>
+<!-- END PRIMARY ELEMENT -->
+
+</xs:schema>

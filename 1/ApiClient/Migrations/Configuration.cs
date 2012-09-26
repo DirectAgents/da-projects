@@ -5,6 +5,7 @@ namespace ApiClient.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
     using Models;
+    using ApiClient.Models.Cake;
 
     internal sealed class Configuration : DbMigrationsConfiguration<CakeDbContext>
     {

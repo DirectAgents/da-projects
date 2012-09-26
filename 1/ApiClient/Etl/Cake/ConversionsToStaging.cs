@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using ApiClient.Models;
+using ApiClient.Models.Cake;
 using Common;
 using Extensions;
 
