@@ -1,5 +1,5 @@
 ﻿using System;
-using ApiClient.Models;
+using ApiClient.Models.Cake;
 using Common;
 
 namespace ApiClient.Etl.Cake

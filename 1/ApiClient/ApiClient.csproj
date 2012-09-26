@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\Solution\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\Solution\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
@@ -61,6 +64,9 @@
     <Reference Include="Microsoft.Scripting.Metadata">
       <HintPath>..\Solution\packages\IronPython.2.7.3\lib\Net40\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
+    <Reference Include="Spring.Rest">
+      <HintPath>..\Solution\packages\Spring.Rest.1.1.0\lib\net40-client\Spring.Rest.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -79,43 +85,53 @@
     <Compile Include="Etl\Cake\CakeWebService.cs" />
     <Compile Include="Etl\Cake\ConversionsFromWebService.cs" />
     <Compile Include="Etl\Cake\ConversionsToStaging.cs" />
+    <Compile Include="Etl\DirectTrack\ApiInfo.cs" />
+    <Compile Include="Etl\DirectTrack\ResourcesFromDirectTrack.cs" />
+    <Compile Include="Etl\DirectTrack\ConsoleLogger.cs" />
+    <Compile Include="Etl\DirectTrack\ResourcesToDatabase.cs" />
+    <Compile Include="Etl\DirectTrack\ILogger.cs" />
+    <Compile Include="Etl\DirectTrack\IResourceGetter.cs" />
+    <Compile Include="Etl\DirectTrack\IRestCall.cs" />
+    <Compile Include="Etl\DirectTrack\NoCacheInterceptor.cs" />
+    <Compile Include="Etl\DirectTrack\Resource.cs" />
+    <Compile Include="Etl\DirectTrack\ResourceGetter.cs" />
+    <Compile Include="Etl\DirectTrack\ResourceList.cs" />
+    <Compile Include="Etl\DirectTrack\RestCall.cs" />
+    <Compile Include="Etl\DirectTrack\Urls.cs" />
     <Compile Include="Etl\IDestination.cs" />
     <Compile Include="Etl\ISource.cs" />
-    <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Extensions\IEnumerableExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\TupleExtensions.cs" />
+    <Compile Include="Etl\Source.cs" />
     <Compile Include="Migrations\201209180503245_Conversion.cs" />
     <Compile Include="Migrations\201209180503245_Conversion.Designer.cs">
       <DependentUpon>201209180503245_Conversion.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\advertiser.Serialization.cs">
+    <Compile Include="Models\Cake\advertiser.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\affiliate.Serialization.cs">
+    <Compile Include="Models\Cake\affiliate.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CakeDbContext.cs" />
-    <Compile Include="Models\conversion.Serialization.cs">
+    <Compile Include="Models\Cake\CakeDbContext.cs" />
+    <Compile Include="Models\Cake\conversion.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\conversion_report_response.Serialization.cs">
+    <Compile Include="Models\Cake\conversion_report_response.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\creative.Serialization.cs">
+    <Compile Include="Models\Cake\creative.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\offer.Serialization.cs">
+    <Compile Include="Models\Cake\offer.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\paid.Serialization.cs">
+    <Compile Include="Models\Cake\paid.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\received.Serialization.cs">
+    <Compile Include="Models\Cake\received.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\XsdClassGen1.cs">
+    <Compile Include="Models\Cake\XsdClassGen1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>XsdClassGen.tt</DependentUpon>
@@ -127,16 +143,15 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Models\XsdClassGen.mapping" />
-    <None Include="Models\XsdClassGen.tt">
+    <None Include="Models\Cake\XsdClassGen.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>XsdClassGen1.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
-    <None Include="Schemas\ApiNameStore.xsd">
+    <None Include="Schemas\Cake\ApiNameStore.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Schemas\ConversionReportResponse.xsd">
+    <None Include="Schemas\Cake\ConversionReportResponse.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -148,7 +163,19 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="App_Readme\Spring.Rest.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApiClient.Common\ApiClient.Common.csproj">
+      <Project>{D10F489D-ABBF-4625-A879-DAD95B0249CA}</Project>
+      <Name>ApiClient.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ApiClient.Models.DirectTrack\ApiClient.Models.DirectTrack.csproj">
+      <Project>{A2EBCBED-B48E-4F9D-B278-D7C84735B7B8}</Project>
+      <Name>ApiClient.Models.DirectTrack</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

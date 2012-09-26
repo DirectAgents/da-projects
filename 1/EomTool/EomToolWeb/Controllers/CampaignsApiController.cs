@@ -56,7 +56,7 @@ namespace EomToolWeb.Controllers
                        .Select(c => new CampaignViewModel(c))
                        .AsQueryable();
 
-            return query.AsQueryable();
+            return query;
         }
 
         protected override void Dispose(bool disposing)

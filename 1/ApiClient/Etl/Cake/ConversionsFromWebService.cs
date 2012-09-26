@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ApiClient.Models;
+using ApiClient.Models.Cake;
 using Common;
 using Extensions;
 
