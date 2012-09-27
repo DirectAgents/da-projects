@@ -140,7 +140,7 @@
             });
 
             // Display the publisher report
-            $.get('@Url.Action("PublisherReport", new { mode = Model.Mode, includeZero = Model.IncludeZero })&affid=' + affid + '&ts=' + new Date().getTime(), function (publisherReportContent) {
+            $.get('@Url.Action("PublisherReport", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (publisherReportContent) {
                 $('#publisherReport').empty().html(publisherReportContent);
             });
         }
