@@ -33,5 +33,11 @@ namespace EomToolWeb.Controllers
             admin.LoadCampaigns();
             return Content("Campaigns loaded");
         }
+
+        public ActionResult LoadSummaries()
+        {
+            admin.LoadSummaries();
+            return Content("Summaries loaded");
+        }
     }
 }

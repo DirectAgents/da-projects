@@ -38,6 +38,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,10 +51,16 @@
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
     <Compile Include="Concrete\AdminImpl.cs" />
+    <Compile Include="Concrete\Cake.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Cake.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
+    <Compile Include="Entities\Cake\MonthlySummary.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\Cake\Conversion.cs" />
     <Compile Include="Entities\TrafficType.cs" />
@@ -95,6 +103,10 @@
     <Compile Include="Migrations\201209201838238_Conversions.Designer.cs">
       <DependentUpon>201209201838238_Conversions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201209272230008_MonthlySummaries.cs" />
+    <Compile Include="Migrations\201209272230008_MonthlySummaries.Designer.cs">
+      <DependentUpon>201209272230008_MonthlySummaries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -110,6 +122,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="Concrete\Cake.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Cake.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +155,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201209201838238_Conversions.resx">
       <DependentUpon>201209201838238_Conversions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201209272230008_MonthlySummaries.resx">
+      <DependentUpon>201209272230008_MonthlySummaries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

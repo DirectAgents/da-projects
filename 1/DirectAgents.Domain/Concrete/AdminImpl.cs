@@ -5,6 +5,7 @@ using Cake.Data.Wsdl.ExportService;
 using Cake.Model.Staging;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Cake;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -32,6 +33,36 @@ namespace DirectAgents.Domain.Concrete
                     context.Database.Delete();
                 }
                 context.Database.Create();
+            }
+        }
+
+        public void LoadSummaries()
+        {
+            List<MonthlySummary> summaries;
+            using (var cake = new CakeEntities())
+            {
+                var query = from d in cake.DailySummaries
+                            group d by d.offer_id into g
+                            select new MonthlySummary
+                            {
+                                pid = g.Key,
+                                date = g.Max(s => s.date),
+                                clicks = g.Sum(s => s.clicks),
+                                conversions = g.Sum(s => s.conversions),
+                                paid = g.Sum(s => s.paid),
+                                sellable = g.Sum(s => s.sellable),
+                                cost = g.Sum(s => s.cost),
+                                revenue = g.Sum(s => s.revenue)
+                            };
+                summaries = query.ToList();
+            }
+            using (daDomain = new EFDbContext())
+            {
+                foreach (var monthlySummary in summaries)
+                {
+                    daDomain.MonthlySummaries.Add(monthlySummary);
+                }
+                daDomain.SaveChanges();
             }
         }
 

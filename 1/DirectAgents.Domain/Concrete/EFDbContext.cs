@@ -61,5 +61,6 @@ namespace DirectAgents.Domain.Concrete
         public DbSet<Vertical> Verticals { get; set; }
         public DbSet<TrafficType> TrafficTypes { get; set; }
         public DbSet<Conversion> Conversions { get; set; }
+        public DbSet<MonthlySummary> MonthlySummaries { get; set; }
     }
 }
