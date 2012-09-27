@@ -85,6 +85,7 @@
     <Compile Include="Etl\Cake\CakeWebService.cs" />
     <Compile Include="Etl\Cake\ConversionsFromWebService.cs" />
     <Compile Include="Etl\Cake\ConversionsToStaging.cs" />
+    <Compile Include="Etl\Cake\DailySummaryFromWebService.cs" />
     <Compile Include="Etl\DirectTrack\ApiInfo.cs" />
     <Compile Include="Etl\DirectTrack\ResourcesFromDirectTrack.cs" />
     <Compile Include="Etl\DirectTrack\ConsoleLogger.cs" />
@@ -105,11 +106,18 @@
     <Compile Include="Migrations\201209180503245_Conversion.Designer.cs">
       <DependentUpon>201209180503245_Conversion.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201209271525052_DailySummary.cs" />
+    <Compile Include="Migrations\201209271525052_DailySummary.Designer.cs">
+      <DependentUpon>201209271525052_DailySummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cake\advertiser.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Cake\affiliate.Serialization.cs">
+      <DependentUpon>XsdClassGen.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Cake\ArrayOfDailySummary.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Cake\CakeDbContext.cs" />
@@ -151,6 +159,9 @@
     <None Include="Schemas\Cake\ApiNameStore.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Schemas\Cake\ArrayOfDailySummary.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Schemas\Cake\ConversionReportResponse.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -158,6 +169,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201209180503245_Conversion.resx">
       <DependentUpon>201209180503245_Conversion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201209271525052_DailySummary.resx">
+      <DependentUpon>201209271525052_DailySummary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

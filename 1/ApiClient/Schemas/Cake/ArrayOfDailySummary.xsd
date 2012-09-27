@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://cakemarketing.com/api/1/">
+  <xsd:element name="ArrayOfDailySummary">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element maxOccurs="unbounded" name="DailySummary">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="date" type="xsd:dateTime" />
+              <xsd:element name="views" type="xsd:int" />
+              <xsd:element name="clicks" type="xsd:int" />
+              <xsd:element name="click_thru" type="xsd:decimal" />
+              <xsd:element name="conversions" type="xsd:int" />
+              <xsd:element name="paid" type="xsd:int" />
+              <xsd:element name="sellable" type="xsd:int" />
+              <xsd:element name="conversion_rate" type="xsd:decimal" />
+              <xsd:element name="cpl" type="xsd:decimal" />
+              <xsd:element name="cost" type="xsd:decimal" />
+              <xsd:element name="rpt" type="xsd:decimal" />
+              <xsd:element name="revenue" type="xsd:decimal" />
+              <xsd:element name="margin" type="xsd:decimal" />
+              <xsd:element name="profit" type="xsd:decimal" />
+              <xsd:element name="epc" type="xsd:decimal" />
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xs:schema>
