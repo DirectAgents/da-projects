@@ -29,6 +29,7 @@ namespace ApiClient.Etl.Cake
             return conversion_report_response.DeserializeFrom(Clean(content));
         }
 
+        // Note: the response doesn't include the last day in the date range
         public static DailySummary[] DailySummaries(int offerId, DateRange dateRange)
         {
             string url = DailySummaryUrl
@@ -39,11 +40,21 @@ namespace ApiClient.Etl.Cake
 
             string content = Http.Get(url);
             var xmlSerializer = new XmlSerializer(typeof(ArrayOfDailySummary));
+            DailySummary[] dailySummaries;
             using (var stream = content.ToStream())
             {
                 var response = (ArrayOfDailySummary)xmlSerializer.Deserialize(stream);
-                return response.DailySummary;
+                dailySummaries = response.DailySummary;
             }
+            if (dailySummaries == null)
+            {
+                dailySummaries = new DailySummary[] { };
+            }
+            foreach (var dailySummary in dailySummaries)
+            {
+                dailySummary.offer_id = offerId;
+            }
+            return dailySummaries;
         }
 
         private static string Clean(string content)

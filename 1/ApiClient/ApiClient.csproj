@@ -85,7 +85,8 @@
     <Compile Include="Etl\Cake\CakeWebService.cs" />
     <Compile Include="Etl\Cake\ConversionsFromWebService.cs" />
     <Compile Include="Etl\Cake\ConversionsToStaging.cs" />
-    <Compile Include="Etl\Cake\DailySummaryFromWebService.cs" />
+    <Compile Include="Etl\Cake\DailySummariesToDatabase.cs" />
+    <Compile Include="Etl\Cake\DailySummariesFromWebService.cs" />
     <Compile Include="Etl\DirectTrack\ApiInfo.cs" />
     <Compile Include="Etl\DirectTrack\ResourcesFromDirectTrack.cs" />
     <Compile Include="Etl\DirectTrack\ConsoleLogger.cs" />

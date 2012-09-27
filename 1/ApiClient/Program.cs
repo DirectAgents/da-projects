@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using ApiClient.Etl.Cake;
+using System;
 //using IronPython.Hosting;
 //using Microsoft.Scripting;
 //using Microsoft.Scripting.Hosting;
@@ -10,14 +12,16 @@ namespace ApiClient
         static void Main(string[] args)
         {
             ServicePointManager.DefaultConnectionLimit = 50;
-            //var source = new ConversionsFromWebService();
-            //var dest = new ConversionsToStaging();
-            var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack("1/campaign/");
-            var dest = new ApiClient.Etl.DirectTrack.ResourcesToDatabase();
+            //var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack("1/campaign/");
+            //var dest = new ApiClient.Etl.DirectTrack.ResourcesToDatabase();
+            var source = new DailySummariesFromWebService();
+            var dest = new DailySummariesToDatabase();
             var extract = source.Extract();
             var load = dest.Load(source);
             extract.Join();
             load.Join();
+
+            Console.ReadKey();
         }
 
         //static void Main()
