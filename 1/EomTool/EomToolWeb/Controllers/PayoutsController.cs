@@ -33,7 +33,7 @@ namespace EomToolWeb.Controllers
             return affIds;
         }
 
-        public ActionResult Summary(string mode, bool includeZero = false)
+        public ActionResult Summary(string mode, bool includeZero = true)
         {
             var affIds = AffIdsForCurrentUser();
 
@@ -52,27 +52,27 @@ namespace EomToolWeb.Controllers
             return PartialView("PayoutsGrid");
         }
 
-        public JsonResult DetailsJson(string mode, int? affid, int page = 1, bool includeZero = false)
+        public JsonResult DetailsJson(string mode, int? affid, int page = 1, bool includeZero = true)
         {
             var model = CreatePayoutsListViewModel(mode, affid, page, includeZero, false);
             return Json(model.Payouts, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult List(string mode, int? affid, int page = 1, bool includeZero = false)
+        public ActionResult List(string mode, int? affid, int page = 1, bool includeZero = true)
         {
             var model = CreatePayoutsListViewModel(mode, affid, page, includeZero, false);
             return View(model);
         }
 
-        public ActionResult ListPartial(string mode, int? affid, int page = 1, bool includeZero = false)
+        public ActionResult ListPartial(string mode, int? affid, int page = 1, bool includeZero = true)
         {
             var model = CreatePayoutsListViewModel(mode, affid, page, includeZero, false);
             return PartialView("PayoutsGrid", model);
         }
 
-        public ActionResult PublisherReport(string mode, int? affid, int page = 1, bool includeZero = false)
+        public ActionResult PublisherReport(string mode, int? affid, int page = 1)
         {
-            var model = CreatePayoutsListViewModel(mode, affid, page, includeZero, true);
+            var model = CreatePayoutsListViewModel(mode, affid, page, false, true);
             return Content(model.PublisherReport.ToHtmlString());
         }
 

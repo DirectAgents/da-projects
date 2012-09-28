@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "List2";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
+    ViewBag.ShowCopy = true;
     if (Model.Country == null)
     {
         if (Model.SearchString != null && Model.SearchString.ToLower() == "cpm") { ViewBag.MenuItem = "CPM"; }

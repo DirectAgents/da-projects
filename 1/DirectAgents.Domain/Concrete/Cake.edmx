@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CakeModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="CakeModelStoreContainer">
+          <EntitySet Name="DailySummaries" EntityType="CakeModel.Store.DailySummaries" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="DailySummaries">
+          <Key>
+            <PropertyRef Name="DailySummaryId" />
+          </Key>
+          <Property Name="DailySummaryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="offer_id" Type="int" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="views" Type="int" Nullable="false" />
+          <Property Name="clicks" Type="int" Nullable="false" />
+          <Property Name="click_thru" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="conversions" Type="int" Nullable="false" />
+          <Property Name="paid" Type="int" Nullable="false" />
+          <Property Name="sellable" Type="int" Nullable="false" />
+          <Property Name="conversion_rate" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="cpl" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="cost" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="rpt" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="revenue" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="margin" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="profit" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="epc" Type="decimal" Nullable="false" Scale="2" />
+        </EntityType>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CakeModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="CakeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DailySummaries" EntityType="CakeModel.DailySummary" />
+        </EntityContainer>
+        <EntityType Name="DailySummary">
+          <Key>
+            <PropertyRef Name="DailySummaryId" />
+          </Key>
+          <Property Name="DailySummaryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="offer_id" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" />
+          <Property Name="views" Type="Int32" Nullable="false" />
+          <Property Name="clicks" Type="Int32" Nullable="false" />
+          <Property Name="click_thru" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="conversions" Type="Int32" Nullable="false" />
+          <Property Name="paid" Type="Int32" Nullable="false" />
+          <Property Name="sellable" Type="Int32" Nullable="false" />
+          <Property Name="conversion_rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="cpl" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="cost" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="rpt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="revenue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="margin" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="profit" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="epc" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CakeModelStoreContainer" CdmEntityContainer="CakeEntities">
+          <EntitySetMapping Name="DailySummaries"><EntityTypeMapping TypeName="CakeModel.DailySummary"><MappingFragment StoreEntitySet="DailySummaries">
+            <ScalarProperty Name="DailySummaryId" ColumnName="DailySummaryId" />
+            <ScalarProperty Name="offer_id" ColumnName="offer_id" />
+            <ScalarProperty Name="date" ColumnName="date" />
+            <ScalarProperty Name="views" ColumnName="views" />
+            <ScalarProperty Name="clicks" ColumnName="clicks" />
+            <ScalarProperty Name="click_thru" ColumnName="click_thru" />
+            <ScalarProperty Name="conversions" ColumnName="conversions" />
+            <ScalarProperty Name="paid" ColumnName="paid" />
+            <ScalarProperty Name="sellable" ColumnName="sellable" />
+            <ScalarProperty Name="conversion_rate" ColumnName="conversion_rate" />
+            <ScalarProperty Name="cpl" ColumnName="cpl" />
+            <ScalarProperty Name="cost" ColumnName="cost" />
+            <ScalarProperty Name="rpt" ColumnName="rpt" />
+            <ScalarProperty Name="revenue" ColumnName="revenue" />
+            <ScalarProperty Name="margin" ColumnName="margin" />
+            <ScalarProperty Name="profit" ColumnName="profit" />
+            <ScalarProperty Name="epc" ColumnName="epc" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Cake">
+        <EntityTypeShape EntityType="CakeModel.DailySummary" Width="1.5" PointX="0.75" PointY="0.75" Height="4.2879036458333326" IsExpanded="true" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

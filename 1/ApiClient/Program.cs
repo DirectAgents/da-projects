@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using ApiClient.Etl.Cake;
+using System;
 //using IronPython.Hosting;
 //using Microsoft.Scripting;
 //using Microsoft.Scripting.Hosting;
@@ -24,10 +26,15 @@ namespace ApiClient
 
             var dest = new ApiClient.Etl.DirectTrack.ResourcesToDatabase();
 
+            //var source = new DailySummariesFromWebService();
+            //var dest = new DailySummariesToDatabase();
+		
             var extract = source.Extract();
             var load = dest.Load(source);
             extract.Join();
             load.Join();
+
+            Console.ReadKey();
         }
 
         //static void Main()

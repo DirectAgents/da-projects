@@ -19,6 +19,227 @@ namespace ApiClient.Models.Cake {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://cakemarketing.com/api/1/")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="http://cakemarketing.com/api/1/", IsNullable=false)]
+    public partial class ArrayOfDailySummary {
+        
+        private DailySummary[] dailySummaries;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("DailySummary")]
+        public DailySummary[] DailySummary {
+            get {
+                return this.dailySummaries;
+            }
+            set {
+                this.dailySummaries = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.233")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://cakemarketing.com/api/1/")]
+    public partial class DailySummary {
+        
+        private System.DateTime dateField;
+        
+        private int viewsField;
+        
+        private int clicksField;
+        
+        private decimal click_thruField;
+        
+        private int conversionsField;
+        
+        private int paidField;
+        
+        private int sellableField;
+        
+        private decimal conversion_rateField;
+        
+        private decimal cplField;
+        
+        private decimal costField;
+        
+        private decimal rptField;
+        
+        private decimal revenueField;
+        
+        private decimal marginField;
+        
+        private decimal profitField;
+        
+        private decimal epcField;
+
+        [System.Xml.Serialization.XmlIgnore]
+        public int DailySummaryId { get; set; }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public int offer_id { get; set; }
+
+        /// <remarks/>
+        public System.DateTime date {
+            get {
+                return this.dateField;
+            }
+            set {
+                this.dateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int views {
+            get {
+                return this.viewsField;
+            }
+            set {
+                this.viewsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int clicks {
+            get {
+                return this.clicksField;
+            }
+            set {
+                this.clicksField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal click_thru {
+            get {
+                return this.click_thruField;
+            }
+            set {
+                this.click_thruField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int conversions {
+            get {
+                return this.conversionsField;
+            }
+            set {
+                this.conversionsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int paid {
+            get {
+                return this.paidField;
+            }
+            set {
+                this.paidField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int sellable {
+            get {
+                return this.sellableField;
+            }
+            set {
+                this.sellableField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal conversion_rate {
+            get {
+                return this.conversion_rateField;
+            }
+            set {
+                this.conversion_rateField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal cpl {
+            get {
+                return this.cplField;
+            }
+            set {
+                this.cplField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal cost {
+            get {
+                return this.costField;
+            }
+            set {
+                this.costField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal rpt {
+            get {
+                return this.rptField;
+            }
+            set {
+                this.rptField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal revenue {
+            get {
+                return this.revenueField;
+            }
+            set {
+                this.revenueField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal margin {
+            get {
+                return this.marginField;
+            }
+            set {
+                this.marginField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal profit {
+            get {
+                return this.profitField;
+            }
+            set {
+                this.profitField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public decimal epc {
+            get {
+                return this.epcField;
+            }
+            set {
+                this.epcField = value;
+            }
+        }
+    }
+}
+namespace ApiClient.Models.Cake {
+    
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.233")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://cakemarketing.com/api/4/")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="http://cakemarketing.com/api/4/", IsNullable=false)]
     public partial class affiliate {

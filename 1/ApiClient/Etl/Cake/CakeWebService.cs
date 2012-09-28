@@ -1,6 +1,8 @@
 ﻿using System;
 using ApiClient.Models.Cake;
 using Common;
+using System.Xml.Serialization;
+using Extensions;
 
 namespace ApiClient.Etl.Cake
 {
@@ -8,7 +10,8 @@ namespace ApiClient.Etl.Cake
     {
         static string ApiKey = "FCjdYAcwQE";
         static string ConversionsUrl = @"http://login.directagents.com/api/4/reports.asmx/Conversions?api_key={api_key}&start_date={start_date}&end_date={end_date}&affiliate_id=0&advertiser_id=0&offer_id=0&campaign_id=0&creative_id=0&include_tests=false&start_at_row={start_at_row}&row_limit={row_limit}&sort_field=conversion_id&sort_descending=false";
-        
+        static string DailySummaryUrl = @"http://login.directagents.com/api/1/reports.asmx/DailySummaryExport?api_key={api_key}&start_date={start_date}&end_date={end_date}&affiliate_id=0&advertiser_id=0&offer_id={offer_id}&vertical_id=0&campaign_id=0&creative_id=0&account_manager_id=0&include_tests=false";
+
         public static conversion_report_response Conversions(DateRange dateRange, int startAtRow, int rowLimit)
         {
             Logger.Log("Extracting {0} conversions starting at row {1}.", rowLimit, startAtRow);
@@ -24,6 +27,34 @@ namespace ApiClient.Etl.Cake
 
             string content = Http.Get(url);
             return conversion_report_response.DeserializeFrom(Clean(content));
+        }
+
+        // Note: the response doesn't include the last day in the date range
+        public static DailySummary[] DailySummaries(int offerId, DateRange dateRange)
+        {
+            string url = DailySummaryUrl
+                .Replace("{api_key}", ApiKey)
+                .Replace("{offer_id}", offerId.ToString())
+                .Replace("{start_date}", dateRange.FromDate.ToString("MM/dd/yyyy"))
+                .Replace("{end_date}", dateRange.ToDate.ToString("MM/dd/yyyy"));
+
+            string content = Http.Get(url);
+            var xmlSerializer = new XmlSerializer(typeof(ArrayOfDailySummary));
+            DailySummary[] dailySummaries;
+            using (var stream = content.ToStream())
+            {
+                var response = (ArrayOfDailySummary)xmlSerializer.Deserialize(stream);
+                dailySummaries = response.DailySummary;
+            }
+            if (dailySummaries == null)
+            {
+                dailySummaries = new DailySummary[] { };
+            }
+            foreach (var dailySummary in dailySummaries)
+            {
+                dailySummary.offer_id = offerId;
+            }
+            return dailySummaries;
         }
 
         private static string Clean(string content)

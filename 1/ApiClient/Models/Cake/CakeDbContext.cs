@@ -11,5 +11,6 @@ namespace ApiClient.Models.Cake
         }
 
         public DbSet<conversion> Conversions { get; set; }
+        public DbSet<DailySummary> DailySummaries { get; set; }
     }
 }
