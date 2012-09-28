@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace DirectTrack
 {
@@ -12,193 +13,124 @@ namespace DirectTrack
         private XmlSerializer resourceListDeserializer = new XmlSerializer(typeof(ResourceList));
         private Queue<Task> tasks = new Queue<Task>();
         private string rootURL;
-        private object errorLocker = new object();
         private IRestCall directTrackRestCall;
-        private int maxResources = int.MaxValue;
+        private int limit = int.MaxValue;
+        private ResourceGetterMode mode;
+        private bool stop = false;
+        private ILogger logger;
+        private List<XDocument> results = new List<XDocument>();
+        private object resultsLocker = new object();
+        private object tasksLocker = new object();
+        private object errorLocker = new object();
 
-        public ResourceGetter(ILogger logger, string url, IRestCall restCall)
+        public ResourceGetter(ILogger logger, string url, IRestCall restCall, ResourceGetterMode mode)
         {
             this.logger = logger;
             this.rootURL = url;
             this.directTrackRestCall = restCall;
+            this.mode = mode;
         }
 
-        public ResourceGetter(ILogger logger, string url, IRestCall restCall, int maxResources)
-            : this(logger, url, restCall)
+        public ResourceGetter(ILogger logger, string url, IRestCall restCall, int limit, ResourceGetterMode mode)
+            : this(logger, url, restCall, mode)
         {
-            this.maxResources = maxResources;
+            this.limit = limit;
         }
 
-        #region Events
-
-        /// <summary>
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="url"></param>
-        /// <param name="doc"></param>
-        public delegate void GotResourceEventHandler(ResourceGetter sender, Uri uri, string url, XDocument doc);
-
-        /// <summary>
-        /// </summary>
+        public delegate void GotResourceEventHandler(ResourceGetter sender, Uri uri, string url, XDocument doc, bool cached);
         public event GotResourceEventHandler GotResource;
-
-        private void OnGotResource(Uri uri, string url, XDocument doc)
+        void OnGotResource(Uri uri, string url, XDocument doc, bool cached)
         {
             if (this.GotResource != null)
-            {
-                this.GotResource(this, uri, url, doc);
-            }
+                this.GotResource(this, uri, url, doc, cached);
         }
 
-        /// <summary>
-        /// Event deletegate for <c>Error</c>.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="url"></param>
-        /// <param name="doc"></param>
         public delegate void ErrorEventHandler(ResourceGetter sender, Uri uri, Exception ex);
-
-        /// <summary>
-        /// This event allows a subscriber to receive errors.
-        /// </summary>
         public event ErrorEventHandler Error;
-
-        private void OnError(Uri uri, Exception ex)
+        void OnError(Uri uri, Exception ex)
         {
             if (this.Error != null)
-            {
                 this.Error(this, uri, ex);
-            }
         }
 
-        #endregion
-
-        #region Resource Retrieval
-
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public List<XDocument> GetResources()
+        public List<XDocument> Run()
         {
-            this.GetResources(rootURL);
-
-            while (this.NumTasks() > 0)
+            this.DoGetResources(rootURL);
+            while (NumTasks > 0)
             {
-                this.RemoveTask().Wait();
+                Task task;
+                lock (tasksLocker)
+                    task = tasks.Dequeue();
+                task.Wait();
             }
-
             return this.results;
         }
 
-        private void GetResources(string url)
+        void DoGetResources(string url)
         {
-            if (++this.count < this.maxResources)
+            if (!this.stop)
             {
-                AddTask(Task.Factory.StartNew(new Action(() => GetResource(url))));
+                Task task = Task.Factory.StartNew(new Action(() => DoGetResource(url)));
+                lock (tasksLocker)
+                    this.tasks.Enqueue(task);
             }
         }
 
-        private void GetResource(string url)
+        void DoGetResource(string url)
         {
             Uri uri = new Uri("about:blank");
             try
             {
-                string xml = this.directTrackRestCall.GetXml(url, out uri);
+                bool cached;
+                string xml = this.directTrackRestCall.GetXml(url, out uri, out cached);
 
+                if (!cached) // only count non-cached resources toward the limit
+                    if (++this.count < this.limit)
+                        this.stop = true;
+            
                 XDocument resource = XDocument.Parse(xml);
-
                 if (this.resourceListDeserializer.CanDeserialize(resource.CreateReader()))
                 {
                     ResourceList resourceList = (ResourceList)resourceListDeserializer.Deserialize(resource.CreateReader());
-
-                    if (resourceList.HasResources)
+                    if (this.mode == ResourceGetterMode.Resource)
                     {
-                        // loop over each resource in the list
-                        foreach (Resource resourceListResourceURL in resourceList.Resources)
-                        {
-                            this.GetResources(url + resourceListResourceURL.Location); // recurse
-                        }
+                        if (resourceList.HasResources) // recurse for each resource in the list
+                            Array.ForEach(resourceList.Resources, c => this.DoGetResources(url + c.Location));
+                        else
+                            logger.Log("Empty resource list at: " + url);
                     }
-                    else
-                    {
-                        logger.Log("Empty resource list at: " + url);
-                    }
+                    else // just return the resource list as the resource and dont recurse
+                        AddResrouce(uri, url, resource, cached);
                 }
                 else
-                {
-                    AddResrouce(uri, url, resource);
-                }
+                    AddResrouce(uri, url, resource, cached);
             }
             catch (Exception ex)
             {
                 lock (this.errorLocker)
-                {
                     OnError(uri, ex);
-                }
             }
         }
 
-        #endregion
-
-        #region Tasks
-
-        private object tasksLocker = new object();
-
-        private int NumTasks()
-        {
-            lock (tasksLocker)
-            {
-                logger.Log(tasks.Count + " tasks left");
-                return tasks.Count;
-            }
-        }
-
-        private Task RemoveTask()
-        {
-            lock (tasksLocker)
-            {
-                return tasks.Dequeue();
-            }
-        }
-
-        private void AddTask(Task task)
-        {
-            lock (tasksLocker)
-            {
-                this.tasks.Enqueue(task);
-            }
-        }
-
-        #endregion
-
-        #region Results
-
-        private List<XDocument> results = new List<XDocument>();
-
-        private object resultsLocker = new object();
-
-        private void AddResrouce(Uri uri, string url, XDocument doc)
+        private void AddResrouce(Uri uri, string url, XDocument doc, bool cached)
         {
             lock (this.resultsLocker)
             {
                 this.results.Add(doc);
-                this.OnGotResource(uri, url, doc);
+                this.OnGotResource(uri, url, doc, cached);
             }
         }
 
-        #endregion
-
-        public ILogger Logger
+        private int NumTasks
         {
-            get { return logger; }
-            set { logger = value; }
-        }
-        private ILogger logger = new ConsoleLogger();
-
-        public IRestCall DirectTrackRestCall
-        {
-            get { return directTrackRestCall; }
-            set { directTrackRestCall = value; }
+            get
+            {
+                lock (tasksLocker)
+                {
+                    logger.Log(tasks.Count + " tasks left");
+                    return tasks.Count;
+                }
+            }
         }
     }
 }

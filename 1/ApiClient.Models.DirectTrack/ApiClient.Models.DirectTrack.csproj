@@ -50,6 +50,10 @@
     <Compile Include="Migrations\201209260450422_DTResources.Designer.cs">
       <DependentUpon>201209260450422_DTResources.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201209261909461_Timestamp.cs" />
+    <Compile Include="Migrations\201209261909461_Timestamp.Designer.cs">
+      <DependentUpon>201209261909461_Timestamp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DirectTrackResource.cs" />
@@ -91,6 +95,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201209260450422_DTResources.resx">
       <DependentUpon>201209260450422_DTResources.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201209261909461_Timestamp.resx">
+      <DependentUpon>201209261909461_Timestamp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

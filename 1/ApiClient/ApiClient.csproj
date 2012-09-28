@@ -86,6 +86,7 @@
     <Compile Include="Etl\Cake\ConversionsFromWebService.cs" />
     <Compile Include="Etl\Cake\ConversionsToStaging.cs" />
     <Compile Include="Etl\DirectTrack\ApiInfo.cs" />
+    <Compile Include="Etl\DirectTrack\ResourceGetterMode.cs" />
     <Compile Include="Etl\DirectTrack\ResourcesFromDirectTrack.cs" />
     <Compile Include="Etl\DirectTrack\ConsoleLogger.cs" />
     <Compile Include="Etl\DirectTrack\ResourcesToDatabase.cs" />

@@ -9,7 +9,9 @@ namespace ApiClient.Models.DirectTrack
     public class DirectTrackResource
     {
         [Key]
+        [System.ComponentModel.DataAnnotations.MaxLength(500)]
         public string Name { get; set; }
         public string Content { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

@@ -4,8 +4,7 @@ namespace DirectTrack
 {
     public interface IRestCall
     {
-        //[CacheResources]
-        string GetXml(string url, out Uri uri);
+        string GetXml(string url, out Uri uri, out bool cached);
         Dictionary<string, object> UriVariables { get; set; }
     }
 }

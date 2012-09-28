@@ -4,7 +4,7 @@ namespace DirectTrack
 {
     interface IResourceGetter
     {
-        List<XDocument> GetResources();
+        List<XDocument> Run();
         event ResourceGetter.GotResourceEventHandler GotResource;
     }
 }
