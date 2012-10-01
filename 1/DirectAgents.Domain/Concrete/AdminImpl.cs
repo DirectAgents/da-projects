@@ -39,7 +39,7 @@ namespace DirectAgents.Domain.Concrete
         public void LoadSummaries()
         {
             List<MonthlySummary> summaries;
-            using (var cake = new CakeEntities())
+            using (var cake = new Cake.Model.Staging.CakeStagingEntities())
             {
                 var query = from d in cake.DailySummaries
                             group d by d.offer_id into g

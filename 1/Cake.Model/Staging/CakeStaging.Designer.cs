@@ -144,6 +144,22 @@ namespace Cake.Model.Staging
             }
         }
         private ObjectSet<conversion> _conversions;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<DailySummary> DailySummaries
+        {
+            get
+            {
+                if ((_DailySummaries == null))
+                {
+                    _DailySummaries = base.CreateObjectSet<DailySummary>("DailySummaries");
+                }
+                return _DailySummaries;
+            }
+        }
+        private ObjectSet<DailySummary> _DailySummaries;
 
         #endregion
         #region AddTo Methods
@@ -186,6 +202,14 @@ namespace Cake.Model.Staging
         public void AddToconversions(conversion conversion)
         {
             base.AddObject("conversions", conversion);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the DailySummaries EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToDailySummaries(DailySummary dailySummary)
+        {
+            base.AddObject("DailySummaries", dailySummary);
         }
 
         #endregion
@@ -2326,6 +2350,477 @@ namespace Cake.Model.Staging
         private global::System.String _note;
         partial void OnnoteChanging(global::System.String value);
         partial void OnnoteChanged();
+
+        #endregion
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="CakeStagingModel", Name="DailySummary")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class DailySummary : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new DailySummary object.
+        /// </summary>
+        /// <param name="dailySummaryId">Initial value of the DailySummaryId property.</param>
+        /// <param name="offer_id">Initial value of the offer_id property.</param>
+        /// <param name="date">Initial value of the date property.</param>
+        /// <param name="views">Initial value of the views property.</param>
+        /// <param name="clicks">Initial value of the clicks property.</param>
+        /// <param name="click_thru">Initial value of the click_thru property.</param>
+        /// <param name="conversions">Initial value of the conversions property.</param>
+        /// <param name="paid">Initial value of the paid property.</param>
+        /// <param name="sellable">Initial value of the sellable property.</param>
+        /// <param name="conversion_rate">Initial value of the conversion_rate property.</param>
+        /// <param name="cpl">Initial value of the cpl property.</param>
+        /// <param name="cost">Initial value of the cost property.</param>
+        /// <param name="rpt">Initial value of the rpt property.</param>
+        /// <param name="revenue">Initial value of the revenue property.</param>
+        /// <param name="margin">Initial value of the margin property.</param>
+        /// <param name="profit">Initial value of the profit property.</param>
+        /// <param name="epc">Initial value of the epc property.</param>
+        public static DailySummary CreateDailySummary(global::System.Int32 dailySummaryId, global::System.Int32 offer_id, global::System.DateTime date, global::System.Int32 views, global::System.Int32 clicks, global::System.Decimal click_thru, global::System.Int32 conversions, global::System.Int32 paid, global::System.Int32 sellable, global::System.Decimal conversion_rate, global::System.Decimal cpl, global::System.Decimal cost, global::System.Decimal rpt, global::System.Decimal revenue, global::System.Decimal margin, global::System.Decimal profit, global::System.Decimal epc)
+        {
+            DailySummary dailySummary = new DailySummary();
+            dailySummary.DailySummaryId = dailySummaryId;
+            dailySummary.offer_id = offer_id;
+            dailySummary.date = date;
+            dailySummary.views = views;
+            dailySummary.clicks = clicks;
+            dailySummary.click_thru = click_thru;
+            dailySummary.conversions = conversions;
+            dailySummary.paid = paid;
+            dailySummary.sellable = sellable;
+            dailySummary.conversion_rate = conversion_rate;
+            dailySummary.cpl = cpl;
+            dailySummary.cost = cost;
+            dailySummary.rpt = rpt;
+            dailySummary.revenue = revenue;
+            dailySummary.margin = margin;
+            dailySummary.profit = profit;
+            dailySummary.epc = epc;
+            return dailySummary;
+        }
+
+        #endregion
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 DailySummaryId
+        {
+            get
+            {
+                return _DailySummaryId;
+            }
+            set
+            {
+                if (_DailySummaryId != value)
+                {
+                    OnDailySummaryIdChanging(value);
+                    ReportPropertyChanging("DailySummaryId");
+                    _DailySummaryId = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("DailySummaryId");
+                    OnDailySummaryIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _DailySummaryId;
+        partial void OnDailySummaryIdChanging(global::System.Int32 value);
+        partial void OnDailySummaryIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 offer_id
+        {
+            get
+            {
+                return _offer_id;
+            }
+            set
+            {
+                Onoffer_idChanging(value);
+                ReportPropertyChanging("offer_id");
+                _offer_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("offer_id");
+                Onoffer_idChanged();
+            }
+        }
+        private global::System.Int32 _offer_id;
+        partial void Onoffer_idChanging(global::System.Int32 value);
+        partial void Onoffer_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime date
+        {
+            get
+            {
+                return _date;
+            }
+            set
+            {
+                OndateChanging(value);
+                ReportPropertyChanging("date");
+                _date = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("date");
+                OndateChanged();
+            }
+        }
+        private global::System.DateTime _date;
+        partial void OndateChanging(global::System.DateTime value);
+        partial void OndateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 views
+        {
+            get
+            {
+                return _views;
+            }
+            set
+            {
+                OnviewsChanging(value);
+                ReportPropertyChanging("views");
+                _views = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("views");
+                OnviewsChanged();
+            }
+        }
+        private global::System.Int32 _views;
+        partial void OnviewsChanging(global::System.Int32 value);
+        partial void OnviewsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 clicks
+        {
+            get
+            {
+                return _clicks;
+            }
+            set
+            {
+                OnclicksChanging(value);
+                ReportPropertyChanging("clicks");
+                _clicks = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("clicks");
+                OnclicksChanged();
+            }
+        }
+        private global::System.Int32 _clicks;
+        partial void OnclicksChanging(global::System.Int32 value);
+        partial void OnclicksChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal click_thru
+        {
+            get
+            {
+                return _click_thru;
+            }
+            set
+            {
+                Onclick_thruChanging(value);
+                ReportPropertyChanging("click_thru");
+                _click_thru = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("click_thru");
+                Onclick_thruChanged();
+            }
+        }
+        private global::System.Decimal _click_thru;
+        partial void Onclick_thruChanging(global::System.Decimal value);
+        partial void Onclick_thruChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 conversions
+        {
+            get
+            {
+                return _conversions;
+            }
+            set
+            {
+                OnconversionsChanging(value);
+                ReportPropertyChanging("conversions");
+                _conversions = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("conversions");
+                OnconversionsChanged();
+            }
+        }
+        private global::System.Int32 _conversions;
+        partial void OnconversionsChanging(global::System.Int32 value);
+        partial void OnconversionsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 paid
+        {
+            get
+            {
+                return _paid;
+            }
+            set
+            {
+                OnpaidChanging(value);
+                ReportPropertyChanging("paid");
+                _paid = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("paid");
+                OnpaidChanged();
+            }
+        }
+        private global::System.Int32 _paid;
+        partial void OnpaidChanging(global::System.Int32 value);
+        partial void OnpaidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 sellable
+        {
+            get
+            {
+                return _sellable;
+            }
+            set
+            {
+                OnsellableChanging(value);
+                ReportPropertyChanging("sellable");
+                _sellable = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("sellable");
+                OnsellableChanged();
+            }
+        }
+        private global::System.Int32 _sellable;
+        partial void OnsellableChanging(global::System.Int32 value);
+        partial void OnsellableChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal conversion_rate
+        {
+            get
+            {
+                return _conversion_rate;
+            }
+            set
+            {
+                Onconversion_rateChanging(value);
+                ReportPropertyChanging("conversion_rate");
+                _conversion_rate = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("conversion_rate");
+                Onconversion_rateChanged();
+            }
+        }
+        private global::System.Decimal _conversion_rate;
+        partial void Onconversion_rateChanging(global::System.Decimal value);
+        partial void Onconversion_rateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal cpl
+        {
+            get
+            {
+                return _cpl;
+            }
+            set
+            {
+                OncplChanging(value);
+                ReportPropertyChanging("cpl");
+                _cpl = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("cpl");
+                OncplChanged();
+            }
+        }
+        private global::System.Decimal _cpl;
+        partial void OncplChanging(global::System.Decimal value);
+        partial void OncplChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal cost
+        {
+            get
+            {
+                return _cost;
+            }
+            set
+            {
+                OncostChanging(value);
+                ReportPropertyChanging("cost");
+                _cost = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("cost");
+                OncostChanged();
+            }
+        }
+        private global::System.Decimal _cost;
+        partial void OncostChanging(global::System.Decimal value);
+        partial void OncostChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal rpt
+        {
+            get
+            {
+                return _rpt;
+            }
+            set
+            {
+                OnrptChanging(value);
+                ReportPropertyChanging("rpt");
+                _rpt = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("rpt");
+                OnrptChanged();
+            }
+        }
+        private global::System.Decimal _rpt;
+        partial void OnrptChanging(global::System.Decimal value);
+        partial void OnrptChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal revenue
+        {
+            get
+            {
+                return _revenue;
+            }
+            set
+            {
+                OnrevenueChanging(value);
+                ReportPropertyChanging("revenue");
+                _revenue = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("revenue");
+                OnrevenueChanged();
+            }
+        }
+        private global::System.Decimal _revenue;
+        partial void OnrevenueChanging(global::System.Decimal value);
+        partial void OnrevenueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal margin
+        {
+            get
+            {
+                return _margin;
+            }
+            set
+            {
+                OnmarginChanging(value);
+                ReportPropertyChanging("margin");
+                _margin = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("margin");
+                OnmarginChanged();
+            }
+        }
+        private global::System.Decimal _margin;
+        partial void OnmarginChanging(global::System.Decimal value);
+        partial void OnmarginChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal profit
+        {
+            get
+            {
+                return _profit;
+            }
+            set
+            {
+                OnprofitChanging(value);
+                ReportPropertyChanging("profit");
+                _profit = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("profit");
+                OnprofitChanged();
+            }
+        }
+        private global::System.Decimal _profit;
+        partial void OnprofitChanging(global::System.Decimal value);
+        partial void OnprofitChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal epc
+        {
+            get
+            {
+                return _epc;
+            }
+            set
+            {
+                OnepcChanging(value);
+                ReportPropertyChanging("epc");
+                _epc = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("epc");
+                OnepcChanged();
+            }
+        }
+        private global::System.Decimal _epc;
+        partial void OnepcChanging(global::System.Decimal value);
+        partial void OnepcChanged();
 
         #endregion
     

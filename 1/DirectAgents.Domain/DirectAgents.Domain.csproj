@@ -51,11 +51,6 @@
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
     <Compile Include="Concrete\AdminImpl.cs" />
-    <Compile Include="Concrete\Cake.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Cake.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Concrete\Extensions.cs" />
@@ -122,10 +117,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="Concrete\Cake.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Cake.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

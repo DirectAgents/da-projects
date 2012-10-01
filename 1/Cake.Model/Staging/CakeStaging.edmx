@@ -6,12 +6,35 @@
     <edmx:StorageModels>
     <Schema Namespace="CakeStagingModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="CakeStagingModelStoreContainer">
+          <EntitySet Name="DailySummaries" EntityType="CakeStagingModel.Store.DailySummaries" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CakeAdvertisers" EntityType="CakeStagingModel.Store.CakeAdvertisers" store:Type="Tables" Schema="staging" />
           <EntitySet Name="CakeAffiliates" EntityType="CakeStagingModel.Store.CakeAffiliates" store:Type="Tables" Schema="staging" />
           <EntitySet Name="CakeConversions" EntityType="CakeStagingModel.Store.CakeConversions" store:Type="Tables" Schema="staging" />
           <EntitySet Name="CakeOffers" EntityType="CakeStagingModel.Store.CakeOffers" store:Type="Tables" Schema="staging" />
           <EntitySet Name="conversions" EntityType="CakeStagingModel.Store.conversions" store:Type="Tables" Schema="staging" />
         </EntityContainer>
+        <EntityType Name="DailySummaries">
+          <Key>
+            <PropertyRef Name="DailySummaryId" />
+          </Key>
+          <Property Name="DailySummaryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="offer_id" Type="int" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="views" Type="int" Nullable="false" />
+          <Property Name="clicks" Type="int" Nullable="false" />
+          <Property Name="click_thru" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="conversions" Type="int" Nullable="false" />
+          <Property Name="paid" Type="int" Nullable="false" />
+          <Property Name="sellable" Type="int" Nullable="false" />
+          <Property Name="conversion_rate" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="cpl" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="cost" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="rpt" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="revenue" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="margin" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="profit" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="epc" Type="decimal" Nullable="false" Scale="2" />
+        </EntityType>
         <EntityType Name="CakeAdvertisers">
           <Key>
             <PropertyRef Name="Advertiser_Id" />
@@ -128,6 +151,7 @@
           <EntitySet Name="CakeConversions" EntityType="CakeStagingModel.CakeConversion" />
           <EntitySet Name="CakeOffers" EntityType="CakeStagingModel.CakeOffer" />
           <EntitySet Name="conversions" EntityType="CakeStagingModel.conversion" />
+          <EntitySet Name="DailySummaries" EntityType="CakeStagingModel.DailySummary" />
         </EntityContainer>
         <EntityType Name="CakeAdvertiser">
           <Key>
@@ -234,6 +258,28 @@
           <Property Type="String" Name="ip_address" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="referrer_url" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="note" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="DailySummary">
+          <Key>
+            <PropertyRef Name="DailySummaryId" />
+          </Key>
+          <Property Type="Int32" Name="DailySummaryId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="offer_id" Nullable="false" />
+          <Property Type="DateTime" Name="date" Nullable="false" />
+          <Property Type="Int32" Name="views" Nullable="false" />
+          <Property Type="Int32" Name="clicks" Nullable="false" />
+          <Property Type="Decimal" Name="click_thru" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Int32" Name="conversions" Nullable="false" />
+          <Property Type="Int32" Name="paid" Nullable="false" />
+          <Property Type="Int32" Name="sellable" Nullable="false" />
+          <Property Type="Decimal" Name="conversion_rate" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="cpl" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="cost" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="rpt" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="revenue" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="margin" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="profit" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="epc" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -349,6 +395,29 @@
                 <ScalarProperty Name="request_session_id" ColumnName="request_session_id" />
                 <ScalarProperty Name="visitor_id" ColumnName="visitor_id" />
                 <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
+               </MappingFragment>
+             </EntityTypeMapping>
+           </EntitySetMapping>
+		   <EntitySetMapping Name="DailySummaries">
+            <EntityTypeMapping TypeName="CakeStagingModel.DailySummary">
+              <MappingFragment StoreEntitySet="DailySummaries">
+                <ScalarProperty Name="epc" ColumnName="epc" />
+                <ScalarProperty Name="profit" ColumnName="profit" />
+                <ScalarProperty Name="margin" ColumnName="margin" />
+                <ScalarProperty Name="revenue" ColumnName="revenue" />
+                <ScalarProperty Name="rpt" ColumnName="rpt" />
+                <ScalarProperty Name="cost" ColumnName="cost" />
+                <ScalarProperty Name="cpl" ColumnName="cpl" />
+                <ScalarProperty Name="conversion_rate" ColumnName="conversion_rate" />
+                <ScalarProperty Name="sellable" ColumnName="sellable" />
+                <ScalarProperty Name="paid" ColumnName="paid" />
+                <ScalarProperty Name="conversions" ColumnName="conversions" />
+                <ScalarProperty Name="click_thru" ColumnName="click_thru" />
+                <ScalarProperty Name="clicks" ColumnName="clicks" />
+                <ScalarProperty Name="views" ColumnName="views" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="offer_id" ColumnName="offer_id" />
+                <ScalarProperty Name="DailySummaryId" ColumnName="DailySummaryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -378,6 +447,7 @@
         <EntityTypeShape EntityType="CakeStagingModel.CakeConversion" Width="1.5" PointX="7.25" PointY="0.75" Height="4.480205078125" />
         <EntityTypeShape EntityType="CakeStagingModel.CakeOffer" Width="1.5" PointX="5.5" PointY="0.75" Height="4.8648079427083326" />
         <EntityTypeShape EntityType="CakeStagingModel.conversion" Width="2" PointX="9.25" PointY="0.5" Height="6.9801236979166674" />
+        <EntityTypeShape EntityType="CakeStagingModel.DailySummary" Width="1.5" PointX="11.5" PointY="0.5" Height="4.2879036458333317" />
       </Diagram>
     </Diagrams>
   </Designer>
