@@ -1,5 +1,3 @@
-USE DADatabaseJuly2012
-
 DECLARE @RC int
 DECLARE @SchemaName sysname
 DECLARE @TableName sysname

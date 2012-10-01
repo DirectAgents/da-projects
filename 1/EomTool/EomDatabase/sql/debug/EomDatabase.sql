@@ -1,5 +1,5 @@
 ﻿/*
-Deployment script for DADatabaseAug2012
+Deployment script for DADatabaseSep2012
 */
 
 GO
@@ -9,7 +9,7 @@ SET NUMERIC_ROUNDABORT OFF;
 
 
 GO
-:setvar DatabaseName "DADatabaseAug2012"
+:setvar DatabaseName "DADatabaseSep2012"
 :setvar DefaultDataPath "C:\Program Files\Microsoft SQL Server\MSSQL10_50.DA\MSSQL\DATA\"
 :setvar DefaultLogPath "C:\Program Files\Microsoft SQL Server\MSSQL10_50.DA\MSSQL\DATA\"
 
@@ -4425,8 +4425,13 @@ INSERT INTO [dbo].[MediaBuyerApprovalStatus] VALUES
 	,('2', 'Queued')
 	,('3', 'Sent')
 	,('4', 'Approved')
-	,('5', 'Hold')
+	,('5', 'Held')
 GO
+
+insert [TrackingSystem] values 
+  (1, 'Direct Track'),
+  (2, 'Cake Marketing')
+go
 
 GO
 PRINT N'Checking existing data against newly created constraints';
