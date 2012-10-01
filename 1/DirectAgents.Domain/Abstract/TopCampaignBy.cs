@@ -3,6 +3,7 @@
     public enum TopCampaignsBy
     {
         Revenue,
-        Cost
+        Cost,
+        EPC
     }
 }

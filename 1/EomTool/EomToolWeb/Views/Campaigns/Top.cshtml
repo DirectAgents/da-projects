@@ -21,6 +21,7 @@
         <li>
             @Html.ActionLink(@campaignSummary.CampaignName, "List2", new { pid = campaignSummary.Pid }) 
             @*@(Model.By == DirectAgents.Domain.Abstract.TopCampaignsBy.Revenue ? campaignSummary.Revenue : campaignSummary.Cost)*@
+            @if (Model.By == DirectAgents.Domain.Abstract.TopCampaignsBy.EPC) { @campaignSummary.EPC }
         </li>
     }
     </ul>

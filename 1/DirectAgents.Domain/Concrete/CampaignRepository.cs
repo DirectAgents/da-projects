@@ -69,25 +69,21 @@ namespace DirectAgents.Domain.Concrete
 
         public IEnumerable<CampaignSummary> TopCampaigns(int num, TopCampaignsBy by, string trafficType)
         {
-            var query = from c in context.Conversions
-                        group c by new { Pid = c.offer.offer_id, Name = c.offer.offer_name, RevenueCurrencyId = c.received.currency_id, CostCurrencyId = c.paid.currency_id } into g
-                        select new CampaignSummary
-                        {
-                            Pid = g.Key.Pid,
-                            CampaignName = g.Key.Name,
-                            RevenueCurrencyId = g.Key.RevenueCurrencyId,
-                            Revenue = g.Sum(r => r.received.amount),
-                            CostCurrencyId = g.Key.CostCurrencyId,
-                            Cost = g.Sum(x => x.paid.amount)
-                        };
-
+            var campaigns = this.Campaigns;
             if (trafficType != null)
             {
-                query = from c in query
-                        join cp in context.Campaigns on c.Pid equals cp.Pid
-                        where cp.TrafficTypes.Select(t => t.Name).Contains(trafficType)
-                        select c;
+                campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(trafficType));
             }
+            var query = from s in context.MonthlySummaries
+                        join c in campaigns on s.pid equals c.Pid
+                        select new CampaignSummary
+                        {
+                            Pid = c.Pid,
+                            CampaignName = c.Name,
+                            Revenue = s.revenue,
+                            Cost = s.cost,
+                            EPC = (s.clicks == 0) ? 0 : (s.cost / s.clicks)
+                        };
 
             switch (by)
             {
@@ -95,6 +91,8 @@ namespace DirectAgents.Domain.Concrete
                     return query.OrderByDescending(c => c.Revenue).Take(num).ToList();
                 case TopCampaignsBy.Cost:
                     return query.OrderByDescending(c => c.Cost).Take(num).ToList();
+                case TopCampaignsBy.EPC:
+                    return query.OrderByDescending(c => c.EPC).Take(num).ToList();
                 default:
                     throw new Exception("Invalid TopCampaignsBy: " + by.ToString());
             }
