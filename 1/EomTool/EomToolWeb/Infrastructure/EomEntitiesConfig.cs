@@ -8,30 +8,34 @@ namespace EomToolWeb.Infrastructure
 {
     public class EomEntitiesConfig : IEomEntitiesConfig
     {
-        static string EomDateSessionKey = "EomDate";
-
-        public static DateTime EomDate
+        public DateTime CurrentEomDate
         {
             get
             {
-                var session = HttpContext.Current.Session;
-                if (session[EomDateSessionKey] == null)
+                var userEomDateFromCookie = HttpContext.Current.Request.Cookies["UserEomDate"];
+                DateTime lastMonth = DateTime.Now.FirstDayOfMonth(-1);
+                DateTime eomDate;
+                if (userEomDateFromCookie == null || !DateTime.TryParse(userEomDateFromCookie.Value, out eomDate))
                 {
-                    session[EomDateSessionKey] = DateTime.Now.FirstDayOfMonth(-1);
+                    eomDate = lastMonth;
+                    HttpCookie cookie = new HttpCookie("UserEomDate");
+                    cookie.Value = eomDate.ToString();
+                    HttpContext.Current.Response.Cookies.Add(cookie);
                 }
-                return (DateTime)session[EomDateSessionKey];
+                // valid eom dates are between Aud 2012 and last month
+                if ((eomDate < new DateTime(2012, 8, 1)) || (eomDate > lastMonth))
+                    eomDate = lastMonth;
+                return eomDate;
             }
-        }
-
-        public string ConnectionString
-        {
-            get
+            set
             {
-                return ConnectionStringByDate(EomDate);
+                HttpCookie cookie = new HttpCookie("UserEomDate");
+                cookie.Value = value.ToString();
+                HttpContext.Current.Response.Cookies.Add(cookie);
             }
         }
 
-        string ConnectionStringByDate(DateTime eomDate)
+        public string ConnectionStringByDate(DateTime eomDate)
         {
             var config = WebConfigurationManager.OpenWebConfiguration("/EomToolWeb");
             var eomToolConfig = config.GetSection<EomToolWebConfigSection>();

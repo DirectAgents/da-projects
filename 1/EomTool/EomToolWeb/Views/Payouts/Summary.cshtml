@@ -51,6 +51,7 @@
         @Html.ActionLink("Held", "Summary", new { mode = "held", includeZero = Model.IncludeZero }, new { @class = Model.Mode == "held" ? "selected" : "notselected" })
         |
         @Html.ActionLink("Approved", "Summary", new { mode = "approved", includeZero = Model.IncludeZero }, new { @class = Model.Mode == "approved" ? "selected" : "notselected" })
+        <span style="float: right">@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)</span>
         <div id="summaryGrid" style="width: 100%;">
             @Html.Partial("SummaryGrid", Model)
         </div>

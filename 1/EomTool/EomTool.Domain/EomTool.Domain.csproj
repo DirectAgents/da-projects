@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IDAMain1Repository.cs" />
+    <Compile Include="Concrete\DAMain1Repository.cs" />
     <Compile Include="Abstract\IAffiliateRepository.cs" />
     <Compile Include="Abstract\IBatchRepository.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
@@ -56,6 +58,11 @@
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Entities\BatchUpdate.cs" />
     <Compile Include="Entities\CampaignStatus.cs" />
+    <Compile Include="Entities\DAMain1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DAMain1.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Entities\EomEntities.cs" />
     <Compile Include="Entities\EomModel.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -86,6 +93,10 @@
     <EntityDeploy Include="Entities\EomToolSecurity.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EomToolSecurity.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="Entities\DAMain1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DAMain1.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="packages.config" />
   </ItemGroup>

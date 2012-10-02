@@ -2640,6 +2640,7 @@
     <None Include="Scripts\kendoui\examples\content\web\datasource\top250movies.json" />
     <Content Include="Views\Campaigns\Filter.cshtml" />
     <Content Include="Views\Campaigns\Items.cshtml" />
+    <Content Include="Views\Payouts\ChooseMonth.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

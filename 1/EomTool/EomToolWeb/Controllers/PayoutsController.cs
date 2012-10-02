@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomToolWeb.Models;
 using EomToolWeb.Infrastructure;
+using EomTool.Domain.Entities;
 
 namespace EomToolWeb.Controllers
 {
@@ -14,11 +15,22 @@ namespace EomToolWeb.Controllers
         public int PageSize = 100;
         private IMainRepository mainRepository;
         private ISecurityRepository securityRepository;
+        private IDAMain1Repository daMain1Repository;
+        private IEomEntitiesConfig eomEntitiesConfig;
 
-        public PayoutsController(IMainRepository mainRepository, ISecurityRepository securityRepository)
+        public PayoutsController(IMainRepository mainRepository, ISecurityRepository securityRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
         {
             this.mainRepository = mainRepository;
             this.securityRepository = securityRepository;
+            this.daMain1Repository = daMain1Repository;
+            this.eomEntitiesConfig = eomEntitiesConfig;
+        }
+
+        [HttpPost]
+        public ActionResult ChooseMonth(DateTime selectedMonth)
+        {
+            eomEntitiesConfig.CurrentEomDate = selectedMonth;
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         private List<int> AffIdsForCurrentUser()
@@ -44,7 +56,23 @@ namespace EomToolWeb.Controllers
                 IncludeZero = includeZero
             };
 
+            ViewBag.ChooseMonthSelectList = new SelectList(ChooseMonthListItems, "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToString());
+
             return View(viewModel);
+        }
+
+        IEnumerable<SelectListItem> ChooseMonthListItems
+        {
+            get
+            {
+                var listItems = from c in daMain1Repository.DADatabases
+                                select new SelectListItem
+                                {
+                                    Text = c.name,
+                                    Value = c.effective_date.Value.ToString()
+                                };
+                return listItems;
+            }
         }
 
         public ActionResult Details(string mode, int? affid, int page = 1)
@@ -141,7 +169,7 @@ namespace EomToolWeb.Controllers
                 table.AddCampaignsPublisherReportDetailsRow(row);
             }
 
-            var eomDate = EomEntitiesConfig.EomDate;
+            var eomDate = eomEntitiesConfig.CurrentEomDate;
             var report = new Eom.Common.PublisherReports.PubRepTemplate(Eom.Common.PublisherReports.PubRepTemplateHtmlMode.InnerHtml)
             {
                 Publisher = publisherName,

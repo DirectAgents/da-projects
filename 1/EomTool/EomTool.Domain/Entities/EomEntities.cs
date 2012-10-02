@@ -7,7 +7,7 @@ namespace EomTool.Domain.Entities
     {
         [Inject]
         public EomEntities(IEomEntitiesConfig config)
-            : this(CreateEntityConnection(config.ConnectionString))
+            : this(CreateEntityConnection(config.ConnectionStringByDate(config.CurrentEomDate)))
         {
         }
 

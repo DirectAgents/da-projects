@@ -1,0 +1,5 @@
+﻿@model SelectList
+@using (Html.BeginForm("ChooseMonth", "Payouts"))
+{
+    @Html.DropDownList("selectedMonth", Model, new { onchange = "this.form.submit();" })
+}
