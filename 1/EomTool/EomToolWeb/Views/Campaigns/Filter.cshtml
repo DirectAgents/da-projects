@@ -7,16 +7,17 @@
     </div>
 </div>
 
+<div id="ExtraInfo">
+    @if (Model.Country != null)
+    {
+        <text>Country: @Model.Country.Name</text>
+        <a href="#" onclick="ChangeFilter(true, false); return false">Show all</a>
+    }
+</div>
+
 <script type="text/javascript">
 
-@{
-    string currFilter = "&country=";
-    if (Model.Country != null) { currFilter += Model.Country.CountryCode; }
-    currFilter += "&pid=";
-    if (Model.Pid != null) { currFilter += Model.Pid; }
-}
-
-    function ChangeFilter() {
+    function ChangeFilter(reloadPage, keepCountry) {
         var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
         var vertical = '';
         if (dataItem.VerticalId != '') vertical = dataItem.Name;
@@ -29,8 +30,17 @@
         var search = '';
         if(dataItem != '') search = dataItem;
 
-        var url = '@Url.Content("~/api/campaignsapi")?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search  + '@(new HtmlString(currFilter))';
-        DisplayCampaigns(url); // TODO: trigger an event and handle in Items.cshtml
+        var url = '?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search + '&pid=&country=';
+        if (keepCountry)
+            url = url + '@(new HtmlString(Model.Country == null ? "" : Model.Country.CountryCode))';
+
+        if (reloadPage) {
+            url = '@Url.Action("List2")' + url;
+            document.location.href = url;
+        } else {
+            url = '@Url.Content("~/api/campaignsapi")' + url;
+            DisplayCampaigns(url); // TODO: trigger an event and handle in Items.cshtml
+        }
     }
 
     var afterSelectedText = "";
@@ -66,7 +76,7 @@
                 type: "json",
                 transport: { read: "@Url.Content("~/api/Verticals")" }
             },
-            change: ChangeFilter
+            change: function() { ChangeFilter(false, true); }
         });
 
         //--------------------------------------
@@ -81,7 +91,7 @@
                 type: "json",
                 transport: { read: "@Url.Content("~/api/TrafficTypes")" }
             },
-            change: ChangeFilter
+            change: function() { ChangeFilter(false, true); }
         });
 
         //--------------------------------------

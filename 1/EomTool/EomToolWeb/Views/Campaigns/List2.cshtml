@@ -1,8 +1,9 @@
 ﻿@model CampaignsListViewModel
 @{
-    ViewBag.Title = "List2";
+    ViewBag.Title = "Campaigns";
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
     ViewBag.ShowCopy = true;
+    ViewBag.SearchString = Model.SearchString;
     if (Model.Country == null)
     {
         if (Model.SearchString != null && Model.SearchString.ToLower() == "cpm") { ViewBag.MenuItem = "CPM"; }

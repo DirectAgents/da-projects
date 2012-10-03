@@ -107,7 +107,7 @@ namespace DirectAgents.Domain.Concrete
         {
             campaign.ImageUrl = offer.offer_image_link;
             campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
-            campaign.Link = offer.offer_contracts[0].offer_link;
+            campaign.Link = offer.preview_link;
             campaign.Cost = offer.offer_contracts[0].payout.amount;
             campaign.Revenue = offer.offer_contracts[0].received.amount;
             campaign.CostCurrency = offer.currency.currency_symbol;

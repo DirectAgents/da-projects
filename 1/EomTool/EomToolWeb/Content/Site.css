@@ -129,6 +129,19 @@ div#CampaignFiltersInner
     margin-top: 41px;
 }
 
+/* extra info bar
+----------------------------------------------------------*/
+div#ExtraInfo
+{
+    position: fixed;
+    top: 43px;
+    left: 561px;
+    height: 30px;
+    width: 480px;
+    padding: 10px 0px 0px 10px;
+    z-index: 400;
+}
+
 /* campaign campaign item list pagers
 ----------------------------------------------------------*/
 div#CampaignListPagerTop
