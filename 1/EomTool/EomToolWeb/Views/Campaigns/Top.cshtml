@@ -1,8 +1,12 @@
 ﻿@model TopViewModel
+@using DirectAgents.Domain.Abstract
 
 @{
     ViewBag.Title = "TopTenRevenue";
-    ViewBag.MenuItem = "Top";
+    ViewBag.ParentMenuItem = "Top";
+    if (Model.By == TopCampaignsBy.Revenue) { ViewBag.MenuItem = "TopRevenue"; }
+    else if (Model.By == TopCampaignsBy.Cost) { ViewBag.MenuItem = "TopCost"; }
+    else if (Model.By == TopCampaignsBy.EPC) { ViewBag.MenuItem = "TopEPC"; }
     ViewBag.NoSearch = true;
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
 }

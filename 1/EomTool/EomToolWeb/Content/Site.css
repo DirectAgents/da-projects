@@ -296,12 +296,12 @@ ul#menu li a
     text-decoration: none;
 }
 
-ul#menu li#selitem a
+ul#menu li.selitem a
 {
     color: #933;
 }
 
-ul#menu span#parentselitem
+ul#menu span.parentselitem
 {
     color: #933;
 }

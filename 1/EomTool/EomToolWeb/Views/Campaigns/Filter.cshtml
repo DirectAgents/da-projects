@@ -30,10 +30,25 @@
         var search = '';
         if(dataItem != '') search = dataItem;
 
-        var url = '?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search + '&pid=&country=';
-        if (keepCountry)
-            url = url + '@(new HtmlString(Model.Country == null ? "" : Model.Country.CountryCode))';
+        var country = '';
+        @if (Model.Country != null && !String.IsNullOrWhiteSpace(Model.Country.CountryCode)) {
+        <text>
+            if (keepCountry)
+                country = '@(new HtmlString(Model.Country.CountryCode))';
+        </text>
+        }
 
+        if (search.toLowerCase() == "cpm")
+            $('#MenuCPM').addClass("selitem");
+        else
+            $('#MenuCPM').removeClass("selitem");
+
+        if (vertical=='' && traffictype=='' && $.trim(search)=='' && country=='')
+            $('#MenuAll').addClass("selitem");
+        else
+            $('#MenuAll').removeClass("selitem");
+
+        var url = '?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search + '&country=' + country + '&pid=';
         if (reloadPage) {
             url = '@Url.Action("List2")' + url;
             document.location.href = url;
