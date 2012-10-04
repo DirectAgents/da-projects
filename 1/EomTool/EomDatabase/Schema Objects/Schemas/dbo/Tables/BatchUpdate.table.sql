@@ -5,6 +5,7 @@
 	[date_created] [datetime] NOT NULL,
 	[media_buyer_approval_status_id] [int] NULL,
 	[extra] [varchar](255) NULL,
+	[from_media_buyer_approval_status_id] [int] NULL,
  CONSTRAINT [PK_BatchUpdate] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
