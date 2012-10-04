@@ -14,7 +14,7 @@ namespace ApiClient.Etl.Cake
 
         public override void DoExtract()
         {
-            var dateRange = new DateRange(new DateTime(2012, 9, 1), DateTime.Today);
+            var dateRange = new DateRange(new DateTime(2012, 9, 27), DateTime.Today);
 
             var pidArray = pids.Split(new char[] { ',' });
             foreach (var pid in pidArray)

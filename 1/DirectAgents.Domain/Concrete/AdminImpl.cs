@@ -38,6 +38,44 @@ namespace DirectAgents.Domain.Concrete
 
         public void LoadSummaries()
         {
+            using (var cake = new Cake.Model.Staging.CakeStagingEntities())
+            using (daDomain = new EFDbContext())
+            {
+                var pids = daDomain.Campaigns.Select(c => c.Pid).ToList();
+                foreach (var pid in pids)
+                {
+                    var cakeSummaries = cake.DailySummaries.Where(ds => ds.offer_id == pid);
+                    if (cakeSummaries.Any())
+                    {
+                        var existingSummaries = daDomain.DailySummaries.Where(ds => ds.Pid == pid);
+                        if (existingSummaries.Any())
+                        {
+                            var maxDate = existingSummaries.Max(ds => ds.Date);
+                            cakeSummaries = cakeSummaries.Where(ds => ds.date > maxDate);
+                        }
+                        foreach (var cakeSummary in cakeSummaries)
+                        {
+                            var daSummary = new DirectAgents.Domain.Entities.Cake.DailySummary
+                            {
+                                Pid = cakeSummary.offer_id,
+                                Date = cakeSummary.date,
+                                Clicks = cakeSummary.clicks,
+                                Conversions = cakeSummary.conversions,
+                                Paid = cakeSummary.paid,
+                                Sellable = cakeSummary.sellable,
+                                Cost = cakeSummary.cost,
+                                Revenue = cakeSummary.revenue
+                            };
+                            daDomain.DailySummaries.Add(daSummary);
+                        }
+                        daDomain.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        public void LoadMonthlySummaries()
+        {
             List<MonthlySummary> summaries;
             using (var cake = new Cake.Model.Staging.CakeStagingEntities())
             {
