@@ -69,12 +69,13 @@ namespace DirectAgents.Domain.Concrete
 
         public IEnumerable<CampaignSummary> TopCampaigns(int num, TopCampaignsBy by, string trafficType)
         {
-            var campaigns = this.Campaigns;
+            var campaigns = this.Campaigns.Where(c => !c.Name.ToLower().Contains("paused"));
+            var monthlySummaries = context.MonthlySummaries.Where(s => s.clicks >= 50);
             if (trafficType != null)
             {
                 campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(trafficType));
             }
-            var query = from s in context.MonthlySummaries
+            var query = from s in monthlySummaries
                         join c in campaigns on s.pid equals c.Pid
                         select new CampaignSummary
                         {
@@ -82,7 +83,8 @@ namespace DirectAgents.Domain.Concrete
                             CampaignName = c.Name,
                             Revenue = s.revenue,
                             Cost = s.cost,
-                            EPC = (s.clicks == 0) ? 0 : (s.cost / s.clicks)
+                            EPC = (s.clicks == 0) ? 0 : (s.cost / s.clicks),
+                            Clicks = s.clicks
                         };
 
             switch (by)

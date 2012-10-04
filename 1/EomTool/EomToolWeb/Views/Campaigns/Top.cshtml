@@ -19,16 +19,34 @@
         <input id="traffictypes" style="width: 250px; margin-top: 10px" />
     </div>
 
-    <ul>
-    @foreach (var campaignSummary in Model.CampaignSummaries)
+    @if (Model.By == TopCampaignsBy.EPC)
     {
-        <li>
-            @Html.ActionLink(@campaignSummary.CampaignName, "List2", new { pid = campaignSummary.Pid }) 
-            @*@(Model.By == DirectAgents.Domain.Abstract.TopCampaignsBy.Revenue ? campaignSummary.Revenue : campaignSummary.Cost)*@
-            @if (Model.By == DirectAgents.Domain.Abstract.TopCampaignsBy.EPC) { @campaignSummary.EPC }
-        </li>
+        <table>
+        <tr>
+            <th>Campaign</th>
+            <th>EPC</th>
+            <th>Clicks</th>
+        </tr>
+        @foreach (var campaignSummary in Model.CampaignSummaries)
+        {
+            <tr>
+                <td>@Html.ActionLink(campaignSummary.CampaignName, "List2", new { pid = campaignSummary.Pid })</td>
+                <td>@campaignSummary.EPC.ToString("0.###")</td>
+                <td>@campaignSummary.Clicks</td>
+            </tr>
+        }
+        </table>
+    } else {
+        <ul>
+        @foreach (var campaignSummary in Model.CampaignSummaries)
+        {
+            <li>
+                @Html.ActionLink(campaignSummary.CampaignName, "List2", new { pid = campaignSummary.Pid }) 
+                @*@(Model.By == DirectAgents.Domain.Abstract.TopCampaignsBy.Revenue ? campaignSummary.Revenue : campaignSummary.Cost)*@
+            </li>
+        }
+        </ul>
     }
-    </ul>
 
 </div>
 @section scripts {

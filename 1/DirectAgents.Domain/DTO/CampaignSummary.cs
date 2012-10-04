@@ -20,5 +20,7 @@ namespace DirectAgents.Domain.DTO
         public decimal Cost { get; set; }
 
         public decimal EPC { get; set; }
+
+        public int Clicks { get; set; }
     }
 }
