@@ -151,14 +151,10 @@ namespace EomToolWeb.Controllers
             var c = campaignRepository.FindById(campaign.Pid);
             if (c != null)
             {
-                c.Name = campaign.Name;
-                c.Description = campaign.Description;
                 c.PayableAction = campaign.PayableAction;
-                c.Link = campaign.Link;
-                c.Cost = campaign.Cost;
-                c.Revenue = campaign.Revenue;
                 c.ImportantDetails = campaign.ImportantDetails;
-                c.BannedNetworks = campaign.BannedNetworks;
+                c.Budget = campaign.Budget;
+                c.PassedInfo = campaign.PassedInfo;
                 c.CampaignCap = campaign.CampaignCap;
                 c.ScrubPolicy = campaign.ScrubPolicy;
                 c.EomNotes = campaign.EomNotes;

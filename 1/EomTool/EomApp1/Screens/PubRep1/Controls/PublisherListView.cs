@@ -411,26 +411,27 @@ namespace EomApp1.Screens.PubRep1.Controls
 
         private void _dgv_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            var dataGridView = (DataGridView)sender;
-            int columnIndex = e.ColumnIndex;
-            int rowIndex = e.RowIndex;
-            if (e.ColumnIndex == setStatusCheckColumn.Index) // Pay check box  CHECKED or UNCHECKED
+            if (e.RowIndex >= 0)
             {
-                // used to be a bunch of commented out lines of code...
-            }
-            else if (e.ColumnIndex == nextStatusComboColumn.Index)
-            {
-                // TODO!: handle the case where the combo box drop down changes
-                MessageBox.Show("TODO: support changing drop down value");
-            }
-            else if (e.ColumnIndex == approvedColumn.Index
-                || e.ColumnIndex == unverifiedColumn.Index
-                || e.ColumnIndex == verifiedColumn.Index
-                || e.ColumnIndex == paidColumn.Index)
-            {
-                var action = dataGridView[columnIndex, rowIndex].Tag as Action;
-                if (action != null)
-                    action();
+                var dataGridView = (DataGridView)sender;
+                if (e.ColumnIndex == setStatusCheckColumn.Index) // Pay check box  CHECKED or UNCHECKED
+                {
+                    // used to be a bunch of commented out lines of code...
+                }
+                else if (e.ColumnIndex == nextStatusComboColumn.Index)
+                {
+                    // TODO!: handle the case where the combo box drop down changes
+                    MessageBox.Show("TODO: support changing drop down value");
+                }
+                else if (e.ColumnIndex == approvedColumn.Index
+                    || e.ColumnIndex == unverifiedColumn.Index
+                    || e.ColumnIndex == verifiedColumn.Index
+                    || e.ColumnIndex == paidColumn.Index)
+                {
+                    var action = dataGridView[e.ColumnIndex, e.RowIndex].Tag as Action;
+                    if (action != null)
+                        action();
+                }
             }
         }
 

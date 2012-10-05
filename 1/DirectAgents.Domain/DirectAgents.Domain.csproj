@@ -56,6 +56,7 @@
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
+    <Compile Include="Entities\Cake\DailySummary.cs" />
     <Compile Include="Entities\Cake\MonthlySummary.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\Cake\Conversion.cs" />
@@ -102,6 +103,14 @@
     <Compile Include="Migrations\201209272230008_MonthlySummaries.cs" />
     <Compile Include="Migrations\201209272230008_MonthlySummaries.Designer.cs">
       <DependentUpon>201209272230008_MonthlySummaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210041739405_DailySummaries.cs" />
+    <Compile Include="Migrations\201210041739405_DailySummaries.Designer.cs">
+      <DependentUpon>201210041739405_DailySummaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210051910596_UpdateCampaignFields.cs" />
+    <Compile Include="Migrations\201210051910596_UpdateCampaignFields.Designer.cs">
+      <DependentUpon>201210051910596_UpdateCampaignFields.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -150,6 +159,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201209272230008_MonthlySummaries.resx">
       <DependentUpon>201209272230008_MonthlySummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210041739405_DailySummaries.resx">
+      <DependentUpon>201210041739405_DailySummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210051910596_UpdateCampaignFields.resx">
+      <DependentUpon>201210051910596_UpdateCampaignFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

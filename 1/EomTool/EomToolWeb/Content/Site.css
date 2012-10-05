@@ -129,6 +129,20 @@ div#CampaignFiltersInner
     margin-top: 41px;
 }
 
+/* extra info bar
+----------------------------------------------------------*/
+div#ExtraInfo
+{
+    position: fixed;
+    top: 43px;
+    left: 561px;
+    height: 30px;
+    width: 400px;
+    padding: 10px 0px 0px 10px;
+    z-index: 400;
+    background-color: White;
+}
+
 /* campaign campaign item list pagers
 ----------------------------------------------------------*/
 div#CampaignListPagerTop
@@ -283,12 +297,12 @@ ul#menu li a
     text-decoration: none;
 }
 
-ul#menu li#selitem a
+ul#menu li.selitem a
 {
     color: #933;
 }
 
-ul#menu span#parentselitem
+ul#menu span.parentselitem
 {
     color: #933;
 }

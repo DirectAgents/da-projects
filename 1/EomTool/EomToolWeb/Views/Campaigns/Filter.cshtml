@@ -7,16 +7,17 @@
     </div>
 </div>
 
+<div id="ExtraInfo">
+    @if (Model.Country != null)
+    {
+        <text>Country: @Model.Country.Name</text>
+        <a href="#" onclick="ChangeFilter(true, false); return false">Show all</a>
+    }
+</div>
+
 <script type="text/javascript">
 
-@{
-    string currFilter = "&country=";
-    if (Model.Country != null) { currFilter += Model.Country.CountryCode; }
-    currFilter += "&pid=";
-    if (Model.Pid != null) { currFilter += Model.Pid; }
-}
-
-    function ChangeFilter() {
+    function ChangeFilter(reloadPage, keepCountry) {
         var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
         var vertical = '';
         if (dataItem.VerticalId != '') vertical = dataItem.Name;
@@ -29,8 +30,32 @@
         var search = '';
         if(dataItem != '') search = dataItem;
 
-        var url = '@Url.Content("~/api/campaignsapi")?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search  + '@(new HtmlString(currFilter))';
-        DisplayCampaigns(url); // TODO: trigger an event and handle in Items.cshtml
+        var country = '';
+        @if (Model.Country != null && !String.IsNullOrWhiteSpace(Model.Country.CountryCode)) {
+        <text>
+            if (keepCountry)
+                country = '@(new HtmlString(Model.Country.CountryCode))';
+        </text>
+        }
+
+        if (search.toLowerCase() == "cpm")
+            $('#MenuCPM').addClass("selitem");
+        else
+            $('#MenuCPM').removeClass("selitem");
+
+        if (vertical=='' && traffictype=='' && $.trim(search)=='' && country=='')
+            $('#MenuAll').addClass("selitem");
+        else
+            $('#MenuAll').removeClass("selitem");
+
+        var url = '?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search + '&country=' + country + '&pid=';
+        if (reloadPage) {
+            url = '@Url.Action("List2")' + url;
+            document.location.href = url;
+        } else {
+            url = '@Url.Content("~/api/campaignsapi")' + url;
+            DisplayCampaigns(url); // TODO: trigger an event and handle in Items.cshtml
+        }
     }
 
     var afterSelectedText = "";
@@ -39,7 +64,7 @@
         var data = listView.dataSource.view();
         var selected = $.map(listView.select(), function(item) {
             var d = data[$(item).index()];
-            return '<b>' + d.Name + '</b><br />' + d.Description + '<br />Action: ' + d.PayableAction + '<br />Traffic: ' + d.TrafficTypes + '<br />Link: <a href="' + d.Link + '">' + d.Link + '</a><br />Payout: ' + d.CostCurrency + d.Cost + '<br />';
+            return '<b>' + d.Name + '</b><br />' + d.Description + '<br />Payable Action: ' + d.PayableAction + '<br />Traffic Type: ' + d.TrafficTypes + '<br />Link: <a href="' + d.Link + '">' + d.Link + '</a><br />Payout: ' + d.CostCurrency + d.Cost + '<br />';
         });
         if (selected.length > 0)
             afterSelectedText = "Campaign text copied";
@@ -66,7 +91,7 @@
                 type: "json",
                 transport: { read: "@Url.Content("~/api/Verticals")" }
             },
-            change: ChangeFilter
+            change: function() { ChangeFilter(false, true); }
         });
 
         //--------------------------------------
@@ -81,7 +106,7 @@
                 type: "json",
                 transport: { read: "@Url.Content("~/api/TrafficTypes")" }
             },
-            change: ChangeFilter
+            change: function() { ChangeFilter(false, true); }
         });
 
         //--------------------------------------
