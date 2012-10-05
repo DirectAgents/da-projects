@@ -9,10 +9,32 @@ namespace ApiClient
 {
     class Program
     {
-        static void Main(string[] args)
+        static Program()
         {
             ServicePointManager.DefaultConnectionLimit = 50;
+        }
 
+        static void Main(string[] args)
+        {
+            string command = args[0];
+
+            if (command == "DailySummaries")
+            {
+                var source = new DailySummariesFromWebService();
+                var dest = new DailySummariesToDatabase();
+                var extract = source.Extract();
+                var load = dest.Load(source);
+                extract.Join();
+                load.Join();
+            }
+            else
+            {
+                Console.WriteLine("Invalid Command");
+            }
+        }
+
+        static void Main2(string[] args)
+        {
             //var source = new ConversionsFromWebService();
             //var dest = new ConversionsToStaging();
 

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="API:id_name_store" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="API:id_name_store" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="advertiser_id" type="xs:unsignedShort" />
+  <xs:element name="advertiser_name" type="xs:string" />
+  <xs:element name="vertical_id" type="xs:unsignedByte" />
+  <xs:element name="vertical_name" type="xs:string" />
+  <xs:element name="offer_type_id" type="xs:unsignedByte" />
+  <xs:element name="offer_type_name" type="xs:string" />
+  <xs:element name="offer_status_id" type="xs:unsignedByte" />
+  <xs:element name="offer_status_name" type="xs:string" />
+  <xs:element name="price_format_id" type="xs:unsignedByte" />
+  <xs:element name="price_format_name" type="xs:string" />
+  <xs:element name="country_code" type="xs:string" />
+  <xs:element name="country_name" type="xs:string" />
+  <xs:element name="tag_id" type="xs:unsignedByte" />
+  <xs:element name="tag_name" type="xs:string" />
+  <xs:element name="media_type_id" type="xs:unsignedByte" />
+  <xs:element name="media_type_name" type="xs:string" />
+  <xs:element name="currency_id" type="xs:unsignedByte" />
+  <xs:element name="currency_symbol" type="xs:string" />
+  <xs:element name="currency_name" type="xs:string" />
+  <xs:element name="currency_abbr" type="xs:string" />
+  <xs:element name="cap_interval_id" type="xs:unsignedByte" />
+  <xs:element name="cap_interval_name" type="xs:string" />
+  <xs:element name="suppression_list_type_id" type="xs:unsignedByte" />
+  <xs:element name="suppression_list_type_name" type="xs:string" />
+  <xs:element name="session_regeneration_type_id" type="xs:unsignedByte" />
+  <xs:element name="session_regeneration_type_name" type="xs:string" />
+  <xs:element name="offer_contract_id" type="xs:unsignedShort" />
+  <xs:element name="offer_contract_name" type="xs:string" />
+</xs:schema>

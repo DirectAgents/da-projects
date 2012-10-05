@@ -52,6 +52,7 @@
     <Compile Include="Abstract\TopCampaignBy.cs" />
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
+    <Compile Include="Concrete\CountryLookup.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />

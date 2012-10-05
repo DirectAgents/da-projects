@@ -15,9 +15,9 @@
         </EntityContainer>
         <EntityType Name="DailySummaries">
           <Key>
-            <PropertyRef Name="DailySummaryId" />
+            <PropertyRef Name="offer_id" />
+            <PropertyRef Name="date" />
           </Key>
-          <Property Name="DailySummaryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="offer_id" Type="int" Nullable="false" />
           <Property Name="date" Type="datetime" Nullable="false" />
           <Property Name="views" Type="int" Nullable="false" />
@@ -261,9 +261,9 @@
         </EntityType>
         <EntityType Name="DailySummary">
           <Key>
-            <PropertyRef Name="DailySummaryId" />
+            <PropertyRef Name="offer_id" />
+            <PropertyRef Name="date" />
           </Key>
-          <Property Type="Int32" Name="DailySummaryId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="offer_id" Nullable="false" />
           <Property Type="DateTime" Name="date" Nullable="false" />
           <Property Type="Int32" Name="views" Nullable="false" />
@@ -417,7 +417,6 @@
                 <ScalarProperty Name="views" ColumnName="views" />
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="offer_id" ColumnName="offer_id" />
-                <ScalarProperty Name="DailySummaryId" ColumnName="DailySummaryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

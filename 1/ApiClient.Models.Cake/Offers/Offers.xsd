@@ -1,0 +1,328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:cake="http://cakemarketing.com/api/3/"
+  attributeFormDefault="unqualified"
+  elementFormDefault="qualified"
+  targetNamespace="http://cakemarketing.com/api/3/"
+  >
+  <xsd:import namespace="API:id_name_store" />
+  <element name="advertiser" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q1="API:id_name_store" ref="q1:advertiser_id" />
+        <element xmlns:q2="API:id_name_store" ref="q2:advertiser_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="vertical" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q3="API:id_name_store" ref="q3:vertical_id" />
+        <element xmlns:q4="API:id_name_store" ref="q4:vertical_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="offer_type" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q5="API:id_name_store" ref="q5:offer_type_id" />
+        <element xmlns:q6="API:id_name_store" ref="q6:offer_type_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="offer_status" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q7="API:id_name_store" ref="q7:offer_status_id" />
+        <element xmlns:q8="API:id_name_store" ref="q8:offer_status_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="price_format" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q9="API:id_name_store" ref="q9:price_format_id" />
+        <element xmlns:q10="API:id_name_store" ref="q10:price_format_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="payout" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="is_percentage" type="xsd:boolean" />
+        <element name="amount" type="xsd:decimal" />
+        <element name="formatted_amount" type="xsd:string" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="received" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="is_percentage" type="xsd:boolean" />
+        <element name="amount" type="xsd:decimal" />
+        <element name="formatted_amount" type="xsd:string" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="country" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q11="API:id_name_store" ref="q11:country_code" />
+        <element xmlns:q12="API:id_name_store" ref="q12:country_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="redirect_offer" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q13="API:id_name_store" ref="q13:offer_contract_id" />
+        <element xmlns:q14="API:id_name_store" ref="q14:offer_contract_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="geo_target" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element ref="cake:country" />
+        <element minOccurs="0" ref="cake:redirect_offer" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="allowed_countries" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence minOccurs="0">
+        <element maxOccurs="unbounded" ref="cake:geo_target" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="geo_targeting" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="use_default_offer_contract" type="xsd:boolean" />
+        <element ref="cake:allowed_countries" />
+        <element name="disallowed_countries" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="step" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="step_number" type="xsd:unsignedByte" />
+        <element minOccurs="0" name="step_name" type="xsd:string" />
+        <element ref="cake:price_format" />
+        <element ref="cake:payout" />
+        <element name="add_to_payout" type="xsd:boolean" />
+        <element ref="cake:received" />
+        <element name="add_to_received" type="xsd:boolean" />
+        <element name="record_conversion" type="xsd:boolean" />
+        <element name="show_in_portal" type="xsd:boolean" />
+        <element name="fire_pixel" type="xsd:boolean" />
+        <element minOccurs="0" name="offer_link" type="xsd:string" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="steps" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element maxOccurs="unbounded" ref="cake:step" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="offer_contract" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="offer_contract_id" type="xsd:unsignedShort" />
+        <element minOccurs="0" name="offer_contract_name" type="xsd:string" />
+        <element ref="cake:price_format" />
+        <element ref="cake:payout" />
+        <element ref="cake:received" />
+        <element name="offer_link" type="xsd:string" />
+        <element name="thankyou_link" type="xsd:string" />
+        <element name="hidden" type="xsd:boolean" />
+        <element ref="cake:geo_targeting" />
+        <element minOccurs="0" ref="cake:steps" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="offer_contracts" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element maxOccurs="unbounded" ref="cake:offer_contract" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="tag" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q17="API:id_name_store" ref="q17:tag_id" />
+        <element xmlns:q18="API:id_name_store" ref="q18:tag_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="tags" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence minOccurs="0">
+        <element maxOccurs="unbounded" ref="cake:tag" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="media_type" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q19="API:id_name_store" ref="q19:media_type_id" />
+        <element xmlns:q20="API:id_name_store" ref="q20:media_type_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="allowed_media_types" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence minOccurs="0">
+        <element maxOccurs="unbounded" ref="cake:media_type" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="currency" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q21="API:id_name_store" ref="q21:currency_id" />
+        <element xmlns:q22="API:id_name_store" ref="q22:currency_symbol" />
+        <element xmlns:q23="API:id_name_store" ref="q23:currency_name" />
+        <element xmlns:q24="API:id_name_store" ref="q24:currency_abbr" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="cap_interval" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q25="API:id_name_store" ref="q25:cap_interval_id" />
+        <element xmlns:q26="API:id_name_store" ref="q26:cap_interval_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="click_cap" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="limit" nillable="true" />
+        <element ref="cake:cap_interval" />
+        <element name="start_date" nillable="true" />
+        <element name="review_no_redirect" type="xsd:boolean" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="conversion_cap" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="limit" nillable="true" />
+        <element ref="cake:cap_interval" />
+        <element name="start_date" nillable="true" />
+        <element name="review_no_redirect" type="xsd:boolean" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="session_regeneration_type" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q29="API:id_name_store" ref="q29:session_regeneration_type_id" />
+        <element xmlns:q30="API:id_name_store" ref="q30:session_regeneration_type_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="suppression_list_type" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element xmlns:q31="API:id_name_store" ref="q31:suppression_list_type_id" />
+        <element xmlns:q32="API:id_name_store" ref="q32:suppression_list_type_name" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="suppression_list" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="suppression_list_id" type="xsd:unsignedByte" />
+        <element name="suppression_list_name" type="xsd:string" />
+        <element ref="cake:suppression_list_type" />
+        <element name="md5_only" type="xsd:boolean" />
+        <element name="date_created" type="xsd:dateTime" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="from_lines" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence minOccurs="0">
+        <element maxOccurs="unbounded" name="string" type="xsd:string" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="subject_lines" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence minOccurs="0">
+        <element maxOccurs="unbounded" name="string" type="xsd:string" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="offer" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="offer_id" type="xsd:unsignedShort" />
+        <element name="offer_name" type="xsd:string" />
+        <element ref="cake:advertiser" />
+        <element ref="cake:vertical" />
+        <element ref="cake:offer_type" />
+        <element ref="cake:offer_status" />
+        <element name="hidden" type="xsd:boolean" />
+        <element name="offer_image_link" type="xsd:string" />
+        <element name="default_offer_contract_id" type="xsd:unsignedShort" />
+        <element ref="cake:offer_contracts" />
+        <element ref="cake:tags" />
+        <element ref="cake:allowed_media_types" />
+        <element ref="cake:currency" />
+        <element name="ssl" type="xsd:boolean" />
+        <element minOccurs="0" name="cookie_domain_override" type="xsd:string" />
+        <element name="suppression_amount" nillable="true" />
+        <element ref="cake:click_cap" />
+        <element ref="cake:conversion_cap" />
+        <element name="click_cookie_days" type="xsd:unsignedByte" />
+        <element name="impression_cookie_days" type="xsd:unsignedByte" />
+        <element name="enable_view_thru_conversions" type="xsd:boolean" />
+        <element name="click_trumps_impression" type="xsd:boolean" />
+        <element name="disable_prepop_appending" type="xsd:boolean" />
+        <element name="redirect_404" type="xsd:boolean" />
+        <element name="session_regeneration_seconds" nillable="true" type="xsd:string" />
+        <element minOccurs="0" ref="cake:session_regeneration_type" />
+        <element minOccurs="0" ref="cake:suppression_list" />
+        <element name="unsubscribe_link" type="xsd:string" />
+        <element name="preview_link" type="xsd:string" />
+        <element name="offer_description" type="xsd:string" />
+        <element name="restrictions" type="xsd:string" />
+        <element name="advertiser_extended_terms" type="xsd:string" />
+        <element name="testing_instructions" type="xsd:string" />
+        <element ref="cake:from_lines" />
+        <element ref="cake:subject_lines" />
+        <element name="upsells" />
+        <element name="thankyou_html" />
+        <element name="date_created" type="xsd:dateTime" />
+        <element name="expiration_date" nillable="true" />
+        <element name="notes" type="xsd:string" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="offers" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element maxOccurs="unbounded" ref="cake:offer" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="offer_export_response" xmlns="http://www.w3.org/2001/XMLSchema">
+    <complexType>
+      <sequence>
+        <element name="success" type="xsd:boolean" />
+        <element name="row_count" type="xsd:unsignedShort" />
+        <element ref="cake:offers" />
+      </sequence>
+    </complexType>
+  </element>
+</xs:schema>

@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
-using EomToolWeb.Models;
-using EomToolWeb.Infrastructure;
 using EomTool.Domain.Entities;
+using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
 {

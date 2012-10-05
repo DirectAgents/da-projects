@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using ApiClient.Models.Cake;
 using System.Threading;
+using ApiClient.Models.Cake;
 using Common;
 using Extensions;
+using System.Data.Entity.Migrations;
+
 
 namespace ApiClient.Etl.Cake
 {
@@ -65,7 +65,7 @@ namespace ApiClient.Etl.Cake
             batch.ForEach(d =>
             {
                 Logger.Progress();
-                db.DailySummaries.Add(d);
+                db.DailySummaries.AddOrUpdate(d);
             });
             Logger.Done();
         }

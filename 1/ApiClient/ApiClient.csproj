@@ -112,34 +112,47 @@
     <Compile Include="Migrations\201209271525052_DailySummary.Designer.cs">
       <DependentUpon>201209271525052_DailySummary.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201210051938338_DailySummaryMultiKey.cs" />
+    <Compile Include="Migrations\201210051938338_DailySummaryMultiKey.Designer.cs">
+      <DependentUpon>201210051938338_DailySummaryMultiKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cake\advertiser.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\affiliate.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\ArrayOfDailySummary.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\CakeDbContext.cs" />
     <Compile Include="Models\Cake\conversion.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\conversion_report_response.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\creative.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\offer.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\paid.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\received.Serialization.cs">
       <DependentUpon>XsdClassGen.tt</DependentUpon>
+      <SubType>code</SubType>
     </Compile>
     <Compile Include="Models\Cake\XsdClassGen1.cs">
       <AutoGen>True</AutoGen>
@@ -175,6 +188,9 @@
     <EmbeddedResource Include="Migrations\201209271525052_DailySummary.resx">
       <DependentUpon>201209271525052_DailySummary.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210051938338_DailySummaryMultiKey.resx">
+      <DependentUpon>201210051938338_DailySummaryMultiKey.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -186,6 +202,10 @@
     <ProjectReference Include="..\ApiClient.Common\ApiClient.Common.csproj">
       <Project>{D10F489D-ABBF-4625-A879-DAD95B0249CA}</Project>
       <Name>ApiClient.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ApiClient.Models.Cake\ApiClient.Models.Cake.csproj">
+      <Project>{D7A8184C-5B0C-4F74-BA5C-3EA5EB2EDA33}</Project>
+      <Name>ApiClient.Models.Cake</Name>
     </ProjectReference>
     <ProjectReference Include="..\ApiClient.Models.DirectTrack\ApiClient.Models.DirectTrack.csproj">
       <Project>{A2EBCBED-B48E-4F9D-B278-D7C84735B7B8}</Project>

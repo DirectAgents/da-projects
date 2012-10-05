@@ -2368,7 +2368,6 @@ namespace Cake.Model.Staging
         /// <summary>
         /// Create a new DailySummary object.
         /// </summary>
-        /// <param name="dailySummaryId">Initial value of the DailySummaryId property.</param>
         /// <param name="offer_id">Initial value of the offer_id property.</param>
         /// <param name="date">Initial value of the date property.</param>
         /// <param name="views">Initial value of the views property.</param>
@@ -2385,10 +2384,9 @@ namespace Cake.Model.Staging
         /// <param name="margin">Initial value of the margin property.</param>
         /// <param name="profit">Initial value of the profit property.</param>
         /// <param name="epc">Initial value of the epc property.</param>
-        public static DailySummary CreateDailySummary(global::System.Int32 dailySummaryId, global::System.Int32 offer_id, global::System.DateTime date, global::System.Int32 views, global::System.Int32 clicks, global::System.Decimal click_thru, global::System.Int32 conversions, global::System.Int32 paid, global::System.Int32 sellable, global::System.Decimal conversion_rate, global::System.Decimal cpl, global::System.Decimal cost, global::System.Decimal rpt, global::System.Decimal revenue, global::System.Decimal margin, global::System.Decimal profit, global::System.Decimal epc)
+        public static DailySummary CreateDailySummary(global::System.Int32 offer_id, global::System.DateTime date, global::System.Int32 views, global::System.Int32 clicks, global::System.Decimal click_thru, global::System.Int32 conversions, global::System.Int32 paid, global::System.Int32 sellable, global::System.Decimal conversion_rate, global::System.Decimal cpl, global::System.Decimal cost, global::System.Decimal rpt, global::System.Decimal revenue, global::System.Decimal margin, global::System.Decimal profit, global::System.Decimal epc)
         {
             DailySummary dailySummary = new DailySummary();
-            dailySummary.DailySummaryId = dailySummaryId;
             dailySummary.offer_id = offer_id;
             dailySummary.date = date;
             dailySummary.views = views;
@@ -2416,33 +2414,6 @@ namespace Cake.Model.Staging
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 DailySummaryId
-        {
-            get
-            {
-                return _DailySummaryId;
-            }
-            set
-            {
-                if (_DailySummaryId != value)
-                {
-                    OnDailySummaryIdChanging(value);
-                    ReportPropertyChanging("DailySummaryId");
-                    _DailySummaryId = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("DailySummaryId");
-                    OnDailySummaryIdChanged();
-                }
-            }
-        }
-        private global::System.Int32 _DailySummaryId;
-        partial void OnDailySummaryIdChanging(global::System.Int32 value);
-        partial void OnDailySummaryIdChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
         public global::System.Int32 offer_id
         {
             get
@@ -2451,11 +2422,14 @@ namespace Cake.Model.Staging
             }
             set
             {
-                Onoffer_idChanging(value);
-                ReportPropertyChanging("offer_id");
-                _offer_id = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("offer_id");
-                Onoffer_idChanged();
+                if (_offer_id != value)
+                {
+                    Onoffer_idChanging(value);
+                    ReportPropertyChanging("offer_id");
+                    _offer_id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("offer_id");
+                    Onoffer_idChanged();
+                }
             }
         }
         private global::System.Int32 _offer_id;
@@ -2465,7 +2439,7 @@ namespace Cake.Model.Staging
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.DateTime date
         {
@@ -2475,11 +2449,14 @@ namespace Cake.Model.Staging
             }
             set
             {
-                OndateChanging(value);
-                ReportPropertyChanging("date");
-                _date = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("date");
-                OndateChanged();
+                if (_date != value)
+                {
+                    OndateChanging(value);
+                    ReportPropertyChanging("date");
+                    _date = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("date");
+                    OndateChanged();
+                }
             }
         }
         private global::System.DateTime _date;

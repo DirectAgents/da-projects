@@ -8,6 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace ApiClient.Models.Cake {
     
 }
@@ -75,13 +77,15 @@ namespace ApiClient.Models.Cake {
         
         private decimal epcField;
 
-        [System.Xml.Serialization.XmlIgnore]
-        public int DailySummaryId { get; set; }
+        //[System.Xml.Serialization.XmlIgnore]
+        //public int DailySummaryId { get; set; }
 
         [System.Xml.Serialization.XmlIgnore]
+        [Key, Column(Order=0)]
         public int offer_id { get; set; }
 
         /// <remarks/>
+        [Key, Column(Order = 1)]
         public System.DateTime date {
             get {
                 return this.dateField;

@@ -34,9 +34,15 @@
                             }
                         });
                     },
-                    update: {
-                        url: "@Url.Action("Edit2", "Campaigns")",
-                        type: "POST"
+                    update: function(options) {
+                        $.ajax( {
+                            type: 'POST',
+                            url: "@Url.Action("Edit2", "Campaigns")",
+                            data: options.data,
+                            success: function(result) {
+                                options.success(result);
+                            }
+                        });
                     }
                 },
                 pageSize: 20,

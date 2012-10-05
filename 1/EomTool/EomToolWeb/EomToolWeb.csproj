@@ -172,6 +172,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\KendoSkin.css" />
     <Content Include="Content\kendo\2012.2.710\Black\editor.png" />
     <Content Include="Content\kendo\2012.2.710\Black\imagebrowser.png" />
     <Content Include="Content\kendo\2012.2.710\Black\loading-image.gif" />
