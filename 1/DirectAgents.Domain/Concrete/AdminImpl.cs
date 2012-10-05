@@ -123,6 +123,7 @@ namespace DirectAgents.Domain.Concrete
 
                     if (string.IsNullOrWhiteSpace(campaign.PayableAction))
                         campaign.PayableAction = "Not Specified";
+                    //TODO: don't import
 
                     var offer = (Cake.Data.Wsdl.ExportService.offer1)item.Offer;
                     if (offer != null)
@@ -151,6 +152,7 @@ namespace DirectAgents.Domain.Concrete
             campaign.CostCurrency = offer.currency.currency_symbol;
             campaign.RevenueCurrency = offer.currency.currency_symbol;
             campaign.ImportantDetails = offer.restrictions;
+            //TODO: make Restrictions field; don't import anything into ImportantDetails
         }
 
         private void UpdateVerticals(CakeStagingEntities cake)

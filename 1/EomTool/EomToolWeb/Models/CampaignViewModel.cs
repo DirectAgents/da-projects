@@ -68,7 +68,7 @@ namespace EomToolWeb.Models
             }
         }
 
-        public string PayableAction { get { return campaign.PayableAction; } }
+        public string PayableAction { get { return campaign.PayableAction ?? string.Empty; } }
 
         public string Link
         {
@@ -111,13 +111,13 @@ namespace EomToolWeb.Models
             }
         }
 
-        public string BannedNetworks { get { return campaign.BannedNetworks; } }
+        public string BannedNetworks { get { return campaign.BannedNetworks ?? string.Empty; } }
 
         public decimal CampaignCap { get { return campaign.CampaignCap; } }
 
-        public string ScrubPolicy { get { return campaign.ScrubPolicy; } }
+        public string ScrubPolicy { get { return campaign.ScrubPolicy ?? string.Empty; } }
 
-        public string EomNotes { get { return campaign.EomNotes; } }
+        public string EomNotes { get { return campaign.EomNotes ?? string.Empty; } }
 
         public string Vertical { get { return campaign.Vertical.Name; } }
     }
