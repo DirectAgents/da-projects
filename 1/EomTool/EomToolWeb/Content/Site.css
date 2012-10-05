@@ -137,9 +137,10 @@ div#ExtraInfo
     top: 43px;
     left: 561px;
     height: 30px;
-    width: 480px;
+    width: 400px;
     padding: 10px 0px 0px 10px;
     z-index: 400;
+    background-color: White;
 }
 
 /* campaign campaign item list pagers
