@@ -89,7 +89,7 @@ namespace EomToolWeb.Models
         public string RevenueCurrency { get { return campaign.RevenueCurrency; } }
         public decimal Revenue { get { return campaign.Revenue; } }
 
-        public MvcHtmlString ImportantDetails
+        public MvcHtmlString ImportantDetailsMvcHtmlString
         {
             get
             {
@@ -100,7 +100,7 @@ namespace EomToolWeb.Models
             }
         }
 
-        public string ImportantDetailsAsString
+        public string ImportantDetails
         {
             get
             {
