@@ -40,6 +40,8 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("Revenue (Payout to Direct Agents)")]
         public decimal Revenue { get; set; } // e.g. 2.50
 
+        public string Restrictions { get; set; } // e.g. No search allowed
+
         [DisplayName("Important Details")]
         [DataType(DataType.MultilineText)]
         public string ImportantDetails { get; set; } // e.g. Important Details 
@@ -47,11 +49,12 @@ namespace DirectAgents.Domain.Entities
         //      No content locking sites 
         //      No free movie download sites 
 
-        [DisplayName("Banned Networks")]
-        public string BannedNetworks { get; set; } // e.g. Adgate Media, Adscend Media, Dollarade
+        public string Budget { get; set; } // e.g. 500 leads
+
+        public string PassedInfo { get; set; } // e.g. Lead IDs
 
         [DisplayName("Campaign Cap")]
-        public decimal CampaignCap { get; set; } // e.g. 3,500 downloads per month 
+        public string CampaignCap { get; set; } // e.g. 3,500 downloads per month 
 
         [DisplayName("Scrub Policy")]
         public string ScrubPolicy { get; set; } // e.g. No Scrub except fraud. 

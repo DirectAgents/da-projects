@@ -8,46 +8,34 @@
         <table>
             <tr>
                 <td class="fieldName">Name:</td>
-                <td><input type="text" data-bind="value:Name" name="Name" /></td>
-            </tr>
-            <tr>
-                <td class="fieldName">Description:</td>
-                <td><input type="text" data-bind="value:Description" name="Description" /></td>
+                <td>${Name}</td>
             </tr>
             <tr>
                 <td class="fieldName">Payable Action:</td>
                 <td><input type="text" data-bind="value:PayableAction" name="PayableAction" /></td>
             </tr>
             <tr>
-                <td class="fieldName">Link:</td>
-                <td><input type="text" data-bind="value:Link" name="Link" /></td>
-            </tr>
-            <tr>
-                <td class="fieldName">Payout:</td>
-                <td><input type="text" data-bind="value:Cost" name="Cost" /></td>
-            </tr>
-            <tr>
-                <td class="fieldName">Pauout to DA:</td>
-                <td><input type="text" data-bind="value:Revenue" name="Revenue" /></td>
-            </tr>
-            <tr>
-                <td class="fieldName">Details</td>
+                <td class="fieldName">Important Details:</td>
                 <td><input type="text" data-bind="value:ImportantDetailsAsString" name="ImportantDetails" /></td>
             </tr>
             <tr>
-                <td class="fieldName">Banned Networks</td>
-                <td><input type="text" data-bind="value:BannedNetworks" name="BannedNetworks" /></td>
+                <td class="fieldName">Campaign Budget:</td>
+                <td><input type="text" data-bind="value:Budget" name="Budget" /></td>
             </tr>
             <tr>
-                <td class="fieldName">Campaign Cap</td>
+                <td class="fieldName">Passed Information:</td>
+                <td><input type="text" data-bind="value:PassedInfo" name="PassedInfo" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Campaign Cap:</td>
                 <td><input type="text" data-bind="value:CampaignCap" name="CampaignCap" /></td>
             </tr>
             <tr>
-                <td class="fieldName">Scrub Policy</td>
+                <td class="fieldName">Scrub Policy:</td>
                 <td><input type="text" data-bind="value:ScrubPolicy" name="ScrubPolicy" /></td>
             </tr>
             <tr>
-                <td class="fieldName">Eom Notes</td>
+                <td class="fieldName">EOM Notes:</td>
                 <td><input type="text" data-bind="value:EomNotes" name="EomNotes" /></td>
             </tr>
         </table>
@@ -63,20 +51,24 @@
         <h5>${Name}<br /><span style="font-weight: normal">${AdManagers}, ${AccountManagers}</span></h5>
         <h6>${Description}</h6>
         <dl>
-            <dt>Action:</dt>
+            <dt>Payable Action:</dt>
             <dd>${PayableAction}</dd>
-            <dt>Traffic:</dt>
+            <dt>Traffic Type:</dt>
             <dd>${TrafficTypes}</dd>
-            <dt>Link:</dt>
+            <dt>Preview Link:</dt>
             <dd><a href="${Link}" target="_blank">${Link}</a></dd>
             <dt>Payout:</dt>
             <dd>${CostCurrency}${Cost}</dd>
-            <dt>Payout to DA:</dt>
-            <dd>${RevenueCurrency}${Revenue}</dd>
+            <dt>Restrictions:</dt>
+            <dd style="overflow: auto">${Restrictions}</dd>
             <dt>Details:</dt>
             <dd style="overflow: auto">${ImportantDetailsAsString}</dd>
-            <dt>Banned:</dt>
-            <dd>${BannedNetworks}</dd>
+            <dt>Budget:</dt>
+            <dd>${Budget}</dd>
+            <dt>Payout to DA:</dt>
+            <dd>${RevenueCurrency}${Revenue}</dd>
+            <dt>Passed Info:</dt>
+            <dd>${PassedInfo}</dd>
             <dt>Cap:</dt>
             <dd>${CampaignCap}</dd>
             <dt>Scrub:</dt>
@@ -177,7 +169,7 @@
         width: 320px;
         text-overflow: ellipsis;
         overflow: hidden;
-        max-height: 100px;
+        max-height: 78px;
     }
     .listitem dt
     {

@@ -111,9 +111,13 @@ namespace EomToolWeb.Models
             }
         }
 
-        public string BannedNetworks { get { return campaign.BannedNetworks ?? string.Empty; } }
+        public string Restrictions { get { return campaign.Restrictions ?? string.Empty; } }
 
-        public decimal CampaignCap { get { return campaign.CampaignCap; } }
+        public string Budget { get { return campaign.Budget ?? string.Empty; } }
+
+        public string PassedInfo { get { return campaign.PassedInfo ?? string.Empty; } }
+
+        public string CampaignCap { get { return campaign.CampaignCap ?? string.Empty; } }
 
         public string ScrubPolicy { get { return campaign.ScrubPolicy ?? string.Empty; } }
 
