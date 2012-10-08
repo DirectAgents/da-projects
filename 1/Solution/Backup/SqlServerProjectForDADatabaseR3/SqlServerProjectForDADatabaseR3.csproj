@@ -8,18 +8,15 @@
     </ProductVersion>
     <SchemaVersion>
     </SchemaVersion>
-    <ProjectGuid>{590BB4FB-CBF2-496C-B408-5D8C1C54CD5F}</ProjectGuid>
+    <ProjectGuid>{AC153EBD-4D65-4B9D-A812-65592DD49508}</ProjectGuid>
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>SqlClrLibrary</AssemblyName>
+    <AssemblyName>SqlServerProjectForDADatabaseR3</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SGenUseProxyTypes>false</SGenUseProxyTypes>
+    <TargetFrameworkProfile />
     <ConnectionString>
     </ConnectionString>
-    <TargetFrameworkProfile />
-    <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>C:\GitHub\da-projects\1\Solution\Backup\SqlClrLibrary\</UpgradeBackupLocation>
-    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,34 +38,11 @@
     <DeployCode>true</DeployCode>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>SqlClrLibrary</RootNamespace>
+    <RootNamespace>SqlServerProjectForDADatabaseR3</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - Client Portal|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Try1 Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug - Client Portal\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - DADatabaseService|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug - DADatabaseService\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - z|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug - z\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - Direct Track|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug - Direct Track\</OutputPath>
+    <OutputPath>bin\Try1 Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -81,8 +55,8 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregate1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserDefinedFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Test Scripts\Test.sql">
