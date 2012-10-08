@@ -1,0 +1,868 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <PostConversionRemoveFromScc>
+    </PostConversionRemoveFromScc>
+    <PostConversionAddToScc>
+    </PostConversionAddToScc>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Name>EomDatabase</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.0</ProjectVersion>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql100DatabaseSchemaProvider</DSP>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <ShowWizard>False</ShowWizard>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <IncludeSchemaNameInFileName>False</IncludeSchemaNameInFileName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <LoadSqlClrTypes>True</LoadSqlClrTypes>
+    <RootNamespace>EomDatabase</RootNamespace>
+    <DefaultSchema>dbo</DefaultSchema>
+    <PreviousProjectVersion>4.0</PreviousProjectVersion>
+    <ValidateCasingOnIdentifiers>False</ValidateCasingOnIdentifiers>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8e4f17c3-e9f3-4d9b-85a6-81c852920af2}</ProjectGuid>
+    <GenerateDatabaseFile>False</GenerateDatabaseFile>
+    <GenerateCreateScript>False</GenerateCreateScript>
+    <SqlServerVerification>False</SqlServerVerification>
+    <TargetLanguage>CS</TargetLanguage>
+    <AllowSnapshotIsolation>False</AllowSnapshotIsolation>
+    <AnsiNullDefault>True</AnsiNullDefault>
+    <AnsiNulls>True</AnsiNulls>
+    <AnsiPadding>True</AnsiPadding>
+    <AnsiWarnings>True</AnsiWarnings>
+    <ArithAbort>True</ArithAbort>
+    <AutoClose>False</AutoClose>
+    <AutoCreateStatistics>True</AutoCreateStatistics>
+    <AutoShrink>False</AutoShrink>
+    <AutoUpdateStatistics>True</AutoUpdateStatistics>
+    <AutoUpdateStatisticsAsynchronously>False</AutoUpdateStatisticsAsynchronously>
+    <ChangeTrackingRetentionPeriod>2</ChangeTrackingRetentionPeriod>
+    <ChangeTrackingRetentionUnit>Days</ChangeTrackingRetentionUnit>
+    <CloseCursorOnCommitEnabled>False</CloseCursorOnCommitEnabled>
+    <ConcatNullYieldsNull>True</ConcatNullYieldsNull>
+    <DatabaseAccess>MULTI_USER</DatabaseAccess>
+    <DatabaseChaining>False</DatabaseChaining>
+    <DatabaseState>ONLINE</DatabaseState>
+    <DateCorrelationOptimizationOn>False</DateCorrelationOptimizationOn>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultCursor>LOCAL</DefaultCursor>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <EnableFullTextSearch>True</EnableFullTextSearch>
+    <IsBrokerPriorityHonored>False</IsBrokerPriorityHonored>
+    <IsChangeTrackingAutoCleanupOn>True</IsChangeTrackingAutoCleanupOn>
+    <IsChangeTrackingOn>False</IsChangeTrackingOn>
+    <IsEncryptionOn>False</IsEncryptionOn>
+    <NumericRoundAbort>False</NumericRoundAbort>
+    <PageVerify>NONE</PageVerify>
+    <Parameterization>SIMPLE</Parameterization>
+    <QuotedIdentifier>True</QuotedIdentifier>
+    <ReadCommittedSnapshot>False</ReadCommittedSnapshot>
+    <Recovery>FULL</Recovery>
+    <RecursiveTriggersEnabled>False</RecursiveTriggersEnabled>
+    <ServiceBrokerOption>DisableBroker</ServiceBrokerOption>
+    <SupplementalLoggingOn>False</SupplementalLoggingOn>
+    <TornPageDetection>False</TornPageDetection>
+    <Trustworthy>False</Trustworthy>
+    <UpdateOptions>READ_WRITE</UpdateOptions>
+    <VardecimalStorageFormatOn>True</VardecimalStorageFormatOn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>.\sql\release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TargetDatabase>zTestEomDatabaseDeploy</TargetDatabase>
+    <TreatTSqlWarningsAsErrors>False</TreatTSqlWarningsAsErrors>
+    <SuppressTSqlWarnings />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>.\sql\debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TargetDatabase>zDADatabaseAug2012</TargetDatabase>
+    <TreatTSqlWarningsAsErrors>False</TreatTSqlWarningsAsErrors>
+    <SuppressTSqlWarnings />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - Client Portal|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TargetDatabase />
+    <TreatTSqlWarningsAsErrors>False</TreatTSqlWarningsAsErrors>
+    <SuppressTSqlWarnings />
+    <OutputPath>.\sql\Debug - Client Portal\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - DADatabaseService|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TargetDatabase>DADatabaseApril2012_before_cake</TargetDatabase>
+    <TreatTSqlWarningsAsErrors>False</TreatTSqlWarningsAsErrors>
+    <SuppressTSqlWarnings />
+    <OutputPath>.\sql\Debug - DADatabaseService\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - z|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TargetDatabase />
+    <TreatTSqlWarningsAsErrors>False</TreatTSqlWarningsAsErrors>
+    <SuppressTSqlWarnings />
+    <OutputPath>.\sql\Debug - z\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - Direct Track|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TargetDatabase>DADatabase</TargetDatabase>
+    <TreatTSqlWarningsAsErrors>False</TreatTSqlWarningsAsErrors>
+    <SuppressTSqlWarnings />
+    <OutputPath>.\sql\Debug - Direct Track\</OutputPath>
+    <DeployScriptFileName>EomDatabase.sql</DeployScriptFileName>
+  </PropertyGroup>
+  <!--Import the settings-->
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\Pre-Deployment" />
+    <Folder Include="Scripts\Post-Deployment" />
+    <Folder Include="Data Generation Plans" />
+    <Folder Include="Schema Comparisons" />
+    <Folder Include="Properties\" />
+    <Folder Include="Schema Objects\" />
+    <Folder Include="Schema Objects\Schemas\" />
+    <Folder Include="Schema Objects\Schemas\dbo\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Defaults\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Functions\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Rules\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Data Types\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Types CLR\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\User Defined Table Types\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Programmability\Types\XML Schema Collections\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Service Broker\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Service Broker\Queues\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Synonyms\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Constraints\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Indexes\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Keys\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Triggers\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Tables\Statistics\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Views\" />
+    <Folder Include="Schema Objects\Database Level Objects\" />
+    <Folder Include="Schema Objects\Database Level Objects\Assemblies\" />
+    <Folder Include="Schema Objects\Database Level Objects\Database Triggers\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Schemas\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Users\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Certificates\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Asymmetric Keys\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Master Keys\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Signatures\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Symmetric Keys\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Database Encryption Keys\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Database Audit Specification\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Roles\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Roles\Application Roles\" />
+    <Folder Include="Schema Objects\Database Level Objects\Security\Roles\Database Roles\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Broker Priorities\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Contracts\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Event Notifications\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Message Types\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Remote Service Binding\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Routes\" />
+    <Folder Include="Schema Objects\Database Level Objects\Service Broker\Services\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Full Text Stoplists\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Filegroups\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Files\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Full Text Catalogs\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Partition Functions\" />
+    <Folder Include="Schema Objects\Database Level Objects\Storage\Partition Schemes\" />
+    <Folder Include="Schema Objects\Schemas\dbo\Indexes" />
+    <Folder Include="Schema Objects\Schemas\dbo\Triggers" />
+    <Folder Include="Schema Objects\Schemas\dbo\Statistics" />
+  </ItemGroup>
+  <ItemGroup>
+    <BuildContributorArgument Include="OutDir=$(OutDir)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_post_impression_sale_amount_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_num_sub_sales_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_num_sales_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_num_post_impression_sub_sales_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_num_post_impression_sales_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_leads_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_clicks_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\PubReportInstance_saved_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\PubReportInstance_email_status_msg_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Affiliate_payment_method_id_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Affiliate_net_term_type_id_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Campaign_campaign_status_id_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Campaign_advertiser_id_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Campaign_ad_manager_id_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Campaign_account_manager_id_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Item_item_accounting_status_id_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Item_accounting_notes_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\CampaignNotes_added_by_system_user_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_sub_sale_amount_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_sale_amount_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Defaults\Stat_post_impression_sub_sale_amount_DF.default.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Payout_Currency_id_FK_Currency_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_AccountManager_id_FK_AccountManager_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_AdManager_id_FK_AdManager_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_Advertiser_id_FK_Advertiser_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_DTCampaignStatus_name_FK_DTCampaignStatus_name_UK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_Currency_id_FK_Currency_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_NetTermType_id_FK_NetTermType_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\PubReportInstance_Vendor_id_FK_Vendor_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Stat_Affiliate_affid_FK_Affiliate_affid_UK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Stat_Campaign_pid_FK_Campaign_pid_UK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Stat_Payout_id_FK_Payout_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Stat_Payout_id_FK_Payout_id_PK1.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\PubReportEmail_PubReportInstance_id_FK_PubReportInstance_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Publisher_Affiliate_affid_FK_Affiliate_affid_UK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\CampaignNotes_Campaign_pid_FK_Campaign_pid_UK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_Affiliate_affid_FK_Affiliate_affid_UK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_Campaign_pid_FK_Campaign_pid_UK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_Currency_id_FK_Currency_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_Currency_id_FK_Currency_id_PK1.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_ItemReportingStatus_id_FK_ItemReportingStatus_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_Source_id_FK_Source_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_Stat_id_FK_Stat_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_UnitType_id_FK_UnitType_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_ItemVerificationDate_Item.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\GetCampaignsPublisherReportSummaryByNetTerms.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\CampaignsPublisherReportSummarySummaryByNetTermsAllRevenue.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\CampaignsPublisherReportSummarySummaryByNetTerms.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Source_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Vendor_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\UnitType_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\AccountManager_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Advertiser_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\AdManager_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\AffiliatePaymentMethod_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Currency_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\ItemReportingStatus_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\ItemAccountingStatus_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\CampaignStatus_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\DTCampaignType_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\DTCampaignStatus_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\NetTermType_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\MediaBuyer_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Payout_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\PubReportInstance_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Stat_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\PubReportEmail_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Publisher_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\CampaignNotes_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_id_PK.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\PK_ItemVerificationDate.pkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\PROC_SELECT_Eddy_Accounting_View_2.proc.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\UpdateLastCampaignSynch.proc.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\SelectNumUnitsByPidCdCostRev.proc.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Stored Procedures\CascaseDeleteAllItemsByPID.proc.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\EomDatabase.rolememberships.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\FormatCurrency1.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\ConvertCurrency.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\tousd3.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\tousd.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\GetCampaignNotes.function.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Triggers\tr_CampaignNotes_U.trigger.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Source_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Vendor_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\UnitType_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\AccountManager_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Advertiser_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\AdManager_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\AffiliatePaymentMethod_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Currency_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\ItemReportingStatus_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\ItemAccountingStatus_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\CampaignStatus_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\DTCampaignType_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\DTCampaignStatus_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\NetTermType_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\MediaBuyer_name_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_pid_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_affid_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Stat_apiurl_UK.ukey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_EGil.user.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_AccountMangers.user.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\MB_Top_20_CPA_View_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\MB_Ranked_CPM_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\MB_CPA_Ranked_Intl_View_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Eddy_Accounting_View_2.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\StandardView_CampaignRevenueTotal_Intl.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\StandardView_CampaignRevenueTotal_CPM.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\StandardView_CampaignRevenueTotal_CPA.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\PublisherReports.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Top45Advertisers2.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Top45Advertisers.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\CampaignsMargin.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AccountingDetailsWithPercentMargin.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AdvertiserView1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\PayoutView1Details1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\PayoutView1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\CampaignPayoutView1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Affiliate_Default_Payout_View_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AffiliateView1Details1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AffiliateView1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AffiliatePayoutView1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\FakePublishers.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\CampaignView1Details1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\CampaignView1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\DA_Wiki_View_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Campaign_Default_Payout_View_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\LatestCampaignNote.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\vPublisherReportEmails.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\vwSub2.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\VerifiedCampaignsPublisherReportSummary.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Rehena_Jan11EomSheetIntl.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\PublisherReportSummary.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\StandardView_CampaignRevenueTotal.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\StandardView_Accounting_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\PublisherReportDetails.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Publisher Report Approval.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Jan11_AccountManager_View_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Eddy_Accounting_View_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\EarlyPublisherList.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\MB_View_Support_PID_SUM_Revenue.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\CampaignsPublisherReportSummary.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\CampaignsPublisherReportDetails.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\Item_To_USD_View_1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AverageMarginRpt.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AccountingView1.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AccountingDetails.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\ab_Advertisers_TotalRevenue.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AccountManagerView.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AccountingView2.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AccountingDetailsWithMargin.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Source.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Vendor.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\UnitType.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\AccountManager.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Advertiser.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\AdManager.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\AffiliatePaymentMethod.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Currency.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\ItemReportingStatus.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\ItemAccountingStatus.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\CampaignStatus.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\DTCampaignType.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\DTCampaignStatus.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\NetTermType.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\MediaBuyer.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Payout.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Campaign.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Affiliate.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\PubReportInstance.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Stat.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\PubReportEmail.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Publisher.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\CampaignNotes.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Item.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\ItemVerificationDate.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\SumMoney2.aggregate.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\SumMoney.aggregate.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Programmability\Functions\SumKeys.aggregate.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Database Level Objects\Service Broker\Routes\AutoCreatedLocal.route.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\vCampaigns.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\vExtraItems.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\vAccounting.view.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Triggers\tr_Affiliate_IU.trigger.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\tracking_system_fk.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\affiliate_tracking_system_fk.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\TrackingSystem.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Item_CampaignStatus_id_FK_CampaignStatus_id_PK.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Constraints\DF_BatchUpdate_date_created.defconst.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchBatchUpdate_BatchUpdate.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchBatchUpdate_Batch.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_Item_Batch.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\BatchBatchUpdate.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Batch.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\MediaBuyerApprovalStatus.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchUpdate_MediaBuyerApprovalStatusFrom.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\FK_BatchUpdate_MediaBuyerApprovalStatus.fkey.sql">
+      <SubType>Code</SubType>
+    </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Tables\BatchUpdate.table.sql">
+      <SubType>Code</SubType>
+    </Build>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">
+      <SubType>NotInBuild</SubType>
+    </None>
+    <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProject1.dll">
+      <SubType>NotInBuild</SubType>
+    </None>
+    <Build Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProject1.supporting.sql">
+      <SubType>NotInBuild</SubType>
+    </Build>
+    <None Include="Schema Objects\Database Level Objects\Assemblies\DADatabaseSqlServer.dll">
+      <SubType>NotInBuild</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SqlServerProjectForDADatabaseR3, Version=1.0.4084.42374, Culture=neutral, PublicKeyToken=null">
+      <Name>SqlServerProjectForDADatabaseR3</Name>
+      <AssemblyName>SqlServerProjectForDADatabaseR3.dll</AssemblyName>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll</HintPath>
+      <Private>True</Private>
+      <SqlAssemblyName>SqlServerProjectForDADatabaseR3</SqlAssemblyName>
+      <SqlOwnerName>dbo</SqlOwnerName>
+      <SqlPermissionSet>SAFE</SqlPermissionSet>
+      <IsModelAware>True</IsModelAware>
+    </Reference>
+    <Reference Include="SqlServerProject1, Version=1.0.4231.27865, Culture=neutral, PublicKeyToken=null">
+      <Name>SqlServerProject1</Name>
+      <AssemblyName>SqlServerProject1.dll</AssemblyName>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Schema Objects\Database Level Objects\Assemblies\SqlServerProject1.dll</HintPath>
+      <Private>True</Private>
+      <SqlAssemblyName>SqlServerProject1</SqlAssemblyName>
+      <SqlOwnerName>dbo</SqlOwnerName>
+      <SqlPermissionSet>SAFE</SqlPermissionSet>
+      <IsModelAware>True</IsModelAware>
+    </Reference>
+    <Reference Include="DADatabaseSqlServer, Version=1.0.4058.36035, Culture=neutral, PublicKeyToken=null">
+      <Name>DADatabaseSqlServer</Name>
+      <AssemblyName>DADatabaseSqlServer.dll</AssemblyName>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Schema Objects\Database Level Objects\Assemblies\DADatabaseSqlServer.dll</HintPath>
+      <Private>True</Private>
+      <SqlAssemblyName>DADatabaseSqlServer</SqlAssemblyName>
+      <SqlOwnerName>dbo</SqlOwnerName>
+      <SqlPermissionSet>SAFE</SqlPermissionSet>
+      <IsModelAware>True</IsModelAware>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Debug - Client Portal.publish.xml" />
+    <None Include="Debug - DADatabaseService.publish.xml" />
+    <None Include="Debug - Direct Track.publish.xml" />
+    <None Include="Debug - z.publish.xml" />
+    <None Include="Debug.publish.xml" />
+    <None Include="Release.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PreDeploy Include="Scripts\Pre-Deployment\Script.PreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\Post-Deployment\Script.PostDeployment.sql" />
+  </ItemGroup>
+</Project>
