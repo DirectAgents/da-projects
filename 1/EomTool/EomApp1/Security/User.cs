@@ -16,9 +16,12 @@ namespace EomApp1.Security
             }
         }
 
-        public bool CanDoWorkflowFinalize(string accountManagerName)
+        public bool CanFinalizeForAccountManager(string accountManagerName)
         {
-            return HasPermission("Workflow.Finalize." + accountManagerName.Trim());
+            if (accountManagerName != null)
+                return HasPermission("Workflow.Finalize." + accountManagerName.Trim());
+            else
+                return false;
         }
 
         public bool CanDoWorkflowVerify

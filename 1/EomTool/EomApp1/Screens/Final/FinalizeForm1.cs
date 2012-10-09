@@ -120,7 +120,7 @@ namespace EomApp1.Screens.Final
             if (campaignsToFinalizeGrid.Rows.Count > 0)
                 foreach (var button in from row in campaignsToFinalizeGrid.Rows.Cast<DataGridViewRow>()
                                        let am = ((row.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow).AM
-                                       where !Security.User.Current.CanDoWorkflowFinalize(am)
+                                       where !Security.User.Current.CanFinalizeForAccountManager(am)
                                        select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
                     button.Enabled = false;
         }

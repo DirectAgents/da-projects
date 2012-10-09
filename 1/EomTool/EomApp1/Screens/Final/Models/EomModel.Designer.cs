@@ -8,12 +8,13 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
@@ -221,6 +222,7 @@ namespace EomApp1.Screens.Final.Models
         private ObjectSet<Item> _Items;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -296,11 +298,11 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -327,6 +329,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -381,6 +384,7 @@ namespace EomApp1.Screens.Final.Models
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -407,6 +411,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -433,6 +438,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -487,6 +493,7 @@ namespace EomApp1.Screens.Final.Models
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -513,6 +520,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -553,6 +561,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -895,6 +904,7 @@ namespace EomApp1.Screens.Final.Models
         partial void Onexternal_idChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -975,6 +985,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1011,6 +1022,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1521,6 +1533,7 @@ namespace EomApp1.Screens.Final.Models
         partial void Onexternal_idChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1639,6 +1652,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1665,6 +1679,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1719,6 +1734,7 @@ namespace EomApp1.Screens.Final.Models
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1745,6 +1761,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1773,6 +1790,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1851,6 +1869,7 @@ namespace EomApp1.Screens.Final.Models
         partial void Onto_usd_multiplierChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1921,6 +1940,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1977,6 +1997,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2535,6 +2556,7 @@ namespace EomApp1.Screens.Final.Models
         partial void Onbatch_idChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2615,6 +2637,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2641,6 +2664,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2695,6 +2719,7 @@ namespace EomApp1.Screens.Final.Models
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2721,6 +2746,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2751,6 +2777,7 @@ namespace EomApp1.Screens.Final.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2910,9 +2937,11 @@ namespace EomApp1.Screens.Final.Models
         partial void OnAdvertiserNameChanged();
 
         #endregion
+
     
     }
 
     #endregion
+
     
 }

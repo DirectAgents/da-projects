@@ -22,6 +22,47 @@ namespace EomApp1.Screens.Extra
             InitializeComponent();
             extraItems.EnforceConstraints = false; // Prevent errors from popping up - need to look into why constraints get violated in first place...
             this.itemFilter = new BindingSourceFilter(this.itemBindingSource);
+
+            // Security
+            itemsGrid.Sorted += (s, e) => DisableRows();
+            itemBindingSource.ListChanged += (s, e) => DisableRows();
+            itemsGrid.KeyDown += itemsGrid_KeyDown;
+            itemsGrid.MultiSelect = false;
+        }
+
+        // Security
+        void itemsGrid_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyValue == 46 && itemsGrid.CurrentRow.ReadOnly)
+                e.Handled = true;
+        }
+
+        // Security
+        private void DisableRows()
+        {
+            using (var db = EomApp1.Screens.Final.Models.Eom.Create())
+            {
+                var amByPID = db.Campaigns.ToDictionary(c => c.pid, c => c.AccountManager.name);
+                if (itemsGrid.Rows.Count > 0)
+                    foreach (var item in from row in itemsGrid.Rows.Cast<DataGridViewRow>()
+                                         where !row.IsNewRow
+                                         let pid = ((row.DataBoundItem as DataRowView).Row as ExtraItemDataSet.ItemRow).pid
+                                         let am = amByPID.ContainsKey(pid) ? amByPID[pid] : null
+                                         where am != null
+                                         select new { Row = row, AM = am })
+                    {
+                        if (!Security.User.Current.CanFinalizeForAccountManager(item.AM))
+                        {
+                            item.Row.DefaultCellStyle.BackColor = DisabledBackColor;
+                            item.Row.ReadOnly = true;
+                        }
+                    }
+            }
+        }
+
+        private static Color DisabledBackColor
+        {
+            get { return Color.Gray;}
         }
 
         public void Initialize()
@@ -157,6 +198,7 @@ namespace EomApp1.Screens.Extra
             itemReportingStatusTableAdapter.Fill(extraItems.ItemReportingStatus);
             itemTableAdapter.Fill(extraItems.Item);
         }
+
         private void FillAdvertisers(string accountManagerName)
         {
             extraItems.Advertiser.Clear();
