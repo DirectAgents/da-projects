@@ -40,6 +40,7 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("Revenue (Payout to Direct Agents)")]
         public decimal Revenue { get; set; } // e.g. 2.50
 
+        [DataType(DataType.MultilineText)]
         public string Restrictions { get; set; } // e.g. No search allowed
 
         [DisplayName("Important Details")]
@@ -51,6 +52,7 @@ namespace DirectAgents.Domain.Entities
 
         public string Budget { get; set; } // e.g. 500 leads
 
+        [DisplayName("Passed Information")]
         public string PassedInfo { get; set; } // e.g. Lead IDs
 
         [DisplayName("Campaign Cap")]

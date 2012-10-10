@@ -89,29 +89,27 @@ namespace EomToolWeb.Models
         public string RevenueCurrency { get { return campaign.RevenueCurrency; } }
         public decimal Revenue { get { return campaign.Revenue; } }
 
-        public MvcHtmlString ImportantDetailsMvcHtmlString
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(campaign.ImportantDetails))
-                    return null;
-                else
-                    return MvcHtmlString.Create(campaign.ImportantDetails.Replace(System.Environment.NewLine, "<br />"));
-            }
-        }
-
-        public string ImportantDetails
+        public string ImportantDetails { get { return campaign.ImportantDetails ?? string.Empty; } }
+        public string ImportantDetailsHtml
         {
             get
             {
                 if (string.IsNullOrWhiteSpace(campaign.ImportantDetails))
                     return string.Empty;
                 else
-                    return campaign.ImportantDetails;
+                    return campaign.ImportantDetails.Replace(System.Environment.NewLine, "<br />").Replace("\n", "<br />");
             }
         }
 
         public string Restrictions { get { return campaign.Restrictions ?? string.Empty; } }
+        public string RestrictionsHtml {
+            get {
+                if (string.IsNullOrWhiteSpace(campaign.Restrictions))
+                    return string.Empty;
+                else
+                    return campaign.Restrictions.Replace(System.Environment.NewLine, "<br />").Replace("\n", "<br />");
+            }
+        }
 
         public string Budget { get { return campaign.Budget ?? string.Empty; } }
 

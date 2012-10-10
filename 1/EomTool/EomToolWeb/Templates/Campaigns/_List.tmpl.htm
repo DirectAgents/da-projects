@@ -16,7 +16,7 @@
             </tr>
             <tr>
                 <td class="fieldName">Important Details:</td>
-                <td><input type="text" data-bind="value:ImportantDetails" name="ImportantDetails" /></td>
+                <td><textarea data-bind="value:ImportantDetails" name="ImportantDetails"></textarea></td>
             </tr>
             <tr>
                 <td class="fieldName">Campaign Budget:</td>
@@ -60,9 +60,9 @@
             <dt>Payout:</dt>
             <dd>${CostCurrency}${Cost}</dd>
             <dt>Restrictions:</dt>
-            <dd style="overflow: auto">${Restrictions}</dd>
+            <dd style="overflow: auto">#= RestrictionsHtml #</dd>
             <dt>Details:</dt>
-            <dd style="overflow: auto">${ImportantDetails}</dd>
+            <dd style="overflow: auto">#= ImportantDetails #</dd>
             <dt>Budget:</dt>
             <dd>${Budget}</dd>
             <dt>Payout to DA:</dt>
