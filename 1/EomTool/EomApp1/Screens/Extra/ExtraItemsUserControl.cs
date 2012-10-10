@@ -47,13 +47,19 @@ namespace EomApp1.Screens.Extra
                     foreach (var item in from row in itemsGrid.Rows.Cast<DataGridViewRow>()
                                          where !row.IsNewRow
                                          let pid = ((row.DataBoundItem as DataRowView).Row as ExtraItemDataSet.ItemRow).pid
+                                         let status = ((row.DataBoundItem as DataRowView).Row as ExtraItemDataSet.ItemRow).campaign_status
                                          let am = amByPID.ContainsKey(pid) ? amByPID[pid] : null
                                          where am != null
-                                         select new { Row = row, AM = am })
+                                         select new { Row = row, AM = am, Status = status })
                     {
                         if (!Security.User.Current.CanFinalizeForAccountManager(item.AM))
                         {
                             item.Row.DefaultCellStyle.BackColor = DisabledBackColor;
+                            item.Row.ReadOnly = true;
+                        }
+                        else if (item.Status != "default")
+                        {
+                            item.Row.DefaultCellStyle.BackColor = NotDefaultBackColor;
                             item.Row.ReadOnly = true;
                         }
                     }
@@ -62,7 +68,12 @@ namespace EomApp1.Screens.Extra
 
         private static Color DisabledBackColor
         {
-            get { return Color.Gray;}
+            get { return Color.Gray; }
+        }
+
+        private static Color NotDefaultBackColor
+        {
+            get { return Color.FromArgb(225, 255, 225); }
         }
 
         public void Initialize()
