@@ -16,10 +16,10 @@ Link:<a href="@Model.Link">@Model.Link</a>
 Payout: @Model.CostCurrency@Model.Cost
 <br />
 <b>Restrictions:</b>
-@if (Model.Restrictions != null) { <br />@MvcHtmlString.Create(Model.RestrictionsHtml) }
+@if (!string.IsNullOrWhiteSpace(Model.Restrictions)) { <br />@MvcHtmlString.Create(Model.RestrictionsHtml) }
 <br />
 <b>Important Details:</b>
-@if (Model.ImportantDetails != null) { <br />@MvcHtmlString.Create(Model.ImportantDetailsHtml) }
+@if (!string.IsNullOrWhiteSpace(Model.ImportantDetails)) { <br />@MvcHtmlString.Create(Model.ImportantDetailsHtml) }
 <br />
 Budget: @Model.Budget
 <br />

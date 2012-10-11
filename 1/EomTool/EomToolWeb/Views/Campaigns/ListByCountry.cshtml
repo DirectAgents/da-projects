@@ -30,7 +30,7 @@
         <br />        
         <h3>@Html.ActionLink(country.CountryCode, "List2", new { country = country.CountryCode }):</h3>
         <ol>
-        @foreach (var campaign in country.Campaigns)
+        @foreach (var campaign in country.Campaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name))
         {
             <li>@Html.ActionLink(campaign.Name, "List2", new { pid = campaign.Pid })</li>
         }

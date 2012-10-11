@@ -54,7 +54,15 @@ namespace EomToolWeb.Models
 
         public string Name { get { return campaign.Name; } }
 
-        public string Description { get { return campaign.Description; } }
+        public string Description {
+            get
+            {
+                var desc = campaign.Description;
+                if (campaign.Description.Length > 220)
+                    desc = campaign.Description.Substring(0, 220) + ".....";
+                return desc;
+            }
+        }
 
         public int Pid { get { return campaign.Pid; } }
 

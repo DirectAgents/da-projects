@@ -34,12 +34,6 @@ namespace EomToolWeb.Controllers
                 viewModel.Pid = pidInt;
                 campaigns = campaigns.Where(c => c.Pid == pidInt);
             }
-            if (!string.IsNullOrWhiteSpace(country))
-            {
-                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
-                if (viewModel.Country != null)
-                    campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
-            }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
                 viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
@@ -51,6 +45,21 @@ namespace EomToolWeb.Controllers
                 viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
                 if (viewModel.TrafficType != null)
                     campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
+            }
+
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+            }
+            if (viewModel.Country != null)
+            {
+                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country))
+                    .OrderBy(c => c.Countries.Count() > 1)
+                    .ThenBy(c => c.Name);
+            }
+            else
+            {
+                campaigns = campaigns.OrderBy(c => c.Name);
             }
 
             viewModel.Campaigns = campaigns.AsEnumerable();

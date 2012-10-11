@@ -12,6 +12,7 @@ namespace EomToolWeb.Controllers
         public IQueryable<CampaignViewModel> Get()
         {
             var query = db.Campaigns
+                          .OrderBy(c => c.Name)
                           .AsEnumerable()
                           .Select(c => new CampaignViewModel(c));
 
@@ -21,6 +22,11 @@ namespace EomToolWeb.Controllers
         public IQueryable<CampaignViewModel> Get(string vertical, string traffictype, string search, string country, int? pid)
         {
             var campaigns = db.Campaigns.AsQueryable();
+
+            if (pid != null)
+            {
+                campaigns = campaigns.Where(c => c.Pid == pid.Value);
+            }
 
             if (!string.IsNullOrWhiteSpace(vertical))
             {
@@ -43,12 +49,13 @@ namespace EomToolWeb.Controllers
 
             if (!string.IsNullOrWhiteSpace(country))
             {
-                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
+                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country))
+                       .OrderBy(c => c.Countries.Count() > 1)
+                       .ThenBy(c => c.Name);
             }
-
-            if (pid != null)
+            else
             {
-                campaigns = campaigns.Where(c => c.Pid == pid.Value);
+                campaigns = campaigns.OrderBy(c => c.Name);
             }
 
             var query = campaigns
