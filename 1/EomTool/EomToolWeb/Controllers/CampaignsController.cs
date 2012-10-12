@@ -66,9 +66,31 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype)
+        private string TemplateName
         {
-            var viewModel = new CampaignsListViewModel();
+            get
+            {
+                if (Session["listTemplate"] == null)
+                {
+                    Session["listTemplate"] = "_List"; // put this in web.config as default template?
+                }
+                return Session["listTemplate"].ToString();
+            }
+            set
+            {
+                Session["listTemplate"] = value;
+            }
+        }
+
+        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype, string template)
+        {
+            if (!string.IsNullOrWhiteSpace(template))
+                this.TemplateName = template;
+            var viewModel = new CampaignsListViewModel()
+            {
+                TemplateName = this.TemplateName
+            };
+
             if (!string.IsNullOrWhiteSpace(search))
             {
                 viewModel.SearchString = search;

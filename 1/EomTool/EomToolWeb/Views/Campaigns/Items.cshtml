@@ -110,6 +110,6 @@
         $(document).bind("TemplateLoaded", function(e, path) { 
             DisplayCampaigns("@Url.Content("~/api/campaignsapi")@(new HtmlString(filter))");
         });
-        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/_List.tmpl.htm")");
+        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/" + Model.TemplateName + ".tmpl.htm")");
     });
 </script>
