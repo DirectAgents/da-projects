@@ -43,7 +43,7 @@ namespace DirectAgents.Domain.Entities
         [DataType(DataType.MultilineText)]
         public string Restrictions { get; set; } // e.g. No search allowed
 
-        [DisplayName("Important Details")]
+        [DisplayName("Important Details (from Wiki)")]
         [DataType(DataType.MultilineText)]
         public string ImportantDetails { get; set; } // e.g. Important Details 
         //      Android Only 
@@ -55,7 +55,7 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("Passed Information")]
         public string PassedInfo { get; set; } // e.g. Lead IDs
 
-        [DisplayName("Campaign Cap")]
+        [DisplayName("Lead Caps")]
         public string CampaignCap { get; set; } // e.g. 3,500 downloads per month 
 
         [DisplayName("Scrub Policy")]

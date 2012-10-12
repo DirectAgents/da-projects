@@ -18,16 +18,17 @@ Payout: @Model.CostCurrency@Model.Cost
 <b>Restrictions:</b>
 @if (!string.IsNullOrWhiteSpace(Model.Restrictions)) { <br />@MvcHtmlString.Create(Model.RestrictionsHtml) }
 <br />
-<b>Important Details:</b>
-@if (!string.IsNullOrWhiteSpace(Model.ImportantDetails)) { <br />@MvcHtmlString.Create(Model.ImportantDetailsHtml) }
-<br />
+@if (!string.IsNullOrWhiteSpace(Model.ImportantDetails)) {
+    <b>Important Details (from Wiki):</b><br />
+    @MvcHtmlString.Create(Model.ImportantDetailsHtml)<br />
+}
 Budget: @Model.Budget
 <br />
 Payout to Direct Agents: @Model.RevenueCurrency@Model.Revenue
 <br />
 Passed Information: @Model.PassedInfo
 <br />
-Campaign Cap: @Model.CampaignCap
+Lead Caps: @Model.CampaignCap
 <br />
 Scrub Policy: @Model.ScrubPolicy
 <br />
