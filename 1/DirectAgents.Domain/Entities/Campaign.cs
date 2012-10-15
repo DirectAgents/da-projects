@@ -64,6 +64,10 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("EOM Notes")]
         public string EomNotes { get; set; } // e.g. EOM will be finalized in 5 days. 
 
+        public bool Hidden { get; set; }
+
+        public int? StatusId { get; set; }
+        public virtual Status Status { get; set; } // e.g. Private, Inactive, Apply To Run
         public virtual Vertical Vertical { get; set; }
 
         public virtual ICollection<Person> AccountManagers { get; set; }

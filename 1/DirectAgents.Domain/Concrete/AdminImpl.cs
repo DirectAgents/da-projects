@@ -117,8 +117,14 @@ namespace DirectAgents.Domain.Concrete
                     var offer = (Cake.Data.Wsdl.ExportService.offer1)item.Offer;
 
                     if (offer != null)
+                    {
                         ExtractFieldsFromWsdlOffer(campaign, offer);
-
+                        if (!daDomain.Statuses.Any(s => s.StatusId == offer.StatusId))
+                        {
+                            var status = new Status { StatusId = offer.StatusId, Name = offer.StatusName };
+                            daDomain.Statuses.Add(status);
+                        }
+                    }
                     AddCountries(countryLookup[campaign.Pid], campaign);
                     AddTrafficTypes(item.Offer.AllowedMediaTypeNames.SplitCSV().Distinct(), campaign);
                     AddAccountManagers(item.Advertiser.AccountManagerName, campaign);
@@ -138,6 +144,8 @@ namespace DirectAgents.Domain.Concrete
             campaign.CostCurrency = offer.currency.currency_symbol;
             campaign.RevenueCurrency = offer.currency.currency_symbol;
             campaign.Restrictions = offer.restrictions;
+            campaign.Hidden = offer.hidden;
+            campaign.StatusId = offer.StatusId;
         }
 
         private void UpdateVerticals(CakeStagingEntities cake)

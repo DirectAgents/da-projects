@@ -21,18 +21,19 @@ namespace EomToolWeb.Controllers
         public ActionResult List(string searchstring, string pid, string country, string vertical, string traffictype)
         {
             var viewModel = new CampaignsListViewModel();
-            var campaigns = campaignRepository.Campaigns;
+            var campaigns = campaignRepository.Campaigns.Where(c => c.StatusId != Status.Inactive);
+
+            int pidInt;
+            if (Int32.TryParse(pid, out pidInt))
+            {
+                viewModel.Pid = pidInt;
+                campaigns = campaignRepository.Campaigns.Where(c => c.Pid == pidInt);
+            }
 
             if (!string.IsNullOrWhiteSpace(searchstring))
             {
                 viewModel.SearchString = searchstring;
                 campaigns = campaigns.Where(c => c.Name.Contains(searchstring));
-            }
-            int pidInt;
-            if (Int32.TryParse(pid, out pidInt))
-            {
-                viewModel.Pid = pidInt;
-                campaigns = campaigns.Where(c => c.Pid == pidInt);
             }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
@@ -115,7 +116,7 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Show(int pid)
         {
-            var campaign = campaignRepository.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
+            var campaign = campaignRepository.FindById(pid);
             if (campaign == null)
             {
                 return Content("campaign not found");
@@ -126,7 +127,7 @@ namespace EomToolWeb.Controllers
         [HttpGet]
         public ActionResult Edit(int pid)
         {
-            var campaign = campaignRepository.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
+            var campaign = campaignRepository.FindById(pid);
             if (campaign == null)
             {
                 return Content("campaign not found");

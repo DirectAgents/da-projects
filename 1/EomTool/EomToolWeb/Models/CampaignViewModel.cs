@@ -130,5 +130,8 @@ namespace EomToolWeb.Models
         public string EomNotes { get { return campaign.EomNotes ?? string.Empty; } }
 
         public string Vertical { get { return campaign.Vertical.Name; } }
+
+        public string Status { get { return campaign.Status.Name; } }
+        public bool Hidden { get { return campaign.Hidden; } }
     }
 }

@@ -60,6 +60,7 @@
     <Compile Include="Entities\Cake\MonthlySummary.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\Cake\Conversion.cs" />
+    <Compile Include="Entities\Status.cs" />
     <Compile Include="Entities\TrafficType.cs" />
     <Compile Include="Entities\Country.cs" />
     <Compile Include="Entities\Person.cs" />
@@ -111,6 +112,10 @@
     <Compile Include="Migrations\201210051910596_UpdateCampaignFields.cs" />
     <Compile Include="Migrations\201210051910596_UpdateCampaignFields.Designer.cs">
       <DependentUpon>201210051910596_UpdateCampaignFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210152035244_StatusAndHidden.cs" />
+    <Compile Include="Migrations\201210152035244_StatusAndHidden.Designer.cs">
+      <DependentUpon>201210152035244_StatusAndHidden.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -165,6 +170,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201210051910596_UpdateCampaignFields.resx">
       <DependentUpon>201210051910596_UpdateCampaignFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210152035244_StatusAndHidden.resx">
+      <DependentUpon>201210152035244_StatusAndHidden.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
