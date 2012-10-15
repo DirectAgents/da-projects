@@ -12,6 +12,6 @@ namespace EomToolWeb.Models
         public Vertical Vertical { get; set; }
         public TrafficType TrafficType { get; set; }
 
-        public string TemplateName { get; set; }
+        public ListViewInfo ListViewInfo { get; set; }
     }
 }

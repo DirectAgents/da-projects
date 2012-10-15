@@ -68,17 +68,25 @@ namespace EomToolWeb.Controllers
 
         private string TemplateName
         {
-            get
-            {
-                if (Session["listTemplate"] == null)
-                {
-                    Session["listTemplate"] = "_List"; // put this in web.config as default template?
-                }
-                return Session["listTemplate"].ToString();
-            }
             set
             {
-                Session["listTemplate"] = value;
+                Session["ListViewInfo"] = new ListViewInfo()
+                {
+                    TemplateName = value,
+                    ItemsPerPage = (value == "_Test") ? 30 : 9
+                };
+            }
+        }
+        private ListViewInfo ListViewInfo
+        {
+            get
+            {
+                var listViewInfo =  Session["ListViewInfo"] as ListViewInfo;
+                if (listViewInfo == null)
+                {
+                    this.TemplateName = "_List";
+                }
+                return Session["ListViewInfo"] as ListViewInfo;
             }
         }
 
@@ -88,7 +96,7 @@ namespace EomToolWeb.Controllers
                 this.TemplateName = template;
             var viewModel = new CampaignsListViewModel()
             {
-                TemplateName = this.TemplateName
+                ListViewInfo = this.ListViewInfo
             };
 
             if (!string.IsNullOrWhiteSpace(search))

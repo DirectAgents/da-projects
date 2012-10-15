@@ -168,6 +168,7 @@
     <Compile Include="Models\CampaignsByCountryViewModel.cs" />
     <Compile Include="Models\CampaignsListViewModel.cs" />
     <Compile Include="Models\CampaignViewModel.cs" />
+    <Compile Include="Models\ListViewInfo.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />

@@ -45,7 +45,7 @@
                         });
                     }
                 },
-                pageSize: 20,
+                pageSize: @Model.ListViewInfo.ItemsPerPage,
                 schema: {
                     model: {
                         id: "Pid",
@@ -110,6 +110,6 @@
         $(document).bind("TemplateLoaded", function(e, path) { 
             DisplayCampaigns("@Url.Content("~/api/campaignsapi")@(new HtmlString(filter))");
         });
-        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/" + Model.TemplateName + ".tmpl.htm")");
+        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/" + Model.ListViewInfo.TemplateName + ".tmpl.htm")");
     });
 </script>
