@@ -133,7 +133,7 @@ namespace DirectAgents.Domain.Concrete
             campaign.ImageUrl = offer.offer_image_link;
             campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
             campaign.Link = offer.preview_link;
-            campaign.Cost = decimal.Round(offer.offer_contracts[0].received.amount * (2m / 3m), 0); // hard coded to 2/3 revenue rounded to nearest dollar
+            campaign.Cost = decimal.Round(offer.offer_contracts[0].received.amount * (8m / 3m), 0) / 4; // hard coded to 2/3 revenue rounded to nearest $0.25
             campaign.Revenue = offer.offer_contracts[0].received.amount;
             campaign.CostCurrency = offer.currency.currency_symbol;
             campaign.RevenueCurrency = offer.currency.currency_symbol;
