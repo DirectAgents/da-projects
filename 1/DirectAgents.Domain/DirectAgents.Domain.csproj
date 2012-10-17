@@ -57,7 +57,6 @@
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="Entities\Cake\DailySummary.cs" />
-    <Compile Include="Entities\Cake\MonthlySummary.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\Cake\Conversion.cs" />
     <Compile Include="Entities\Status.cs" />
@@ -117,6 +116,10 @@
     <Compile Include="Migrations\201210152035244_StatusAndHidden.Designer.cs">
       <DependentUpon>201210152035244_StatusAndHidden.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201210172102104_RmMonthlySummaries.cs" />
+    <Compile Include="Migrations\201210172102104_RmMonthlySummaries.Designer.cs">
+      <DependentUpon>201210172102104_RmMonthlySummaries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -173,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201210152035244_StatusAndHidden.resx">
       <DependentUpon>201210152035244_StatusAndHidden.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210172102104_RmMonthlySummaries.resx">
+      <DependentUpon>201210172102104_RmMonthlySummaries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
