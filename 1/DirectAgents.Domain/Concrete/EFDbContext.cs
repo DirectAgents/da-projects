@@ -60,6 +60,7 @@ namespace DirectAgents.Domain.Concrete
         public DbSet<Country> Countries { get; set; }
         public DbSet<Vertical> Verticals { get; set; }
         public DbSet<TrafficType> TrafficTypes { get; set; }
+        public DbSet<Status> Statuses { get; set; }
         public DbSet<Conversion> Conversions { get; set; }
         public DbSet<MonthlySummary> MonthlySummaries { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }

@@ -43,7 +43,7 @@
 </script>
 
 <script type="text/x-kendo-tmpl" id="listTemplate">
-    <div class="listitem">
+    <div class="listitem hidden${Hidden}">
         <img src="${ImageUrl}" alt="${Name} image" />
         <div class="edit-buttons">
             <a class="k-button k-button-icontext k-edit-button" style="float: right; width: 20px; border-top: 0px; border-right: 0px" href="\\#"><span class="k-icon k-edit" style="margin-left: -5px"></span></a>
@@ -97,6 +97,11 @@
         width: 100px;
         text-align: right;
     }
+
+    .hiddentrue
+    {
+        background-color: #F89;
+    }
     
     .listitem
     {
@@ -129,7 +134,7 @@
         margin: 0;
         padding: 10px 10px 10px 15px;
         color: #333;
-        font-size: smaller;
+        font-size: small;
         float: left;
         max-width: 300px;
         background-color: rgb(239, 238, 239);
