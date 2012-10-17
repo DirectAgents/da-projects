@@ -168,7 +168,7 @@
     <Compile Include="Models\CampaignsByCountryViewModel.cs" />
     <Compile Include="Models\CampaignsListViewModel.cs" />
     <Compile Include="Models\CampaignViewModel.cs" />
-    <Compile Include="Models\ListViewInfo.cs" />
+    <Compile Include="Models\ListViewMode.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
@@ -2585,7 +2585,7 @@
     <Content Include="Scripts\tinymce\utils\validate.js" />
     <Content Include="Scripts\ZeroClipboard10.swf" />
     <Content Include="Templates\Campaigns\_List.tmpl.htm" />
-    <Content Include="Templates\Campaigns\_Test.tmpl.htm" />
+    <Content Include="Templates\Campaigns\_Brief.tmpl.htm" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

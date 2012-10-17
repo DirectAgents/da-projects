@@ -1,4 +1,43 @@
-﻿<script type="text/x-kendo-tmpl" id="editTemplate">
+﻿<script type="text/x-kendo-tmpl" id="listTemplate">
+    <div class="listitem hidden${Hidden}">
+        <img src="${ImageUrl}" alt="${Name} image" />
+        <div class="edit-buttons">
+            <a class="k-button k-button-icontext k-edit-button" style="float: right; width: 20px; border-top: 0px; border-right: 0px" href="\\#"><span class="k-icon k-edit" style="margin-left: -5px"></span></a>
+        </div>
+        <h5>${Name}<br /><span style="font-weight: normal">${AdManagers}, ${AccountManagers}</span></h5>
+        <h6>${DescriptionTrimmed}</h6>
+        <dl>
+            <dt>Payable Action:</dt>
+            <dd>${PayableAction}</dd>
+            <dt>Traffic Type:</dt>
+            <dd>${TrafficTypes}</dd>
+            <dt>Link:</dt>
+            <dd><a href="${Link}" target="_blank">${Link}</a></dd>
+            <dt>Payout:</dt>
+            <dd>${CostCurrency}${Cost}</dd>
+            <dt>Restrictions:</dt>
+            <dd style="overflow: auto">#= RestrictionsHtml #</dd>
+            <dt>Wiki Details:</dt>
+            <dd style="overflow: auto">#= ImportantDetails #</dd>
+            <dt>Budget:</dt>
+            <dd>${Budget}</dd>
+            <dt>Payout to DA:</dt>
+            <dd>${RevenueCurrency}${Revenue}</dd>
+            <dt>Passed Info:</dt>
+            <dd>${PassedInfo}</dd>
+            <dt>Lead Caps:</dt>
+            <dd style="overflow: auto">${CampaignCap}</dd>
+            <dt>Scrub:</dt>
+            <dd>${ScrubPolicy}</dd>
+            <dt>EOM Notes:</dt>
+            <dd>${EomNotes}</dd>
+            <dt>Countries:</dt>
+            <dd>${CountryCodes}</dd>
+        </dl>
+    </div>
+</script>
+
+<script type="text/x-kendo-tmpl" id="editTemplate">
     <div class="listitem">
         <img src="${ImageUrl}" alt="${Name} image" />
         <div class="edit-buttons" style="float: right; margin-right: 10px; margin-top: 10px;">
@@ -42,44 +81,6 @@
     </div>
 </script>
 
-<script type="text/x-kendo-tmpl" id="listTemplate">
-    <div class="listitem hidden${Hidden}">
-        <img src="${ImageUrl}" alt="${Name} image" />
-        <div class="edit-buttons">
-            <a class="k-button k-button-icontext k-edit-button" style="float: right; width: 20px; border-top: 0px; border-right: 0px" href="\\#"><span class="k-icon k-edit" style="margin-left: -5px"></span></a>
-        </div>
-        <h5>${Name}<br /><span style="font-weight: normal">${AdManagers}, ${AccountManagers}</span></h5>
-        <h6>${Description}</h6>
-        <dl>
-            <dt>Payable Action:</dt>
-            <dd>${PayableAction}</dd>
-            <dt>Traffic Type:</dt>
-            <dd>${TrafficTypes}</dd>
-            <dt>Link:</dt>
-            <dd><a href="${Link}" target="_blank">${Link}</a></dd>
-            <dt>Payout:</dt>
-            <dd>${CostCurrency}${Cost}</dd>
-            <dt>Restrictions:</dt>
-            <dd style="overflow: auto">#= RestrictionsHtml #</dd>
-            <dt>Wiki Details:</dt>
-            <dd style="overflow: auto">#= ImportantDetails #</dd>
-            <dt>Budget:</dt>
-            <dd>${Budget}</dd>
-            <dt>Payout to DA:</dt>
-            <dd>${RevenueCurrency}${Revenue}</dd>
-            <dt>Passed Info:</dt>
-            <dd>${PassedInfo}</dd>
-            <dt>Lead Caps:</dt>
-            <dd>${CampaignCap}</dd>
-            <dt>Scrub:</dt>
-            <dd>${ScrubPolicy}</dd>
-            <dt>EOM Notes:</dt>
-            <dd>${EomNotes}</dd>
-            <dt>Countries:</dt>
-            <dd>${CountryCodes}</dd>
-        </dl>
-    </div>
-</script>
 <style  scoped>
     .listitem input
     {
@@ -98,7 +99,7 @@
         text-align: right;
     }
 
-    .hiddentrue
+    .hiddentrue:not(.k-state-selected)
     {
         background-color: #F89;
     }
@@ -164,7 +165,7 @@
     .listitem dl
     {
         clear: both;
-        margin: 15px 0 0 0;
+        margin: 3px 0 0 0;
     }
     .listitem dt, dd
     {
@@ -174,7 +175,7 @@
         width: 320px;
         text-overflow: ellipsis;
         overflow: hidden;
-        max-height: 78px;
+        max-height: 54px;
     }
     .listitem dt
     {

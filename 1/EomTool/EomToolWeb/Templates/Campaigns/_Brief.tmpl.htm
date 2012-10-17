@@ -1,0 +1,136 @@
+﻿<script type="text/x-kendo-tmpl" id="listTemplate">
+    <div class="listitem hidden${Hidden}">
+        <div style="float: left">
+            <img src="${ImageUrl}" alt="${Name} image" />
+            ${AdManagers}, ${AccountManagers}
+        </div>
+        <div class="edit-buttons">
+            <a class="k-button k-button-icontext k-edit-button" style="float: right; width: 20px; border-top: 0px; border-right: 0px" href="\\#"><span class="k-icon k-edit" style="margin-left: -5px"></span></a>
+        </div>
+        <h3>${Name}</h3>
+        <div>${Description}</div>
+    </div>
+</script>
+
+<script type="text/x-kendo-tmpl" id="editTemplate">
+    <div class="listitem">
+        <div style="float: left">
+            <img src="${ImageUrl}" alt="${Name} image" />
+            ${AdManagers}, ${AccountManagers}
+        </div>
+        <div class="edit-buttons" style="float: right; margin-right: 10px; margin-top: 10px;">
+            <a class="k-button k-button-icontext k-update-button" href="\\#"><span class="k-icon k-update"></span>Save</a>
+            <a class="k-button k-button-icontext k-cancel-button" href="\\#"><span class="k-icon k-cancel"></span>Cancel</a>
+        </div>
+        <h3>${Name}</h3>
+        <div>${Description}</div>
+        <table>
+            <tr>
+                <td class="fieldName">Payable Action:</td>
+                <td><input type="text" data-bind="value:PayableAction" name="PayableAction" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Traffic Type:</td>
+                <td>${TrafficTypes}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Link:</td>
+                <td><a href="${Link}" target="_blank">${Link}</a></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Payout:</td>
+                <td>${CostCurrency}${Cost}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Restrictions:</td>
+                <td style="overflow: auto">#= RestrictionsHtml #</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Wiki Details:</td>
+                <td><textarea data-bind="value:ImportantDetails" name="ImportantDetails"></textarea></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Campaign Budget:</td>
+                <td><input type="text" data-bind="value:Budget" name="Budget" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Payout to DA:</td>
+                <td>${RevenueCurrency}${Revenue}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Passed Information:</td>
+                <td><input type="text" data-bind="value:PassedInfo" name="PassedInfo" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Lead Caps:</td>
+                <td><input type="text" data-bind="value:CampaignCap" name="CampaignCap" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Scrub Policy:</td>
+                <td><input type="text" data-bind="value:ScrubPolicy" name="ScrubPolicy" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">EOM Notes:</td>
+                <td><input type="text" data-bind="value:EomNotes" name="EomNotes" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Countries:</td>
+                <td>${CountryCodes}</td>
+            </tr>
+        </table>
+    </div>
+</script>
+
+<style scoped>
+    .listitem input
+    {
+        font-size: .8em;
+        width: 100%;         
+    }
+    .listitem table
+    {
+        width: 100%;
+    }
+    .fieldName
+    {
+        width: 100px;
+        text-align: right;
+    }
+
+    .hiddentrue:not(.k-state-selected)
+    {
+        background-color: #F89;
+    }
+
+    .listitem
+    {
+        margin: 5px;
+        width: 800px;
+        padding: 7px 10px 10px 10px;
+        -moz-box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        -webkit-box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+    }
+    .listitem img
+    {
+        vertical-align: middle;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        -moz-border-radius-topright: 0;
+        border-radius: 10px;
+    }
+    .listitem h3
+    {
+        margin-top: .2em;
+        clear: both;
+    }
+    .k-listview
+    {
+        border: 0;
+        padding: 0 0 20px 0;
+        min-width: 0;
+    }
+</style>

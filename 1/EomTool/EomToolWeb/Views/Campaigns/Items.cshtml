@@ -45,7 +45,7 @@
                         });
                     }
                 },
-                pageSize: @Model.ListViewInfo.ItemsPerPage,
+                pageSize: @Model.ListViewMode.ItemsPerPage,
                 schema: {
                     model: {
                         id: "Pid",
@@ -71,7 +71,7 @@
                 dataBound: function () {
                 },
                 edit: function(e) {
-                    e.item.animate({ height: '540px', width: '800px' }, 1000 );
+                    e.item.animate({ height: '@(Model.ListViewMode.EditHeight)px', width: '@(Model.ListViewMode.EditWidth)px' }, 1000 );
                 },
                 selectable: "multiple"
             });
@@ -110,6 +110,6 @@
         $(document).bind("TemplateLoaded", function(e, path) { 
             DisplayCampaigns("@Url.Content("~/api/campaignsapi")@(new HtmlString(filter))");
         });
-        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/" + Model.ListViewInfo.TemplateName + ".tmpl.htm")");
+        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/_" + Model.ListViewMode.TemplateName + ".tmpl.htm")");
     });
 </script>

@@ -54,7 +54,8 @@ namespace EomToolWeb.Models
 
         public string Name { get { return campaign.Name; } }
 
-        public string Description {
+        public string Description { get { return campaign.Description; } }
+        public string DescriptionTrimmed {
             get
             {
                 var desc = campaign.Description;

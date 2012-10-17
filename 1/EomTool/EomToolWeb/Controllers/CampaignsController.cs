@@ -67,37 +67,41 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        private string TemplateName
+        private void SetMode(string mode)
         {
-            set
-            {
-                Session["ListViewInfo"] = new ListViewInfo()
+            Session["ListViewMode"] = (mode.ToLower() == "brief") ?
+                new ListViewMode()
                 {
-                    TemplateName = value,
-                    ItemsPerPage = (value == "_Test") ? 30 : 9
+                    TemplateName = "Brief",
+                    ItemsPerPage = 500,
+                    EditHeight = 750,
+                    EditWidth = 1100,
+                } :
+                new ListViewMode() // default: "List" mode
+                {
+                    TemplateName = "List",
+                    ItemsPerPage = 30,
+                    EditHeight = 500,
+                    EditWidth = 800,
                 };
-            }
         }
-        private ListViewInfo ListViewInfo
+        private ListViewMode GetMode()
         {
-            get
+            var listViewMode =  Session["ListViewMode"] as ListViewMode;
+            if (listViewMode == null)
             {
-                var listViewInfo =  Session["ListViewInfo"] as ListViewInfo;
-                if (listViewInfo == null)
-                {
-                    this.TemplateName = "_List";
-                }
-                return Session["ListViewInfo"] as ListViewInfo;
+                SetMode("List");
             }
+            return Session["ListViewMode"] as ListViewMode;
         }
 
-        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype, string template)
+        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype, string mode)
         {
-            if (!string.IsNullOrWhiteSpace(template))
-                this.TemplateName = template;
+            if (!string.IsNullOrWhiteSpace(mode))
+                SetMode(mode);
             var viewModel = new CampaignsListViewModel()
             {
-                ListViewInfo = this.ListViewInfo
+                ListViewMode = GetMode()
             };
 
             if (!string.IsNullOrWhiteSpace(search))
