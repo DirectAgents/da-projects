@@ -24,8 +24,8 @@ namespace EomApp1.Screens.Extra
             this.itemFilter = new BindingSourceFilter(this.itemBindingSource);
 
             // Security
-            itemsGrid.Sorted += (s, e) => DisableRows();
-            itemBindingSource.ListChanged += (s, e) => DisableRows();
+            itemsGrid.Sorted += DisableRows;
+            itemBindingSource.ListChanged += DisableRows;
             itemsGrid.KeyDown += itemsGrid_KeyDown;
             itemsGrid.MultiSelect = false;
         }
@@ -38,7 +38,7 @@ namespace EomApp1.Screens.Extra
         }
 
         // Security
-        private void DisableRows()
+        private void DisableRows(object sender, EventArgs e)
         {
             using (var db = EomApp1.Screens.Final.Models.Eom.Create())
             {
@@ -251,6 +251,7 @@ namespace EomApp1.Screens.Extra
                 }
             }
 
+            itemBindingSource.ListChanged -= DisableRows;
             if (accountManagerName == "default")
             {
                 itemTableAdapter.Fill(extraItems.Item);
@@ -263,6 +264,9 @@ namespace EomApp1.Screens.Extra
                 FillAdvertisers(accountManagerName);
                 campaignTableAdapter.FillBy(extraItems.Campaign, accountManagerName);
             }
+            DisableRows(null, null);
+            itemBindingSource.ListChanged += DisableRows;
+
             if (extraItems.Advertiser.Rows.Count > 0 && extraItems.Campaign.Rows.Count > 0)
             {
                 itemsGrid.AllowUserToAddRows = true;
