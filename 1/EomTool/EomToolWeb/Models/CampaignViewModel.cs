@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using DirectAgents.Domain.Entities;
 using System.Web.Mvc;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EomToolWeb.Models
 {
@@ -98,6 +100,7 @@ namespace EomToolWeb.Models
         public string RevenueCurrency { get { return campaign.RevenueCurrency; } }
         public decimal Revenue { get { return campaign.Revenue; } }
 
+//        public string ImportantDetails { get { return HttpUtility.HtmlDecode(campaign.ImportantDetails) ?? string.Empty; } }
         public string ImportantDetails { get { return campaign.ImportantDetails ?? string.Empty; } }
         public string ImportantDetailsHtml
         {
@@ -134,5 +137,21 @@ namespace EomToolWeb.Models
 
         public string Status { get { return campaign.Status.Name; } }
         public bool Hidden { get { return campaign.Hidden; } }
+
+        //TODO: Put in utility class
+        private string MakeHtmlSafe(string text)
+        {
+            if (text == null) return null;
+
+            StringBuilder sb = new StringBuilder(
+                HttpUtility.HtmlEncode(text));
+            // Selectively allow <b> and <i>
+            sb.Replace("&lt;b&gt;", "<b>");
+            sb.Replace("&lt;/b&gt;", "</b>");
+            sb.Replace("&lt;i&gt;", "<i>");
+            sb.Replace("&lt;/i&gt;", "</i>");
+            return Regex.Replace(sb.ToString(), "&lt;(br */?)&gt;", "<$1>"); // allow <br>'s
+        }
+
     }
 }

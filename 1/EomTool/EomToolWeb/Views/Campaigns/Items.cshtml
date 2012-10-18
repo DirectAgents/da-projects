@@ -35,6 +35,8 @@
                         });
                     },
                     update: function(options) {
+                        console.warn('dataSource update');
+                        console.warn(options);
                         $.ajax( {
                             type: 'POST',
                             url: "@Url.Action("Edit2", "Campaigns")",
@@ -71,7 +73,11 @@
                 dataBound: function () {
                 },
                 edit: function(e) {
-                    e.item.animate({ height: '@(Model.ListViewMode.EditHeight)px', width: '@(Model.ListViewMode.EditWidth)px' }, 1000 );
+                    e.item.animate({ height: '@(Model.ListViewMode.EditHeight)px', width: '@(Model.ListViewMode.EditWidth)px' }, 750 );
+                },
+                save: function(e) {
+                    //e.model.PayableAction = "hi";
+                    console.warn(e.model);
                 },
                 selectable: "multiple"
             });

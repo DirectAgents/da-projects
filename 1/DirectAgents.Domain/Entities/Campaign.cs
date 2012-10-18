@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
 namespace DirectAgents.Domain.Entities
 {
@@ -45,6 +46,7 @@ namespace DirectAgents.Domain.Entities
 
         [DisplayName("Important Details (from Wiki)")]
         [DataType(DataType.MultilineText)]
+        [AllowHtml]
         public string ImportantDetails { get; set; } // e.g. Important Details 
         //      Android Only 
         //      No content locking sites 
