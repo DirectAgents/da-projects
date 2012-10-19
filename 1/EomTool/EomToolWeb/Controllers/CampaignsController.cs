@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
@@ -181,7 +178,6 @@ namespace EomToolWeb.Controllers
                 if (existingCampaign != null)
                 {
                     TryUpdateModel(existingCampaign);
-//                    existingCampaign.ImportantDetails = MakeHtmlSafe(existingCampaign.ImportantDetails);
                     campaignRepository.SaveChanges();
                 }
                 // else... set a ModelState error?
@@ -200,7 +196,6 @@ namespace EomToolWeb.Controllers
             if (c != null)
             {
                 c.PayableAction = campaign.PayableAction;
-//                c.ImportantDetails = MakeHtmlSafe(campaign.ImportantDetails);
                 c.ImportantDetails = campaign.ImportantDetails;
                 c.Budget = campaign.Budget;
                 c.PassedInfo = campaign.PassedInfo;
@@ -209,21 +204,9 @@ namespace EomToolWeb.Controllers
                 c.EomNotes = campaign.EomNotes;
                 campaignRepository.SaveChanges();
             }
-
-            return null;
-        }
-
-        //TODO: Put in utility class
-        private string MakeHtmlSafe(string text)
-        {
-            StringBuilder sb = new StringBuilder(
-                HttpUtility.HtmlEncode(text));
-            // Selectively allow <b> and <i>
-            sb.Replace("&lt;b&gt;", "<b>");
-            sb.Replace("&lt;/b&gt;", "</b>");
-            sb.Replace("&lt;i&gt;", "<i>");
-            sb.Replace("&lt;/i&gt;", "</i>");
-            return Regex.Replace(sb.ToString(), "&lt;(br */?)&gt;", "<$1>"); // allow <br>'s
+            var campaignViewModel = (c != null) ? new CampaignViewModel(c) : null;
+            var json = Json(campaignViewModel);
+            return json;
         }
 
         public ActionResult Top(TopCampaignsBy by, string traffictype)

@@ -42,7 +42,12 @@
                             url: "@Url.Action("Edit2", "Campaigns")",
                             data: options.data,
                             success: function(result) {
+                                var c = dataSource.get(options.data.Pid);
+                                if (result) c.ImportantDetailsHtml = result.ImportantDetailsHtml;
                                 options.success(result);
+                            },
+                            error: function(result) {
+                                alert('An error occurred while attempting to save.');
                             }
                         });
                     }

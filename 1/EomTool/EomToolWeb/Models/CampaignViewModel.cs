@@ -100,7 +100,6 @@ namespace EomToolWeb.Models
         public string RevenueCurrency { get { return campaign.RevenueCurrency; } }
         public decimal Revenue { get { return campaign.Revenue; } }
 
-//        public string ImportantDetails { get { return HttpUtility.HtmlDecode(campaign.ImportantDetails) ?? string.Empty; } }
         public string ImportantDetails { get { return campaign.ImportantDetails ?? string.Empty; } }
         public string ImportantDetailsHtml
         {
@@ -109,7 +108,7 @@ namespace EomToolWeb.Models
                 if (string.IsNullOrWhiteSpace(campaign.ImportantDetails))
                     return string.Empty;
                 else
-                    return campaign.ImportantDetails.Replace(System.Environment.NewLine, "<br />").Replace("\n", "<br />");
+                    return MakeHtmlSafe(campaign.ImportantDetails).Replace(System.Environment.NewLine, "<br />").Replace("\n", "<br />");
             }
         }
 
