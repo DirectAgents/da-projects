@@ -1,14 +1,69 @@
 ﻿<script type="text/x-kendo-tmpl" id="listTemplate">
-    <div class="listitem hidden${Hidden}">
+    <div class="listitem hidden${Hidden} pid${Pid}">
         <div style="float: left">
             <img src="${ImageUrl}" alt="${Name} image" />
             ${AdManagers}, ${AccountManagers}
         </div>
         <div class="edit-buttons">
             <a class="k-button k-button-icontext k-edit-button" style="float: right; width: 20px; border-top: 0px; border-right: 0px" href="\\#"><span class="k-icon k-edit" style="margin-left: -5px"></span></a>
+            <a href="\\#" style="float: right" onclick="Expand(${Pid}); return false">expand</a>
         </div>
         <h3>${Name}</h3>
         <div>${Description}</div>
+        <table class="expandTable" #if(!Edited){# style="display:none" #}#>
+            <tr>
+                <td class="fieldName">Payable Action:</td>
+                <td>${PayableAction}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Traffic Type:</td>
+                <td>${TrafficTypes}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Link:</td>
+                <td><a href="${Link}" target="_blank">${Link}</a></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Payout:</td>
+                <td>${CostCurrency}${Cost}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Restrictions:</td>
+                <td style="overflow: auto">#= RestrictionsHtml #</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Wiki Details:</td>
+                <td style="overflow: auto">#= ImportantDetailsHtml #</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Campaign Budget:</td>
+                <td>${Budget}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Payout to DA:</td>
+                <td>${RevenueCurrency}${Revenue}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Passed Information:</td>
+                <td>${PassedInfo}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Lead Caps:</td>
+                <td style="overflow: auto">${CampaignCap}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Scrub Policy:</td>
+                <td>${ScrubPolicy}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">EOM Notes:</td>
+                <td>${EomNotes}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Countries:</td>
+                <td>${CountryCodes}</td>
+            </tr>
+        </table>
     </div>
 </script>
 

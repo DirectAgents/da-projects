@@ -40,8 +40,9 @@
                             url: "@Url.Action("Edit2", "Campaigns")",
                             data: options.data,
                             success: function(result) {
-                                var c = dataSource.get(options.data.Pid);
-                                if (result) c.ImportantDetailsHtml = result.ImportantDetailsHtml;
+                                var campData = dataSource.get(options.data.Pid);
+                                campData.Edited = true;
+                                if (result) campData.ImportantDetailsHtml = result.ImportantDetailsHtml;
                                 options.success(result);
                             },
                             error: function(result) {
@@ -59,7 +60,8 @@
                             AdManagers: { editable: false },
                             AccountManagers: { editable: false },
                             Countries: { editable: false },
-                            TrafficTypes: { editable: false }
+                            TrafficTypes: { editable: false },
+                            Edited: { editable: false }
                         }
                     }
                 },
@@ -96,6 +98,10 @@
             });
         }
         dataSource.read();
+    }
+
+    function Expand(pid) {
+        $('.pid'+pid+' .expandTable').toggle();
     }
 
 @{
