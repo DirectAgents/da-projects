@@ -40,9 +40,8 @@
                             url: "@Url.Action("Edit2", "Campaigns")",
                             data: options.data,
                             success: function(result) {
-                                var campData = dataSource.get(options.data.Pid);
-                                campData.Edited = true;
-                                if (result) campData.ImportantDetailsHtml = result.ImportantDetailsHtml;
+                                var campModel = dataSource.get(options.data.Pid);
+                                if (result) campModel.ImportantDetailsHtml = result.ImportantDetailsHtml;
                                 options.success(result);
                             },
                             error: function(result) {
@@ -79,6 +78,7 @@
                 },
                 edit: function(e) {
                     e.item.animate({ height: '@(Model.ListViewMode.EditHeight)px', width: '@(Model.ListViewMode.EditWidth)px' }, 750 );
+                    e.model.Edited = true;
                 },
                 selectable: "multiple"
             });
@@ -100,8 +100,12 @@
         dataSource.read();
     }
 
-    function Expand(pid) {
+    function Expand(pid, el) {
         $('.pid'+pid+' .expandTable').toggle();
+        if ($('.pid'+pid+' .expandTable').is(':visible'))
+            $(el).text('collapse');
+        else
+            $(el).text('expand');
     }
 
 @{
