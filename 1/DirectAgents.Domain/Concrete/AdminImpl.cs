@@ -13,6 +13,13 @@ namespace DirectAgents.Domain.Concrete
     {
         private EFDbContext daDomain;
 
+        public event LogEventHandler LogHandler;
+        protected virtual void Log(string messageFormat, params object[] formatArgs)
+        {
+            if (LogHandler != null)
+                LogHandler(this, messageFormat, formatArgs);
+        }
+
         public void CreateDatabaseIfNotExists()
         {
             using (var context = new EFDbContext())
@@ -34,21 +41,29 @@ namespace DirectAgents.Domain.Concrete
 
         public void LoadSummaries()
         {
+            Log("start LoadSummaries");
             using (var cake = new Cake.Model.Staging.CakeStagingEntities())
             using (daDomain = new EFDbContext())
             {
                 var pids = daDomain.Campaigns.Select(c => c.Pid).ToList();
                 foreach (var pid in pids)
                 {
+                    Log("Pid {0}", pid);
                     var cakeSummaries = cake.DailySummaries.Where(ds => ds.offer_id == pid);
-                    if (cakeSummaries.Any())
+                    if (!cakeSummaries.Any())
+                    {
+                        Log("No cake summaries found");
+                    }
+                    else
                     {
                         var existingSummaries = daDomain.DailySummaries.Where(ds => ds.Pid == pid);
                         if (existingSummaries.Any())
                         {
                             var maxDate = existingSummaries.Max(ds => ds.Date);
+                            Log("Found existing summaries through {0}", maxDate);
                             cakeSummaries = cakeSummaries.Where(ds => ds.date > maxDate);
                         }
+                        Log("Loading {0} new summaries", cakeSummaries.Count());
                         foreach (var cakeSummary in cakeSummaries)
                         {
                             var daSummary = new DirectAgents.Domain.Entities.Cake.DailySummary
@@ -65,24 +80,31 @@ namespace DirectAgents.Domain.Concrete
                             daDomain.DailySummaries.Add(daSummary);
                         }
                         daDomain.SaveChanges();
+                        Log("done");
                     }
                 }
             }
+            Log("done LoadSummaries");
         }
 
         public void LoadCampaigns()
         {
+            Log("start LoadCampaigns");
             using (var cake = new Cake.Model.Staging.CakeStagingEntities())
             using (daDomain = new EFDbContext())
             {
+                Log("Updating verticals");
                 UpdateVerticals(cake);
+                Log("Updating traffic types");
                 UpdateTrafficTypes(cake);
 
                 var countryLookup = new CountryLookup(cake);
 
+                Log("Going through cake staged campaigns...");
                 foreach (var item in StagedCampaigns(cake))
                 {
                     var campaign = GetOrCreateCampaign(item);
+
                     campaign.Name = item.Offer.OfferName;
                     campaign.Vertical = daDomain.Verticals.Single(c => c.Name == item.Offer.VerticalName);
 
@@ -104,6 +126,7 @@ namespace DirectAgents.Domain.Concrete
                     daDomain.SaveChanges();
                 }
             }
+            Log("done LoadCampaigns");
         }
 
         private static void ExtractFieldsFromWsdlOffer(Campaign campaign, offer1 offer)
@@ -173,6 +196,11 @@ namespace DirectAgents.Domain.Concrete
             {
                 campaign = new Campaign { Pid = item.Offer.Offer_Id, };
                 daDomain.Campaigns.Add(campaign);
+                Log("Pid {0} (adding)", campaign.Pid);
+            }
+            else
+            {
+                Log("Pid {0} (updating)", campaign.Pid);
             }
 
             return campaign;
