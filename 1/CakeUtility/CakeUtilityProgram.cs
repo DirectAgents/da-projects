@@ -11,7 +11,7 @@ namespace CakeUtility
         [STAThread]
         public static void Main(string[] args)
         {
-            System.Console.Clear();
+            //System.Console.Clear();
             bool hasRun = false;
             try
             {
