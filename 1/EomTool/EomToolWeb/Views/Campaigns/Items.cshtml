@@ -103,9 +103,9 @@
     function Expand(pid, el) {
         $('.pid'+pid+' .expandTable').toggle();
         if ($('.pid'+pid+' .expandTable').is(':visible'))
-            $(el).text('collapse');
+            $(el).text('less detail');
         else
-            $(el).text('expand');
+            $(el).text('more detail');
     }
 
 @{

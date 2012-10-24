@@ -8,10 +8,15 @@
 </div>
 
 <div id="ExtraInfo">
-    <a href="#" onclick="ChangeFilter(true, true, '@(Model.ListViewMode.TemplateName.ToLower() != "brief" ? "Brief" : "List")'); return false">Switch Mode</a>
+    @if (Model.ListViewMode.TemplateName.ToLower() == "brief")
+    {
+        <text><a href="#" onclick="ChangeFilter(true, true, 'List'); return false">Mode</a>: Brief</text>
+    } else {
+        <text><a href="#" onclick="ChangeFilter(true, true, 'Brief'); return false">Mode</a>: Classic</text>
+    }
     @if (Model.Country != null)
     {
-        <text>| Country: @Model.Country.Name (<a href="#" onclick="ChangeFilter(true, false); return false">Show all</a>)</text>
+        <text>&nbsp;| Country: @Model.Country.Name (<a href="#" onclick="ChangeFilter(true, false); return false">Show all</a>)</text>
     }
 </div>
 
