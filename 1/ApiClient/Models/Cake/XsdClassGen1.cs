@@ -8,11 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ApiClient.Models.Cake {
-    
-}
-namespace ApiClient.Models.Cake {
-    
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.0.30319.17929")]
@@ -23,16 +22,16 @@ namespace ApiClient.Models.Cake {
     [System.Xml.Serialization.XmlRootAttribute(Namespace="http://cakemarketing.com/api/1/", IsNullable=false)]
     public partial class ArrayOfDailySummary {
         
-        private ArrayOfDailySummaryDailySummary[] dailySummaryField;
+        private DailySummary[] dailySummaries;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("DailySummary")]
-        public ArrayOfDailySummaryDailySummary[] DailySummary {
+        public DailySummary[] DailySummary {
             get {
-                return this.dailySummaryField;
+                return this.dailySummaries;
             }
             set {
-                this.dailySummaryField = value;
+                this.dailySummaries = value;
             }
         }
     }
@@ -43,7 +42,7 @@ namespace ApiClient.Models.Cake {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://cakemarketing.com/api/1/")]
-    public partial class ArrayOfDailySummaryDailySummary {
+    public partial class DailySummary {
         
         private System.DateTime dateField;
         
@@ -75,7 +74,12 @@ namespace ApiClient.Models.Cake {
         
         private decimal epcField;
         
+        [System.Xml.Serialization.XmlIgnore]
+        [Key, Column(Order=0)]
+        public int offer_id { get; set; }
+
         /// <remarks/>
+        [Key, Column(Order = 1)]
         public System.DateTime date {
             get {
                 return this.dateField;
