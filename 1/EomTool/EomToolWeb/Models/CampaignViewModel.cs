@@ -137,6 +137,8 @@ namespace EomToolWeb.Models
         public string Status { get { return campaign.Status.Name; } }
         public bool Hidden { get { return campaign.Hidden; } }
 
+        public bool CPM { get { return campaign.Name.ToLower().Contains("cpm"); } }
+
         //TODO: Put in utility class
         private string MakeHtmlSafe(string text)
         {

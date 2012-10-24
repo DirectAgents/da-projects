@@ -1,5 +1,5 @@
 ﻿<script type="text/x-kendo-tmpl" id="listTemplate">
-    <div class="listitem hidden${Hidden} pid${Pid}">
+    <div class="listitem hidden${Hidden} cpm${CPM} pid${Pid}">
         <div style="float: left">
             <img src="${ImageUrl}" alt="${Name} image" />
             ${AdManagers}, ${AccountManagers}
@@ -150,6 +150,11 @@
     {
         width: 100px;
         text-align: right;
+    }
+
+    .cpmtrue:not(.k-state-selected)
+    {
+        background-color: #ADF;
     }
 
     .hiddentrue:not(.k-state-selected)

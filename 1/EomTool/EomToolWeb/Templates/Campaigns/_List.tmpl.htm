@@ -1,5 +1,5 @@
 ﻿<script type="text/x-kendo-tmpl" id="listTemplate">
-    <div class="listitem hidden${Hidden}">
+    <div class="listitem hidden${Hidden} cpm${CPM}">
         <img src="${ImageUrl}" alt="${Name} image" />
         <div class="edit-buttons">
             <a class="k-button k-button-icontext k-edit-button" style="float: right; width: 20px; border-top: 0px; border-right: 0px" href="\\#"><span class="k-icon k-edit" style="margin-left: -5px"></span></a>
@@ -97,6 +97,11 @@
     {
         width: 100px;
         text-align: right;
+    }
+
+    .cpmtrue:not(.k-state-selected)
+    {
+        background-color: #ADF;
     }
 
     .hiddentrue:not(.k-state-selected)
