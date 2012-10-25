@@ -88,7 +88,7 @@
     <Compile Include="Etl\Cake\DailySummariesToDatabase.cs" />
     <Compile Include="Etl\Cake\DailySummariesFromWebService.cs" />
     <Compile Include="Etl\DirectTrack\ApiInfo.cs" />
-    <Compile Include="Etl\DirectTrack\ResourceGetterMode.cs" />
+    <Compile Include="Etl\DirectTrack\Enums.cs" />
     <Compile Include="Etl\DirectTrack\ResourcesFromDirectTrack.cs" />
     <Compile Include="Etl\DirectTrack\ConsoleLogger.cs" />
     <Compile Include="Etl\DirectTrack\ResourcesToDatabase.cs" />

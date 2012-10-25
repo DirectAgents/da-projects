@@ -38,6 +38,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,12 +56,70 @@
     <Compile Include="Migrations\201209261909461_Timestamp.Designer.cs">
       <DependentUpon>201209261909461_Timestamp.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201210100019119_UsedPoints.cs" />
+    <Compile Include="Migrations\201210100019119_UsedPoints.Designer.cs">
+      <DependentUpon>201210100019119_UsedPoints.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210110318431_dtapicall.cs" />
+    <Compile Include="Migrations\201210110318431_dtapicall.Designer.cs">
+      <DependentUpon>201210110318431_dtapicall.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210122021532_cumCampStat.cs" />
+    <Compile Include="Migrations\201210122021532_cumCampStat.Designer.cs">
+      <DependentUpon>201210122021532_cumCampStat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210122109449_clickThurisDouble.cs" />
+    <Compile Include="Migrations\201210122109449_clickThurisDouble.Designer.cs">
+      <DependentUpon>201210122109449_clickThurisDouble.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210151959583_leads.cs" />
+    <Compile Include="Migrations\201210151959583_leads.Designer.cs">
+      <DependentUpon>201210151959583_leads.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210162139085_addessID.cs" />
+    <Compile Include="Migrations\201210162139085_addessID.Designer.cs">
+      <DependentUpon>201210162139085_addessID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ModelFirst\campaign_stats.cs">
+      <DependentUpon>DTModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ModelFirst\DTModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DTModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ModelFirst\DTModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DTModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ModelFirst\DTModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DTModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DirectTrackResource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="ModelFirst\DTModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DTModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ModelFirst\DTModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DTModel.edmx</DependentUpon>
+      <LastGenOutput>DTModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="ModelFirst\DTModel.edmx.diagram">
+      <DependentUpon>DTModel.edmx</DependentUpon>
+    </None>
+    <None Include="ModelFirst\DTModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DTModel.edmx</DependentUpon>
+      <LastGenOutput>DTModel.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
     <None Include="Schemas\advertiser.xsd">
       <SubType>Designer</SubType>
@@ -99,7 +159,26 @@
     <EmbeddedResource Include="Migrations\201209261909461_Timestamp.resx">
       <DependentUpon>201209261909461_Timestamp.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210100019119_UsedPoints.resx">
+      <DependentUpon>201210100019119_UsedPoints.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210110318431_dtapicall.resx">
+      <DependentUpon>201210110318431_dtapicall.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210122021532_cumCampStat.resx">
+      <DependentUpon>201210122021532_cumCampStat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210122109449_clickThurisDouble.resx">
+      <DependentUpon>201210122109449_clickThurisDouble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210151959583_leads.resx">
+      <DependentUpon>201210151959583_leads.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210162139085_addessID.resx">
+      <DependentUpon>201210162139085_addessID.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

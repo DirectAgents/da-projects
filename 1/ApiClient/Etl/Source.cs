@@ -28,6 +28,12 @@ namespace ApiClient.Etl
             }
         }
 
+        protected void WaitUntilNotPaused()
+        {
+            while (Paused)
+                Thread.Sleep(1000);
+        }
+
         List<T> items = new List<T>();
         IEnumerable<T> ISource<T>.Items { get { return items; } }
 
@@ -43,9 +49,24 @@ namespace ApiClient.Etl
             {
                 lock (Locker)
                 {
-                    Logger.Log("Total to extract is {0} + {1} = {2}.", total, value, total + value);
+                    //Logger.Log("Total to extract is {0} + {1} = {2}.", total, value, total + value);
                     total += value;
                 }
+            }
+        }
+
+        bool paused = false;
+        public bool Paused
+        {
+            get
+            {
+                lock (Locker)
+                    return paused;
+            }
+            set
+            {
+                lock (Locker)
+                    paused = value;
             }
         }
 

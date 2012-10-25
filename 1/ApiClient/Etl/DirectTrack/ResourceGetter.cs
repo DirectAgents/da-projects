@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Linq;
+using ApiClient.Models.DirectTrack;
+using System.Threading;
 
 namespace DirectTrack
 {
@@ -94,10 +96,12 @@ namespace DirectTrack
                     ResourceList resourceList = (ResourceList)resourceListDeserializer.Deserialize(resource.CreateReader());
                     if (this.mode == ResourceGetterMode.Resource)
                     {
-                        if (resourceList.HasResources) // recurse for each resource in the list
+                        AddResrouce(uri, url, resource, cached);
+                        if (resourceList.HasResources)
+                        {
+                            // recurse for each resource in the list
                             Array.ForEach(resourceList.Resources, c => this.DoGetResources(url + c.Location));
-                        else
-                            logger.Log("Empty resource list at: " + url);
+                        }
                     }
                     else // just return the resource list as the resource and dont recurse
                         AddResrouce(uri, url, resource, cached);
@@ -119,6 +123,20 @@ namespace DirectTrack
                 this.results.Add(doc);
                 this.OnGotResource(uri, url, doc, cached);
             }
+
+            if (!cached)
+            {
+                using (var db = new DirectTrackDbContext())
+                {
+                    int points = db.PointsUsedInLastMinutes(1, ApiInfo.LoginAccessId);
+                    logger.Log("Points Used: " + points);
+                    if (points > PointsThreshold)
+                    {
+                        logger.Log("Sleeping for a minute..");
+                        Thread.Sleep(60 * 1000);
+                    }
+                }
+            }
         }
 
         private int NumTasks
@@ -127,10 +145,12 @@ namespace DirectTrack
             {
                 lock (tasksLocker)
                 {
-                    logger.Log(tasks.Count + " tasks left");
+                    //logger.Log(tasks.Count + " tasks left");
                     return tasks.Count;
                 }
             }
         }
+
+        public static int PointsThreshold { get; set; }
     }
 }

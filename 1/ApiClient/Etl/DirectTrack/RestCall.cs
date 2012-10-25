@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Xml.Linq;
 using System.Xml.Serialization;
+using ApiClient.Models.DirectTrack;
+using Spring.Http;
 using Spring.Http.Client.Interceptor;
 using Spring.Rest.Client;
 using Spring.Util;
-using System.Linq;
 
 namespace DirectTrack
 {
@@ -35,11 +40,11 @@ namespace DirectTrack
 
                 RestTemplate restTemplate = new RestTemplate(this.DirectTrackRestApiInfo.BaseUrl);
                 restTemplate.RequestInterceptors.Add(new BasicSigningRequestInterceptor(this.DirectTrackRestApiInfo.Login, this.DirectTrackRestApiInfo.Password));
-
-                if (!url.EndsWith("/"))
-                {
-                    restTemplate.RequestInterceptors.Add(new NoCacheInterceptor());
-                }
+                //restTemplate.RequestInterceptors.Add(new LogDirectTrackApiCallInterceptor());
+                //if (!url.EndsWith("/"))
+                //{
+                //    restTemplate.RequestInterceptors.Add(new NoCacheInterceptor());
+                //}
 
                 xml = restTemplate.GetForObject<string>(url, this.UriVariables);
 
@@ -71,6 +76,85 @@ namespace DirectTrack
             string xml = this.GetXml(url, out expandedUri, out cached);
             var serializer = new XmlSerializer(typeof(T));
             return (T)serializer.Deserialize(new System.IO.StringReader(xml));
+        }
+    }
+
+    public class LogDirectTrackApiCallInterceptor : IClientHttpRequestSyncInterceptor
+    {
+        public Spring.Http.Client.IClientHttpResponse Execute(IClientHttpRequestSyncExecution execution)
+        {
+            using (var db = new DirectTrackDbContext())
+            {
+                var existing = db.DirectTrackApiCalls.FirstOrDefault(c => c.Url == execution.Uri.AbsoluteUri);
+                if (existing != null)
+                {
+                    Console.WriteLine("Already made call to " + execution.Uri.AbsoluteUri + " which resulted in " + existing.Status);
+                    return null;
+                }
+            }
+
+            int points = GetPointsUsed(1);
+            while (points > 3000)
+            {
+                Console.WriteLine("Points at " + points + ", Sleeping for a minute...");
+                Thread.Sleep(60 * 1000);
+                points = GetPointsUsed(1);
+            }
+
+            var result = execution.Execute();
+
+            using (var db = new DirectTrackDbContext())
+            {
+                int pointsUsed = 10;
+
+                if (execution.Uri.AbsoluteUri.EndsWith("/")) // Resource lists end with '/' and cost 1 point per resourceURL
+                {
+                    XNamespace dt = "http://www.digitalriver.com/directtrack/api/resourceList/v1_0";
+
+                    var reader = new StreamReader(result.Body);
+                    string xmlString = reader.ReadToEnd();
+                    //reader.Close();
+
+                    XDocument doc = XDocument.Parse(xmlString);
+
+                    var resourceUrlElements =
+                        from c in doc.Root.Elements(dt + "resourceURL")
+                        select c;
+
+                    pointsUsed = resourceUrlElements.Count();
+                }
+
+                var apiCall = new DirectTrackApiCall
+                {
+                    Url = execution.Uri.AbsoluteUri,
+                    Status = ((int)result.StatusCode).ToString() + " " + result.StatusDescription,
+                    Timestamp = DateTime.Now,
+                    PointsUsed = pointsUsed
+                };
+
+                db.DirectTrackApiCalls.Add(apiCall);
+                db.SaveChanges();
+
+                Console.WriteLine("Logged " + pointsUsed + " points..");
+            }
+
+            return result;
+        }
+
+        private static int GetPointsUsed(int minutes)
+        {
+            using (var db = new DirectTrackDbContext())
+            {
+                int result = 0;
+                var ago = DateTime.Now.AddMinutes(-1 * minutes);
+                var points = (from c in db.DirectTrackApiCalls
+                              where c.Timestamp >= ago
+                              select c.PointsUsed)
+                            .ToList();
+                if (points.Count > 0)
+                    result = points.Sum();
+                return result;
+            }
         }
     }
 }

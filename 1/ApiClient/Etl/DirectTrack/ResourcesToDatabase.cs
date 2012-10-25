@@ -38,9 +38,7 @@ namespace ApiClient.Etl.DirectTrack
                         using (var db = new DirectTrackDbContext())
                         {
                             Load(db, batch);
-                            Logger.Log("Saving..");
                             db.SaveChanges();
-                            Logger.Log("Saved.");
                             Loaded += batch.Count();
                         }
                     }

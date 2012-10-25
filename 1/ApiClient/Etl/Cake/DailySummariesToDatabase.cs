@@ -6,7 +6,6 @@ using Common;
 using Extensions;
 using System.Data.Entity.Migrations;
 
-
 namespace ApiClient.Etl.Cake
 {
     public class DailySummariesToDatabase : IDestination<DailySummary>
