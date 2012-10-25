@@ -33,7 +33,7 @@ namespace EomToolWeb.Controllers
             if (!string.IsNullOrWhiteSpace(searchstring))
             {
                 viewModel.SearchString = searchstring;
-                campaigns = campaigns.Where(c => c.Name.Contains(searchstring));
+                campaigns = campaigns.Where(c => c.Name.Contains(searchstring) || c.Description.Contains(searchstring));
             }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
