@@ -57,19 +57,26 @@ namespace DirectAgents.Domain.Concrete
                     else
                     {
                         var existingSummaries = daDomain.DailySummaries.Where(ds => ds.Pid == pid);
-                        if (existingSummaries.Any())
+
+                        // Delete today's and yesterday's summaries (if exist) so they can be updated
+                        var yesterday = DateTime.Today.AddDays(-1);
+                        var recentSummaries = existingSummaries.Where(s => s.Date >= yesterday);
+                        if (recentSummaries.Any())
                         {
-                            // Delete today's summary (if exists) so it can be updated
-                            var todaysSummary = existingSummaries.Where(s => s.Date >= DateTime.Today);
-                            if (todaysSummary.Any())
-                            {   // just in case there's more than one with today's date...
-                                foreach (var summary in todaysSummary)
-                                {
-                                    Log("Deleting today's summary");
-                                    daDomain.DailySummaries.Remove(summary);
-                                }
-                                daDomain.SaveChanges();
+                            Log("Deleting today's and yesterday's summaries");
+                            foreach (var summary in recentSummaries)
+                            {
+                                daDomain.DailySummaries.Remove(summary);
                             }
+                            daDomain.SaveChanges();
+                        }
+                        // See if any existing summaries remain
+                        if (!existingSummaries.Any())
+                        {
+                            Log("No existing summaries");
+                        }
+                        else
+                        {
                             var maxDate = existingSummaries.Max(ds => ds.Date);
                             Log("Found existing summaries through {0}", maxDate);
                             cakeSummaries = cakeSummaries.Where(ds => ds.date > maxDate);
