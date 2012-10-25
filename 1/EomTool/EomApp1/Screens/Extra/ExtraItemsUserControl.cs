@@ -207,7 +207,7 @@ namespace EomApp1.Screens.Extra
             affiliateTableAdapter.Fill(extraItems.Affiliate);
             sourceTableAdapter.Fill(extraItems.Source);
             itemReportingStatusTableAdapter.Fill(extraItems.ItemReportingStatus);
-            itemTableAdapter.Fill(extraItems.Item);
+            itemTableAdapter.Fill(extraItems.Item, Properties.Settings.Default.PeriodId);
         }
 
         private void FillAdvertisers(string accountManagerName)
@@ -254,13 +254,13 @@ namespace EomApp1.Screens.Extra
             itemBindingSource.ListChanged -= DisableRows;
             if (accountManagerName == "default")
             {
-                itemTableAdapter.Fill(extraItems.Item);
+                itemTableAdapter.Fill(extraItems.Item, Properties.Settings.Default.PeriodId);
                 FillAdvertisers(null);
                 campaignTableAdapter.Fill(extraItems.Campaign);
             }
             else
             {
-                itemTableAdapter.FillBy(extraItems.Item, accountManagerName);
+                itemTableAdapter.FillBy(extraItems.Item, accountManagerName, Properties.Settings.Default.PeriodId);
                 FillAdvertisers(accountManagerName);
                 campaignTableAdapter.FillBy(extraItems.Campaign, accountManagerName);
             }

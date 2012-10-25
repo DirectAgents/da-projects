@@ -15,7 +15,7 @@ namespace EomApp1.Properties
             if (IsTestMode())
             {
                 string name = "Test";
-                SetSettings(this.OverrideConnectionString, this.OverrideDate, name);
+                SetSettings(this.OverrideConnectionString, this.OverrideDate, name, 27);
                 this.DADatabaseName = name;
                 this["EomToolSecurityConnectionString"] = this.OverrideEomToolSecurityConnectionString;
             }
@@ -29,7 +29,7 @@ namespace EomApp1.Properties
 
                 if (database != null)
                 {
-                    SetSettings(database.connection_string, database.effective_date.Value, name);
+                    SetSettings(database.connection_string, database.effective_date.Value, name, database.id);
                 }
                 else
                 {
@@ -59,16 +59,19 @@ namespace EomApp1.Properties
             return found;
         }
 
-        private void SetSettings(string connectionString, DateTime effectiveDate, string reportName)
+        private void SetSettings(string connectionString, DateTime effectiveDate, string reportName, int periodId)
         {
             int year = effectiveDate.Year;
             int month = effectiveDate.Month;
-            this["DADatabaseR1ConnectionString"] = connectionString;
+            this["DADatabaseR1ConnectionString"] = @"Data Source=biz2\da;Initial Catalog=zDADatabaseSept2012Test;User=sa;Password=sp0ngbOb";
+            this.PeriodId = periodId;
             this.StatsYear = year;
             this.StatsMonth = month;
             this.StatsDaysInMonth = DateTime.DaysInMonth(year, month);
             this.PubReportSubjectLine = string.Format("{0} Report", reportName);
         }
+
+        public int PeriodId { get; set; }
 
         public int StatsYear { get; set; }
 

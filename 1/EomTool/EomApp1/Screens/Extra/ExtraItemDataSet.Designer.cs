@@ -646,6 +646,8 @@ namespace EomApp1.Screens.Extra {
             
             private global::System.Data.DataColumn columncampaign_status;
             
+            private global::System.Data.DataColumn columnperiod_id;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public ItemDataTable() : 
@@ -866,6 +868,14 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn period_idColumn {
+                get {
+                    return this.columnperiod_id;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -922,7 +932,8 @@ namespace EomApp1.Screens.Extra {
                         string AffiliateName, 
                         int advertiser_id, 
                         string AdvertiserName, 
-                        string campaign_status) {
+                        string campaign_status, 
+                        int period_id) {
                 ItemRow rowItemRow = ((ItemRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -946,7 +957,8 @@ namespace EomApp1.Screens.Extra {
                         AffiliateName,
                         advertiser_id,
                         AdvertiserName,
-                        campaign_status};
+                        campaign_status,
+                        period_id};
                 if ((parentCampaignRowByFK_Item_Campaign != null)) {
                     columnValuesArray[1] = parentCampaignRowByFK_Item_Campaign[5];
                 }
@@ -993,7 +1005,8 @@ namespace EomApp1.Screens.Extra {
                         string name, 
                         string SourceName, 
                         int advertiser_id, 
-                        string campaign_status) {
+                        string campaign_status, 
+                        int period_id) {
                 ItemRow rowItemRow = ((ItemRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -1017,7 +1030,8 @@ namespace EomApp1.Screens.Extra {
                         null,
                         advertiser_id,
                         null,
-                        campaign_status};
+                        campaign_status,
+                        period_id};
                 if ((parentCampaignRowByFK_Item_Campaign != null)) {
                     columnValuesArray[1] = parentCampaignRowByFK_Item_Campaign[5];
                 }
@@ -1090,6 +1104,7 @@ namespace EomApp1.Screens.Extra {
                 this.columnadvertiser_id = base.Columns["advertiser_id"];
                 this.columnAdvertiserName = base.Columns["AdvertiserName"];
                 this.columncampaign_status = base.Columns["campaign_status"];
+                this.columnperiod_id = base.Columns["period_id"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1139,6 +1154,8 @@ namespace EomApp1.Screens.Extra {
                 base.Columns.Add(this.columnAdvertiserName);
                 this.columncampaign_status = new global::System.Data.DataColumn("campaign_status", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncampaign_status);
+                this.columnperiod_id = new global::System.Data.DataColumn("period_id", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnperiod_id);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnid}, true));
                 this.columnid.AutoIncrement = true;
@@ -1186,6 +1203,8 @@ namespace EomApp1.Screens.Extra {
                 this.columnAdvertiserName.ReadOnly = true;
                 this.columncampaign_status.AllowDBNull = false;
                 this.columncampaign_status.MaxLength = 50;
+                this.columnperiod_id.AllowDBNull = false;
+                this.columnperiod_id.DefaultValue = ((int)(0));
                 this.ExtendedProperties.Add("Generator_RowClassName", "ItemRow");
                 this.ExtendedProperties.Add("Generator_RowEvArgName", "ItemRowChangeEvent");
                 this.ExtendedProperties.Add("Generator_RowEvHandlerName", "ItemRowChangeEventHandler");
@@ -3848,6 +3867,17 @@ namespace EomApp1.Screens.Extra {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int period_id {
+                get {
+                    return ((int)(this[this.tableItem.period_idColumn]));
+                }
+                set {
+                    this[this.tableItem.period_idColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public AffiliateRow AffiliateRow {
                 get {
                     return ((AffiliateRow)(this.GetParentRow(this.Table.ParentRelations["FK_Item_Affiliate"])));
@@ -5036,6 +5066,7 @@ namespace EomApp1.Screens.Extra.ExtraItemDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("SourceName", "SourceName");
             tableMapping.ColumnMappings.Add("advertiser_id", "advertiser_id");
             tableMapping.ColumnMappings.Add("campaign_status", "campaign_status");
+            tableMapping.ColumnMappings.Add("period_id", "period_id");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
@@ -5125,7 +5156,7 @@ SELECT id, pid, affid, source_id, unit_type_id, revenue_currency_id, cost_curren
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = @"SELECT        Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
                          Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
-                         Advertiser.id AS advertiser_id, CampaignStatus.name AS campaign_status
+                         Advertiser.id AS advertiser_id, CampaignStatus.name AS campaign_status, Item.period_id
 FROM            Item INNER JOIN
                          Campaign ON Item.pid = Campaign.pid INNER JOIN
                          Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
@@ -5134,13 +5165,14 @@ FROM            Item INNER JOIN
                          CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
 WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (Item.item_reporting_status_id = 1 OR
                          Item.item_reporting_status_id = 2 OR
-                         Item.item_reporting_status_id = 4) AND (Source.name <> 'Cake')";
+                         Item.item_reporting_status_id = 4) AND (Source.name <> 'Cake') AND (Item.period_id = @periodid)";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@periodid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "period_id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
             this._commandCollection[1].CommandText = @"SELECT        Item.id, Item.pid, Item.affid, Item.source_id, Item.unit_type_id, Item.revenue_currency_id, Item.cost_currency_id, Item.revenue_per_unit, Item.cost_per_unit, 
                          Item.num_units, Item.notes, Item.item_reporting_status_id, Item.total_revenue, Item.total_cost, Item.margin, UnitType.name, Source.name AS SourceName, 
-                         Advertiser.id AS advertiser_id, CampaignStatus.name AS campaign_status
+                         Advertiser.id AS advertiser_id, CampaignStatus.name AS campaign_status, Item.period_id
 FROM            Item INNER JOIN
                          Campaign ON Item.pid = Campaign.pid INNER JOIN
                          Advertiser ON Campaign.advertiser_id = Advertiser.id INNER JOIN
@@ -5150,17 +5182,19 @@ FROM            Item INNER JOIN
                          CampaignStatus ON Item.campaign_status_id = CampaignStatus.id
 WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) AND (Item.item_reporting_status_id = 1 OR
                          Item.item_reporting_status_id = 2 OR
-                         Item.item_reporting_status_id = 4) AND (Source.name <> 'Cake')";
+                         Item.item_reporting_status_id = 4) AND (Source.name <> 'Cake') AND (Item.period_id = @periodid)";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@1", global::System.Data.SqlDbType.VarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, "name", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@periodid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "period_id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(ExtraItemDataSet.ItemDataTable dataTable) {
+        public virtual int Fill(ExtraItemDataSet.ItemDataTable dataTable, int periodid) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
+            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(periodid));
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
             }
@@ -5172,8 +5206,9 @@ WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual ExtraItemDataSet.ItemDataTable GetData() {
+        public virtual ExtraItemDataSet.ItemDataTable GetData(int periodid) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
+            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(periodid));
             ExtraItemDataSet.ItemDataTable dataTable = new ExtraItemDataSet.ItemDataTable(true);
             this.Adapter.Fill(dataTable);
             return dataTable;
@@ -5183,7 +5218,7 @@ WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
-        public virtual int FillBy(ExtraItemDataSet.ItemDataTable dataTable, string _1) {
+        public virtual int FillBy(ExtraItemDataSet.ItemDataTable dataTable, string _1, int periodid) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
             if ((_1 == null)) {
                 throw new global::System.ArgumentNullException("_1");
@@ -5191,6 +5226,7 @@ WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) 
             else {
                 this.Adapter.SelectCommand.Parameters[0].Value = ((string)(_1));
             }
+            this.Adapter.SelectCommand.Parameters[1].Value = ((int)(periodid));
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
             }
@@ -5202,7 +5238,7 @@ WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) 
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
-        public virtual ExtraItemDataSet.ItemDataTable GetDataBy(string _1) {
+        public virtual ExtraItemDataSet.ItemDataTable GetDataBy(string _1, int periodid) {
             this.Adapter.SelectCommand = this.CommandCollection[1];
             if ((_1 == null)) {
                 throw new global::System.ArgumentNullException("_1");
@@ -5210,6 +5246,7 @@ WHERE        (NOT (UnitType.name LIKE '%(DT)%')) AND (AccountManager.name = @1) 
             else {
                 this.Adapter.SelectCommand.Parameters[0].Value = ((string)(_1));
             }
+            this.Adapter.SelectCommand.Parameters[1].Value = ((int)(periodid));
             ExtraItemDataSet.ItemDataTable dataTable = new ExtraItemDataSet.ItemDataTable(true);
             this.Adapter.Fill(dataTable);
             return dataTable;

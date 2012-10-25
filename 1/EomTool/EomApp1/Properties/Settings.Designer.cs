@@ -26,7 +26,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseR1;User=sa;Password=sp0ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseSept2012Test;User ID=sa")]
         public string DADatabaseR1ConnectionString {
             get {
                 return ((string)(this["DADatabaseR1ConnectionString"]));
@@ -225,8 +225,8 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseJuly2012Test2;User=sa;Password=sp0" +
-            "ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseSept2012Test;User=sa;Password=sp0n" +
+            "gbOb")]
         public string OverrideConnectionString {
             get {
                 return ((string)(this["OverrideConnectionString"]));
@@ -235,7 +235,7 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2012-07-01")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2012-09-01")]
         public global::System.DateTime OverrideDate {
             get {
                 return ((global::System.DateTime)(this["OverrideDate"]));
@@ -244,7 +244,7 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool TestMode {
             get {
                 return ((bool)(this["TestMode"]));
