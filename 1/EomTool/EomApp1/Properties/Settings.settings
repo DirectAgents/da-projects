@@ -115,7 +115,7 @@
     <Setting Name="OverrideDate" Type="System.DateTime" Scope="Application">
       <Value Profile="(Default)">2012-07-01</Value>
     </Setting>
-    <Setting Name="TestMode" Type="System.Boolean" Scope="Application">
+    <Setting Name="TestMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EomToolSecurityConnectionString" Type="(Connection string)" Scope="Application">

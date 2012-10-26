@@ -242,12 +242,15 @@ namespace EomApp1.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool TestMode {
             get {
                 return ((bool)(this["TestMode"]));
+            }
+            set {
+                this["TestMode"] = value;
             }
         }
         
