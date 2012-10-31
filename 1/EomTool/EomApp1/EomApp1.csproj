@@ -59,10 +59,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>91A88A39BBE8295DBEC39C9D685ED02D287660C0</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>B29A4D2C623538C8FE01208E166589E1F09D53CB</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>EOMTool-ClickOnce-Manifests.pfx</ManifestKeyFile>
+    <ManifestKeyFile>EomApp1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -814,6 +814,7 @@
     <None Include="DAMain1DataSetForSqlExecute.xss">
       <DependentUpon>DAMain1DataSetForSqlExecute.xsd</DependentUpon>
     </None>
+    <None Include="EomApp1_TemporaryKey.pfx" />
     <None Include="EOMTool-ClickOnce-Manifests-5Years.pfx" />
     <None Include="EOMTool-ClickOnce-Manifests.pfx" />
     <None Include="Models\Generated\Database.tt">

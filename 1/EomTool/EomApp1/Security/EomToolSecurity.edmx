@@ -36,6 +36,7 @@
           <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="WindowsIdentity" Type="varchar" Nullable="false" MaxLength="500" />
           <Property Name="EmailAddress" Type="varchar" MaxLength="255" />
+          <Property Name="IpAddress" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Permissions">
           <Key>
@@ -138,8 +139,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Tag" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Tag" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Roles" Relationship="EomToolSecurity.RolePermission" FromRole="Permission" ToRole="Role" />
         </EntityType>
         <EntityType Name="Role">
@@ -147,7 +148,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Permissions" Relationship="EomToolSecurity.RolePermission" FromRole="Role" ToRole="Permission" />
           <NavigationProperty Name="Groups" Relationship="EomToolSecurity.RoleGroup" FromRole="Role" ToRole="Group" />
         </EntityType>
@@ -164,6 +165,7 @@
           <Property Type="String" Name="WindowsIdentity" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="EmailAddress" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Roles" Relationship="EomToolSecurity.RoleGroup" FromRole="Group" ToRole="Role" />
+          <Property Type="String" Name="IpAddress" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="RoleGroup">
           <End Type="EomToolSecurity.Group" Role="Group" Multiplicity="*" />
@@ -203,6 +205,7 @@
           <EntitySetMapping Name="Groups">
             <EntityTypeMapping TypeName="EomToolSecurity.Group">
               <MappingFragment StoreEntitySet="Groups">
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
                 <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
                 <ScalarProperty Name="WindowsIdentity" ColumnName="WindowsIdentity" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
