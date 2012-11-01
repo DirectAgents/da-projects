@@ -10,5 +10,6 @@ namespace EomTool.Domain.Abstract
     {
         Group WindowsIdentityGroup(string windowsIdentity);
         IEnumerable<Group> GroupsForUser(IPrincipal user);
+        IEnumerable<Group> GroupsForIpAddress(string ipAddress);
     }
 }

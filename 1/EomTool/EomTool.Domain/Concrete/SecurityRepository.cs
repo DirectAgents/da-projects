@@ -28,5 +28,13 @@ namespace EomTool.Domain.Concrete
             var groups = allGroups.Where(g => g.WindowsIdentity.Split(',').Any(wi => user.IsInRole(wi)));
             return groups;
         }
+
+        public IEnumerable<Group> GroupsForIpAddress(string ipAddress)
+        {
+            if (string.IsNullOrWhiteSpace(ipAddress))
+                return null;
+            var groups = db.Groups.Where(g => g.IpAddress == ipAddress);
+            return groups;
+        }
     }
 }

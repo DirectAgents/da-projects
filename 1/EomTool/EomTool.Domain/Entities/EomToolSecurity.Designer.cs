@@ -8,12 +8,13 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
@@ -120,6 +121,7 @@ namespace EomTool.Domain.Entities
         private ObjectSet<Role> _Roles;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -147,11 +149,11 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -180,6 +182,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -280,8 +283,33 @@ namespace EomTool.Domain.Entities
         private global::System.String _EmailAddress;
         partial void OnEmailAddressChanging(global::System.String value);
         partial void OnEmailAddressChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String IpAddress
+        {
+            get
+            {
+                return _IpAddress;
+            }
+            set
+            {
+                OnIpAddressChanging(value);
+                ReportPropertyChanging("IpAddress");
+                _IpAddress = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("IpAddress");
+                OnIpAddressChanged();
+            }
+        }
+        private global::System.String _IpAddress;
+        partial void OnIpAddressChanging(global::System.String value);
+        partial void OnIpAddressChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -308,6 +336,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -336,6 +365,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -414,6 +444,7 @@ namespace EomTool.Domain.Entities
         partial void OnTagChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -440,6 +471,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -466,6 +498,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -520,6 +553,7 @@ namespace EomTool.Domain.Entities
         partial void OnNameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -568,8 +602,10 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
 
     #endregion
+
     
 }

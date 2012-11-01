@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
+using DAgents.Common;
 
 namespace EomToolWeb.Controllers
 {
@@ -36,7 +37,12 @@ namespace EomToolWeb.Controllers
         {
             var affIds = new List<int>();
             var groups = securityRepository.GroupsForUser(User);
-            if (groups != null)
+            if (!groups.Any())
+            {
+                string ipAddress = WindowsIdentityHelper.GetIpAddress();
+                groups = securityRepository.GroupsForIpAddress(ipAddress);
+            }
+            if (groups != null && groups.Any())
             {
                 var mediaBuyers = groups.SelectMany(g => g.Roles).Distinct().Where(r => r.Name.StartsWith("MB: ")).Select(r => r.Name.Substring(4)).ToArray();
                 affIds = mainRepository.AffiliatesForMediaBuyers(mediaBuyers).Select(a => a.affid).ToList();
