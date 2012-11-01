@@ -1,11 +1,45 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DAgents.Common;
+using System;
+using System.Net;
+using System.IO;
 
 namespace EomApp1.Security
 {
     public class UserBase
     {
+        string _IpAddress;
+        string IpAddress
+        {
+            get
+            {
+                if (_IpAddress == null)
+                {
+                    try
+                    {
+                        String direction = "";
+                        WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");
+                        using (WebResponse response = request.GetResponse())
+                        using (StreamReader stream = new StreamReader(response.GetResponseStream()))
+                        {
+                            direction = stream.ReadToEnd();
+                        }
+                        //Search for the ip in the html
+                        int first = direction.IndexOf("Address: ") + 9;
+                        int last = direction.LastIndexOf("</body>");
+                        _IpAddress = direction.Substring(first, last - first).Trim();
+
+                    }
+                    catch
+                    {
+                        _IpAddress = string.Empty;
+                    }
+                }
+                return _IpAddress;
+            }
+        }
+
         List<Role> _Roles;
         List<Role> Roles
         {
@@ -13,10 +47,19 @@ namespace EomApp1.Security
             {
                 if (_Roles == null)
                     using (var db = new Security.EomToolSecurityEntities())
+                    {
                         _Roles = (from g in db.Groups.ToList()
                                   where WindowsIdentityHelper.DoesCurrentUserHaveIdentity(g.WindowsIdentity.ToArray(','))
                                   from r in g.Roles
                                   select r).ToList();
+                        if (_Roles.Count == 0 && !string.IsNullOrWhiteSpace(IpAddress))
+                        {
+                            _Roles = (from g in db.Groups.ToList()
+                                      where g.IpAddress == IpAddress
+                                      from r in g.Roles
+                                      select r).ToList();
+                        }
+                    }
                 return _Roles;
             }
         }

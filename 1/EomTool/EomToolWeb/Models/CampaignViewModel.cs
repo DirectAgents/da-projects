@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using DirectAgents.Domain.Entities;
 using System.Web.Mvc;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EomToolWeb.Models
 {
@@ -55,6 +57,15 @@ namespace EomToolWeb.Models
         public string Name { get { return campaign.Name; } }
 
         public string Description { get { return campaign.Description; } }
+        public string DescriptionTrimmed {
+            get
+            {
+                var desc = campaign.Description;
+                if (campaign.Description.Length > 220)
+                    desc = campaign.Description.Substring(0, 220) + ".....";
+                return desc;
+            }
+        }
 
         public int Pid { get { return campaign.Pid; } }
 
@@ -89,29 +100,27 @@ namespace EomToolWeb.Models
         public string RevenueCurrency { get { return campaign.RevenueCurrency; } }
         public decimal Revenue { get { return campaign.Revenue; } }
 
-        public MvcHtmlString ImportantDetailsMvcHtmlString
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(campaign.ImportantDetails))
-                    return null;
-                else
-                    return MvcHtmlString.Create(campaign.ImportantDetails.Replace(System.Environment.NewLine, "<br />"));
-            }
-        }
-
-        public string ImportantDetails
+        public string ImportantDetails { get { return campaign.ImportantDetails ?? string.Empty; } }
+        public string ImportantDetailsHtml
         {
             get
             {
                 if (string.IsNullOrWhiteSpace(campaign.ImportantDetails))
                     return string.Empty;
                 else
-                    return campaign.ImportantDetails;
+                    return MakeHtmlSafe(campaign.ImportantDetails).Replace(System.Environment.NewLine, "<br />").Replace("\n", "<br />");
             }
         }
 
         public string Restrictions { get { return campaign.Restrictions ?? string.Empty; } }
+        public string RestrictionsHtml {
+            get {
+                if (string.IsNullOrWhiteSpace(campaign.Restrictions))
+                    return string.Empty;
+                else
+                    return campaign.Restrictions.Replace(System.Environment.NewLine, "<br />").Replace("\n", "<br />");
+            }
+        }
 
         public string Budget { get { return campaign.Budget ?? string.Empty; } }
 
@@ -124,5 +133,26 @@ namespace EomToolWeb.Models
         public string EomNotes { get { return campaign.EomNotes ?? string.Empty; } }
 
         public string Vertical { get { return campaign.Vertical.Name; } }
+
+        public string Status { get { return campaign.Status.Name; } }
+        public bool Hidden { get { return campaign.Hidden; } }
+
+        public bool CPM { get { return campaign.Name.ToLower().Contains("cpm"); } }
+
+        //TODO: Put in utility class
+        private string MakeHtmlSafe(string text)
+        {
+            if (text == null) return null;
+
+            StringBuilder sb = new StringBuilder(
+                HttpUtility.HtmlEncode(text));
+            // Selectively allow <b> and <i>
+            sb.Replace("&lt;b&gt;", "<b>");
+            sb.Replace("&lt;/b&gt;", "</b>");
+            sb.Replace("&lt;i&gt;", "<i>");
+            sb.Replace("&lt;/i&gt;", "</i>");
+            return Regex.Replace(sb.ToString(), "&lt;(br */?)&gt;", "<$1>"); // allow <br>'s
+        }
+
     }
 }

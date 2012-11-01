@@ -7,6 +7,14 @@ namespace Cake.Data.Wsdl.ExportService
 {
     public partial class offer1
     {
+        public int StatusId
+        {
+            get
+            {
+                return this.offer_status.offer_status_id;
+            }
+        }
+
         public string StatusName
         {
             get

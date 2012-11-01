@@ -71,13 +71,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class vertical
     {
 
-        private byte vertical_idField;
+        private int vertical_idField;
 
         private string vertical_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte vertical_id
+        public int vertical_id
         {
             get
             {
@@ -114,13 +114,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class offer_type
     {
 
-        private byte offer_type_idField;
+        private int offer_type_idField;
 
         private string offer_type_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte offer_type_id
+        public int offer_type_id
         {
             get
             {
@@ -157,13 +157,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class offer_status
     {
 
-        private byte offer_status_idField;
+        private int offer_status_idField;
 
         private string offer_status_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte offer_status_id
+        public int offer_status_id
         {
             get
             {
@@ -200,13 +200,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class price_format
     {
 
-        private byte price_format_idField;
+        private int price_format_idField;
 
         private string price_format_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte price_format_id
+        public int price_format_id
         {
             get
             {
@@ -566,7 +566,7 @@ namespace ApiClient.Models.Cake.Offers
     public partial class step
     {
 
-        private byte step_numberField;
+        private int step_numberField;
 
         private string step_nameField;
 
@@ -589,7 +589,7 @@ namespace ApiClient.Models.Cake.Offers
         private string offer_linkField;
 
         /// <remarks/>
-        public byte step_number
+        public int step_number
         {
             get
             {
@@ -958,13 +958,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class tag
     {
 
-        private byte tag_idField;
+        private int tag_idField;
 
         private string tag_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte tag_id
+        public int tag_id
         {
             get
             {
@@ -1028,13 +1028,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class media_type
     {
 
-        private byte media_type_idField;
+        private int media_type_idField;
 
         private string media_type_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte media_type_id
+        public int media_type_id
         {
             get
             {
@@ -1098,7 +1098,7 @@ namespace ApiClient.Models.Cake.Offers
     public partial class currency
     {
 
-        private byte currency_idField;
+        private int currency_idField;
 
         private string currency_symbolField;
 
@@ -1108,7 +1108,7 @@ namespace ApiClient.Models.Cake.Offers
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte currency_id
+        public int currency_id
         {
             get
             {
@@ -1173,13 +1173,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class cap_interval
     {
 
-        private byte cap_interval_idField;
+        private int cap_interval_idField;
 
         private string cap_interval_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte cap_interval_id
+        public int cap_interval_id
         {
             get
             {
@@ -1362,13 +1362,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class session_regeneration_type
     {
 
-        private byte session_regeneration_type_idField;
+        private int session_regeneration_type_idField;
 
         private string session_regeneration_type_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte session_regeneration_type_id
+        public int session_regeneration_type_id
         {
             get
             {
@@ -1405,13 +1405,13 @@ namespace ApiClient.Models.Cake.Offers
     public partial class suppression_list_type
     {
 
-        private byte suppression_list_type_idField;
+        private int suppression_list_type_idField;
 
         private string suppression_list_type_nameField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Namespace = "API:id_name_store")]
-        public byte suppression_list_type_id
+        public int suppression_list_type_id
         {
             get
             {
@@ -1448,7 +1448,7 @@ namespace ApiClient.Models.Cake.Offers
     public partial class suppression_list
     {
 
-        private byte suppression_list_idField;
+        private int suppression_list_idField;
 
         private string suppression_list_nameField;
 
@@ -1459,7 +1459,7 @@ namespace ApiClient.Models.Cake.Offers
         private System.DateTime date_createdField;
 
         /// <remarks/>
-        public byte suppression_list_id
+        public int suppression_list_id
         {
             get
             {
@@ -1624,9 +1624,9 @@ namespace ApiClient.Models.Cake.Offers
 
         private conversion_cap conversion_capField;
 
-        private byte click_cookie_daysField;
+        private int click_cookie_daysField;
 
-        private byte impression_cookie_daysField;
+        private int impression_cookie_daysField;
 
         private bool enable_view_thru_conversionsField;
 
@@ -1907,7 +1907,7 @@ namespace ApiClient.Models.Cake.Offers
         }
 
         /// <remarks/>
-        public byte click_cookie_days
+        public int click_cookie_days
         {
             get
             {
@@ -1920,7 +1920,7 @@ namespace ApiClient.Models.Cake.Offers
         }
 
         /// <remarks/>
-        public byte impression_cookie_days
+        public int impression_cookie_days
         {
             get
             {

@@ -40,12 +40,17 @@
                             url: "@Url.Action("Edit2", "Campaigns")",
                             data: options.data,
                             success: function(result) {
+                                var campModel = dataSource.get(options.data.Pid);
+                                if (result) campModel.ImportantDetailsHtml = result.ImportantDetailsHtml;
                                 options.success(result);
+                            },
+                            error: function(result) {
+                                alert('An error occurred while attempting to save.');
                             }
                         });
                     }
                 },
-                pageSize: 20,
+                pageSize: @Model.ListViewMode.ItemsPerPage,
                 schema: {
                     model: {
                         id: "Pid",
@@ -54,7 +59,8 @@
                             AdManagers: { editable: false },
                             AccountManagers: { editable: false },
                             Countries: { editable: false },
-                            TrafficTypes: { editable: false }
+                            TrafficTypes: { editable: false },
+                            Edited: { editable: false }
                         }
                     }
                 },
@@ -71,7 +77,8 @@
                 dataBound: function () {
                 },
                 edit: function(e) {
-                    e.item.animate({ height: '540px', width: '800px' }, 1000 );
+                    e.item.animate({ height: '@(Model.ListViewMode.EditHeight)px', width: '@(Model.ListViewMode.EditWidth)px' }, 750 );
+                    e.model.Edited = true;
                 },
                 selectable: "multiple"
             });
@@ -93,6 +100,14 @@
         dataSource.read();
     }
 
+    function Expand(pid, el) {
+        $('.pid'+pid+' .expandTable').toggle();
+        if ($('.pid'+pid+' .expandTable').is(':visible'))
+            $(el).text('less detail');
+        else
+            $(el).text('more detail');
+    }
+
 @{
     string filter = "";
     filter += "?pid=";
@@ -110,6 +125,6 @@
         $(document).bind("TemplateLoaded", function(e, path) { 
             DisplayCampaigns("@Url.Content("~/api/campaignsapi")@(new HtmlString(filter))");
         });
-        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/_List.tmpl.htm")");
+        loader.loadTemplate("@Url.Content("~/Templates/Campaigns/_" + Model.ListViewMode.TemplateName + ".tmpl.htm")");
     });
 </script>

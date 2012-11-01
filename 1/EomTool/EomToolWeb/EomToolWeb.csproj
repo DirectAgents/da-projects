@@ -16,6 +16,10 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -164,6 +168,7 @@
     <Compile Include="Models\CampaignsByCountryViewModel.cs" />
     <Compile Include="Models\CampaignsListViewModel.cs" />
     <Compile Include="Models\CampaignViewModel.cs" />
+    <Compile Include="Models\ListViewMode.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
@@ -2580,6 +2585,7 @@
     <Content Include="Scripts\tinymce\utils\validate.js" />
     <Content Include="Scripts\ZeroClipboard10.swf" />
     <Content Include="Templates\Campaigns\_List.tmpl.htm" />
+    <Content Include="Templates\Campaigns\_Brief.tmpl.htm" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -2607,6 +2613,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
     <None Include="readme.txt" />
     <Content Include="Views\Payouts\Summary.cshtml" />
     <Content Include="Views\Payouts\SummaryGrid.cshtml" />

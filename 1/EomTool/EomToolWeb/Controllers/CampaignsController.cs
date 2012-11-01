@@ -21,24 +21,19 @@ namespace EomToolWeb.Controllers
         public ActionResult List(string searchstring, string pid, string country, string vertical, string traffictype)
         {
             var viewModel = new CampaignsListViewModel();
-            var campaigns = campaignRepository.Campaigns;
+            var campaigns = campaignRepository.Campaigns.Where(c => c.StatusId != Status.Inactive);
 
-            if (!string.IsNullOrWhiteSpace(searchstring))
-            {
-                viewModel.SearchString = searchstring;
-                campaigns = campaigns.Where(c => c.Name.Contains(searchstring));
-            }
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))
             {
                 viewModel.Pid = pidInt;
-                campaigns = campaigns.Where(c => c.Pid == pidInt);
+                campaigns = campaignRepository.Campaigns.Where(c => c.Pid == pidInt);
             }
-            if (!string.IsNullOrWhiteSpace(country))
+
+            if (!string.IsNullOrWhiteSpace(searchstring))
             {
-                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
-                if (viewModel.Country != null)
-                    campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
+                viewModel.SearchString = searchstring;
+                campaigns = campaigns.Where(c => c.Name.Contains(searchstring) || c.Description.Contains(searchstring));
             }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
@@ -53,13 +48,62 @@ namespace EomToolWeb.Controllers
                     campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
             }
 
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+            }
+            if (viewModel.Country != null)
+            {
+                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country))
+                    .OrderBy(c => c.Countries.Count() > 1)
+                    .ThenBy(c => c.Name);
+            }
+            else
+            {
+                campaigns = campaigns.OrderBy(c => c.Name);
+            }
+
             viewModel.Campaigns = campaigns.AsEnumerable();
             return View(viewModel);
         }
 
-        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype)
+        private void SetMode(string mode)
         {
-            var viewModel = new CampaignsListViewModel();
+            Session["ListViewMode"] = (mode.ToLower() == "brief") ?
+                new ListViewMode()
+                {
+                    TemplateName = "Brief",
+                    ItemsPerPage = 500,
+                    EditHeight = 750,
+                    EditWidth = 1100,
+                } :
+                new ListViewMode() // default: "List" mode
+                {
+                    TemplateName = "List",
+                    ItemsPerPage = 30,
+                    EditHeight = 500,
+                    EditWidth = 800,
+                };
+        }
+        private ListViewMode GetMode()
+        {
+            var listViewMode =  Session["ListViewMode"] as ListViewMode;
+            if (listViewMode == null)
+            {
+                SetMode("List");
+            }
+            return Session["ListViewMode"] as ListViewMode;
+        }
+
+        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype, string mode)
+        {
+            if (!string.IsNullOrWhiteSpace(mode))
+                SetMode(mode);
+            var viewModel = new CampaignsListViewModel()
+            {
+                ListViewMode = GetMode()
+            };
+
             if (!string.IsNullOrWhiteSpace(search))
             {
                 viewModel.SearchString = search;
@@ -106,7 +150,7 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Show(int pid)
         {
-            var campaign = campaignRepository.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
+            var campaign = campaignRepository.FindById(pid);
             if (campaign == null)
             {
                 return Content("campaign not found");
@@ -117,7 +161,7 @@ namespace EomToolWeb.Controllers
         [HttpGet]
         public ActionResult Edit(int pid)
         {
-            var campaign = campaignRepository.Campaigns.Where(c => c.Pid == pid).FirstOrDefault();
+            var campaign = campaignRepository.FindById(pid);
             if (campaign == null)
             {
                 return Content("campaign not found");
@@ -160,8 +204,9 @@ namespace EomToolWeb.Controllers
                 c.EomNotes = campaign.EomNotes;
                 campaignRepository.SaveChanges();
             }
-
-            return null;
+            var campaignViewModel = (c != null) ? new CampaignViewModel(c) : null;
+            var json = Json(campaignViewModel);
+            return json;
         }
 
         public ActionResult Top(TopCampaignsBy by, string traffictype)

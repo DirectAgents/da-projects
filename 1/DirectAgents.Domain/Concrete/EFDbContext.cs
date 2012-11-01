@@ -14,6 +14,9 @@ namespace DirectAgents.Domain.Concrete
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            //Disable the check to see if the model is out of sync with the database
+//            Database.SetInitializer<EFDbContext>(null);
+
             modelBuilder.Entity<Campaign>()
                 .HasMany(u => u.AccountManagers)
                 .WithMany(t => t.AccountManagerCampaigns)
@@ -60,8 +63,8 @@ namespace DirectAgents.Domain.Concrete
         public DbSet<Country> Countries { get; set; }
         public DbSet<Vertical> Verticals { get; set; }
         public DbSet<TrafficType> TrafficTypes { get; set; }
+        public DbSet<Status> Statuses { get; set; }
         public DbSet<Conversion> Conversions { get; set; }
-        public DbSet<MonthlySummary> MonthlySummaries { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }
     }
 }

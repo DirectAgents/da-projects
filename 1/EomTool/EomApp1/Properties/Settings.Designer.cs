@@ -45,7 +45,7 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Dec 10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Sep 2012")]
         public string DADatabaseName {
             get {
                 return ((string)(this["DADatabaseName"]));
@@ -58,7 +58,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=173.204.123.82;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
         public string DAMain1ConnectionString {
             get {
                 return ((string)(this["DAMain1ConnectionString"]));
@@ -241,19 +241,23 @@ namespace EomApp1.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool TestMode {
             get {
                 return ((bool)(this["TestMode"]));
+            }
+            set {
+                this["TestMode"] = value;
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=EomToolSecurity;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=173.204.123.82;Initial Catalog=EOMToolSecurity;User=sa;Password=sp0ng" +
+            "bOb")]
         public string EomToolSecurityConnectionString {
             get {
                 return ((string)(this["EomToolSecurityConnectionString"]));

@@ -3812,13 +3812,13 @@ namespace Cake.Data.Wsdl.ExportService {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="API:id_name_store")]
     public partial class offer_status : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private byte offer_status_idField;
+        private int offer_status_idField;
         
         private string offer_status_nameField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
-        public byte offer_status_id {
+        public int offer_status_id {
             get {
                 return this.offer_status_idField;
             }

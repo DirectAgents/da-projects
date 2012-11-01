@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using System.Web.Http;
 using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Entities;
 using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
@@ -8,10 +10,18 @@ namespace EomToolWeb.Controllers
     public class CampaignsApiController : ApiController
     {
         private EFDbContext db = new EFDbContext();
+        private IQueryable<Campaign> AllCampaigns(bool includeInactive)
+        {
+            if (includeInactive)
+                return db.Campaigns.AsQueryable();
+            else
+                return db.Campaigns.Where(c => c.StatusId != Status.Inactive);
+        }
 
         public IQueryable<CampaignViewModel> Get()
         {
-            var query = db.Campaigns
+            var query = AllCampaigns(false)
+                          .OrderBy(c => c.Name)
                           .AsEnumerable()
                           .Select(c => new CampaignViewModel(c));
 
@@ -20,7 +30,12 @@ namespace EomToolWeb.Controllers
 
         public IQueryable<CampaignViewModel> Get(string vertical, string traffictype, string search, string country, int? pid)
         {
-            var campaigns = db.Campaigns.AsQueryable();
+            var campaigns = AllCampaigns(false);
+
+            if (pid != null)
+            {
+                campaigns = AllCampaigns(true).Where(c => c.Pid == pid.Value);
+            }
 
             if (!string.IsNullOrWhiteSpace(vertical))
             {
@@ -43,12 +58,13 @@ namespace EomToolWeb.Controllers
 
             if (!string.IsNullOrWhiteSpace(country))
             {
-                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country));
+                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country))
+                       .OrderBy(c => c.Countries.Count() > 1)
+                       .ThenBy(c => c.Name);
             }
-
-            if (pid != null)
+            else
             {
-                campaigns = campaigns.Where(c => c.Pid == pid.Value);
+                campaigns = campaigns.OrderBy(c => c.Name);
             }
 
             var query = campaigns

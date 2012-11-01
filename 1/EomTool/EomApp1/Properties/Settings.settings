@@ -18,15 +18,15 @@
       <Value Profile="(Default)">Data Source=aaron\sqlexpress;Initial Catalog=Nov10Eom2;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DADatabaseName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Dec 10</Value>
+      <Value Profile="(Default)">Sep 2012</Value>
     </Setting>
     <Setting Name="DAMain1ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=173.204.123.82;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb</Value>
+      <Value Profile="(Default)">Data Source=173.204.123.82;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb</Value>
     </Setting>
     <Setting Name="DADatabaseR2ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -115,16 +115,16 @@
     <Setting Name="OverrideDate" Type="System.DateTime" Scope="Application">
       <Value Profile="(Default)">2012-07-01</Value>
     </Setting>
-    <Setting Name="TestMode" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="TestMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="EomToolSecurityConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=EomToolSecurity;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=173.204.123.82;Initial Catalog=EOMToolSecurity;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=EomToolSecurity;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=173.204.123.82;Initial Catalog=EOMToolSecurity;User=sa;Password=sp0ngbOb</Value>
     </Setting>
     <Setting Name="TestUserIdentities" Type="System.String" Scope="Application">
       <Value Profile="(Default)">directagents\aanodide,directagents\kslesinsky,aaron-pavillion\aaron</Value>

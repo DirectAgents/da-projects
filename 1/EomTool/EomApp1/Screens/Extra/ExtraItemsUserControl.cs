@@ -24,8 +24,8 @@ namespace EomApp1.Screens.Extra
             this.itemFilter = new BindingSourceFilter(this.itemBindingSource);
 
             // Security
-            itemsGrid.Sorted += (s, e) => DisableRows();
-            itemBindingSource.ListChanged += (s, e) => DisableRows();
+            itemsGrid.Sorted += DisableRows;
+            itemBindingSource.ListChanged += DisableRows;
             itemsGrid.KeyDown += itemsGrid_KeyDown;
             itemsGrid.MultiSelect = false;
         }
@@ -38,7 +38,7 @@ namespace EomApp1.Screens.Extra
         }
 
         // Security
-        private void DisableRows()
+        private void DisableRows(object sender, EventArgs e)
         {
             using (var db = EomApp1.Screens.Final.Models.Eom.Create())
             {
@@ -47,13 +47,19 @@ namespace EomApp1.Screens.Extra
                     foreach (var item in from row in itemsGrid.Rows.Cast<DataGridViewRow>()
                                          where !row.IsNewRow
                                          let pid = ((row.DataBoundItem as DataRowView).Row as ExtraItemDataSet.ItemRow).pid
+                                         let status = ((row.DataBoundItem as DataRowView).Row as ExtraItemDataSet.ItemRow).campaign_status
                                          let am = amByPID.ContainsKey(pid) ? amByPID[pid] : null
                                          where am != null
-                                         select new { Row = row, AM = am })
+                                         select new { Row = row, AM = am, Status = status })
                     {
                         if (!Security.User.Current.CanFinalizeForAccountManager(item.AM))
                         {
                             item.Row.DefaultCellStyle.BackColor = DisabledBackColor;
+                            item.Row.ReadOnly = true;
+                        }
+                        else if (item.Status != "default")
+                        {
+                            item.Row.DefaultCellStyle.BackColor = NotDefaultBackColor;
                             item.Row.ReadOnly = true;
                         }
                     }
@@ -62,7 +68,12 @@ namespace EomApp1.Screens.Extra
 
         private static Color DisabledBackColor
         {
-            get { return Color.Gray;}
+            get { return Color.Gray; }
+        }
+
+        private static Color NotDefaultBackColor
+        {
+            get { return Color.FromArgb(225, 255, 225); }
         }
 
         public void Initialize()
@@ -240,6 +251,7 @@ namespace EomApp1.Screens.Extra
                 }
             }
 
+            itemBindingSource.ListChanged -= DisableRows;
             if (accountManagerName == "default")
             {
                 itemTableAdapter.Fill(extraItems.Item);
@@ -252,6 +264,9 @@ namespace EomApp1.Screens.Extra
                 FillAdvertisers(accountManagerName);
                 campaignTableAdapter.FillBy(extraItems.Campaign, accountManagerName);
             }
+            DisableRows(null, null);
+            itemBindingSource.ListChanged += DisableRows;
+
             if (extraItems.Advertiser.Rows.Count > 0 && extraItems.Campaign.Rows.Count > 0)
             {
                 itemsGrid.AllowUserToAddRows = true;

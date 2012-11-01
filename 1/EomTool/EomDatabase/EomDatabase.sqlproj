@@ -801,6 +801,12 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\BatchUpdate.table.sql">
       <SubType>Code</SubType>
     </Build>
+    <Build Include="Schema Objects\Schemas\dbo\Views\AccountingSheet2.view.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\CampaignWorkflow.view.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\PublisherPayouts.view.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\PublisherPayouts1.view.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\VerifiedItemsCampaignRevenueSummary.view.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\WorkflowView.view.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">

@@ -37,6 +37,18 @@
     @Html.EditorFor(c => c.Cost)
 </p>
 <p>
+    @Html.LabelFor(c => c.Restrictions)
+    @Html.EditorFor(c => c.Restrictions)
+</p>
+<p>
+    @Html.LabelFor(c => c.ImportantDetails)
+    @Html.EditorFor(c => c.ImportantDetails)
+</p>
+<p>
+    @Html.LabelFor(c => c.Budget)
+    @Html.EditorFor(c => c.Budget)
+</p>
+<p>
     @Html.LabelFor(c => c.RevenueCurrency)
     @Html.EditorFor(c => c.RevenueCurrency)
 </p>
@@ -45,16 +57,12 @@
     @Html.EditorFor(c => c.Revenue)
 </p>
 <p>
-    @Html.LabelFor(c => c.ImportantDetails)
-    @Html.EditorFor(c => c.ImportantDetails)
+    @Html.LabelFor(c => c.PassedInfo)
+    @Html.EditorFor(c => c.PassedInfo)
 </p>
 <p>
     @Html.LabelFor(c => c.CampaignCap)
     @Html.EditorFor(c => c.CampaignCap)
-</p>
-<p>
-    @Html.LabelFor(c => c.Countries)
-    @string.Join(",", Model.Countries.Select(c => c.CountryCode))
 </p>
 <p>
     @Html.LabelFor(c => c.ScrubPolicy)
@@ -63,6 +71,10 @@
 <p>
     @Html.LabelFor(c => c.EomNotes)
     @Html.EditorFor(c => c.EomNotes)
+</p>
+<p>
+    @Html.LabelFor(c => c.Countries)
+    @string.Join(",", Model.Countries.Select(c => c.CountryCode))
 </p>
 </fieldset>
 

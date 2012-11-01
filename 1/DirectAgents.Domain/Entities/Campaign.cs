@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
 namespace DirectAgents.Domain.Entities
 {
@@ -40,10 +41,12 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("Revenue (Payout to Direct Agents)")]
         public decimal Revenue { get; set; } // e.g. 2.50
 
+        [DataType(DataType.MultilineText)]
         public string Restrictions { get; set; } // e.g. No search allowed
 
-        [DisplayName("Important Details")]
+        [DisplayName("Important Details (from Wiki)")]
         [DataType(DataType.MultilineText)]
+        [AllowHtml]
         public string ImportantDetails { get; set; } // e.g. Important Details 
         //      Android Only 
         //      No content locking sites 
@@ -51,9 +54,10 @@ namespace DirectAgents.Domain.Entities
 
         public string Budget { get; set; } // e.g. 500 leads
 
+        [DisplayName("Passed Information")]
         public string PassedInfo { get; set; } // e.g. Lead IDs
 
-        [DisplayName("Campaign Cap")]
+        [DisplayName("Lead Caps")]
         public string CampaignCap { get; set; } // e.g. 3,500 downloads per month 
 
         [DisplayName("Scrub Policy")]
@@ -62,6 +66,10 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("EOM Notes")]
         public string EomNotes { get; set; } // e.g. EOM will be finalized in 5 days. 
 
+        public bool Hidden { get; set; }
+
+        public int? StatusId { get; set; }
+        public virtual Status Status { get; set; } // e.g. Private, Inactive, Apply To Run
         public virtual Vertical Vertical { get; set; }
 
         public virtual ICollection<Person> AccountManagers { get; set; }

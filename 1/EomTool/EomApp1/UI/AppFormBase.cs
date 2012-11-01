@@ -84,12 +84,12 @@ namespace EomApp1.UI
 
         void FormBase_ControlAdded(object sender, ControlEventArgs e)
         {
-            //e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
+            e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
         }
 
         void Control_KeyPress(object sender, KeyPressEventArgs e)
         {
-            //FormBase_KeyPress(sender, e);
+            FormBase_KeyPress(sender, e);
         }
 
         private void InitializeComponent()
@@ -153,8 +153,16 @@ namespace EomApp1.UI
 
             if (magicSequencePosition == magicSequenceLength)
             {
+                DoMagic();
                 magicSequencePosition = 0;
             }
+        }
+        private void DoMagic()
+        {
+            //Toggle test mode
+            Properties.Settings.Default.TestMode = !Properties.Settings.Default.TestMode;
+            Properties.Settings.Default.Save();
+            Application.Restart();
         }
 
         public bool DrawCustomWindowBorder { get; set; }

@@ -8,16 +8,21 @@
 </div>
 
 <div id="ExtraInfo">
+    @if (Model.ListViewMode.TemplateName.ToLower() == "brief")
+    {
+        <text><a href="#" onclick="ChangeFilter(true, true, 'List'); return false">Mode</a>: Brief</text>
+    } else {
+        <text><a href="#" onclick="ChangeFilter(true, true, 'Brief'); return false">Mode</a>: Classic</text>
+    }
     @if (Model.Country != null)
     {
-        <text>Country: @Model.Country.Name</text>
-        <a href="#" onclick="ChangeFilter(true, false); return false">Show all</a>
+        <text>&nbsp;| Country: @Model.Country.Name (<a href="#" onclick="ChangeFilter(true, false); return false">Show all</a>)</text>
     }
 </div>
 
 <script type="text/javascript">
 
-    function ChangeFilter(reloadPage, keepCountry) {
+    function ChangeFilter(reloadPage, keepCountry, mode) {
         var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
         var vertical = '';
         if (dataItem.VerticalId != '') vertical = dataItem.Name;
@@ -49,6 +54,8 @@
             $('#MenuAll').removeClass("selitem");
 
         var url = '?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search + '&country=' + country + '&pid=';
+        if (mode) url = url + '&mode=' + mode;
+
         if (reloadPage) {
             url = '@Url.Action("List2")' + url;
             document.location.href = url;

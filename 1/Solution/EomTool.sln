@@ -84,6 +84,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectTrackXsdUtility", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClient.Models.Cake", "..\ApiClient.Models.Cake\ApiClient.Models.Cake.csproj", "{D7A8184C-5B0C-4F74-BA5C-3EA5EB2EDA33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampaignUpdater", "CampaignUpdater\CampaignUpdater.csproj", "{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = EomTool.vsmdi
@@ -1195,6 +1197,41 @@ Global
 		{D7A8184C-5B0C-4F74-BA5C-3EA5EB2EDA33}.Try1 Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{D7A8184C-5B0C-4F74-BA5C-3EA5EB2EDA33}.Try1 Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{D7A8184C-5B0C-4F74-BA5C-3EA5EB2EDA33}.Try1 Debug|x86.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Client Portal|Any CPU.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Client Portal|Any CPU.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Client Portal|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Client Portal|Mixed Platforms.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Client Portal|x86.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - DADatabaseService|Any CPU.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - DADatabaseService|Any CPU.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - DADatabaseService|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - DADatabaseService|Mixed Platforms.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - DADatabaseService|x86.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Direct Track|Any CPU.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Direct Track|Any CPU.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Direct Track|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Direct Track|Mixed Platforms.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - Direct Track|x86.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - z|Any CPU.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - z|Any CPU.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - z|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - z|Mixed Platforms.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug - z|x86.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Release|x86.ActiveCfg = Release|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Try1 Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Try1 Debug|Any CPU.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Try1 Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Try1 Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Try1 Debug|x86.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1213,6 +1250,7 @@ Global
 		{A2EBCBED-B48E-4F9D-B278-D7C84735B7B8} = {E647B892-F7C2-4556-8E61-E67350468D29}
 		{D10F489D-ABBF-4625-A879-DAD95B0249CA} = {E647B892-F7C2-4556-8E61-E67350468D29}
 		{D7A8184C-5B0C-4F74-BA5C-3EA5EB2EDA33} = {E647B892-F7C2-4556-8E61-E67350468D29}
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6} = {E647B892-F7C2-4556-8E61-E67350468D29}
 		{815E0D7A-2097-4281-9627-F2FCFDB33190} = {CC2DAFAE-8413-4CDF-982D-AC35E861AA3D}
 		{768819DE-541A-4208-9D3B-06FD70AFA769} = {CC2DAFAE-8413-4CDF-982D-AC35E861AA3D}
 		{948AD96B-FECD-4A9A-BF7B-4801B604D1AF} = {CC2DAFAE-8413-4CDF-982D-AC35E861AA3D}

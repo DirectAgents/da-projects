@@ -40,6 +40,7 @@
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,9 +58,9 @@
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="Entities\Cake\DailySummary.cs" />
-    <Compile Include="Entities\Cake\MonthlySummary.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\Cake\Conversion.cs" />
+    <Compile Include="Entities\Status.cs" />
     <Compile Include="Entities\TrafficType.cs" />
     <Compile Include="Entities\Country.cs" />
     <Compile Include="Entities\Person.cs" />
@@ -111,6 +112,14 @@
     <Compile Include="Migrations\201210051910596_UpdateCampaignFields.cs" />
     <Compile Include="Migrations\201210051910596_UpdateCampaignFields.Designer.cs">
       <DependentUpon>201210051910596_UpdateCampaignFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210152035244_StatusAndHidden.cs" />
+    <Compile Include="Migrations\201210152035244_StatusAndHidden.Designer.cs">
+      <DependentUpon>201210152035244_StatusAndHidden.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201210172102104_RmMonthlySummaries.cs" />
+    <Compile Include="Migrations\201210172102104_RmMonthlySummaries.Designer.cs">
+      <DependentUpon>201210172102104_RmMonthlySummaries.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -165,6 +174,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201210051910596_UpdateCampaignFields.resx">
       <DependentUpon>201210051910596_UpdateCampaignFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210152035244_StatusAndHidden.resx">
+      <DependentUpon>201210152035244_StatusAndHidden.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201210172102104_RmMonthlySummaries.resx">
+      <DependentUpon>201210172102104_RmMonthlySummaries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -15,12 +15,20 @@ Link:<a href="@Model.Link">@Model.Link</a>
 <br />
 Payout: @Model.CostCurrency@Model.Cost
 <br />
+<b>Restrictions:</b>
+@if (!string.IsNullOrWhiteSpace(Model.Restrictions)) { <br />@MvcHtmlString.Create(Model.RestrictionsHtml) }
+<br />
+@if (!string.IsNullOrWhiteSpace(Model.ImportantDetails)) {
+    <b>Important Details (from Wiki):</b><br />
+    @MvcHtmlString.Create(Model.ImportantDetailsHtml)<br />
+}
+Budget: @Model.Budget
+<br />
 Payout to Direct Agents: @Model.RevenueCurrency@Model.Revenue
 <br />
-<b>Important Details:</b>
-@if (Model.ImportantDetailsMvcHtmlString != null) { <br />@Model.ImportantDetailsMvcHtmlString }
+Passed Information: @Model.PassedInfo
 <br />
-Campaign Cap: @Model.CampaignCap
+Lead Caps: @Model.CampaignCap
 <br />
 Scrub Policy: @Model.ScrubPolicy
 <br />
@@ -28,6 +36,7 @@ EOM Info: @Model.EomNotes
 <br />
 Countries: @Model.CountryCodes
 <br />
-@*
-Campaign Budget: 100 leads per day until further notice. 
-*@
+Status: @Model.Status
+<br />
+Hidden: @Model.Hidden
+<br />
