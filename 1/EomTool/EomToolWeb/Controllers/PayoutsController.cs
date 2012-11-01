@@ -39,8 +39,13 @@ namespace EomToolWeb.Controllers
             var groups = securityRepository.GroupsForUser(User);
             if (!groups.Any())
             {
-                string ipAddress = WindowsIdentityHelper.GetIpAddress();
+                string ipAddress = Request.ServerVariables["REMOTE_ADDR"];
                 groups = securityRepository.GroupsForIpAddress(ipAddress);
+                if (groups == null || !groups.Any())
+                {
+                    ipAddress = WindowsIdentityHelper.GetIpAddress();
+                    groups = securityRepository.GroupsForIpAddress(ipAddress);
+                }
             }
             if (groups != null && groups.Any())
             {
