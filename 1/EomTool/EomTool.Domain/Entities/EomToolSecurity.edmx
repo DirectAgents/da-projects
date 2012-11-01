@@ -36,6 +36,7 @@
           <Property Name="Name" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="WindowsIdentity" Type="varchar" Nullable="false" MaxLength="500" />
           <Property Name="EmailAddress" Type="varchar" MaxLength="255" />
+          <Property Name="IpAddress" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Permissions">
           <Key>
@@ -142,6 +143,7 @@
           <Property Name="WindowsIdentity" Type="String" Nullable="false" MaxLength="500" Unicode="false" FixedLength="false" />
           <Property Name="EmailAddress" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Roles" Relationship="EomToolSecurityModel.RoleGroup" FromRole="Group" ToRole="Role" />
+          <Property Type="String" Name="IpAddress" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Permission">
           <Key>
@@ -176,7 +178,8 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EomToolSecurityModelStoreContainer" CdmEntityContainer="EomToolSecurityEntities">
           <EntitySetMapping Name="Groups"><EntityTypeMapping TypeName="EomToolSecurityModel.Group"><MappingFragment StoreEntitySet="Groups">
-            <ScalarProperty Name="Id" ColumnName="Id" />
+            <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Name" ColumnName="Name" />
             <ScalarProperty Name="WindowsIdentity" ColumnName="WindowsIdentity" />
             <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
