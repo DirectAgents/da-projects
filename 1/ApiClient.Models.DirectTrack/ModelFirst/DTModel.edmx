@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DirectTrackModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="DirectTrackModelStoreContainer">
+          <EntitySet Name="campaign_stats" EntityType="DirectTrackModel.Store.campaign_stats" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="campaign_stats">
+          <Key>
+            <PropertyRef Name="PID" />
+          </Key>
+          <Property Name="PID" Type="int" Nullable="false" />
+          <Property Name="Campaign Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Company" Type="nvarchar" MaxLength="255" />
+          <Property Name="Impression" Type="float" />
+          <Property Name="Clicks" Type="float" />
+          <Property Name="Clickthru" Type="float" />
+          <Property Name="Leads" Type="float" />
+          <Property Name="#Sales" Type="float" />
+          <Property Name="Sale Amount" Type="money" />
+          <Property Name="#Sub Sales" Type="float" />
+          <Property Name="Sub Sale Amount" Type="money" />
+          <Property Name="We Get" Type="money" />
+          <Property Name="They Get" Type="money" />
+          <Property Name="Revenue" Type="money" />
+          <Property Name="EPC" Type="money" />
+          <Property Name="Signup Ratio" Type="float" />
+          <Property Name="Real Time" Type="nvarchar" MaxLength="255" />
+          <Property Name="Active" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DirectTrackModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="DirectTrackEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="campaign_stats" EntityType="DirectTrackModel.campaign_stats" />
+        </EntityContainer>
+        <EntityType Name="campaign_stats">
+          <Key>
+            <PropertyRef Name="PID" />
+          </Key>
+          <Property Name="PID" Type="Int32" Nullable="false" />
+          <Property Name="Campaign_Name" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Company" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Impression" Type="Double" />
+          <Property Name="Clicks" Type="Double" />
+          <Property Name="Clickthru" Type="Double" />
+          <Property Name="Leads" Type="Double" />
+          <Property Name="C_Sales" Type="Double" />
+          <Property Name="Sale_Amount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="C_Sub_Sales" Type="Double" />
+          <Property Name="Sub_Sale_Amount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="We_Get" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="They_Get" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Revenue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="EPC" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Signup_Ratio" Type="Double" />
+          <Property Name="Real_Time" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Active" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DirectTrackModelStoreContainer" CdmEntityContainer="DirectTrackEntities1">
+          <EntitySetMapping Name="campaign_stats">
+            <EntityTypeMapping TypeName="DirectTrackModel.campaign_stats">
+              <MappingFragment StoreEntitySet="campaign_stats">
+                <ScalarProperty Name="PID" ColumnName="PID" />
+                <ScalarProperty Name="Campaign_Name" ColumnName="Campaign Name" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="Impression" ColumnName="Impression" />
+                <ScalarProperty Name="Clicks" ColumnName="Clicks" />
+                <ScalarProperty Name="Clickthru" ColumnName="Clickthru" />
+                <ScalarProperty Name="Leads" ColumnName="Leads" />
+                <ScalarProperty Name="C_Sales" ColumnName="#Sales" />
+                <ScalarProperty Name="Sale_Amount" ColumnName="Sale Amount" />
+                <ScalarProperty Name="C_Sub_Sales" ColumnName="#Sub Sales" />
+                <ScalarProperty Name="Sub_Sale_Amount" ColumnName="Sub Sale Amount" />
+                <ScalarProperty Name="We_Get" ColumnName="We Get" />
+                <ScalarProperty Name="They_Get" ColumnName="They Get" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="EPC" ColumnName="EPC" />
+                <ScalarProperty Name="Signup_Ratio" ColumnName="Signup Ratio" />
+                <ScalarProperty Name="Real_Time" ColumnName="Real Time" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

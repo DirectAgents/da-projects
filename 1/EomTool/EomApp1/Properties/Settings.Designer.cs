@@ -225,8 +225,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseJuly2012Test2;User=sa;Password=sp0" +
-            "ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseSep2012;User=sa;Password=sp0ngbOb")]
         public string OverrideConnectionString {
             get {
                 return ((string)(this["OverrideConnectionString"]));
