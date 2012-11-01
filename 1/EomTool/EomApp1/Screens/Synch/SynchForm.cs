@@ -230,7 +230,7 @@ namespace EomApp1.Screens.Synch
         private void SynchCampaigns(List<int> pidList)
         {
             Log("synch starting..");
-            pidList.AsParallel().ForAll(pid =>
+            pidList.ForEach(pid =>
             {
                 if (ShouldSynchPayouts)
                 {

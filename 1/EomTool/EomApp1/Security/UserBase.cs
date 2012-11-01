@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DAgents.Common;
-using System;
-using System.Net;
-using System.IO;
 
 namespace EomApp1.Security
 {
@@ -16,25 +13,7 @@ namespace EomApp1.Security
             {
                 if (_IpAddress == null)
                 {
-                    try
-                    {
-                        String direction = "";
-                        WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");
-                        using (WebResponse response = request.GetResponse())
-                        using (StreamReader stream = new StreamReader(response.GetResponseStream()))
-                        {
-                            direction = stream.ReadToEnd();
-                        }
-                        //Search for the ip in the html
-                        int first = direction.IndexOf("Address: ") + 9;
-                        int last = direction.LastIndexOf("</body>");
-                        _IpAddress = direction.Substring(first, last - first).Trim();
-
-                    }
-                    catch
-                    {
-                        _IpAddress = string.Empty;
-                    }
+                    _IpAddress = WindowsIdentityHelper.GetIpAddress();
                 }
                 return _IpAddress;
             }

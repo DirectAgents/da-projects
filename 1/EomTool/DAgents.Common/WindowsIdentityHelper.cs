@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Principal;
 
 namespace DAgents.Common
@@ -40,5 +42,27 @@ namespace DAgents.Common
             }
         }
         private static List<string> _CurrentUsersGroups;
+
+        public static string GetIpAddress()
+        {
+            try
+            {
+                string responseText = "";
+                WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");
+                using (WebResponse response = request.GetResponse())
+                using (StreamReader stream = new StreamReader(response.GetResponseStream()))
+                {
+                    responseText = stream.ReadToEnd();
+                }
+                //Search for the ip in the html
+                int first = responseText.IndexOf("Address: ") + 9;
+                int last = responseText.LastIndexOf("</body>");
+                return responseText.Substring(first, last - first).Trim();
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
     }
 }
