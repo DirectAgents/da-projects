@@ -295,7 +295,7 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=173.204.123.82;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
         public string SettingsConnectionString {
             get {
                 return ((string)(this["SettingsConnectionString"]));
