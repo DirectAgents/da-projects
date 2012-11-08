@@ -15,5 +15,6 @@ namespace EomTool.Domain.Entities
         public decimal MaxPctMargin { get; set; }
         public string BatchIds { get; set; }
         public string LatestNote { get; set; }
+        public string NetTerms { get; set; }
     }
 }

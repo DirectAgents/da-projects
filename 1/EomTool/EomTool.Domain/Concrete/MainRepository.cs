@@ -70,7 +70,7 @@ namespace EomTool.Domain.Concrete
         private IQueryable<PublisherSummary> PubPayoutsToPubSummaries(IQueryable<PublisherPayout> publisherPayouts)
         {
             var pubSummaries = publisherPayouts
-                .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr }).ToList()
+                .GroupBy(p => new { affid = p.affid, Publisher = p.Publisher, Currency = p.Pub_Pay_Curr, NetTerms = p.Net_Terms }).ToList()
                 .Select(p => new PublisherSummary
                 {
                     affid = p.Key.affid,
@@ -79,7 +79,8 @@ namespace EomTool.Domain.Concrete
                     PayoutTotal = p.Sum(pp => pp.Pub_Payout) ?? 0,
                     MinPctMargin = p.Min(pp => pp.MarginPct) ?? 0,
                     MaxPctMargin = p.Max(pp => pp.MarginPct) ?? 0,
-                    BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct())
+                    BatchIds = String.Join(",", String.Join(",", p.Select(pp => pp.BatchIds)).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct()),
+                    NetTerms = p.Key.NetTerms
                 }).ToList();
 
             // Get latest note for each PublisherSummary

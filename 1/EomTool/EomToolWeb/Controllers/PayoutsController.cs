@@ -61,7 +61,7 @@ namespace EomToolWeb.Controllers
 
             var viewModel = new PublisherSummaryViewModel
             {
-                PublisherSummaries = mainRepository.PublisherSummariesByMode(mode, includeZero).Where(ps => affIds.Contains(ps.affid)).OrderBy(p => p.PublisherName),
+                PublisherSummaries = mainRepository.PublisherSummariesByMode(mode, includeZero).Where(ps => affIds.Contains(ps.affid)).OrderBy(p => !p.NetTerms.Contains("Net 7")).ThenBy(p => p.NetTerms).ThenBy(p => p.PublisherName),
                 Mode = mode,
                 IncludeZero = includeZero
             };

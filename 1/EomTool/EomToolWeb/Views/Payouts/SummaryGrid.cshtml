@@ -1,29 +1,17 @@
 ﻿@model PublisherSummaryViewModel
 <table id="tblSummary">
     <tr>
-        <th>
-            Publisher
-        </th>
-        <th>
-            Curr
-        </th>
-        <th>
-            Payout
-        </th>
-        <th>
-            Margin Range
-        </th>
-        <th>
-        </th>
+        <th>Publisher</th>
+        <th>Curr</th>
+        <th>Payout</th>
+        <th>Margin Range</th>
+        <th>Terms</th>
+        <th></th>
         @if (Model.ShowActions)
         {
-            <th>
-                Action
-            </th>
+            <th>Action</th>
         }
-        <th>
-            Latest Note
-        </th>
+        <th>Latest Note</th>
     </tr>
     @foreach (var ps in Model.PublisherSummaries)
     {
@@ -31,11 +19,17 @@
             <td>
                 <a href="#" onclick="ShowDetails(@ps.affid); return false;">@ps.PublisherName</a>
             </td>
-            <td>@ps.Currency
+            <td>
+                @ps.Currency
             </td>
-            <td>@String.Format("{0:N2}", ps.PayoutTotal)
+            <td>
+                @String.Format("{0:N2}", ps.PayoutTotal)
             </td>
-            <td>@String.Format("{0:N2}%", ps.MinPctMargin) - @String.Format("{0:N2}", ps.MaxPctMargin)%
+            <td>
+                @String.Format("{0:N2}%", ps.MinPctMargin) - @String.Format("{0:N2}", ps.MaxPctMargin)%
+            </td>
+            <td>
+                <nobr>@ps.NetTerms</nobr>
             </td>
             <td>
                 @if (!String.IsNullOrWhiteSpace(@ps.BatchIds))
