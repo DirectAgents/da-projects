@@ -32,7 +32,7 @@ namespace ApiClient
             }
             else if (command == "DT")
             {
-                Main2(args);
+                DT(args);
             }
             else
             {
@@ -41,7 +41,7 @@ namespace ApiClient
         }
 
         // DT <accessID> <pointsThreshold>
-        static void Main2(string[] args)
+        static void DT(string[] args)
         {
             ApiInfo.LoginAccessId = int.Parse(args[1]);
             ResourceGetter.PointsThreshold = int.Parse(args[2]);
@@ -59,27 +59,29 @@ namespace ApiClient
             
             //var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack("1/payout/campaign/[campaign_id]/", DirectTrack.ResourceGetterMode.ResourceList);
             //var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack("1/payout/campaign/[campaign_id]/", DirectTrack.ResourceGetterMode.Resource, 10000);
-            
+
             //var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack(
             //                                                    url: "1/leadDetail/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
             //                                                    mode: DirectTrack.ResourceGetterMode.ResourceList,
             //                                                    dateRange: new DateRange(new DateTime(2002, 1, 1), DateTime.Now),
             //                                                    threadMode: ThreadMode.Multiple);
 
-            //var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack(
-            //                                        url: "3/statCampaign/cumulative/campaign/[campaign_id]/[yyyy]-[mm]",
-            //                                        //url: "1/statCampaign/cumulative/campaign/1077/[yyyy]-[mm]",
-            //                                        //url: "3/statCampaign/daily/campaign/1077/[yyyy]-[mm]",
-            //                                        mode: DirectTrack.ResourceGetterMode.ResourceList,
-            //                                        dateRange: new DateRange(new DateTime(2002, 1, 1), DateTime.Now, x => x.AddMonths(1)),
-            //                                        threadMode: ThreadMode.Multiple);
-
             var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack(
-                                        //url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
-                                        url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
-                                        mode: DirectTrack.ResourceGetterMode.Resource,
-                                        dateRange: new DateRange(new DateTime(year, 1, 1), new DateTime(year, 1, 1).AddYears(1), x => x.AddDays(1)),
-                                        threadMode: ThreadMode.Multiple);
+                                                    // url: "3/statCampaign/cumulative/campaign/[campaign_id]/[yyyy]-[mm]",
+                                                    //url: "1/statCampaign/cumulative/campaign/1077/[yyyy]-[mm]",
+                                                    //url: "3/statCampaign/daily/campaign/1077/[yyyy]-[mm]",
+                                                    url: "1/statCampaign/affiliate/campaign/[campaign_id]/[yyyy]-[mm]",
+                                                    //statCampaign/affiliate/campaign/[campaign_id]/[yyyy]-[mm]
+                                                    mode: DirectTrack.ResourceGetterMode.ResourceList,
+                                                    dateRange: new DateRange(new DateTime(2007, 1, 1), new DateTime(2011, 1, 1), x => x.AddMonths(1)),
+                                                    threadMode: ThreadMode.Multiple);
+
+            //var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack(
+            //                            //url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
+            //                            url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
+            //                            mode: DirectTrack.ResourceGetterMode.Resource,
+            //                            dateRange: new DateRange(new DateTime(year, 1, 1), new DateTime(year, 1, 1).AddYears(1), x => x.AddDays(1)),
+            //                            threadMode: ThreadMode.Multiple);
             
             //leadDetail/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/
             var dest = new ApiClient.Etl.DirectTrack.ResourcesToDatabase();
