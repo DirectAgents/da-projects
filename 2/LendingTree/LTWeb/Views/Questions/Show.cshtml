@@ -1,0 +1,38 @@
+﻿@model LTWeb.Models.QuestionVM
+
+@{
+    ViewBag.Title = "Show";
+}
+
+<h2>Show</h2>
+
+@Model.Text<br />
+
+@switch (Model.AnswerType)
+{
+    case "dropdown":
+        <select>
+        @foreach (var option in Model.Options)
+        {
+            <option>@option</option>
+        }
+        </select>
+    break;
+    case "radio":
+        foreach (var option in Model.Options)
+        {
+            <input type="radio" />@option<br />
+        }
+    break;
+    case "3part":
+        <input type="text" />
+        <input type="text" />
+        <input type="text" />
+    break;
+    default:
+        <input type="text" />
+    break;
+}
+
+<br /><br />
+@Html.ActionLink("Next", "Show", new { q = Model.NextQuestionIndex })
