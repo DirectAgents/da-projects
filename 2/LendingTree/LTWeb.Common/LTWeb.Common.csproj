@@ -63,9 +63,13 @@
     <Compile Include="Migrations\201211090316562_Leads.Designer.cs">
       <DependentUpon>201211090316562_Leads.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201211090342230_ResponseTimeStamp.cs" />
+    <Compile Include="Migrations\201211090342230_ResponseTimeStamp.Designer.cs">
+      <DependentUpon>201211090342230_ResponseTimeStamp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Entities\LendingTree.cs" />
+    <Compile Include="Entities\LTRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -82,6 +86,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201211090316562_Leads.resx">
       <DependentUpon>201211090316562_Leads.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201211090342230_ResponseTimeStamp.resx">
+      <DependentUpon>201211090342230_ResponseTimeStamp.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
