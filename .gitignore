@@ -7,3 +7,5 @@ TestResults
 
 # SQL Server backups
 *.bak
+
+connectionsconfig.xml
