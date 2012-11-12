@@ -1,0 +1,30 @@
+﻿@model LTWeb.Models.QuestionVM
+
+@{
+    Layout = "~/Views/Shared/_LTLayout.cshtml";
+}
+
+<div class="form-fields">
+    <div id="page1FormHeader" class="png">
+        <h2>
+            Get FREE Quotes from Trusted Lenders</h2>
+        <h3 class="ssnOptional">
+            No SSN Required
+        </h3>
+    </div>
+    <div class="form-content png">
+        <div class="dropdown-item">
+            <div id="form_inner_1step">
+                <div>
+
+                    <div style="margin-bottom: 18px; margin-left: 80px; width: 350px;">
+                        @Html.Partial("Show")
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-fields-end png">&nbsp;</div>
+</div>
+<!--form fields-->

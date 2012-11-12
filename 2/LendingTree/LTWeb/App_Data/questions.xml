@@ -71,13 +71,13 @@
     <option value="2TO4UNITFAM">Multi family dwelling</option>
     <option value="MOBILEPERMANENT">Mobile/Manufactured Home</option>
   </question>
-  <question key="PropertyPurpose" text="What is the purpose of this property?" answertype="dropdown">
+  <question key="PropertyUse" text="What is the purpose of this property?" answertype="dropdown">
     <option selected="" value="OWNEROCCUPIED">Primary Residence</option>
     <option value="SECONDHOME">Secondary home</option>
     <option value="INVESTMENTPROPERTY">Investment Property</option>
   </question>
-  <question key="xZip" text="Which zip code is the property in?" answertype="freeform" />
-  <question key="ApproximatePropertyValue" text="What is the approximate value of the property?" subtext="(ok to estimate)" answertype="dropdown">
+  <question key="PropertyZip" text="Which zip code is the property in?" answertype="freeform" />
+  <question key="PropertyApproximateValue" text="What is the approximate value of the property?" subtext="(ok to estimate)" answertype="dropdown">
     <option selected="selected" value="0">Select home value</option>
     <option value="100000">$90,001 - $100,000</option>
     <option value="110000">$100,001 - $110,000</option>
@@ -153,7 +153,7 @@
     <option value="400000">$380,001 - $400,000</option>
     <option value="400001">Over $400,000</option>
   </question>
-  <question key="MonthlyMortgagePayment" text="What is your monthly mortgage payment?" subtext="(ok to estimate)" answertype="dropdown">
+  <question key="MonthlyPayment" text="What is your monthly mortgage payment?" subtext="(ok to estimate)" answertype="dropdown">
     <option selected="selected" value="">Select payment </option>
     <option value="450">$401 - $500</option>
     <option value="550">$501 - $600</option>
@@ -168,7 +168,7 @@
     <option value="6250">$6,001 - $7,500</option>
     <option value="7501">Over $7,501</option>
   </question>
-  <question key="HadBakruptcy" text="Have you ever had a bankruptcy?" subtext="(ok to estimate)" answertype="dropdown">
+  <question key="BankruptcyDischarged" text="Have you ever had a bankruptcy?" subtext="(ok to estimate)" answertype="dropdown">
     <option selected="selected" value="NEVER">Never/Not in the last 7 years</option>
     <option value="01-12_MONTHS">1-12 months ago</option>
     <option value="13-24_MONTHS">13-24 months ago</option>
@@ -179,7 +179,7 @@
     <option value="OVER_72_MONTHS">73-84 months ago</option>
     <option value="OVER_84_MONTHS">Over 84 months ago</option>
   </question>
-  <question key="HadForeclosures" text="Do you have any foreclosures?" answertype="dropdown">
+  <question key="ForeclosureDischarged" text="Do you have any foreclosures?" answertype="dropdown">
     <option value="NEVER">Never Foreclosed</option>
     <option value="CURRENTLY_IN_FORECLOSURE">Currently in Foreclosure</option>
     <option value="01-12_MONTHS">1-12 months ago</option>
@@ -191,16 +191,16 @@
     <option value="OVER_72_MONTHS">73-84 months ago</option>
     <option value="OVER_84_MONTHS">Over 84 months ago</option>
   </question>
-  <question key="xMilitary" text="Are you or a spouse on Active Duty, or a veteran of the U.S. military?" answertype="radio">
+  <question key="IsVetran" text="Are you or a spouse on Active Duty, or a veteran of the U.S. military?" answertype="radio">
     <option value="YES">Yes</option>
     <option value="NO">No</option>
   </question>
-  <question key="xFirst" text="First Name:" answertype="freeform" />
-  <question key="xLast" text="Last Name:" answertype="freeform" />
-  <question key="xStreet" text="Street Address:" answertype="freeform" />
-  <question key="xZip" text="Zip Code:" answertype="freeform" />
-  <question key="xEmail" text="Email:" answertype="freeform" />
-  <question key="xHome" text="Home Phone:" answertype="freeform" />
-  <question key="xWork" text="Work Phone:" answertype="freeform" />
-  <question key="xSocial" text="Social Security Number:" answertype="3part" subtext="(optional)" />
+  <question key="FirstName" text="First Name:" answertype="freeform" />
+  <question key="LastName" text="Last Name:" answertype="freeform" />
+  <question key="Address" text="Street Address:" answertype="freeform" />
+  <question key="ApplicantZipCode" text="Zip Code:" answertype="freeform" />
+  <question key="Email" text="Email:" answertype="freeform" />
+  <question key="HomePhone" text="Home Phone:" answertype="freeform" />
+  <question key="WorkPhone" text="Work Phone:" answertype="freeform" />
+  <question key="SSN" text="Social Security Number:" answertype="3part" subtext="(optional)" />
 </data>

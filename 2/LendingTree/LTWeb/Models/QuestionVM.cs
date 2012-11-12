@@ -10,9 +10,16 @@ namespace LTWeb.Models
         public string Text { get; set; }
         public string Subtext { get; set; }
 
+        public string Key { get; set; }
         public string AnswerType { get; set; }
-        public List<string> Options { get; set; }
+        public List<OptionVM> Options { get; set; }
 
         public int NextQuestionIndex { get; set; }
+    }
+
+    public class OptionVM
+    {
+        public string Text { get; set; }
+        public string Value { get; set; }
     }
 }

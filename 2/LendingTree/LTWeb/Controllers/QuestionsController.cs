@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
 using LTWeb.Models;
+using LTWeb.Service;
 
 namespace LTWeb.Controllers
 {
@@ -33,9 +35,40 @@ namespace LTWeb.Controllers
             var model = questions[q];
             model.NextQuestionIndex = q + 1;
  
-            return PartialView(model);
+            return View(model);
+            //return PartialView("FormFields", model);
         }
 
+        public ActionResult Save(LendingTreeVM model, string questionKey)
+        {
+            //LendingTreeModel sessionModel = Session["LTModel"] as LendingTreeModel;
+            LendingTreeVM sessionModel = Session["LTModel"] as LendingTreeVM;
+            if (sessionModel == null)
+            {
+                //sessionModel = new LendingTreeModel();
+                sessionModel = new LendingTreeVM();
+                Session["LTModel"] = sessionModel;
+            }
+            PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
+            PropertyInfo destPropInfo = sessionModel.GetType().GetProperty(questionKey);
+
+            switch (questionKey)
+            {
+                case "IsVetran":
+                    sessionModel.IsVetran = Request["IsVetran"] == "YES";
+                    break;
+                default:
+                    destPropInfo.SetValue(sessionModel, sourcePropInfo.GetValue(model));
+                    break;
+            }
+
+            return null;
+        }
+
+        public ActionResult SaveAll()
+        {
+            return Content("thank you");
+        }
 
         private QuestionVM[] GetQuestionVMs()
         {
@@ -50,27 +83,41 @@ namespace LTWeb.Controllers
                     {
                         switch (reader.Name)
                         {
-                            case "answertype":
-                                question.AnswerType = reader.Value;
-                                break;
                             case "text":
                                 question.Text = reader.Value;
                                 break;
                             case "subtext":
                                 question.Subtext = reader.Value;
                                 break;
+                            case "key":
+                                question.Key = reader.Value;
+                                break;
+                            case "answertype":
+                                question.AnswerType = reader.Value;
+                                break;
                         }
                     }
                     if (question.AnswerType == "dropdown" || question.AnswerType == "radio")
                     {
-                        List<string> options = new List<string>();
+                        List<OptionVM> options = new List<OptionVM>();
                         while (reader.Read() && !(reader.NodeType == XmlNodeType.EndElement && reader.Name == "question"))
                         {
                             if (reader.NodeType == XmlNodeType.Element && reader.Name == "option")
                             {
+                                OptionVM option = new OptionVM();
+                                while (reader.MoveToNextAttribute())
+                                {
+                                    switch (reader.Name)
+                                    {
+                                        case "value":
+                                            option.Value = reader.Value;
+                                            break;
+                                    }
+                                }
                                 if (reader.Read() && reader.NodeType == XmlNodeType.Text)
                                 {
-                                    options.Add(reader.Value);
+                                    option.Text = reader.Value;
+                                    options.Add(option);
                                 }
                             }
                         }
