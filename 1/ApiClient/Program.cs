@@ -19,33 +19,36 @@ namespace ApiClient
 
         static void Main(string[] args)
         {
-            string command = args[0];
+            Main2(args);
+            return;
 
-            if (command == "DailySummaries")
-            {
-                var source = new DailySummariesFromWebService();
-                var dest = new DailySummariesToDatabase();
-                var extract = source.Extract();
-                var load = dest.Load(source);
-                extract.Join();
-                load.Join();
-            }
-            else if (command == "DT")
-            {
-                Main2(args);
-            }
-            else
-            {
-                Console.WriteLine("Invalid Command");
-            }
+            //string command = args[0];
+
+            //if (command == "DailySummaries")
+            //{
+            //    var source = new DailySummariesFromWebService();
+            //    var dest = new DailySummariesToDatabase();
+            //    var extract = source.Extract();
+            //    var load = dest.Load(source);
+            //    extract.Join();
+            //    load.Join();
+            //}
+            //else if (command == "DT")
+            //{
+            //    Main2(args);
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Invalid Command");
+            //}
         }
 
         // DT <accessID> <pointsThreshold>
         static void Main2(string[] args)
         {
-            ApiInfo.LoginAccessId = int.Parse(args[1]);
-            ResourceGetter.PointsThreshold = int.Parse(args[2]);
-            int year = int.Parse(args[3]);
+            ApiInfo.LoginAccessId = 1;
+            ResourceGetter.PointsThreshold = 5000;
+            int year = 2010;
 
             Stopwatch sw = Stopwatch.StartNew();
 
@@ -74,12 +77,24 @@ namespace ApiClient
             //                                        dateRange: new DateRange(new DateTime(2002, 1, 1), DateTime.Now, x => x.AddMonths(1)),
             //                                        threadMode: ThreadMode.Multiple);
 
+            //var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack(
+            //                            //url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
+            //                            url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
+            //                            mode: DirectTrack.ResourceGetterMode.Resource,
+            //                            dateRange: new DateRange(new DateTime(year, 1, 1), new DateTime(year, 1, 1).AddYears(1), x => x.AddDays(1)),
+            //                            threadMode: ThreadMode.Multiple);
+
             var source = new ApiClient.Etl.DirectTrack.ResourcesFromDirectTrack(
-                                        //url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
-                                        url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
-                                        mode: DirectTrack.ResourceGetterMode.Resource,
-                                        dateRange: new DateRange(new DateTime(year, 1, 1), new DateTime(year, 1, 1).AddYears(1), x => x.AddDays(1)),
-                                        threadMode: ThreadMode.Multiple);
+                //url: "1/programLead/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/",
+                            //url: "1/statCampaign/daily/campaign/[campaign_id]/[yyyy]-[mm]",
+                            // /rest/[client_id]/[access_id]/statAffiliate/quick/[yyyy]-[mm]-[dd]
+                            //url: "1/statCampaign/affiliate/campaign/[campaign_id]/[yyyy]-[mm]",
+                            url: "1/statAffiliate/quick/[yyyy]-[mm]-[dd]",
+
+                            mode: DirectTrack.ResourceGetterMode.Resource,
+                            dateRange: new DateRange(new DateTime(2010, 1, 1), new DateTime(2010, 2, 1), x => x.AddDays(1)),
+                            threadMode: ThreadMode.Multiple);
+            
             
             //leadDetail/campaign/[campaign_id]/[yyyy]-[mm]-[dd]/
             var dest = new ApiClient.Etl.DirectTrack.ResourcesToDatabase();

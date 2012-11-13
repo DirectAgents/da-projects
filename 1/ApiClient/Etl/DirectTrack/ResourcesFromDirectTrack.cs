@@ -154,13 +154,14 @@ namespace ApiClient.Etl.DirectTrack
         {
             get
             {
-                using (var db = new Models.DirectTrack.ModelFirst.DirectTrackEntities1())
-                {
-                    return db.campaign_stats
-                             .OrderByDescending(c => c.Leads)
-                             .Select(c => c.PID)
-                             .ToArray();
-                }
+                return new [] { 31 };
+                //using (var db = new Models.DirectTrack.ModelFirst.DirectTrackEntities1())
+                //{
+                //    return db.campaign_stats
+                //             .OrderByDescending(c => c.Leads)
+                //             .Select(c => c.PID)
+                //             .ToArray();
+                //}
             }
         }
     }

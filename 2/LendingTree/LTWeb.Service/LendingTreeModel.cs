@@ -1,42 +1,19 @@
 ﻿using System;
 using System.ComponentModel;
+using LTWeb.DataAccess;
 
 namespace LTWeb.Service
 {
     public class LendingTreeModel : INotifyPropertyChanged, ILendingTreeModel
     {
-        //[Dependency]
-        public ServiceConfig LendingTreeConfig { get; set; }
+        LTRequest _request;
+        LTRequest _response;
 
-        //[Dependency("StatesExcludedFromDisclosure")]
-        public string StatesExcludedFromDisclosure { get; set; }
-
-        LTRequest _data = null;
-
-        /// <summary>
-        /// LTRequest holds the information that translates to an XML POST.
-        /// It is lazily initialized so Page_Load has a chance to restore it from Session.
-        /// </summary>
-        public LTRequest Data
+        public LendingTreeModel(string serviceConfigName)
         {
-            get
+            using (var repo = new Repository(new LTWebDataContext(), false))
             {
-                if (_data == null)
-                {
-                    _data = new LTRequest();
-                    _data.Request.SourceOfRequest = LendingTreeConfig.SourceOfRequest;
-                    OnPropertyChanged(this, DataPropertyName);
-                }
-                return _data;
-            }
-            set
-            {
-                // Ensure property is on set one time.
-                if (_data != null)
-                {
-                    throw new Exception("model already exists");
-                }
-                _data = value;
+                repo.Single<ServiceConfig>(c => c.Name == serviceConfigName);
             }
         }
 
@@ -64,7 +41,7 @@ namespace LTWeb.Service
 
         public string GetXMLForPost()
         {
-            string xml = Data.ToString();
+            string xml = Request.ToString();
             return xml;
         }
 
@@ -73,6 +50,73 @@ namespace LTWeb.Service
             get
             {
                 return GetType().GetProperty(propertyName).GetValue(this, null);
+            }
+        }
+
+        public ServiceConfig LendingTreeConfig { get; set; }
+
+        public string StatesExcludedFromDisclosure { get; set; }
+
+        public LTRequest Request
+        {
+            get
+            {
+                if (_request == null)
+                {
+                    _request = new LTRequest();
+                    _request.Request.SourceOfRequest = LendingTreeConfig.SourceOfRequest;
+                    OnPropertyChanged(this, DataPropertyName);
+                }
+                return _request;
+            }
+            set
+            {
+                // Ensure property is on set one time.
+                if (_request != null)
+                {
+                    throw new Exception("model already exists");
+                }
+                _request = value;
+            }
+        }
+
+        public System.Xml.Linq.XElement ResponseXml
+        {
+            set
+            {
+                LTRequest.Create(value, out _response);
+            }
+        }
+
+        public bool ResponseValidForPixelFire
+        {
+            get
+            {
+                return _request.Request.LoanType == ELoanType.REFINANCE;
+            }
+        }
+
+        public string VisitorIPAddress
+        {
+            set
+            {
+                _request.Request.SourceOfRequest.VisitorIPAddress = value;
+            }
+        }
+
+        public string VisitorURL
+        {
+            set
+            {
+                _request.Request.SourceOfRequest.VisitorURL = value;
+            }
+        }
+
+        public bool RequiresDisclosure
+        {
+            get
+            {
+                return !StatesExcludedFromDisclosure.Contains(this.PropertyState);
             }
         }
 
@@ -108,11 +152,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.AppID;
+                return Request.Request.AppID;
             }
             set
             {
-                Data.Request.AppID = value;
+                Request.Request.AppID = value;
                 OnDataChanged("AppID");
             }
         }
@@ -121,11 +165,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return GetEnumName<ELoanType>(Data.Request.LoanType);
+                return GetEnumName<ELoanType>(Request.Request.LoanType);
             }
             set
             {
-                Data.Request.LoanType = ParseEnum<ELoanType>(value);
+                Request.Request.LoanType = ParseEnum<ELoanType>(value);
                 OnDataChanged("LoanType");
             }
         }
@@ -138,13 +182,13 @@ namespace LTWeb.Service
         {
             get
             {
-                StateType stateType = this.IsRefi ? Data.Request.TheApplicant.State : (GetHomeLoanProductItem() as PurchaseType).SubjectProperty.PropertyState;
+                StateType stateType = this.IsLoanTypeRefinance ? Request.Request.TheApplicant.State : (GetHomeLoanProductItem() as PurchaseType).SubjectProperty.PropertyState;
                 return GetEnumName<StateType>(stateType);
             }
             set
             {
-                Data.Request.TheApplicant.State = ParseEnum<StateType>(value);
-                if (Data.Request.LoanType == ELoanType.PURCHASE) (GetHomeLoanProductItem() as PurchaseType).SubjectProperty.PropertyState = ParseEnum<StateType>(value);
+                Request.Request.TheApplicant.State = ParseEnum<StateType>(value);
+                if (Request.Request.LoanType == ELoanType.PURCHASE) (GetHomeLoanProductItem() as PurchaseType).SubjectProperty.PropertyState = ParseEnum<StateType>(value);
                 OnDataChanged("PropertyState");
             }
         }
@@ -153,11 +197,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return GetEnumName<CreditHistoryTypeCreditSelfRating>(Data.Request.TheApplicant.CreditHistory.CreditSelfRating);
+                return GetEnumName<CreditHistoryTypeCreditSelfRating>(Request.Request.TheApplicant.CreditHistory.CreditSelfRating);
             }
             set
             {
-                Data.Request.TheApplicant.CreditHistory.CreditSelfRating = ParseEnum<CreditHistoryTypeCreditSelfRating>(value);
+                Request.Request.TheApplicant.CreditHistory.CreditSelfRating = ParseEnum<CreditHistoryTypeCreditSelfRating>(value);
                 OnDataChanged("CreditRating");
             }
         }
@@ -166,11 +210,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return GetEnumName<CreditHistoryTypeBankruptcyDischarged>(Data.Request.TheApplicant.CreditHistory.BankruptcyDischarged);
+                return GetEnumName<CreditHistoryTypeBankruptcyDischarged>(Request.Request.TheApplicant.CreditHistory.BankruptcyDischarged);
             }
             set
             {
-                Data.Request.TheApplicant.CreditHistory.BankruptcyDischarged = ParseEnum<CreditHistoryTypeBankruptcyDischarged>(value);
+                Request.Request.TheApplicant.CreditHistory.BankruptcyDischarged = ParseEnum<CreditHistoryTypeBankruptcyDischarged>(value);
                 OnDataChanged("BankruptcyDischarged");
             }
         }
@@ -179,11 +223,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return GetEnumName<CreditHistoryTypeForeclosureDischarged>(Data.Request.TheApplicant.CreditHistory.ForeclosureDischarged);
+                return GetEnumName<CreditHistoryTypeForeclosureDischarged>(Request.Request.TheApplicant.CreditHistory.ForeclosureDischarged);
             }
             set
             {
-                Data.Request.TheApplicant.CreditHistory.ForeclosureDischarged = ParseEnum<CreditHistoryTypeForeclosureDischarged>(value);
+                Request.Request.TheApplicant.CreditHistory.ForeclosureDischarged = ParseEnum<CreditHistoryTypeForeclosureDischarged>(value);
                 OnDataChanged("ForeclosureDischarged");
             }
         }
@@ -237,12 +281,12 @@ namespace LTWeb.Service
             get
             {
                 AssertRefi();
-                return (Data.Request.HomeLoanProduct.Item as RefinanceType).PropertyEstimatedValue;
+                return (Request.Request.HomeLoanProduct.Item as RefinanceType).PropertyEstimatedValue;
             }
             set
             {
                 AssertRefi();
-                (Data.Request.HomeLoanProduct.Item as RefinanceType).PropertyEstimatedValue = value;
+                (Request.Request.HomeLoanProduct.Item as RefinanceType).PropertyEstimatedValue = value;
                 OnDataChanged("PropertyApproximateValue");
             }
         }
@@ -252,12 +296,12 @@ namespace LTWeb.Service
             get
             {
                 AssertRefi();
-                return (Data.Request.HomeLoanProduct.Item as RefinanceType).EstimatedMortgageBalance;
+                return (Request.Request.HomeLoanProduct.Item as RefinanceType).EstimatedMortgageBalance;
             }
             set
             {
                 AssertRefi();
-                (Data.Request.HomeLoanProduct.Item as RefinanceType).EstimatedMortgageBalance = value;
+                (Request.Request.HomeLoanProduct.Item as RefinanceType).EstimatedMortgageBalance = value;
                 OnDataChanged("EstimatedMortgageBalance");
             }
         }
@@ -267,12 +311,12 @@ namespace LTWeb.Service
             get
             {
                 AssertRefi();
-                return (Data.Request.HomeLoanProduct.Item as RefinanceType).CashOut;
+                return (Request.Request.HomeLoanProduct.Item as RefinanceType).CashOut;
             }
             set
             {
                 AssertRefi();
-                (Data.Request.HomeLoanProduct.Item as RefinanceType).CashOut = value;
+                (Request.Request.HomeLoanProduct.Item as RefinanceType).CashOut = value;
                 OnDataChanged("CashOut");
             }
         }
@@ -282,12 +326,12 @@ namespace LTWeb.Service
             get
             {
                 AssertRefi();
-                return (Data.Request.HomeLoanProduct.Item as RefinanceType).MonthlyPayment;
+                return (Request.Request.HomeLoanProduct.Item as RefinanceType).MonthlyPayment;
             }
             set
             {
                 AssertRefi();
-                (Data.Request.HomeLoanProduct.Item as RefinanceType).MonthlyPayment = value;
+                (Request.Request.HomeLoanProduct.Item as RefinanceType).MonthlyPayment = value;
                 OnDataChanged("MonthlyPayment");
             }
         }
@@ -309,28 +353,28 @@ namespace LTWeb.Service
         {
             get
             {
-                decimal ppp = GetPurchase().PropertyPurchasePrice;
-                return ppp;
+                decimal propertyPurchasePrice = GetPurchase().PropertyPurchasePrice;
+                return propertyPurchasePrice;
             }
             set
             {
-                decimal ppp = GetPurchase().PropertyPurchasePrice;
-                decimal dp;
+                decimal propertyPurchasePrice = GetPurchase().PropertyPurchasePrice;
+                decimal downPayment;
                 switch (Convert.ToInt32(value))
                 {
                     case 1:
-                        dp = ppp * (decimal)0.19;
+                        downPayment = propertyPurchasePrice * (decimal)0.19;
                         break;
                     case 2:
-                        dp = ppp * (decimal)0.20;
+                        downPayment = propertyPurchasePrice * (decimal)0.20;
                         break;
                     case 3:
-                        dp = ppp * (decimal)0.21;
+                        downPayment = propertyPurchasePrice * (decimal)0.21;
                         break;
                     default:
                         throw new Exception("invalid down payment value");
                 }
-                GetPurchase().DownPayment = dp;
+                GetPurchase().DownPayment = downPayment;
                 OnDataChanged("DownPayment");
             }
         }
@@ -352,11 +396,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.DateOfBirth;
+                return Request.Request.TheApplicant.DateOfBirth;
             }
             set
             {
-                Data.Request.TheApplicant.DateOfBirth = value;
+                Request.Request.TheApplicant.DateOfBirth = value;
                 OnDataChanged("DOB");
             }
         }
@@ -365,11 +409,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.EmailAddress;
+                return Request.Request.TheApplicant.EmailAddress;
             }
             set
             {
-                Data.Request.TheApplicant.EmailAddress = value;
+                Request.Request.TheApplicant.EmailAddress = value;
                 OnDataChanged("Email");
             }
         }
@@ -378,11 +422,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.FirstName;
+                return Request.Request.TheApplicant.FirstName;
             }
             set
             {
-                Data.Request.TheApplicant.FirstName = value;
+                Request.Request.TheApplicant.FirstName = value;
                 OnDataChanged("FirstName");
             }
         }
@@ -391,11 +435,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.HomePhone;
+                return Request.Request.TheApplicant.HomePhone;
             }
             set
             {
-                Data.Request.TheApplicant.HomePhone = FixPhoneNum(value);
+                Request.Request.TheApplicant.HomePhone = FixPhoneNum(value);
                 OnDataChanged("Email");
             }
         }
@@ -404,11 +448,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.LastName;
+                return Request.Request.TheApplicant.LastName;
             }
             set
             {
-                Data.Request.TheApplicant.LastName = value;
+                Request.Request.TheApplicant.LastName = value;
                 OnDataChanged("LastName");
             }
         }
@@ -417,11 +461,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.SSN;
+                return Request.Request.TheApplicant.SSN;
             }
             set
             {
-                Data.Request.TheApplicant.SSN = value;
+                Request.Request.TheApplicant.SSN = value;
                 OnDataChanged("SSN");
             }
         }
@@ -430,11 +474,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.Street;
+                return Request.Request.TheApplicant.Street;
             }
             set
             {
-                Data.Request.TheApplicant.Street = value;
+                Request.Request.TheApplicant.Street = value;
                 OnDataChanged("Address");
             }
         }
@@ -443,11 +487,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.WorkPhone;
+                return Request.Request.TheApplicant.WorkPhone;
             }
             set
             {
-                Data.Request.TheApplicant.WorkPhone = FixPhoneNum(value);
+                Request.Request.TheApplicant.WorkPhone = FixPhoneNum(value);
                 OnDataChanged("WorkPhone");
             }
         }
@@ -456,11 +500,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.Zip;
+                return Request.Request.TheApplicant.Zip;
             }
             set
             {
-                Data.Request.TheApplicant.Zip = value;
+                Request.Request.TheApplicant.Zip = value;
                 OnDataChanged("ApplicantZipCode");
             }
         }
@@ -482,11 +526,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.SourceOfRequest.AffiliateSiteID;
+                return Request.Request.SourceOfRequest.AffiliateSiteID;
             }
             set
             {
-                Data.Request.SourceOfRequest.AffiliateSiteID = value;
+                Request.Request.SourceOfRequest.AffiliateSiteID = value;
                 OnDataChanged("AffiliateSiteID");
             }
         }
@@ -495,11 +539,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.TheApplicant.IsVeteran == YesNoType.Y;
+                return Request.Request.TheApplicant.IsVeteran == YesNoType.Y;
             }
             set
             {
-                Data.Request.TheApplicant.IsVeteran = value ? YesNoType.Y : YesNoType.N;
+                Request.Request.TheApplicant.IsVeteran = value ? YesNoType.Y : YesNoType.N;
                 OnDataChanged("IsVetran");
             }
         }
@@ -508,11 +552,11 @@ namespace LTWeb.Service
         {
             get
             {
-                return Data.Request.SourceOfRequest.LendingTreeAffiliateEsourceID;
+                return Request.Request.SourceOfRequest.LendingTreeAffiliateEsourceID;
             }
             set
             {
-                Data.Request.SourceOfRequest.LendingTreeAffiliateEsourceID = value;
+                Request.Request.SourceOfRequest.LendingTreeAffiliateEsourceID = value;
                 OnDataChanged("ESourceId");
             }
         }
@@ -521,11 +565,11 @@ namespace LTWeb.Service
 
         #region Private Helpers
 
-        bool IsRefi
+        bool IsLoanTypeRefinance
         {
             get
             {
-                return Data.Request.LoanType == ELoanType.REFINANCE;
+                return Request.Request.LoanType == ELoanType.REFINANCE;
             }
         }
 
@@ -546,7 +590,7 @@ namespace LTWeb.Service
         PurchaseType GetPurchase()
         {
             AssertPurchase();
-            return (Data.Request.HomeLoanProduct.Item as PurchaseType);
+            return (Request.Request.HomeLoanProduct.Item as PurchaseType);
         }
 
         void Assert(bool b, string errorMessage)
@@ -556,12 +600,12 @@ namespace LTWeb.Service
 
         void AssertRefi()
         {
-            Assert(Data.Request.LoanType == ELoanType.REFINANCE, "invalid loan type");
+            Assert(Request.Request.LoanType == ELoanType.REFINANCE, "invalid loan type");
         }
 
         void AssertPurchase()
         {
-            Assert(Data.Request.LoanType == ELoanType.PURCHASE, "invalid loan type");
+            Assert(Request.Request.LoanType == ELoanType.PURCHASE, "invalid loan type");
         }
 
         static string GetEnumName<T>(T v)
@@ -578,13 +622,13 @@ namespace LTWeb.Service
         object GetHomeLoanProductItem()
         {
             object result = null;
-            switch (Data.Request.LoanType)
+            switch (Request.Request.LoanType)
             {
                 case ELoanType.REFINANCE:
-                    result = (RefinanceType)Data.Request.HomeLoanProduct.Item;
+                    result = (RefinanceType)Request.Request.HomeLoanProduct.Item;
                     break;
                 case ELoanType.PURCHASE:
-                    result = (PurchaseType)Data.Request.HomeLoanProduct.Item;
+                    result = (PurchaseType)Request.Request.HomeLoanProduct.Item;
                     break;
                 default:
                     throw new Exception("invalid loan type");
@@ -607,51 +651,5 @@ namespace LTWeb.Service
         }
 
         #endregion
-
-        LTRequest _responseData;
-        public System.Xml.Linq.XElement ResonseXml
-        {
-            set
-            {
-                LTRequest.Create(value, out _responseData);
-            }
-        }
-
-        public bool ResponseValidForPixelFire
-        {
-            get
-            {
-                return _data.Request.LoanType == ELoanType.REFINANCE;
-            }
-        }
-
-        public string VisitorIPAddress
-        {
-            set
-            {
-                _data.Request.SourceOfRequest.VisitorIPAddress = value;
-            }
-        }
-
-        public string VisitorURL
-        {
-            set
-            {
-                _data.Request.SourceOfRequest.VisitorURL = value;
-            }
-        }
-
-        public bool RequiresDisclosure
-        {
-            get
-            {
-                return !StatesExcludedFromDisclosure.Contains(this.PropertyState);
-            }
-        }
-
-        public void ConvertDownPaymentOrdinalToActualValue()
-        {
-
-        }
     }
 }

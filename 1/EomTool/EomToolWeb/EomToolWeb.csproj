@@ -2586,7 +2586,9 @@
     <Content Include="Scripts\ZeroClipboard10.swf" />
     <Content Include="Templates\Campaigns\_List.tmpl.htm" />
     <Content Include="Templates\Campaigns\_Brief.tmpl.htm" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

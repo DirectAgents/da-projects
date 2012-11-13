@@ -6,7 +6,6 @@ using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using ApiClient.Models.DirectTrack;
-using Spring.Http;
 using Spring.Http.Client.Interceptor;
 using Spring.Rest.Client;
 using Spring.Util;

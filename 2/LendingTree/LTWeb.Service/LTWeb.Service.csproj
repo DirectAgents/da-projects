@@ -33,6 +33,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,10 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILendingTreeModel.cs" />
-    <Compile Include="ILendingTreeService.cs" />
+    <Compile Include="Abstract\ILendingTreeModel.cs" />
+    <Compile Include="Abstract\ILendingTreeService.cs" />
+    <Compile Include="Abstract\ILendingTreeResult.cs" />
     <Compile Include="LendingTreeModel.cs" />
     <Compile Include="LendingTreeService.cs" />
+    <Compile Include="LendingTreeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +62,10 @@
       <Project>{a0fe1ca6-fe54-4791-9397-61ebb10ba5f5}</Project>
       <Name>LTWeb.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
