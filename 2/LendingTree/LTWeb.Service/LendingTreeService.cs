@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Net;
+using LTWeb.DataAccess;
 
 namespace LTWeb.Service
 {
@@ -6,13 +9,40 @@ namespace LTWeb.Service
     {
         public ILendingTreeResult Send(ILendingTreeModel request)
         {
-            throw new NotImplementedException();
+            var webRequest = (HttpWebRequest)WebRequest.Create(request.GetUrlForPost());
+            webRequest.ContentType = "text/xml";
+            webRequest.Method = "POST";
 
-            // get the xml to send
+            string requestXML = request.GetXMLForPost();
+            
+            var lead = new Lead
+            {
+                RequestContent = requestXML,
+                Timestamp = DateTime.UtcNow,
+            };
 
-            // post to server
+            using (var writer = new StreamWriter(webRequest.GetRequestStream()))
+            {
+                writer.Write(requestXML);
+            }  
 
-            // look at server response then create and return result
+            using (var response = (HttpWebResponse)webRequest.GetResponse())
+            using (var reader = new StreamReader(response.GetResponseStream()))
+            {
+                var responseXML = reader.ReadToEnd();
+
+                lead.ResponseContent = responseXML;
+                lead.ResponseTimestamp = DateTime.UtcNow;
+                using (var repo = new Repository(new LTWebDataContext(), false))
+                {
+                    repo.Add<Lead>(lead);
+                }
+
+                return new LendingTreeResult
+                {
+                    IsSuccess = true
+                };
+            }
         }
     }
 }

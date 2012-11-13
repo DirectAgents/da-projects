@@ -6,6 +6,7 @@
         bool RequiresInitialization();
         string DataPropertyName { get; }
         string GetXMLForPost();
+        string GetUrlForPost();
         string AppID { get; set; }
         string CreditRating { get; set; }
         string LoanType { get; set; }

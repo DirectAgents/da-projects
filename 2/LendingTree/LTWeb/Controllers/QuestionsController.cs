@@ -41,12 +41,12 @@ namespace LTWeb.Controllers
 
         public ActionResult Save(LendingTreeVM model, string questionKey)
         {
-            //LendingTreeModel sessionModel = Session["LTModel"] as LendingTreeModel;
-            LendingTreeVM sessionModel = Session["LTModel"] as LendingTreeVM;
+            ILendingTreeModel sessionModel = Session["LTModel"] as ILendingTreeModel;
+            //LendingTreeVM sessionModel = Session["LTModel"] as LendingTreeVM;
             if (sessionModel == null)
             {
-                //sessionModel = new LendingTreeModel();
-                sessionModel = new LendingTreeVM();
+                sessionModel = new LendingTreeModel("Test");
+                //sessionModel = new LendingTreeVM();
                 Session["LTModel"] = sessionModel;
             }
             PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
