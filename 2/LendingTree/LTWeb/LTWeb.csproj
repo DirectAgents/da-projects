@@ -123,14 +123,21 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\LTServiceController.cs" />
+    <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\LendingTreeVM.cs" />
+    <Compile Include="Models\QuestionVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\connectionsconfig.xml" />
+    <Content Include="App_Data\questions.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Content\style.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -219,10 +226,12 @@
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\LTService\Index.cshtml" />
     <Content Include="Views\LTService\Call.cshtml" />
+    <Content Include="Views\Questions\Show.cshtml" />
+    <Content Include="Views\Questions\FormFields.cshtml" />
+    <Content Include="Views\Shared\_LTLayout.cshtml" />
+    <Content Include="Views\Test\Test.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
@@ -230,6 +239,10 @@
     <ProjectReference Include="..\LTWeb.Common\LTWeb.Common.csproj">
       <Project>{a0fe1ca6-fe54-4791-9397-61ebb10ba5f5}</Project>
       <Name>LTWeb.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LTWeb.Service\LTWeb.Service.csproj">
+      <Project>{0852445a-3124-4223-b755-7812b59e39fa}</Project>
+      <Name>LTWeb.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

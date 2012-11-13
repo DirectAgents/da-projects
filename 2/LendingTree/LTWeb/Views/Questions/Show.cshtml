@@ -1,0 +1,52 @@
+﻿@model LTWeb.Models.QuestionVM
+
+@Model.Text<br />
+
+@using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
+{
+    @Html.Hidden("QuestionKey", Model.Key)
+    switch (Model.AnswerType)
+    {
+        case "dropdown":
+            <select name="@Model.Key">
+            @foreach (var option in Model.Options)
+            {
+                <option value="@option.Value">@option.Text</option>
+            }
+            </select>
+            break;
+        case "radio":
+            foreach (var option in Model.Options)
+            {
+                <input type="radio" name="@Model.Key" value="@option.Value" />@option.Text<br />
+            }
+            break;
+        case "3part":
+            <input name="@Model.Key" type="text" />
+    <!--        <input type="text" />
+            <input type="text" />-->
+            break;
+        default:
+            <input name="@Model.Key" type="text" />
+            break;
+    }
+}
+
+<input type="button" value="Save" onclick="Save()" />
+@Html.ActionLink("Next", "Show", new { q = Model.NextQuestionIndex })
+<br /><br />
+@Html.ActionLink("Save All", "SaveAll")
+
+<script type="text/javascript">
+    function Save() {
+        var form = $('#questionForm');
+        $.ajax({
+            type: "POST",
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                //alert('success!');
+            }
+        });
+    }
+</script>
