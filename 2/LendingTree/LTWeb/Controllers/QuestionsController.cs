@@ -41,12 +41,13 @@ namespace LTWeb.Controllers
 
         public ActionResult Save(LendingTreeVM model, string questionKey)
         {
-            //LendingTreeModel sessionModel = Session["LTModel"] as LendingTreeModel;
-            LendingTreeVM sessionModel = Session["LTModel"] as LendingTreeVM;
+            ILendingTreeModel sessionModel = Session["LTModel"] as ILendingTreeModel;
+            //LendingTreeVM sessionModel = Session["LTModel"] as LendingTreeVM;
             if (sessionModel == null)
             {
-                //sessionModel = new LendingTreeModel();
-                sessionModel = new LendingTreeVM();
+                sessionModel = new LendingTreeModel("Test");
+                sessionModel.Initialize();
+                //sessionModel = new LendingTreeVM();
                 Session["LTModel"] = sessionModel;
             }
             PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
@@ -62,7 +63,43 @@ namespace LTWeb.Controllers
                     break;
             }
 
-            return null;
+            if (Request.IsAjaxRequest())
+                return null;
+            else
+            {
+                // Determine next question
+                var questions = GetQuestionVMs();
+                bool foundThisQuestion = false;
+                QuestionVM nextQuestion = null;
+                int i = 0;
+                while ((!foundThisQuestion || nextQuestion == null) && i < questions.Length)
+                {
+                    var question = questions[i];
+                    if (question.Key == questionKey)
+                    {
+                        foundThisQuestion = true;
+                    }
+                    else if (foundThisQuestion)
+                    {
+                        if (string.IsNullOrEmpty(question.DependencyKey))
+                        {
+                            nextQuestion = question;
+                        }
+                        else
+                        {
+                            string qValue = sessionModel.GetType().GetProperty(question.DependencyKey).GetValue(sessionModel) as string;
+                            if (qValue == question.DependencyValue)
+                                nextQuestion = question;
+                        }
+                    }
+                    i++;
+                }
+                if (nextQuestion == null)
+                    return Content("no more questions");
+                else
+                    return RedirectToAction("Show", new { q = i - 1 });
+                    //return View("Show", nextQuestion); // didn't work... the hidden "QuestionKey" got set to the wrong value. browser cache?
+            }
         }
 
         public ActionResult SaveAll()
@@ -94,6 +131,12 @@ namespace LTWeb.Controllers
                                 break;
                             case "answertype":
                                 question.AnswerType = reader.Value;
+                                break;
+                            case "dependencykey":
+                                question.DependencyKey = reader.Value;
+                                break;
+                            case "dependencyvalue":
+                                question.DependencyValue = reader.Value;
                                 break;
                         }
                     }
