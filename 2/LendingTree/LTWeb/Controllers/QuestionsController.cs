@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml;
+using System.Xml.Linq;
 using LTWeb.Models;
 using LTWeb.Service;
 
@@ -19,21 +20,8 @@ namespace LTWeb.Controllers
 
         public ActionResult Show(int q = 0)
         {
-/*
-            var question = new QuestionVM
-            {
-                Text = "Type of loan:",
-                AnswerType = "radio",
-                Options = new List<string>
-                {
-                    "Refinance Mortgage",
-                    "Purchase Home"
-                }
-            };
-*/
             var questions = GetQuestionVMs();
             var model = questions[q];
-            model.NextQuestionIndex = q + 1;
  
             return View(model);
             //return PartialView("FormFields", model);
@@ -42,12 +30,10 @@ namespace LTWeb.Controllers
         public ActionResult Save(LendingTreeVM model, string questionKey)
         {
             ILendingTreeModel sessionModel = Session["LTModel"] as ILendingTreeModel;
-            //LendingTreeVM sessionModel = Session["LTModel"] as LendingTreeVM;
             if (sessionModel == null)
             {
                 sessionModel = new LendingTreeModel("Test");
                 sessionModel.Initialize();
-                //sessionModel = new LendingTreeVM();
                 Session["LTModel"] = sessionModel;
             }
             PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
@@ -67,38 +53,11 @@ namespace LTWeb.Controllers
                 return null;
             else
             {
-                // Determine next question
-                var questions = GetQuestionVMs();
-                bool foundThisQuestion = false;
-                QuestionVM nextQuestion = null;
-                int i = 0;
-                while ((!foundThisQuestion || nextQuestion == null) && i < questions.Length)
-                {
-                    var question = questions[i];
-                    if (question.Key == questionKey)
-                    {
-                        foundThisQuestion = true;
-                    }
-                    else if (foundThisQuestion)
-                    {
-                        if (string.IsNullOrEmpty(question.DependencyKey))
-                        {
-                            nextQuestion = question;
-                        }
-                        else
-                        {
-                            string qValue = sessionModel.GetType().GetProperty(question.DependencyKey).GetValue(sessionModel) as string;
-                            if (qValue == question.DependencyValue)
-                                nextQuestion = question;
-                        }
-                    }
-                    i++;
-                }
+                var nextQuestion = GetNextQuestionVM(questionKey, sessionModel);
                 if (nextQuestion == null)
                     return Content("no more questions");
                 else
-                    return RedirectToAction("Show", new { q = i - 1 });
-                    //return View("Show", nextQuestion); // didn't work... the hidden "QuestionKey" got set to the wrong value. browser cache?
+                    return View("Show", nextQuestion);
             }
         }
 
@@ -107,70 +66,73 @@ namespace LTWeb.Controllers
             return Content("thank you");
         }
 
+        // returns null if there is no next question
+        private QuestionVM GetNextQuestionVM(string completedKey, ILendingTreeModel ltModel)
+        {
+            var questions = GetQuestionVMs();
+            bool foundCompletedQuestion = false;
+            QuestionVM nextQuestion = null;
+            int i = 0;
+            while ((!foundCompletedQuestion || nextQuestion == null) && i < questions.Length)
+            {
+                var question = questions[i];
+                if (question.Key == completedKey)
+                {
+                    foundCompletedQuestion = true;
+                }
+                else if (foundCompletedQuestion)
+                {
+                    if (string.IsNullOrEmpty(question.DependencyKey))
+                    {
+                        nextQuestion = question;
+                    }
+                    else
+                    {
+                        string qValue = ltModel.GetType().GetProperty(question.DependencyKey).GetValue(ltModel) as string;
+                        if (qValue == question.DependencyValue)
+                            nextQuestion = question;
+                    }
+                }
+                i++;
+            }
+            return nextQuestion;
+        }
+
         private QuestionVM[] GetQuestionVMs()
         {
-            List<QuestionVM> questions = new List<QuestionVM>();
-            XmlTextReader reader = new XmlTextReader(Request.PhysicalApplicationPath + "App_Data\\questions.xml");
-            while (reader.Read())
+            List<QuestionVM> questionsList = new List<QuestionVM>();
+            var xelement = XElement.Load(Request.MapPath("~/App_Data/questions.xml"));
+            int i = 0;
+            foreach (var questionEl in xelement.Elements("question"))
             {
-                if (reader.NodeType == XmlNodeType.Element && reader.Name == "question")
+                var question = new QuestionVM()
                 {
-                    var question = new QuestionVM();
-                    while (reader.MoveToNextAttribute())
-                    {
-                        switch (reader.Name)
-                        {
-                            case "text":
-                                question.Text = reader.Value;
-                                break;
-                            case "subtext":
-                                question.Subtext = reader.Value;
-                                break;
-                            case "key":
-                                question.Key = reader.Value;
-                                break;
-                            case "answertype":
-                                question.AnswerType = reader.Value;
-                                break;
-                            case "dependencykey":
-                                question.DependencyKey = reader.Value;
-                                break;
-                            case "dependencyvalue":
-                                question.DependencyValue = reader.Value;
-                                break;
-                        }
-                    }
-                    if (question.AnswerType == "dropdown" || question.AnswerType == "radio")
-                    {
-                        List<OptionVM> options = new List<OptionVM>();
-                        while (reader.Read() && !(reader.NodeType == XmlNodeType.EndElement && reader.Name == "question"))
-                        {
-                            if (reader.NodeType == XmlNodeType.Element && reader.Name == "option")
-                            {
-                                OptionVM option = new OptionVM();
-                                while (reader.MoveToNextAttribute())
-                                {
-                                    switch (reader.Name)
-                                    {
-                                        case "value":
-                                            option.Value = reader.Value;
-                                            break;
-                                    }
-                                }
-                                if (reader.Read() && reader.NodeType == XmlNodeType.Text)
-                                {
-                                    option.Text = reader.Value;
-                                    options.Add(option);
-                                }
-                            }
-                        }
-                        question.Options = options;
-                    }
-                    questions.Add(question);
+                    QuestionIndex = i++,
+                    Key = questionEl.Attribute("key").Value,
+                    Text = questionEl.Attribute("text").Value,
+                    AnswerType = questionEl.Attribute("answertype").Value
+                };
+                var xattr = questionEl.Attribute("subtext");
+                if (xattr != null) question.Subtext = xattr.Value;
+                xattr = questionEl.Attribute("dependencykey");
+                if (xattr != null)
+                {
+                    question.DependencyKey = xattr.Value;
+                    question.DependencyValue = questionEl.Attribute("dependencyvalue").Value;
                 }
+                question.Options = new List<OptionVM>();
+                foreach (var optionEl in questionEl.Descendants("option"))
+                {
+                    OptionVM option = new OptionVM()
+                    {
+                        Text = optionEl.Value,
+                        Value = optionEl.Attribute("value").Value
+                    };
+                    question.Options.Add(option);
+                }
+                questionsList.Add(question);
             }
-            reader.Dispose();
-            return questions.ToArray();
+            return questionsList.ToArray();
         }
     }
 }
