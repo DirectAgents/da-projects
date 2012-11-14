@@ -30,8 +30,11 @@
             <input name="@Model.Key" type="text" />
             break;
     }
+    <br />
+    <input type="submit" value="Save and Continue" />
 }
 
+<br />
 <input type="button" value="Save" onclick="Save()" />
 @Html.ActionLink("Next", "Show", new { q = Model.NextQuestionIndex })
 <br /><br />
