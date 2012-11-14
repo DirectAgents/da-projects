@@ -137,6 +137,19 @@
     <Content Include="App_Data\questions.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Content\images\bbb-logo.gif" />
+    <Content Include="Content\images\bg-narrow-repeat.png" />
+    <Content Include="Content\images\bg-narrowgreen-end.png" />
+    <Content Include="Content\images\bg-narrowgreen.png" />
+    <Content Include="Content\images\bg-repeat.jpg" />
+    <Content Include="Content\images\btn-continue.jpg" />
+    <Content Include="Content\images\btn-getquotes.jpg" />
+    <Content Include="Content\images\graphic-review.gif" />
+    <Content Include="Content\images\house-logo.gif" />
+    <Content Include="Content\images\icon-lock.png" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\siteseal_gd_3_h_d_m.gif" />
+    <Content Include="Content\images\x.gif" />
     <Content Include="Content\style.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
