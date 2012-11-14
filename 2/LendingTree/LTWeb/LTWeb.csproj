@@ -122,7 +122,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\LTServiceController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
@@ -237,12 +237,11 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
-    <Content Include="Views\LTService\Index.cshtml" />
-    <Content Include="Views\LTService\Call.cshtml" />
     <Content Include="Views\Questions\Show.cshtml" />
     <Content Include="Views\Questions\FormFields.cshtml" />
     <Content Include="Views\Shared\_LTLayout.cshtml" />
     <Content Include="Views\Test\Test.cshtml" />
+    <Content Include="Views\Shared\LTModel.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

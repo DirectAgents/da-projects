@@ -13,7 +13,7 @@ namespace LTWeb.Service
         {
             using (var repo = new Repository(new LTWebDataContext(), false))
             {
-                repo.Single<ServiceConfig>(c => c.Name == serviceConfigName);
+                LendingTreeConfig = repo.Single<ServiceConfig>(c => c.Name == serviceConfigName);
             }
         }
 
@@ -43,6 +43,11 @@ namespace LTWeb.Service
         {
             string xml = Request.ToString();
             return xml;
+        }
+
+        public string GetUrlForPost()
+        {
+            return LendingTreeConfig.PostUrl;
         }
 
         public object this[string propertyName]
@@ -651,5 +656,11 @@ namespace LTWeb.Service
         }
 
         #endregion
+
+        public bool SsnRequired
+        {
+            get;
+            set;
+        }
     }
 }

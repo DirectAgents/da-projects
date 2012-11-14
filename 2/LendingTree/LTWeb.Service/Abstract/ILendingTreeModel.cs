@@ -6,6 +6,7 @@
         bool RequiresInitialization();
         string DataPropertyName { get; }
         string GetXMLForPost();
+        string GetUrlForPost();
         string AppID { get; set; }
         string CreditRating { get; set; }
         string LoanType { get; set; }
@@ -25,6 +26,7 @@
         string HomePhone { get; set; }
         string LastName { get; set; }
         string SSN { get; set; }
+        bool SsnRequired { get; set; }
         string Address { get; set; }
         string WorkPhone { get; set; }
         string ApplicantZipCode { get; set; }
