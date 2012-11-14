@@ -18,13 +18,15 @@ namespace LTWeb.Controllers
             return View();
         }
 
-        public ActionResult Show(int q = 0)
+        public ActionResult Show(int q = 0, bool test = false)
         {
             var questions = GetQuestionVMs();
             var model = questions[q];
  
-            return View(model);
-            //return PartialView("FormFields", model);
+            if (test)
+                return View(model);
+            else
+                return PartialView("FormFields", model);
         }
 
         public ActionResult Save(LendingTreeVM model, string questionKey)
@@ -57,7 +59,7 @@ namespace LTWeb.Controllers
                 if (nextQuestion == null)
                     return Content("no more questions");
                 else
-                    return View("Show", nextQuestion);
+                    return View("FormFields", nextQuestion);
             }
         }
 

@@ -11,19 +11,19 @@
         <h3 class="ssnOptional">
             No SSN Required
         </h3>
+        <h4 style="color:black">progress bar</h4>
     </div>
     <div class="form-content png">
         <div class="dropdown-item">
             <div id="form_inner_1step">
+                @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
+                {
                 <div>
-
                     <div style="margin-bottom: 18px; margin-left: 80px; width: 350px;">
-                        @Html.Partial("Show")
+                        @Html.Partial("ShowInner")
                     </div>
-
                 </div>
                 <div>
-
                     <div style="width: 400px; margin-right: @(Model.QuestionIndex == 0 ? "100px" : "150px")">
                         <div style="float: left; margin-top: 20px;">
                             <div class="security"></div>
@@ -32,8 +32,8 @@
                             <input type="submit" value="" id="ContentPlaceHolder1_GetQuoteNow1_Button1" class="@(Model.QuestionIndex == 0 ? "btnPage1" : "btnPage2")" />
                         </div>
                     </div>
-
                 </div>
+                }
             </div>
         </div>
     </div>

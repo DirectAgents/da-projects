@@ -1,0 +1,31 @@
+﻿@model LTWeb.Models.QuestionVM
+
+@Model.Text<br />
+<input type="hidden" name="QuestionKey" value="@Model.Key" />
+
+@switch (Model.AnswerType)
+{
+    case "dropdown":
+        <select name="@Model.Key">
+        @foreach (var option in Model.Options)
+        {
+            <option value="@option.Value">@option.Text</option>
+        }
+        </select>
+        break;
+    case "radio":
+        foreach (var option in Model.Options)
+        {
+            <input type="radio" name="@Model.Key" value="@option.Value" />@option.Text<br />
+        }
+        break;
+    case "3part":
+        <input name="@Model.Key" type="text" />
+<!--        <input type="text" />
+        <input type="text" />-->
+        break;
+    default:
+        <input name="@Model.Key" type="text" />
+        break;
+}
+@Model.Subtext

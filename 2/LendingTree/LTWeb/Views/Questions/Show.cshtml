@@ -1,42 +1,15 @@
 ﻿@model LTWeb.Models.QuestionVM
 
-@Model.Text<br />
-
 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
 {
-    <input type="hidden" name="QuestionKey" value="@Model.Key" />
-    switch (Model.AnswerType)
-    {
-        case "dropdown":
-            <select name="@Model.Key">
-            @foreach (var option in Model.Options)
-            {
-                <option value="@option.Value">@option.Text</option>
-            }
-            </select>
-            break;
-        case "radio":
-            foreach (var option in Model.Options)
-            {
-                <input type="radio" name="@Model.Key" value="@option.Value" />@option.Text<br />
-            }
-            break;
-        case "3part":
-            <input name="@Model.Key" type="text" />
-    <!--        <input type="text" />
-            <input type="text" />-->
-            break;
-        default:
-            <input name="@Model.Key" type="text" />
-            break;
-    }
+    @Html.Partial("ShowInner")
     <br />
     <input type="submit" value="Save and Continue" />
 }
 
 <br />
 <input type="button" value="Save" onclick="Save()" />
-@Html.ActionLink("Next", "Show", new { q = Model.QuestionIndex + 1 })
+@Html.ActionLink("Next", "Show", new { q = Model.QuestionIndex + 1, test = true })
 <br /><br />
 @Html.ActionLink("Save All", "SaveAll")
 
@@ -48,7 +21,7 @@
             url: form.attr('action'),
             data: form.serialize(),
             success: function (response) {
-                //alert('success!');
+                alert('success!');
             }
         });
     }

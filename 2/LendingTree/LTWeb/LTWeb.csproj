@@ -242,6 +242,7 @@
     <Content Include="Views\Shared\_LTLayout.cshtml" />
     <Content Include="Views\Test\Test.cshtml" />
     <Content Include="Views\Shared\LTModel.cshtml" />
+    <Content Include="Views\Questions\ShowInner.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
