@@ -4,7 +4,7 @@
 
 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
 {
-    @Html.Hidden("QuestionKey", Model.Key)
+    <input type="hidden" name="QuestionKey" value="@Model.Key" />
     switch (Model.AnswerType)
     {
         case "dropdown":
@@ -36,7 +36,7 @@
 
 <br />
 <input type="button" value="Save" onclick="Save()" />
-@Html.ActionLink("Next", "Show", new { q = Model.NextQuestionIndex })
+@Html.ActionLink("Next", "Show", new { q = Model.QuestionIndex + 1 })
 <br /><br />
 @Html.ActionLink("Save All", "SaveAll")
 

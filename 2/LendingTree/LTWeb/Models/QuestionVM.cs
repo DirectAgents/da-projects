@@ -17,7 +17,7 @@ namespace LTWeb.Models
         public string DependencyKey { get; set; }
         public string DependencyValue { get; set; }
 
-        public int NextQuestionIndex { get; set; }
+        public int QuestionIndex { get; set; }
     }
 
     public class OptionVM
