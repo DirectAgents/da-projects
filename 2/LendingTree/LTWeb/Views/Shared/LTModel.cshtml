@@ -1,0 +1,16 @@
+﻿@{
+    Layout = null;
+}
+
+@{
+    var sessionModel = HttpContext.Current.Session["LTModel"] as LTWeb.Service.ILendingTreeModel;
+    if(sessionModel != null)
+    {
+        WriteLiteral(sessionModel.GetXMLForPost()         
+            .Replace("<", "[")
+            .Replace(">", "]")                                                                        
+            .Replace("\r", "")
+            .Replace("\n", "<br/>")
+            );
+    }
+}

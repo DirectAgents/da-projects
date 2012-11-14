@@ -88,9 +88,21 @@ namespace LTWeb.Controllers
                     }
                     else
                     {
-                        string qValue = ltModel.GetType().GetProperty(question.DependencyKey).GetValue(ltModel) as string;
-                        if (qValue == question.DependencyValue)
-                            nextQuestion = question;
+                        object qValue = ltModel.GetType().GetProperty(question.DependencyKey).GetValue(ltModel);
+                        if (qValue is string)
+                        {
+                            if ((string)qValue == question.DependencyValue)
+                                nextQuestion = question;
+                        }
+                        else if (qValue is bool)
+                        {
+                            if ((bool)qValue == bool.Parse(question.DependencyValue))
+                                nextQuestion = question;
+                        }
+                        else
+                        {
+                            throw new Exception("invalid value");       
+                        }
                     }
                 }
                 i++;
@@ -112,14 +124,16 @@ namespace LTWeb.Controllers
                     Text = questionEl.Attribute("text").Value,
                     AnswerType = questionEl.Attribute("answertype").Value
                 };
+
                 var xattr = questionEl.Attribute("subtext");
                 if (xattr != null) question.Subtext = xattr.Value;
+
                 xattr = questionEl.Attribute("dependencykey");
-                if (xattr != null)
-                {
-                    question.DependencyKey = xattr.Value;
-                    question.DependencyValue = questionEl.Attribute("dependencyvalue").Value;
-                }
+                if (xattr != null) question.DependencyKey = xattr.Value;
+
+                xattr = questionEl.Attribute("dependencyvalue");
+                if (xattr != null) question.DependencyValue = xattr.Value;
+
                 question.Options = new List<OptionVM>();
                 foreach (var optionEl in questionEl.Descendants("option"))
                 {

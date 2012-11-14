@@ -656,5 +656,11 @@ namespace LTWeb.Service
         }
 
         #endregion
+
+        public bool SsnRequired
+        {
+            get;
+            set;
+        }
     }
 }

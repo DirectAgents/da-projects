@@ -26,6 +26,7 @@
         string HomePhone { get; set; }
         string LastName { get; set; }
         string SSN { get; set; }
+        bool SsnRequired { get; set; }
         string Address { get; set; }
         string WorkPhone { get; set; }
         string ApplicantZipCode { get; set; }
