@@ -8,7 +8,101 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    <div class="website-wrapper">
+        <div id="topheader" class="png">
+            <span id="tagline" class="inline">Get instant mortgage offers </span>
+        </div>
+        <div id="step1" class="board-content-data">
+            <div class="left-rail inline">
+                <div id="page1RailHeader" class="stroke">
+                    <h2>
+                        Lower Your<br />
+                        Mortgage Payment
+                        <br />
+                        and Save Money Now!</h2>
+                </div>
+                <div id="page1RailRates" class="stroke">
+                    <h2>
+                        Refinance Rates From</h2>
+                    <div class="rate">
+                        2.00%
+                        <br />
+                        (2.207% APR)*</div>
+                    <h2>
+                        Affordable Mortgage Payments</h2>
+                    <div class="smallLabel">
+                        Example payments are for a 5/1 adjustable rate mortgage loan</div>
+                </div>
+                <div id="payments">
+                    <h2 class="green">
+                        $200,000 mortgage for $817/mo.
+                    </h2>
+                    <h2 class="green">
+                        $300,000 mortgage for $1,205/mo.
+                    </h2>
+                    <h2 class="green">
+                        $400,000 mortgage for $1,607/mo.
+                    </h2>
+                    <div class="disclosure">
+                        <a href="javascript:STMRCWindow('http://www.lendingtree.com/stmrc/promotional_disclosures.asp?disclosures=00018,00031,00065,00021')">
+                            Full Advertising Disclosures</a>
+                    </div>
+                </div>
+            </div>
+
     @RenderBody()
+
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+            &nbsp;</div>
+        <div id="reviewContainer">
+            <h2>
+                Quick and easy</h2>
+            Nina and Melissa helped to make the entire refinancing process quick and easy. The
+            rate, fees and costs were all competitive, but it was the top notch service that
+            will have me recommending Lending Tree to my friends and coming back if ever I need
+            another loan.
+        </div>
+        <div id="footer-wrapper">
+            <div id="footer" class="board">
+                <div class="footer-logo">
+                    <a target="_blank" href="http://www.bbb.org/charlotte/business-reviews/online-loans-referral-services/lendingtree-in-charlotte-nc-109412">
+                        <img src="https://mortgage-rate-offers.com/images/bbb-logo.gif" alt="bbb-logo" /></a>
+                    <a target="_blank" href="http://quickmatch.lendingtree.com/LT_housing.asp">
+                        <img src="https://mortgage-rate-offers.com/images/house-logo.gif" alt="house-logo" /></a>
+                    <!--CERTIFICATE TRUST LOGO-->
+                    <span id="siteseal">
+                        <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=2nOOUr9eTPDXWnZhyCuzuV3T0u15tx2nRXhbr6K9zjPWT8FdsYJea78Nk8"></script>
+                        <br />
+                        <a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/email/email-hosting.aspx"
+                            target="_blank">email hosting</a></span>
+                    <!--END CERTIFICATE TRUST LOGO-->
+                    <p>
+                        Online Security:<a target="_blank" href="http://www.lendingtree.com/about-us/online-security/">
+                            <span>Protect Against Fraud</span></a></p>
+                </div>
+                <!--End .footer-logo-->
+                <div class="footer-text">
+                    <a href="javascript:STMRCWindow('http://www.lendingtree.com/stmrc/privacy.asp?nonav=true&bp=ltquickmatch', 550, 450)">
+                        Privacy Policy</a> | <a href="javascript:STMRCWindow('http://www.lendingtree.com/stmrc/termsofuse.asp?bp=v3&nonav=true')">
+                            Terms of Use</a> | <a href="javascript:STMRCWindow('http://www.lendingtree.com/stmrc/disclosure.asp?nonav=true&bp=ltquickmatch',550, 450)">
+                                Licenses &amp; Disclosures</a>  | <a href="javascript:STMRCWindow('http://www.lendingtree.com/stmrc/promotional_disclosuresv1.asp',550, 450)">
+                                Full Advertising Disclosures</a><br />
+                    <br />
+                    <p style="text-align: left;">
+                        LendingTree technology and processes are patented under U.S. Patent Nos. 6,385,594
+                        and 6,611,816 and licensed under U.S. Patent Nos. 5,995,947 and 5,758,328. © 1998
+                        - 2011 LendingTree, LLC. All Rights Reserved. This site is directed at, and made
+                        available to, persons in the continental U.S., Alaska and Hawaii only.</p>
+                </div>
+                <!--End .footer-text-->
+            </div>
+            <!--End #footer-->
+        </div>
+        <!--End .website-wrapper-->
+    </div>
 
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
