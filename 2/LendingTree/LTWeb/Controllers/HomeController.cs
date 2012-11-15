@@ -12,8 +12,7 @@ namespace LTWeb.Controllers
     {
         public ActionResult Index(int? mode, bool? debug)
         {
-            using (var db = new LTWebDataContext()) // TDOO: dependency injection
-                Settings.Reset(db);
+            Settings.Reset();
 
             var ltModel = Settings.LTModel;
 
