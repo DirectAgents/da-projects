@@ -115,6 +115,19 @@ namespace LTWeb.Service
             }
         }
 
+        public bool IsLoanTypeSet()
+        {
+            try
+            {
+                var lt = this.LoanType;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         #region Events/Notification
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -37,5 +37,6 @@
         object this[string propertyName] { get; }
         bool RequiresDisclosure { get; }
         string ESourceId { get; set; }
+        bool IsLoanTypeSet();
     }
 }

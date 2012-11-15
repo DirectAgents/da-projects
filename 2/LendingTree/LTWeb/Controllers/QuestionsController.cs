@@ -27,19 +27,21 @@ namespace LTWeb.Controllers
         public ActionResult Save(LendingTreeVM model, string questionKey)
         {
             ILendingTreeModel ltModel = Settings.LTModel;
-            PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
-            PropertyInfo destPropInfo = ltModel.GetType().GetProperty(questionKey);
 
-            switch (questionKey)
+            if (questionKey == "LoanType" || ltModel.IsLoanTypeSet())
             {
-                case "IsVetran":
-                    ltModel.IsVetran = Request["IsVetran"] == "YES";
-                    break;
-                default:
-                    destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));
-                    break;
+                PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
+                PropertyInfo destPropInfo = ltModel.GetType().GetProperty(questionKey);
+                switch (questionKey)
+                {
+                    case "IsVetran":
+                        ltModel.IsVetran = Request["IsVetran"] == "YES";
+                        break;
+                    default:
+                        destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));
+                        break;
+                }
             }
-
             if (Request.IsAjaxRequest())
                 return null;
             else

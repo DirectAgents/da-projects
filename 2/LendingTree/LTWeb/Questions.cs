@@ -52,6 +52,13 @@ namespace LTWeb
         public static QuestionVM GetNextQuestionVM(string completedKey, ILendingTreeModel ltModel)
         {
             var questions = Questions.GetQuestionVMs();
+            if (!ltModel.IsLoanTypeSet())
+            {
+                var question = questions[0];
+                AdjustQuestion(question, ltModel);
+                return question;
+                //note: doesn't check dependencies
+            }
             bool foundCompletedQuestion = false;
             QuestionVM nextQuestion = null;
             int i = 0;
