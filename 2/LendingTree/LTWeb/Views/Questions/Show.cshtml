@@ -10,19 +10,9 @@
 <br />
 <input type="button" value="Save" onclick="Save()" />
 @Html.ActionLink("Next", "Show", new { q = Model.QuestionIndex + 1, test = true })
+
 <br /><br />
 @Html.ActionLink("Save All", "SaveAll")
 
-<script type="text/javascript">
-    function Save() {
-        var form = $('#questionForm');
-        $.ajax({
-            type: "POST",
-            url: form.attr('action'),
-            data: form.serialize(),
-            success: function (response) {
-                alert('success!');
-            }
-        });
-    }
-</script>
+<br /><br />
+@Html.Partial("LTModel")
