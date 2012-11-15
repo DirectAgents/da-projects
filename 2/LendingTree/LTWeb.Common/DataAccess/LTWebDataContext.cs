@@ -8,6 +8,8 @@ namespace LTWeb.DataAccess
 
         public DbSet<Lead> Leads { get; set; }
 
+        public DbSet<AdminSetting> AdminSettings { get; set; }
+
         public LTWebDataContext()
         {
 #if(DEBUG)

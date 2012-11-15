@@ -122,18 +122,22 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="Models\AdminVM.cs" />
     <Compile Include="Models\LendingTreeVM.cs" />
     <Compile Include="Models\QuestionVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\connectionsconfig.xml" />
+    <Content Include="App_Data\exampleLead.xml" />
     <Content Include="App_Data\questions.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -243,6 +247,7 @@
     <Content Include="Views\Test\Test.cshtml" />
     <Content Include="Views\Shared\LTModel.cshtml" />
     <Content Include="Views\Questions\ShowInner.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

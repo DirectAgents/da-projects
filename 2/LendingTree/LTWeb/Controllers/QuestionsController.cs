@@ -31,13 +31,7 @@ namespace LTWeb.Controllers
 
         public ActionResult Save(LendingTreeVM model, string questionKey)
         {
-            ILendingTreeModel sessionModel = Session["LTModel"] as ILendingTreeModel;
-            if (sessionModel == null)
-            {
-                sessionModel = new LendingTreeModel("Test");
-                sessionModel.Initialize();
-                Session["LTModel"] = sessionModel;
-            }
+            ILendingTreeModel sessionModel = Settings.LTModel;
             PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
             PropertyInfo destPropInfo = sessionModel.GetType().GetProperty(questionKey);
 

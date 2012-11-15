@@ -1,0 +1,39 @@
+﻿@model LTWeb.Models.AdminVM
+
+@{
+    ViewBag.Title = "Admin";
+}
+
+<h2>Administration</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Settings</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Rate1)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Rate1)
+            @Html.ValidationMessageFor(model => model.Rate1)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Rate2)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Rate2)
+            @Html.ValidationMessageFor(model => model.Rate2)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
