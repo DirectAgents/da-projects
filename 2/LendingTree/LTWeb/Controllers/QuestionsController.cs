@@ -16,6 +16,7 @@ namespace LTWeb.Controllers
         {
             var questions = Questions.GetQuestionVMs();
             var model = questions[q];
+            Questions.AdjustQuestion(model, Settings.LTModel);
  
             if (test)
                 return View(model);
@@ -25,17 +26,17 @@ namespace LTWeb.Controllers
 
         public ActionResult Save(LendingTreeVM model, string questionKey)
         {
-            ILendingTreeModel sessionModel = Settings.LTModel;
+            ILendingTreeModel ltModel = Settings.LTModel;
             PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
-            PropertyInfo destPropInfo = sessionModel.GetType().GetProperty(questionKey);
+            PropertyInfo destPropInfo = ltModel.GetType().GetProperty(questionKey);
 
             switch (questionKey)
             {
                 case "IsVetran":
-                    sessionModel.IsVetran = Request["IsVetran"] == "YES";
+                    ltModel.IsVetran = Request["IsVetran"] == "YES";
                     break;
                 default:
-                    destPropInfo.SetValue(sessionModel, sourcePropInfo.GetValue(model));
+                    destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));
                     break;
             }
 
@@ -43,7 +44,7 @@ namespace LTWeb.Controllers
                 return null;
             else
             {
-                var nextQuestion = Questions.GetNextQuestionVM(questionKey, sessionModel);
+                var nextQuestion = Questions.GetNextQuestionVM(questionKey, ltModel);
                 if (nextQuestion == null)
                     return Content("no more questions");
                 else

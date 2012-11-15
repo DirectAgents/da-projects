@@ -89,7 +89,26 @@ namespace LTWeb
                 }
                 i++;
             }
+            if (nextQuestion != null)
+                AdjustQuestion(nextQuestion, ltModel);
             return nextQuestion;
+        }
+
+        public static void AdjustQuestion(QuestionVM question, ILendingTreeModel ltModel)
+        {
+            switch (question.Key)
+            {
+                case "CashOut":
+                    List<OptionVM> newOptions = new List<OptionVM>();
+                    for (int i=0; i < question.Options.Count; i++)
+                    {
+                        var option = question.Options[i];
+                        if (Convert.ToInt32(option.Value) <= ltModel.PropertyApproximateValue)
+                            newOptions.Add(option);
+                    }
+                    question.Options = newOptions;
+                    break;
+            }
         }
 
     }

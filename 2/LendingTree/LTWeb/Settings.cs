@@ -31,7 +31,11 @@ namespace LTWeb
         static Dictionary<string, string> CreateAdminSettings()
         {
             using (var db = new LTWebDataContext())
-                return db.AdminSettings.ToDictionary(c => c.Name, c => c.Value);
+            {
+                var adminSettings = db.AdminSettings.ToDictionary(c => c.Name, c => c.Value);
+                SessionAdminSettings = adminSettings;
+                return adminSettings;
+            }
         }
 
         public static ILendingTreeModel LTModel
@@ -47,7 +51,9 @@ namespace LTWeb
 
         static ILendingTreeModel CreateLTModel()
         {
-            return new LendingTreeModel("Test"); // TODO: un-hardcode
+            var ltModel = new LendingTreeModel("Test"); // TODO: un-hardcode
+            SessionLTModel = ltModel;
+            return ltModel;
         }
     }
 }
