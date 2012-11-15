@@ -1,11 +1,4 @@
 ﻿function Save() {
     var form = $('#questionForm');
-    $.ajax({
-        type: "POST",
-        url: form.attr('action'),
-        data: form.serialize(),
-        success: function (response) {
-            alert('success!');
-        }
-    });
+    $('#form-fields').load(form.attr('action'), form.serialize());
 }

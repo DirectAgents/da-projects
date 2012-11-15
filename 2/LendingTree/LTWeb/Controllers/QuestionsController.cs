@@ -21,10 +21,10 @@ namespace LTWeb.Controllers
             if (test)
                 return View(model);
             else
-                return PartialView("FormFields", model);
+                return View("FormFields", model);
         }
 
-        public ActionResult Save(LendingTreeVM model, string questionKey)
+        public ActionResult Save(LendingTreeVM model, string questionKey, bool test = false)
         {
             ILendingTreeModel ltModel = Settings.LTModel;
 
@@ -42,11 +42,20 @@ namespace LTWeb.Controllers
                         break;
                 }
             }
+            var nextQuestion = Questions.GetNextQuestionVM(questionKey, ltModel);
+
             if (Request.IsAjaxRequest())
-                return null;
+            {
+                if (test)
+                    return null;
+                else
+                    return PartialView("FormFields", nextQuestion);
+            }
             else
             {
-                var nextQuestion = Questions.GetNextQuestionVM(questionKey, ltModel);
+                if (test)
+                    return View("Show", nextQuestion);
+
                 if (nextQuestion == null)
                     return Content("no more questions");
                 else

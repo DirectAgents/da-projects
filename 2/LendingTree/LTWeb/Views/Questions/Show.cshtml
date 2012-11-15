@@ -1,10 +1,15 @@
 ﻿@model LTWeb.Models.QuestionVM
 
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
 {
+    <input type="hidden" name="test" value="true" />
     @Html.Partial("ShowInner")
     <br />
-    <input type="submit" value="Save and Continue" />
+    <input type="submit" value="Submit form (no javascript)" />
 }
 
 <br />
@@ -16,3 +21,19 @@
 
 <br /><br />
 @Html.Partial("LTModel")
+
+@section Scripts {
+<script type="text/javascript">
+    function Save() {
+        var form = $('#questionForm');
+        $.ajax({
+            type: "POST",
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function (response) {
+                alert('success!');
+            }
+        });
+    }
+</script>
+}

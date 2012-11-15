@@ -1,10 +1,5 @@
 ﻿@model LTWeb.Models.QuestionVM
 
-@{
-    Layout = "~/Views/Shared/_LTLayout.cshtml";
-}
-
-<div class="form-fields">
     <div id="page1FormHeader" class="png">
         <h2>
             Get FREE Quotes from Trusted Lenders</h2>
@@ -29,7 +24,7 @@
                             <div class="security"></div>
                         </div>
                         <div style="float: left;">
-                            <input type="submit" value="" id="ContentPlaceHolder1_GetQuoteNow1_Button1" class="@(Model.QuestionIndex == 0 ? "btnPage1" : "btnPage2")" />
+                            <input type="submit" onclick="Save(); return false" value="" id="ContentPlaceHolder1_GetQuoteNow1_Button1" class="@(Model.QuestionIndex == 0 ? "btnPage1" : "btnPage2")" />
                         </div>
                     </div>
                 </div>
@@ -38,5 +33,3 @@
         </div>
     </div>
     <div class="form-fields-end png">&nbsp;</div>
-</div>
-<!--form fields-->
