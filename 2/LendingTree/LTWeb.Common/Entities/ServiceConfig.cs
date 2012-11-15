@@ -16,7 +16,7 @@ namespace LTWeb
             return Deserialize<ServiceConfig>(xml);
         }
 
-        static T Deserialize<T>(string xml)
+        private static T Deserialize<T>(string xml)
         {
             using (var reader = new StringReader(xml))
             {

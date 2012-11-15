@@ -202,6 +202,6 @@
   <question key="Email" text="Email:" answertype="freeform" />
   <question key="HomePhone" text="Home Phone:" answertype="freeform" />
   <question key="WorkPhone" text="Work Phone:" answertype="freeform" />
-  <question key="SSN" text="Social Security Number:" answertype="3part" subtext="(optional)" dependencykey="SsnRequired" dependencyvalue="True" />
-  <question key="SSN" text="Social Security Number:" answertype="3part" dependencykey="SsnRequired" dependencyvalue="False" />
+  <question key="SSN" text="Social Security Number:" answertype="3part" subtext="(optional)" dependencykey="SsnRequired" dependencyvalue="False" />
+  <question key="SSN" text="Social Security Number:" answertype="3part" dependencykey="SsnRequired" dependencyvalue="True" />
 </data>

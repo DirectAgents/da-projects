@@ -15,17 +15,7 @@ namespace LTWeb.Service
             {
                 LendingTreeConfig = repo.Single<ServiceConfig>(c => c.Name == serviceConfigName);
             }
-        }
-
-        /// <summary>
-        /// This initializes the model and should be called before accessing other members.
-        /// </summary>
-        void ILendingTreeModel.Initialize()
-        {
-            if (this.AppID == Guid.Empty.ToString())
-            {
-                this.AppID = Guid.NewGuid().ToString();
-            }
+            this.AppID = Guid.NewGuid().ToString();
         }
 
         /// <summary>

@@ -2,7 +2,6 @@
 {
     public interface ILendingTreeModel
     {
-        void Initialize();
         bool RequiresInitialization();
         string DataPropertyName { get; }
         string GetXMLForPost();
