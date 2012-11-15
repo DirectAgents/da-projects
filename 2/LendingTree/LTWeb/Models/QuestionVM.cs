@@ -18,6 +18,7 @@ namespace LTWeb.Models
         public string DependencyValue { get; set; }
 
         public int QuestionIndex { get; set; }
+        public int Progress { get; set; }
     }
 
     public class OptionVM

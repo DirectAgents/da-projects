@@ -6,7 +6,7 @@
         <h3 class="ssnOptional">
             No SSN Required
         </h3>
-        <h4 style="color:black">progress bar</h4>
+        <div id="progressbar"></div>
     </div>
     <div class="form-content png">
         <div class="dropdown-item">
@@ -33,3 +33,13 @@
         </div>
     </div>
     <div class="form-fields-end png">&nbsp;</div>
+
+<script type="text/javascript">
+    $('#progressbar').progressbar({ value: @Model.Progress });
+</script>
+
+@section Scripts {
+<script type="text/javascript">
+    $('#progressbar').progressbar({ value: @Model.Progress });
+</script>
+}

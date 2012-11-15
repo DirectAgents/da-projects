@@ -45,6 +45,10 @@ namespace LTWeb
                 }
                 questionsList.Add(question);
             }
+            foreach (var question in questionsList)
+            {
+                question.Progress = (question.QuestionIndex * 100) / questionsList.Count;
+            }
             return questionsList.ToArray();
         }
 
