@@ -596,7 +596,7 @@ div.smartTipWindow
 {
     font-size: 22px;
 }
-.security
+.security, .security2
 {
     background: url('images/icon-lock.png') no-repeat scroll left top transparent;
     width: 30px;
@@ -607,6 +607,10 @@ div.smartTipWindow
 #step1 .security
 {
     margin: 10px 0pt 0pt 10px;
+}
+#step1 .security2
+{
+    margin: 10px 0pt 0pt 50px;
 }
 #step2 .security
 {

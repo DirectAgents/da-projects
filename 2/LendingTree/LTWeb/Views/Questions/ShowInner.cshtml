@@ -28,4 +28,6 @@
         <input name="@Model.Key" type="text" />
         break;
 }
-@Model.Subtext
+@if (!string.IsNullOrWhiteSpace(Model.Subtext)) {
+    <br />@Model.Subtext
+}

@@ -1,12 +1,17 @@
 ﻿@model LTWeb.Models.QuestionVM
 
     <div id="page1FormHeader" class="png">
-        <h2>
-            Get FREE Quotes from Trusted Lenders</h2>
-        <h3 class="ssnOptional">
-            No SSN Required
-        </h3>
-        <div id="progressbar"></div>
+        <h2>Get FREE Quotes from Trusted Lenders</h2>
+
+        @if (LTWeb.Settings.LTModel.SsnRequired) {
+            <h3 class="ssnOptional">&nbsp;</h3>
+        } else {
+            <h3 class="ssnOptional">No SSN Required</h3>
+        }
+        <div id="progressbarcontainer" style="margin-left:30px; margin-top:10px">
+            <div style="float:left; color:black">Progress:&nbsp;</div>
+            <div id="progressbar" style="width:270px; height:18px"></div>
+        </div>
     </div>
     <div class="form-content png">
         <div class="dropdown-item">
@@ -14,14 +19,14 @@
                 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
                 {
                 <div>
-                    <div style="margin-bottom: 18px; margin-left: 80px; width: 350px;">
+                    <div style="margin-bottom: 18px; margin-left: 80px; width: 300px;">
                         @Html.Partial("ShowInner")
                     </div>
                 </div>
                 <div>
-                    <div style="width: 400px; margin-right: @(Model.QuestionIndex == 0 ? "100px" : "150px")">
+                    <div style="width: 400px; margin-right: 100px">
                         <div style="float: left; margin-top: 20px;">
-                            <div class="security"></div>
+                            <div class="@(Model.QuestionIndex == 0 ? "security" : "security2")"></div>
                         </div>
                         <div style="float: left;">
                             <input type="submit" onclick="Save(); return false" value="" id="ContentPlaceHolder1_GetQuoteNow1_Button1" class="@(Model.QuestionIndex == 0 ? "btnPage1" : "btnPage2")" />
@@ -35,11 +40,11 @@
     <div class="form-fields-end png">&nbsp;</div>
 
 <script type="text/javascript">
-    $('#progressbar').progressbar({ value: @Model.Progress });
+    if (typeof InitializeProgressbar == 'function') InitializeProgressbar(@Model.Progress);
 </script>
 
 @section Scripts {
 <script type="text/javascript">
-    $('#progressbar').progressbar({ value: @Model.Progress });
+    InitializeProgressbar(@Model.Progress); //after full page load
 </script>
 }
