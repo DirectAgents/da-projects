@@ -4,6 +4,7 @@ using System.Web;
 using System.Xml.Linq;
 using LTWeb.Models;
 using LTWeb.Service;
+using System.Linq;
 
 namespace LTWeb
 {
@@ -16,40 +17,51 @@ namespace LTWeb
             int i = 0;
             foreach (var questionEl in xelement.Elements("question"))
             {
-                var question = new QuestionVM()
-                {
-                    QuestionIndex = i++,
-                    Key = questionEl.Attribute("key").Value,
-                    Text = questionEl.Attribute("text").Value,
-                    AnswerType = questionEl.Attribute("answertype").Value
-                };
-
-                var xattr = questionEl.Attribute("subtext");
-                if (xattr != null) question.Subtext = xattr.Value;
-
-                xattr = questionEl.Attribute("dependencykey");
-                if (xattr != null) question.DependencyKey = xattr.Value;
-
-                xattr = questionEl.Attribute("dependencyvalue");
-                if (xattr != null) question.DependencyValue = xattr.Value;
-
-                question.Options = new List<OptionVM>();
-                foreach (var optionEl in questionEl.Descendants("option"))
-                {
-                    OptionVM option = new OptionVM()
-                    {
-                        Text = optionEl.Value,
-                        Value = optionEl.Attribute("value").Value
-                    };
-                    question.Options.Add(option);
-                }
+                var question = CreateQuestionVM(questionEl, i);
                 questionsList.Add(question);
+                i++;
             }
             foreach (var question in questionsList)
             {
                 question.Progress = (question.QuestionIndex * 100) / questionsList.Count;
             }
             return questionsList.ToArray();
+        }
+
+        private static QuestionVM CreateQuestionVM(XElement questionEl, int index)
+        {
+            var question = new QuestionVM()
+            {
+                QuestionIndex = index,
+                Key = questionEl.Attribute("key").Value,
+                Text = questionEl.Attribute("text").Value,
+                AnswerType = questionEl.Attribute("answertype").Value
+            };
+
+            var xattr = questionEl.Attribute("subtext");
+            if (xattr != null) question.Subtext = xattr.Value;
+
+            xattr = questionEl.Attribute("dependencykey");
+            if (xattr != null) question.DependencyKey = xattr.Value;
+
+            xattr = questionEl.Attribute("dependencyvalue");
+            if (xattr != null) question.DependencyValue = xattr.Value;
+
+            question.Options = new List<OptionVM>();
+            foreach (var optionEl in questionEl.Descendants("option"))
+            {
+                OptionVM option = new OptionVM()
+                {
+                    Text = optionEl.Value,
+                    Value = optionEl.Attribute("value").Value
+                };
+                question.Options.Add(option);
+            }
+            var subquestion = questionEl.Descendants("question").FirstOrDefault();
+            if (subquestion != null)
+                question.SamePageQuestion = CreateQuestionVM(subquestion, index); //note, the subquestion get the same index
+
+            return question;
         }
 
         // returns null if there is no next question
@@ -120,6 +132,9 @@ namespace LTWeb
                     question.Options = newOptions;
                     break;
             }
+            if (question.SamePageQuestion != null)
+                AdjustQuestion(question.SamePageQuestion, ltModel);
+                // todo: ?have a QuestionVM.Adjusted booleon to avoid infinite loops?
         }
 
     }

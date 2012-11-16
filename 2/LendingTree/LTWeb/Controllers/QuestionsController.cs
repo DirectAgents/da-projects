@@ -7,11 +7,6 @@ namespace LTWeb.Controllers
 {
     public class QuestionsController : Controller
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         public ActionResult Show(int q = 0, bool test = false)
         {
             var questions = Questions.GetQuestionVMs();
@@ -24,25 +19,29 @@ namespace LTWeb.Controllers
                 return View("FormFields", model);
         }
 
-        public ActionResult Save(LendingTreeVM model, string questionKey, bool test = false)
+        public ActionResult Save(LendingTreeVM model, string[] questionKey, bool test = false)
         {
             ILendingTreeModel ltModel = Settings.LTModel;
 
-            if (questionKey == "LoanType" || ltModel.IsLoanTypeSet())
+            if (questionKey.Length > 0 && (questionKey[0] == "LoanType" || ltModel.IsLoanTypeSet()))
             {
-                PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
-                PropertyInfo destPropInfo = ltModel.GetType().GetProperty(questionKey);
-                switch (questionKey)
+                foreach (string qKey in questionKey)
                 {
-                    case "IsVetran":
-                        ltModel.IsVetran = Request["IsVetran"] == "YES";
-                        break;
-                    default:
-                        destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));
-                        break;
+                    PropertyInfo sourcePropInfo = model.GetType().GetProperty(qKey);
+                    PropertyInfo destPropInfo = ltModel.GetType().GetProperty(qKey);
+                    switch (qKey)
+                    {
+                        case "IsVetran":
+                            ltModel.IsVetran = Request["IsVetran"] == "YES";
+                            break;
+                        default:
+                            destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));
+                            break;
+                    }
                 }
             }
-            var nextQuestion = Questions.GetNextQuestionVM(questionKey, ltModel);
+            string key = questionKey.Length > 0 ? questionKey[0] : "";
+            var nextQuestion = Questions.GetNextQuestionVM(key, ltModel);
 
             if (Request.IsAjaxRequest())
             {
@@ -65,7 +64,7 @@ namespace LTWeb.Controllers
 
         public ActionResult SaveAll()
         {
-            return Content("thank you");
+            return Content("not implemented yet");
         }
 
     }

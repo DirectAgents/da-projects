@@ -8,6 +8,13 @@
 {
     <input type="hidden" name="test" value="true" />
     @Html.Partial("ShowInner")
+    LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
+    while (subquestion != null)
+    {
+        <br />
+        @Html.Partial("ShowInner", subquestion)
+        subquestion = subquestion.SamePageQuestion;
+    }
     <br />
     <input type="submit" value="Submit form (no javascript)" />
 }

@@ -19,6 +19,8 @@ namespace LTWeb.Models
 
         public int QuestionIndex { get; set; }
         public int Progress { get; set; }
+
+        public QuestionVM SamePageQuestion { get; set; }
     }
 
     public class OptionVM

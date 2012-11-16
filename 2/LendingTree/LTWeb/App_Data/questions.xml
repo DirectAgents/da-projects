@@ -195,8 +195,9 @@
     <option value="YES">Yes</option>
     <option value="NO">No</option>
   </question>
-  <question key="FirstName" text="First Name:" answertype="freeform" />
-  <question key="LastName" text="Last Name:" answertype="freeform" />
+  <question key="FirstName" text="First Name:" answertype="freeform">
+    <question key="LastName" text="Last Name:" answertype="freeform" />
+  </question>
   <question key="Address" text="Street Address:" answertype="freeform" />
   <question key="ApplicantZipCode" text="Zip Code:" answertype="freeform" />
   <question key="Email" text="Email:" answertype="freeform" />

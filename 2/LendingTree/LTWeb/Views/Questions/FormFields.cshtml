@@ -21,6 +21,15 @@
                 <div>
                     <div style="margin-bottom: 18px; margin-left: 80px; width: 300px;">
                         @Html.Partial("ShowInner")
+                        @{
+                            LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
+                            while (subquestion != null)
+                            {
+                                <br />
+                                @Html.Partial("ShowInner", subquestion)
+                                subquestion = subquestion.SamePageQuestion;
+                            }
+                        }
                     </div>
                 </div>
                 <div>
