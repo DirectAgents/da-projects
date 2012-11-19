@@ -23,8 +23,8 @@ namespace LTWeb
             }
             foreach (var question in questionsList)
             {
-                question.Progress = (question.QuestionIndex * 100) / questionsList.Count;
-            }
+                question.Progress = (question.QuestionIndex * 100) / (questionsList.Count - 1);
+            }                                                         // subtract one because last two questions are SSN
             return questionsList.ToArray();
         }
 
@@ -40,6 +40,9 @@ namespace LTWeb
 
             var xattr = questionEl.Attribute("subtext");
             if (xattr != null) question.Subtext = xattr.Value;
+
+            xattr = questionEl.Attribute("supertext");
+            if (xattr != null) question.Supertext = xattr.Value;
 
             xattr = questionEl.Attribute("dependencykey");
             if (xattr != null) question.DependencyKey = xattr.Value;
@@ -62,6 +65,18 @@ namespace LTWeb
                 question.SamePageQuestion = CreateQuestionVM(subquestion, index); //note, the subquestion get the same index
 
             return question;
+        }
+
+        // returns null if there is no next question
+        public static QuestionVM GetNextQuestionVM(string[] completedKeys, ILendingTreeModel ltModel)
+        {
+            QuestionVM nextQuestion = null;
+            foreach (var completedKey in completedKeys)
+            {
+                nextQuestion = GetNextQuestionVM(completedKey, ltModel);
+                if (nextQuestion != null) return nextQuestion;
+            }
+            return nextQuestion; // (null)
         }
 
         // returns null if there is no next question

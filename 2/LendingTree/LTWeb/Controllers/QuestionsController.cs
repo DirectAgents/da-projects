@@ -40,13 +40,15 @@ namespace LTWeb.Controllers
                     }
                 }
             }
-            string key = questionKey.Length > 0 ? questionKey[0] : "";
-            var nextQuestion = Questions.GetNextQuestionVM(key, ltModel);
+            var nextQuestion = Questions.GetNextQuestionVM(questionKey, ltModel);
 
             if (Request.IsAjaxRequest())
             {
                 if (test)
                     return null;
+
+                if (nextQuestion == null)
+                    return Content("no more questions");
                 else
                     return PartialView("FormFields", nextQuestion);
             }

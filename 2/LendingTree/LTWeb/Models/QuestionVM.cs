@@ -9,6 +9,7 @@ namespace LTWeb.Models
     {
         public string Text { get; set; }
         public string Subtext { get; set; }
+        public string Supertext { get; set; }
 
         public string Key { get; set; }
         public string AnswerType { get; set; }
