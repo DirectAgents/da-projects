@@ -15,8 +15,17 @@ namespace LTWeb.Controllers
  
             if (test)
                 return View(model);
+
+            if (Request.IsAjaxRequest())
+                return PartialView("FormFields", model);
             else
                 return View("FormFields", model);
+        }
+
+        // this is used for ajax requests so the browser differentiates it from /Show (non-ajax) and the forward and back work smoothly
+        public ActionResult Load(int q = 0)
+        {
+            return Show(q);
         }
 
         public ActionResult Save(LendingTreeVM model, string[] questionKey, bool test = false)

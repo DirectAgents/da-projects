@@ -18,6 +18,7 @@
             <div id="form_inner_1step">
                 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
                 {
+                <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
                 <div style="width:380px">
                     @if (!string.IsNullOrWhiteSpace(Model.Supertext))
                     {
@@ -58,6 +59,22 @@
 
 @section Scripts {
 <script type="text/javascript">
+
+(function(window,undefined){
     InitializeProgressbar(@Model.Progress); //after full page load
+
+    var History = window.History;
+    if (!History.enabled) {
+        return false;
+    }
+    SetState(true);
+
+    History.Adapter.bind(window, 'statechange', function () {
+        var State = History.getState();
+        //History.log(State.data, State.title, State.url);
+        CheckLoad(State.data.index, '@Url.Action("Load")');
+    });
+})(window);
+
 </script>
 }
