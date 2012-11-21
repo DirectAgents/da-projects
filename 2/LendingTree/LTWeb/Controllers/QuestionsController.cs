@@ -9,20 +9,31 @@ namespace LTWeb.Controllers
     {
         public ActionResult Show(int q = 0, bool test = false)
         {
+            var ltModel = Settings.LTModel;
+            if (q > 0 && !ltModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
+            {
+                if (!Request.IsAjaxRequest())
+                {
+                    if (test)
+                        return RedirectToAction("Show", new { test = test });
+                    else
+                        return RedirectToAction("Show");
+                }
+                q = 0; // for ajax requests: return the first question
+            }
             var questions = Questions.GetQuestionVMs();
-            var model = questions[q];
-            Questions.AdjustQuestion(model, Settings.LTModel);
+            var question = questions[q];
 
-            if (Request.IsAjaxRequest())
-                Questions.SetQuestionAnswer(model, Settings.LTModel);
+            Questions.AdjustQuestion(question, ltModel);
+            Questions.SetQuestionAnswer(question, ltModel);
  
             if (test)
-                return View(model);
+                return View(question);
 
             if (Request.IsAjaxRequest())
-                return PartialView("FormFields", model);
+                return PartialView("FormFields", question);
             else
-                return View("FormFields", model);
+                return View("FormFields", question);
         }
 
         // this is used for ajax requests so the browser differentiates it from /Show (non-ajax) and the forward and back work smoothly
@@ -54,23 +65,22 @@ namespace LTWeb.Controllers
             }
             var nextQuestion = Questions.GetNextQuestionVM(questionKey, ltModel);
 
-            if (Request.IsAjaxRequest())
+            if (nextQuestion == null)
             {
+                // submit to LendingTree & save to db
+                return Content("no more questions");
+            }
+            else if (Request.IsAjaxRequest())
+            {   // there is a nextQuestion
                 if (test)
                     return null;
-
-                if (nextQuestion == null)
-                    return Content("no more questions");
                 else
                     return PartialView("FormFields", nextQuestion);
             }
-            else
+            else // non-ajax && there is a nextQuestion
             {
                 if (test)
                     return View("Show", nextQuestion);
-
-                if (nextQuestion == null)
-                    return Content("no more questions");
                 else
                     return View("FormFields", nextQuestion);
             }
