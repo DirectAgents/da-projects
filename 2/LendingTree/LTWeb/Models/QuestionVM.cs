@@ -21,6 +21,8 @@ namespace LTWeb.Models
         public int QuestionIndex { get; set; }
         public int Progress { get; set; }
 
+        public string Answer { get; set; }
+
         public QuestionVM SamePageQuestion { get; set; }
     }
 

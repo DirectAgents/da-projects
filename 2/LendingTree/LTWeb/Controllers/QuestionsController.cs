@@ -12,6 +12,9 @@ namespace LTWeb.Controllers
             var questions = Questions.GetQuestionVMs();
             var model = questions[q];
             Questions.AdjustQuestion(model, Settings.LTModel);
+
+            if (Request.IsAjaxRequest())
+                Questions.SetQuestionAnswer(model, Settings.LTModel);
  
             if (test)
                 return View(model);
@@ -41,7 +44,7 @@ namespace LTWeb.Controllers
                     switch (qKey)
                     {
                         case "IsVetran":
-                            ltModel.IsVetran = Request["IsVetran"] == "YES";
+                            ltModel.IsVetran = Request["IsVetran"] == "True";
                             break;
                         default:
                             destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));

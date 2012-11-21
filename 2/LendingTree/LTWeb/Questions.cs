@@ -155,5 +155,18 @@ namespace LTWeb
                 // todo: ?have a QuestionVM.Adjusted booleon to avoid infinite loops?
         }
 
+        public static void SetQuestionAnswer(QuestionVM question, ILendingTreeModel ltModel)
+        {
+            try
+            {
+                question.Answer = ltModel.GetType().GetProperty(question.Key).GetValue(ltModel).ToString();
+            }
+            catch { }
+
+            if (question.SamePageQuestion != null)
+                SetQuestionAnswer(question.SamePageQuestion, ltModel);
+                // todo: something to avoid infinite loops?
+        }
+
     }
 }

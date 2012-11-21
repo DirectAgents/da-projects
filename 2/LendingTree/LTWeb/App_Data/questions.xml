@@ -192,8 +192,8 @@
     <option value="OVER_84_MONTHS">Over 84 months ago</option>
   </question>
   <question key="IsVetran" text="Are you or a spouse on Active Duty, or a veteran of the U.S. military?" answertype="radio">
-    <option value="YES">Yes</option>
-    <option value="NO">No</option>
+    <option value="True">Yes</option>
+    <option value="False">No</option>
   </question>
   <question key="FirstName" text="First Name:" answertype="freeform">
     <question key="LastName" text="Last Name:" answertype="freeform" />
