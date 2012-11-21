@@ -71,10 +71,13 @@ namespace LTWeb
         public static QuestionVM GetNextQuestionVM(string[] completedKeys, ILendingTreeModel ltModel)
         {
             QuestionVM nextQuestion = null;
-            foreach (var completedKey in completedKeys)
+            if (completedKeys != null)
             {
-                nextQuestion = GetNextQuestionVM(completedKey, ltModel);
-                if (nextQuestion != null) return nextQuestion;
+                foreach (var completedKey in completedKeys)
+                {
+                    nextQuestion = GetNextQuestionVM(completedKey, ltModel);
+                    if (nextQuestion != null) return nextQuestion;
+                }
             }
             return nextQuestion; // (null)
         }

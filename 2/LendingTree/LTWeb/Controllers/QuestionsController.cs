@@ -32,7 +32,7 @@ namespace LTWeb.Controllers
         {
             ILendingTreeModel ltModel = Settings.LTModel;
 
-            if (questionKey.Length > 0 && (questionKey[0] == "LoanType" || ltModel.IsLoanTypeSet()))
+            if (questionKey != null && (questionKey[0] == "LoanType" || ltModel.IsLoanTypeSet()))
             {
                 foreach (string qKey in questionKey)
                 {

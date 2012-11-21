@@ -33,4 +33,5 @@ function CheckLoad(index, baseurl) {
     var pageindex = $('input[name="QuestionIndex"]').val();
     if (pageindex != index)
         $('#form-fields').load(baseurl + '?q=' + index);
+        //$('#form-fields').load(baseurl, { q: index }); //does a POST
 }

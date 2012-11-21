@@ -62,6 +62,7 @@
 
 (function(window,undefined){
     InitializeProgressbar(@Model.Progress); //after full page load
+    $.ajaxSetup({ cache: false });
 
     var History = window.History;
     if (!History.enabled) {
