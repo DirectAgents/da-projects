@@ -192,16 +192,18 @@
     <option value="OVER_84_MONTHS">Over 84 months ago</option>
   </question>
   <question key="IsVetran" text="Are you or a spouse on Active Duty, or a veteran of the U.S. military?" answertype="radio">
-    <option value="YES">Yes</option>
-    <option value="NO">No</option>
+    <option value="True">Yes</option>
+    <option value="False">No</option>
   </question>
-  <question key="FirstName" text="First Name:" answertype="freeform" />
-  <question key="LastName" text="Last Name:" answertype="freeform" />
+  <question key="FirstName" text="First Name:" answertype="freeform">
+    <question key="LastName" text="Last Name:" answertype="freeform" />
+  </question>
   <question key="Address" text="Street Address:" answertype="freeform" />
   <question key="ApplicantZipCode" text="Zip Code:" answertype="freeform" />
   <question key="Email" text="Email:" answertype="freeform" />
   <question key="HomePhone" text="Home Phone:" answertype="freeform" />
   <question key="WorkPhone" text="Work Phone:" answertype="freeform" />
-  <question key="SSN" text="Social Security Number:" answertype="3part" subtext="(optional)" dependencykey="SsnRequired" dependencyvalue="False" />
+  <question key="SSN" text="Social Security Number:" answertype="3part" subtext="(optional)" supertext="NOT REQUIRED, but providing this final detail could help you save!"
+            dependencykey="SsnRequired" dependencyvalue="False" />
   <question key="SSN" text="Social Security Number:" answertype="3part" dependencykey="SsnRequired" dependencyvalue="True" />
 </data>

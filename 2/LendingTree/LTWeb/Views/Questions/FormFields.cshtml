@@ -18,9 +18,23 @@
             <div id="form_inner_1step">
                 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
                 {
-                <div>
+                <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
+                <div style="width:380px">
+                    @if (!string.IsNullOrWhiteSpace(Model.Supertext))
+                    {
+                        <span class="green">@Model.Supertext</span><br /><br />
+                    }
                     <div style="margin-bottom: 18px; margin-left: 80px; width: 300px;">
                         @Html.Partial("ShowInner")
+                        @{
+                            LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
+                            while (subquestion != null)
+                            {
+                                <br />
+                                @Html.Partial("ShowInner", subquestion)
+                                subquestion = subquestion.SamePageQuestion;
+                            }
+                        }
                     </div>
                 </div>
                 <div>
@@ -45,6 +59,23 @@
 
 @section Scripts {
 <script type="text/javascript">
+
+(function(window,undefined){
     InitializeProgressbar(@Model.Progress); //after full page load
+    $.ajaxSetup({ cache: false });
+
+    var History = window.History;
+    if (!History.enabled) {
+        return false;
+    }
+    SetState(true);
+
+    History.Adapter.bind(window, 'statechange', function () {
+        var State = History.getState();
+        //History.log(State.data, State.title, State.url);
+        CheckLoad(State.data.index, '@Url.Action("Load")');
+    });
+})(window);
+
 </script>
 }

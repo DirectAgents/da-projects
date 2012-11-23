@@ -7,57 +7,80 @@ namespace LTWeb.Controllers
 {
     public class QuestionsController : Controller
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         public ActionResult Show(int q = 0, bool test = false)
         {
+            var ltModel = Settings.LTModel;
+            if (q > 0 && !ltModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
+            {
+                if (!Request.IsAjaxRequest())
+                {
+                    if (test)
+                        return RedirectToAction("Show", new { test = test });
+                    else
+                        return RedirectToAction("Show");
+                }
+                q = 0; // for ajax requests: return the first question
+            }
             var questions = Questions.GetQuestionVMs();
-            var model = questions[q];
-            Questions.AdjustQuestion(model, Settings.LTModel);
+            var question = questions[q];
+
+            Questions.AdjustQuestion(question, ltModel);
+            Questions.SetQuestionAnswer(question, ltModel);
  
             if (test)
-                return View(model);
+                return View(question);
+
+            if (Request.IsAjaxRequest())
+                return PartialView("FormFields", question);
             else
-                return View("FormFields", model);
+                return View("FormFields", question);
         }
 
-        public ActionResult Save(LendingTreeVM model, string questionKey, bool test = false)
+        // this is used for ajax requests so the browser differentiates it from /Show (non-ajax) and the forward and back work smoothly
+        public ActionResult Load(int q = 0)
+        {
+            return Show(q);
+        }
+
+        public ActionResult Save(LendingTreeVM model, string[] questionKey, bool test = false)
         {
             ILendingTreeModel ltModel = Settings.LTModel;
 
-            if (questionKey == "LoanType" || ltModel.IsLoanTypeSet())
+            if (questionKey != null && (questionKey[0] == "LoanType" || ltModel.IsLoanTypeSet()))
             {
-                PropertyInfo sourcePropInfo = model.GetType().GetProperty(questionKey);
-                PropertyInfo destPropInfo = ltModel.GetType().GetProperty(questionKey);
-                switch (questionKey)
+                foreach (string qKey in questionKey)
                 {
-                    case "IsVetran":
-                        ltModel.IsVetran = Request["IsVetran"] == "YES";
-                        break;
-                    default:
-                        destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));
-                        break;
+                    PropertyInfo sourcePropInfo = model.GetType().GetProperty(qKey);
+                    PropertyInfo destPropInfo = ltModel.GetType().GetProperty(qKey);
+                    switch (qKey)
+                    {
+                        case "IsVetran":
+                            ltModel.IsVetran = Request["IsVetran"] == "True";
+                            break;
+                        default:
+                            destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));
+                            break;
+                    }
                 }
             }
             var nextQuestion = Questions.GetNextQuestionVM(questionKey, ltModel);
 
-            if (Request.IsAjaxRequest())
+            if (nextQuestion == null)
             {
+                // submit to LendingTree & save to db
+                return Content("no more questions");
+            }
+            else if (Request.IsAjaxRequest())
+            {   // there is a nextQuestion
                 if (test)
                     return null;
                 else
                     return PartialView("FormFields", nextQuestion);
             }
-            else
+            else // non-ajax && there is a nextQuestion
             {
                 if (test)
                     return View("Show", nextQuestion);
-
-                if (nextQuestion == null)
-                    return Content("no more questions");
                 else
                     return View("FormFields", nextQuestion);
             }
@@ -65,7 +88,7 @@ namespace LTWeb.Controllers
 
         public ActionResult SaveAll()
         {
-            return Content("thank you");
+            return Content("not implemented yet");
         }
 
     }

@@ -9,6 +9,7 @@ namespace LTWeb.Models
     {
         public string Text { get; set; }
         public string Subtext { get; set; }
+        public string Supertext { get; set; }
 
         public string Key { get; set; }
         public string AnswerType { get; set; }
@@ -19,6 +20,10 @@ namespace LTWeb.Models
 
         public int QuestionIndex { get; set; }
         public int Progress { get; set; }
+
+        public string Answer { get; set; }
+
+        public QuestionVM SamePageQuestion { get; set; }
     }
 
     public class OptionVM

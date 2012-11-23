@@ -11,7 +11,27 @@ function InitializeProgressbar(barvalue) {
     $('#progressbar').progressbar({ value: barvalue });
 }
 
+function SetState(replace) {
+    var url = "";
+    var index = $('input[name="QuestionIndex"]').val();
+    if (index > 0)
+        url = "?q=" + index;
+    if (replace)
+        History.replaceState({ index: index }, null, url);
+    else
+        History.pushState({ index: index }, null, url);
+}
+
 function Save() {
     var form = $('#questionForm');
-    $('#form-fields').load(form.attr('action'), form.serialize());
+    $('#form-fields').load(form.attr('action'), form.serialize(), function () {
+        SetState();
+    });
+}
+
+function CheckLoad(index, baseurl) {
+    var pageindex = $('input[name="QuestionIndex"]').val();
+    if (pageindex != index)
+        $('#form-fields').load(baseurl + '?q=' + index);
+        //$('#form-fields').load(baseurl, { q: index }); //does a POST
 }
