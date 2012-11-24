@@ -8,13 +8,19 @@ namespace LTWeb.Service
     {
         LTRequest _request;
         LTRequest _response;
+        ServiceConfig _config;
 
+        // TODO: make sure this isn't getting called on every web request.  The reason I'm wondering
+        //       is because I didn't think an object could deserialize without a default consructor...
         public LendingTreeModel(string serviceConfigName)
         {
+            // Get service configuration from database by name.
             using (var repo = new Repository(new LTWebDataContext(), false))
             {
-                LendingTreeConfig = repo.Single<ServiceConfig>(c => c.Name == serviceConfigName);
+                _config = repo.Single<ServiceConfig>(c => c.Name == serviceConfigName);
             }
+
+            // Initialize to new AppID
             this.AppID = Guid.NewGuid().ToString();
         }
 
@@ -28,7 +34,7 @@ namespace LTWeb.Service
 
         public string GetUrlForPost()
         {
-            return LendingTreeConfig.PostUrl;
+            return _config.PostUrl;
         }
 
         public object this[string propertyName]
@@ -39,7 +45,6 @@ namespace LTWeb.Service
             }
         }
 
-        public ServiceConfig LendingTreeConfig { get; set; }
 
         public string StatesExcludedFromDisclosure { get; set; }
 
@@ -50,7 +55,7 @@ namespace LTWeb.Service
                 if (_request == null)
                 {
                     _request = new LTRequest();
-                    _request.Request.SourceOfRequest = LendingTreeConfig.SourceOfRequest;
+                    _request.Request.SourceOfRequest = _config.SourceOfRequest;
                     OnPropertyChanged(this, DataPropertyName);
                 }
                 return _request;
