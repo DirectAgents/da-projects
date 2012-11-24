@@ -6,10 +6,18 @@ using LTWeb.Service;
 
 namespace LTWeb
 {
+    // TODO: think about refactoring this whole Settings class as
+    //       it is too complicated right now...
     public static class Settings
     {
+        #region Session Keys
+
         static string AdminSettingsKey = "AdminSettings";
-        static string LTModelKey = "LTModel";
+        static string LTModelKey = "LTModel"; 
+
+        #endregion
+
+        #region Public
 
         public static void Reset()
         {
@@ -22,11 +30,20 @@ namespace LTWeb
             get { return SessionAdminSettings ?? CreateAdminSettings(); }
         }
 
+        public static ILendingTreeModel LTModel
+        {
+            get { return SessionLTModel ?? CreateLTModel(); }
+        }
+
+        #endregion
+
+        #region Private
+
         static Dictionary<string, string> SessionAdminSettings
         {
             get { return HttpContext.Current.Session[AdminSettingsKey] as Dictionary<string, string>; }
             set { HttpContext.Current.Session[AdminSettingsKey] = value; }
-        }
+        } 
 
         static Dictionary<string, string> CreateAdminSettings()
         {
@@ -38,11 +55,6 @@ namespace LTWeb
             }
         }
 
-        public static ILendingTreeModel LTModel
-        {
-            get { return SessionLTModel ?? CreateLTModel(); }
-        }
-
         static ILendingTreeModel SessionLTModel
         {
             get { return HttpContext.Current.Session[LTModelKey] as ILendingTreeModel; }
@@ -51,9 +63,10 @@ namespace LTWeb
 
         static ILendingTreeModel CreateLTModel()
         {
-            var ltModel = new LendingTreeModel("Test"); // TODO: un-hardcode
+            var ltModel = new LendingTreeModel("Test"); // TODO: un-hardcode, should probably come from xml file at runtime
             SessionLTModel = ltModel;
             return ltModel;
         }
+        #endregion
     }
 }
