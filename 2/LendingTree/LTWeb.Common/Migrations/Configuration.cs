@@ -23,8 +23,28 @@ namespace LTWeb.Common.Migrations
         {
             context.ServiceConfigs.AddOrUpdate(
                 x => x.Name,
-                LTWeb.ServiceConfig.CreateFromXml(TestConfig),
-                LTWeb.ServiceConfig.CreateFromXml(ProductionConfig)
+                XmlUtility.Deserialize<LTWeb.ServiceConfig>(@"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<ServiceConfig>
+  <Name>Test</Name>
+  <SourceOfRequest>
+    <LendingTreeAffiliatePartnerCode>19655</LendingTreeAffiliatePartnerCode>
+    <LendingTreeAffiliateUserName>DirectAgentsUser</LendingTreeAffiliateUserName>
+    <LendingTreeAffiliatePassword>capeWrAjujujajA5uspa</LendingTreeAffiliatePassword>
+    <LendingTreeAffiliateEsourceID>5860430</LendingTreeAffiliateEsourceID>
+  </SourceOfRequest>
+  <PostUrl>http://qaaffiliates.lendingtree.com/v1/qfpost.aspx</PostUrl>
+</ServiceConfig>"),
+                XmlUtility.Deserialize<LTWeb.ServiceConfig>(@"<?xml version=""1.0"" encoding=""utf-8"" ?>
+<ServiceConfig>
+  <Name>Production</Name>
+  <SourceOfRequest>
+    <LendingTreeAffiliatePartnerCode>19655</LendingTreeAffiliatePartnerCode>
+    <LendingTreeAffiliateUserName>DirectAgentsUser</LendingTreeAffiliateUserName>
+    <LendingTreeAffiliatePassword>racHadRa3uQufuspaste</LendingTreeAffiliatePassword>
+    <LendingTreeAffiliateEsourceID>5860430</LendingTreeAffiliateEsourceID>
+  </SourceOfRequest>
+  <PostUrl>https://affiliates.lendingtree.com/v1/qfpost.aspx</PostUrl>
+</ServiceConfig>")
             );
         }
 
@@ -44,29 +64,5 @@ namespace LTWeb.Common.Migrations
                 context.AdminSettings.Add(new LTWeb.AdminSetting { Name = "Rate2", Value = "2.02%" });
             }
         }
-
-        static string TestConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
-<ServiceConfig>
-  <Name>Test</Name>
-  <SourceOfRequest>
-    <LendingTreeAffiliatePartnerCode>19655</LendingTreeAffiliatePartnerCode>
-    <LendingTreeAffiliateUserName>DirectAgentsUser</LendingTreeAffiliateUserName>
-    <LendingTreeAffiliatePassword>capeWrAjujujajA5uspa</LendingTreeAffiliatePassword>
-    <LendingTreeAffiliateEsourceID>5860430</LendingTreeAffiliateEsourceID>
-  </SourceOfRequest>
-  <PostUrl>http://qaaffiliates.lendingtree.com/v1/qfpost.aspx</PostUrl>
-</ServiceConfig>";
-
-        static string ProductionConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
-<ServiceConfig>
-  <Name>Production</Name>
-  <SourceOfRequest>
-    <LendingTreeAffiliatePartnerCode>19655</LendingTreeAffiliatePartnerCode>
-    <LendingTreeAffiliateUserName>DirectAgentsUser</LendingTreeAffiliateUserName>
-    <LendingTreeAffiliatePassword>racHadRa3uQufuspaste</LendingTreeAffiliatePassword>
-    <LendingTreeAffiliateEsourceID>5860430</LendingTreeAffiliateEsourceID>
-  </SourceOfRequest>
-  <PostUrl>https://affiliates.lendingtree.com/v1/qfpost.aspx</PostUrl>
-</ServiceConfig>";
     }
 }
