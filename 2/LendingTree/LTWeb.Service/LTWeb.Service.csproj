@@ -49,23 +49,23 @@
     <Compile Include="Abstract\ILendingTreeModel.cs" />
     <Compile Include="Abstract\ILendingTreeService.cs" />
     <Compile Include="Abstract\ILendingTreeResult.cs" />
-    <Compile Include="LendingTreeModel.cs" />
-    <Compile Include="LendingTreeService.cs" />
-    <Compile Include="LendingTreeResult.cs" />
+    <Compile Include="Concrete\LendingTreeModel.cs" />
+    <Compile Include="Concrete\LendingTreeService.cs" />
+    <Compile Include="Concrete\LendingTreeResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\LTWeb.Common\LTWeb.Common.csproj">
       <Project>{a0fe1ca6-fe54-4791-9397-61ebb10ba5f5}</Project>
       <Name>LTWeb.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

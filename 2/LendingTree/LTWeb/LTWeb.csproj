@@ -252,10 +252,6 @@
     <Content Include="Views\Questions\ShowInner.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LTWeb.Common\LTWeb.Common.csproj">
       <Project>{a0fe1ca6-fe54-4791-9397-61ebb10ba5f5}</Project>
@@ -265,6 +261,9 @@
       <Project>{0852445a-3124-4223-b755-7812b59e39fa}</Project>
       <Name>LTWeb.Service</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

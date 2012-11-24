@@ -2,8 +2,7 @@
 {
     public interface ILendingTreeModel
     {
-        bool RequiresInitialization();
-        string DataPropertyName { get; }
+        string DataPropertyName { get; } // TODO: remove?
         string GetXMLForPost();
         string GetUrlForPost();
         string AppID { get; set; }

@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace LTWeb.Models
+﻿namespace LTWeb.Models
 {
     public class LendingTreeVM
     {
-//        void Initialize();
-//        bool RequiresInitialization();
-//        string DataPropertyName { get; }
-//        string GetXMLForPost();
         public string AppID { get; set; }
         public string CreditRating { get; set; }
         public string LoanType { get; set; }
@@ -38,8 +29,6 @@ namespace LTWeb.Models
         public decimal PurchasePrice { get; set; }
         public decimal DownPayment { get; set; }
         public string PropertyCity { get; set; }
-//        object this[string propertyName] { get; }
-//        bool RequiresDisclosure { get; }
         public string ESourceId { get; set; }
     }
 }

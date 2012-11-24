@@ -18,15 +18,6 @@ namespace LTWeb.Service
             this.AppID = Guid.NewGuid().ToString();
         }
 
-        /// <summary>
-        /// This is used by the client to determine if Initialize needs to be called.
-        /// </summary>
-        /// <returns></returns>
-        bool ILendingTreeModel.RequiresInitialization()
-        {
-            return this.AppID == Guid.Empty.ToString();
-        }
-
         public string DataPropertyName { get { return "Data"; } }
 
         public string GetXMLForPost()
@@ -136,6 +127,11 @@ namespace LTWeb.Service
         /// When a property changes, if that property is copied to the underlying LendingTreeAffiliateRequest
         /// (a.k.a. the "Data" property), then we send one notification for the Data property followed by the 
         /// another for the actual property.
+        /// 
+        /// This gives a listener the ability to know if changing a higher level property has propgated an effect
+        /// to the underlying "wrapped" object.
+        /// 
+        /// TODO: It probably breaks good OO design and should be removed.
         /// </summary>
         /// <param name="propertyName"></param>
         void OnDataChanged(string propertyName)

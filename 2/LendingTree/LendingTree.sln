@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTWeb", "LTWeb\LTWeb.csproj", "{CEF781F8-600E-46CD-BE68-91DB79A21197}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0852445A-3124-4223-B755-7812B59E39FA} = {0852445A-3124-4223-B755-7812B59E39FA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTWeb.Common", "LTWeb.Common\LTWeb.Common.csproj", "{A0FE1CA6-FE54-4791-9397-61EBB10BA5F5}"
 EndProject
