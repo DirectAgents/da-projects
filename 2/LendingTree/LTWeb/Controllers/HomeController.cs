@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using LTWeb.DataAccess;
-using LTWeb.Service;
+﻿using System.Web.Mvc;
 
 namespace LTWeb.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index(int? mode, bool? debug)
+        public ActionResult Index(int? mode)
         {
             Settings.Reset();
 
@@ -28,10 +22,6 @@ namespace LTWeb.Controllers
                 {
                     ltModel.SsnRequired = false;
                 }
-            }
-
-            if (debug != null) // TODO
-            {
             }
 
             return RedirectToAction("Show", "Questions");

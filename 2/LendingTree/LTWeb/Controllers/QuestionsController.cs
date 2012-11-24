@@ -36,7 +36,8 @@ namespace LTWeb.Controllers
                 return View("FormFields", question);
         }
 
-        // this is used for ajax requests so the browser differentiates it from /Show (non-ajax) and the forward and back work smoothly
+        // this is used for ajax requests so the browser differentiates it from /Show (non-ajax) 
+        // and the forward and back work smoothly
         public ActionResult Load(int q = 0)
         {
             return Show(q);
@@ -90,6 +91,5 @@ namespace LTWeb.Controllers
         {
             return Content("not implemented yet");
         }
-
     }
 }

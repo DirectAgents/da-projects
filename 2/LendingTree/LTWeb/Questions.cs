@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using LTWeb.Models;
 using LTWeb.Service;
-using System.Linq;
 
 namespace LTWeb
 {
@@ -167,6 +167,5 @@ namespace LTWeb
                 SetQuestionAnswer(question.SamePageQuestion, ltModel);
                 // todo: something to avoid infinite loops?
         }
-
     }
 }
