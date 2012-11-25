@@ -129,13 +129,18 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Settings.resx</DependentUpon>
+    </Compile>
     <Compile Include="Questions.cs" />
-    <Compile Include="LTWebSession.cs" />
+    <Compile Include="Session.cs" />
     <Compile Include="Models\AdminVM.cs" />
     <Compile Include="Models\LendingTreeVM.cs" />
     <Compile Include="Models\QuestionVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SessionKeys.Designer.cs">
+    <Compile Include="Resources\SessionKeys.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SessionKeys.resx</DependentUpon>
@@ -270,9 +275,15 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SessionKeys.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+    <EmbeddedResource Include="Resources\Settings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>LTWeb</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SessionKeys.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SessionKeys.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>LTWeb</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -24,9 +24,11 @@ function SetState(replace) {
 
 function Save() {
     var form = $('#questionForm');
-    $('#form-fields').load(form.attr('action'), form.serialize(), function () {
-        SetState();
-    });
+    if (form.validationEngine('validate')) {
+        $('#form-fields').load(form.attr('action'), form.serialize(), function () {
+            SetState();
+        });
+    }
 }
 
 function CheckLoad(index, baseurl) {

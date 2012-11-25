@@ -25,9 +25,9 @@
                     <h2>
                         Refinance Rates From</h2>
                     <div class="rate">
-                        @LTWeb.LTWebSession.Admin["Rate1"]
+                        @LTWeb.Session.Admin["Rate1"]
                         <br />   
-                        (@LTWeb.LTWebSession.Admin["Rate2"] APR)*</div>
+                        (@LTWeb.Session.Admin["Rate2"] APR)*</div>
                     <h2>
                         Affordable Mortgage Payments</h2>
                     <div class="smallLabel">
@@ -105,7 +105,12 @@
         <!--End .website-wrapper-->
     </div>
 
-    @Scripts.Render("~/bundles/jquery", "~/bundles/jqueryui", "~/Scripts/jquery.history.js", "~/Scripts/lt-script.js")
+    @Scripts.Render(
+                "~/bundles/jquery", 
+                "~/bundles/jqueryui", 
+                "~/Scripts/jquery.history.js", 
+                "~/bundles/validation", 
+                "~/Scripts/lt-script.js")
     @RenderSection("scripts", required: false)
 </body>
 </html>

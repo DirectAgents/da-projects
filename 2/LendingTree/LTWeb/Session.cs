@@ -6,7 +6,7 @@ using LTWeb.Service;
 
 namespace LTWeb
 {
-    public static class LTWebSession
+    public static class Session
     {
         public static void Reset()
         {

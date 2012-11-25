@@ -9,7 +9,7 @@ namespace LTWeb.Controllers
     {
         public ActionResult Show(int questionIndex = 0, bool isTestMode = false)
         {
-            ILendingTreeModel lendingTreeModel = LTWebSession.LTModel;
+            ILendingTreeModel lendingTreeModel = LTWeb.Session.LTModel;
             
             if (questionIndex > 0 && !lendingTreeModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
             {
@@ -46,7 +46,7 @@ namespace LTWeb.Controllers
 
         public ActionResult Save(LendingTreeVM model, string[] questionKey, bool test = false)
         {
-            ILendingTreeModel ltModel = LTWebSession.LTModel;
+            ILendingTreeModel ltModel = LTWeb.Session.LTModel;
 
             if (questionKey != null && (questionKey[0] == "LoanType" || ltModel.IsLoanTypeSet()))
             {

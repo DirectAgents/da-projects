@@ -6,7 +6,7 @@
 @switch (Model.AnswerType)
 {
     case "dropdown":
-        <select name="@Model.Key">
+        <select name="@Model.Key" class="validate[required]" data-prompt-position="bottomLeft">
         @foreach (var option in Model.Options)
         {
             <option value="@option.Value" @( option.Value == Model.Answer ? "selected=\"selected\"" : "" )>@option.Text</option>
@@ -23,7 +23,7 @@
         <input name="@Model.Key" type="text" />
         break;
     default:
-        <input name="@Model.Key" type="text" value="@Model.Answer" />
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="bottomLeft" />
         break;
 }
 @if (!string.IsNullOrWhiteSpace(Model.Subtext)) {

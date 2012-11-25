@@ -366,7 +366,7 @@
 			form.trigger("jqv.form.result", [errorFound]);
 
 			if (errorFound) {
-				if (options.scroll) {
+			    if (options.scroll) {
 					var destination=first_err.offset().top;
 					var fixleft = first_err.offset().left;
 
@@ -1950,7 +1950,7 @@
 		// Name of the event triggering field validation
 		validationEventTrigger: "blur",
 		// Automatically scroll viewport to the first error
-		scroll: true,
+		scroll: false,
 		// Focus on the first input
 		focusFirstField:true,
 		// Show prompts, set to false to disable prompts
