@@ -89,6 +89,10 @@
                     "regex": /^[\-\+]?\d+$/,
                     "alertText": "* Not a valid integer"
                 },
+                "zipcode": {
+                    "regex": /^\d{5}$/,
+                    "alertText": "* Please enter a five digit zip code"
+                },
                 "number": {
                     // Number, including positive, negative, and floating decimal. credit: orefalo
                     "regex": /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,

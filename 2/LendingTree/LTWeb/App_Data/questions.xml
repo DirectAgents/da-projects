@@ -76,7 +76,7 @@
     <option value="SECONDHOME">Secondary home</option>
     <option value="INVESTMENTPROPERTY">Investment Property</option>
   </question>
-  <question key="PropertyZip" text="Which zip code is the property in?" answertype="freeform" />
+  <question key="PropertyZip" text="Which zip code is the property in?" answertype="zipcode" />
   <question key="PropertyApproximateValue" text="What is the approximate value of the property?" subtext="(ok to estimate)" answertype="dropdown" dependencykey="LoanType" dependencyvalue="REFINANCE">
     <option selected="selected" value="">Select home value</option>
     <option value="100000">$90,001 - $100,000</option>

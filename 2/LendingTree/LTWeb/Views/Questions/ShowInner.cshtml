@@ -22,6 +22,9 @@
     case "3part":
         <input name="@Model.Key" type="text" />
         break;
+    case "zipcode":
+        <input name="@Model.Key" type="text" maxlength="5" class="validate[required,custom[zipcode]]" data-prompt-position="bottomLeft" />
+        break;
     default:
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="bottomLeft" />
         break;
