@@ -3,7 +3,7 @@
     <div id="page1FormHeader" class="png">
         <h2>Get FREE Quotes from Trusted Lenders</h2>
 
-        @if (LTWeb.Settings.LTModel.SsnRequired) {
+        @if (LTWeb.LTWebSession.LTModel.SsnRequired) {
             <h3 class="ssnOptional">&nbsp;</h3>
         } else {
             <h3 class="ssnOptional">No SSN Required</h3>

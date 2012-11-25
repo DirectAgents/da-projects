@@ -6,9 +6,9 @@ namespace LTWeb.Controllers
     {
         public ActionResult Index(int? mode)
         {
-            Settings.Reset();
+            LTWebSession.Reset();
 
-            var ltModel = Settings.LTModel;
+            var ltModel = LTWebSession.LTModel;
 
             // mode=1 --> SSN is required
             // mode=2 --> SSN is not required

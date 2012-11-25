@@ -7,27 +7,28 @@ namespace LTWeb.Controllers
 {
     public class QuestionsController : Controller
     {
-        public ActionResult Show(int q = 0, bool test = false)
+        public ActionResult Show(int questionIndex = 0, bool isTestMode = false)
         {
-            var ltModel = Settings.LTModel;
-            if (q > 0 && !ltModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
+            ILendingTreeModel lendingTreeModel = LTWebSession.LTModel;
+            
+            if (questionIndex > 0 && !lendingTreeModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
             {
                 if (!Request.IsAjaxRequest())
                 {
-                    if (test)
-                        return RedirectToAction("Show", new { test = test });
+                    if (isTestMode)
+                        return RedirectToAction("Show", new { test = isTestMode });
                     else
                         return RedirectToAction("Show");
                 }
-                q = 0; // for ajax requests: return the first question
+                questionIndex = 0; // for ajax requests: return the first question
             }
             var questions = Questions.GetQuestionVMs();
-            var question = questions[q];
+            var question = questions[questionIndex];
 
-            Questions.AdjustQuestion(question, ltModel);
-            Questions.SetQuestionAnswer(question, ltModel);
+            Questions.AdjustQuestion(question, lendingTreeModel);
+            Questions.SetQuestionAnswer(question, lendingTreeModel);
  
-            if (test)
+            if (isTestMode)
                 return View(question);
 
             if (Request.IsAjaxRequest())
@@ -45,7 +46,7 @@ namespace LTWeb.Controllers
 
         public ActionResult Save(LendingTreeVM model, string[] questionKey, bool test = false)
         {
-            ILendingTreeModel ltModel = Settings.LTModel;
+            ILendingTreeModel ltModel = LTWebSession.LTModel;
 
             if (questionKey != null && (questionKey[0] == "LoanType" || ltModel.IsLoanTypeSet()))
             {
