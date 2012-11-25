@@ -6,7 +6,7 @@
 @switch (Model.AnswerType)
 {
     case "dropdown":
-        <select name="@Model.Key" class="validate[required]" data-prompt-position="bottomLeft">
+        <select name="@Model.Key" class="validate[required]" data-prompt-position="bottomRight">
         @foreach (var option in Model.Options)
         {
             <option value="@option.Value" @( option.Value == Model.Answer ? "selected=\"selected\"" : "" )>@option.Text</option>
