@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
+using System.Xml.Serialization;
 using LTWeb.DataAccess;
 
 namespace LTWeb.Service
@@ -626,9 +628,17 @@ namespace LTWeb.Service
         static string GetEnumName<T>(T v)
         {
             var result = Enum.GetName(typeof(T), v);
-            if (result.StartsWith("Item"))
-                result = result.Replace("-", string.Empty).Substring(4);
-            return result;
+            FieldInfo info = typeof(T).GetField(result);
+            if (!info.IsDefined(typeof(XmlEnumAttribute), false))
+            {
+                return result;
+            }
+            else
+            {
+                object[] o = info.GetCustomAttributes(typeof(XmlEnumAttribute), false);
+                XmlEnumAttribute att = (XmlEnumAttribute)o[0];
+                return att.Name;
+            }
         }
 
         static T ParseEnum<T>(string v) where T : struct

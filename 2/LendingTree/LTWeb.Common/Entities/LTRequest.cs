@@ -823,18 +823,13 @@ namespace LTWeb
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public enum CreditHistoryTypeCreditSelfRating
     {
+        SOMECREDITPROBLEMS,
 
-    
         EXCELLENT,
 
-    
-        LITTLEORNOCREDITHISTORY,
-
-    
         MAJORCREDITPROBLEMS,
 
-    
-        SOMECREDITPROBLEMS,
+        LITTLEORNOCREDITHISTORY,
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
