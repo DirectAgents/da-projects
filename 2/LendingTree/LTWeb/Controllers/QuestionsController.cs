@@ -7,28 +7,26 @@ namespace LTWeb.Controllers
 {
     public class QuestionsController : Controller
     {
-        public ActionResult Show(int questionIndex = 0, bool isTestMode = false)
+        public ActionResult Show(int q = 0, bool test = false)
         {
-            ILendingTreeModel lendingTreeModel = LTWeb.Session.LTModel;
-            
-            if (questionIndex > 0 && !lendingTreeModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
+            if (q > 0 && !LendingTreeModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
             {
                 if (!Request.IsAjaxRequest())
                 {
-                    if (isTestMode)
-                        return RedirectToAction("Show", new { test = isTestMode });
+                    if (test)
+                        return RedirectToAction("Show", new { test = test });
                     else
                         return RedirectToAction("Show");
                 }
-                questionIndex = 0; // for ajax requests: return the first question
+                q = 0; // for ajax requests: return the first question
             }
             var questions = Questions.GetQuestionVMs();
-            var question = questions[questionIndex];
+            var question = questions[q];
 
-            Questions.AdjustQuestion(question, lendingTreeModel);
-            Questions.SetQuestionAnswer(question, lendingTreeModel);
+            Questions.AdjustQuestion(question, LendingTreeModel);
+            Questions.SetQuestionAnswer(question, LendingTreeModel);
  
-            if (isTestMode)
+            if (test)
                 return View(question);
 
             if (Request.IsAjaxRequest())
@@ -46,45 +44,56 @@ namespace LTWeb.Controllers
 
         public ActionResult Save(LendingTreeVM model, string[] questionKey, bool test = false)
         {
-            ILendingTreeModel ltModel = LTWeb.Session.LTModel;
+            // Map properties from LendingTreeVM to ILendingTreeModel
+            //
 
-            if (questionKey != null && (questionKey[0] == "LoanType" || ltModel.IsLoanTypeSet()))
+            bool shouldMapProperties = questionKey != null && (questionKey[0] == "LoanType" || LendingTreeModel.IsLoanTypeSet());
+            
+            if (shouldMapProperties)
             {
-                foreach (string qKey in questionKey)
+                foreach (string propertyName in questionKey)
                 {
-                    PropertyInfo sourcePropInfo = model.GetType().GetProperty(qKey);
-                    PropertyInfo destPropInfo = ltModel.GetType().GetProperty(qKey);
-                    switch (qKey)
+                    PropertyInfo viewModelProperty = model.GetType().GetProperty(propertyName);
+                    PropertyInfo modelProperty = LendingTreeModel.GetType().GetProperty(propertyName);
+                    switch (propertyName)
                     {
                         case "IsVetran":
-                            ltModel.IsVetran = Request["IsVetran"] == "True";
+                            LendingTreeModel.IsVetran = Request["IsVetran"] == "True"; // AA: undersatnd this...
                             break;
                         default:
-                            destPropInfo.SetValue(ltModel, sourcePropInfo.GetValue(model));
+                            modelProperty.SetValue(LendingTreeModel, viewModelProperty.GetValue(model));
                             break;
                     }
                 }
             }
-            var nextQuestion = Questions.GetNextQuestionVM(questionKey, ltModel);
 
-            if (nextQuestion == null)
+            // Produce the view for the next question
+            //
+
+            var nextQuestionVM = Questions.GetNextQuestionVM(questionKey, LendingTreeModel);
+
+            if (nextQuestionVM == null)
             {
                 // submit to LendingTree & save to db
+                //
+
+                // TODO: return THANK YOU
                 return Content("no more questions");
             }
             else if (Request.IsAjaxRequest())
-            {   // there is a nextQuestion
+            {   
+                // there is a nextQuestion
                 if (test)
                     return null;
                 else
-                    return PartialView("FormFields", nextQuestion);
+                    return PartialView("FormFields", nextQuestionVM);
             }
             else // non-ajax && there is a nextQuestion
             {
                 if (test)
-                    return View("Show", nextQuestion);
+                    return View("Show", nextQuestionVM);
                 else
-                    return View("FormFields", nextQuestion);
+                    return View("FormFields", nextQuestionVM);
             }
         }
 
@@ -92,5 +101,7 @@ namespace LTWeb.Controllers
         {
             return Content("not implemented yet");
         }
+
+        ILendingTreeModel LendingTreeModel { get { return LTWeb.Session.LTModel; } }
     }
 }

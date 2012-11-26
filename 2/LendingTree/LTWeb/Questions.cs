@@ -139,20 +139,35 @@ namespace LTWeb
         {
             switch (question.Key)
             {
-                case "CashOut":
-                    List<OptionVM> newOptions = new List<OptionVM>();
-                    for (int i=0; i < question.Options.Count; i++)
+                case "EstimatedMortgageBalance":
                     {
-                        var option = question.Options[i];
-                        if (Convert.ToInt32(option.Value) <= ltModel.PropertyApproximateValue)
-                            newOptions.Add(option);
+                        decimal max = ltModel.PropertyApproximateValue;
+
+                        var options = from c in question.Options.Skip(1)
+                                      where Convert.ToDecimal(c.Value) <= max
+                                      select c;
+
+                        question.Options = options.ToList();
                     }
-                    question.Options = newOptions;
+                    break;
+                case "CashOut":
+                    {
+                        decimal loanAmountBeforeCashOut = ltModel.EstimatedMortgageBalance;
+                        decimal loanValue = ltModel.PropertyApproximateValue;
+                        decimal maxLoanToValue = .85m;
+                        decimal maxCashOut = (loanValue * maxLoanToValue) - loanAmountBeforeCashOut;
+
+                        var options = from c in question.Options.Skip(1)
+                                      where Convert.ToDecimal(c.Value) <= maxCashOut
+                                      select c;
+
+                        question.Options = options.ToList();
+                    }
                     break;
             }
             if (question.SamePageQuestion != null)
                 AdjustQuestion(question.SamePageQuestion, ltModel);
-                // todo: ?have a QuestionVM.Adjusted booleon to avoid infinite loops?
+            // todo: ?have a QuestionVM.Adjusted booleon to avoid infinite loops?
         }
 
         public static void SetQuestionAnswer(QuestionVM question, ILendingTreeModel ltModel)
@@ -165,7 +180,7 @@ namespace LTWeb
 
             if (question.SamePageQuestion != null)
                 SetQuestionAnswer(question.SamePageQuestion, ltModel);
-                // todo: something to avoid infinite loops?
+            // todo: something to avoid infinite loops?
         }
     }
 }
