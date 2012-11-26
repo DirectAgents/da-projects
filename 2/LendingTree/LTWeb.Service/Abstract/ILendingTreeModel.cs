@@ -15,6 +15,7 @@
         decimal PropertyApproximateValue { get; set; }
         decimal EstimatedMortgageBalance { get; set; }
         decimal CashOut { get; set; }
+        bool IsCashOutSet { get; set; }
         decimal MonthlyPayment { get; set; }
         string BankruptcyDischarged { get; set; }
         string ForeclosureDischarged { get; set; }

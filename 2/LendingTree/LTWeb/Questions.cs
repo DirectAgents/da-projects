@@ -142,12 +142,11 @@ namespace LTWeb
                 case "EstimatedMortgageBalance":
                     {
                         decimal max = ltModel.PropertyApproximateValue;
-
-                        var options = from c in question.Options.Skip(1)
-                                      where Convert.ToDecimal(c.Value) <= max
-                                      select c;
-
-                        question.Options = options.ToList();
+                        var options = (from c in question.Options.Skip(1)
+                                       where Convert.ToDecimal(c.Value) <= max
+                                       select c).ToList();
+                        options.Insert(0, question.Options[0]);
+                        question.Options = options;
                     }
                     break;
                 case "CashOut":
@@ -156,12 +155,11 @@ namespace LTWeb
                         decimal loanValue = ltModel.PropertyApproximateValue;
                         decimal maxLoanToValue = .85m;
                         decimal maxCashOut = (loanValue * maxLoanToValue) - loanAmountBeforeCashOut;
-
-                        var options = from c in question.Options.Skip(1)
+                        var options = from c in question.Options
                                       where Convert.ToDecimal(c.Value) <= maxCashOut
                                       select c;
-
                         question.Options = options.ToList();
+                        question.DefaultValue = question.Options.Last().Value; // default to highest cash out value
                     }
                     break;
             }
@@ -177,6 +175,11 @@ namespace LTWeb
                 question.Answer = ltModel.GetType().GetProperty(question.Key).GetValue(ltModel).ToString();
             }
             catch { }
+
+            if (question.Key == "CashOut" && !ltModel.IsCashOutSet)
+            {
+                question.Answer = question.DefaultValue;
+            }
 
             if (question.SamePageQuestion != null)
                 SetQuestionAnswer(question.SamePageQuestion, ltModel);

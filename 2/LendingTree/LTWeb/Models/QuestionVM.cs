@@ -21,6 +21,8 @@ namespace LTWeb.Models
         public string Answer { get; set; }
 
         public QuestionVM SamePageQuestion { get; set; }
+
+        public string DefaultValue { get; set; }
     }
 
     public class OptionVM

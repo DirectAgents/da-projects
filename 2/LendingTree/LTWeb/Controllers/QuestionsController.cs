@@ -80,20 +80,25 @@ namespace LTWeb.Controllers
                 // TODO: return THANK YOU
                 return Content("no more questions");
             }
-            else if (Request.IsAjaxRequest())
-            {   
-                // there is a nextQuestion
-                if (test)
-                    return null;
-                else
-                    return PartialView("FormFields", nextQuestionVM);
-            }
-            else // non-ajax && there is a nextQuestion
+            else
             {
-                if (test)
-                    return View("Show", nextQuestionVM);
-                else
-                    return View("FormFields", nextQuestionVM);
+                Questions.SetQuestionAnswer(nextQuestionVM, LendingTreeModel);
+
+                if (Request.IsAjaxRequest())
+                {
+                    // there is a nextQuestion
+                    if (test)
+                        return null;
+                    else
+                        return PartialView("FormFields", nextQuestionVM);
+                }
+                else // non-ajax && there is a nextQuestion
+                {
+                    if (test)
+                        return View("Show", nextQuestionVM);
+                    else
+                        return View("FormFields", nextQuestionVM);
+                }
             }
         }
 

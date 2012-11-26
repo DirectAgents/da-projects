@@ -45,7 +45,6 @@ namespace LTWeb.Service
             }
         }
 
-
         public string StatesExcludedFromDisclosure { get; set; }
 
         public LTRequest Request
@@ -191,6 +190,8 @@ namespace LTWeb.Service
         {
             get
             {
+                if (!isPropertyStateSet)
+                    return null;
                 StateType stateType = this.IsLoanTypeRefinance ? Request.Request.TheApplicant.State : (GetHomeLoanProductItem() as PurchaseType).SubjectProperty.PropertyState;
                 return GetEnumName<StateType>(stateType);
             }
@@ -199,8 +200,10 @@ namespace LTWeb.Service
                 Request.Request.TheApplicant.State = ParseEnum<StateType>(value);
                 if (Request.Request.LoanType == ELoanType.PURCHASE) (GetHomeLoanProductItem() as PurchaseType).SubjectProperty.PropertyState = ParseEnum<StateType>(value);
                 OnDataChanged("PropertyState");
+                isPropertyStateSet = true;
             }
         }
+        bool isPropertyStateSet;
 
         public string CreditRating
         {
@@ -327,8 +330,11 @@ namespace LTWeb.Service
                 AssertRefi();
                 (Request.Request.HomeLoanProduct.Item as RefinanceType).CashOut = value;
                 OnDataChanged("CashOut");
+                IsCashOutSet = true;
             }
         }
+
+        public bool IsCashOutSet { get; set; }
 
         public decimal MonthlyPayment
         {
@@ -619,7 +625,10 @@ namespace LTWeb.Service
 
         static string GetEnumName<T>(T v)
         {
-            return Enum.GetName(typeof(T), v);
+            var result = Enum.GetName(typeof(T), v);
+            if (result.StartsWith("Item"))
+                result = result.Replace("-", string.Empty).Substring(4);
+            return result;
         }
 
         static T ParseEnum<T>(string v) where T : struct

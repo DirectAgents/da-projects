@@ -842,8 +842,8 @@ namespace LTWeb
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public enum CreditHistoryTypeBankruptcyDischarged
     {
+        NEVER,
 
-    
         NOT_YET_DISCHARGED,
 
     
@@ -875,9 +875,7 @@ namespace LTWeb
 
     
         OVER_84_MONTHS,
-
     
-        NEVER,
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
@@ -885,7 +883,7 @@ namespace LTWeb
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public enum CreditHistoryTypeForeclosureDischarged
     {
-
+        NEVER,
     
         CURRENTLY_IN_FORECLOSURE,
 
@@ -919,8 +917,6 @@ namespace LTWeb
     
         OVER_84_MONTHS,
 
-    
-        NEVER,
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
