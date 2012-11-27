@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using LTWeb.Service;
 
 namespace LTWeb.Controllers
 {
@@ -7,24 +8,21 @@ namespace LTWeb.Controllers
         public ActionResult Index(int? mode)
         {
             LTWeb.Session.Reset();
+            PrepareLendingTreeModelForNewSession(LTWeb.Session.LTModel, mode);
+            return RedirectToAction("Show", "Questions");
+        }
 
-            var ltModel = LTWeb.Session.LTModel;
-
-            // mode=1 --> SSN is required
-            // mode=2 --> SSN is not required
+        void PrepareLendingTreeModelForNewSession(ILendingTreeModel lendingTreeModel, int? mode)
+        {
             if (mode != null)
             {
-                if (mode == 1)
-                {
-                    ltModel.SsnRequired = true;
-                }
-                else if (mode == 2)
-                {
-                    ltModel.SsnRequired = false;
-                }
+                lendingTreeModel.SsnRequired = (mode == AppSettings.SsnRequiredModeValue);
             }
+            lendingTreeModel.VisitorIPAddress = Request.UserHostAddress;
+            lendingTreeModel.VisitorURL = AppSettings.VisitorUrl;
 
-            return RedirectToAction("Show", "Questions");
+            // TODO!!!: add DOB question
+            lendingTreeModel.DOB = "10/10/1960";
         }
     }
 }

@@ -140,7 +140,7 @@ namespace LTWeb
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false, ElementName = "LendingTreeAffiliateRequest")]
     public partial class LTRequest : object, System.ComponentModel.INotifyPropertyChanged
     {
 
@@ -148,7 +148,7 @@ namespace LTWeb
 
         private ResponseType responseField;
 
-    
+
         public RequestType Request
         {
             get
@@ -162,7 +162,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public ResponseType Response
         {
             get
@@ -213,7 +213,7 @@ namespace LTWeb
 
         private string electronicDisclosureConsentField;
 
-    
+
         public SourceOfRequestType SourceOfRequest
         {
             get
@@ -227,7 +227,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public HomeLoanProductType HomeLoanProduct
         {
             get
@@ -241,7 +241,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlElementAttribute("Applicant")]
         public ApplicantType[] Applicant
         {
@@ -256,7 +256,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string type
         {
@@ -271,7 +271,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string created
         {
@@ -286,7 +286,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string updated
         {
@@ -301,7 +301,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string VisitorSessionID
         {
@@ -316,7 +316,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string AppID
         {
@@ -331,7 +331,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string ElectronicDisclosureConsent
         {
@@ -393,7 +393,7 @@ namespace LTWeb
         private string affiliateSiteID;
 
 
-    
+
         public string LendingTreeAffiliatePartnerCode
         {
             get
@@ -407,7 +407,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string LendingTreeAffiliateUserName
         {
             get
@@ -421,7 +421,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string LendingTreeAffiliatePassword
         {
             get
@@ -435,7 +435,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string LendingTreeAffiliateEsourceID
         {
             get
@@ -449,7 +449,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string LendingTreeAffiliateBrand
         {
             get
@@ -463,7 +463,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string LendingTreeAffiliateFormVersion
         {
             get
@@ -477,7 +477,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string VisitorIPAddress
         {
             get
@@ -491,7 +491,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string VisitorURL
         {
             get
@@ -505,7 +505,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string TreeSessionID
         {
             get
@@ -519,7 +519,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string TreeComputerID
         {
             get
@@ -533,7 +533,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string V1stCookie
         {
             get
@@ -547,7 +547,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType LTLOptin
         {
             get
@@ -561,7 +561,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string AffiliateSiteID
         {
             get
@@ -592,10 +592,10 @@ namespace LTWeb
     public enum YesNoType
     {
 
-    
+
         Y,
 
-    
+
         N,
     }
 
@@ -608,7 +608,7 @@ namespace LTWeb
 
         private string errorField;
 
-    
+
         public string Error
         {
             get
@@ -645,7 +645,7 @@ namespace LTWeb
 
         private ErrorsType errorsField;
 
-    
+
         public string ReturnURL
         {
             get
@@ -659,7 +659,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public ErrorsType Errors
         {
             get
@@ -706,7 +706,7 @@ namespace LTWeb
 
         private CreditHistoryTypeForeclosureDischarged foreclosureDischargedField;
 
-    
+
         public CreditHistoryTypeCreditSelfRating CreditSelfRating
         {
             get
@@ -720,7 +720,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType DeclaredBankruptcy
         {
             get
@@ -734,7 +734,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool DeclaredBankruptcySpecified
         {
@@ -749,7 +749,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType DeclaredForeclosure
         {
             get
@@ -763,7 +763,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool DeclaredForeclosureSpecified
         {
@@ -778,7 +778,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public CreditHistoryTypeBankruptcyDischarged BankruptcyDischarged
         {
             get
@@ -792,7 +792,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public CreditHistoryTypeForeclosureDischarged ForeclosureDischarged
         {
             get
@@ -841,36 +841,36 @@ namespace LTWeb
 
         NOT_YET_DISCHARGED,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("01-12_MONTHS")]
         Item0112_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("13-24_MONTHS")]
         Item1324_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("25-36_MONTHS")]
         Item2536_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("37-48_MONTHS")]
         Item3748_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("49-60_MONTHS")]
         Item4960_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("61-72_MONTHS")]
         Item6172_MONTHS,
 
-    
+
         OVER_72_MONTHS,
 
-    
+
         OVER_84_MONTHS,
-    
+
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
@@ -879,37 +879,37 @@ namespace LTWeb
     public enum CreditHistoryTypeForeclosureDischarged
     {
         NEVER,
-    
+
         CURRENTLY_IN_FORECLOSURE,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("01-12_MONTHS")]
         Item0112_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("13-24_MONTHS")]
         Item1324_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("25-36_MONTHS")]
         Item2536_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("37-48_MONTHS")]
         Item3748_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("49-60_MONTHS")]
         Item4960_MONTHS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("61-72_MONTHS")]
         Item6172_MONTHS,
 
-    
+
         OVER_72_MONTHS,
 
-    
+
         OVER_84_MONTHS,
 
     }
@@ -937,7 +937,7 @@ namespace LTWeb
 
         private string employmentIndicatorField;
 
-    
+
         public string EmployerName
         {
             get
@@ -951,7 +951,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string EmployeeTitle
         {
             get
@@ -965,7 +965,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string EmploymentYears
         {
             get
@@ -979,7 +979,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public EmploymentStausType EmploymentStatus
         {
             get
@@ -993,7 +993,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool EmploymentStatusSpecified
         {
@@ -1008,7 +1008,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal EmploymentIncome
         {
             get
@@ -1022,7 +1022,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool EmploymentIncomeSpecified
         {
@@ -1037,7 +1037,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string EmploymentIndicator
         {
@@ -1069,22 +1069,22 @@ namespace LTWeb
     public enum EmploymentStausType
     {
 
-    
+
         FULLTIME,
 
-    
+
         HOMEMAKER,
 
-    
+
         PARTTIME,
 
-    
+
         RETIRED,
 
-    
+
         SELFEMPLOYED,
 
-    
+
         STUDENT,
     }
 
@@ -1107,7 +1107,7 @@ namespace LTWeb
 
         private bool preferredContactTimeFieldSpecified;
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public ContactPreferenceTypePreferredContactPlace PreferredContactPlace
         {
@@ -1122,7 +1122,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool PreferredContactPlaceSpecified
         {
@@ -1137,7 +1137,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public ContactPreferenceTypePreferredContactMethod PreferredContactMethod
         {
@@ -1152,7 +1152,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool PreferredContactMethodSpecified
         {
@@ -1167,7 +1167,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public ContactPreferenceTypePreferredContactTime PreferredContactTime
         {
@@ -1182,7 +1182,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool PreferredContactTimeSpecified
         {
@@ -1215,10 +1215,10 @@ namespace LTWeb
     public enum ContactPreferenceTypePreferredContactPlace
     {
 
-    
+
         Home,
 
-    
+
         Work,
     }
 
@@ -1228,16 +1228,16 @@ namespace LTWeb
     public enum ContactPreferenceTypePreferredContactMethod
     {
 
-    
+
         Any,
 
-    
+
         Email,
 
-    
+
         Fax,
 
-    
+
         Phone,
     }
 
@@ -1247,16 +1247,16 @@ namespace LTWeb
     public enum ContactPreferenceTypePreferredContactTime
     {
 
-    
+
         Anytime,
 
-    
+
         Morning,
 
-    
+
         Afternoon,
 
-    
+
         Evening,
     }
 
@@ -1336,7 +1336,7 @@ namespace LTWeb
             this.isVeteranField = YesNoType.N;
         }
 
-    
+
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
         public string FirstName
         {
@@ -1351,7 +1351,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
         public string MiddleName
         {
@@ -1366,7 +1366,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
         public string LastName
         {
@@ -1381,7 +1381,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public NameSuffixType NameSuffix
         {
             get
@@ -1395,7 +1395,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool NameSuffixSpecified
         {
@@ -1410,7 +1410,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
         public string Street
         {
@@ -1425,7 +1425,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
         public string City
         {
@@ -1440,7 +1440,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlElementAttribute(DataType = "normalizedString")]
         public string County
         {
@@ -1455,7 +1455,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public StateType State
         {
             get
@@ -1470,7 +1470,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool StateSpecified
         {
@@ -1485,7 +1485,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string Zip
         {
             get
@@ -1499,7 +1499,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string DateOfBirth
         {
             get
@@ -1513,7 +1513,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string HomePhone
         {
             get
@@ -1527,7 +1527,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string MobilePhone
         {
             get
@@ -1541,7 +1541,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string WorkPhone
         {
             get
@@ -1555,7 +1555,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public int WorkPhoneExt
         {
             get
@@ -1569,7 +1569,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool WorkPhoneExtSpecified
         {
@@ -1584,7 +1584,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string EmailAddress
         {
             get
@@ -1598,7 +1598,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string Password
         {
             get
@@ -1612,7 +1612,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string SSN
         {
             get
@@ -1626,7 +1626,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType IsVeteran
         {
             get
@@ -1640,7 +1640,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public MaritalStatusType MaritalStatus
         {
             get
@@ -1654,7 +1654,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool MaritalStatusSpecified
         {
@@ -1669,7 +1669,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public CitizenshipStatusType IsUSCitizen
         {
             get
@@ -1683,7 +1683,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool IsUSCitizenSpecified
         {
@@ -1698,7 +1698,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public RelationshipToApplicantType RelationshipToApplicant
         {
             get
@@ -1712,7 +1712,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool RelationshipToApplicantSpecified
         {
@@ -1727,7 +1727,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public ContactPreferenceType ContactPreference
         {
             get
@@ -1741,7 +1741,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public EmploymentType Employment
         {
             get
@@ -1755,7 +1755,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public CreditHistoryType CreditHistory
         {
             get
@@ -1772,7 +1772,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public ApplicantTypePrimary Primary
         {
@@ -1787,7 +1787,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlAttributeAttribute(Form = System.Xml.Schema.XmlSchemaForm.Qualified)]
         public ApplicantTypePrimaryContact PrimaryContact
         {
@@ -1819,25 +1819,25 @@ namespace LTWeb
     public enum NameSuffixType
     {
 
-    
+
         I,
 
-    
+
         II,
 
-    
+
         III,
 
-    
+
         IV,
 
-    
+
         JR,
 
-    
+
         SR,
 
-    
+
         V,
     }
 
@@ -1847,157 +1847,157 @@ namespace LTWeb
     public enum StateType
     {
 
-    
+
         AK,
 
-    
+
         AL,
 
-    
+
         AR,
 
-    
+
         AZ,
 
-    
+
         CA,
 
-    
+
         CO,
 
-    
+
         CT,
 
-    
+
         DE,
 
-    
+
         DC,
 
-    
+
         FL,
 
-    
+
         GA,
 
-    
+
         HI,
 
-    
+
         ID,
 
-    
+
         IL,
 
-    
+
         IN,
 
-    
+
         IA,
 
-    
+
         KS,
 
-    
+
         KY,
 
-    
+
         LA,
 
-    
+
         ME,
 
-    
+
         MD,
 
-    
+
         MA,
 
-    
+
         MI,
 
-    
+
         MN,
 
-    
+
         MS,
 
-    
+
         MO,
 
-    
+
         MT,
 
-    
+
         NE,
 
-    
+
         NV,
 
-    
+
         NH,
 
-    
+
         NJ,
 
-    
+
         NM,
 
-    
+
         NY,
 
-    
+
         NC,
 
-    
+
         ND,
 
-    
+
         OH,
 
-    
+
         OK,
 
-    
+
         OR,
 
-    
+
         PA,
 
-    
+
         RI,
 
-    
+
         SC,
 
-    
+
         SD,
 
-    
+
         TN,
 
-    
+
         TX,
 
-    
+
         UT,
 
-    
+
         VT,
 
-    
+
         VA,
 
-    
+
         WA,
 
-    
+
         WV,
 
-    
+
         WI,
 
-    
+
         WY,
     }
 
@@ -2007,13 +2007,13 @@ namespace LTWeb
     public enum MaritalStatusType
     {
 
-    
+
         MARRIED,
 
-    
+
         UNMARRIED,
 
-    
+
         SEPARATED,
     }
 
@@ -2023,16 +2023,16 @@ namespace LTWeb
     public enum CitizenshipStatusType
     {
 
-    
+
         NONPERMANENTRESIDENTALIEN,
 
-    
+
         NONRESIDENTALIEN,
 
-    
+
         PERMANENTRESIDENTALIEN,
 
-    
+
         USCITIZEN,
     }
 
@@ -2042,16 +2042,16 @@ namespace LTWeb
     public enum RelationshipToApplicantType
     {
 
-    
+
         SPOUSE,
 
-    
+
         PARENT,
 
-    
+
         SELF,
 
-    
+
         OTHER,
     }
 
@@ -2062,10 +2062,10 @@ namespace LTWeb
     public enum ApplicantTypePrimary
     {
 
-    
+
         Y,
 
-    
+
         N,
     }
 
@@ -2076,10 +2076,10 @@ namespace LTWeb
     public enum ApplicantTypePrimaryContact
     {
 
-    
+
         Y,
 
-    
+
         N,
     }
 
@@ -2117,7 +2117,7 @@ namespace LTWeb
             this.propertyUseField = PropertyUseType.OWNEROCCUPIED;
         }
 
-    
+
         public PropertyType PropertyType
         {
             get
@@ -2131,7 +2131,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public PropertyUseType PropertyUse
         {
             get
@@ -2145,7 +2145,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyAddress
         {
             get
@@ -2159,7 +2159,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public StateType PropertyState
         {
             get
@@ -2173,7 +2173,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool PropertyStateSpecified
         {
@@ -2188,7 +2188,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyCounty
         {
             get
@@ -2202,7 +2202,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyCity
         {
             get
@@ -2216,7 +2216,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyZip
         {
             get
@@ -2230,7 +2230,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public UnitsType Units
         {
             get
@@ -2244,7 +2244,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool UnitsSpecified
         {
@@ -2277,35 +2277,35 @@ namespace LTWeb
     public enum PropertyType
     {
 
-    
+
         SINGLEFAMDET,
 
-    
+
         SINGLEFAMATT,
 
-    
+
         LOWRISECONDO,
 
-    
+
         HIGHRISECONDO,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("2TO4UNITFAM")]
         Item2TO4UNITFAM,
 
-    
+
         COOP,
 
-    
+
         MODULAR,
 
-    
+
         MOBILEPERMANENT,
 
-    
+
         MOBILEMOVEABLE,
 
-    
+
         MANUFACTURED,
     }
 
@@ -2315,13 +2315,13 @@ namespace LTWeb
     public enum PropertyUseType
     {
 
-    
+
         OWNEROCCUPIED,
 
-    
+
         SECONDHOME,
 
-    
+
         INVESTMENTPROPERTY,
     }
 
@@ -2331,23 +2331,23 @@ namespace LTWeb
     public enum UnitsType
     {
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("1UNIT")]
         Item1UNIT,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("2UNITS")]
         Item2UNITS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("3UNITS")]
         Item3UNITS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("4UNITS")]
         Item4UNITS,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("5ORMOREUNITS")]
         Item5ORMOREUNITS,
     }
@@ -2378,7 +2378,7 @@ namespace LTWeb
 
         private HomeEquitySubjectPropertyType subjectPropertyField;
 
-    
+
         public YesNoType FirstHome
         {
             get
@@ -2392,7 +2392,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool FirstHomeSpecified
         {
@@ -2407,7 +2407,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal PropertyEstimatedValue
         {
             get
@@ -2421,7 +2421,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal MonthlyPayment
         {
             get
@@ -2435,7 +2435,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool MonthlyPaymentSpecified
         {
@@ -2450,7 +2450,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal CashOut
         {
             get
@@ -2464,7 +2464,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlArrayItemAttribute("Product", IsNullable = false)]
         public ProductType[] RequestedProducts
         {
@@ -2479,7 +2479,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlArrayItemAttribute("Purpose", IsNullable = false)]
         public HomeEquityPurposesType[] HomeEquityPurpose
         {
@@ -2494,7 +2494,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public HomeEquitySubjectPropertyType SubjectProperty
         {
             get
@@ -2526,209 +2526,209 @@ namespace LTWeb
     public enum ProductType
     {
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("5YRFHELOAN")]
         Item5YRFHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("5YRVHELOAN")]
         Item5YRVHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("5YRFHELOC")]
         Item5YRFHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("5YRVHELOC")]
         Item5YRVHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("7YRFHELOAN")]
         Item7YRFHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("7YRVHELOAN")]
         Item7YRVHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("7YRFHELOC")]
         Item7YRFHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("7YRVHELOC")]
         Item7YRVHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("10YRFHELOAN")]
         Item10YRFHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("10YRVHELOAN")]
         Item10YRVHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("10YRFHELOC")]
         Item10YRFHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("10YRVHELOC")]
         Item10YRVHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("15YRFHELOAN")]
         Item15YRFHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("15YRVHELOAN")]
         Item15YRVHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("15YRFHELOC")]
         Item15YRFHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("15YRVHELOC")]
         Item15YRVHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("20YRFHELOAN")]
         Item20YRFHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("20YRVHELOAN")]
         Item20YRVHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("20YRFHELOC")]
         Item20YRFHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("20YRVHELOC")]
         Item20YRVHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("25YRFHELOAN")]
         Item25YRFHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("25YRVHELOAN")]
         Item25YRVHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("25YRFHELOC")]
         Item25YRFHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("25YRVHELOC")]
         Item25YRVHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("30YRFHELOAN")]
         Item30YRFHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("30YRVHELOAN")]
         Item30YRVHELOAN,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("30YRFHELOC")]
         Item30YRFHELOC,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("30YRVHELOC")]
         Item30YRVHELOC,
 
-    
+
         OTHERINNOVATIVEHEPRODUCTS,
 
-    
+
         MORTGAGEOTHER,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("10YRF")]
         Item10YRF,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("15YRF")]
         Item15YRF,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("20YRF")]
         Item20YRF,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("25YRF")]
         Item25YRF,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("30YRF")]
         Item30YRF,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("40YRF")]
         Item40YRF,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("5YRB")]
         Item5YRB,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("7YRB")]
         Item7YRB,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("10YRB")]
         Item10YRB,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("6MONTHARM")]
         Item6MONTHARM,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("1YRARM")]
         Item1YRARM,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("2YRARM")]
         Item2YRARM,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("3YRARM")]
         Item3YRARM,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("5YRARM")]
         Item5YRARM,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("7YRARM")]
         Item7YRARM,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("10YRARM")]
         Item10YRARM,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("5YRARM-INTONLY")]
         Item5YRARMINTONLY,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("10YRARM-INTONLY")]
         Item10YRARMINTONLY,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("15YRARM-INTONLY")]
         Item15YRARMINTONLY,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("20YRARM-INTONLY")]
         Item20YRARMINTONLY,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("25YRARM-INTONLY")]
         Item25YRARMINTONLY,
 
-    
+
         [System.Xml.Serialization.XmlEnumAttribute("30YRARM-INTONLY")]
         Item30YRARMINTONLY,
     }
@@ -2739,31 +2739,31 @@ namespace LTWeb
     public enum HomeEquityPurposesType
     {
 
-    
+
         PAYOFFHELOAN,
 
-    
+
         PAYOFFHELOC,
 
-    
+
         HOMEIMP,
 
-    
+
         DEBTCONSOLIDATION,
 
-    
+
         AUTOPURCHASE,
 
-    
+
         BOATPURCHASE,
 
-    
+
         RVPURCHASE,
 
-    
+
         MOTORCYCLEPURCHASE,
 
-    
+
         OTHER,
     }
 
@@ -2801,7 +2801,7 @@ namespace LTWeb
             this.propertyUseField = PropertyUseType.OWNEROCCUPIED;
         }
 
-    
+
         public PropertyType PropertyType
         {
             get
@@ -2815,7 +2815,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public PropertyUseType PropertyUse
         {
             get
@@ -2829,7 +2829,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyAddress
         {
             get
@@ -2843,7 +2843,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public StateType PropertyState
         {
             get
@@ -2857,7 +2857,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool PropertyStateSpecified
         {
@@ -2872,7 +2872,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyCounty
         {
             get
@@ -2886,7 +2886,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyCity
         {
             get
@@ -2900,7 +2900,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyZip
         {
             get
@@ -2914,7 +2914,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public UnitsType Units
         {
             get
@@ -2928,7 +2928,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool UnitsSpecified
         {
@@ -3005,7 +3005,7 @@ namespace LTWeb
             this.cashOutField = ((decimal)(0m));
         }
 
-    
+
         public decimal RequestedLoanAmount
         {
             get
@@ -3019,7 +3019,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool RequestedLoanAmountSpecified
         {
@@ -3034,7 +3034,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal PropertyEstimatedValue
         {
             get
@@ -3048,7 +3048,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal MonthlyPayment
         {
             get
@@ -3062,7 +3062,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal EstimatedMortgageBalance
         {
             get
@@ -3076,7 +3076,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal FirstMortgageInterestRate
         {
             get
@@ -3090,7 +3090,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool FirstMortgageInterestRateSpecified
         {
@@ -3105,7 +3105,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType HaveMultipleMortages
         {
             get
@@ -3119,7 +3119,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal SecondMortgageBalance
         {
             get
@@ -3133,7 +3133,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool SecondMortgageBalanceSpecified
         {
@@ -3148,7 +3148,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal SecondMortgageMonthlyPayment
         {
             get
@@ -3162,7 +3162,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool SecondMortgageMonthlyPaymentSpecified
         {
@@ -3177,7 +3177,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal SecondMortgageInterestRate
         {
             get
@@ -3191,7 +3191,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool SecondMortgageInterestRateSpecified
         {
@@ -3206,7 +3206,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlArrayItemAttribute("Product", IsNullable = false)]
         public ProductType[] RequestedProducts
         {
@@ -3221,7 +3221,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlArrayItemAttribute("Purpose", IsNullable = false)]
         public RefinancePurposesType[] RefinancePurpose
         {
@@ -3236,7 +3236,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal CashOut
         {
             get
@@ -3250,7 +3250,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public RefinanceSubjectPropertyType SubjectProperty
         {
             get
@@ -3283,22 +3283,22 @@ namespace LTWeb
     public enum RefinancePurposesType
     {
 
-    
+
         REFIPRIMARY,
 
-    
+
         PAYOFFSECOND,
 
-    
+
         PAYOFFHELOC,
 
-    
+
         CASHOUT,
 
-    
+
         PAYOFFSPOUSE,
 
-    
+
         HOMEIMP,
     }
 
@@ -3334,7 +3334,7 @@ namespace LTWeb
             this.propertyUseField = PropertyUseType.OWNEROCCUPIED;
         }
 
-    
+
         public PropertyType PropertyType
         {
             get
@@ -3348,7 +3348,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public PropertyUseType PropertyUse
         {
             get
@@ -3362,7 +3362,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyAddress
         {
             get
@@ -3376,7 +3376,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public StateType PropertyState
         {
             get
@@ -3390,7 +3390,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyCounty
         {
             get
@@ -3404,7 +3404,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyCity
         {
             get
@@ -3418,7 +3418,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public string PropertyZip
         {
             get
@@ -3432,7 +3432,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public UnitsType Units
         {
             get
@@ -3446,7 +3446,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool UnitsSpecified
         {
@@ -3510,7 +3510,7 @@ namespace LTWeb
             this.needRealtorField = YesNoType.Y;
         }
 
-    
+
         public decimal RequestedLoanAmount
         {
             get
@@ -3524,7 +3524,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool RequestedLoanAmountSpecified
         {
@@ -3539,7 +3539,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal PropertyPurchasePrice
         {
             get
@@ -3553,7 +3553,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType FirstTimeHomeBuyer
         {
             get
@@ -3567,7 +3567,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool FirstTimeHomeBuyerSpecified
         {
@@ -3582,7 +3582,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType FoundAHome
         {
             get
@@ -3596,7 +3596,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType SignedSalesContract
         {
             get
@@ -3610,7 +3610,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool SignedSalesContractSpecified
         {
@@ -3625,7 +3625,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public YesNoType NeedRealtor
         {
             get
@@ -3639,7 +3639,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public decimal DownPayment
         {
             get
@@ -3653,7 +3653,7 @@ namespace LTWeb
             }
         }
 
-    
+
         [System.Xml.Serialization.XmlArrayItemAttribute("Product", IsNullable = false)]
         public ProductType[] RequestedProducts
         {
@@ -3668,7 +3668,7 @@ namespace LTWeb
             }
         }
 
-    
+
         public PurchaseSubjectPropertyType SubjectProperty
         {
             get
@@ -3705,7 +3705,7 @@ namespace LTWeb
 
         private object itemField;
 
-    
+
         [System.Xml.Serialization.XmlElementAttribute("HomeEquity", typeof(HomeEquityType))]
         [System.Xml.Serialization.XmlElementAttribute("Purchase", typeof(PurchaseType))]
         [System.Xml.Serialization.XmlElementAttribute("Refinance", typeof(RefinanceType))]

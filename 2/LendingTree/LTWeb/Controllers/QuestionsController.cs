@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Web.Mvc;
 using LTWeb.Models;
 using LTWeb.Service;
@@ -25,7 +26,7 @@ namespace LTWeb.Controllers
 
             Questions.AdjustQuestion(question, LendingTreeModel);
             Questions.SetQuestionAnswer(question, LendingTreeModel);
- 
+
             if (test)
                 return View(question);
 
@@ -48,7 +49,7 @@ namespace LTWeb.Controllers
             //
 
             bool shouldMapProperties = questionKey != null && (questionKey[0] == "LoanType" || LendingTreeModel.IsLoanTypeSet());
-            
+
             if (shouldMapProperties)
             {
                 foreach (string propertyName in questionKey)
@@ -77,8 +78,11 @@ namespace LTWeb.Controllers
                 // submit to LendingTree & save to db
                 //
 
+                var service = new LendingTreeService();
+                var result = service.Send(LendingTreeModel);
+
                 // TODO: return THANK YOU
-                return Content("no more questions");
+                return Content("send result is " + result.IsSuccess.ToString());
             }
             else
             {
@@ -107,6 +111,7 @@ namespace LTWeb.Controllers
             return Content("not implemented yet");
         }
 
-        ILendingTreeModel LendingTreeModel { get { return LTWeb.Session.LTModel; } }
+        ILendingTreeModel LendingTreeModel { get { return _LendingTreeModel.Value; } }
+        Lazy<ILendingTreeModel> _LendingTreeModel = new Lazy<ILendingTreeModel>(() => LTWeb.Session.LTModel);
     }
 }
