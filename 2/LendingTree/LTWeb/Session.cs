@@ -18,7 +18,7 @@ namespace LTWeb
         {
             get
             {
-                return SessionUility.GetOrCreate<ILendingTreeModel>(SessionKeys.LTModel, () => new LendingTreeModel("Test"));
+                return SessionUility.GetOrCreate<ILendingTreeModel>(SessionKeys.LTModel, () => new LendingTreeModel(AppSettings.LendingTreeServiceConfig));
             }
         }
 
