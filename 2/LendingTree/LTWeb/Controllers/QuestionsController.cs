@@ -10,7 +10,7 @@ namespace LTWeb.Controllers
     {
         public ActionResult Show(int q = 0, bool test = false)
         {
-            if (q > 0 && !LendingTreeModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
+            if (q != 0 && !LendingTreeModel.IsLoanTypeSet()) // if trying to skip ahead or lost session
             {
                 if (!Request.IsAjaxRequest())
                 {
@@ -22,6 +22,10 @@ namespace LTWeb.Controllers
                 q = 0; // for ajax requests: return the first question
             }
             var questions = Questions.GetQuestionVMs();
+            if (questions.Length == 0 || q < 0 || q > questions.Length - 1)
+            {
+                return Content("Error getting question");
+            }
             var question = questions[q];
 
             Questions.AdjustQuestion(question, LendingTreeModel);
@@ -73,7 +77,7 @@ namespace LTWeb.Controllers
 
             var nextQuestionVM = Questions.GetNextQuestionVM(questionKey, LendingTreeModel);
 
-            if (nextQuestionVM == null)
+            if (nextQuestionVM == null || nextQuestionVM.Key == "Complete")
             {
                 // submit to LendingTree & save to db
                 //
@@ -81,13 +85,21 @@ namespace LTWeb.Controllers
                 var service = new LendingTreeService();
                 var result = service.Send(LendingTreeModel);
 
-                // TODO: return THANK YOU
-                return Content("send result is " + result.IsSuccess.ToString());
+                // TODO: handle errors
+                //return Content("send result is " + result.IsSuccess.ToString());
+                return PartialView("FormFields", nextQuestionVM);
             }
             else
             {
                 Questions.SetQuestionAnswer(nextQuestionVM, LendingTreeModel);
+            }
 
+            if (nextQuestionVM == null)
+            {
+                return Content("Error getting next question");
+            }
+            else
+            {
                 if (Request.IsAjaxRequest())
                 {
                     // there is a nextQuestion

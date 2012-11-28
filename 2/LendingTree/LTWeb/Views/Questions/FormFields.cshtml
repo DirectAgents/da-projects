@@ -25,8 +25,11 @@
                         <span class="green">@Model.Supertext</span><br /><br />
                     }
                     <div style="margin-bottom: 18px; margin-left: 80px; width: 300px;">
-                        @Html.Partial("ShowInner")
-                        @{
+                        @if (Model.Key == "Complete") {
+                            <p>@Model.Text</p>
+                        } else {
+                            Html.RenderPartial("ShowInner");
+
                             LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
                             while (subquestion != null)
                             {
@@ -37,16 +40,23 @@
                         }
                     </div>
                 </div>
+                if (Model.Key != "Complete")
+                {
                 <div>
                     <div style="width: 400px; margin-right: 100px">
                         <div style="float: left; margin-top: 20px;">
                             <div class="@(Model.QuestionIndex == 0 ? "security" : "security2")"></div>
                         </div>
                         <div style="float: left;">
-                            <input type="submit" onclick="Save(); return false" value="" id="ContentPlaceHolder1_GetQuoteNow1_Button1" class="@(Model.QuestionIndex == 0 ? "btnPage1" : "btnPage2")" />
+                            <input type="submit" onclick="Save(); return false" value="" id="SaveButton" class="@(Model.QuestionIndex == 0 ? "btnPage1" : Model.Key == "SSN" ? "btnPage3" : "btnPage2")" />
                         </div>
                     </div>
+                    @if (Model.Key == "SSN")
+                    {
+                        Html.RenderPartial("TermsConsent");
+                    }
                 </div>
+                }
                 }
             </div>
         </div>
@@ -59,6 +69,8 @@
 
 @section Scripts {
 <script type="text/javascript">
+
+var processing = false;
 
 (function(window,undefined){
     InitializeProgressbar(@Model.Progress); //after full page load

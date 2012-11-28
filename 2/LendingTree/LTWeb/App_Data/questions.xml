@@ -251,4 +251,5 @@
   <question key="SSN" text="Social Security Number:" answertype="3part" subtext="(optional)" supertext="NOT REQUIRED, but providing this final detail could help you save!"
             dependencykey="SsnRequired" dependencyvalue="False" />
   <question key="SSN" text="Social Security Number:" answertype="3part" dependencykey="SsnRequired" dependencyvalue="True" />
+  <question key="Complete" text="Your information has been received. A LendingTree representative will be in contact with you shortly." answertype="" />
 </data>
