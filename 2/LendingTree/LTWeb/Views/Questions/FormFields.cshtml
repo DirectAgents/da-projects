@@ -18,45 +18,55 @@
             <div id="form_inner_1step">
                 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = LTWeb.Settings.QuestionsFormId }))
                 {
-                <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
-                <div style="width:380px">
-                    @if (!string.IsNullOrWhiteSpace(Model.Supertext))
-                    {
-                        <span class="green">@Model.Supertext</span><br /><br />
-                    }
-                    <div>
-                        @Html.Partial("ShowInner")
-                        @{
-                            LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
-                            while (subquestion != null)
-                            {
-                                <br />
-                                <br />                          
-                                @Html.Partial("ShowInner", subquestion)
-                                subquestion = subquestion.SamePageQuestion;
-                            }
+                    <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
+                    <div style="width:380px">
+                        @if (!string.IsNullOrWhiteSpace(Model.Supertext))
+                        {
+                            <span class="green">@Model.Supertext</span><br /><br />
                         }
-                    </div>
-                </div>
-                <br />
-                <br /> 
-                <br />                                               
-                <div>
-                    <div style="float: left; width: 400px; margin-right: 100px">
-                        @*-------------*@
-                        @*     LOCK    *@
-                        @*-------------*@
-                        <div style="float: left; width: @(Model.IsFirstQuestion ? "30px" : "80px"); display: inline; margin-top: 20px;">
-                            <div class="@(Model.IsFirstQuestion ? "security" : "security2")"></div>
-                        </div>
-                        @*-------------*@
-                        @*SUBMIT BUTTON*@
-                        @*-------------*@
-                        <div style="float: left; width: 201px">
-                            <input type="submit" onclick="Save(); return false" value="" id="ContentPlaceHolder1_GetQuoteNow1_Button1" class="@(Model.IsFirstQuestion ? "btnPage1" : "btnPage2")" />
+                        <div>
+                            @if (Model.Key == "Complete") {
+                                <p>@Model.Text</p>
+                            } else {
+                                Html.RenderPartial("ShowInner");
+                                LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
+                                while (subquestion != null)
+                                {
+                                    <br />
+                                    <br />     
+                                    <br />                                                                               
+                                    @Html.Partial("ShowInner", subquestion)
+                                    subquestion = subquestion.SamePageQuestion;
+                                }
+                            }
                         </div>
                     </div>
-                </div>
+                    <br />
+                    <br /> 
+                    <br />                                               
+                    if (Model.Key != "Complete")
+                    {
+                        <div>
+                            <div style="float: left; width: 400px; margin-right: 100px">
+                                @*-------------*@
+                                @*     LOCK    *@
+                                @*-------------*@
+                                <div style="float: left; width: @(Model.IsFirstQuestion ? "30px" : "80px"); display: inline; margin-top: 20px;">
+                                    <div class="@(Model.IsFirstQuestion ? "security" : "security2")"></div>
+                                </div>
+                                @*-------------*@
+                                @*SUBMIT BUTTON*@
+                                @*-------------*@
+                                <div style="float: left; width: 201px">
+                                    <input type="submit" onclick="Save(); return false" value="" id="SaveButton" class="@(Model.IsFirstQuestion ? "btnPage1" : Model.Key == "SSN" ? "btnPage3" : "btnPage2")" />
+                                </div>
+                            </div>
+                            @if (Model.Key == "SSN")
+                            {
+                                Html.RenderPartial("TermsConsent");
+                            }
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -69,6 +79,8 @@
 
 @section Scripts {
 <script type="text/javascript">
+
+var processing = false;
 
 (function(window,undefined){
     InitializeProgressbar(@Model.Progress); //after full page load

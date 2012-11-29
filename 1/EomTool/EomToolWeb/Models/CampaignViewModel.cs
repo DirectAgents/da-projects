@@ -81,18 +81,7 @@ namespace EomToolWeb.Models
 
         public string PayableAction { get { return campaign.PayableAction ?? string.Empty; } }
 
-        public string Link
-        {
-            get
-            {
-                string link = campaign.Link;
-                if(link.Contains('?'))
-                    return link.Substring(0, link.IndexOf('?'));
-                else
-                    return link;
-            }
-        }
-
+        public string Link { get { return campaign.Link; } }
 
         public string CostCurrency { get { return campaign.CostCurrency; } }
         public decimal Cost { get { return campaign.Cost; } }

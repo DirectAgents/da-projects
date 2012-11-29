@@ -12,17 +12,18 @@ namespace LTWeb.Controllers
             return RedirectToAction("Show", "Questions");
         }
 
-        void PrepareLendingTreeModelForNewSession(ILendingTreeModel lendingTreeModel, int? mode)
+        public static void PrepareLendingTreeModelForNewSession(ILendingTreeModel lendingTreeModel, int? mode)
         {
             if (mode != null)
             {
                 lendingTreeModel.SsnRequired = (mode == AppSettings.SsnRequiredModeValue);
             }
-            lendingTreeModel.VisitorIPAddress = Request.UserHostAddress;
+            lendingTreeModel.VisitorIPAddress = System.Web.HttpContext.Current.Request.UserHostAddress;
             lendingTreeModel.VisitorURL = AppSettings.VisitorUrl;
 
             // TODO!!!: add DOB question
             lendingTreeModel.DOB = "10/10/1960";
         }
+
     }
 }

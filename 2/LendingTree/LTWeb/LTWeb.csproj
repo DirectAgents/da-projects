@@ -162,10 +162,13 @@
     <Content Include="Content\images\bg-repeat.jpg" />
     <Content Include="Content\images\btn-continue.jpg" />
     <Content Include="Content\images\btn-getquotes.jpg" />
+    <Content Include="Content\images\btn-processing.jpg" />
+    <Content Include="Content\images\btn-showresults.jpg" />
     <Content Include="Content\images\graphic-review.gif" />
     <Content Include="Content\images\house-logo.gif" />
     <Content Include="Content\images\icon-lock.png" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\privacy-security-logo.gif" />
     <Content Include="Content\images\siteseal_gd_3_h_d_m.gif" />
     <Content Include="Content\images\x.gif" />
     <Content Include="Content\style.css" />
@@ -352,6 +355,7 @@
     <Content Include="Scripts\validation-engine\test\NanoHTTPD%24HTTPSession.class" />
     <Content Include="Scripts\validation-engine\test\NanoHTTPD%24Response.class" />
     <Content Include="Scripts\validation-engine\test\NanoHTTPD.class" />
+    <Content Include="Views\Questions\TermsConsent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LTWeb.Common\LTWeb.Common.csproj">
