@@ -20,10 +20,6 @@ namespace LTWeb.Controllers
             }
             lendingTreeModel.VisitorIPAddress = System.Web.HttpContext.Current.Request.UserHostAddress;
             lendingTreeModel.VisitorURL = AppSettings.VisitorUrl;
-
-            // TODO!!!: add DOB question
-            lendingTreeModel.DOB = "10/10/1960";
         }
-
     }
 }

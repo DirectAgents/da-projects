@@ -243,15 +243,20 @@
   <question key="FirstName" text="First Name:" answertype="name">
     <question key="LastName" text="Last Name:" answertype="name" />
   </question>
-  <question key="Address" text="Street Address:" answertype="freeform" />
-  <question key="ApplicantZipCode" text="Zip Code:" answertype="freeform" />
+  <question key="Address" text="Street Address:" subtext="(applicant's address)" answertype="freeform" />
+  <question key="ApplicantZipCode" text="Zip Code:" subtext="(applicant's zipcode)" answertype="zipcode" />
   <question key="Email" text="Email:" answertype="email">
     <question key="DOB" text="Date of Birth:" answertype="birthday" />
   </question>
-  <question key="HomePhone" text="Home Phone:" answertype="freeform" />
-  <question key="WorkPhone" text="Work Phone:" answertype="freeform" />
-  <question key="SSN" text="Social Security Number:" answertype="3part" subtext="(optional)" supertext="NOT REQUIRED, but providing this final detail could help you save!"
-            dependencykey="SsnRequired" dependencyvalue="False" />
-  <question key="SSN" text="Social Security Number:" answertype="3part" dependencykey="SsnRequired" dependencyvalue="True" />
+  <question key="HomePhone" text="Home Phone:" answertype="phone" />
+  <question key="WorkPhone" text="Work Phone:" answertype="phone" />
+  <question key="SSN" text="Social Security Number:" answertype="ssn" 
+            subtext="(optional)" 
+            supertext="NOT REQUIRED, but providing this final detail could help you save!"
+            dependencykey="SsnRequired" 
+            dependencyvalue="False" />
+  <question key="SSN" text="Social Security Number:" answertype="ssn"
+            dependencykey="SsnRequired" 
+            dependencyvalue="True" />
   <question key="Complete" text="Your information has been received. A LendingTree representative will be in contact with you shortly." answertype="" />
 </data>

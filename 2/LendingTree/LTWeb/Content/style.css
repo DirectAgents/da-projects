@@ -395,10 +395,12 @@ input[type=radio], input.radio
 .accept-detail-panel li
 {
     margin: 5px 0px 7px;
+    font-size: smaller;
 }
 .read-detail .small-caption
 {
     margin-top: 10px;
+    font-size: smaller;
 }
 #footer-wrapper
 {

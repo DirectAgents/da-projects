@@ -27,14 +27,14 @@ function Save() {
         alert('already submitted');
         return;
     }
-    if ($('input[name="QuestionKey"]').val() == 'SSN') {
-        processing = true;
-        $('#SaveButton').css('background-image', "url('../../Content/images/btn-processing.jpg')");
-        // change button to "processing" & disable clicking again
-        // todo? server side check for already submitted LTModel...
-    }
     var form = $('#questionForm');
     if (form.validationEngine('validate')) {
+        if ($('input[name="QuestionKey"]').val() == 'SSN') {
+            processing = true;
+            $('#SaveButton').css('background-image', "url('../../Content/images/btn-processing.jpg')");
+            // change button to "processing" & disable clicking again
+            // todo? server side check for already submitted LTModel...
+        }
         $('#form-fields').load(form.attr('action'), form.serialize(), function () {
             SetState();
         });

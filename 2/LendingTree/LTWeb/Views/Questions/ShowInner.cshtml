@@ -7,7 +7,7 @@
     }
 }
 <input type="hidden" name="QuestionKey" value="@Model.Key" />
-<div style="float: left; width: 150px; text-align: @( Model.Text.EndsWith(":") ? "right" : "left" )">@Model.Text</div>
+<div style="float: left; width: 150px; text-align: @( Model.Text.EndsWith(":") ? "right" : "left" ); margin-top: 2px">@Model.Text</div>
 <div style="float: right; width: 220px; margin-left: 10px">
 @switch (Model.AnswerType)
 {
@@ -35,10 +35,16 @@
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[birthday]]" data-prompt-position="@promptPosition" />
         break;
     case "email":
-        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[email]]" data-prompt-position="@promptPosition" />
         break;
     case "name":
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
+        break;
+    case "phone":
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[phone]]" data-prompt-position="@promptPosition" />
+        break;
+    case "ssn":
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[ssnumber]]" data-prompt-position="@promptPosition" />
         break;
     default:
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
