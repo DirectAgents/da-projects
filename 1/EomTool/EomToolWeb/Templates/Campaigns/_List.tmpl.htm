@@ -14,7 +14,7 @@
             <dt>Link:</dt>
             <dd><a href="${Link}" target="_blank">${Link}</a></dd>
             <dt>Payout:</dt>
-            <dd>${CostCurrency}${Cost}</dd>
+            <dd># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { #${CostCurrency}${Cost}# } } #</dd>
             <dt>Restrictions:</dt>
             <dd style="overflow: auto">#= RestrictionsHtml #</dd>
             <dt>Wiki Details:</dt>
@@ -22,7 +22,7 @@
             <dt>Budget:</dt>
             <dd>${Budget}</dd>
             <dt>Payout to DA:</dt>
-            <dd>${RevenueCurrency}${Revenue}</dd>
+            <dd># if(RevenueIsPercentage){ #${Revenue}%# }else{ #${RevenueCurrency}${Revenue}# } #</dd>
             <dt>Passed Info:</dt>
             <dd>${PassedInfo}</dd>
             <dt>Lead Caps:</dt>

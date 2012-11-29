@@ -20,6 +20,8 @@ namespace DirectAgents.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Pid { get; set; }
 
+        public string DefaultPriceFormat { get; set; } // e.g. CPA, CPC, CPM, Fixed, RevShare
+
         public string Name { get; set; } // e.g. US - Casino Pack AT&T 3G/4G - Android Only
 
         public string Description { get; set; } //e.g. Fun and Easy to download Mobile Game
@@ -40,6 +42,8 @@ namespace DirectAgents.Domain.Entities
 
         [DisplayName("Revenue (Payout to Direct Agents)")]
         public decimal Revenue { get; set; } // e.g. 2.50
+
+        public bool RevenueIsPercentage { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string Restrictions { get; set; } // e.g. No search allowed
