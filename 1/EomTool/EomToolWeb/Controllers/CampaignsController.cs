@@ -130,9 +130,7 @@ namespace EomToolWeb.Controllers
 
         public ActionResult ListByCountry()
         {
-            var countryCodes = campaignRepository.AllCountryCodes;
-            ViewBag.CountryCodes = countryCodes.ToList();
-            var countries = campaignRepository.Countries.OrderByDescending(c => c.Campaigns.Count());
+            var countries = campaignRepository.CountriesWithActiveCampaigns.ToList().OrderByDescending(c => c.ActiveCampaigns.Count()).ThenBy(c => c.CountryCode).ToList();
             return View(countries);
         }
 

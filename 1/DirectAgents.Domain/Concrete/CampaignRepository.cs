@@ -32,6 +32,11 @@ namespace DirectAgents.Domain.Concrete
             get { return context.Countries; }
         }
 
+        public IQueryable<Country> CountriesWithActiveCampaigns
+        {
+            get { return context.Countries.Where(c => c.Campaigns.Any(camp => camp.StatusId != Status.Inactive)); }
+        }
+
         public IQueryable<string> AllCountryCodes
         {
             get { return context.Countries.Select(c => c.CountryCode); }
