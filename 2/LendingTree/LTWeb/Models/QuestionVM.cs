@@ -20,7 +20,19 @@ namespace LTWeb.Models
 
         public string Answer { get; set; }
 
-        public QuestionVM SamePageQuestion { get; set; }
+        public QuestionVM SamePageQuestion
+        {
+            get { return Child; }
+            set
+            {
+                value.Parent = this;
+                Child = value;
+            }
+        }
+        QuestionVM Parent { get; set; }
+        QuestionVM Child { get; set; }
+        public bool IsMultipleQuestions { get { return (Parent != null) || (Child != null); } }
+        public bool IsFirstQuestion { get { return (QuestionIndex == 0); } }
 
         public string DefaultValue { get; set; }
     }

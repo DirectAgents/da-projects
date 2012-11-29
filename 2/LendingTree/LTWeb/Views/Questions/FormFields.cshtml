@@ -6,15 +6,15 @@
         @if (LTWeb.Session.LTModel.SsnRequired) {
             <h3 class="ssnOptional">&nbsp;</h3>
         } else {
-            <h3 class="ssnOptional">No SSN Required</h3>
+            <h3 class="ssnOptional" style="margin-top: 0px">No SSN Required</h3>
         }
-        <div id="progressbarcontainer" style="margin-left:30px; margin-top:10px">
+        <div id="progressbarcontainer" style="margin-left: 30px; margin-top: 25px">
             <div style="float:left; color:black">Progress:&nbsp;</div>
             <div id="progressbar" style="width:270px; height:18px"></div>
         </div>
     </div>
     <div class="form-content png">
-        <div class="dropdown-item">
+        <div class="dropdown-item" style="margin-top: 30px">
             <div id="form_inner_1step">
                 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = LTWeb.Settings.QuestionsFormId }))
                 {
@@ -24,26 +24,36 @@
                     {
                         <span class="green">@Model.Supertext</span><br /><br />
                     }
-                    <div style="margin-bottom: 18px; margin-left: 80px; width: 300px;">
+                    <div>
                         @Html.Partial("ShowInner")
                         @{
                             LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
                             while (subquestion != null)
                             {
                                 <br />
+                                <br />                          
                                 @Html.Partial("ShowInner", subquestion)
                                 subquestion = subquestion.SamePageQuestion;
                             }
                         }
                     </div>
                 </div>
+                <br />
+                <br /> 
+                <br />                                               
                 <div>
-                    <div style="width: 400px; margin-right: 100px">
-                        <div style="float: left; margin-top: 20px;">
-                            <div class="@(Model.QuestionIndex == 0 ? "security" : "security2")"></div>
+                    <div style="float: left; width: 400px; margin-right: 100px">
+                        @*-------------*@
+                        @*     LOCK    *@
+                        @*-------------*@
+                        <div style="float: left; width: @(Model.IsFirstQuestion ? "30px" : "80px"); display: inline; margin-top: 20px;">
+                            <div class="@(Model.IsFirstQuestion ? "security" : "security2")"></div>
                         </div>
-                        <div style="float: left;">
-                            <input type="submit" onclick="Save(); return false" value="" id="ContentPlaceHolder1_GetQuoteNow1_Button1" class="@(Model.QuestionIndex == 0 ? "btnPage1" : "btnPage2")" />
+                        @*-------------*@
+                        @*SUBMIT BUTTON*@
+                        @*-------------*@
+                        <div style="float: left; width: 201px">
+                            <input type="submit" onclick="Save(); return false" value="" id="ContentPlaceHolder1_GetQuoteNow1_Button1" class="@(Model.IsFirstQuestion ? "btnPage1" : "btnPage2")" />
                         </div>
                     </div>
                 </div>

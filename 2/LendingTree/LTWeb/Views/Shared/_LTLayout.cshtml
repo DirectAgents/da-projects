@@ -22,45 +22,34 @@
                         and Save Money Now!</h2>
                 </div>
                 <div id="page1RailRates" class="stroke">
-                    <h2>
-                        Refinance Rates From</h2>
+                    <h2>Refinance Rates From</h2>
                     <div class="rate">
-                        @LTWeb.Session.Admin["Rate1"]
+                        @LTWeb.Session.Admin["Rate1"]%
                         <br />   
-                        (@LTWeb.Session.Admin["Rate2"] APR)*</div>
-                    <h2>
-                        Affordable Mortgage Payments</h2>
-                    <div class="smallLabel">
-                        Example payments are for a 5/1 ARM rates subject</div>
+                        (@LTWeb.Session.Admin["Rate2"]% APR)*</div>
+                    <h2>Affordable Mortgage Payments</h2>
+                    <div class="smallLabel">Example payments are for a 5/1 ARM rates subject</div>
                 </div>
                 <div id="payments">
-                    <h2 class="green">
-                        $200,000 mortgage for $817/mo.
-                    </h2>
-                    <h2 class="green">
-                        $300,000 mortgage for $1,205/mo.
-                    </h2>
-                    <h2 class="green">
-                        $400,000 mortgage for $1,607/mo.
-                    </h2>
+                    <h2 class="green">$200,000 mortgage for $817/mo.</h2>
+                    <h2 class="green">$300,000 mortgage for $1,205/mo.</h2>
+                    <h2 class="green">$400,000 mortgage for $1,607/mo.</h2>
                     <div class="disclosure">
                         <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/advertising-disclosures-offers?disclosures=00018,00031,00065,00021')">
-                            Full Advertising Disclosures</a>
+                            Full Advertising Disclosures
+                        </a>
                     </div>
                 </div>
             </div>
             <div id="form-fields" class="form-fields">
                 @RenderBody()
             </div>
-            <!--form fields-->
             <div class="clear">
             </div>
         </div>
-        <div class="clear">
-            &nbsp;</div>
+        <div class="clear">&nbsp;</div>
         <div id="reviewContainer">
-            <h2>
-                Quick and easy</h2>
+            <h2>Quick and easy</h2>
             Nina and Melissa helped to make the entire refinancing process quick and easy. The
             rate, fees and costs were all competitive, but it was the top notch service that
             will have me recommending Lending Tree to my friends and coming back if ever I need
@@ -104,14 +93,13 @@
         </div>
         <!--End .website-wrapper-->
     </div>
-
     @Scripts.Render(
                 "~/bundles/jquery", 
                 "~/bundles/jqueryui", 
                 "~/Scripts/jquery.history.js", 
                 "~/bundles/validation", 
                 "~/Scripts/lt-script.js")
-    @Styles.Render("~/Scripts/validation-engine/css/validationEngine.jquery.css");
+    @Styles.Render("~/Scripts/validation-engine/css/validationEngine.jquery.css")
     @RenderSection("scripts", required: false)
 </body>
 </html>

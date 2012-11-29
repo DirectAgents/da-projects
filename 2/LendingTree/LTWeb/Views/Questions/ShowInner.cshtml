@@ -1,12 +1,18 @@
 ﻿@model LTWeb.Models.QuestionVM
-
-@Model.Text<br />
+@{
+    string promptPosition = Model.IsMultipleQuestions ? "centerRight:0,-9" : "bottomLeft";
+    if (!Model.IsMultipleQuestions && !string.IsNullOrWhiteSpace(Model.Subtext))
+    {
+        promptPosition = "bottomRight";
+    }
+}
 <input type="hidden" name="QuestionKey" value="@Model.Key" />
-
+<div style="float: left; width: 150px; text-align: @( Model.Text.EndsWith(":") ? "right" : "left" )">@Model.Text</div>
+<div style="float: right; width: 220px; margin-left: 10px">
 @switch (Model.AnswerType)
 {
     case "dropdown":
-        <select name="@Model.Key" class="validate[required]" data-prompt-position="bottomRight">
+        <select name="@Model.Key" class="validate[required]" data-prompt-position="@promptPosition">
         @foreach (var option in Model.Options)
         {
             <option value="@option.Value" @( option.Value == Model.Answer ? "selected=\"selected\"" : "" )>@option.Text</option>
@@ -23,12 +29,22 @@
         <input name="@Model.Key" type="text" />
         break;
     case "zipcode":
-        <input name="@Model.Key" type="text" value="@Model.Answer" maxlength="5" class="validate[required,custom[zipcode]]" data-prompt-position="bottomLeft" />
+        <input name="@Model.Key" type="text" value="@Model.Answer" maxlength="5" class="validate[required,custom[zipcode]]" data-prompt-position="@promptPosition" />
+        break;
+    case "birthday":
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[birthday]]" data-prompt-position="@promptPosition" />
+        break;
+    case "email":
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
+        break;
+    case "name":
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
         break;
     default:
-        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="bottomLeft" />
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
         break;
 }
 @if (!string.IsNullOrWhiteSpace(Model.Subtext)) {
-    <br />@Model.Subtext
+    <br /><span style="font-size: smaller">@Model.Subtext</span>
 }
+</div>

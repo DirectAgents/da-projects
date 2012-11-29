@@ -93,6 +93,10 @@
                     "regex": /^\d{5}$/,
                     "alertText": "* Please enter a five digit zip code"
                 },
+                "birthday": {
+                    "regex": /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/,
+                    "alertText": "* Please enter MM/DD/YYYY"
+                },
                 "number": {
                     // Number, including positive, negative, and floating decimal. credit: orefalo
                     "regex": /^[\-\+]?((([0-9]{1,3})([,][0-9]{3})*)|([0-9]+))?([\.]([0-9]+))?$/,
