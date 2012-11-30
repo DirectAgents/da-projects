@@ -10,8 +10,17 @@ namespace LTWeb
     {
         public static void Reset()
         {
+            SessionUility.Clear(SessionKeys.SessionVars);
             SessionUility.Clear(SessionKeys.LTModel);
             SessionUility.Clear(SessionKeys.Admin);
+        }
+
+        public static SessionVars SessionVars
+        {
+            get
+            {
+                return SessionUility.GetOrCreate<SessionVars>(SessionKeys.SessionVars, () => new SessionVars());
+            }
         }
 
         public static ILendingTreeModel LTModel
@@ -35,5 +44,10 @@ namespace LTWeb
                 });
             }
         }
+    }
+
+    public class SessionVars
+    {
+        public int HighestQuestionIndexDisplayed = 0;
     }
 }

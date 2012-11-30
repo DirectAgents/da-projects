@@ -7,24 +7,28 @@
 @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = "questionForm" }))
 {
     <input type="hidden" name="test" value="true" />
-    @Html.Partial("ShowInner")
-    LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
-    while (subquestion != null)
-    {
-        <br />
-        @Html.Partial("ShowInner", subquestion)
-        subquestion = subquestion.SamePageQuestion;
+    <div style="width:380px; border-width:2px; border-style:solid; overflow:hidden">
+    @{
+        Html.RenderPartial("ShowInner");
+        LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
+        while (subquestion != null)
+        {
+            <br />
+            Html.RenderPartial("ShowInner", subquestion);
+            subquestion = subquestion.SamePageQuestion;
+        }
     }
-    <br />
-    <input type="submit" value="Submit form (no javascript)" />
+        <br style="clear:both" />
+        <input type="submit" value="Submit (no javascript)" />
+    </div>
 }
 
 <br />
-<input type="button" value="Save" onclick="Save()" />
-@Html.ActionLink("Next", "Show", new { q = Model.QuestionIndex + 1, test = true })
+<input type="button" value="Save (ajax)" onclick="Save()" />
 
 <br /><br />
-@Html.ActionLink("Question 19", "Show", new { q = 19, test = true })
+@Html.ActionLink("Next Question", "Show", new { q = Model.QuestionIndex + 1, test = true })
+| @Html.ActionLink("Question 19", "Show", new { q = 19, test = true })
 
 <br /><br />
 <pre>@LTWeb.Session.LTModel.GetXMLForPost())</pre>

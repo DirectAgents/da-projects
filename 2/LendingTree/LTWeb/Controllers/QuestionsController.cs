@@ -22,10 +22,14 @@ namespace LTWeb.Controllers
                 q = 0; // for ajax requests: return the first question
             }
             var questions = Questions.GetQuestionVMs();
-            if (questions.Length == 0 || q < 0 || q > questions.Length - 1)
+            if (questions == null || questions.Length == 0)
             {
-                return Content("Error getting question");
+                return Content("Error getting questions");
             }
+            if (q > SessionVars.HighestQuestionIndexDisplayed && !test) q = SessionVars.HighestQuestionIndexDisplayed;
+            if (q < 0) q = 0;
+            if (q > questions.Length - 1) q = questions.Length - 1; // last question ("complete")
+
             var question = questions[q];
 
             Questions.AdjustQuestion(question, LendingTreeModel);
@@ -76,6 +80,8 @@ namespace LTWeb.Controllers
             //
 
             var nextQuestionVM = Questions.GetNextQuestionVM(questionKey, LendingTreeModel);
+            if (nextQuestionVM != null && nextQuestionVM.QuestionIndex > SessionVars.HighestQuestionIndexDisplayed)
+                SessionVars.HighestQuestionIndexDisplayed = nextQuestionVM.QuestionIndex;
 
             if (nextQuestionVM == null || nextQuestionVM.Key == "Complete")
             {
@@ -96,34 +102,25 @@ namespace LTWeb.Controllers
                 Questions.SetQuestionAnswer(nextQuestionVM, LendingTreeModel);
             }
 
-            if (nextQuestionVM == null)
+            // nextQuestionVM is not null at this point
+            if (Request.IsAjaxRequest())
             {
-                return Content("Error getting next question");
+                if (test)
+                    return null;
+                else
+                    return PartialView("FormFields", nextQuestionVM);
             }
-            else
+            else // non-ajax
             {
-                if (Request.IsAjaxRequest())
-                {
-                    // there is a nextQuestion
-                    if (test)
-                        return null;
-                    else
-                        return PartialView("FormFields", nextQuestionVM);
-                }
-                else // non-ajax && there is a nextQuestion
-                {
-                    if (test)
-                        return View("Show", nextQuestionVM);
-                    else
-                        return View("FormFields", nextQuestionVM);
-                }
+                if (test)
+                    return View("Show", nextQuestionVM);
+                else
+                    return View("FormFields", nextQuestionVM);
             }
         }
 
-        public ActionResult SaveAll()
-        {
-            return Content("not implemented yet");
-        }
+        SessionVars SessionVars { get { return _SessionVars.Value; } }
+        Lazy<SessionVars> _SessionVars = new Lazy<SessionVars>(() => LTWeb.Session.SessionVars);
 
         ILendingTreeModel LendingTreeModel { get { return _LendingTreeModel.Value; } }
         Lazy<ILendingTreeModel> _LendingTreeModel = new Lazy<ILendingTreeModel>(() => LTWeb.Session.LTModel);
