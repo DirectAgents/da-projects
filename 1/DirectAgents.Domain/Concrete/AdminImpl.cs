@@ -163,8 +163,13 @@ namespace DirectAgents.Domain.Concrete
             if (offer.DefaultPriceFormat == "RevShare")
                 campaign.Cost = offer.offer_contracts[0].payout.amount;
             else
-                campaign.Cost = decimal.Round(offer.offer_contracts[0].received.amount * (8m / 3m), 0) / 4; // hard coded to 2/3 revenue rounded to nearest $0.25
-
+            {   // compute cost as 2/3 of revenue
+                if (campaign.Revenue < .375m) // computed cost will be less than .25
+                    campaign.Cost = decimal.Round(campaign.Revenue * (40m / 3m), 0) / 20; // round to nearest 0.05
+                    //campaign.Cost = decimal.Round(campaign.Revenue * (2m / 3m), 2); // round to nearest 0.01
+                else
+                    campaign.Cost = decimal.Round(campaign.Revenue * (8m / 3m), 0) / 4; // round to nearest 0.25
+            }
             campaign.CostCurrency = offer.currency.currency_symbol;
             campaign.RevenueCurrency = offer.currency.currency_symbol;
         }
