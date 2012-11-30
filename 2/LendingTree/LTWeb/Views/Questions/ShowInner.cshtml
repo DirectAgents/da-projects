@@ -1,13 +1,33 @@
 ﻿@model LTWeb.Models.QuestionVM
-@{
-    string promptPosition = Model.IsMultipleQuestions ? "centerRight:0,-9" : "bottomLeft";
-    if (!Model.IsMultipleQuestions && !string.IsNullOrWhiteSpace(Model.Subtext))
+@*
+    Set prompt position for validation messages
+*@
+@{ 
+    string promptPosition;
+    if(Model.IsMultipleQuestions)
+    {
+        promptPosition = "centerRight:0,-9";
+    }
+    else if(string.IsNullOrWhiteSpace(Model.Subtext))
     {
         promptPosition = "bottomRight";
     }
+    else
+    {
+        promptPosition = "bottomLeft";
+    }
 }
+@* 
+    Each question renders hidden input "QuestionKey" which, on submit, map to "string[] questionKey" in the action method  
+*@
 <input type="hidden" name="QuestionKey" value="@Model.Key" />
+@*
+    Question
+*@
 <div style="float: left; width: 150px; text-align: @( Model.Text.EndsWith(":") ? "right" : "left" ); margin-top: 2px">@Model.Text</div>
+@* 
+    Answer
+*@
 <div style="float: right; width: 220px; margin-left: 10px">
 @switch (Model.AnswerType)
 {
@@ -50,6 +70,9 @@
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
         break;
 }
+@*
+    Question Subtext
+*@
 @if (!string.IsNullOrWhiteSpace(Model.Subtext)) {
     <br /><span style="font-size: smaller">@Model.Subtext</span>
 }

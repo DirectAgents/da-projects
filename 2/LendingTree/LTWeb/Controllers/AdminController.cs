@@ -7,20 +7,14 @@ namespace LTWeb.Controllers
 {
     public class AdminController : Controller
     {
-
-        string[] allowedHostAddresses = new string[]
+        bool IsAllowedAdminAccess
         {
-            "::1"
-        };
-
-        bool AllowedAdminAccess
-        {
-            get { return allowedHostAddresses.Contains(Request.UserHostAddress); }
+            get { return AppSettings.AdminIps.Contains(Request.UserHostAddress); }
         }
 
         public ActionResult Index()
         {
-            if (!AllowedAdminAccess)
+            if (!IsAllowedAdminAccess)
                 return RedirectToAction("Index", "Home");
 
             using (var repo = new Repository(new LTWebDataContext())) // TODO: dependency injection
@@ -37,7 +31,7 @@ namespace LTWeb.Controllers
         [HttpPost]
         public ActionResult Index(AdminVM model)
         {
-            if (!AllowedAdminAccess)
+            if (!IsAllowedAdminAccess)
                 return RedirectToAction("Index", "Home");
 
             using (var db = new LTWebDataContext()) // TODO: dependency injection

@@ -1,4 +1,5 @@
-﻿using System.Web.Configuration;
+﻿using System;
+using System.Web.Configuration;
 
 namespace LTWeb
 {
@@ -15,6 +16,8 @@ namespace LTWeb
 
         public static int SsnNotRequiredModeValue { get { return GetInt("Mode_SsnNotRequired"); } }
 
+        public static string[] AdminIps { get { return GetString("AdminIps").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries); } }
+
         #region Private Helpers
 
         static int GetInt(string name)
@@ -30,7 +33,7 @@ namespace LTWeb
         static string GetAppSetting(string name)
         {
             return WebConfigurationManager.AppSettings[name];
-        } 
+        }
 
         #endregion
     }
