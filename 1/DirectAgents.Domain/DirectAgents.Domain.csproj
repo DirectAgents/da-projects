@@ -121,6 +121,10 @@
     <Compile Include="Migrations\201210172102104_RmMonthlySummaries.Designer.cs">
       <DependentUpon>201210172102104_RmMonthlySummaries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201211291655140_RevShareStuff.cs" />
+    <Compile Include="Migrations\201211291655140_RevShareStuff.Designer.cs">
+      <DependentUpon>201211291655140_RevShareStuff.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -180,6 +184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201210172102104_RmMonthlySummaries.resx">
       <DependentUpon>201210172102104_RmMonthlySummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201211291655140_RevShareStuff.resx">
+      <DependentUpon>201211291655140_RevShareStuff.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

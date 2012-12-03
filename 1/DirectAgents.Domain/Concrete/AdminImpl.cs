@@ -152,13 +152,26 @@ namespace DirectAgents.Domain.Concrete
             campaign.ImageUrl = offer.offer_image_link;
             campaign.Description = string.IsNullOrWhiteSpace(offer.offer_description) ? "no description" : offer.offer_description;
             campaign.Link = offer.preview_link;
-            campaign.Cost = decimal.Round(offer.offer_contracts[0].received.amount * (8m / 3m), 0) / 4; // hard coded to 2/3 revenue rounded to nearest $0.25
-            campaign.Revenue = offer.offer_contracts[0].received.amount;
-            campaign.CostCurrency = offer.currency.currency_symbol;
-            campaign.RevenueCurrency = offer.currency.currency_symbol;
             campaign.Restrictions = offer.restrictions;
             campaign.Hidden = offer.hidden;
             campaign.StatusId = offer.StatusId;
+
+            campaign.DefaultPriceFormat = offer.DefaultPriceFormat;
+            campaign.RevenueIsPercentage = offer.offer_contracts[0].received.is_percentage;
+            campaign.Revenue = offer.offer_contracts[0].received.amount;
+
+            if (offer.DefaultPriceFormat == "RevShare")
+                campaign.Cost = offer.offer_contracts[0].payout.amount;
+            else
+            {   // compute cost as 2/3 of revenue
+                if (campaign.Revenue < .375m) // computed cost will be less than .25
+                    campaign.Cost = decimal.Round(campaign.Revenue * (40m / 3m), 0) / 20; // round to nearest 0.05
+                    //campaign.Cost = decimal.Round(campaign.Revenue * (2m / 3m), 2); // round to nearest 0.01
+                else
+                    campaign.Cost = decimal.Round(campaign.Revenue * (8m / 3m), 0) / 4; // round to nearest 0.25
+            }
+            campaign.CostCurrency = offer.currency.currency_symbol;
+            campaign.RevenueCurrency = offer.currency.currency_symbol;
         }
 
         private void UpdateVerticals(CakeStagingEntities cake)

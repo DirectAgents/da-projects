@@ -77,5 +77,14 @@ namespace LTWeb {
                 return ResourceManager.GetString("LTModel", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SessionVars.
+        /// </summary>
+        public static string SessionVars {
+            get {
+                return ResourceManager.GetString("SessionVars", resourceCulture);
+            }
+        }
     }
 }

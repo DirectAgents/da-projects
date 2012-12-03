@@ -13,7 +13,13 @@ Vertical: @Model.Vertical
 <br />
 Link:<a href="@Model.Link">@Model.Link</a>
 <br />
-Payout: @Model.CostCurrency@Model.Cost
+Payout:
+@if (Model.DefaultPriceFormat == "RevShare")
+{
+    @Model.Cost<text>%</text>
+} else {
+    @Model.CostCurrency@Model.Cost
+}
 <br />
 <b>Restrictions:</b>
 @if (!string.IsNullOrWhiteSpace(Model.Restrictions)) { <br />@MvcHtmlString.Create(Model.RestrictionsHtml) }
@@ -24,7 +30,13 @@ Payout: @Model.CostCurrency@Model.Cost
 }
 Budget: @Model.Budget
 <br />
-Payout to Direct Agents: @Model.RevenueCurrency@Model.Revenue
+Payout to Direct Agents:
+@if (Model.RevenueIsPercentage)
+{
+    @Model.Revenue<text>%</text>
+} else {
+    @Model.RevenueCurrency@Model.Revenue
+}
 <br />
 Passed Information: @Model.PassedInfo
 <br />
@@ -39,4 +51,6 @@ Countries: @Model.CountryCodes
 Status: @Model.Status
 <br />
 Hidden: @Model.Hidden
+<br />
+Default Price Format: @Model.DefaultPriceFormat
 <br />

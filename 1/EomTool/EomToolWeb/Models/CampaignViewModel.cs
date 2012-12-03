@@ -89,6 +89,8 @@ namespace EomToolWeb.Models
         public string RevenueCurrency { get { return campaign.RevenueCurrency; } }
         public decimal Revenue { get { return campaign.Revenue; } }
 
+        public bool RevenueIsPercentage { get { return campaign.RevenueIsPercentage; } }
+
         public string ImportantDetails { get { return campaign.ImportantDetails ?? string.Empty; } }
         public string ImportantDetailsHtml
         {
@@ -127,6 +129,8 @@ namespace EomToolWeb.Models
         public bool Hidden { get { return campaign.Hidden; } }
 
         public bool CPM { get { return campaign.Name.ToLower().Contains("cpm"); } }
+
+        public string DefaultPriceFormat { get { return campaign.DefaultPriceFormat; } }
 
         //TODO: Put in utility class
         private string MakeHtmlSafe(string text)

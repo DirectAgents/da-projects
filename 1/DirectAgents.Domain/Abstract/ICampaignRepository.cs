@@ -10,6 +10,7 @@ namespace DirectAgents.Domain.Abstract
         void SaveChanges();
         IQueryable<Campaign> Campaigns { get; }
         IQueryable<Country> Countries { get; }
+        IQueryable<Country> CountriesWithActiveCampaigns { get; }
         IQueryable<string> AllCountryCodes { get; }
         IQueryable<Vertical> Verticals { get; }
         IQueryable<TrafficType> TrafficTypes { get; }

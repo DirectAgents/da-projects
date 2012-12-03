@@ -123,4 +123,7 @@
   <data name="LTModel" xml:space="preserve">
     <value>LTModel</value>
   </data>
+  <data name="SessionVars" xml:space="preserve">
+    <value>SessionVars</value>
+  </data>
 </root>

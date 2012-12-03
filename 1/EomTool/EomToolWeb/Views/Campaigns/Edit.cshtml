@@ -37,6 +37,10 @@
     @Html.EditorFor(c => c.Cost)
 </p>
 <p>
+    @Html.LabelFor(c => c.DefaultPriceFormat)
+    @Html.EditorFor(c => c.DefaultPriceFormat)
+</p>
+<p>
     @Html.LabelFor(c => c.Restrictions)
     @Html.EditorFor(c => c.Restrictions)
 </p>
@@ -55,6 +59,10 @@
 <p>
     @Html.LabelFor(c => c.Revenue)
     @Html.EditorFor(c => c.Revenue)
+</p>
+<p>
+    @Html.LabelFor(c => c.RevenueIsPercentage)
+    @Html.EditorFor(c => c.RevenueIsPercentage)
 </p>
 <p>
     @Html.LabelFor(c => c.PassedInfo)

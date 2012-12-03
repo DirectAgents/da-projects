@@ -71,7 +71,12 @@
         var data = listView.dataSource.view();
         var selected = $.map(listView.select(), function(item) {
             var d = data[$(item).index()];
-            return '<b>' + d.Name + '</b><br />' + d.Description + '<br />Payable Action: ' + d.PayableAction + '<br />Traffic Type: ' + d.TrafficTypes + '<br />Link: <a href="' + d.Link + '">' + d.Link + '</a><br />Payout: ' + d.CostCurrency + d.Cost + '<br />';
+            var payout = "&nbsp;";
+            if (d.Cost > 0) {
+                if (d.DefaultPriceFormat == "RevShare") payout = payout + d.Cost + '%';
+                else payout = payout + d.CostCurrency + d.Cost;
+            }
+            return '<b>' + d.Name + '</b><br />' + d.Description + '<br />Payable Action: ' + d.PayableAction + '<br />Traffic Type: ' + d.TrafficTypes + '<br />Link: <a href="' + d.Link + '">' + d.Link + '</a><br />Payout:' + payout + '<br />';
         });
         if (selected.length > 0)
             afterSelectedText = "Campaign text copied";
