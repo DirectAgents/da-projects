@@ -18,6 +18,7 @@ namespace EomToolWeb.Controllers
             this.campaignRepository = campaignRepository;
         }
 
+        // non-Kendo
         public ActionResult List(string searchstring, string pid, string country, string vertical, string traffictype)
         {
             var viewModel = new CampaignsListViewModel();
@@ -95,6 +96,7 @@ namespace EomToolWeb.Controllers
             return Session["ListViewMode"] as ListViewMode;
         }
 
+        // for Kendo
         public ActionResult List2(string search, string pid, string country, string vertical, string traffictype, string mode)
         {
             if (!string.IsNullOrWhiteSpace(mode))
@@ -128,24 +130,54 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        public ActionResult ListByCountry()
+        private IEnumerable<SelectListItem> ExcludeSelectList(string[] excludeStrings)
         {
-            var countries = campaignRepository.CountriesWithActiveCampaigns.ToList().OrderByDescending(c => c.ActiveCampaigns.Count()).ThenBy(c => c.CountryCode).ToList();
-            return View(countries);
+            string[] excludes = new string[] { "PAUSED", "NOT LIVE YET", "CPM" };
+            IEnumerable<SelectListItem> selectList =
+                from e in excludes
+                select new SelectListItem
+                {
+                    Selected = excludeStrings.Contains(e),
+                    Text = e,
+                    Value = e
+                };
+            return selectList;
         }
 
+        public ActionResult ListByCountry(string[] exclude)
+        {
+            if (exclude == null) exclude = new string[] { };
+
+            var countries = campaignRepository.CountriesWithActiveCampaigns;
+            var model = countries.ToList();
+            foreach (var country in model)
+            {
+                var filteredCampaigns = country.ActiveCampaigns;
+                foreach (var excludeString in exclude)
+                {
+                    filteredCampaigns = filteredCampaigns.Where(c => !c.Name.Contains(excludeString));
+                }
+                country.Campaigns = filteredCampaigns.ToList();
+            }
+            model = model.OrderByDescending(c => c.Campaigns.Count()).ThenBy(c => c.CountryCode).ToList();
+            ViewBag.Exclude = ExcludeSelectList(exclude);
+            return View(model);
+        }
+
+        // old
         public ActionResult Search()
         {
             var countryCodes = campaignRepository.AllCountryCodes;
             return View(countryCodes);
         }
-
+        // old
         public ActionResult ShowCountries()
         {
             var countryCodes = campaignRepository.AllCountryCodes;
             return View(countryCodes);
         }
 
+        // non-Kendo
         public ActionResult Show(int pid)
         {
             var campaign = campaignRepository.FindById(pid);
@@ -156,6 +188,7 @@ namespace EomToolWeb.Controllers
             return PartialView(new CampaignViewModel(campaign));
         }
 
+        // non-Kendo
         [HttpGet]
         public ActionResult Edit(int pid)
         {
@@ -167,6 +200,7 @@ namespace EomToolWeb.Controllers
             return PartialView(campaign);
         }
 
+        // non-Kendo
         [HttpPost]
         public ActionResult Edit(Campaign campaign)
         {
@@ -187,6 +221,7 @@ namespace EomToolWeb.Controllers
                 return View(campaign);
         }
 
+        // for Kendo
         [HttpPost]
         public ActionResult Edit2(Campaign campaign)
         {

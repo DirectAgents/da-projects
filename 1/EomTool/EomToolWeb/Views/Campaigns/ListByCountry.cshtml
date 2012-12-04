@@ -10,12 +10,15 @@
 
 <div style="margin-left: 30px">
 
+    @Html.ListBox("Exclude")
+    <input type="button" value="Exclude Selected" onclick="ChangeFilter()" />
+
     <h2>Campaigns By Country</h2>
     <br />
     @{
         foreach (var country in Model.OrderBy(c => c.CountryCode))
         {
-            <a href="#@country.CountryCode"><b>@country.CountryCode</b>&nbsp;(@country.ActiveCampaigns.Count())</a>
+            <a href="#@country.CountryCode"><b>@country.CountryCode</b>&nbsp;(@country.Campaigns.Count())</a>
         }
     }
 
@@ -26,10 +29,31 @@
         <br />
         <h3>@Html.ActionLink(country.CountryCode, "List2", new { country = country.CountryCode }):</h3>
         <ol>
-        @foreach (var campaign in country.ActiveCampaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name))
-        {
-            <li>@Html.ActionLink(campaign.Name, "List2", new { pid = campaign.Pid })</li>
+        @{  // first show campaigns with 1 country, then with >1 (international)
+            foreach (var campaign in country.Campaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name))
+            {
+                <li>@Html.ActionLink(campaign.Name, "List2", new { pid = campaign.Pid })</li>
+            }
         }
         </ol>
     }
 </div>
+
+@section scripts {
+<script type="text/javascript">
+
+    function ChangeFilter() {
+        var url = '@Url.Action("ListByCountry")';
+        var excludes = $('#Exclude').val();
+        if (excludes != null) {
+            var connector = "?";
+            $.each(excludes, function (key, value) {
+                url = url + connector + "exclude=" + value;
+                connector = "&";
+            });
+        }
+        document.location.href = url;
+    }
+
+</script>
+}
