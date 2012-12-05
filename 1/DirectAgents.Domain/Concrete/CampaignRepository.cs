@@ -27,6 +27,19 @@ namespace DirectAgents.Domain.Concrete
             get { return context.Campaigns; }
         }
 
+        public IQueryable<Campaign> CampaignsExcluding(string[] exclude)
+        {
+            var campaigns = context.Campaigns.AsQueryable();
+            if (exclude != null)
+            {
+                foreach (string excludeString in exclude)
+                {
+                    campaigns = campaigns.Where(c => !c.Name.Contains(excludeString));
+                }
+            }
+            return campaigns;
+        }
+
         public IQueryable<Country> Countries
         {
             get { return context.Countries; }

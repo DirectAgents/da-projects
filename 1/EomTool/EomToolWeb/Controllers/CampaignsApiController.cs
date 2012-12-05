@@ -12,11 +12,9 @@ namespace EomToolWeb.Controllers
         private EFDbContext db = new EFDbContext();
         private IQueryable<Campaign> Campaigns(bool includeInactive)
         {
-            IQueryable<Campaign> campaigns = null;
-            if (includeInactive)
-                campaigns = db.Campaigns.AsQueryable();
-            else
-                campaigns = db.Campaigns.Where(c => c.StatusId != Status.Inactive);
+            IQueryable<Campaign> campaigns = db.Campaigns.AsQueryable();
+            if (!includeInactive)
+                campaigns = campaigns.Where(c => c.StatusId != Status.Inactive);
 
             var settings = SessionUtility.WikiSettings;
             foreach (var excludeString in settings.ExcludeStrings())

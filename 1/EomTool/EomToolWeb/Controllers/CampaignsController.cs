@@ -21,9 +21,10 @@ namespace EomToolWeb.Controllers
         // non-Kendo
         public ActionResult List(string searchstring, string pid, string country, string vertical, string traffictype)
         {
-            var viewModel = new CampaignsListViewModel();
-            var campaigns = campaignRepository.Campaigns.Where(c => c.StatusId != Status.Inactive);
+            string[] excludeStrings = WikiSettings.ExcludeStrings().ToArray();
+            var campaigns = campaignRepository.CampaignsExcluding(excludeStrings).Where(c => c.StatusId != Status.Inactive);
 
+            var viewModel = new CampaignsListViewModel();
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))
             {
@@ -130,37 +131,22 @@ namespace EomToolWeb.Controllers
             return View(viewModel);
         }
 
-        private IEnumerable<SelectListItem> ExcludeSelectList(string[] excludeStrings)
+        public ActionResult ListByCountry()
         {
-            string[] excludes = new string[] { "PAUSED", "NOT LIVE YET", "CPM" };
-            IEnumerable<SelectListItem> selectList =
-                from e in excludes
-                select new SelectListItem
-                {
-                    Selected = excludeStrings.Contains(e),
-                    Text = e,
-                    Value = e
-                };
-            return selectList;
-        }
-
-        public ActionResult ListByCountry(string[] exclude)
-        {
-            if (exclude == null) exclude = new string[] { };
+            var excludeStrings = WikiSettings.ExcludeStrings();
 
             var countries = campaignRepository.CountriesWithActiveCampaigns;
             var model = countries.ToList();
             foreach (var country in model)
             {
                 var filteredCampaigns = country.ActiveCampaigns;
-                foreach (var excludeString in exclude)
+                foreach (var excludeString in excludeStrings)
                 {
                     filteredCampaigns = filteredCampaigns.Where(c => !c.Name.Contains(excludeString));
                 }
                 country.Campaigns = filteredCampaigns.ToList();
             }
             model = model.Where(c => c.Campaigns.Count() > 0).OrderByDescending(c => c.Campaigns.Count()).ThenBy(c => c.CountryCode).ToList();
-            ViewBag.Exclude = ExcludeSelectList(exclude);
             return View(model);
         }
 
@@ -260,5 +246,8 @@ namespace EomToolWeb.Controllers
 
             return View(model);
         }
+
+        WikiSettings WikiSettings { get { return _WikiSettings.Value; } }
+        Lazy<WikiSettings> _WikiSettings = new Lazy<WikiSettings>(() => SessionUtility.WikiSettings);
     }
 }

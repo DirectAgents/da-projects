@@ -9,11 +9,15 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
         IQueryable<Campaign> Campaigns { get; }
+        IQueryable<Campaign> CampaignsExcluding(string[] exclude);
+
         IQueryable<Country> Countries { get; }
         IQueryable<Country> CountriesWithActiveCampaigns { get; }
         IQueryable<string> AllCountryCodes { get; }
+
         IQueryable<Vertical> Verticals { get; }
         IQueryable<TrafficType> TrafficTypes { get; }
+
         Campaign FindById(int pid);
         void SaveCampaign(Campaign campaign);
         IEnumerable<CampaignSummary> TopCampaigns(int num, TopCampaignsBy by, string trafficType);

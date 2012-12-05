@@ -59,6 +59,12 @@ namespace EomToolWeb
         //[DisplayName("Show Inactive")]
         //public bool ShowInactive;
 
+        public WikiSettings()
+        {
+            ShowNotLiveYet = true;
+            ShowPaused = true;
+        }
+
         public List<string> ExcludeStrings()
         {
             List<String> excludeStrings = new List<string>();

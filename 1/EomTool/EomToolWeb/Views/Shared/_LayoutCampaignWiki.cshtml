@@ -78,8 +78,8 @@
         function SaveWikiSettings() {
             var url = '@Url.Action("Settings", "Wiki")';
             $.post(url, $('#frmWikiSettings').serialize(), function (data) {
-                //TODO: Reload Campaigns
                 $('#divWikiSettings').dialog("close");
+                document.location.reload();
             });
         }
 
