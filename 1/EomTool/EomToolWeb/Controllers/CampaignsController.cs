@@ -159,7 +159,7 @@ namespace EomToolWeb.Controllers
                 }
                 country.Campaigns = filteredCampaigns.ToList();
             }
-            model = model.OrderByDescending(c => c.Campaigns.Count()).ThenBy(c => c.CountryCode).ToList();
+            model = model.Where(c => c.Campaigns.Count() > 0).OrderByDescending(c => c.Campaigns.Count()).ThenBy(c => c.CountryCode).ToList();
             ViewBag.Exclude = ExcludeSelectList(exclude);
             return View(model);
         }

@@ -10,17 +10,25 @@ namespace EomToolWeb.Controllers
     public class CampaignsApiController : ApiController
     {
         private EFDbContext db = new EFDbContext();
-        private IQueryable<Campaign> AllCampaigns(bool includeInactive)
+        private IQueryable<Campaign> Campaigns(bool includeInactive)
         {
+            IQueryable<Campaign> campaigns = null;
             if (includeInactive)
-                return db.Campaigns.AsQueryable();
+                campaigns = db.Campaigns.AsQueryable();
             else
-                return db.Campaigns.Where(c => c.StatusId != Status.Inactive);
+                campaigns = db.Campaigns.Where(c => c.StatusId != Status.Inactive);
+
+            var settings = SessionUtility.WikiSettings;
+            foreach (var excludeString in settings.ExcludeStrings())
+            {
+                campaigns = campaigns.Where(c => !c.Name.Contains(excludeString));
+            }
+            return campaigns;
         }
 
         public IQueryable<CampaignViewModel> Get()
         {
-            var query = AllCampaigns(false)
+            var query = Campaigns(false)
                           .OrderBy(c => c.Name)
                           .AsEnumerable()
                           .Select(c => new CampaignViewModel(c));
@@ -30,11 +38,11 @@ namespace EomToolWeb.Controllers
 
         public IQueryable<CampaignViewModel> Get(string vertical, string traffictype, string search, string country, int? pid)
         {
-            var campaigns = AllCampaigns(false);
+            var campaigns = Campaigns(false);
 
             if (pid != null)
             {
-                campaigns = AllCampaigns(true).Where(c => c.Pid == pid.Value);
+                campaigns = Campaigns(true).Where(c => c.Pid == pid.Value);
             }
 
             if (!string.IsNullOrWhiteSpace(vertical))

@@ -153,6 +153,7 @@
     <Compile Include="Controllers\VerticalsController.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controllers\WikiController.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -175,6 +176,7 @@
     <Compile Include="Models\TopViewModel.cs" />
     <Compile Include="Models\TrafficTypeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\KendoSkin.css" />
@@ -2652,6 +2654,7 @@
     <Content Include="Views\Campaigns\Filter.cshtml" />
     <Content Include="Views\Campaigns\Items.cshtml" />
     <Content Include="Views\Payouts\ChooseMonth.cshtml" />
+    <Content Include="Views\Wiki\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

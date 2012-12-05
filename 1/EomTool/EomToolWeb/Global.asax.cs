@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.SessionState;
 using EomToolWeb.Infrastructure;
 
 namespace EomToolWeb
@@ -15,6 +16,22 @@ namespace EomToolWeb
 
     public class MvcApplication : System.Web.HttpApplication
     {
+        private const string _WebApiPrefix = "api";
+        private static string _WebApiExecutionPath = String.Format("~/{0}", _WebApiPrefix);
+
+        protected void Application_PostAuthorizeRequest()
+        {
+            if (IsWebApiRequest())
+            {
+                HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
+            }
+        }
+
+        private static bool IsWebApiRequest()
+        {
+            return HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.StartsWith(_WebApiExecutionPath);
+        }
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();

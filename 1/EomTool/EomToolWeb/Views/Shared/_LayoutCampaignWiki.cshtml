@@ -48,8 +48,9 @@
             }
             @if (ViewBag.ShowCopy != null && ViewBag.ShowCopy)
             {
-            <li style="border-right: 0px"><a href="#" id="copy-campaign">Copy</a></li>
+            <li><a href="#" id="copy-campaign">Copy</a></li>
             }
+            <li style="border-right: 0px"><a href="#" onclick="ShowWikiSettings(); return false;">Settings</a></li>
         </ul>
     </div>
     <div id="body" style="position: absolute; top: 42px; overflow: auto">
@@ -57,8 +58,31 @@
             @RenderBody()
         </section>
     </div>
+
+    <div id="divWikiSettings" title="Wiki Settings">
+        <div id="divWikiSettingsInner">
+        </div>
+    </div>
+
     @RenderSection("scripts", required: false)
+
     <script type="text/javascript">
+
+        function ShowWikiSettings() {
+            $.get('@Url.Action("Settings", "Wiki")', function (data) {
+                $('#divWikiSettingsInner').html(data);
+                $('#divWikiSettings').dialog("open");
+            });
+        }
+
+        function SaveWikiSettings() {
+            var url = '@Url.Action("Settings", "Wiki")';
+            $.post(url, $('#frmWikiSettings').serialize(), function (data) {
+                //TODO: Reload Campaigns
+                $('#divWikiSettings').dialog("close");
+            });
+        }
+
         $(document).ready(function () {
             $("#menu").kendoMenu();
             $("img.campaign-image").hover(function () {
@@ -86,7 +110,20 @@
                     });
                 }
             });
-        });
+            $("#divWikiSettings").dialog({
+                autoOpen: false,
+                height: 500,
+                width: 500,
+                modal: true,
+                buttons: {
+                    Save: SaveWikiSettings,
+                    Cancel: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        }); // ready function
+
     </script>
 </body>
 </html>

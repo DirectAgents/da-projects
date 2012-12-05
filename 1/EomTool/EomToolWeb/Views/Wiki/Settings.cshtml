@@ -1,0 +1,15 @@
+﻿@model EomToolWeb.WikiSettings
+
+@using (Html.BeginForm("Settings", "Wiki", FormMethod.Post, new { id = "frmWikiSettings" }))
+{
+<fieldset>
+    <p>
+        @Html.LabelFor(m => m.ShowNotLiveYet)
+        @Html.EditorFor(m => m.ShowNotLiveYet)
+    </p>
+    <p>
+        @Html.LabelFor(m => m.ShowPaused)
+        @Html.EditorFor(m => m.ShowPaused)
+    </p>
+</fieldset>
+}
