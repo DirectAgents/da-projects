@@ -21,49 +21,40 @@ namespace EomToolWeb.Controllers
         // non-Kendo
         public ActionResult List(string searchstring, string country, string vertical, string traffictype, int? pid)
         {
-            string[] excludeStrings = WikiSettings.ExcludeStrings().ToArray();
-            var campaigns = campaignRepository.CampaignsExcluding(excludeStrings).Where(c => c.StatusId != Status.Inactive);
+            if (string.IsNullOrWhiteSpace(searchstring)) searchstring = null;
+            var viewModel = new CampaignsListViewModel
+            {
+                Pid = pid,
+                SearchString = searchstring
+            };
 
-            var viewModel = new CampaignsListViewModel();
+            IQueryable<Campaign> campaigns;
             if (pid != null)
             {
-                viewModel.Pid = pid;
                 campaigns = campaignRepository.Campaigns.Where(c => c.Pid == pid.Value);
-            }
-
-            if (!string.IsNullOrWhiteSpace(searchstring))
-            {
-                viewModel.SearchString = searchstring;
-                campaigns = campaigns.Where(c => c.Name.Contains(searchstring) || c.Description.Contains(searchstring));
-            }
-            if (!string.IsNullOrWhiteSpace(vertical))
-            {
-                viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
-                if (viewModel.Vertical != null)
-                    campaigns = campaigns.Where(c => c.Vertical.Name == vertical);
-            }
-            if (!string.IsNullOrWhiteSpace(traffictype))
-            {
-                viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
-                if (viewModel.TrafficType != null)
-                    campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
-            }
-
-            if (!string.IsNullOrWhiteSpace(country))
-            {
-                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
-            }
-            if (viewModel.Country != null)
-            {
-                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country))
-                    .OrderBy(c => c.Countries.Count() > 1)
-                    .ThenBy(c => c.Name);
             }
             else
             {
-                campaigns = campaigns.OrderBy(c => c.Name);
-            }
+                if (!string.IsNullOrWhiteSpace(country))
+                    viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+                if (viewModel.Country == null) country = null;
 
+                if (!string.IsNullOrWhiteSpace(vertical))
+                    viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
+                if (viewModel.Vertical == null) vertical = null;
+
+                if (!string.IsNullOrWhiteSpace(traffictype))
+                    viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+                if (viewModel.TrafficType == null) traffictype = null;
+
+                var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
+                campaigns = campaignRepository.CampaignsFiltered(false, excludeStrings, searchstring, country, vertical, traffictype);
+
+                if (viewModel.Country != null) // show campaigns for the specified country first, then multi-country campaigns
+                    campaigns = campaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name);
+                else
+                    campaigns = campaigns.OrderBy(c => c.Name);
+            }
             viewModel.Campaigns = campaigns.AsEnumerable();
             return View(viewModel);
         }

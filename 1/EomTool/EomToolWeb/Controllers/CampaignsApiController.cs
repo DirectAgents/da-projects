@@ -27,44 +27,25 @@ namespace EomToolWeb.Controllers
             return Get(null, null, null, null, null);
         }
 
-        public IQueryable<CampaignViewModel> Get(string vertical, string traffictype, string search, string country, int? pid)
+        public IQueryable<CampaignViewModel> Get(string search, string country, string vertical, string traffictype, int? pid)
         {
-            var excludeStrings = SessionUtility.WikiSettings.ExcludeStrings().ToArray();
-            var campaigns = campaignRepository.CampaignsExcluding(excludeStrings).Where(c => c.StatusId != Status.Inactive);
+            IQueryable<Campaign> campaigns;
 
             if (pid != null)
             {
                 campaigns = campaignRepository.Campaigns.Where(c => c.Pid == pid.Value);
             }
-
-            if (!string.IsNullOrWhiteSpace(vertical))
-            {
-                var cr = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
-                if (cr != null)
-                    campaigns = campaigns.Where(c => c.Vertical.Name == vertical);
-            }
-
-            if (!string.IsNullOrWhiteSpace(traffictype))
-            {
-                var tt = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
-                if (tt != null)
-                    campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
-            }
-
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                campaigns = campaigns.Where(c => c.Name.Contains(search) || c.Description.Contains(search));
-            }
-
-            if (!string.IsNullOrWhiteSpace(country))
-            {
-                campaigns = campaigns.Where(camp => camp.Countries.Select(c => c.CountryCode).Contains(country))
-                       .OrderBy(c => c.Countries.Count() > 1)
-                       .ThenBy(c => c.Name);
-            }
             else
             {
-                campaigns = campaigns.OrderBy(c => c.Name);
+                var excludeStrings = SessionUtility.WikiSettings.ExcludeStrings().ToArray();
+                campaigns = campaignRepository.CampaignsFiltered(false, excludeStrings, search, country, vertical, traffictype);
+
+                var isValidCountry = campaignRepository.Countries.Where(c => c.CountryCode == country).Any();
+
+                if (isValidCountry) // show campaigns for the specified country first, then multi-country campaigns
+                    campaigns = campaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name);
+                else
+                    campaigns = campaigns.OrderBy(c => c.Name);
             }
 
             var query = campaigns

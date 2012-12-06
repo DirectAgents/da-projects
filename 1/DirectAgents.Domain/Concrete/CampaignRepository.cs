@@ -27,15 +27,35 @@ namespace DirectAgents.Domain.Concrete
             get { return context.Campaigns; }
         }
 
-        public IQueryable<Campaign> CampaignsExcluding(string[] exclude)
+        public IQueryable<Campaign> CampaignsFiltered(bool includeInactive, string[] exclude, string search, string countrycode, string vertical, string traffictype)
         {
             var campaigns = context.Campaigns.AsQueryable();
+            if (!includeInactive)
+            {
+                campaigns = campaigns.Where(c => c.StatusId != Status.Inactive);
+            }
             if (exclude != null)
             {
                 foreach (string excludeString in exclude)
                 {
                     campaigns = campaigns.Where(c => !c.Name.Contains(excludeString));
                 }
+            }
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                campaigns = campaigns.Where(c => c.Name.Contains(search) || c.Description.Contains(search));
+            }
+            if (!string.IsNullOrWhiteSpace(countrycode))
+            {
+                campaigns = campaigns.Where(c => c.Countries.Select(country => country.CountryCode).Contains(countrycode));
+            }
+            if (!string.IsNullOrWhiteSpace(vertical))
+            {
+                campaigns = campaigns.Where(c => c.Vertical.Name == vertical);
+            }
+            if (!string.IsNullOrWhiteSpace(traffictype))
+            {
+                campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
             }
             return campaigns;
         }
