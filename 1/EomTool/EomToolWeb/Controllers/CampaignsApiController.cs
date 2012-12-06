@@ -27,6 +27,15 @@ namespace EomToolWeb.Controllers
             return Get(null, null, null, null, null);
         }
 
+        /// <summary>
+        /// Get
+        /// </summary>
+        /// <param name="search">a search string</param>
+        /// <param name="country">a country code</param>
+        /// <param name="vertical">a vertical</param>
+        /// <param name="traffictype">a traffic type</param>
+        /// <param name="pid">if specified, other parameters will be ignored</param>
+        /// <returns></returns>
         public IQueryable<CampaignViewModel> Get(string search, string country, string vertical, string traffictype, int? pid)
         {
             IQueryable<Campaign> campaigns;
@@ -37,8 +46,9 @@ namespace EomToolWeb.Controllers
             }
             else
             {
-                var excludeStrings = SessionUtility.WikiSettings.ExcludeStrings().ToArray();
-                campaigns = campaignRepository.CampaignsFiltered(false, excludeStrings, search, country, vertical, traffictype);
+                var settings = SessionUtility.WikiSettings;
+                var excludeStrings = settings.ExcludeStrings().ToArray();
+                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, search, country, vertical, traffictype, settings.ExcludeHidden, settings.ExcludeInactive);
 
                 var isValidCountry = campaignRepository.Countries.Where(c => c.CountryCode == country).Any();
 

@@ -4,12 +4,20 @@
 {
 <fieldset>
     <p>
-        @Html.LabelFor(m => m.ShowNotLiveYet)
-        @Html.EditorFor(m => m.ShowNotLiveYet)
+        @Html.LabelFor(m => m.ExcludeNotLiveYet)
+        @Html.EditorFor(m => m.ExcludeNotLiveYet)
     </p>
     <p>
-        @Html.LabelFor(m => m.ShowPaused)
-        @Html.EditorFor(m => m.ShowPaused)
+        @Html.LabelFor(m => m.ExcludePaused)
+        @Html.EditorFor(m => m.ExcludePaused)
+    </p>
+    <p>
+        @Html.LabelFor(m => m.ExcludeHidden)
+        @Html.EditorFor(m => m.ExcludeHidden)
+    </p>
+    <p>
+        @Html.LabelFor(m => m.ExcludeInactive)
+        @Html.EditorFor(m => m.ExcludeInactive)
     </p>
 </fieldset>
 }

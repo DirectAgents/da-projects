@@ -48,7 +48,7 @@ namespace EomToolWeb.Controllers
                 if (viewModel.TrafficType == null) traffictype = null;
 
                 var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
-                campaigns = campaignRepository.CampaignsFiltered(false, excludeStrings, searchstring, country, vertical, traffictype);
+                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, searchstring, country, vertical, traffictype, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
 
                 if (viewModel.Country != null) // show campaigns for the specified country first, then multi-country campaigns
                     campaigns = campaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name);
@@ -65,7 +65,7 @@ namespace EomToolWeb.Controllers
                 new ListViewMode()
                 {
                     TemplateName = "Brief",
-                    ItemsPerPage = 500,
+                    ItemsPerPage = 1000,
                     EditHeight = 750,
                     EditWidth = 1100,
                 } :
@@ -123,21 +123,19 @@ namespace EomToolWeb.Controllers
 
         public ActionResult ListByCountry()
         {
-            var excludeStrings = WikiSettings.ExcludeStrings();
+            List<Country> countries;
+            if (WikiSettings.ExcludeInactive)
+                countries = campaignRepository.Countries.ToList();
+            else
+                countries = campaignRepository.CountriesWithActiveCampaigns.ToList();
 
-            var countries = campaignRepository.CountriesWithActiveCampaigns;
-            var model = countries.ToList();
-            foreach (var country in model)
+            var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
+            foreach (var country in countries)
             {
-                var filteredCampaigns = country.ActiveCampaigns;
-                foreach (var excludeString in excludeStrings)
-                {
-                    filteredCampaigns = filteredCampaigns.Where(c => !c.Name.Contains(excludeString));
-                }
-                country.Campaigns = filteredCampaigns.ToList();
+                country.Campaigns = country.FilteredCampaigns(excludeStrings, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive).ToList();
             }
-            model = model.Where(c => c.Campaigns.Count() > 0).OrderByDescending(c => c.Campaigns.Count()).ThenBy(c => c.CountryCode).ToList();
-            return View(model);
+            countries = countries.Where(c => c.Campaigns.Count() > 0).OrderByDescending(c => c.Campaigns.Count()).ThenBy(c => c.CountryCode).ToList();
+            return View(countries);
         }
 
         // old

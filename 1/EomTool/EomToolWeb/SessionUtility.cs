@@ -7,8 +7,6 @@ namespace EomToolWeb
 {
     public class SessionUtility
     {
-        // TODO: Reset
-
         public static WikiSettings WikiSettings
         {
             get
@@ -34,11 +32,6 @@ namespace EomToolWeb
             return result;
         }
 
-        private static void Clear(string key)
-        {
-            Session[key] = null;
-        }
-
         private static System.Web.SessionState.HttpSessionState Session
         {
             get { return HttpContext.Current.Session; }
@@ -47,30 +40,32 @@ namespace EomToolWeb
 
     public class WikiSettings
     {
-        [DisplayName("Show \"NOT LIVE YET\"")]
-        public bool ShowNotLiveYet { get; set; }
+        [DisplayName("Exclude \"NOT LIVE YET\"")]
+        public bool ExcludeNotLiveYet { get; set; }
 
-        [DisplayName("Show \"PAUSED\"")]
-        public bool ShowPaused { get; set; }
+        [DisplayName("Exclude \"PAUSED\"")]
+        public bool ExcludePaused { get; set; }
 
-        //[DisplayName("Show Hidden")]
-        //public bool ShowHidden { get; set; }
+        [DisplayName("Exclude Hidden (pink)")]
+        public bool ExcludeHidden { get; set; }
 
-        //[DisplayName("Show Inactive")]
-        //public bool ShowInactive;
+        [DisplayName("Exclude Inactive")]
+        public bool ExcludeInactive { get; set; }
 
         public WikiSettings()
         {
-            ShowNotLiveYet = true;
-            ShowPaused = true;
+            ExcludeNotLiveYet = false;
+            ExcludePaused = false;
+            ExcludeHidden = false;
+            ExcludeInactive = true;
         }
 
         public List<string> ExcludeStrings()
         {
             List<String> excludeStrings = new List<string>();
-            if (!ShowNotLiveYet)
+            if (ExcludeNotLiveYet)
                 excludeStrings.Add("NOT LIVE YET");
-            if (!ShowPaused)
+            if (ExcludePaused)
                 excludeStrings.Add("PAUSED");
 
             return excludeStrings;

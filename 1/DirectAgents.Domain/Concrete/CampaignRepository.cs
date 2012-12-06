@@ -27,16 +27,12 @@ namespace DirectAgents.Domain.Concrete
             get { return context.Campaigns; }
         }
 
-        public IQueryable<Campaign> CampaignsFiltered(bool includeInactive, string[] exclude, string search, string countrycode, string vertical, string traffictype)
+        public IQueryable<Campaign> CampaignsFiltered(string[] excludeInName, string search, string countrycode, string vertical, string traffictype, bool excludeHidden, bool excludeInactive)
         {
             var campaigns = context.Campaigns.AsQueryable();
-            if (!includeInactive)
+            if (excludeInName != null)
             {
-                campaigns = campaigns.Where(c => c.StatusId != Status.Inactive);
-            }
-            if (exclude != null)
-            {
-                foreach (string excludeString in exclude)
+                foreach (string excludeString in excludeInName)
                 {
                     campaigns = campaigns.Where(c => !c.Name.Contains(excludeString));
                 }
@@ -56,6 +52,15 @@ namespace DirectAgents.Domain.Concrete
             if (!string.IsNullOrWhiteSpace(traffictype))
             {
                 campaigns = campaigns.Where(c => c.TrafficTypes.Select(t => t.Name).Contains(traffictype));
+            }
+
+            if (excludeHidden)
+            {
+                campaigns = campaigns.Where(c => !c.Hidden);
+            }
+            if (excludeInactive)
+            {
+                campaigns = campaigns.Where(c => c.StatusId != Status.Inactive);
             }
             return campaigns;
         }
