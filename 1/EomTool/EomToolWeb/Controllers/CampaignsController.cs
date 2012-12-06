@@ -19,17 +19,16 @@ namespace EomToolWeb.Controllers
         }
 
         // non-Kendo
-        public ActionResult List(string searchstring, string pid, string country, string vertical, string traffictype)
+        public ActionResult List(string searchstring, string country, string vertical, string traffictype, int? pid)
         {
             string[] excludeStrings = WikiSettings.ExcludeStrings().ToArray();
             var campaigns = campaignRepository.CampaignsExcluding(excludeStrings).Where(c => c.StatusId != Status.Inactive);
 
             var viewModel = new CampaignsListViewModel();
-            int pidInt;
-            if (Int32.TryParse(pid, out pidInt))
+            if (pid != null)
             {
-                viewModel.Pid = pidInt;
-                campaigns = campaignRepository.Campaigns.Where(c => c.Pid == pidInt);
+                viewModel.Pid = pid;
+                campaigns = campaignRepository.Campaigns.Where(c => c.Pid == pid.Value);
             }
 
             if (!string.IsNullOrWhiteSpace(searchstring))
