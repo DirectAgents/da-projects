@@ -36,17 +36,22 @@ namespace DirectAgents.Domain.Concrete
 
         static string[] SplitOfferName(string offerName)
         {
-            // Assume these would be at the end of the string. Strip them off.
-            int pos = offerName.IndexOf("NO EMAIL");
+            // If one of these strings is found, everything including and after it will be stripped off when scanning for country codes
+            int pos = -1;
+            if (pos == -1) pos = offerName.IndexOf("MS Guide");
+            if (pos == -1) pos = offerName.IndexOf("SC Johnson");
+            if (pos == -1) pos = offerName.IndexOf("NO EMAIL");
             if (pos == -1) pos = offerName.IndexOf("NO NETWORKS");
             if (pos == -1) pos = offerName.IndexOf("BY APPROVAL");
+            if (pos == -1) pos = offerName.IndexOf("IN CAKE");
+            if (pos == -1) pos = offerName.IndexOf("DO NOT USE");
             if (pos >= 0) offerName = offerName.Substring(0, pos);
 
             var split = offerName.Split(new[] { ' ', '-', '/' }, StringSplitOptions.RemoveEmptyEntries);
             return split;
         }
 
-        static string[] IgnoreCodes = { "DA", "LP", "OS", "PC", "RX" };
+        static string[] IgnoreCodes = { "DA", "LP", "OS", "PC", "RX", "HP" };
         static bool IsCountryCode(string str)
         {
             bool result = str.Length == 2 && !IgnoreCodes.Contains(str) && str.ToCharArray().All(c => IsUpperAlpha(c));

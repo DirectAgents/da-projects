@@ -147,6 +147,7 @@
         }
 
         function ApprovePub(affid, releasing) {
+            $('#txtNote').val("");
             $('#dlgAction').val("Approve");
             $('#dlgAffId').val(affid);
             $('#dlgReleasing').val(releasing);
@@ -158,6 +159,7 @@
         }
 
         function HoldPub(affid) {
+            $('#txtNote').val("");
             $('#dlgAction').val("Hold");
             $('#dlgAffId').val(affid);
             $('#spnRequired').show();
