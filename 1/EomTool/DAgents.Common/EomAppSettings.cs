@@ -45,7 +45,19 @@ namespace EomAppCommon
         public string EomAppSettings_MediaBuyerWorkflow_Email_Subject { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_Subject"); } }
 
         public string EomAppSettings_MediaBuyerWorkflow_Email_Link { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_Link"); } }
-        
+
+        public int? EomAppSettings_PaymentWorkflow_First_Batch_Threshold { get { return GetIntSetting("EomAppSettings_PaymentWorkflow_First_Batch_Threshold"); } }
+
+        private int? GetIntSetting(string settingName)
+        {
+            var settingVal = GetSetting(settingName);
+            int intVal;
+            if (int.TryParse(settingVal, out intVal))
+                return intVal;
+            else
+                return null;
+        }
+
         private string GetSetting(string settingName)
         {
             if (SettingsDictionary == null)

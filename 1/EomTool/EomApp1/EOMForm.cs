@@ -16,7 +16,7 @@ namespace EomApp1
             InitializeComponent();
 
             // Show the connection string when hovering over the database label (Test Mode Only)
-            if(Properties.Settings.Default.TestMode)
+            if (Properties.Settings.Default.IsTestMode())
                 this.toolTip1.SetToolTip(this.databaseLabel, EomAppCommon.EomAppSettings.ConnStr);
 
             // Security

@@ -41,7 +41,7 @@ namespace EomApp1.Properties
             this["DADatabaseMarch11ConnectionString"] = this["DADatabaseR1ConnectionString"];
         }
 
-        private bool IsTestMode()
+        public bool IsTestMode()
         {
             return (OverrideConnectionHasValue() && IsValidTestUser() && this.TestMode);
         }

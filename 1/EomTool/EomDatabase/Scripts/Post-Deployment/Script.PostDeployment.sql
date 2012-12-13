@@ -47,3 +47,27 @@ insert [TrackingSystem] values
   (1, 'Direct Track'),
   (2, 'Cake Marketing')
 go
+
+INSERT INTO [dbo].[PaymentBatchApprovalState] VALUES 
+	 ('1', 'default')
+	,('2', 'Queued')
+	,('3', 'Sent')
+	,('4', 'Approved')
+	,('5', 'Held')
+GO
+
+/*
+ALTER TABLE dbo.Item ADD
+	payment_batch_id int NULL
+GO
+ALTER TABLE dbo.Item ADD CONSTRAINT
+	FK_Item_PaymentBatch FOREIGN KEY
+	(
+	payment_batch_id
+	) REFERENCES dbo.PaymentBatch
+	(
+	id
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION 
+GO
+*/

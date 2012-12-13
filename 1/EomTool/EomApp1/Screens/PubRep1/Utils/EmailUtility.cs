@@ -25,8 +25,8 @@ namespace EomApp1.Screens.PubRep1.Utils
 
             msg.To.Add(to);
 
-            msg.CC.Add(
-                "ap@directagents.com");
+            if (!Properties.Settings.Default.IsTestMode())
+                msg.CC.Add("ap@directagents.com");
 
             SmtpClient SmtpMailer = new SmtpClient();
             SmtpMailer.Host = "smtp.gmail.com";
@@ -42,7 +42,7 @@ namespace EomApp1.Screens.PubRep1.Utils
             SmtpMailer.Send(msg);
             
             // Create PubReportEmail record
-            Data.PRDataDataContext db = new Data.PRDataDataContext();
+            Data.PRDataDataContext db = new Data.PRDataDataContext(EomAppCommon.EomAppSettings.ConnStr);
             var pre = new Data.PubReportEmail();
             pre.body = body;
             pre.sent_date = DateTime.Now;

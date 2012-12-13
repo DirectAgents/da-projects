@@ -807,6 +807,10 @@
     <Build Include="Schema Objects\Schemas\dbo\Views\PublisherPayouts1.view.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\VerifiedItemsCampaignRevenueSummary.view.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\WorkflowView.view.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Identity.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\PaymentBatchApprovalState.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\PaymentBatch.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\PaymentBatchUpdate.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">

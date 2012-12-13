@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" Class="PRDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=biz2\da;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Item" Member="Items">
     <Type Name="Item">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -21,7 +21,11 @@
       <Column Name="total_revenue" Type="System.Decimal" DbType="Decimal(32,10)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="total_cost" Type="System.Decimal" DbType="Decimal(32,10)" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="margin" Type="System.Decimal" DbType="Money" IsDbGenerated="true" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="campaign_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="media_buyer_approval_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="payment_batch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="Campaign_Item" Member="Campaign" ThisKey="pid" OtherKey="pid" Type="Campaign" IsForeignKey="true" />
+      <Association Name="PaymentBatch_Item" Member="PaymentBatch" ThisKey="payment_batch_id" OtherKey="id" Type="PaymentBatch" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Publisher" Member="Publishers">
@@ -84,6 +88,51 @@
       <Column Name="max_scrub" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="notes" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Association Name="Campaign_Item" Member="Items" ThisKey="pid" OtherKey="pid" Type="Item" />
+    </Type>
+  </Table>
+  <Table Name="dbo.[Identity]" Member="Identities">
+    <Type Name="Identity">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="login" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Association Name="Identity_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="approver_identity_id" Type="PaymentBatch" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PaymentBatch" Member="PaymentBatches">
+    <Type Name="PaymentBatch">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="approver_identity_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="payment_batch_approval_state_id" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="is_current" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="payment_threshold" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="parent_batch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="PaymentBatch_Item" Member="Items" ThisKey="id" OtherKey="payment_batch_id" Type="Item" />
+      <Association Name="PaymentBatch_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="parent_batch_id" Type="PaymentBatch" />
+      <Association Name="PaymentBatch_PaymentBatchUpdate" Member="PaymentBatchUpdates" ThisKey="id" OtherKey="payment_batch_id" Type="PaymentBatchUpdate" />
+      <Association Name="Identity_PaymentBatch" Member="Identity" ThisKey="approver_identity_id" OtherKey="id" Type="Identity" IsForeignKey="true" />
+      <Association Name="PaymentBatch_PaymentBatch" Member="PaymentBatch1" ThisKey="parent_batch_id" OtherKey="id" Type="PaymentBatch" IsForeignKey="true" />
+      <Association Name="PaymentBatchApprovalState_PaymentBatch" Member="PaymentBatchApprovalState" ThisKey="payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PaymentBatchApprovalState" Member="PaymentBatchApprovalStates">
+    <Type Name="PaymentBatchApprovalState">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="PaymentBatchApprovalState_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="payment_batch_approval_state_id" Type="PaymentBatch" />
+      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate" Member="PaymentBatchUpdates" ThisKey="id" OtherKey="from_payment_batch_approval_state_id" Type="PaymentBatchUpdate" />
+      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate1" Member="PaymentBatchUpdates1" ThisKey="id" OtherKey="to_payment_batch_approval_state_id" Type="PaymentBatchUpdate" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PaymentBatchUpdate" Member="PaymentBatchUpdates">
+    <Type Name="PaymentBatchUpdate">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="payment_batch_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="from_payment_batch_approval_state_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="to_payment_batch_approval_state_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="timestamp" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="PaymentBatch_PaymentBatchUpdate" Member="PaymentBatch" ThisKey="payment_batch_id" OtherKey="id" Type="PaymentBatch" IsForeignKey="true" />
+      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate" Member="PaymentBatchApprovalState" ThisKey="from_payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
+      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate1" Member="PaymentBatchApprovalState1" ThisKey="to_payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

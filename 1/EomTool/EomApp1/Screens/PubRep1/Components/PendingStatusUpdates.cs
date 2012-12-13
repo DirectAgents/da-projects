@@ -3,10 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
+using EomAppCommon;
 
 namespace EomApp1.Screens.PubRep1.Components
 {
+    public enum PaymentBatchApprovalStateId
+    {
+        Default = 1,
+        Queued = 2,
+        Sent = 3,
+        Approved = 4,
+        Held = 5
+    }
+
     public partial class PendingStatusUpdates : Component, IListSource
     {
         public PendingStatusUpdates()
@@ -89,28 +100,31 @@ namespace EomApp1.Screens.PubRep1.Components
                 {"Approved", 6},  
                 {"Paid", 5},              
             };
-            foreach (var item in publisherReportDataSet11.StatusChangeAction)
+            foreach (var row in publisherReportDataSet11.StatusChangeAction)
             {
-                if (item.Saved == "-")
+                if (row.Saved == "-")
                 {
-                    int to = map[item.ToStatus];
+                    int to = map[row.ToStatus];
 
-                    string query;
+                    var itemIDs = GetItemIds(row, excludedItemIDs);
+                    //var batch = GetBatchForItems(itemIDs);
+                    Data.PaymentBatch batch = null;
 
-                    if (string.IsNullOrEmpty(excludedItemIDs))
-                    {
-                        query =
-                           @"update Item set item_accounting_status_id={0} where id in (" + item.ItemIDs + ")";
-                    }
-                    else
-                    {
-                        query =
-                            @"update Item set item_accounting_status_id={0} where id in (" + item.ItemIDs + ")" +
-                            @" and not id in (" + excludedItemIDs + ")";
-                    }
+                    // update item_accounting_status_id and set payment_batch_id
+                    StringBuilder query = new StringBuilder("update Item set item_accounting_status_id={0}");
+                    if (batch != null)
+                        query.Append(", payment_batch_id={1}");
+
+                    query.Append(" where id in (" + row.ItemIDs + ")");
+
+                    if (!string.IsNullOrEmpty(excludedItemIDs))
+                        query.Append(" and not id in (" + excludedItemIDs + ")");
+
+                    var args = new List<object>() { to };
+                    if (batch != null) args.Add(batch.id);
 
                     using (var cn = new SqlConnection(Properties.Settings.Default.DADatabaseR1ConnectionString))
-                    using (var cm = new SqlCommand(string.Format(query, to), cn))
+                    using (var cm = new SqlCommand(string.Format(query.ToString(), args.ToArray()), cn))
                     {
                         //MessageBox.Show("will execute sql: " + cm.CommandText);
 
@@ -120,12 +134,67 @@ namespace EomApp1.Screens.PubRep1.Components
 
                         //MessageBox.Show(n.ToString() + " rows affected");
 
-                        item.BeginEdit();
-                        item.Saved = string.Format("{0} by {1}", DateTime.Now, DAgents.Common.WindowsIdentityHelper.GetWindowsIdentityName());
-                        item.EndEdit();
+                        row.BeginEdit();
+                        row.Saved = string.Format("{0} by {1}", DateTime.Now, DAgents.Common.WindowsIdentityHelper.GetWindowsIdentityName());
+                        row.EndEdit();
                     }
                 }
             }
+        }
+
+        private int[] GetItemIds(Eom.Common.PublisherReportDataSet1.StatusChangeActionRow row, string excludedItemIDs)
+        {
+            if (excludedItemIDs == null) excludedItemIDs = "";
+
+            var allIDs = row.ItemIDs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id));
+            var excludedIDs = excludedItemIDs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => int.Parse(id));
+
+            return allIDs.Except(excludedIDs).ToArray();
+        }
+
+        private Data.PaymentBatch GetBatchForItems(int[] itemIDs)
+        {
+            // check/create batch
+            Data.PRDataDataContext db = new Data.PRDataDataContext(EomAppCommon.EomAppSettings.ConnStr);
+            var batch = (from b in db.PaymentBatches
+                         where b.is_current
+                         orderby b.id descending
+                         select b).FirstOrDefault();
+            if (batch == null)
+            {
+                batch = new Data.PaymentBatch()
+                {
+                    is_current = true,
+                    payment_threshold = EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_First_Batch_Threshold
+                };
+                db.PaymentBatches.InsertOnSubmit(batch);
+                db.SubmitChanges();
+            }
+            // check if will exceed the threshold
+            // TODO: handle different currencies!
+            if (batch.payment_threshold != null)
+            {
+                var batchItems = (from i in db.Items
+                                  where i.payment_batch_id == batch.id
+                                  select i);
+                var batchTotal = batchItems.Sum(i => i.total_cost);
+
+                var itemsToUpdate = (from i in db.Items
+                                     where itemIDs.Contains(i.id)
+                                     select i);
+                var totalToUpdate = itemsToUpdate.Sum(i => i.total_cost);
+
+                if (batchTotal + totalToUpdate > batch.payment_threshold.Value)
+                {
+                    batch = new Data.PaymentBatch()
+                    {
+                        is_current = true
+                    };
+                    db.PaymentBatches.InsertOnSubmit(batch);
+                    db.SubmitChanges();
+                }
+            }
+            return batch;
         }
 
         static private LinkedList<string> _StatusList = null;

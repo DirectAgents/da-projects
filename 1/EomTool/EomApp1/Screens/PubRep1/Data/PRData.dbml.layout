@@ -2,12 +2,6 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 11.125" name="PRData">
   <DataContextMoniker Name="/PRDataDataContext" />
   <nestedChildShapes>
-    <classShape Id="516251e9-d7d2-43a1-92f9-956acca26715" absoluteBounds="0.875, 1.375, 2, 4.4631168619791666">
-      <DataClassMoniker Name="/PRDataDataContext/Item" />
-      <nestedChildShapes>
-        <elementListCompartment Id="a38cfc57-1e19-415d-90ed-53d57ad795c5" absoluteBounds="0.89000000000000012, 1.835, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="46bdb14c-ab63-4f66-9d28-9200ac4e5931" absoluteBounds="3.625, 0.625, 2, 1.3862939453125">
       <DataClassMoniker Name="/PRDataDataContext/Publisher" />
       <nestedChildShapes>
@@ -52,11 +46,90 @@
         <elementListCompartment Id="9c8e2459-4849-4d39-a076-8a87c89366cd" absoluteBounds="0.88999999999999968, 6.835, 1.9700000000000002, 3.903116861979167" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(1.875 : 6.375); (1.875 : 5.83811686197917)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <classShape Id="423698f0-df52-44a0-a268-d961fa5945d6" absoluteBounds="0.875, 0.75, 2, 5.0400211588541657">
+      <DataClassMoniker Name="/PRDataDataContext/Item" />
+      <nestedChildShapes>
+        <elementListCompartment Id="5b235a68-fba8-4495-94df-2d4fbca5cfac" absoluteBounds="0.89000000000000012, 1.21, 1.9700000000000002, 4.4800211588541661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(1.875 : 6.375); (1.875 : 5.79002115885417)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/PRDataDataContext/Campaign/Campaign_Item" />
       <nodes>
         <classShapeMoniker Id="99e6a04b-9a73-4b39-ab91-646c1f9ae21d" />
-        <classShapeMoniker Id="516251e9-d7d2-43a1-92f9-956acca26715" />
+        <classShapeMoniker Id="423698f0-df52-44a0-a268-d961fa5945d6" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="e53936d3-e300-46c4-829f-46f8ae804fb6" absoluteBounds="3.5, 6.875, 2, 1.1939925130208344">
+      <DataClassMoniker Name="/PRDataDataContext/Identity" />
+      <nestedChildShapes>
+        <elementListCompartment Id="87976771-b0e0-43c3-8e99-9864bc62027f" absoluteBounds="3.5150000000000006, 7.3350000000000009, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="75076b7b-8836-46eb-8027-1fb971ae826f" absoluteBounds="6.25, 5.5, 2.625, 1.9631982421874996">
+      <DataClassMoniker Name="/PRDataDataContext/PaymentBatch" />
+      <nestedChildShapes>
+        <elementListCompartment Id="21eb526e-41df-4063-a46a-34b985c03f0d" absoluteBounds="6.265, 5.96, 2.5949999999999998, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="eb40e970-8a58-4b1a-80fb-dae5366824ee" absoluteBounds="3.5, 8.75, 2, 1.1939925130208335">
+      <DataClassMoniker Name="/PRDataDataContext/PaymentBatchApprovalState" />
+      <nestedChildShapes>
+        <elementListCompartment Id="4657aeed-4287-4d4d-a556-262a4c771f94" absoluteBounds="3.515, 9.21, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="09b043cd-c750-4430-9ae2-3dea6491fa17" absoluteBounds="6.25, 8.375, 3, 1.9631982421874996">
+      <DataClassMoniker Name="/PRDataDataContext/PaymentBatchUpdate" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e4218412-72e1-4e63-ba5f-c0f797625c8c" absoluteBounds="6.265, 8.835, 2.9699999999999998, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(8.71875 : 5.5); (8.71875 : 4.98159912109375); (4.70833333333333 : 4.98159912109375 : JumpStart); (4.54166666666667 : 4.98159912109375 : JumpEnd); (2.875 : 4.98159912109375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/PaymentBatch/PaymentBatch_Item" />
+      <nodes>
+        <classShapeMoniker Id="75076b7b-8836-46eb-8027-1fb971ae826f" />
+        <classShapeMoniker Id="423698f0-df52-44a0-a268-d961fa5945d6" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 7.16909912109375); (6.25 : 7.16909912109375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/Identity/Identity_PaymentBatch" />
+      <nodes>
+        <classShapeMoniker Id="e53936d3-e300-46c4-829f-46f8ae804fb6" />
+        <classShapeMoniker Id="75076b7b-8836-46eb-8027-1fb971ae826f" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8.875 : 6.19618029972957); (9.125 : 6.19618029972957); (9.125 : 6.78060931490385); (8.875 : 6.78060931490385)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/PaymentBatch/PaymentBatch_PaymentBatch" />
+      <nodes>
+        <classShapeMoniker Id="75076b7b-8836-46eb-8027-1fb971ae826f" />
+        <classShapeMoniker Id="75076b7b-8836-46eb-8027-1fb971ae826f" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 8.75); (5.875 : 8.375); (5.875 : 7.8381982421875); (6.25 : 7.4631982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/PaymentBatchApprovalState/PaymentBatchApprovalState_PaymentBatch" />
+      <nodes>
+        <classShapeMoniker Id="eb40e970-8a58-4b1a-80fb-dae5366824ee" />
+        <classShapeMoniker Id="75076b7b-8836-46eb-8027-1fb971ae826f" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(7.5937525 : 7.4631982421875); (7.5937525 : 8.375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/PaymentBatch/PaymentBatch_PaymentBatchUpdate" />
+      <nodes>
+        <classShapeMoniker Id="75076b7b-8836-46eb-8027-1fb971ae826f" />
+        <classShapeMoniker Id="09b043cd-c750-4430-9ae2-3dea6491fa17" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 9.60827182386398); (6.25 : 9.60827182386398)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/PaymentBatchApprovalState/PaymentBatchApprovalState_PaymentBatchUpdate" />
+      <nodes>
+        <classShapeMoniker Id="eb40e970-8a58-4b1a-80fb-dae5366824ee" />
+        <classShapeMoniker Id="09b043cd-c750-4430-9ae2-3dea6491fa17" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.5 : 9.14788841193199); (6.25 : 9.14788841193199)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/PRDataDataContext/PaymentBatchApprovalState/PaymentBatchApprovalState_PaymentBatchUpdate1" />
+      <nodes>
+        <classShapeMoniker Id="eb40e970-8a58-4b1a-80fb-dae5366824ee" />
+        <classShapeMoniker Id="09b043cd-c750-4430-9ae2-3dea6491fa17" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>

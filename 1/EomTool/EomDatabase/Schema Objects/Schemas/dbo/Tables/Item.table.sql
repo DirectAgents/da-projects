@@ -21,6 +21,8 @@
     [margin]                    AS              ([dbo].[tousd3]([revenue_currency_id],[num_units]*[revenue_per_unit])-[dbo].[tousd3]([cost_currency_id],[num_units]*[cost_per_unit])),
 	[modified]					AS				(GETDATE()),
 	media_buyer_approval_status_id INT			NOT NULL REFERENCES MediaBuyerApprovalStatus(id) DEFAULT 1,
-	batch_id					INT				NULL
+	batch_id					INT				NULL, 
+    [payment_batch_id] INT NULL, 
+    CONSTRAINT [FK_Item_PaymentBatch] FOREIGN KEY ([payment_batch_id]) REFERENCES [PaymentBatch]([id])
 );
 
