@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Mail;
+using System.Linq;
 
 namespace DAgents.Common
 {
@@ -14,7 +15,8 @@ namespace DAgents.Common
                 IsBodyHtml = isHTML,
                 From = new MailAddress(from),
             };
-            Array.ForEach(to, c => message.To.Add(c));
+            foreach (var item in to.SelectMany(c => c.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)))
+                message.To.Add(item);
             Array.ForEach(cc, c => message.CC.Add(c));
             SmtpClient SmtpMailer = new SmtpClient
             {
