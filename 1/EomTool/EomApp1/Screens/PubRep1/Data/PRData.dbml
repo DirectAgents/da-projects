@@ -25,6 +25,9 @@
       <Column Name="media_buyer_approval_status_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="payment_batch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="Campaign_Item" Member="Campaign" ThisKey="pid" OtherKey="pid" Type="Campaign" IsForeignKey="true" />
+      <Association Name="Currency_Item" Member="RevenueCurrency" Storage="_Currency" ThisKey="revenue_currency_id" OtherKey="id" Type="Currency" IsForeignKey="true" />
+      <Association Name="Currency_Item1" Member="CostCurrency" Storage="_Currency1" ThisKey="cost_currency_id" OtherKey="id" Type="Currency" IsForeignKey="true" />
+      <Association Name="Affiliate_Item" Member="Affiliate" ThisKey="affid" OtherKey="affid" Type="Affiliate" IsForeignKey="true" />
       <Association Name="PaymentBatch_Item" Member="PaymentBatch" ThisKey="payment_batch_id" OtherKey="id" Type="PaymentBatch" IsForeignKey="true" />
     </Type>
   </Table>
@@ -33,6 +36,7 @@
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="affid" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Affiliate_Publisher" Member="Affiliate" ThisKey="affid" OtherKey="affid" Type="Affiliate" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Vendor" Member="Vendors">
@@ -97,6 +101,40 @@
       <Association Name="Identity_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="approver_identity_id" Type="PaymentBatch" />
     </Type>
   </Table>
+  <Table Name="dbo.Currency" Member="Currencies">
+    <Type Name="Currency">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="to_usd_multiplier" Type="System.Decimal" DbType="Decimal(14,4) NOT NULL" CanBeNull="false" />
+      <Association Name="Currency_Affiliate" Member="Affiliates" ThisKey="id" OtherKey="currency_id" Type="Affiliate" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Affiliate" Member="Affiliates">
+    <Type Name="Affiliate">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="media_buyer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="add_code" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="name2" Type="System.String" DbType="VarChar(358) NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="net_term_type_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="payment_method_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Affiliate_Item" Member="Items" ThisKey="affid" OtherKey="affid" Type="Item" />
+      <Association Name="Affiliate_Publisher" Member="Publishers" ThisKey="affid" OtherKey="affid" Type="Publisher" />
+      <Association Name="Currency_Affiliate" Member="Currency" ThisKey="currency_id" OtherKey="id" Type="Currency" IsForeignKey="true" />
+      <Association Name="AffiliatePaymentMethod_Affiliate" Member="AffiliatePaymentMethod" ThisKey="payment_method_id" OtherKey="id" Type="AffiliatePaymentMethod" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AffiliatePaymentMethod" Member="AffiliatePaymentMethods">
+    <Type Name="AffiliatePaymentMethod">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="AffiliatePaymentMethod_Affiliate" Member="Affiliates" ThisKey="id" OtherKey="payment_method_id" Type="Affiliate" />
+      <Association Name="AffiliatePaymentMethod_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="payment_method_id" Type="PaymentBatch" />
+    </Type>
+  </Table>
   <Table Name="dbo.PaymentBatch" Member="PaymentBatches">
     <Type Name="PaymentBatch">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -105,9 +143,11 @@
       <Column Name="is_current" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="payment_threshold" Type="System.Decimal" DbType="Money" CanBeNull="true" />
       <Column Name="parent_batch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="payment_method_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="PaymentBatch_Item" Member="Items" ThisKey="id" OtherKey="payment_batch_id" Type="Item" />
       <Association Name="PaymentBatch_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="parent_batch_id" Type="PaymentBatch" />
       <Association Name="PaymentBatch_PaymentBatchUpdate" Member="PaymentBatchUpdates" ThisKey="id" OtherKey="payment_batch_id" Type="PaymentBatchUpdate" />
+      <Association Name="AffiliatePaymentMethod_PaymentBatch" Member="AffiliatePaymentMethod" ThisKey="payment_method_id" OtherKey="id" Type="AffiliatePaymentMethod" IsForeignKey="true" />
       <Association Name="Identity_PaymentBatch" Member="Identity" ThisKey="approver_identity_id" OtherKey="id" Type="Identity" IsForeignKey="true" />
       <Association Name="PaymentBatch_PaymentBatch" Member="PaymentBatch1" ThisKey="parent_batch_id" OtherKey="id" Type="PaymentBatch" IsForeignKey="true" />
       <Association Name="PaymentBatchApprovalState_PaymentBatch" Member="PaymentBatchApprovalState" ThisKey="payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
@@ -118,8 +158,6 @@
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="PaymentBatchApprovalState_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="payment_batch_approval_state_id" Type="PaymentBatch" />
-      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate" Member="PaymentBatchUpdates" ThisKey="id" OtherKey="from_payment_batch_approval_state_id" Type="PaymentBatchUpdate" />
-      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate1" Member="PaymentBatchUpdates1" ThisKey="id" OtherKey="to_payment_batch_approval_state_id" Type="PaymentBatchUpdate" />
     </Type>
   </Table>
   <Table Name="dbo.PaymentBatchUpdate" Member="PaymentBatchUpdates">
@@ -131,8 +169,8 @@
       <Column Name="note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="timestamp" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Association Name="PaymentBatch_PaymentBatchUpdate" Member="PaymentBatch" ThisKey="payment_batch_id" OtherKey="id" Type="PaymentBatch" IsForeignKey="true" />
-      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate" Member="PaymentBatchApprovalState" ThisKey="from_payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
-      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate1" Member="PaymentBatchApprovalState1" ThisKey="to_payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
+      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate" Member="FromPaymentBatchApprovalState" ThisKey="from_payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
+      <Association Name="PaymentBatchApprovalState_PaymentBatchUpdate1" Member="ToPaymentBatchApprovalState" ThisKey="to_payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

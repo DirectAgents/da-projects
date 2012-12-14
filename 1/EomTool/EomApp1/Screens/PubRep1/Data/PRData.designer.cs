@@ -51,6 +51,15 @@ namespace EomApp1.Screens.PubRep1.Data
     partial void InsertIdentity(Identity instance);
     partial void UpdateIdentity(Identity instance);
     partial void DeleteIdentity(Identity instance);
+    partial void InsertCurrency(Currency instance);
+    partial void UpdateCurrency(Currency instance);
+    partial void DeleteCurrency(Currency instance);
+    partial void InsertAffiliate(Affiliate instance);
+    partial void UpdateAffiliate(Affiliate instance);
+    partial void DeleteAffiliate(Affiliate instance);
+    partial void InsertAffiliatePaymentMethod(AffiliatePaymentMethod instance);
+    partial void UpdateAffiliatePaymentMethod(AffiliatePaymentMethod instance);
+    partial void DeleteAffiliatePaymentMethod(AffiliatePaymentMethod instance);
     partial void InsertPaymentBatch(PaymentBatch instance);
     partial void UpdatePaymentBatch(PaymentBatch instance);
     partial void DeletePaymentBatch(PaymentBatch instance);
@@ -148,6 +157,30 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
+		public System.Data.Linq.Table<Currency> Currencies
+		{
+			get
+			{
+				return this.GetTable<Currency>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Affiliate> Affiliates
+		{
+			get
+			{
+				return this.GetTable<Affiliate>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AffiliatePaymentMethod> AffiliatePaymentMethods
+		{
+			get
+			{
+				return this.GetTable<AffiliatePaymentMethod>();
+			}
+		}
+		
 		public System.Data.Linq.Table<PaymentBatch> PaymentBatches
 		{
 			get
@@ -225,6 +258,12 @@ namespace EomApp1.Screens.PubRep1.Data
 		
 		private EntityRef<Campaign> _Campaign;
 		
+		private EntityRef<Currency> _Currency;
+		
+		private EntityRef<Currency> _Currency1;
+		
+		private EntityRef<Affiliate> _Affiliate;
+		
 		private EntityRef<PaymentBatch> _PaymentBatch;
 		
     #region Extensibility Method Definitions
@@ -280,6 +319,9 @@ namespace EomApp1.Screens.PubRep1.Data
 		public Item()
 		{
 			this._Campaign = default(EntityRef<Campaign>);
+			this._Currency = default(EntityRef<Currency>);
+			this._Currency1 = default(EntityRef<Currency>);
+			this._Affiliate = default(EntityRef<Affiliate>);
 			this._PaymentBatch = default(EntityRef<PaymentBatch>);
 			OnCreated();
 		}
@@ -359,6 +401,10 @@ namespace EomApp1.Screens.PubRep1.Data
 			{
 				if ((this._affid != value))
 				{
+					if (this._Affiliate.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnaffidChanging(value);
 					this.SendPropertyChanging();
 					this._affid = value;
@@ -439,6 +485,10 @@ namespace EomApp1.Screens.PubRep1.Data
 			{
 				if ((this._revenue_currency_id != value))
 				{
+					if (this._Currency.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.Onrevenue_currency_idChanging(value);
 					this.SendPropertyChanging();
 					this._revenue_currency_id = value;
@@ -459,6 +509,10 @@ namespace EomApp1.Screens.PubRep1.Data
 			{
 				if ((this._cost_currency_id != value))
 				{
+					if (this._Currency1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.Oncost_currency_idChanging(value);
 					this.SendPropertyChanging();
 					this._cost_currency_id = value;
@@ -766,6 +820,76 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Currency_Item", Storage="_Currency", ThisKey="revenue_currency_id", OtherKey="id", IsForeignKey=true)]
+		public Currency RevenueCurrency
+		{
+			get
+			{
+				return this._Currency.Entity;
+			}
+			set
+			{
+				if ((this._Currency.Entity != value))
+				{
+					this.SendPropertyChanging();
+					this._Currency.Entity = value;
+					this.SendPropertyChanged("RevenueCurrency");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Currency_Item1", Storage="_Currency1", ThisKey="cost_currency_id", OtherKey="id", IsForeignKey=true)]
+		public Currency CostCurrency
+		{
+			get
+			{
+				return this._Currency1.Entity;
+			}
+			set
+			{
+				if ((this._Currency1.Entity != value))
+				{
+					this.SendPropertyChanging();
+					this._Currency1.Entity = value;
+					this.SendPropertyChanged("CostCurrency");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Affiliate_Item", Storage="_Affiliate", ThisKey="affid", OtherKey="affid", IsForeignKey=true)]
+		public Affiliate Affiliate
+		{
+			get
+			{
+				return this._Affiliate.Entity;
+			}
+			set
+			{
+				Affiliate previousValue = this._Affiliate.Entity;
+				if (((previousValue != value) 
+							|| (this._Affiliate.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Affiliate.Entity = null;
+						previousValue.Items.Remove(this);
+					}
+					this._Affiliate.Entity = value;
+					if ((value != null))
+					{
+						value.Items.Add(this);
+						this._affid = value.affid;
+					}
+					else
+					{
+						this._affid = default(int);
+					}
+					this.SendPropertyChanged("Affiliate");
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatch_Item", Storage="_PaymentBatch", ThisKey="payment_batch_id", OtherKey="id", IsForeignKey=true)]
 		public PaymentBatch PaymentBatch
 		{
@@ -833,6 +957,8 @@ namespace EomApp1.Screens.PubRep1.Data
 		
 		private System.Nullable<int> _affid;
 		
+		private EntityRef<Affiliate> _Affiliate;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -847,6 +973,7 @@ namespace EomApp1.Screens.PubRep1.Data
 		
 		public Publisher()
 		{
+			this._Affiliate = default(EntityRef<Affiliate>);
 			OnCreated();
 		}
 		
@@ -901,11 +1028,49 @@ namespace EomApp1.Screens.PubRep1.Data
 			{
 				if ((this._affid != value))
 				{
+					if (this._Affiliate.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnaffidChanging(value);
 					this.SendPropertyChanging();
 					this._affid = value;
 					this.SendPropertyChanged("affid");
 					this.OnaffidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Affiliate_Publisher", Storage="_Affiliate", ThisKey="affid", OtherKey="affid", IsForeignKey=true)]
+		public Affiliate Affiliate
+		{
+			get
+			{
+				return this._Affiliate.Entity;
+			}
+			set
+			{
+				Affiliate previousValue = this._Affiliate.Entity;
+				if (((previousValue != value) 
+							|| (this._Affiliate.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Affiliate.Entity = null;
+						previousValue.Publishers.Remove(this);
+					}
+					this._Affiliate.Entity = value;
+					if ((value != null))
+					{
+						value.Publishers.Add(this);
+						this._affid = value.affid;
+					}
+					else
+					{
+						this._affid = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Affiliate");
 				}
 			}
 		}
@@ -2179,6 +2344,702 @@ namespace EomApp1.Screens.PubRep1.Data
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Currency")]
+	public partial class Currency : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private decimal _to_usd_multiplier;
+		
+		private EntitySet<Affiliate> _Affiliates;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void Onto_usd_multiplierChanging(decimal value);
+    partial void Onto_usd_multiplierChanged();
+    #endregion
+		
+		public Currency()
+		{
+			this._Affiliates = new EntitySet<Affiliate>(new Action<Affiliate>(this.attach_Affiliates), new Action<Affiliate>(this.detach_Affiliates));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_to_usd_multiplier", DbType="Decimal(14,4) NOT NULL")]
+		public decimal to_usd_multiplier
+		{
+			get
+			{
+				return this._to_usd_multiplier;
+			}
+			set
+			{
+				if ((this._to_usd_multiplier != value))
+				{
+					this.Onto_usd_multiplierChanging(value);
+					this.SendPropertyChanging();
+					this._to_usd_multiplier = value;
+					this.SendPropertyChanged("to_usd_multiplier");
+					this.Onto_usd_multiplierChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Currency_Affiliate", Storage="_Affiliates", ThisKey="id", OtherKey="currency_id")]
+		public EntitySet<Affiliate> Affiliates
+		{
+			get
+			{
+				return this._Affiliates;
+			}
+			set
+			{
+				this._Affiliates.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Affiliates(Affiliate entity)
+		{
+			this.SendPropertyChanging();
+			entity.Currency = this;
+		}
+		
+		private void detach_Affiliates(Affiliate entity)
+		{
+			this.SendPropertyChanging();
+			entity.Currency = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Affiliate")]
+	public partial class Affiliate : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private int _media_buyer_id;
+		
+		private int _affid;
+		
+		private int _currency_id;
+		
+		private string _email;
+		
+		private string _add_code;
+		
+		private string _name2;
+		
+		private System.Nullable<int> _net_term_type_id;
+		
+		private int _payment_method_id;
+		
+		private EntitySet<Item> _Items;
+		
+		private EntitySet<Publisher> _Publishers;
+		
+		private EntityRef<Currency> _Currency;
+		
+		private EntityRef<AffiliatePaymentMethod> _AffiliatePaymentMethod;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void Onmedia_buyer_idChanging(int value);
+    partial void Onmedia_buyer_idChanged();
+    partial void OnaffidChanging(int value);
+    partial void OnaffidChanged();
+    partial void Oncurrency_idChanging(int value);
+    partial void Oncurrency_idChanged();
+    partial void OnemailChanging(string value);
+    partial void OnemailChanged();
+    partial void Onadd_codeChanging(string value);
+    partial void Onadd_codeChanged();
+    partial void Onname2Changing(string value);
+    partial void Onname2Changed();
+    partial void Onnet_term_type_idChanging(System.Nullable<int> value);
+    partial void Onnet_term_type_idChanged();
+    partial void Onpayment_method_idChanging(int value);
+    partial void Onpayment_method_idChanged();
+    #endregion
+		
+		public Affiliate()
+		{
+			this._Items = new EntitySet<Item>(new Action<Item>(this.attach_Items), new Action<Item>(this.detach_Items));
+			this._Publishers = new EntitySet<Publisher>(new Action<Publisher>(this.attach_Publishers), new Action<Publisher>(this.detach_Publishers));
+			this._Currency = default(EntityRef<Currency>);
+			this._AffiliatePaymentMethod = default(EntityRef<AffiliatePaymentMethod>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_media_buyer_id", DbType="Int NOT NULL")]
+		public int media_buyer_id
+		{
+			get
+			{
+				return this._media_buyer_id;
+			}
+			set
+			{
+				if ((this._media_buyer_id != value))
+				{
+					this.Onmedia_buyer_idChanging(value);
+					this.SendPropertyChanging();
+					this._media_buyer_id = value;
+					this.SendPropertyChanged("media_buyer_id");
+					this.Onmedia_buyer_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_affid", DbType="Int NOT NULL")]
+		public int affid
+		{
+			get
+			{
+				return this._affid;
+			}
+			set
+			{
+				if ((this._affid != value))
+				{
+					this.OnaffidChanging(value);
+					this.SendPropertyChanging();
+					this._affid = value;
+					this.SendPropertyChanged("affid");
+					this.OnaffidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_currency_id", DbType="Int NOT NULL")]
+		public int currency_id
+		{
+			get
+			{
+				return this._currency_id;
+			}
+			set
+			{
+				if ((this._currency_id != value))
+				{
+					if (this._Currency.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Oncurrency_idChanging(value);
+					this.SendPropertyChanging();
+					this._currency_id = value;
+					this.SendPropertyChanged("currency_id");
+					this.Oncurrency_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this.OnemailChanging(value);
+					this.SendPropertyChanging();
+					this._email = value;
+					this.SendPropertyChanged("email");
+					this.OnemailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_add_code", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string add_code
+		{
+			get
+			{
+				return this._add_code;
+			}
+			set
+			{
+				if ((this._add_code != value))
+				{
+					this.Onadd_codeChanging(value);
+					this.SendPropertyChanging();
+					this._add_code = value;
+					this.SendPropertyChanged("add_code");
+					this.Onadd_codeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name2", AutoSync=AutoSync.Always, DbType="VarChar(358) NOT NULL", CanBeNull=false, IsDbGenerated=true, UpdateCheck=UpdateCheck.Never)]
+		public string name2
+		{
+			get
+			{
+				return this._name2;
+			}
+			set
+			{
+				if ((this._name2 != value))
+				{
+					this.Onname2Changing(value);
+					this.SendPropertyChanging();
+					this._name2 = value;
+					this.SendPropertyChanged("name2");
+					this.Onname2Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_net_term_type_id", DbType="Int")]
+		public System.Nullable<int> net_term_type_id
+		{
+			get
+			{
+				return this._net_term_type_id;
+			}
+			set
+			{
+				if ((this._net_term_type_id != value))
+				{
+					this.Onnet_term_type_idChanging(value);
+					this.SendPropertyChanging();
+					this._net_term_type_id = value;
+					this.SendPropertyChanged("net_term_type_id");
+					this.Onnet_term_type_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_payment_method_id", DbType="Int NOT NULL")]
+		public int payment_method_id
+		{
+			get
+			{
+				return this._payment_method_id;
+			}
+			set
+			{
+				if ((this._payment_method_id != value))
+				{
+					if (this._AffiliatePaymentMethod.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onpayment_method_idChanging(value);
+					this.SendPropertyChanging();
+					this._payment_method_id = value;
+					this.SendPropertyChanged("payment_method_id");
+					this.Onpayment_method_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Affiliate_Item", Storage="_Items", ThisKey="affid", OtherKey="affid")]
+		public EntitySet<Item> Items
+		{
+			get
+			{
+				return this._Items;
+			}
+			set
+			{
+				this._Items.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Affiliate_Publisher", Storage="_Publishers", ThisKey="affid", OtherKey="affid")]
+		public EntitySet<Publisher> Publishers
+		{
+			get
+			{
+				return this._Publishers;
+			}
+			set
+			{
+				this._Publishers.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Currency_Affiliate", Storage="_Currency", ThisKey="currency_id", OtherKey="id", IsForeignKey=true)]
+		public Currency Currency
+		{
+			get
+			{
+				return this._Currency.Entity;
+			}
+			set
+			{
+				Currency previousValue = this._Currency.Entity;
+				if (((previousValue != value) 
+							|| (this._Currency.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Currency.Entity = null;
+						previousValue.Affiliates.Remove(this);
+					}
+					this._Currency.Entity = value;
+					if ((value != null))
+					{
+						value.Affiliates.Add(this);
+						this._currency_id = value.id;
+					}
+					else
+					{
+						this._currency_id = default(int);
+					}
+					this.SendPropertyChanged("Currency");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AffiliatePaymentMethod_Affiliate", Storage="_AffiliatePaymentMethod", ThisKey="payment_method_id", OtherKey="id", IsForeignKey=true)]
+		public AffiliatePaymentMethod AffiliatePaymentMethod
+		{
+			get
+			{
+				return this._AffiliatePaymentMethod.Entity;
+			}
+			set
+			{
+				AffiliatePaymentMethod previousValue = this._AffiliatePaymentMethod.Entity;
+				if (((previousValue != value) 
+							|| (this._AffiliatePaymentMethod.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AffiliatePaymentMethod.Entity = null;
+						previousValue.Affiliates.Remove(this);
+					}
+					this._AffiliatePaymentMethod.Entity = value;
+					if ((value != null))
+					{
+						value.Affiliates.Add(this);
+						this._payment_method_id = value.id;
+					}
+					else
+					{
+						this._payment_method_id = default(int);
+					}
+					this.SendPropertyChanged("AffiliatePaymentMethod");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Items(Item entity)
+		{
+			this.SendPropertyChanging();
+			entity.Affiliate = this;
+		}
+		
+		private void detach_Items(Item entity)
+		{
+			this.SendPropertyChanging();
+			entity.Affiliate = null;
+		}
+		
+		private void attach_Publishers(Publisher entity)
+		{
+			this.SendPropertyChanging();
+			entity.Affiliate = this;
+		}
+		
+		private void detach_Publishers(Publisher entity)
+		{
+			this.SendPropertyChanging();
+			entity.Affiliate = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AffiliatePaymentMethod")]
+	public partial class AffiliatePaymentMethod : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _name;
+		
+		private EntitySet<Affiliate> _Affiliates;
+		
+		private EntitySet<PaymentBatch> _PaymentBatches;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    #endregion
+		
+		public AffiliatePaymentMethod()
+		{
+			this._Affiliates = new EntitySet<Affiliate>(new Action<Affiliate>(this.attach_Affiliates), new Action<Affiliate>(this.detach_Affiliates));
+			this._PaymentBatches = new EntitySet<PaymentBatch>(new Action<PaymentBatch>(this.attach_PaymentBatches), new Action<PaymentBatch>(this.detach_PaymentBatches));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AffiliatePaymentMethod_Affiliate", Storage="_Affiliates", ThisKey="id", OtherKey="payment_method_id")]
+		public EntitySet<Affiliate> Affiliates
+		{
+			get
+			{
+				return this._Affiliates;
+			}
+			set
+			{
+				this._Affiliates.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AffiliatePaymentMethod_PaymentBatch", Storage="_PaymentBatches", ThisKey="id", OtherKey="payment_method_id")]
+		public EntitySet<PaymentBatch> PaymentBatches
+		{
+			get
+			{
+				return this._PaymentBatches;
+			}
+			set
+			{
+				this._PaymentBatches.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Affiliates(Affiliate entity)
+		{
+			this.SendPropertyChanging();
+			entity.AffiliatePaymentMethod = this;
+		}
+		
+		private void detach_Affiliates(Affiliate entity)
+		{
+			this.SendPropertyChanging();
+			entity.AffiliatePaymentMethod = null;
+		}
+		
+		private void attach_PaymentBatches(PaymentBatch entity)
+		{
+			this.SendPropertyChanging();
+			entity.AffiliatePaymentMethod = this;
+		}
+		
+		private void detach_PaymentBatches(PaymentBatch entity)
+		{
+			this.SendPropertyChanging();
+			entity.AffiliatePaymentMethod = null;
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentBatch")]
 	public partial class PaymentBatch : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -2197,11 +3058,15 @@ namespace EomApp1.Screens.PubRep1.Data
 		
 		private System.Nullable<int> _parent_batch_id;
 		
+		private System.Nullable<int> _payment_method_id;
+		
 		private EntitySet<Item> _Items;
 		
 		private EntitySet<PaymentBatch> _PaymentBatches;
 		
 		private EntitySet<PaymentBatchUpdate> _PaymentBatchUpdates;
+		
+		private EntityRef<AffiliatePaymentMethod> _AffiliatePaymentMethod;
 		
 		private EntityRef<Identity> _Identity;
 		
@@ -2225,6 +3090,8 @@ namespace EomApp1.Screens.PubRep1.Data
     partial void Onpayment_thresholdChanged();
     partial void Onparent_batch_idChanging(System.Nullable<int> value);
     partial void Onparent_batch_idChanged();
+    partial void Onpayment_method_idChanging(System.Nullable<int> value);
+    partial void Onpayment_method_idChanged();
     #endregion
 		
 		public PaymentBatch()
@@ -2232,6 +3099,7 @@ namespace EomApp1.Screens.PubRep1.Data
 			this._Items = new EntitySet<Item>(new Action<Item>(this.attach_Items), new Action<Item>(this.detach_Items));
 			this._PaymentBatches = new EntitySet<PaymentBatch>(new Action<PaymentBatch>(this.attach_PaymentBatches), new Action<PaymentBatch>(this.detach_PaymentBatches));
 			this._PaymentBatchUpdates = new EntitySet<PaymentBatchUpdate>(new Action<PaymentBatchUpdate>(this.attach_PaymentBatchUpdates), new Action<PaymentBatchUpdate>(this.detach_PaymentBatchUpdates));
+			this._AffiliatePaymentMethod = default(EntityRef<AffiliatePaymentMethod>);
 			this._Identity = default(EntityRef<Identity>);
 			this._PaymentBatch1 = default(EntityRef<PaymentBatch>);
 			this._PaymentBatchApprovalState = default(EntityRef<PaymentBatchApprovalState>);
@@ -2370,6 +3238,30 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_payment_method_id", DbType="Int")]
+		public System.Nullable<int> payment_method_id
+		{
+			get
+			{
+				return this._payment_method_id;
+			}
+			set
+			{
+				if ((this._payment_method_id != value))
+				{
+					if (this._AffiliatePaymentMethod.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.Onpayment_method_idChanging(value);
+					this.SendPropertyChanging();
+					this._payment_method_id = value;
+					this.SendPropertyChanged("payment_method_id");
+					this.Onpayment_method_idChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatch_Item", Storage="_Items", ThisKey="id", OtherKey="payment_batch_id")]
 		public EntitySet<Item> Items
 		{
@@ -2406,6 +3298,40 @@ namespace EomApp1.Screens.PubRep1.Data
 			set
 			{
 				this._PaymentBatchUpdates.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AffiliatePaymentMethod_PaymentBatch", Storage="_AffiliatePaymentMethod", ThisKey="payment_method_id", OtherKey="id", IsForeignKey=true)]
+		public AffiliatePaymentMethod AffiliatePaymentMethod
+		{
+			get
+			{
+				return this._AffiliatePaymentMethod.Entity;
+			}
+			set
+			{
+				AffiliatePaymentMethod previousValue = this._AffiliatePaymentMethod.Entity;
+				if (((previousValue != value) 
+							|| (this._AffiliatePaymentMethod.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AffiliatePaymentMethod.Entity = null;
+						previousValue.PaymentBatches.Remove(this);
+					}
+					this._AffiliatePaymentMethod.Entity = value;
+					if ((value != null))
+					{
+						value.PaymentBatches.Add(this);
+						this._payment_method_id = value.id;
+					}
+					else
+					{
+						this._payment_method_id = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("AffiliatePaymentMethod");
+				}
 			}
 		}
 		
@@ -2580,10 +3506,6 @@ namespace EomApp1.Screens.PubRep1.Data
 		
 		private EntitySet<PaymentBatch> _PaymentBatches;
 		
-		private EntitySet<PaymentBatchUpdate> _PaymentBatchUpdates;
-		
-		private EntitySet<PaymentBatchUpdate> _PaymentBatchUpdates1;
-		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -2597,8 +3519,6 @@ namespace EomApp1.Screens.PubRep1.Data
 		public PaymentBatchApprovalState()
 		{
 			this._PaymentBatches = new EntitySet<PaymentBatch>(new Action<PaymentBatch>(this.attach_PaymentBatches), new Action<PaymentBatch>(this.detach_PaymentBatches));
-			this._PaymentBatchUpdates = new EntitySet<PaymentBatchUpdate>(new Action<PaymentBatchUpdate>(this.attach_PaymentBatchUpdates), new Action<PaymentBatchUpdate>(this.detach_PaymentBatchUpdates));
-			this._PaymentBatchUpdates1 = new EntitySet<PaymentBatchUpdate>(new Action<PaymentBatchUpdate>(this.attach_PaymentBatchUpdates1), new Action<PaymentBatchUpdate>(this.detach_PaymentBatchUpdates1));
 			OnCreated();
 		}
 		
@@ -2655,32 +3575,6 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatchUpdate", Storage="_PaymentBatchUpdates", ThisKey="id", OtherKey="from_payment_batch_approval_state_id")]
-		public EntitySet<PaymentBatchUpdate> PaymentBatchUpdates
-		{
-			get
-			{
-				return this._PaymentBatchUpdates;
-			}
-			set
-			{
-				this._PaymentBatchUpdates.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatchUpdate1", Storage="_PaymentBatchUpdates1", ThisKey="id", OtherKey="to_payment_batch_approval_state_id")]
-		public EntitySet<PaymentBatchUpdate> PaymentBatchUpdates1
-		{
-			get
-			{
-				return this._PaymentBatchUpdates1;
-			}
-			set
-			{
-				this._PaymentBatchUpdates1.Assign(value);
-			}
-		}
-		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -2712,30 +3606,6 @@ namespace EomApp1.Screens.PubRep1.Data
 			this.SendPropertyChanging();
 			entity.PaymentBatchApprovalState = null;
 		}
-		
-		private void attach_PaymentBatchUpdates(PaymentBatchUpdate entity)
-		{
-			this.SendPropertyChanging();
-			entity.PaymentBatchApprovalState = this;
-		}
-		
-		private void detach_PaymentBatchUpdates(PaymentBatchUpdate entity)
-		{
-			this.SendPropertyChanging();
-			entity.PaymentBatchApprovalState = null;
-		}
-		
-		private void attach_PaymentBatchUpdates1(PaymentBatchUpdate entity)
-		{
-			this.SendPropertyChanging();
-			entity.PaymentBatchApprovalState1 = this;
-		}
-		
-		private void detach_PaymentBatchUpdates1(PaymentBatchUpdate entity)
-		{
-			this.SendPropertyChanging();
-			entity.PaymentBatchApprovalState1 = null;
-		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentBatchUpdate")]
@@ -2758,9 +3628,9 @@ namespace EomApp1.Screens.PubRep1.Data
 		
 		private EntityRef<PaymentBatch> _PaymentBatch;
 		
-		private EntityRef<PaymentBatchApprovalState> _PaymentBatchApprovalState;
+		private EntityRef<PaymentBatchApprovalState> _FromPaymentBatchApprovalState;
 		
-		private EntityRef<PaymentBatchApprovalState> _PaymentBatchApprovalState1;
+		private EntityRef<PaymentBatchApprovalState> _ToPaymentBatchApprovalState;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2783,8 +3653,8 @@ namespace EomApp1.Screens.PubRep1.Data
 		public PaymentBatchUpdate()
 		{
 			this._PaymentBatch = default(EntityRef<PaymentBatch>);
-			this._PaymentBatchApprovalState = default(EntityRef<PaymentBatchApprovalState>);
-			this._PaymentBatchApprovalState1 = default(EntityRef<PaymentBatchApprovalState>);
+			this._FromPaymentBatchApprovalState = default(EntityRef<PaymentBatchApprovalState>);
+			this._ToPaymentBatchApprovalState = default(EntityRef<PaymentBatchApprovalState>);
 			OnCreated();
 		}
 		
@@ -2843,7 +3713,7 @@ namespace EomApp1.Screens.PubRep1.Data
 			{
 				if ((this._from_payment_batch_approval_state_id != value))
 				{
-					if (this._PaymentBatchApprovalState.HasLoadedOrAssignedValue)
+					if (this._FromPaymentBatchApprovalState.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -2867,7 +3737,7 @@ namespace EomApp1.Screens.PubRep1.Data
 			{
 				if ((this._to_payment_batch_approval_state_id != value))
 				{
-					if (this._PaymentBatchApprovalState1.HasLoadedOrAssignedValue)
+					if (this._ToPaymentBatchApprovalState.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -2954,70 +3824,38 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatchUpdate", Storage="_PaymentBatchApprovalState", ThisKey="from_payment_batch_approval_state_id", OtherKey="id", IsForeignKey=true)]
-		public PaymentBatchApprovalState PaymentBatchApprovalState
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatchUpdate", Storage="_FromPaymentBatchApprovalState", ThisKey="from_payment_batch_approval_state_id", OtherKey="id", IsForeignKey=true)]
+		public PaymentBatchApprovalState FromPaymentBatchApprovalState
 		{
 			get
 			{
-				return this._PaymentBatchApprovalState.Entity;
+				return this._FromPaymentBatchApprovalState.Entity;
 			}
 			set
 			{
-				PaymentBatchApprovalState previousValue = this._PaymentBatchApprovalState.Entity;
-				if (((previousValue != value) 
-							|| (this._PaymentBatchApprovalState.HasLoadedOrAssignedValue == false)))
+				if ((this._FromPaymentBatchApprovalState.Entity != value))
 				{
 					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._PaymentBatchApprovalState.Entity = null;
-						previousValue.PaymentBatchUpdates.Remove(this);
-					}
-					this._PaymentBatchApprovalState.Entity = value;
-					if ((value != null))
-					{
-						value.PaymentBatchUpdates.Add(this);
-						this._from_payment_batch_approval_state_id = value.id;
-					}
-					else
-					{
-						this._from_payment_batch_approval_state_id = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("PaymentBatchApprovalState");
+					this._FromPaymentBatchApprovalState.Entity = value;
+					this.SendPropertyChanged("FromPaymentBatchApprovalState");
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatchUpdate1", Storage="_PaymentBatchApprovalState1", ThisKey="to_payment_batch_approval_state_id", OtherKey="id", IsForeignKey=true)]
-		public PaymentBatchApprovalState PaymentBatchApprovalState1
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatchUpdate1", Storage="_ToPaymentBatchApprovalState", ThisKey="to_payment_batch_approval_state_id", OtherKey="id", IsForeignKey=true)]
+		public PaymentBatchApprovalState ToPaymentBatchApprovalState
 		{
 			get
 			{
-				return this._PaymentBatchApprovalState1.Entity;
+				return this._ToPaymentBatchApprovalState.Entity;
 			}
 			set
 			{
-				PaymentBatchApprovalState previousValue = this._PaymentBatchApprovalState1.Entity;
-				if (((previousValue != value) 
-							|| (this._PaymentBatchApprovalState1.HasLoadedOrAssignedValue == false)))
+				if ((this._ToPaymentBatchApprovalState.Entity != value))
 				{
 					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._PaymentBatchApprovalState1.Entity = null;
-						previousValue.PaymentBatchUpdates1.Remove(this);
-					}
-					this._PaymentBatchApprovalState1.Entity = value;
-					if ((value != null))
-					{
-						value.PaymentBatchUpdates1.Add(this);
-						this._to_payment_batch_approval_state_id = value.id;
-					}
-					else
-					{
-						this._to_payment_batch_approval_state_id = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("PaymentBatchApprovalState1");
+					this._ToPaymentBatchApprovalState.Entity = value;
+					this.SendPropertyChanged("ToPaymentBatchApprovalState");
 				}
 			}
 		}
