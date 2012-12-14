@@ -5,10 +5,12 @@
 	[is_current] [bit] NOT NULL,
 	[payment_threshold] [money] NULL,
 	[parent_batch_id] [int] NULL,
+	[payment_method_id] INT NULL, 
  CONSTRAINT [PK_PaymentBatch] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY], 
+    CONSTRAINT [FK_PaymentBatch_AffiliatePaymentMethod] FOREIGN KEY ([payment_method_id]) REFERENCES [AffiliatePaymentMethod]([id])
 ) ON [PRIMARY]
 
 GO
