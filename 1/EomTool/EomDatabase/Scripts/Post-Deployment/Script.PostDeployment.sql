@@ -70,4 +70,11 @@ ALTER TABLE dbo.Item ADD CONSTRAINT
 	) ON UPDATE  NO ACTION 
 	 ON DELETE  NO ACTION 
 GO
+
+//TODO: Add first and second batch approvers to DAMain1 Settings table
 */
+
+INSERT INTO [dbo].[Identity] VALUES
+	 (1, 'DIRECTAGENTS\Jberger')
+	,(2, 'DIRECTAGENTS\JBoaz')
+GO

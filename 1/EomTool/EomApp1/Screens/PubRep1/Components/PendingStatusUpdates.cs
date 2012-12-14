@@ -104,11 +104,14 @@ namespace EomApp1.Screens.PubRep1.Components
             {
                 if (row.Saved == "-")
                 {
-                    int to = map[row.ToStatus];
-
-                    var itemIDs = GetItemIds(row, excludedItemIDs);
-                    //var batch = GetBatchForItems(itemIDs);
                     Data.PaymentBatch batch = null;
+                    //if (row.ToStatus == "Approved")
+                    //{
+                    //    var itemIDs = GetItemIds(row, excludedItemIDs);
+                    //    batch = GetBatchForItems(itemIDs);
+                    //}
+
+                    int to = map[row.ToStatus];
 
                     // update item_accounting_status_id and set payment_batch_id
                     StringBuilder query = new StringBuilder("update Item set item_accounting_status_id={0}");
@@ -162,8 +165,13 @@ namespace EomApp1.Screens.PubRep1.Components
                          select b).FirstOrDefault();
             if (batch == null)
             {
+                var firstBatchApprover = (from i in db.Identities
+                                          where i.login == EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_First_Batch_Approver
+                                          select i).Single();
+
                 batch = new Data.PaymentBatch()
                 {
+                    approver_identity_id = firstBatchApprover.id,
                     is_current = true,
                     payment_threshold = EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_First_Batch_Threshold
                 };
@@ -177,21 +185,28 @@ namespace EomApp1.Screens.PubRep1.Components
                 var batchItems = (from i in db.Items
                                   where i.payment_batch_id == batch.id
                                   select i);
-                var batchTotal = batchItems.Sum(i => i.total_cost);
+                var batchTotal = batchItems.Sum(i => i.total_cost) ?? 0;
+                //batchItems.Select(i => i.Currency.to_usd_multiplier)
 
                 var itemsToUpdate = (from i in db.Items
                                      where itemIDs.Contains(i.id)
                                      select i);
-                var totalToUpdate = itemsToUpdate.Sum(i => i.total_cost);
+                var totalToUpdate = itemsToUpdate.Sum(i => i.total_cost) ?? 0;
 
                 if (batchTotal + totalToUpdate > batch.payment_threshold.Value)
                 {
+                    var secondBatchApprover = (from i in db.Identities
+                                               where i.login == EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_Second_Batch_Approver
+                                               select i).Single();
+
                     batch = new Data.PaymentBatch()
                     {
+                        approver_identity_id = secondBatchApprover.id,
                         is_current = true
                     };
                     db.PaymentBatches.InsertOnSubmit(batch);
                     db.SubmitChanges();
+                    //TODO: set is_current to false on previous batch ??
                 }
             }
             return batch;

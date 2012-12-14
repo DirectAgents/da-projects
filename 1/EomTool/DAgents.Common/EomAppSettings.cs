@@ -41,12 +41,12 @@ namespace EomAppCommon
         private static Dictionary<string, string> SettingsDictionary;
         
         public string EomAppSettings_MediaBuyerWorkflow_Email_From { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_From"); } }
-        
         public string EomAppSettings_MediaBuyerWorkflow_Email_Subject { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_Subject"); } }
-
         public string EomAppSettings_MediaBuyerWorkflow_Email_Link { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_Link"); } }
 
         public int? EomAppSettings_PaymentWorkflow_First_Batch_Threshold { get { return GetIntSetting("EomAppSettings_PaymentWorkflow_First_Batch_Threshold"); } }
+        public string EomAppSettings_PaymentWorkflow_First_Batch_Approver { get { return GetSetting("EomAppSettings_PaymentWorkflow_First_Batch_Approver"); } }
+        public string EomAppSettings_PaymentWorkflow_Second_Batch_Approver { get { return GetSetting("EomAppSettings_PaymentWorkflow_Second_Batch_Approver"); } }
 
         private int? GetIntSetting(string settingName)
         {
