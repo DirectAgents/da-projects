@@ -8,12 +8,13 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
@@ -35,6 +36,14 @@ using System.Runtime.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatus", "MediaBuyerApprovalStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "BatchBatchUpdate", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Batch), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate))]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "MediaBuyerApprovalStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.CampaignStatus), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_Identity", "Identity", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.Identity), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_Item_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatch1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatchApprovalState), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatchUpdate), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatchApprovalState), "PaymentBatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatchUpdate), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatchApprovalState), "PaymentBatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatchUpdate), true)]
 
 #endregion
 
@@ -437,8 +446,73 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<BatchUpdate> _BatchUpdates;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Identity> Identities
+        {
+            get
+            {
+                if ((_Identities == null))
+                {
+                    _Identities = base.CreateObjectSet<Identity>("Identities");
+                }
+                return _Identities;
+            }
+        }
+        private ObjectSet<Identity> _Identities;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<PaymentBatch> PaymentBatches
+        {
+            get
+            {
+                if ((_PaymentBatches == null))
+                {
+                    _PaymentBatches = base.CreateObjectSet<PaymentBatch>("PaymentBatches");
+                }
+                return _PaymentBatches;
+            }
+        }
+        private ObjectSet<PaymentBatch> _PaymentBatches;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<PaymentBatchApprovalState> PaymentBatchApprovalStates
+        {
+            get
+            {
+                if ((_PaymentBatchApprovalStates == null))
+                {
+                    _PaymentBatchApprovalStates = base.CreateObjectSet<PaymentBatchApprovalState>("PaymentBatchApprovalStates");
+                }
+                return _PaymentBatchApprovalStates;
+            }
+        }
+        private ObjectSet<PaymentBatchApprovalState> _PaymentBatchApprovalStates;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<PaymentBatchUpdate> PaymentBatchUpdates
+        {
+            get
+            {
+                if ((_PaymentBatchUpdates == null))
+                {
+                    _PaymentBatchUpdates = base.CreateObjectSet<PaymentBatchUpdate>("PaymentBatchUpdates");
+                }
+                return _PaymentBatchUpdates;
+            }
+        }
+        private ObjectSet<PaymentBatchUpdate> _PaymentBatchUpdates;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -616,13 +690,45 @@ namespace EomTool.Domain.Entities
         {
             base.AddObject("BatchUpdates", batchUpdate);
         }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Identities EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToIdentities(Identity identity)
+        {
+            base.AddObject("Identities", identity);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the PaymentBatches EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToPaymentBatches(PaymentBatch paymentBatch)
+        {
+            base.AddObject("PaymentBatches", paymentBatch);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the PaymentBatchApprovalStates EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToPaymentBatchApprovalStates(PaymentBatchApprovalState paymentBatchApprovalState)
+        {
+            base.AddObject("PaymentBatchApprovalStates", paymentBatchApprovalState);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the PaymentBatchUpdates EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToPaymentBatchUpdates(PaymentBatchUpdate paymentBatchUpdate)
+        {
+            base.AddObject("PaymentBatchUpdates", paymentBatchUpdate);
+        }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -652,7 +758,8 @@ namespace EomTool.Domain.Entities
         /// <param name="status">Initial value of the Status property.</param>
         /// <param name="accounting_Status">Initial value of the Accounting_Status property.</param>
         /// <param name="source">Initial value of the Source property.</param>
-        public static AccountingView2 CreateAccountingView2(global::System.String publisher, global::System.String advertiser, global::System.Int32 campaign_Number, global::System.String campaign_Name, global::System.String rev_Currency, global::System.String cost_Currency, global::System.Decimal rev_Unit, global::System.Decimal cost_Unit, global::System.String unit_Type, global::System.String ad_Manager, global::System.String account_Manager, global::System.String status, global::System.String accounting_Status, global::System.String source)
+        /// <param name="mediaBuyerApproval_Status">Initial value of the MediaBuyerApproval_Status property.</param>
+        public static AccountingView2 CreateAccountingView2(global::System.String publisher, global::System.String advertiser, global::System.Int32 campaign_Number, global::System.String campaign_Name, global::System.String rev_Currency, global::System.String cost_Currency, global::System.Decimal rev_Unit, global::System.Decimal cost_Unit, global::System.String unit_Type, global::System.String ad_Manager, global::System.String account_Manager, global::System.String status, global::System.String accounting_Status, global::System.String source, global::System.String mediaBuyerApproval_Status)
         {
             AccountingView2 accountingView2 = new AccountingView2();
             accountingView2.Publisher = publisher;
@@ -669,10 +776,12 @@ namespace EomTool.Domain.Entities
             accountingView2.Status = status;
             accountingView2.Accounting_Status = accounting_Status;
             accountingView2.Source = source;
+            accountingView2.MediaBuyerApproval_Status = mediaBuyerApproval_Status;
             return accountingView2;
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1412,8 +1521,36 @@ namespace EomTool.Domain.Entities
         private global::System.String _Source;
         partial void OnSourceChanging(global::System.String value);
         partial void OnSourceChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String MediaBuyerApproval_Status
+        {
+            get
+            {
+                return _MediaBuyerApproval_Status;
+            }
+            set
+            {
+                if (_MediaBuyerApproval_Status != value)
+                {
+                    OnMediaBuyerApproval_StatusChanging(value);
+                    ReportPropertyChanging("MediaBuyerApproval_Status");
+                    _MediaBuyerApproval_Status = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("MediaBuyerApproval_Status");
+                    OnMediaBuyerApproval_StatusChanged();
+                }
+            }
+        }
+        private global::System.String _MediaBuyerApproval_Status;
+        partial void OnMediaBuyerApproval_StatusChanging(global::System.String value);
+        partial void OnMediaBuyerApproval_StatusChanged();
 
         #endregion
+
     
     }
     
@@ -1441,6 +1578,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1495,6 +1633,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -1521,6 +1660,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -1561,6 +1701,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -1903,6 +2044,7 @@ namespace EomTool.Domain.Entities
         partial void Onexternal_idChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2059,6 +2201,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2083,6 +2226,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2137,6 +2281,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2185,6 +2330,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2215,6 +2361,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -2389,6 +2536,7 @@ namespace EomTool.Domain.Entities
         partial void Onfrom_media_buyer_approval_status_idChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -2491,6 +2639,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -2527,6 +2676,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3037,6 +3187,7 @@ namespace EomTool.Domain.Entities
         partial void Onexternal_idChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3155,6 +3306,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3191,6 +3343,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3551,6 +3704,7 @@ namespace EomTool.Domain.Entities
         partial void OnTotalChanged();
 
         #endregion
+
     
     }
     
@@ -3580,6 +3734,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3832,6 +3987,7 @@ namespace EomTool.Domain.Entities
         partial void OnTotalChanged();
 
         #endregion
+
     
     }
     
@@ -3859,6 +4015,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -3913,6 +4070,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -3937,8 +4095,31 @@ namespace EomTool.Domain.Entities
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "Item")]
+        public EntityCollection<Item> Items
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "Item");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "Item", value);
+                }
+            }
+        }
 
         #endregion
+
     }
     
     /// <summary>
@@ -3967,6 +4148,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4045,6 +4227,7 @@ namespace EomTool.Domain.Entities
         partial void Onto_usd_multiplierChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4115,6 +4298,116 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="Identity")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Identity : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Identity object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="login">Initial value of the login property.</param>
+        public static Identity CreateIdentity(global::System.Int32 id, global::System.String login)
+        {
+            Identity identity = new Identity();
+            identity.id = id;
+            identity.login = login;
+            return identity;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String login
+        {
+            get
+            {
+                return _login;
+            }
+            set
+            {
+                OnloginChanging(value);
+                ReportPropertyChanging("login");
+                _login = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("login");
+                OnloginChanged();
+            }
+        }
+        private global::System.String _login;
+        partial void OnloginChanging(global::System.String value);
+        partial void OnloginChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_Identity", "PaymentBatch")]
+        public EntityCollection<PaymentBatch> PaymentBatches
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_Identity", "PaymentBatch");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_Identity", "PaymentBatch", value);
+                }
+            }
+        }
+
+        #endregion
+
     }
     
     /// <summary>
@@ -4171,6 +4464,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -4727,8 +5021,33 @@ namespace EomTool.Domain.Entities
         private Nullable<global::System.Int32> _batch_id;
         partial void Onbatch_idChanging(Nullable<global::System.Int32> value);
         partial void Onbatch_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> payment_batch_id
+        {
+            get
+            {
+                return _payment_batch_id;
+            }
+            set
+            {
+                Onpayment_batch_idChanging(value);
+                ReportPropertyChanging("payment_batch_id");
+                _payment_batch_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("payment_batch_id");
+                Onpayment_batch_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _payment_batch_id;
+        partial void Onpayment_batch_idChanging(Nullable<global::System.Int32> value);
+        partial void Onpayment_batch_idChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -4997,8 +5316,85 @@ namespace EomTool.Domain.Entities
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus")]
+        public CampaignStatus CampaignStatus
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatus>("EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatus>("EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<CampaignStatus> CampaignStatusReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<CampaignStatus>("EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatus>("EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Item_PaymentBatch", "PaymentBatch")]
+        public PaymentBatch PaymentBatch
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_Item_PaymentBatch", "PaymentBatch").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_Item_PaymentBatch", "PaymentBatch").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<PaymentBatch> PaymentBatchReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_Item_PaymentBatch", "PaymentBatch");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatch>("EomModel.FK_Item_PaymentBatch", "PaymentBatch", value);
+                }
+            }
+        }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5025,6 +5421,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5079,6 +5476,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5105,6 +5503,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5131,6 +5530,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5185,6 +5585,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5211,6 +5612,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5237,6 +5639,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5291,6 +5694,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5361,6 +5765,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -5387,6 +5792,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -5441,6 +5847,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -5467,6 +5874,804 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="PaymentBatch")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class PaymentBatch : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new PaymentBatch object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="payment_batch_approval_state_id">Initial value of the payment_batch_approval_state_id property.</param>
+        /// <param name="is_current">Initial value of the is_current property.</param>
+        public static PaymentBatch CreatePaymentBatch(global::System.Int32 id, global::System.Int32 payment_batch_approval_state_id, global::System.Boolean is_current)
+        {
+            PaymentBatch paymentBatch = new PaymentBatch();
+            paymentBatch.id = id;
+            paymentBatch.payment_batch_approval_state_id = payment_batch_approval_state_id;
+            paymentBatch.is_current = is_current;
+            return paymentBatch;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> approver_identity_id
+        {
+            get
+            {
+                return _approver_identity_id;
+            }
+            set
+            {
+                Onapprover_identity_idChanging(value);
+                ReportPropertyChanging("approver_identity_id");
+                _approver_identity_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("approver_identity_id");
+                Onapprover_identity_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _approver_identity_id;
+        partial void Onapprover_identity_idChanging(Nullable<global::System.Int32> value);
+        partial void Onapprover_identity_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 payment_batch_approval_state_id
+        {
+            get
+            {
+                return _payment_batch_approval_state_id;
+            }
+            set
+            {
+                Onpayment_batch_approval_state_idChanging(value);
+                ReportPropertyChanging("payment_batch_approval_state_id");
+                _payment_batch_approval_state_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("payment_batch_approval_state_id");
+                Onpayment_batch_approval_state_idChanged();
+            }
+        }
+        private global::System.Int32 _payment_batch_approval_state_id;
+        partial void Onpayment_batch_approval_state_idChanging(global::System.Int32 value);
+        partial void Onpayment_batch_approval_state_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean is_current
+        {
+            get
+            {
+                return _is_current;
+            }
+            set
+            {
+                Onis_currentChanging(value);
+                ReportPropertyChanging("is_current");
+                _is_current = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("is_current");
+                Onis_currentChanged();
+            }
+        }
+        private global::System.Boolean _is_current;
+        partial void Onis_currentChanging(global::System.Boolean value);
+        partial void Onis_currentChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> payment_threshold
+        {
+            get
+            {
+                return _payment_threshold;
+            }
+            set
+            {
+                Onpayment_thresholdChanging(value);
+                ReportPropertyChanging("payment_threshold");
+                _payment_threshold = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("payment_threshold");
+                Onpayment_thresholdChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _payment_threshold;
+        partial void Onpayment_thresholdChanging(Nullable<global::System.Decimal> value);
+        partial void Onpayment_thresholdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> parent_batch_id
+        {
+            get
+            {
+                return _parent_batch_id;
+            }
+            set
+            {
+                Onparent_batch_idChanging(value);
+                ReportPropertyChanging("parent_batch_id");
+                _parent_batch_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("parent_batch_id");
+                Onparent_batch_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _parent_batch_id;
+        partial void Onparent_batch_idChanging(Nullable<global::System.Int32> value);
+        partial void Onparent_batch_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> payment_method_id
+        {
+            get
+            {
+                return _payment_method_id;
+            }
+            set
+            {
+                Onpayment_method_idChanging(value);
+                ReportPropertyChanging("payment_method_id");
+                _payment_method_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("payment_method_id");
+                Onpayment_method_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _payment_method_id;
+        partial void Onpayment_method_idChanging(Nullable<global::System.Int32> value);
+        partial void Onpayment_method_idChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_Identity", "Identity")]
+        public Identity Identity
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Identity>("EomModel.FK_PaymentBatch_Identity", "Identity").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Identity>("EomModel.FK_PaymentBatch_Identity", "Identity").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Identity> IdentityReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Identity>("EomModel.FK_PaymentBatch_Identity", "Identity");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Identity>("EomModel.FK_PaymentBatch_Identity", "Identity", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Item_PaymentBatch", "Item")]
+        public EntityCollection<Item> Items
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.FK_Item_PaymentBatch", "Item");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.FK_Item_PaymentBatch", "Item", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch1")]
+        public EntityCollection<PaymentBatch> PaymentBatchChildren
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatch", "PaymentBatch1");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatch", "PaymentBatch1", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch")]
+        public PaymentBatch PaymentBatchParent
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatch", "PaymentBatch").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatch", "PaymentBatch").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<PaymentBatch> PaymentBatchParentReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatch", "PaymentBatch");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatch", "PaymentBatch", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState")]
+        public PaymentBatchApprovalState PaymentBatchApprovalState
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<PaymentBatchApprovalState> PaymentBatchApprovalStateReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatchApprovalState>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatchUpdate")]
+        public EntityCollection<PaymentBatchUpdate> PaymentBatchUpdates
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PaymentBatchUpdate>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatchUpdate");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PaymentBatchUpdate>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatchUpdate", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="PaymentBatchApprovalState")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class PaymentBatchApprovalState : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new PaymentBatchApprovalState object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="name">Initial value of the name property.</param>
+        public static PaymentBatchApprovalState CreatePaymentBatchApprovalState(global::System.Int32 id, global::System.String name)
+        {
+            PaymentBatchApprovalState paymentBatchApprovalState = new PaymentBatchApprovalState();
+            paymentBatchApprovalState.id = id;
+            paymentBatchApprovalState.name = name;
+            return paymentBatchApprovalState;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatch")]
+        public EntityCollection<PaymentBatch> PaymentBatches
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatch");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatch", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="PaymentBatchUpdate")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class PaymentBatchUpdate : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new PaymentBatchUpdate object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="payment_batch_id">Initial value of the payment_batch_id property.</param>
+        /// <param name="timestamp">Initial value of the timestamp property.</param>
+        public static PaymentBatchUpdate CreatePaymentBatchUpdate(global::System.Int32 id, global::System.Int32 payment_batch_id, global::System.DateTime timestamp)
+        {
+            PaymentBatchUpdate paymentBatchUpdate = new PaymentBatchUpdate();
+            paymentBatchUpdate.id = id;
+            paymentBatchUpdate.payment_batch_id = payment_batch_id;
+            paymentBatchUpdate.timestamp = timestamp;
+            return paymentBatchUpdate;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 payment_batch_id
+        {
+            get
+            {
+                return _payment_batch_id;
+            }
+            set
+            {
+                Onpayment_batch_idChanging(value);
+                ReportPropertyChanging("payment_batch_id");
+                _payment_batch_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("payment_batch_id");
+                Onpayment_batch_idChanged();
+            }
+        }
+        private global::System.Int32 _payment_batch_id;
+        partial void Onpayment_batch_idChanging(global::System.Int32 value);
+        partial void Onpayment_batch_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> from_payment_batch_approval_state_id
+        {
+            get
+            {
+                return _from_payment_batch_approval_state_id;
+            }
+            set
+            {
+                Onfrom_payment_batch_approval_state_idChanging(value);
+                ReportPropertyChanging("from_payment_batch_approval_state_id");
+                _from_payment_batch_approval_state_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("from_payment_batch_approval_state_id");
+                Onfrom_payment_batch_approval_state_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _from_payment_batch_approval_state_id;
+        partial void Onfrom_payment_batch_approval_state_idChanging(Nullable<global::System.Int32> value);
+        partial void Onfrom_payment_batch_approval_state_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> to_payment_batch_approval_state_id
+        {
+            get
+            {
+                return _to_payment_batch_approval_state_id;
+            }
+            set
+            {
+                Onto_payment_batch_approval_state_idChanging(value);
+                ReportPropertyChanging("to_payment_batch_approval_state_id");
+                _to_payment_batch_approval_state_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("to_payment_batch_approval_state_id");
+                Onto_payment_batch_approval_state_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _to_payment_batch_approval_state_id;
+        partial void Onto_payment_batch_approval_state_idChanging(Nullable<global::System.Int32> value);
+        partial void Onto_payment_batch_approval_state_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String note
+        {
+            get
+            {
+                return _note;
+            }
+            set
+            {
+                OnnoteChanging(value);
+                ReportPropertyChanging("note");
+                _note = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("note");
+                OnnoteChanged();
+            }
+        }
+        private global::System.String _note;
+        partial void OnnoteChanging(global::System.String value);
+        partial void OnnoteChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime timestamp
+        {
+            get
+            {
+                return _timestamp;
+            }
+            set
+            {
+                OntimestampChanging(value);
+                ReportPropertyChanging("timestamp");
+                _timestamp = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("timestamp");
+                OntimestampChanged();
+            }
+        }
+        private global::System.DateTime _timestamp;
+        partial void OntimestampChanging(global::System.DateTime value);
+        partial void OntimestampChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch")]
+        public PaymentBatch PaymentBatch
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<PaymentBatch> PaymentBatchReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState")]
+        public PaymentBatchApprovalState FromPaymentBatchApprovalState
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<PaymentBatchApprovalState> FromPaymentBatchApprovalStateReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState")]
+        public PaymentBatchApprovalState ToPaymentBatchApprovalState
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<PaymentBatchApprovalState> ToPaymentBatchApprovalStateReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState", value);
+                }
+            }
+        }
+
+        #endregion
+
     }
     
     /// <summary>
@@ -5527,6 +6732,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6451,6 +7657,7 @@ namespace EomTool.Domain.Entities
         partial void OnBatchIdsChanged();
 
         #endregion
+
     
     }
     
@@ -6488,6 +7695,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -6848,6 +8056,7 @@ namespace EomTool.Domain.Entities
         partial void OnTotalChanged();
 
         #endregion
+
     
     }
     
@@ -6887,6 +8096,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7226,6 +8436,7 @@ namespace EomTool.Domain.Entities
         partial void OnItemIDsChanged();
 
         #endregion
+
     
     }
     
@@ -7253,6 +8464,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7406,6 +8618,7 @@ namespace EomTool.Domain.Entities
         partial void OnTotalChanged();
 
         #endregion
+
     
     }
     
@@ -7433,6 +8646,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7487,6 +8701,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -7513,6 +8728,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -7539,6 +8755,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7593,6 +8810,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -7641,6 +8859,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
     
     /// <summary>
@@ -7667,6 +8886,7 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -7721,6 +8941,7 @@ namespace EomTool.Domain.Entities
         partial void OnnameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -7747,8 +8968,10 @@ namespace EomTool.Domain.Entities
         }
 
         #endregion
+
     }
 
     #endregion
+
     
 }

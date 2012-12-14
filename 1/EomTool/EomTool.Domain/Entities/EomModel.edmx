@@ -14,11 +14,15 @@
           <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Identity" EntityType="EomModel.Store.Identity" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MediaBuyer" EntityType="EomModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MediaBuyerApprovalStatus" EntityType="EomModel.Store.MediaBuyerApprovalStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PaymentBatch" EntityType="EomModel.Store.PaymentBatch" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PaymentBatchApprovalState" EntityType="EomModel.Store.PaymentBatchApprovalState" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PaymentBatchUpdate" EntityType="EomModel.Store.PaymentBatchUpdate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UnitType" EntityType="EomModel.Store.UnitType" store:Type="Tables" Schema="dbo" />
@@ -46,6 +50,7 @@
       [AccountingView2].[Ad Manager] AS [Ad Manager], 
       [AccountingView2].[Account Manager] AS [Account Manager], 
       [AccountingView2].[Status] AS [Status], 
+      [AccountingView2].[MediaBuyerApproval Status] AS [MediaBuyerApproval Status], 
       [AccountingView2].[Accounting Status] AS [Accounting Status], 
       [AccountingView2].[name] AS [name], 
       [AccountingView2].[Aff Pay Method] AS [Aff Pay Method], 
@@ -196,7 +201,7 @@
             <End Role="CampaignStatus" EntitySet="CampaignStatus" />
             <End Role="Campaign" EntitySet="Campaign" />
           </AssociationSet>
-          <AssociationSet Name="FK__Item__media_buye__540C7B00" Association="EomModel.Store.FK__Item__media_buye__540C7B00">
+          <AssociationSet Name="FK__Item__media_buye__76969D2E" Association="EomModel.Store.FK__Item__media_buye__76969D2E">
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
             <End Role="Item" EntitySet="Item" />
           </AssociationSet>
@@ -218,6 +223,38 @@
           </AssociationSet>
           <AssociationSet Name="FK_Item_Batch" Association="EomModel.Store.FK_Item_Batch">
             <End Role="Batch" EntitySet="Batch" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_PaymentBatch" Association="EomModel.Store.FK_Item_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_Identity" Association="EomModel.Store.FK_PaymentBatch_Identity">
+            <End Role="Identity" EntitySet="Identity" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatch" Association="EomModel.Store.FK_PaymentBatch_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+            <End Role="PaymentBatch1" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatchApprovalState" Association="EomModel.Store.FK_PaymentBatch_PaymentBatchApprovalState">
+            <End Role="PaymentBatchApprovalState" EntitySet="PaymentBatchApprovalState" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatchUpdate_PaymentBatch" Association="EomModel.Store.FK_PaymentBatchUpdate_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+            <End Role="PaymentBatchUpdate" EntitySet="PaymentBatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_1_PaymentBatchApprovalStateFrom" Association="EomModel.Store.FK_Table_1_PaymentBatchApprovalStateFrom">
+            <End Role="PaymentBatchApprovalState" EntitySet="PaymentBatchApprovalState" />
+            <End Role="PaymentBatchUpdate" EntitySet="PaymentBatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_1_PaymentBatchApprovalStateTo" Association="EomModel.Store.FK_Table_1_PaymentBatchApprovalStateTo">
+            <End Role="PaymentBatchApprovalState" EntitySet="PaymentBatchApprovalState" />
+            <End Role="PaymentBatchUpdate" EntitySet="PaymentBatchUpdate" />
+          </AssociationSet>
+          <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Store.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+            <End Role="CampaignStatus" EntitySet="CampaignStatus" />
             <End Role="Item" EntitySet="Item" />
           </AssociationSet>
           <AssociationSet Name="Item_Currency_id_FK_Currency_id_PK" Association="EomModel.Store.Item_Currency_id_FK_Currency_id_PK">
@@ -345,6 +382,13 @@
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="to_usd_multiplier" Type="decimal" Nullable="false" Precision="14" Scale="4" />
         </EntityType>
+        <EntityType Name="Identity">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="login" Type="varchar" Nullable="false" MaxLength="255" />
+        </EntityType>
         <EntityType Name="Item">
           <Key>
             <PropertyRef Name="id" />
@@ -365,13 +409,14 @@
           <Property Name="accounting_notes" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="item_accounting_status_id" Type="int" Nullable="false" />
           <Property Name="item_reporting_status_id" Type="int" Nullable="false" />
+          <Property Name="campaign_status_id" Type="int" Nullable="false" />
           <Property Name="total_revenue" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
           <Property Name="total_cost" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
           <Property Name="margin" Type="money" StoreGeneratedPattern="Computed" />
           <Property Name="modified" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
-          <Property Name="campaign_status_id" Type="int" Nullable="false" />
           <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
           <Property Name="batch_id" Type="int" />
+          <Property Name="payment_batch_id" Type="int" />
         </EntityType>
         <EntityType Name="ItemAccountingStatus">
           <Key>
@@ -391,7 +436,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="NetTermType">
@@ -400,6 +445,36 @@
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PaymentBatch">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="approver_identity_id" Type="int" />
+          <Property Name="payment_batch_approval_state_id" Type="int" Nullable="false" />
+          <Property Name="is_current" Type="bit" Nullable="false" />
+          <Property Name="payment_threshold" Type="money" />
+          <Property Name="parent_batch_id" Type="int" />
+          <Property Name="payment_method_id" Type="int" />
+        </EntityType>
+        <EntityType Name="PaymentBatchApprovalState">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PaymentBatchUpdate">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="payment_batch_id" Type="int" Nullable="false" />
+          <Property Name="from_payment_batch_approval_state_id" Type="int" />
+          <Property Name="to_payment_batch_approval_state_id" Type="int" />
+          <Property Name="note" Type="varchar(max)" />
+          <Property Name="timestamp" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Source">
           <Key>
@@ -423,7 +498,7 @@
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.AccountingView2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.AccountingView2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="AccountingView2">
           <Key>
@@ -439,6 +514,7 @@
             <PropertyRef Name="Ad Manager" />
             <PropertyRef Name="Account Manager" />
             <PropertyRef Name="Status" />
+            <PropertyRef Name="MediaBuyerApproval Status" />
             <PropertyRef Name="Accounting Status" />
             <PropertyRef Name="Source" />
           </Key>
@@ -464,6 +540,7 @@
           <Property Name="Ad Manager" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Account Manager" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="MediaBuyerApproval Status" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Accounting Status" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="name" Type="varchar" MaxLength="50" />
           <Property Name="Aff Pay Method" Type="varchar" MaxLength="50" />
@@ -473,7 +550,7 @@
           <Property Name="Source" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="CampaignsPublisherReportDetails">
           <Key>
@@ -501,7 +578,7 @@
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.CampaignsPublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="CampaignsPublisherReportSummary">
           <Key>
@@ -521,7 +598,7 @@
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="PublisherPayouts">
           <Key>
@@ -583,7 +660,7 @@
           <Property Name="BatchIds" Type="nvarchar" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.PublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="PublisherReportDetails">
           <Key>
@@ -611,7 +688,7 @@
           <Property Name="ItemIDs" Type="nvarchar" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.PublisherReports' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="PublisherReports">
           <Key>
@@ -639,7 +716,7 @@
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseJuly2012Test2.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.PublisherReportSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="PublisherReportSummary">
           <Key>
@@ -725,7 +802,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Item__media_buye__540C7B00">
+        <Association Name="FK__Item__media_buye__76969D2E">
           <End Role="MediaBuyerApprovalStatus" Type="EomModel.Store.MediaBuyerApprovalStatus" Multiplicity="1" />
           <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
           <ReferentialConstraint>
@@ -794,6 +871,102 @@
             </Principal>
             <Dependent Role="Item">
               <PropertyRef Name="batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_PaymentBatch">
+          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="0..1" />
+          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_Identity">
+          <End Role="Identity" Type="EomModel.Store.Identity" Multiplicity="0..1" />
+          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Identity">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="approver_identity_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_PaymentBatch">
+          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="0..1" />
+          <End Role="PaymentBatch1" Type="EomModel.Store.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch1">
+              <PropertyRef Name="parent_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_PaymentBatchApprovalState">
+          <End Role="PaymentBatchApprovalState" Type="EomModel.Store.PaymentBatchApprovalState" Multiplicity="1" />
+          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatchApprovalState">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="payment_batch_approval_state_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatchUpdate_PaymentBatch">
+          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="1" />
+          <End Role="PaymentBatchUpdate" Type="EomModel.Store.PaymentBatchUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatchUpdate">
+              <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_1_PaymentBatchApprovalStateFrom">
+          <End Role="PaymentBatchApprovalState" Type="EomModel.Store.PaymentBatchApprovalState" Multiplicity="0..1" />
+          <End Role="PaymentBatchUpdate" Type="EomModel.Store.PaymentBatchUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatchApprovalState">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatchUpdate">
+              <PropertyRef Name="from_payment_batch_approval_state_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_1_PaymentBatchApprovalStateTo">
+          <End Role="PaymentBatchApprovalState" Type="EomModel.Store.PaymentBatchApprovalState" Multiplicity="0..1" />
+          <End Role="PaymentBatchUpdate" Type="EomModel.Store.PaymentBatchUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatchApprovalState">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatchUpdate">
+              <PropertyRef Name="to_payment_batch_approval_state_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+          <End Role="CampaignStatus" Type="EomModel.Store.CampaignStatus" Multiplicity="1" />
+          <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="campaign_status_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -964,6 +1137,42 @@
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatuses" />
             <End Role="BatchUpdate" EntitySet="BatchUpdates" />
           </AssociationSet>
+          <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+            <End Role="CampaignStatus" EntitySet="CampaignStatuses" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <EntitySet Name="Identities" EntityType="EomModel.Identity" />
+          <EntitySet Name="PaymentBatches" EntityType="EomModel.PaymentBatch" />
+          <EntitySet Name="PaymentBatchApprovalStates" EntityType="EomModel.PaymentBatchApprovalState" />
+          <EntitySet Name="PaymentBatchUpdates" EntityType="EomModel.PaymentBatchUpdate" />
+          <AssociationSet Name="FK_PaymentBatch_Identity" Association="EomModel.FK_PaymentBatch_Identity">
+            <End Role="Identity" EntitySet="Identities" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_PaymentBatch" Association="EomModel.FK_Item_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatch" Association="EomModel.FK_PaymentBatch_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+            <End Role="PaymentBatch1" EntitySet="PaymentBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatchApprovalState" Association="EomModel.FK_PaymentBatch_PaymentBatchApprovalState">
+            <End Role="PaymentBatchApprovalState" EntitySet="PaymentBatchApprovalStates" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatchUpdate_PaymentBatch" Association="EomModel.FK_PaymentBatchUpdate_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+            <End Role="PaymentBatchUpdate" EntitySet="PaymentBatchUpdates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_1_PaymentBatchApprovalStateFrom" Association="EomModel.FK_Table_1_PaymentBatchApprovalStateFrom">
+            <End Role="PaymentBatchApprovalState" EntitySet="PaymentBatchApprovalStates" />
+            <End Role="PaymentBatchUpdate" EntitySet="PaymentBatchUpdates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_1_PaymentBatchApprovalStateTo" Association="EomModel.FK_Table_1_PaymentBatchApprovalStateTo">
+            <End Role="PaymentBatchApprovalState" EntitySet="PaymentBatchApprovalStates" />
+            <End Role="PaymentBatchUpdate" EntitySet="PaymentBatchUpdates" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -987,8 +1196,8 @@
           <Property Name="net_term_type_id" Type="Int32" />
           <Property Name="payment_method_id" Type="Int32" Nullable="false" />
           <Property Name="name2" Type="String" Nullable="false" MaxLength="358" Unicode="false" FixedLength="false" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="date_created" Type="DateTime" />
-          <Property Name="date_modified" Type="DateTime" />
+          <Property Name="date_created" Type="DateTime" Precision="3" />
+          <Property Name="date_modified" Type="DateTime" Precision="3" />
           <Property Name="tracking_system_id" Type="Int32" />
           <Property Name="external_id" Type="Int32" />
           <NavigationProperty Name="Currency" Relationship="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" FromRole="Affiliate" ToRole="Currency" />
@@ -1008,8 +1217,8 @@
           <Property Name="pid" Type="Int32" Nullable="false" />
           <Property Name="campaign_name" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
           <Property Name="campaign_type" Type="String" MaxLength="3" Unicode="false" FixedLength="true" />
-          <Property Name="modified" Type="DateTime" />
-          <Property Name="created" Type="DateTime" />
+          <Property Name="modified" Type="DateTime" Precision="3" />
+          <Property Name="created" Type="DateTime" Precision="3" />
           <Property Name="dt_campaign_status" Type="String" MaxLength="25" Unicode="false" FixedLength="false" />
           <Property Name="dt_campaign_url" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
           <Property Name="dt_allowed_country_names" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
@@ -1032,6 +1241,7 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="CampaignStatus" ToRole="Campaign" />
+          <NavigationProperty Name="Items" Relationship="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="CampaignStatus" ToRole="Item" />
         </EntityType>
         <EntityType Name="Currency">
           <Key>
@@ -1067,7 +1277,7 @@
           <Property Name="total_revenue" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="total_cost" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="margin" Type="Decimal" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="modified" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="modified" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" Precision="3" />
           <Property Name="campaign_status_id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Currency" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Item" ToRole="Currency" />
           <NavigationProperty Name="Currency1" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Item" ToRole="Currency" />
@@ -1078,6 +1288,9 @@
           <NavigationProperty Name="MediaBuyerApprovalStatus" Relationship="EomModel.FK__Item__media_buye__540C7B00" FromRole="Item" ToRole="MediaBuyerApprovalStatu" />
           <Property Type="Int32" Name="batch_id" />
           <NavigationProperty Name="Batch" Relationship="EomModel.FK_Item_Batch" FromRole="Item" ToRole="Batch" />
+          <Property Type="Int32" Name="payment_batch_id" />
+          <NavigationProperty Name="CampaignStatus" Relationship="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="Item" ToRole="CampaignStatus" />
+          <NavigationProperty Name="PaymentBatch" Relationship="EomModel.FK_Item_PaymentBatch" FromRole="Item" ToRole="PaymentBatch" />
         </EntityType>
         <EntityType Name="ItemAccountingStatus">
           <Key>
@@ -1392,6 +1605,7 @@
             <PropertyRef Name="Status" />
             <PropertyRef Name="Accounting_Status" />
             <PropertyRef Name="Source" />
+            <PropertyRef Name="MediaBuyerApproval_Status" />
           </Key>
           <Property Type="String" Name="Publisher" Nullable="false" MaxLength="358" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Advertiser" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -1422,6 +1636,7 @@
           <Property Type="Decimal" Name="Pub_Payout" Precision="38" Scale="6" />
           <Property Type="String" Name="CampaignNotes" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Source" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MediaBuyerApproval_Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="MediaBuyerApprovalStatus">
           <Key>
@@ -1532,7 +1747,7 @@
           <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="author" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="date_created" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="DateTime" Name="date_created" Nullable="false" annotation:StoreGeneratedPattern="Computed" Precision="3" />
           <Property Type="Int32" Name="media_buyer_approval_status_id" />
           <Property Type="String" Name="extra" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="MediaBuyerApprovalStatus" Relationship="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus" FromRole="BatchUpdate" ToRole="MediaBuyerApprovalStatus" />
@@ -1565,6 +1780,150 @@
             </Principal>
             <Dependent Role="BatchUpdate">
               <PropertyRef Name="from_media_buyer_approval_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
+          <End Type="EomModel.CampaignStatus" Role="CampaignStatus" Multiplicity="1" />
+          <End Type="EomModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Identity">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="login" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PaymentBatches" Relationship="EomModel.FK_PaymentBatch_Identity" FromRole="Identity" ToRole="PaymentBatch" />
+        </EntityType>
+        <EntityType Name="PaymentBatch">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="approver_identity_id" />
+          <Property Type="Int32" Name="payment_batch_approval_state_id" Nullable="false" />
+          <Property Type="Boolean" Name="is_current" Nullable="false" />
+          <Property Type="Decimal" Name="payment_threshold" Precision="19" Scale="4" />
+          <Property Type="Int32" Name="parent_batch_id" />
+          <Property Type="Int32" Name="payment_method_id" />
+          <NavigationProperty Name="Identity" Relationship="EomModel.FK_PaymentBatch_Identity" FromRole="PaymentBatch" ToRole="Identity" />
+          <NavigationProperty Name="Items" Relationship="EomModel.FK_Item_PaymentBatch" FromRole="PaymentBatch" ToRole="Item" />
+          <NavigationProperty Name="PaymentBatchChildren" Relationship="EomModel.FK_PaymentBatch_PaymentBatch" FromRole="PaymentBatch" ToRole="PaymentBatch1" />
+          <NavigationProperty Name="PaymentBatchParent" Relationship="EomModel.FK_PaymentBatch_PaymentBatch" FromRole="PaymentBatch1" ToRole="PaymentBatch" />
+          <NavigationProperty Name="PaymentBatchApprovalState" Relationship="EomModel.FK_PaymentBatch_PaymentBatchApprovalState" FromRole="PaymentBatch" ToRole="PaymentBatchApprovalState" />
+          <NavigationProperty Name="PaymentBatchUpdates" Relationship="EomModel.FK_PaymentBatchUpdate_PaymentBatch" FromRole="PaymentBatch" ToRole="PaymentBatchUpdate" />
+        </EntityType>
+        <EntityType Name="PaymentBatchApprovalState">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PaymentBatches" Relationship="EomModel.FK_PaymentBatch_PaymentBatchApprovalState" FromRole="PaymentBatchApprovalState" ToRole="PaymentBatch" />
+        </EntityType>
+        <EntityType Name="PaymentBatchUpdate">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="payment_batch_id" Nullable="false" />
+          <Property Type="Int32" Name="from_payment_batch_approval_state_id" />
+          <Property Type="Int32" Name="to_payment_batch_approval_state_id" />
+          <Property Type="String" Name="note" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="timestamp" Nullable="false" Precision="3" />
+          <NavigationProperty Name="PaymentBatch" Relationship="EomModel.FK_PaymentBatchUpdate_PaymentBatch" FromRole="PaymentBatchUpdate" ToRole="PaymentBatch" />
+          <NavigationProperty Name="FromPaymentBatchApprovalState" Relationship="EomModel.FK_Table_1_PaymentBatchApprovalStateFrom" FromRole="PaymentBatchUpdate" ToRole="PaymentBatchApprovalState" />
+          <NavigationProperty Name="ToPaymentBatchApprovalState" Relationship="EomModel.FK_Table_1_PaymentBatchApprovalStateTo" FromRole="PaymentBatchUpdate" ToRole="PaymentBatchApprovalState" />
+        </EntityType>
+        <Association Name="FK_PaymentBatch_Identity">
+          <End Type="EomModel.Identity" Role="Identity" Multiplicity="0..1" />
+          <End Type="EomModel.PaymentBatch" Role="PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Identity">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="approver_identity_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_PaymentBatch">
+          <End Type="EomModel.PaymentBatch" Role="PaymentBatch" Multiplicity="0..1" />
+          <End Type="EomModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_PaymentBatch">
+          <End Type="EomModel.PaymentBatch" Role="PaymentBatch" Multiplicity="0..1" />
+          <End Type="EomModel.PaymentBatch" Role="PaymentBatch1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch1">
+              <PropertyRef Name="parent_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_PaymentBatchApprovalState">
+          <End Type="EomModel.PaymentBatchApprovalState" Role="PaymentBatchApprovalState" Multiplicity="1" />
+          <End Type="EomModel.PaymentBatch" Role="PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatchApprovalState">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="payment_batch_approval_state_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatchUpdate_PaymentBatch">
+          <End Type="EomModel.PaymentBatch" Role="PaymentBatch" Multiplicity="1" />
+          <End Type="EomModel.PaymentBatchUpdate" Role="PaymentBatchUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatchUpdate">
+              <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_1_PaymentBatchApprovalStateFrom">
+          <End Type="EomModel.PaymentBatchApprovalState" Role="PaymentBatchApprovalState" Multiplicity="0..1" />
+          <End Type="EomModel.PaymentBatchUpdate" Role="PaymentBatchUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatchApprovalState">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatchUpdate">
+              <PropertyRef Name="from_payment_batch_approval_state_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_1_PaymentBatchApprovalStateTo">
+          <End Type="EomModel.PaymentBatchApprovalState" Role="PaymentBatchApprovalState" Multiplicity="0..1" />
+          <End Type="EomModel.PaymentBatchUpdate" Role="PaymentBatchUpdate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatchApprovalState">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatchUpdate">
+              <PropertyRef Name="to_payment_batch_approval_state_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1627,7 +1986,8 @@
             <ScalarProperty Name="to_usd_multiplier" ColumnName="to_usd_multiplier" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Items"><EntityTypeMapping TypeName="EomModel.Item"><MappingFragment StoreEntitySet="Item">
-            <ScalarProperty Name="batch_id" ColumnName="batch_id" />
+            <ScalarProperty Name="payment_batch_id" ColumnName="payment_batch_id" />
+                <ScalarProperty Name="batch_id" ColumnName="batch_id" />
                 <ScalarProperty Name="media_buyer_approval_status_id" ColumnName="media_buyer_approval_status_id" />
                 <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
@@ -1745,6 +2105,7 @@
           <EntitySetMapping Name="AccountingView2">
             <EntityTypeMapping TypeName="EomModel.AccountingView2">
               <MappingFragment StoreEntitySet="AccountingView2">
+                <ScalarProperty Name="MediaBuyerApproval_Status" ColumnName="MediaBuyerApproval Status" />
                 <ScalarProperty Name="Source" ColumnName="Source" />
                 <ScalarProperty Name="CampaignNotes" ColumnName="CampaignNotes" />
                 <ScalarProperty Name="Pub_Payout" ColumnName="Pub Payout" />
@@ -1856,6 +2217,47 @@
               <ScalarProperty Name="id" ColumnName="batch_id" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="Identities">
+            <EntityTypeMapping TypeName="EomModel.Identity">
+              <MappingFragment StoreEntitySet="Identity">
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentBatches">
+            <EntityTypeMapping TypeName="EomModel.PaymentBatch">
+              <MappingFragment StoreEntitySet="PaymentBatch">
+                <ScalarProperty Name="payment_method_id" ColumnName="payment_method_id" />
+                <ScalarProperty Name="parent_batch_id" ColumnName="parent_batch_id" />
+                <ScalarProperty Name="payment_threshold" ColumnName="payment_threshold" />
+                <ScalarProperty Name="is_current" ColumnName="is_current" />
+                <ScalarProperty Name="payment_batch_approval_state_id" ColumnName="payment_batch_approval_state_id" />
+                <ScalarProperty Name="approver_identity_id" ColumnName="approver_identity_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentBatchApprovalStates">
+            <EntityTypeMapping TypeName="EomModel.PaymentBatchApprovalState">
+              <MappingFragment StoreEntitySet="PaymentBatchApprovalState">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentBatchUpdates">
+            <EntityTypeMapping TypeName="EomModel.PaymentBatchUpdate">
+              <MappingFragment StoreEntitySet="PaymentBatchUpdate">
+                <ScalarProperty Name="timestamp" ColumnName="timestamp" />
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="to_payment_batch_approval_state_id" ColumnName="to_payment_batch_approval_state_id" />
+                <ScalarProperty Name="from_payment_batch_approval_state_id" ColumnName="from_payment_batch_approval_state_id" />
+                <ScalarProperty Name="payment_batch_id" ColumnName="payment_batch_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1883,12 +2285,12 @@
         <EntityTypeShape EntityType="EomModel.CampaignStatus" Width="1.5" PointX="3.875" PointY="15.5" Height="1.5956835937500031" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Currency" Width="1.5" PointX="0.75" PointY="5.875" Height="2.1725878906250005" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Item" Width="2.375" PointX="6" PointY="4" Height="6.4032194010416656" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.ItemAccountingStatus" Width="1.5" PointX="3.75" PointY="1.875" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.ItemAccountingStatus" Width="1.5" PointX="6.875" PointY="2" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.MediaBuyer" Width="1.5" PointX="0.75" PointY="2.75" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.NetTermType" Width="1.5" PointX="0.75" PointY="9.125" Height="1.5956835937499996" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.Source" Width="1.5" PointX="3.75" PointY="10.25" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.Source" Width="1.5" PointX="3.625" PointY="10.25" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.TrackingSystem" Width="1.5" PointX="0.75" PointY="11.5" Height="1.7879850260416674" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.UnitType" Width="1.5" PointX="3.75" PointY="12.5" Height="1.5956835937500031" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.UnitType" Width="1.5" PointX="3.875" PointY="12.5" Height="1.5956835937500031" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportDetail" Width="2.5" PointX="17.25" PointY="4.375" Height="3.7109993489583388" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportSummary" Width="2.75" PointX="14.25" PointY="0.5" Height="2.9417936197916674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.PublisherReportDetail" Width="2" PointX="9.875" PointY="8.625" Height="3.5186979166666674" IsExpanded="true" />
@@ -2005,6 +2407,18 @@
           <ConnectorPoint PointX="10.7041015625" PointY="5.875" />
           <ConnectorPoint PointX="10.7041015625" PointY="3.4417936197916665" />
         </AssociationConnector>
+        <AssociationConnector Association="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" />
+        <EntityTypeShape EntityType="EomModel.Identity" Width="1.5" PointX="11.875" PointY="15.875" />
+        <EntityTypeShape EntityType="EomModel.PaymentBatch" Width="2.375" PointX="8.875" PointY="12.5" />
+        <EntityTypeShape EntityType="EomModel.PaymentBatchApprovalState" Width="2.25" PointX="6.125" PointY="17.625" />
+        <EntityTypeShape EntityType="EomModel.PaymentBatchUpdate" Width="2.75" PointX="8.875" PointY="16.5" />
+        <AssociationConnector Association="EomModel.FK_PaymentBatch_Identity" />
+        <AssociationConnector Association="EomModel.FK_Item_PaymentBatch" />
+        <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatch" />
+        <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatchApprovalState" />
+        <AssociationConnector Association="EomModel.FK_PaymentBatchUpdate_PaymentBatch" />
+        <AssociationConnector Association="EomModel.FK_Table_1_PaymentBatchApprovalStateFrom" />
+        <AssociationConnector Association="EomModel.FK_Table_1_PaymentBatchApprovalStateTo" />
         </Diagram>
     </Diagrams>
   </Designer>
