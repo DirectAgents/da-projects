@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[PaymentBatchUpdate](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[payment_batch_id] [int] NOT NULL,
+	[windows_identity] [varchar](255) NULL,
 	[from_payment_batch_approval_state_id] [int] NULL,
 	[to_payment_batch_approval_state_id] [int] NULL,
 	[note] [varchar](max) NULL,

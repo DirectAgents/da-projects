@@ -37,7 +37,6 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "BatchBatchUpdate", "Batch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Batch), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate))]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_BatchUpdate_MediaBuyerApprovalStatusFrom", "MediaBuyerApprovalStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.MediaBuyerApprovalStatus), "BatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.BatchUpdate), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.CampaignStatus), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_Identity", "Identity", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.Identity), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_Item_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatch1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatchApprovalState), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
@@ -450,22 +449,6 @@ namespace EomTool.Domain.Entities
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Identity> Identities
-        {
-            get
-            {
-                if ((_Identities == null))
-                {
-                    _Identities = base.CreateObjectSet<Identity>("Identities");
-                }
-                return _Identities;
-            }
-        }
-        private ObjectSet<Identity> _Identities;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<PaymentBatch> PaymentBatches
         {
             get
@@ -689,14 +672,6 @@ namespace EomTool.Domain.Entities
         public void AddToBatchUpdates(BatchUpdate batchUpdate)
         {
             base.AddObject("BatchUpdates", batchUpdate);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Identities EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToIdentities(Identity identity)
-        {
-            base.AddObject("Identities", identity);
         }
     
         /// <summary>
@@ -4304,115 +4279,6 @@ namespace EomTool.Domain.Entities
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="Identity")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class Identity : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new Identity object.
-        /// </summary>
-        /// <param name="id">Initial value of the id property.</param>
-        /// <param name="login">Initial value of the login property.</param>
-        public static Identity CreateIdentity(global::System.Int32 id, global::System.String login)
-        {
-            Identity identity = new Identity();
-            identity.id = id;
-            identity.login = login;
-            return identity;
-        }
-
-        #endregion
-
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                if (_id != value)
-                {
-                    OnidChanging(value);
-                    ReportPropertyChanging("id");
-                    _id = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("id");
-                    OnidChanged();
-                }
-            }
-        }
-        private global::System.Int32 _id;
-        partial void OnidChanging(global::System.Int32 value);
-        partial void OnidChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String login
-        {
-            get
-            {
-                return _login;
-            }
-            set
-            {
-                OnloginChanging(value);
-                ReportPropertyChanging("login");
-                _login = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("login");
-                OnloginChanged();
-            }
-        }
-        private global::System.String _login;
-        partial void OnloginChanging(global::System.String value);
-        partial void OnloginChanged();
-
-        #endregion
-
-    
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_Identity", "PaymentBatch")]
-        public EntityCollection<PaymentBatch> PaymentBatches
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_Identity", "PaymentBatch");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_Identity", "PaymentBatch", value);
-                }
-            }
-        }
-
-        #endregion
-
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
     [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="Item")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
@@ -5938,24 +5804,24 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> approver_identity_id
+        public global::System.String approver_identity
         {
             get
             {
-                return _approver_identity_id;
+                return _approver_identity;
             }
             set
             {
-                Onapprover_identity_idChanging(value);
-                ReportPropertyChanging("approver_identity_id");
-                _approver_identity_id = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("approver_identity_id");
-                Onapprover_identity_idChanged();
+                Onapprover_identityChanging(value);
+                ReportPropertyChanging("approver_identity");
+                _approver_identity = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("approver_identity");
+                Onapprover_identityChanged();
             }
         }
-        private Nullable<global::System.Int32> _approver_identity_id;
-        partial void Onapprover_identity_idChanging(Nullable<global::System.Int32> value);
-        partial void Onapprover_identity_idChanged();
+        private global::System.String _approver_identity;
+        partial void Onapprover_identityChanging(global::System.String value);
+        partial void Onapprover_identityChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6081,44 +5947,6 @@ namespace EomTool.Domain.Entities
 
     
         #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_Identity", "Identity")]
-        public Identity Identity
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Identity>("EomModel.FK_PaymentBatch_Identity", "Identity").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Identity>("EomModel.FK_PaymentBatch_Identity", "Identity").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<Identity> IdentityReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Identity>("EomModel.FK_PaymentBatch_Identity", "Identity");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Identity>("EomModel.FK_PaymentBatch_Identity", "Identity", value);
-                }
-            }
-        }
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6347,32 +6175,6 @@ namespace EomTool.Domain.Entities
         #endregion
 
     
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatch")]
-        public EntityCollection<PaymentBatch> PaymentBatches
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatch");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PaymentBatch>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatch", value);
-                }
-            }
-        }
-
-        #endregion
-
     }
     
     /// <summary>
@@ -6454,6 +6256,30 @@ namespace EomTool.Domain.Entities
         private global::System.Int32 _payment_batch_id;
         partial void Onpayment_batch_idChanging(global::System.Int32 value);
         partial void Onpayment_batch_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String windows_identity
+        {
+            get
+            {
+                return _windows_identity;
+            }
+            set
+            {
+                Onwindows_identityChanging(value);
+                ReportPropertyChanging("windows_identity");
+                _windows_identity = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("windows_identity");
+                Onwindows_identityChanged();
+            }
+        }
+        private global::System.String _windows_identity;
+        partial void Onwindows_identityChanging(global::System.String value);
+        partial void Onwindows_identityChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

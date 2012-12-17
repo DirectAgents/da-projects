@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="d795b6d6-e3ad-4aee-a748-5c4637b4040a" ChangeDateTime="12/17/2012 20:49:49">
+    <Property Name="ElementName" Value="[dbo].[PaymentBatch].[approver_identity_id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PaymentBatch]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="approver_identity" />
+  </Operation>
+</Operations>

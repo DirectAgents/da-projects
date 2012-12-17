@@ -94,13 +94,6 @@
       <Association Name="Campaign_Item" Member="Items" ThisKey="pid" OtherKey="pid" Type="Item" />
     </Type>
   </Table>
-  <Table Name="dbo.[Identity]" Member="Identities">
-    <Type Name="Identity">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="login" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
-      <Association Name="Identity_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="approver_identity_id" Type="PaymentBatch" />
-    </Type>
-  </Table>
   <Table Name="dbo.Currency" Member="Currencies">
     <Type Name="Currency">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -138,8 +131,8 @@
   <Table Name="dbo.PaymentBatch" Member="PaymentBatches">
     <Type Name="PaymentBatch">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="approver_identity_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="payment_batch_approval_state_id" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="approver_identity" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="payment_batch_approval_state_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="is_current" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="payment_threshold" Type="System.Decimal" DbType="Money" CanBeNull="true" />
       <Column Name="parent_batch_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
@@ -148,7 +141,6 @@
       <Association Name="PaymentBatch_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="parent_batch_id" Type="PaymentBatch" />
       <Association Name="PaymentBatch_PaymentBatchUpdate" Member="PaymentBatchUpdates" ThisKey="id" OtherKey="payment_batch_id" Type="PaymentBatchUpdate" />
       <Association Name="AffiliatePaymentMethod_PaymentBatch" Member="AffiliatePaymentMethod" ThisKey="payment_method_id" OtherKey="id" Type="AffiliatePaymentMethod" IsForeignKey="true" />
-      <Association Name="Identity_PaymentBatch" Member="Identity" ThisKey="approver_identity_id" OtherKey="id" Type="Identity" IsForeignKey="true" />
       <Association Name="PaymentBatch_PaymentBatch" Member="PaymentBatch1" ThisKey="parent_batch_id" OtherKey="id" Type="PaymentBatch" IsForeignKey="true" />
       <Association Name="PaymentBatchApprovalState_PaymentBatch" Member="PaymentBatchApprovalState" ThisKey="payment_batch_approval_state_id" OtherKey="id" Type="PaymentBatchApprovalState" IsForeignKey="true" />
     </Type>
@@ -157,13 +149,13 @@
     <Type Name="PaymentBatchApprovalState">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="PaymentBatchApprovalState_PaymentBatch" Member="PaymentBatches" ThisKey="id" OtherKey="payment_batch_approval_state_id" Type="PaymentBatch" />
     </Type>
   </Table>
   <Table Name="dbo.PaymentBatchUpdate" Member="PaymentBatchUpdates">
     <Type Name="PaymentBatchUpdate">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="payment_batch_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="windows_identity" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="from_payment_batch_approval_state_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="to_payment_batch_approval_state_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="note" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />

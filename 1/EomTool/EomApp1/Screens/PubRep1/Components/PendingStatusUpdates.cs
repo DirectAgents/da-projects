@@ -169,14 +169,11 @@ namespace EomApp1.Screens.PubRep1.Components
                          select b).FirstOrDefault();
             if (batch == null)
             {
-                var firstBatchApprover = (from i in db.Identities
-                                          where i.login == EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_First_Batch_Approver
-                                          select i).Single();
-
                 batch = new Data.PaymentBatch()
                 {
                     payment_method_id = paymentMethod.id,
-                    approver_identity_id = firstBatchApprover.id,
+                    approver_identity = EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_First_Batch_Approver,
+                    payment_batch_approval_state_id = (int)PaymentBatchApprovalStateId.Default,
                     is_current = true,
                     payment_threshold = EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_First_Batch_Threshold
                 };
@@ -197,14 +194,11 @@ namespace EomApp1.Screens.PubRep1.Components
 
                 if (batchTotal + newItemsTotal > batch.payment_threshold.Value)
                 {
-                    var secondBatchApprover = (from i in db.Identities
-                                               where i.login == EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_Second_Batch_Approver
-                                               select i).Single();
-
                     batch = new Data.PaymentBatch()
                     {
                         payment_method_id = paymentMethod.id,
-                        approver_identity_id = secondBatchApprover.id,
+                        approver_identity = EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_Second_Batch_Approver,
+                        payment_batch_approval_state_id = (int)PaymentBatchApprovalStateId.Default,
                         is_current = true
                     };
                     db.PaymentBatches.InsertOnSubmit(batch);

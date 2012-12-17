@@ -807,7 +807,6 @@
     <Build Include="Schema Objects\Schemas\dbo\Views\PublisherPayouts1.view.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\VerifiedItemsCampaignRevenueSummary.view.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\WorkflowView.view.sql" />
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Identity.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\PaymentBatchApprovalState.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\PaymentBatch.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\PaymentBatchUpdate.sql" />
@@ -874,5 +873,8 @@
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\Post-Deployment\Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="EomDatabase.refactorlog" />
   </ItemGroup>
 </Project>
