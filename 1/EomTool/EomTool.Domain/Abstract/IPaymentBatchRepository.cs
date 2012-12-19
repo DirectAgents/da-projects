@@ -8,6 +8,5 @@ namespace EomTool.Domain.Abstract
     {
         IQueryable<PaymentBatch> PaymentBatches { get; }
         IQueryable<PaymentBatch> PaymentBatchesForUser(IPrincipal user);
-        void Approve(int id, string windows_identity);
     }
 }

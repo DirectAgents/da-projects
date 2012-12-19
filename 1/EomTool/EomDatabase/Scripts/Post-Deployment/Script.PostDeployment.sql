@@ -48,7 +48,7 @@ insert [TrackingSystem] values
   (2, 'Cake Marketing')
 go
 
-INSERT INTO [dbo].[PaymentBatchApprovalState] VALUES 
+INSERT INTO [dbo].[PaymentBatchState] VALUES 
 	 ('1', 'default')
 	,('2', 'Queued')
 	,('3', 'Sent')
@@ -73,8 +73,3 @@ GO
 
 //TODO: Add first and second batch approvers to DAMain1 Settings table
 */
-
-INSERT INTO [dbo].[Identity] VALUES
-	 (1, 'DIRECTAGENTS\Jberger')
-	,(2, 'DIRECTAGENTS\JBoaz')
-GO

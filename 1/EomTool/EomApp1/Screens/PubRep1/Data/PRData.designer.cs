@@ -60,12 +60,9 @@ namespace EomApp1.Screens.PubRep1.Data
     partial void InsertPaymentBatch(PaymentBatch instance);
     partial void UpdatePaymentBatch(PaymentBatch instance);
     partial void DeletePaymentBatch(PaymentBatch instance);
-    partial void InsertPaymentBatchApprovalState(PaymentBatchApprovalState instance);
-    partial void UpdatePaymentBatchApprovalState(PaymentBatchApprovalState instance);
-    partial void DeletePaymentBatchApprovalState(PaymentBatchApprovalState instance);
-    partial void InsertPaymentBatchUpdate(PaymentBatchUpdate instance);
-    partial void UpdatePaymentBatchUpdate(PaymentBatchUpdate instance);
-    partial void DeletePaymentBatchUpdate(PaymentBatchUpdate instance);
+    partial void InsertPaymentBatchState(PaymentBatchState instance);
+    partial void UpdatePaymentBatchState(PaymentBatchState instance);
+    partial void DeletePaymentBatchState(PaymentBatchState instance);
     #endregion
 		
 		public PRDataDataContext() : 
@@ -178,19 +175,11 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
-		public System.Data.Linq.Table<PaymentBatchApprovalState> PaymentBatchApprovalStates
+		public System.Data.Linq.Table<PaymentBatchState> PaymentBatchStates
 		{
 			get
 			{
-				return this.GetTable<PaymentBatchApprovalState>();
-			}
-		}
-		
-		public System.Data.Linq.Table<PaymentBatchUpdate> PaymentBatchUpdates
-		{
-			get
-			{
-				return this.GetTable<PaymentBatchUpdate>();
+				return this.GetTable<PaymentBatchState>();
 			}
 		}
 	}
@@ -2925,7 +2914,7 @@ namespace EomApp1.Screens.PubRep1.Data
 		
 		private string _approver_identity;
 		
-		private int _payment_batch_approval_state_id;
+		private int _payment_batch_state_id;
 		
 		private bool _is_current;
 		
@@ -2937,15 +2926,13 @@ namespace EomApp1.Screens.PubRep1.Data
 		
 		private EntitySet<Item> _Items;
 		
-		private EntitySet<PaymentBatch> _PaymentBatches;
-		
-		private EntitySet<PaymentBatchUpdate> _PaymentBatchUpdates;
+		private EntitySet<PaymentBatch> _PaymentBatchChildren;
 		
 		private EntityRef<AffiliatePaymentMethod> _AffiliatePaymentMethod;
 		
-		private EntityRef<PaymentBatch> _PaymentBatch1;
+		private EntityRef<PaymentBatch> _PaymentBatchParent;
 		
-		private EntityRef<PaymentBatchApprovalState> _PaymentBatchApprovalState;
+		private EntityRef<PaymentBatchState> _PaymentBatchState;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2955,8 +2942,8 @@ namespace EomApp1.Screens.PubRep1.Data
     partial void OnidChanged();
     partial void Onapprover_identityChanging(string value);
     partial void Onapprover_identityChanged();
-    partial void Onpayment_batch_approval_state_idChanging(int value);
-    partial void Onpayment_batch_approval_state_idChanged();
+    partial void Onpayment_batch_state_idChanging(int value);
+    partial void Onpayment_batch_state_idChanged();
     partial void Onis_currentChanging(bool value);
     partial void Onis_currentChanged();
     partial void Onpayment_thresholdChanging(System.Nullable<decimal> value);
@@ -2970,11 +2957,10 @@ namespace EomApp1.Screens.PubRep1.Data
 		public PaymentBatch()
 		{
 			this._Items = new EntitySet<Item>(new Action<Item>(this.attach_Items), new Action<Item>(this.detach_Items));
-			this._PaymentBatches = new EntitySet<PaymentBatch>(new Action<PaymentBatch>(this.attach_PaymentBatches), new Action<PaymentBatch>(this.detach_PaymentBatches));
-			this._PaymentBatchUpdates = new EntitySet<PaymentBatchUpdate>(new Action<PaymentBatchUpdate>(this.attach_PaymentBatchUpdates), new Action<PaymentBatchUpdate>(this.detach_PaymentBatchUpdates));
+			this._PaymentBatchChildren = new EntitySet<PaymentBatch>(new Action<PaymentBatch>(this.attach_PaymentBatchChildren), new Action<PaymentBatch>(this.detach_PaymentBatchChildren));
 			this._AffiliatePaymentMethod = default(EntityRef<AffiliatePaymentMethod>);
-			this._PaymentBatch1 = default(EntityRef<PaymentBatch>);
-			this._PaymentBatchApprovalState = default(EntityRef<PaymentBatchApprovalState>);
+			this._PaymentBatchParent = default(EntityRef<PaymentBatch>);
+			this._PaymentBatchState = default(EntityRef<PaymentBatchState>);
 			OnCreated();
 		}
 		
@@ -3018,26 +3004,26 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_payment_batch_approval_state_id", DbType="Int NOT NULL")]
-		public int payment_batch_approval_state_id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_payment_batch_state_id", DbType="Int NOT NULL")]
+		public int payment_batch_state_id
 		{
 			get
 			{
-				return this._payment_batch_approval_state_id;
+				return this._payment_batch_state_id;
 			}
 			set
 			{
-				if ((this._payment_batch_approval_state_id != value))
+				if ((this._payment_batch_state_id != value))
 				{
-					if (this._PaymentBatchApprovalState.HasLoadedOrAssignedValue)
+					if (this._PaymentBatchState.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
-					this.Onpayment_batch_approval_state_idChanging(value);
+					this.Onpayment_batch_state_idChanging(value);
 					this.SendPropertyChanging();
-					this._payment_batch_approval_state_id = value;
-					this.SendPropertyChanged("payment_batch_approval_state_id");
-					this.Onpayment_batch_approval_state_idChanged();
+					this._payment_batch_state_id = value;
+					this.SendPropertyChanged("payment_batch_state_id");
+					this.Onpayment_batch_state_idChanged();
 				}
 			}
 		}
@@ -3093,7 +3079,7 @@ namespace EomApp1.Screens.PubRep1.Data
 			{
 				if ((this._parent_batch_id != value))
 				{
-					if (this._PaymentBatch1.HasLoadedOrAssignedValue)
+					if (this._PaymentBatchParent.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -3143,29 +3129,16 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatch_PaymentBatch", Storage="_PaymentBatches", ThisKey="id", OtherKey="parent_batch_id")]
-		public EntitySet<PaymentBatch> PaymentBatches
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatch_PaymentBatch", Storage="_PaymentBatchChildren", ThisKey="id", OtherKey="parent_batch_id")]
+		public EntitySet<PaymentBatch> PaymentBatchChildren
 		{
 			get
 			{
-				return this._PaymentBatches;
+				return this._PaymentBatchChildren;
 			}
 			set
 			{
-				this._PaymentBatches.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatch_PaymentBatchUpdate", Storage="_PaymentBatchUpdates", ThisKey="id", OtherKey="payment_batch_id")]
-		public EntitySet<PaymentBatchUpdate> PaymentBatchUpdates
-		{
-			get
-			{
-				return this._PaymentBatchUpdates;
-			}
-			set
-			{
-				this._PaymentBatchUpdates.Assign(value);
+				this._PaymentBatchChildren.Assign(value);
 			}
 		}
 		
@@ -3203,54 +3176,54 @@ namespace EomApp1.Screens.PubRep1.Data
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatch_PaymentBatch", Storage="_PaymentBatch1", ThisKey="parent_batch_id", OtherKey="id", IsForeignKey=true)]
-		public PaymentBatch PaymentBatch1
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatch_PaymentBatch", Storage="_PaymentBatchParent", ThisKey="parent_batch_id", OtherKey="id", IsForeignKey=true)]
+		public PaymentBatch PaymentBatchParent
 		{
 			get
 			{
-				return this._PaymentBatch1.Entity;
+				return this._PaymentBatchParent.Entity;
 			}
 			set
 			{
-				PaymentBatch previousValue = this._PaymentBatch1.Entity;
+				PaymentBatch previousValue = this._PaymentBatchParent.Entity;
 				if (((previousValue != value) 
-							|| (this._PaymentBatch1.HasLoadedOrAssignedValue == false)))
+							|| (this._PaymentBatchParent.HasLoadedOrAssignedValue == false)))
 				{
 					this.SendPropertyChanging();
 					if ((previousValue != null))
 					{
-						this._PaymentBatch1.Entity = null;
-						previousValue.PaymentBatches.Remove(this);
+						this._PaymentBatchParent.Entity = null;
+						previousValue.PaymentBatchChildren.Remove(this);
 					}
-					this._PaymentBatch1.Entity = value;
+					this._PaymentBatchParent.Entity = value;
 					if ((value != null))
 					{
-						value.PaymentBatches.Add(this);
+						value.PaymentBatchChildren.Add(this);
 						this._parent_batch_id = value.id;
 					}
 					else
 					{
 						this._parent_batch_id = default(Nullable<int>);
 					}
-					this.SendPropertyChanged("PaymentBatch1");
+					this.SendPropertyChanged("PaymentBatchParent");
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatch", Storage="_PaymentBatchApprovalState", ThisKey="payment_batch_approval_state_id", OtherKey="id", IsForeignKey=true)]
-		public PaymentBatchApprovalState PaymentBatchApprovalState
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchState_PaymentBatch", Storage="_PaymentBatchState", ThisKey="payment_batch_state_id", OtherKey="id", IsForeignKey=true)]
+		public PaymentBatchState PaymentBatchState
 		{
 			get
 			{
-				return this._PaymentBatchApprovalState.Entity;
+				return this._PaymentBatchState.Entity;
 			}
 			set
 			{
-				if ((this._PaymentBatchApprovalState.Entity != value))
+				if ((this._PaymentBatchState.Entity != value))
 				{
 					this.SendPropertyChanging();
-					this._PaymentBatchApprovalState.Entity = value;
-					this.SendPropertyChanged("PaymentBatchApprovalState");
+					this._PaymentBatchState.Entity = value;
+					this.SendPropertyChanged("PaymentBatchState");
 				}
 			}
 		}
@@ -3287,33 +3260,21 @@ namespace EomApp1.Screens.PubRep1.Data
 			entity.PaymentBatch = null;
 		}
 		
-		private void attach_PaymentBatches(PaymentBatch entity)
+		private void attach_PaymentBatchChildren(PaymentBatch entity)
 		{
 			this.SendPropertyChanging();
-			entity.PaymentBatch1 = this;
+			entity.PaymentBatchParent = this;
 		}
 		
-		private void detach_PaymentBatches(PaymentBatch entity)
+		private void detach_PaymentBatchChildren(PaymentBatch entity)
 		{
 			this.SendPropertyChanging();
-			entity.PaymentBatch1 = null;
-		}
-		
-		private void attach_PaymentBatchUpdates(PaymentBatchUpdate entity)
-		{
-			this.SendPropertyChanging();
-			entity.PaymentBatch = this;
-		}
-		
-		private void detach_PaymentBatchUpdates(PaymentBatchUpdate entity)
-		{
-			this.SendPropertyChanging();
-			entity.PaymentBatch = null;
+			entity.PaymentBatchParent = null;
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentBatchApprovalState")]
-	public partial class PaymentBatchApprovalState : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentBatchState")]
+	public partial class PaymentBatchState : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -3332,7 +3293,7 @@ namespace EomApp1.Screens.PubRep1.Data
     partial void OnnameChanged();
     #endregion
 		
-		public PaymentBatchApprovalState()
+		public PaymentBatchState()
 		{
 			OnCreated();
 		}
@@ -3373,303 +3334,6 @@ namespace EomApp1.Screens.PubRep1.Data
 					this._name = value;
 					this.SendPropertyChanged("name");
 					this.OnnameChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentBatchUpdate")]
-	public partial class PaymentBatchUpdate : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private int _payment_batch_id;
-		
-		private string _windows_identity;
-		
-		private System.Nullable<int> _from_payment_batch_approval_state_id;
-		
-		private System.Nullable<int> _to_payment_batch_approval_state_id;
-		
-		private string _note;
-		
-		private System.DateTime _timestamp;
-		
-		private EntityRef<PaymentBatch> _PaymentBatch;
-		
-		private EntityRef<PaymentBatchApprovalState> _FromPaymentBatchApprovalState;
-		
-		private EntityRef<PaymentBatchApprovalState> _ToPaymentBatchApprovalState;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void Onpayment_batch_idChanging(int value);
-    partial void Onpayment_batch_idChanged();
-    partial void Onwindows_identityChanging(string value);
-    partial void Onwindows_identityChanged();
-    partial void Onfrom_payment_batch_approval_state_idChanging(System.Nullable<int> value);
-    partial void Onfrom_payment_batch_approval_state_idChanged();
-    partial void Onto_payment_batch_approval_state_idChanging(System.Nullable<int> value);
-    partial void Onto_payment_batch_approval_state_idChanged();
-    partial void OnnoteChanging(string value);
-    partial void OnnoteChanged();
-    partial void OntimestampChanging(System.DateTime value);
-    partial void OntimestampChanged();
-    #endregion
-		
-		public PaymentBatchUpdate()
-		{
-			this._PaymentBatch = default(EntityRef<PaymentBatch>);
-			this._FromPaymentBatchApprovalState = default(EntityRef<PaymentBatchApprovalState>);
-			this._ToPaymentBatchApprovalState = default(EntityRef<PaymentBatchApprovalState>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_payment_batch_id", DbType="Int NOT NULL")]
-		public int payment_batch_id
-		{
-			get
-			{
-				return this._payment_batch_id;
-			}
-			set
-			{
-				if ((this._payment_batch_id != value))
-				{
-					if (this._PaymentBatch.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onpayment_batch_idChanging(value);
-					this.SendPropertyChanging();
-					this._payment_batch_id = value;
-					this.SendPropertyChanged("payment_batch_id");
-					this.Onpayment_batch_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_windows_identity", DbType="VarChar(255)")]
-		public string windows_identity
-		{
-			get
-			{
-				return this._windows_identity;
-			}
-			set
-			{
-				if ((this._windows_identity != value))
-				{
-					this.Onwindows_identityChanging(value);
-					this.SendPropertyChanging();
-					this._windows_identity = value;
-					this.SendPropertyChanged("windows_identity");
-					this.Onwindows_identityChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_from_payment_batch_approval_state_id", DbType="Int")]
-		public System.Nullable<int> from_payment_batch_approval_state_id
-		{
-			get
-			{
-				return this._from_payment_batch_approval_state_id;
-			}
-			set
-			{
-				if ((this._from_payment_batch_approval_state_id != value))
-				{
-					if (this._FromPaymentBatchApprovalState.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onfrom_payment_batch_approval_state_idChanging(value);
-					this.SendPropertyChanging();
-					this._from_payment_batch_approval_state_id = value;
-					this.SendPropertyChanged("from_payment_batch_approval_state_id");
-					this.Onfrom_payment_batch_approval_state_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_to_payment_batch_approval_state_id", DbType="Int")]
-		public System.Nullable<int> to_payment_batch_approval_state_id
-		{
-			get
-			{
-				return this._to_payment_batch_approval_state_id;
-			}
-			set
-			{
-				if ((this._to_payment_batch_approval_state_id != value))
-				{
-					if (this._ToPaymentBatchApprovalState.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.Onto_payment_batch_approval_state_idChanging(value);
-					this.SendPropertyChanging();
-					this._to_payment_batch_approval_state_id = value;
-					this.SendPropertyChanged("to_payment_batch_approval_state_id");
-					this.Onto_payment_batch_approval_state_idChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_note", DbType="VarChar(MAX)")]
-		public string note
-		{
-			get
-			{
-				return this._note;
-			}
-			set
-			{
-				if ((this._note != value))
-				{
-					this.OnnoteChanging(value);
-					this.SendPropertyChanging();
-					this._note = value;
-					this.SendPropertyChanged("note");
-					this.OnnoteChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_timestamp", DbType="DateTime NOT NULL")]
-		public System.DateTime timestamp
-		{
-			get
-			{
-				return this._timestamp;
-			}
-			set
-			{
-				if ((this._timestamp != value))
-				{
-					this.OntimestampChanging(value);
-					this.SendPropertyChanging();
-					this._timestamp = value;
-					this.SendPropertyChanged("timestamp");
-					this.OntimestampChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatch_PaymentBatchUpdate", Storage="_PaymentBatch", ThisKey="payment_batch_id", OtherKey="id", IsForeignKey=true)]
-		public PaymentBatch PaymentBatch
-		{
-			get
-			{
-				return this._PaymentBatch.Entity;
-			}
-			set
-			{
-				PaymentBatch previousValue = this._PaymentBatch.Entity;
-				if (((previousValue != value) 
-							|| (this._PaymentBatch.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._PaymentBatch.Entity = null;
-						previousValue.PaymentBatchUpdates.Remove(this);
-					}
-					this._PaymentBatch.Entity = value;
-					if ((value != null))
-					{
-						value.PaymentBatchUpdates.Add(this);
-						this._payment_batch_id = value.id;
-					}
-					else
-					{
-						this._payment_batch_id = default(int);
-					}
-					this.SendPropertyChanged("PaymentBatch");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatchUpdate", Storage="_FromPaymentBatchApprovalState", ThisKey="from_payment_batch_approval_state_id", OtherKey="id", IsForeignKey=true)]
-		public PaymentBatchApprovalState FromPaymentBatchApprovalState
-		{
-			get
-			{
-				return this._FromPaymentBatchApprovalState.Entity;
-			}
-			set
-			{
-				if ((this._FromPaymentBatchApprovalState.Entity != value))
-				{
-					this.SendPropertyChanging();
-					this._FromPaymentBatchApprovalState.Entity = value;
-					this.SendPropertyChanged("FromPaymentBatchApprovalState");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PaymentBatchApprovalState_PaymentBatchUpdate1", Storage="_ToPaymentBatchApprovalState", ThisKey="to_payment_batch_approval_state_id", OtherKey="id", IsForeignKey=true)]
-		public PaymentBatchApprovalState ToPaymentBatchApprovalState
-		{
-			get
-			{
-				return this._ToPaymentBatchApprovalState.Entity;
-			}
-			set
-			{
-				if ((this._ToPaymentBatchApprovalState.Entity != value))
-				{
-					this.SendPropertyChanging();
-					this._ToPaymentBatchApprovalState.Entity = value;
-					this.SendPropertyChanged("ToPaymentBatchApprovalState");
 				}
 			}
 		}

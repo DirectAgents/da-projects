@@ -24,17 +24,5 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
-        public ActionResult Approve(int[] id)
-        {
-            foreach (var pbId in id)
-            {
-                pbRepository.Approve(pbId, User.Identity.Name);
-            }
-            if (Request.IsAjaxRequest())
-                return null;
-            else
-                return RedirectToAction("Index");
-        }
-
     }
 }

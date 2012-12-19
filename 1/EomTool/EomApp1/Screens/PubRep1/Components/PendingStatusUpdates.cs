@@ -9,13 +9,11 @@ using EomAppCommon;
 
 namespace EomApp1.Screens.PubRep1.Components
 {
-    public enum PaymentBatchApprovalStateId
+    public enum PaymentBatchStateId
     {
         Default = 1,
         Queued = 2,
         Sent = 3,
-        Approved = 4,
-        Held = 5
     }
 
     public partial class PendingStatusUpdates : Component, IListSource
@@ -173,7 +171,7 @@ namespace EomApp1.Screens.PubRep1.Components
                 {
                     payment_method_id = paymentMethod.id,
                     approver_identity = EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_First_Batch_Approver,
-                    payment_batch_approval_state_id = (int)PaymentBatchApprovalStateId.Default,
+                    payment_batch_state_id = (int)PaymentBatchStateId.Default,
                     is_current = true,
                     payment_threshold = EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_First_Batch_Threshold
                 };
@@ -198,7 +196,7 @@ namespace EomApp1.Screens.PubRep1.Components
                     {
                         payment_method_id = paymentMethod.id,
                         approver_identity = EomAppSettings.Settings.EomAppSettings_PaymentWorkflow_Second_Batch_Approver,
-                        payment_batch_approval_state_id = (int)PaymentBatchApprovalStateId.Default,
+                        payment_batch_state_id = (int)PaymentBatchStateId.Default,
                         is_current = true
                     };
                     db.PaymentBatches.InsertOnSubmit(batch);

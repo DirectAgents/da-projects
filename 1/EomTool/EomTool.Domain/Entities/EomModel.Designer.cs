@@ -39,10 +39,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.CampaignStatus), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_Item_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatch1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatchApprovalState), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatchUpdate), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatchApprovalState), "PaymentBatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatchUpdate), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatchApprovalState), "PaymentBatchUpdate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatchUpdate), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatchState", "PaymentBatchState", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatchState), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 
 #endregion
 
@@ -465,34 +462,18 @@ namespace EomTool.Domain.Entities
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<PaymentBatchApprovalState> PaymentBatchApprovalStates
+        public ObjectSet<PaymentBatchState> PaymentBatchStates
         {
             get
             {
-                if ((_PaymentBatchApprovalStates == null))
+                if ((_PaymentBatchStates == null))
                 {
-                    _PaymentBatchApprovalStates = base.CreateObjectSet<PaymentBatchApprovalState>("PaymentBatchApprovalStates");
+                    _PaymentBatchStates = base.CreateObjectSet<PaymentBatchState>("PaymentBatchStates");
                 }
-                return _PaymentBatchApprovalStates;
+                return _PaymentBatchStates;
             }
         }
-        private ObjectSet<PaymentBatchApprovalState> _PaymentBatchApprovalStates;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<PaymentBatchUpdate> PaymentBatchUpdates
-        {
-            get
-            {
-                if ((_PaymentBatchUpdates == null))
-                {
-                    _PaymentBatchUpdates = base.CreateObjectSet<PaymentBatchUpdate>("PaymentBatchUpdates");
-                }
-                return _PaymentBatchUpdates;
-            }
-        }
-        private ObjectSet<PaymentBatchUpdate> _PaymentBatchUpdates;
+        private ObjectSet<PaymentBatchState> _PaymentBatchStates;
 
         #endregion
 
@@ -683,19 +664,11 @@ namespace EomTool.Domain.Entities
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the PaymentBatchApprovalStates EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the PaymentBatchStates EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToPaymentBatchApprovalStates(PaymentBatchApprovalState paymentBatchApprovalState)
+        public void AddToPaymentBatchStates(PaymentBatchState paymentBatchState)
         {
-            base.AddObject("PaymentBatchApprovalStates", paymentBatchApprovalState);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the PaymentBatchUpdates EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToPaymentBatchUpdates(PaymentBatchUpdate paymentBatchUpdate)
-        {
-            base.AddObject("PaymentBatchUpdates", paymentBatchUpdate);
+            base.AddObject("PaymentBatchStates", paymentBatchState);
         }
 
         #endregion
@@ -5757,13 +5730,13 @@ namespace EomTool.Domain.Entities
         /// Create a new PaymentBatch object.
         /// </summary>
         /// <param name="id">Initial value of the id property.</param>
-        /// <param name="payment_batch_approval_state_id">Initial value of the payment_batch_approval_state_id property.</param>
+        /// <param name="payment_batch_state_id">Initial value of the payment_batch_state_id property.</param>
         /// <param name="is_current">Initial value of the is_current property.</param>
-        public static PaymentBatch CreatePaymentBatch(global::System.Int32 id, global::System.Int32 payment_batch_approval_state_id, global::System.Boolean is_current)
+        public static PaymentBatch CreatePaymentBatch(global::System.Int32 id, global::System.Int32 payment_batch_state_id, global::System.Boolean is_current)
         {
             PaymentBatch paymentBatch = new PaymentBatch();
             paymentBatch.id = id;
-            paymentBatch.payment_batch_approval_state_id = payment_batch_approval_state_id;
+            paymentBatch.payment_batch_state_id = payment_batch_state_id;
             paymentBatch.is_current = is_current;
             return paymentBatch;
         }
@@ -5828,24 +5801,24 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 payment_batch_approval_state_id
+        public global::System.Int32 payment_batch_state_id
         {
             get
             {
-                return _payment_batch_approval_state_id;
+                return _payment_batch_state_id;
             }
             set
             {
-                Onpayment_batch_approval_state_idChanging(value);
-                ReportPropertyChanging("payment_batch_approval_state_id");
-                _payment_batch_approval_state_id = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("payment_batch_approval_state_id");
-                Onpayment_batch_approval_state_idChanged();
+                Onpayment_batch_state_idChanging(value);
+                ReportPropertyChanging("payment_batch_state_id");
+                _payment_batch_state_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("payment_batch_state_id");
+                Onpayment_batch_state_idChanged();
             }
         }
-        private global::System.Int32 _payment_batch_approval_state_id;
-        partial void Onpayment_batch_approval_state_idChanging(global::System.Int32 value);
-        partial void Onpayment_batch_approval_state_idChanged();
+        private global::System.Int32 _payment_batch_state_id;
+        partial void Onpayment_batch_state_idChanging(global::System.Int32 value);
+        partial void Onpayment_batch_state_idChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -6036,16 +6009,16 @@ namespace EomTool.Domain.Entities
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState")]
-        public PaymentBatchApprovalState PaymentBatchApprovalState
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_PaymentBatchState", "PaymentBatchState")]
+        public PaymentBatchState PaymentBatchState
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchState>("EomModel.FK_PaymentBatch_PaymentBatchState", "PaymentBatchState").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchState>("EomModel.FK_PaymentBatch_PaymentBatchState", "PaymentBatchState").Value = value;
             }
         }
         /// <summary>
@@ -6053,39 +6026,17 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<PaymentBatchApprovalState> PaymentBatchApprovalStateReference
+        public EntityReference<PaymentBatchState> PaymentBatchStateReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchState>("EomModel.FK_PaymentBatch_PaymentBatchState", "PaymentBatchState");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatchApprovalState>("EomModel.FK_PaymentBatch_PaymentBatchApprovalState", "PaymentBatchApprovalState", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatchUpdate")]
-        public EntityCollection<PaymentBatchUpdate> PaymentBatchUpdates
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<PaymentBatchUpdate>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatchUpdate");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<PaymentBatchUpdate>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatchUpdate", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatchState>("EomModel.FK_PaymentBatch_PaymentBatchState", "PaymentBatchState", value);
                 }
             }
         }
@@ -6097,24 +6048,24 @@ namespace EomTool.Domain.Entities
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="PaymentBatchApprovalState")]
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="PaymentBatchState")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class PaymentBatchApprovalState : EntityObject
+    public partial class PaymentBatchState : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new PaymentBatchApprovalState object.
+        /// Create a new PaymentBatchState object.
         /// </summary>
         /// <param name="id">Initial value of the id property.</param>
         /// <param name="name">Initial value of the name property.</param>
-        public static PaymentBatchApprovalState CreatePaymentBatchApprovalState(global::System.Int32 id, global::System.String name)
+        public static PaymentBatchState CreatePaymentBatchState(global::System.Int32 id, global::System.String name)
         {
-            PaymentBatchApprovalState paymentBatchApprovalState = new PaymentBatchApprovalState();
-            paymentBatchApprovalState.id = id;
-            paymentBatchApprovalState.name = name;
-            return paymentBatchApprovalState;
+            PaymentBatchState paymentBatchState = new PaymentBatchState();
+            paymentBatchState.id = id;
+            paymentBatchState.name = name;
+            return paymentBatchState;
         }
 
         #endregion
@@ -6175,329 +6126,6 @@ namespace EomTool.Domain.Entities
         #endregion
 
     
-    }
-    
-    /// <summary>
-    /// No Metadata Documentation available.
-    /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="PaymentBatchUpdate")]
-    [Serializable()]
-    [DataContractAttribute(IsReference=true)]
-    public partial class PaymentBatchUpdate : EntityObject
-    {
-        #region Factory Method
-    
-        /// <summary>
-        /// Create a new PaymentBatchUpdate object.
-        /// </summary>
-        /// <param name="id">Initial value of the id property.</param>
-        /// <param name="payment_batch_id">Initial value of the payment_batch_id property.</param>
-        /// <param name="timestamp">Initial value of the timestamp property.</param>
-        public static PaymentBatchUpdate CreatePaymentBatchUpdate(global::System.Int32 id, global::System.Int32 payment_batch_id, global::System.DateTime timestamp)
-        {
-            PaymentBatchUpdate paymentBatchUpdate = new PaymentBatchUpdate();
-            paymentBatchUpdate.id = id;
-            paymentBatchUpdate.payment_batch_id = payment_batch_id;
-            paymentBatchUpdate.timestamp = timestamp;
-            return paymentBatchUpdate;
-        }
-
-        #endregion
-
-        #region Primitive Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                if (_id != value)
-                {
-                    OnidChanging(value);
-                    ReportPropertyChanging("id");
-                    _id = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("id");
-                    OnidChanged();
-                }
-            }
-        }
-        private global::System.Int32 _id;
-        partial void OnidChanging(global::System.Int32 value);
-        partial void OnidChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.Int32 payment_batch_id
-        {
-            get
-            {
-                return _payment_batch_id;
-            }
-            set
-            {
-                Onpayment_batch_idChanging(value);
-                ReportPropertyChanging("payment_batch_id");
-                _payment_batch_id = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("payment_batch_id");
-                Onpayment_batch_idChanged();
-            }
-        }
-        private global::System.Int32 _payment_batch_id;
-        partial void Onpayment_batch_idChanging(global::System.Int32 value);
-        partial void Onpayment_batch_idChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String windows_identity
-        {
-            get
-            {
-                return _windows_identity;
-            }
-            set
-            {
-                Onwindows_identityChanging(value);
-                ReportPropertyChanging("windows_identity");
-                _windows_identity = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("windows_identity");
-                Onwindows_identityChanged();
-            }
-        }
-        private global::System.String _windows_identity;
-        partial void Onwindows_identityChanging(global::System.String value);
-        partial void Onwindows_identityChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> from_payment_batch_approval_state_id
-        {
-            get
-            {
-                return _from_payment_batch_approval_state_id;
-            }
-            set
-            {
-                Onfrom_payment_batch_approval_state_idChanging(value);
-                ReportPropertyChanging("from_payment_batch_approval_state_id");
-                _from_payment_batch_approval_state_id = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("from_payment_batch_approval_state_id");
-                Onfrom_payment_batch_approval_state_idChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _from_payment_batch_approval_state_id;
-        partial void Onfrom_payment_batch_approval_state_idChanging(Nullable<global::System.Int32> value);
-        partial void Onfrom_payment_batch_approval_state_idChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public Nullable<global::System.Int32> to_payment_batch_approval_state_id
-        {
-            get
-            {
-                return _to_payment_batch_approval_state_id;
-            }
-            set
-            {
-                Onto_payment_batch_approval_state_idChanging(value);
-                ReportPropertyChanging("to_payment_batch_approval_state_id");
-                _to_payment_batch_approval_state_id = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("to_payment_batch_approval_state_id");
-                Onto_payment_batch_approval_state_idChanged();
-            }
-        }
-        private Nullable<global::System.Int32> _to_payment_batch_approval_state_id;
-        partial void Onto_payment_batch_approval_state_idChanging(Nullable<global::System.Int32> value);
-        partial void Onto_payment_batch_approval_state_idChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
-        public global::System.String note
-        {
-            get
-            {
-                return _note;
-            }
-            set
-            {
-                OnnoteChanging(value);
-                ReportPropertyChanging("note");
-                _note = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("note");
-                OnnoteChanged();
-            }
-        }
-        private global::System.String _note;
-        partial void OnnoteChanging(global::System.String value);
-        partial void OnnoteChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.DateTime timestamp
-        {
-            get
-            {
-                return _timestamp;
-            }
-            set
-            {
-                OntimestampChanging(value);
-                ReportPropertyChanging("timestamp");
-                _timestamp = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("timestamp");
-                OntimestampChanged();
-            }
-        }
-        private global::System.DateTime _timestamp;
-        partial void OntimestampChanging(global::System.DateTime value);
-        partial void OntimestampChanged();
-
-        #endregion
-
-    
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch")]
-        public PaymentBatch PaymentBatch
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<PaymentBatch> PaymentBatchReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatch>("EomModel.FK_PaymentBatchUpdate_PaymentBatch", "PaymentBatch", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState")]
-        public PaymentBatchApprovalState FromPaymentBatchApprovalState
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<PaymentBatchApprovalState> FromPaymentBatchApprovalStateReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateFrom", "PaymentBatchApprovalState", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState")]
-        public PaymentBatchApprovalState ToPaymentBatchApprovalState
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState").Value;
-            }
-            set
-            {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState").Value = value;
-            }
-        }
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [BrowsableAttribute(false)]
-        [DataMemberAttribute()]
-        public EntityReference<PaymentBatchApprovalState> ToPaymentBatchApprovalStateReference
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatchApprovalState>("EomModel.FK_Table_1_PaymentBatchApprovalStateTo", "PaymentBatchApprovalState", value);
-                }
-            }
-        }
-
-        #endregion
-
     }
     
     /// <summary>
