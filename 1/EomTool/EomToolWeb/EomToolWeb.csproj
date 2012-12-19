@@ -145,6 +145,7 @@
     <Compile Include="Controllers\CampaignsController.cs" />
     <Compile Include="Controllers\CampaignsApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PaymentBatchesController.cs" />
     <Compile Include="Controllers\PayoutsController.cs" />
     <Compile Include="Controllers\PublishersController.cs" />
     <Compile Include="Controllers\TrafficTypesController.cs">
@@ -2655,6 +2656,7 @@
     <Content Include="Views\Campaigns\Items.cshtml" />
     <Content Include="Views\Payouts\ChooseMonth.cshtml" />
     <Content Include="Views\Wiki\Settings.cshtml" />
+    <Content Include="Views\PaymentBatches\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

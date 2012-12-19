@@ -43,7 +43,7 @@ namespace EomToolWeb.Infrastructure
 
             if (eomToolConfig.DebugMode)
             {
-                connectionString = @"data source=biz2\da;initial catalog=zDADatabaseJuly2012Test2;Integrated Security=True";
+                connectionString = @"data source=biz2\da;initial catalog=zDADatabaseNov2012Test;Integrated Security=True";
             }
             else
             {

@@ -1,0 +1,15 @@
+﻿@model IEnumerable<EomTool.Domain.Entities.PaymentBatch>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@foreach (var paymentBatch in Model)
+{
+    @paymentBatch.id
+    <text>&nbsp;</text>
+    @paymentBatch.payment_threshold
+    <br />
+}

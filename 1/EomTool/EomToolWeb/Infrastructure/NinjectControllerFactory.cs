@@ -31,6 +31,7 @@ namespace EomToolWeb.Infrastructure
             kernel.Bind<ISecurityRepository>().To<SecurityRepository>();
             kernel.Bind<IBatchRepository>().To<BatchRepository>();
             kernel.Bind<IDAMain1Repository>().To<DAMain1Repository>();
+            kernel.Bind<IPaymentBatchRepository>().To<PaymentBatchRepository>();
             SetupOther();            
         }
     }
