@@ -474,6 +474,22 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<PaymentBatchState> _PaymentBatchStates;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<PublisherPayment> PublisherPayments
+        {
+            get
+            {
+                if ((_PublisherPayments == null))
+                {
+                    _PublisherPayments = base.CreateObjectSet<PublisherPayment>("PublisherPayments");
+                }
+                return _PublisherPayments;
+            }
+        }
+        private ObjectSet<PublisherPayment> _PublisherPayments;
 
         #endregion
 
@@ -669,6 +685,14 @@ namespace EomTool.Domain.Entities
         public void AddToPaymentBatchStates(PaymentBatchState paymentBatchState)
         {
             base.AddObject("PaymentBatchStates", paymentBatchState);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the PublisherPayments EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToPublisherPayments(PublisherPayment publisherPayment)
+        {
+            base.AddObject("PublisherPayments", publisherPayment);
         }
 
         #endregion
@@ -6122,6 +6146,439 @@ namespace EomTool.Domain.Entities
         private global::System.String _name;
         partial void OnnameChanging(global::System.String value);
         partial void OnnameChanged();
+
+        #endregion
+
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="PublisherPayment")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class PublisherPayment : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new PublisherPayment object.
+        /// </summary>
+        /// <param name="netTermType">Initial value of the NetTermType property.</param>
+        /// <param name="publisher">Initial value of the Publisher property.</param>
+        /// <param name="pubPayCurr">Initial value of the PubPayCurr property.</param>
+        /// <param name="accountingStatusId">Initial value of the AccountingStatusId property.</param>
+        /// <param name="accountingStatus">Initial value of the AccountingStatus property.</param>
+        /// <param name="paymentMethodId">Initial value of the PaymentMethodId property.</param>
+        /// <param name="paymentMethod">Initial value of the PaymentMethod property.</param>
+        /// <param name="paymentBatchStateId">Initial value of the PaymentBatchStateId property.</param>
+        /// <param name="paymentBatchState">Initial value of the PaymentBatchState property.</param>
+        public static PublisherPayment CreatePublisherPayment(global::System.String netTermType, global::System.String publisher, global::System.String pubPayCurr, global::System.Int32 accountingStatusId, global::System.String accountingStatus, global::System.Int32 paymentMethodId, global::System.String paymentMethod, global::System.Int32 paymentBatchStateId, global::System.String paymentBatchState)
+        {
+            PublisherPayment publisherPayment = new PublisherPayment();
+            publisherPayment.NetTermType = netTermType;
+            publisherPayment.Publisher = publisher;
+            publisherPayment.PubPayCurr = pubPayCurr;
+            publisherPayment.AccountingStatusId = accountingStatusId;
+            publisherPayment.AccountingStatus = accountingStatus;
+            publisherPayment.PaymentMethodId = paymentMethodId;
+            publisherPayment.PaymentMethod = paymentMethod;
+            publisherPayment.PaymentBatchStateId = paymentBatchStateId;
+            publisherPayment.PaymentBatchState = paymentBatchState;
+            return publisherPayment;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> NetTermTypeId
+        {
+            get
+            {
+                return _NetTermTypeId;
+            }
+            set
+            {
+                OnNetTermTypeIdChanging(value);
+                ReportPropertyChanging("NetTermTypeId");
+                _NetTermTypeId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("NetTermTypeId");
+                OnNetTermTypeIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _NetTermTypeId;
+        partial void OnNetTermTypeIdChanging(Nullable<global::System.Int32> value);
+        partial void OnNetTermTypeIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String NetTermType
+        {
+            get
+            {
+                return _NetTermType;
+            }
+            set
+            {
+                if (_NetTermType != value)
+                {
+                    OnNetTermTypeChanging(value);
+                    ReportPropertyChanging("NetTermType");
+                    _NetTermType = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("NetTermType");
+                    OnNetTermTypeChanged();
+                }
+            }
+        }
+        private global::System.String _NetTermType;
+        partial void OnNetTermTypeChanging(global::System.String value);
+        partial void OnNetTermTypeChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String AffIds
+        {
+            get
+            {
+                return _AffIds;
+            }
+            set
+            {
+                OnAffIdsChanging(value);
+                ReportPropertyChanging("AffIds");
+                _AffIds = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("AffIds");
+                OnAffIdsChanged();
+            }
+        }
+        private global::System.String _AffIds;
+        partial void OnAffIdsChanging(global::System.String value);
+        partial void OnAffIdsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Publisher
+        {
+            get
+            {
+                return _Publisher;
+            }
+            set
+            {
+                if (_Publisher != value)
+                {
+                    OnPublisherChanging(value);
+                    ReportPropertyChanging("Publisher");
+                    _Publisher = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("Publisher");
+                    OnPublisherChanged();
+                }
+            }
+        }
+        private global::System.String _Publisher;
+        partial void OnPublisherChanging(global::System.String value);
+        partial void OnPublisherChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String PubPayCurr
+        {
+            get
+            {
+                return _PubPayCurr;
+            }
+            set
+            {
+                if (_PubPayCurr != value)
+                {
+                    OnPubPayCurrChanging(value);
+                    ReportPropertyChanging("PubPayCurr");
+                    _PubPayCurr = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("PubPayCurr");
+                    OnPubPayCurrChanged();
+                }
+            }
+        }
+        private global::System.String _PubPayCurr;
+        partial void OnPubPayCurrChanging(global::System.String value);
+        partial void OnPubPayCurrChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> PubPayout
+        {
+            get
+            {
+                return _PubPayout;
+            }
+            set
+            {
+                OnPubPayoutChanging(value);
+                ReportPropertyChanging("PubPayout");
+                _PubPayout = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PubPayout");
+                OnPubPayoutChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _PubPayout;
+        partial void OnPubPayoutChanging(Nullable<global::System.Decimal> value);
+        partial void OnPubPayoutChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 AccountingStatusId
+        {
+            get
+            {
+                return _AccountingStatusId;
+            }
+            set
+            {
+                if (_AccountingStatusId != value)
+                {
+                    OnAccountingStatusIdChanging(value);
+                    ReportPropertyChanging("AccountingStatusId");
+                    _AccountingStatusId = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("AccountingStatusId");
+                    OnAccountingStatusIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _AccountingStatusId;
+        partial void OnAccountingStatusIdChanging(global::System.Int32 value);
+        partial void OnAccountingStatusIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String AccountingStatus
+        {
+            get
+            {
+                return _AccountingStatus;
+            }
+            set
+            {
+                if (_AccountingStatus != value)
+                {
+                    OnAccountingStatusChanging(value);
+                    ReportPropertyChanging("AccountingStatus");
+                    _AccountingStatus = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("AccountingStatus");
+                    OnAccountingStatusChanged();
+                }
+            }
+        }
+        private global::System.String _AccountingStatus;
+        partial void OnAccountingStatusChanging(global::System.String value);
+        partial void OnAccountingStatusChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PaymentMethodId
+        {
+            get
+            {
+                return _PaymentMethodId;
+            }
+            set
+            {
+                if (_PaymentMethodId != value)
+                {
+                    OnPaymentMethodIdChanging(value);
+                    ReportPropertyChanging("PaymentMethodId");
+                    _PaymentMethodId = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("PaymentMethodId");
+                    OnPaymentMethodIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _PaymentMethodId;
+        partial void OnPaymentMethodIdChanging(global::System.Int32 value);
+        partial void OnPaymentMethodIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String PaymentMethod
+        {
+            get
+            {
+                return _PaymentMethod;
+            }
+            set
+            {
+                if (_PaymentMethod != value)
+                {
+                    OnPaymentMethodChanging(value);
+                    ReportPropertyChanging("PaymentMethod");
+                    _PaymentMethod = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("PaymentMethod");
+                    OnPaymentMethodChanged();
+                }
+            }
+        }
+        private global::System.String _PaymentMethod;
+        partial void OnPaymentMethodChanging(global::System.String value);
+        partial void OnPaymentMethodChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> PaymentBatchId
+        {
+            get
+            {
+                return _PaymentBatchId;
+            }
+            set
+            {
+                OnPaymentBatchIdChanging(value);
+                ReportPropertyChanging("PaymentBatchId");
+                _PaymentBatchId = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PaymentBatchId");
+                OnPaymentBatchIdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _PaymentBatchId;
+        partial void OnPaymentBatchIdChanging(Nullable<global::System.Int32> value);
+        partial void OnPaymentBatchIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 PaymentBatchStateId
+        {
+            get
+            {
+                return _PaymentBatchStateId;
+            }
+            set
+            {
+                if (_PaymentBatchStateId != value)
+                {
+                    OnPaymentBatchStateIdChanging(value);
+                    ReportPropertyChanging("PaymentBatchStateId");
+                    _PaymentBatchStateId = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("PaymentBatchStateId");
+                    OnPaymentBatchStateIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _PaymentBatchStateId;
+        partial void OnPaymentBatchStateIdChanging(global::System.Int32 value);
+        partial void OnPaymentBatchStateIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String PaymentBatchState
+        {
+            get
+            {
+                return _PaymentBatchState;
+            }
+            set
+            {
+                if (_PaymentBatchState != value)
+                {
+                    OnPaymentBatchStateChanging(value);
+                    ReportPropertyChanging("PaymentBatchState");
+                    _PaymentBatchState = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("PaymentBatchState");
+                    OnPaymentBatchStateChanged();
+                }
+            }
+        }
+        private global::System.String _PaymentBatchState;
+        partial void OnPaymentBatchStateChanging(global::System.String value);
+        partial void OnPaymentBatchStateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ApproverIdentity
+        {
+            get
+            {
+                return _ApproverIdentity;
+            }
+            set
+            {
+                OnApproverIdentityChanging(value);
+                ReportPropertyChanging("ApproverIdentity");
+                _ApproverIdentity = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ApproverIdentity");
+                OnApproverIdentityChanged();
+            }
+        }
+        private global::System.String _ApproverIdentity;
+        partial void OnApproverIdentityChanging(global::System.String value);
+        partial void OnApproverIdentityChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ItemIds
+        {
+            get
+            {
+                return _ItemIds;
+            }
+            set
+            {
+                OnItemIdsChanging(value);
+                ReportPropertyChanging("ItemIds");
+                _ItemIds = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ItemIds");
+                OnItemIdsChanged();
+            }
+        }
+        private global::System.String _ItemIds;
+        partial void OnItemIdsChanging(global::System.String value);
+        partial void OnItemIdsChanged();
 
         #endregion
 

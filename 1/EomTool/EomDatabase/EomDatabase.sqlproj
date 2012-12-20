@@ -809,6 +809,7 @@
     <Build Include="Schema Objects\Schemas\dbo\Views\WorkflowView.view.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\PaymentBatch.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\PaymentBatchState.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\PublisherPayments.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">

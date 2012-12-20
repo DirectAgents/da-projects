@@ -90,6 +90,25 @@
       [CampaignsPublisherReportSummary].[Total] AS [Total]
       FROM [dbo].[CampaignsPublisherReportSummary] AS [CampaignsPublisherReportSummary]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="PublisherPayments" EntityType="EomModel.Store.PublisherPayments" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayments">
+            <DefiningQuery>SELECT 
+      [PublisherPayments].[NetTermTypeId] AS [NetTermTypeId], 
+      [PublisherPayments].[NetTermType] AS [NetTermType], 
+      [PublisherPayments].[AffIds] AS [AffIds], 
+      [PublisherPayments].[Publisher] AS [Publisher], 
+      [PublisherPayments].[PubPayCurr] AS [PubPayCurr], 
+      [PublisherPayments].[PubPayout] AS [PubPayout], 
+      [PublisherPayments].[AccountingStatusId] AS [AccountingStatusId], 
+      [PublisherPayments].[AccountingStatus] AS [AccountingStatus], 
+      [PublisherPayments].[PaymentMethodId] AS [PaymentMethodId], 
+      [PublisherPayments].[PaymentMethod] AS [PaymentMethod], 
+      [PublisherPayments].[PaymentBatchId] AS [PaymentBatchId], 
+      [PublisherPayments].[PaymentBatchStateId] AS [PaymentBatchStateId], 
+      [PublisherPayments].[PaymentBatchState] AS [PaymentBatchState], 
+      [PublisherPayments].[ApproverIdentity] AS [ApproverIdentity], 
+      [PublisherPayments].[ItemIds] AS [ItemIds]
+      FROM [dbo].[PublisherPayments] AS [PublisherPayments]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="PublisherPayouts" EntityType="EomModel.Store.PublisherPayouts" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayouts">
             <DefiningQuery>SELECT 
       [PublisherPayouts].[affid] AS [affid], 
@@ -560,6 +579,37 @@
           <Property Name="Paid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="ToBePaid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.PublisherPayments' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="PublisherPayments">
+          <Key>
+            <PropertyRef Name="NetTermType" />
+            <PropertyRef Name="Publisher" />
+            <PropertyRef Name="PubPayCurr" />
+            <PropertyRef Name="AccountingStatusId" />
+            <PropertyRef Name="AccountingStatus" />
+            <PropertyRef Name="PaymentMethodId" />
+            <PropertyRef Name="PaymentMethod" />
+            <PropertyRef Name="PaymentBatchStateId" />
+            <PropertyRef Name="PaymentBatchState" />
+          </Key>
+          <Property Name="NetTermTypeId" Type="int" />
+          <Property Name="NetTermType" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="AffIds" Type="nvarchar" />
+          <Property Name="Publisher" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="PubPayCurr" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="PubPayout" Type="decimal" Precision="38" Scale="8" />
+          <Property Name="AccountingStatusId" Type="int" Nullable="false" />
+          <Property Name="AccountingStatus" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="PaymentMethodId" Type="int" Nullable="false" />
+          <Property Name="PaymentMethod" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="PaymentBatchId" Type="int" />
+          <Property Name="PaymentBatchStateId" Type="int" Nullable="false" />
+          <Property Name="PaymentBatchState" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="ApproverIdentity" Type="varchar" MaxLength="255" />
+          <Property Name="ItemIds" Type="nvarchar" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.PublisherPayouts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -1071,6 +1121,7 @@
             <End Role="PaymentBatchState" EntitySet="PaymentBatchStates" />
             <End Role="PaymentBatch" EntitySet="PaymentBatches" />
           </AssociationSet>
+          <EntitySet Name="PublisherPayments" EntityType="EomModel.PublisherPayment" />
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -1752,6 +1803,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="PublisherPayment">
+          <Key>
+            <PropertyRef Name="NetTermType" />
+            <PropertyRef Name="Publisher" />
+            <PropertyRef Name="PubPayCurr" />
+            <PropertyRef Name="AccountingStatusId" />
+            <PropertyRef Name="AccountingStatus" />
+            <PropertyRef Name="PaymentMethodId" />
+            <PropertyRef Name="PaymentMethod" />
+            <PropertyRef Name="PaymentBatchStateId" />
+            <PropertyRef Name="PaymentBatchState" />
+          </Key>
+          <Property Type="Int32" Name="NetTermTypeId" />
+          <Property Type="String" Name="NetTermType" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="AffIds" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Publisher" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="PubPayCurr" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="PubPayout" Precision="38" Scale="8" />
+          <Property Type="Int32" Name="AccountingStatusId" Nullable="false" />
+          <Property Type="String" Name="AccountingStatus" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PaymentMethodId" Nullable="false" />
+          <Property Type="String" Name="PaymentMethod" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PaymentBatchId" />
+          <Property Type="Int32" Name="PaymentBatchStateId" Nullable="false" />
+          <Property Type="String" Name="PaymentBatchState" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ApproverIdentity" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ItemIds" MaxLength="4000" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2063,6 +2142,27 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PublisherPayments">
+            <EntityTypeMapping TypeName="EomModel.PublisherPayment">
+              <MappingFragment StoreEntitySet="PublisherPayments">
+                <ScalarProperty Name="ItemIds" ColumnName="ItemIds" />
+                <ScalarProperty Name="ApproverIdentity" ColumnName="ApproverIdentity" />
+                <ScalarProperty Name="PaymentBatchState" ColumnName="PaymentBatchState" />
+                <ScalarProperty Name="PaymentBatchStateId" ColumnName="PaymentBatchStateId" />
+                <ScalarProperty Name="PaymentBatchId" ColumnName="PaymentBatchId" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="PaymentMethodId" ColumnName="PaymentMethodId" />
+                <ScalarProperty Name="AccountingStatus" ColumnName="AccountingStatus" />
+                <ScalarProperty Name="AccountingStatusId" ColumnName="AccountingStatusId" />
+                <ScalarProperty Name="PubPayout" ColumnName="PubPayout" />
+                <ScalarProperty Name="PubPayCurr" ColumnName="PubPayCurr" />
+                <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+                <ScalarProperty Name="AffIds" ColumnName="AffIds" />
+                <ScalarProperty Name="NetTermType" ColumnName="NetTermType" />
+                <ScalarProperty Name="NetTermTypeId" ColumnName="NetTermTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2218,6 +2318,7 @@
         <AssociationConnector Association="EomModel.FK_Item_PaymentBatch" />
         <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatch" />
         <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatchState" />
+        <EntityTypeShape EntityType="EomModel.PublisherPayment" Width="1.75" PointX="14.5" PointY="6.125" />
         </Diagram>
     </Diagrams>
   </Designer>

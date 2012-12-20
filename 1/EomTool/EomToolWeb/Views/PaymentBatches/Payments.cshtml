@@ -1,0 +1,19 @@
+﻿@model IEnumerable<EomTool.Domain.Entities.PublisherPayment>
+
+@{
+    ViewBag.Title = "Payments";
+}
+
+<h2>Payments</h2>
+
+@foreach (var payment in Model)
+{
+<text>
+    @payment.AffIds
+    @payment.Publisher
+    @payment.PubPayCurr
+    @payment.PubPayout
+    @payment.PaymentBatchId
+    <br />
+</text>
+}

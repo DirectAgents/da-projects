@@ -20,7 +20,18 @@ namespace EomToolWeb.Controllers
         {
             //var model = pbRepository.PaymentBatchesForUser(User);
             var model = pbRepository.PaymentBatches;
+            var payments = pbRepository.PublisherPayments;
+            foreach (var pbatch in model)
+            {
+                pbatch.Payments = payments.Where(p => p.PaymentBatchId == pbatch.id);
+            }
 
+            return View(model);
+        }
+
+        public ActionResult Payments()
+        {
+            var model = pbRepository.PublisherPayments;
             return View(model);
         }
 

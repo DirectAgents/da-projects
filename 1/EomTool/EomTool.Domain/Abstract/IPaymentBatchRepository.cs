@@ -8,5 +8,7 @@ namespace EomTool.Domain.Abstract
     {
         IQueryable<PaymentBatch> PaymentBatches { get; }
         IQueryable<PaymentBatch> PaymentBatchesForUser(IPrincipal user);
+
+        IQueryable<PublisherPayment> PublisherPayments { get; }
     }
 }

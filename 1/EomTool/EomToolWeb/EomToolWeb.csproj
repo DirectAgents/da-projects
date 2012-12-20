@@ -2657,6 +2657,7 @@
     <Content Include="Views\Payouts\ChooseMonth.cshtml" />
     <Content Include="Views\Wiki\Settings.cshtml" />
     <Content Include="Views\PaymentBatches\Index.cshtml" />
+    <Content Include="Views\PaymentBatches\Payments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

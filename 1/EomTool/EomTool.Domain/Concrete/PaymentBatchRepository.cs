@@ -24,5 +24,10 @@ namespace EomTool.Domain.Concrete
         {
             return context.PaymentBatches.Where(b => b.approver_identity == user.Identity.Name);
         }
+
+        public IQueryable<PublisherPayment> PublisherPayments
+        {
+            get { return context.PublisherPayments; }
+        }
     }
 }

@@ -6,10 +6,55 @@
 
 <h2>Index</h2>
 
-@foreach (var paymentBatch in Model)
+@foreach (var pbatch in Model)
 {
-    @paymentBatch.id
-    <text>&nbsp;</text>
-    @paymentBatch.payment_threshold
     <br />
+    <span>
+        Batch @pbatch.id
+        @if (pbatch.payment_threshold != null) {
+            <text>(threshold: @pbatch.payment_threshold)</text>
+        }
+        - @pbatch.PaymentBatchState.name
+    </span>
+    if (pbatch.Payments.Count() > 0)
+    {
+        <table style="border:1px solid">
+            <tr>
+                <th>AffIds</th>
+                <th>Publisher</th>
+                <th>Curr</th>
+                <th>Payout</th>
+                <th>PayMethod</th>
+                <th>NetTerms</th>
+                <th>AcctStatus</th>
+                <th>ItemIds</th>
+            </tr>
+            @foreach (var payment in pbatch.Payments)
+            {
+                <tr>
+                    <td>@payment.AffIds</td>
+                    <td>@payment.Publisher</td>
+                    <td>@payment.PubPayCurr</td>
+                    <td>@String.Format("{0:N2}", payment.PubPayout)</td>
+                    <td>@payment.PaymentMethod</td>
+                    <td>@payment.NetTermType</td>
+                    <td>@payment.AccountingStatus</td>
+                    <td><span title="@payment.ItemIds">@payment.ItemIds.Substring(0, payment.ItemIds.Length>20 ? 20 : payment.ItemIds.Length)..</span></td>
+                </tr>
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>@String.Format("{0:N2}", pbatch.Payments.Sum(p => p.PubPayout))</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    }
+    else {
+        <br />
+    }
 }
