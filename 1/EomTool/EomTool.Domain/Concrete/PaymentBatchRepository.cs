@@ -29,5 +29,15 @@ namespace EomTool.Domain.Concrete
         {
             get { return context.PublisherPayments; }
         }
+
+        public void SetAccountingStatus(int[] itemIds, int accountingStatus)
+        {
+            var items = context.Items.Where(item => itemIds.Contains(item.id));
+            foreach (var item in items)
+            {
+                item.item_accounting_status_id = accountingStatus;
+            }
+            context.SaveChanges();
+        }
     }
 }

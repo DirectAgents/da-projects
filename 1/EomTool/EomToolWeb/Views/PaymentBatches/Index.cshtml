@@ -1,11 +1,14 @@
 ﻿@model IEnumerable<EomTool.Domain.Entities.PaymentBatch>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Payment Batches";
 }
 
-<h2>Index</h2>
+<h2>Payment Batches</h2>
 
+@{
+    int iPayment = 0;
+}
 @foreach (var pbatch in Model)
 {
     <br />
@@ -27,6 +30,7 @@
                 <th>PayMethod</th>
                 <th>NetTerms</th>
                 <th>AcctStatus</th>
+                <th></th>
                 <th>ItemIds</th>
             </tr>
             @foreach (var payment in pbatch.Payments)
@@ -39,8 +43,17 @@
                     <td>@payment.PaymentMethod</td>
                     <td>@payment.NetTermType</td>
                     <td>@payment.AccountingStatus</td>
-                    <td><span title="@payment.ItemIds">@payment.ItemIds.Substring(0, payment.ItemIds.Length>20 ? 20 : payment.ItemIds.Length)..</span></td>
+                    <td id="actionarea@(iPayment)">
+                        @using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { id = "form" + iPayment }))
+                        {
+                            <input type="hidden" name="itemids" value="@payment.ItemIds" />
+                            <input type="button" value="Release" onclick="ReleasePayment(@iPayment)" />
+                            <input type="button" value="Hold" onclick="HoldPayment(@iPayment)" />
+                        }
+                    </td>
+                    <td><span title="@payment.ItemIds">@payment.ItemIds.Substring(0, payment.ItemIds.Length>10 ? 10 : payment.ItemIds.Length)..</span></td>
                 </tr>
+                iPayment++;
             }
             <tr>
                 <td></td>
@@ -51,10 +64,26 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
             </tr>
         </table>
     }
     else {
         <br />
     }
+}
+@section scripts {
+<script type="text/javascript">
+    function ReleasePayment(formid)
+    {
+        var form = $('#form' + formid);
+        $('#actionarea' + formid).load('@Url.Action("ReleaseItems")', form.serialize());
+    }
+
+    function HoldPayment(formid)
+    {
+        var form = $('#form' + formid);
+        $('#actionarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
+    }
+</script>
 }

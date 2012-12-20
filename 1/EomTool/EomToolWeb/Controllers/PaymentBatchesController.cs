@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
+using EomTool.Domain.Entities;
 
 namespace EomToolWeb.Controllers
 {
@@ -29,6 +30,29 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
+        public ActionResult ReleaseItems(string itemids)
+        {
+            int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
+            pbRepository.SetAccountingStatus(itemIdsArray, ItemAccountingStatus.CheckSignedAndPaid);
+
+            if (Request.IsAjaxRequest())
+                return Content("(released)");
+            else
+                return RedirectToAction("Index");
+        }
+
+        public ActionResult HoldItems(string itemids)
+        {
+            int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
+            pbRepository.SetAccountingStatus(itemIdsArray, ItemAccountingStatus.Hold);
+
+            if (Request.IsAjaxRequest())
+                return Content("(held)");
+            else
+                return RedirectToAction("Index");
+        }
+
+        // ---testing---
         public ActionResult Payments()
         {
             var model = pbRepository.PublisherPayments;
