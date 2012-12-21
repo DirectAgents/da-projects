@@ -172,6 +172,7 @@
     <Compile Include="Models\CampaignViewModel.cs" />
     <Compile Include="Models\ListViewMode.cs" />
     <Compile Include="Models\PagingInfo.cs" />
+    <Compile Include="Models\PaymentBatchesViewModel.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
     <Compile Include="Models\TopViewModel.cs" />

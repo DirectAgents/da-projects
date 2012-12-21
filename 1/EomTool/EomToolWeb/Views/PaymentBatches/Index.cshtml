@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EomTool.Domain.Entities.PaymentBatch>
+﻿@model PaymentBatchesViewModel
 
 @{
     ViewBag.Title = "Payment Batches";
@@ -9,7 +9,7 @@
 @{
     int iPayment = 0;
 }
-@foreach (var pbatch in Model)
+@foreach (var pbatch in Model.Batches)
 {
     <br />
     <span>
@@ -21,14 +21,15 @@
     </span>
     if (pbatch.Payments.Count() > 0)
     {
+        var batchTotal = pbatch.Payments.Sum(p => p.PubPayout);
+        var allItemIds = pbatch.Payments.Select(p => p.ItemIds).Aggregate((i, j) => i + "," + j);
         <table style="border:1px solid">
             <tr>
                 <th>AffIds</th>
-                <th>Publisher</th>
-                <th>Curr</th>
+                <th>Publisher&nbsp;</th>
                 <th>Payout</th>
-                <th>PayMethod</th>
-                <th>NetTerms</th>
+                <th>PayMethod&nbsp;</th>
+                <th>NetTerms&nbsp;</th>
                 <th>AcctStatus</th>
                 <th></th>
                 <th>ItemIds</th>
@@ -38,17 +39,18 @@
                 <tr>
                     <td>@payment.AffIds</td>
                     <td>@payment.Publisher</td>
-                    <td>@payment.PubPayCurr</td>
-                    <td>@String.Format("{0:N2}", payment.PubPayout)</td>
+                    <td>@Model.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
                     <td>@payment.PaymentMethod</td>
                     <td>@payment.NetTermType</td>
-                    <td>@payment.AccountingStatus</td>
+                    <td id="statusarea@(iPayment)">@payment.AccountingStatus</td>
                     <td id="actionarea@(iPayment)">
                         @using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { id = "form" + iPayment }))
                         {
                             <input type="hidden" name="itemids" value="@payment.ItemIds" />
-                            <input type="button" value="Release" onclick="ReleasePayment(@iPayment)" />
-                            <input type="button" value="Hold" onclick="HoldPayment(@iPayment)" />
+                            <input type="button" value="Release" onclick="if (confirm('Press OK to confirm Release')) ReleasePayment(@iPayment)" />
+                            if (Model.AllowHold) {
+                                <input type="button" value="Hold" onclick="if (confirm('Press OK to confirm Hold')) HoldPayment(@iPayment)" />
+                            }
                         }
                     </td>
                     <td><span title="@payment.ItemIds">@payment.ItemIds.Substring(0, payment.ItemIds.Length>10 ? 10 : payment.ItemIds.Length)..</span></td>
@@ -58,12 +60,20 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td>@String.Format("{0:N2}", pbatch.Payments.Sum(p => p.PubPayout))</td>
-                <td></td>
+                <td>@String.Format("{0:N2}", batchTotal)</td>
                 <td></td>
                 <td></td>
                 <td></td>
+                <td>
+                    @if (pbatch.Payments.Count() > 1)
+                    {
+                        using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { onsubmit = "return confirm('Press OK to confirm Release All')" }))
+                        {
+                            <input type="hidden" name="itemids" value="@allItemIds" />
+                            <input type="submit" value="Release All" />
+                        }
+                    }
+                </td>
                 <td></td>
             </tr>
         </table>
@@ -71,19 +81,20 @@
     else {
         <br />
     }
-}
+} @* loop through batches *@
+
 @section scripts {
 <script type="text/javascript">
     function ReleasePayment(formid)
     {
         var form = $('#form' + formid);
-        $('#actionarea' + formid).load('@Url.Action("ReleaseItems")', form.serialize());
+        $('#statusarea' + formid).load('@Url.Action("ReleaseItems")', form.serialize());
     }
 
     function HoldPayment(formid)
     {
         var form = $('#form' + formid);
-        $('#actionarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
+        $('#statusarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
     }
 </script>
 }

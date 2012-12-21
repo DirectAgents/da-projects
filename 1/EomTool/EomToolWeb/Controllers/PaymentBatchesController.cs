@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
+using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
 {
@@ -20,13 +21,18 @@ namespace EomToolWeb.Controllers
         public ActionResult Index()
         {
             //var model = pbRepository.PaymentBatchesForUser(User);
-            var model = pbRepository.PaymentBatches;
+            var pbatches = pbRepository.PaymentBatches;
             var payments = pbRepository.PublisherPayments;
-            foreach (var pbatch in model)
+            foreach (var pbatch in pbatches)
             {
                 pbatch.Payments = payments.Where(p => p.PaymentBatchId == pbatch.id);
             }
 
+            var model = new PaymentBatchesViewModel()
+            {
+                Batches = pbatches,
+                AllowHold = true
+            };
             return View(model);
         }
 
