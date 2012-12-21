@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Payment Batches";
 }
+<span style="float: right">@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)</span>
 
 <h2>Payment Batches</h2>
 
@@ -30,7 +31,7 @@
                 <th>Payout</th>
                 <th>PayMethod&nbsp;</th>
                 <th>NetTerms&nbsp;</th>
-                <th>AcctStatus</th>
+                <th>Status</th>
                 <th></th>
                 <th>ItemIds</th>
             </tr>

@@ -66,23 +66,9 @@ namespace EomToolWeb.Controllers
                 IncludeZero = includeZero
             };
 
-            ViewBag.ChooseMonthSelectList = new SelectList(ChooseMonthListItems, "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToString());
+            ViewBag.ChooseMonthSelectList = new SelectList(daMain1Repository.ChooseMonthListItems(), "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToString());
 
             return View(viewModel);
-        }
-
-        IEnumerable<SelectListItem> ChooseMonthListItems
-        {
-            get
-            {
-                var listItems = from c in daMain1Repository.DADatabases
-                                select new SelectListItem
-                                {
-                                    Text = c.name,
-                                    Value = c.effective_date.Value.ToString()
-                                };
-                return listItems;
-            }
         }
 
         public ActionResult Details(string mode, int? affid, int page = 1)

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Web.Mvc;
 using System.Web.SessionState;
+using EomTool.Domain.Abstract;
 using EomToolWeb.Infrastructure;
 
 namespace EomToolWeb
@@ -32,6 +35,17 @@ namespace EomToolWeb
         public static T GetSection<T>(this Configuration config) where T : ConfigurationSection
         {
            return (T)config.GetSection(typeof(T).SingleCustomAttribute<ConfigurationSectionAttribute>().Name);
+        }
+
+        public static IEnumerable<SelectListItem> ChooseMonthListItems(this IDAMain1Repository daMain1Repository)
+        {
+            var listItems = from c in daMain1Repository.DADatabases
+                            select new SelectListItem
+                            {
+                                Text = c.name,
+                                Value = c.effective_date.Value.ToString()
+                            };
+            return listItems;
         }
     }
 }

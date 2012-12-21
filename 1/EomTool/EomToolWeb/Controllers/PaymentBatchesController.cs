@@ -12,10 +12,14 @@ namespace EomToolWeb.Controllers
     public class PaymentBatchesController : Controller
     {
         private IPaymentBatchRepository pbRepository;
+        private IDAMain1Repository daMain1Repository;
+        private IEomEntitiesConfig eomEntitiesConfig;
 
-        public PaymentBatchesController(IPaymentBatchRepository paymentBatchRepository)
+        public PaymentBatchesController(IPaymentBatchRepository paymentBatchRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
         {
             this.pbRepository = paymentBatchRepository;
+            this.daMain1Repository = daMain1Repository;
+            this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
         public ActionResult Index()
@@ -33,6 +37,7 @@ namespace EomToolWeb.Controllers
                 Batches = pbatches,
                 AllowHold = true
             };
+            ViewBag.ChooseMonthSelectList = new SelectList(daMain1Repository.ChooseMonthListItems(), "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToString());
             return View(model);
         }
 
