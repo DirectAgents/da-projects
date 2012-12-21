@@ -22,10 +22,14 @@ namespace EomToolWeb.Controllers
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(bool test = false)
         {
-            //var model = pbRepository.PaymentBatchesForUser(User);
-            var pbatches = pbRepository.PaymentBatches;
+            IQueryable<PaymentBatch> pbatches;
+            if (test)
+                pbatches = pbRepository.PaymentBatches;
+            else
+                pbatches = pbRepository.PaymentBatchesForUser(User);
+
             var payments = pbRepository.PublisherPayments;
             foreach (var pbatch in pbatches)
             {
