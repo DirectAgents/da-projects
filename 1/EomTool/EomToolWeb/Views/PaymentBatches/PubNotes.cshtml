@@ -1,0 +1,9 @@
+﻿@model IEnumerable<PublisherNote>
+
+@foreach (var note in Model) {
+<p>
+    <b>Date:</b> @note.created<br />
+    <b>By:</b> @note.added_by_system_user<br />
+    @Html.Raw(note.note.Replace("\n","<br />"))
+</p>
+}

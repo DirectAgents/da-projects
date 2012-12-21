@@ -30,6 +30,16 @@ namespace EomTool.Domain.Concrete
             get { return context.PublisherPayments; }
         }
 
+        public IQueryable<PublisherNote> PublisherNotes
+        {
+            get { return context.PublisherNotes; }
+        }
+
+        public IQueryable<PublisherNote> PublisherNotesForPublisher(string pubName)
+        {
+            return context.PublisherNotes.Where(n => n.publisher_name == pubName);
+        }
+
         public void SetAccountingStatus(int[] itemIds, int accountingStatus)
         {
             var items = context.Items.Where(item => itemIds.Contains(item.id));

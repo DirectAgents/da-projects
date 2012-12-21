@@ -21,6 +21,7 @@
           <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PaymentBatch" EntityType="EomModel.Store.PaymentBatch" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="PaymentBatchState" EntityType="EomModel.Store.PaymentBatchState" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PublisherNotes" EntityType="EomModel.Store.PublisherNotes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UnitType" EntityType="EomModel.Store.UnitType" store:Type="Tables" Schema="dbo" />
@@ -458,6 +459,16 @@
           </Key>
           <Property Name="id" Type="int" Nullable="false" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PublisherNotes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="publisher_name" Type="varchar(max)" Nullable="false" />
+          <Property Name="note" Type="varchar(max)" Nullable="false" />
+          <Property Name="added_by_system_user" Type="varchar" MaxLength="255" />
+          <Property Name="created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Source">
           <Key>
@@ -1122,6 +1133,7 @@
             <End Role="PaymentBatch" EntitySet="PaymentBatches" />
           </AssociationSet>
           <EntitySet Name="PublisherPayments" EntityType="EomModel.PublisherPayment" />
+          <EntitySet Name="PublisherNotes" EntityType="EomModel.PublisherNote" />
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -1831,6 +1843,16 @@
           <Property Type="String" Name="ApproverIdentity" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ItemIds" MaxLength="4000" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="PublisherNote">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="publisher_name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="added_by_system_user" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="created" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2163,6 +2185,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PublisherNotes">
+            <EntityTypeMapping TypeName="EomModel.PublisherNote">
+              <MappingFragment StoreEntitySet="PublisherNotes">
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="added_by_system_user" ColumnName="added_by_system_user" />
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="publisher_name" ColumnName="publisher_name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2319,6 +2352,7 @@
         <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatch" />
         <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatchState" />
         <EntityTypeShape EntityType="EomModel.PublisherPayment" Width="1.75" PointX="14.5" PointY="6.125" />
+        <EntityTypeShape EntityType="EomModel.PublisherNote" Width="1.875" PointX="4.375" PointY="0.5" />
         </Diagram>
     </Diagrams>
   </Designer>

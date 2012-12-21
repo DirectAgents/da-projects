@@ -11,6 +11,9 @@ namespace EomTool.Domain.Abstract
 
         IQueryable<PublisherPayment> PublisherPayments { get; }
 
+        IQueryable<PublisherNote> PublisherNotes { get; }
+        IQueryable<PublisherNote> PublisherNotesForPublisher(string pubName);
+
         void SetAccountingStatus(int[] itemIds, int accountingStatus);
     }
 }

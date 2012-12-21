@@ -33,6 +33,7 @@
                 <th>NetTerms&nbsp;</th>
                 <th>Status</th>
                 <th></th>
+                <th>Notes</th>
                 <th>ItemIds</th>
             </tr>
             @foreach (var payment in pbatch.Payments)
@@ -54,6 +55,7 @@
                             }
                         }
                     </td>
+                    <td><a href="#" onclick="ShowNotes('@payment.Publisher');return false">notes</a></td>
                     <td><span title="@payment.ItemIds">@payment.ItemIds.Substring(0, payment.ItemIds.Length>10 ? 10 : payment.ItemIds.Length)..</span></td>
                 </tr>
                 iPayment++;
@@ -76,6 +78,7 @@
                     }
                 </td>
                 <td></td>
+                <td></td>
             </tr>
         </table>
     }
@@ -84,6 +87,10 @@
     }
 } @* loop through batches *@
 
+<div id="divNotesSummary" title="Notes">
+    <div id="divNotesSummaryInner">
+    </div>
+</div>
 @section scripts {
 <script type="text/javascript">
     function ReleasePayment(formid)
@@ -97,5 +104,22 @@
         var form = $('#form' + formid);
         $('#statusarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
     }
+
+    function ShowNotes(pubname) {
+        $.get('@Url.Action("PubNotes")', { pubname: pubname }, function (data) {
+                $('#divNotesSummaryInner').html(data);
+                $('#divNotesSummary').dialog("option", "title", pubname);
+                $('#divNotesSummary').dialog("open");
+            });
+        }
+
+    $(function () {
+        $("#divNotesSummary").dialog({
+            autoOpen: false,
+            height: 500,
+            width: 400,
+            modal: true
+        });
+    });
 </script>
 }

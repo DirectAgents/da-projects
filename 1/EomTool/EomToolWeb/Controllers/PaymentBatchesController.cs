@@ -63,6 +63,12 @@ namespace EomToolWeb.Controllers
                 return RedirectToAction("Index");
         }
 
+        public ActionResult PubNotes(string pubName)
+        {
+            var model = pbRepository.PublisherNotesForPublisher(pubName).OrderByDescending(n => n.created);
+            return PartialView(model);
+        }
+
         // ---testing---
         public ActionResult Payments()
         {
