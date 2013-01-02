@@ -83,6 +83,7 @@
     <Compile Include="Entities\ItemAccountingStatus.cs" />
     <Compile Include="Entities\MediaBuyerApprovalStatus.cs" />
     <Compile Include="Entities\PaymentBatch.cs" />
+    <Compile Include="Entities\PaymentBatchState.cs" />
     <Compile Include="Entities\PublisherSummary.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

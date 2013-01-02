@@ -28,8 +28,10 @@ namespace EomToolWeb.Controllers
             if (test)
                 pbatches = pbRepository.PaymentBatches;
             else
-                pbatches = pbRepository.PaymentBatchesForUser(User);
-
+            {
+                string identityName = User.Identity.Name;
+                pbatches = pbRepository.PaymentBatchesForUser(identityName, true);
+            }
             var payments = pbRepository.PublisherPayments;
             foreach (var pbatch in pbatches)
             {
@@ -71,6 +73,17 @@ namespace EomToolWeb.Controllers
         {
             var model = pbRepository.PublisherNotesForPublisher(pubName).OrderByDescending(n => n.created);
             return PartialView(model);
+        }
+
+        public ActionResult SavePubNote(string pubname, string note)
+        {
+            string identityName = User.Identity.Name;
+            pbRepository.AddPublisherNote(pubname, note, identityName);
+
+            if (Request.IsAjaxRequest())
+                return Content("saved");
+            else
+                return RedirectToAction("Index");
         }
 
         // ---testing---

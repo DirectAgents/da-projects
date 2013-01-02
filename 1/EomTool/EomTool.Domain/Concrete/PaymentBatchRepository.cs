@@ -20,15 +20,31 @@ namespace EomTool.Domain.Concrete
             get { return context.PaymentBatches; }
         }
 
-        public IQueryable<PaymentBatch> PaymentBatchesForUser(IPrincipal user)
+        public IQueryable<PaymentBatch> PaymentBatchesForUser(string identity, bool sentOnly)
         {
-            return context.PaymentBatches.Where(b => b.approver_identity == user.Identity.Name);
+            var batches = context.PaymentBatches.Where(b => b.approver_identity == identity);
+            if (sentOnly)
+                batches = batches.Where(pb => pb.payment_batch_state_id == PaymentBatchState.Sent);
+            return batches;
         }
 
         public IQueryable<PublisherPayment> PublisherPayments
         {
             get { return context.PublisherPayments; }
         }
+
+
+        public void SetAccountingStatus(int[] itemIds, int accountingStatus)
+        {
+            var items = context.Items.Where(item => itemIds.Contains(item.id));
+            foreach (var item in items)
+            {
+                item.item_accounting_status_id = accountingStatus;
+            }
+            context.SaveChanges();
+        }
+
+        // --- Notes ---
 
         public IQueryable<PublisherNote> PublisherNotes
         {
@@ -40,13 +56,15 @@ namespace EomTool.Domain.Concrete
             return context.PublisherNotes.Where(n => n.publisher_name == pubName);
         }
 
-        public void SetAccountingStatus(int[] itemIds, int accountingStatus)
+        public void AddPublisherNote(string pubName, string note, string identity)
         {
-            var items = context.Items.Where(item => itemIds.Contains(item.id));
-            foreach (var item in items)
+            var pubNote = new PublisherNote()
             {
-                item.item_accounting_status_id = accountingStatus;
-            }
+                note = note,
+                added_by_system_user = identity,
+                publisher_name = pubName
+            };
+            context.PublisherNotes.AddObject(pubNote);
             context.SaveChanges();
         }
     }

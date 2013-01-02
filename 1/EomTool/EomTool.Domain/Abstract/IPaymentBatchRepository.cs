@@ -7,13 +7,14 @@ namespace EomTool.Domain.Abstract
     public interface IPaymentBatchRepository
     {
         IQueryable<PaymentBatch> PaymentBatches { get; }
-        IQueryable<PaymentBatch> PaymentBatchesForUser(IPrincipal user);
+        IQueryable<PaymentBatch> PaymentBatchesForUser(string identity, bool sentOnly);
 
         IQueryable<PublisherPayment> PublisherPayments { get; }
 
+        void SetAccountingStatus(int[] itemIds, int accountingStatus);
+
         IQueryable<PublisherNote> PublisherNotes { get; }
         IQueryable<PublisherNote> PublisherNotesForPublisher(string pubName);
-
-        void SetAccountingStatus(int[] itemIds, int accountingStatus);
+        void AddPublisherNote(string pubName, string note, string identity);
     }
 }
