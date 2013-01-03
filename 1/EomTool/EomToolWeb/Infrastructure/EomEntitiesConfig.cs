@@ -6,9 +6,9 @@ using EomTool.Domain.Entities;
 
 namespace EomToolWeb.Infrastructure
 {
-    public class EomEntitiesConfig : IEomEntitiesConfig
+    public class EomEntitiesConfig : EomEntitiesConfigBase, IEomEntitiesConfig
     {
-        public DateTime CurrentEomDate
+        public override DateTime CurrentEomDate
         {
             get
             {
@@ -22,7 +22,7 @@ namespace EomToolWeb.Infrastructure
                     cookie.Value = eomDate.ToString();
                     HttpContext.Current.Response.Cookies.Add(cookie);
                 }
-                // valid eom dates are between Aud 2012 and last month
+                // valid eom dates are between Aug 2012 and last month
                 if ((eomDate < new DateTime(2012, 8, 1)) || (eomDate > lastMonth))
                     eomDate = lastMonth;
                 return eomDate;
@@ -34,6 +34,21 @@ namespace EomToolWeb.Infrastructure
                 HttpContext.Current.Response.Cookies.Add(cookie);
             }
         }
+    }
+
+    public class EomEntitiesConfigBase : IEomEntitiesConfig
+    {
+        public virtual DateTime CurrentEomDate { get; set; }
+
+        public string ConnectionString
+        {
+            get
+            {
+                var dateTime = CurrentEomDate;
+                var connString = ConnectionStringByDate(dateTime);
+                return connString;
+            }
+        }
 
         public string ConnectionStringByDate(DateTime eomDate)
         {
@@ -43,7 +58,9 @@ namespace EomToolWeb.Infrastructure
 
             if (eomToolConfig.DebugMode)
             {
-                connectionString = @"data source=biz2\da;initial catalog=zDADatabaseNov2012Test;Integrated Security=True";
+                var year = eomDate.Year;
+                var month = eomDate.ToString("MMM");
+                connectionString = @"data source=biz2\da;initial catalog=zDADatabase" + month + year + "Test;Integrated Security=True";
             }
             else
             {

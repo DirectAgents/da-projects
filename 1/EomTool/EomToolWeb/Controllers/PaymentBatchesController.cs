@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using EomTool.Domain.Abstract;
+using EomTool.Domain.Concrete;
 using EomTool.Domain.Entities;
+using EomToolWeb.Infrastructure;
 using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers
@@ -12,14 +14,41 @@ namespace EomToolWeb.Controllers
     public class PaymentBatchesController : Controller
     {
         private IPaymentBatchRepository pbRepository;
+        private Dictionary<string, IPaymentBatchRepository> pbRepositories = new Dictionary<string, IPaymentBatchRepository>(); // the keys are accounting periods
+        private string latestAccountingPeriod;
         private IDAMain1Repository daMain1Repository;
-        private IEomEntitiesConfig eomEntitiesConfig;
 
-        public PaymentBatchesController(IPaymentBatchRepository paymentBatchRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
+        public PaymentBatchesController(IPaymentBatchRepository paymentBatchRepository, IDAMain1Repository daMain1Repository)
         {
             this.pbRepository = paymentBatchRepository;
             this.daMain1Repository = daMain1Repository;
-            this.eomEntitiesConfig = eomEntitiesConfig;
+
+            //var today = DateTime.Now;
+            var today = new DateTime(2012, 12, 12); // for testing
+
+            var lastMonth = today.FirstDayOfMonth(-1);
+            latestAccountingPeriod = AccountingPeriod(lastMonth);
+            pbRepositories[latestAccountingPeriod] = GetRepo(lastMonth);
+
+            var prevMonth = today.FirstDayOfMonth(-2);
+            pbRepositories[AccountingPeriod(prevMonth)] = GetRepo(prevMonth);
+
+            this.pbRepository = pbRepositories[latestAccountingPeriod];
+        }
+
+        private string AccountingPeriod(DateTime dateTime)
+        {
+            return dateTime.ToString("MMM") + dateTime.Year; // e.g. "Dec2012"
+        }
+        private IPaymentBatchRepository GetRepo(DateTime dateTime)
+        {
+            var config = new EomEntitiesConfigBase()
+            {
+                CurrentEomDate = dateTime
+            };
+            var eomEntities = new EomEntities(config);
+            var repo = new PaymentBatchRepository(eomEntities);
+            return repo;
         }
 
         public ActionResult Index(string test)
@@ -45,10 +74,10 @@ namespace EomToolWeb.Controllers
 
             var model = new PaymentBatchesViewModel()
             {
+                AccountingPeriod = latestAccountingPeriod,
                 Batches = pbatches,
                 AllowHold = true
             };
-            ViewBag.ChooseMonthSelectList = new SelectList(daMain1Repository.ChooseMonthListItems(), "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToString());
             return View(model);
         }
 
