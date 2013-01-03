@@ -22,6 +22,7 @@
     </span>
     if (pbatch.Payments.Count() > 0)
     {
+        string currency = pbatch.Payments.First().PubPayCurr;
         var batchTotal = pbatch.Payments.Sum(p => p.PubPayout);
         var allItemIds = pbatch.Payments.Select(p => p.ItemIds).Aggregate((i, j) => i + "," + j);
         <table style="border:1px solid">
@@ -58,12 +59,13 @@
                     <td><a href="#" onclick="ShowNotes('@payment.Publisher');return false">notes</a></td>
                     <td><span title="@payment.ItemIds">@payment.ItemIds.Substring(0, payment.ItemIds.Length>10 ? 10 : payment.ItemIds.Length)..</span></td>
                 </tr>
+                if (payment.PubPayCurr != currency) { currency = null; }
                 iPayment++;
             }
             <tr>
                 <td></td>
                 <td></td>
-                <td>@String.Format("{0:N2}", batchTotal)</td>
+                <td>@Model.FormatCurrency(currency, batchTotal.Value)</td>
                 <td></td>
                 <td></td>
                 <td></td>

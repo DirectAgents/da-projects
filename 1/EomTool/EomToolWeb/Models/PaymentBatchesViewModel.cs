@@ -19,7 +19,10 @@ namespace EomToolWeb.Models
 
         public string FormatCurrency(string currency, decimal amount)
         {
-            return string.Format(CultureInfo.CreateSpecificCulture(CurrMap[currency]), "{0:C}", amount);
+            if (currency == null || !CurrMap.ContainsKey(currency))
+                return string.Format("{0:N2}", amount);
+            else
+                return string.Format(CultureInfo.CreateSpecificCulture(CurrMap[currency]), "{0:C}", amount);
         }
     }
 }

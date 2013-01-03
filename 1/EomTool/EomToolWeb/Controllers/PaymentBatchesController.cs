@@ -22,11 +22,16 @@ namespace EomToolWeb.Controllers
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
-        public ActionResult Index(bool test = false)
+        public ActionResult Index(string test)
         {
             IQueryable<PaymentBatch> pbatches;
-            if (test)
-                pbatches = pbRepository.PaymentBatches;
+            if (test != null)
+            {
+                if (test == "all")
+                    pbatches = pbRepository.PaymentBatches;
+                else
+                    pbatches = pbRepository.PaymentBatchesForUser("DIRECTAGENTS\\" + test, false);
+            }
             else
             {
                 string identityName = User.Identity.Name;
