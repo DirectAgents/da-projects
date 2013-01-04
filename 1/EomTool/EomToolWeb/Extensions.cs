@@ -13,7 +13,8 @@ namespace EomToolWeb
     {
         public static DateTime FirstDayOfMonth(this DateTime dateTime, int addMonths = 0)
         {
-            return new DateTime(dateTime.Year, dateTime.AddMonths(addMonths).Month, 1);
+            var firstOfMonth = new DateTime(dateTime.Year, dateTime.Month, 1);
+            return firstOfMonth.AddMonths(addMonths);
         }
 
         public static void Set(this HttpSessionState session, string key, object value)
