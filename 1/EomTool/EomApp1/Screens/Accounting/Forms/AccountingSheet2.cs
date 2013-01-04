@@ -197,6 +197,8 @@ namespace EomApp1.Screens.Accounting.Forms
                                     item.num_units -= needed;
                                     counted += needed;
                                     numUnitChanges.Add(item);
+                                    success = true;
+                                    break;
                                 }
                                 else
                                 {
