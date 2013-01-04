@@ -13,34 +13,31 @@ namespace EomToolWeb.Controllers
 {
     public class PaymentBatchesController : Controller
     {
-        private IPaymentBatchRepository pbRepository;
         private Dictionary<string, IPaymentBatchRepository> pbRepositories = new Dictionary<string, IPaymentBatchRepository>(); // the keys are accounting periods
-        private string latestAccountingPeriod;
+        private List<string> accountingPeriods = new List<string>();
         private IDAMain1Repository daMain1Repository;
 
-        public PaymentBatchesController(IPaymentBatchRepository paymentBatchRepository, IDAMain1Repository daMain1Repository)
+        public PaymentBatchesController(IDAMain1Repository daMain1Repository)
         {
-            this.pbRepository = paymentBatchRepository;
             this.daMain1Repository = daMain1Repository;
 
             //var today = DateTime.Now;
             var today = new DateTime(2012, 12, 12); // for testing
 
             var lastMonth = today.FirstDayOfMonth(-1);
-            latestAccountingPeriod = AccountingPeriod(lastMonth);
-            pbRepositories[latestAccountingPeriod] = GetRepo(lastMonth);
+            accountingPeriods.Add(AccountingPeriod(lastMonth));
+            pbRepositories[AccountingPeriod(lastMonth)] = CreateRepository(lastMonth);
 
             var prevMonth = today.FirstDayOfMonth(-2);
-            pbRepositories[AccountingPeriod(prevMonth)] = GetRepo(prevMonth);
-
-            this.pbRepository = pbRepositories[latestAccountingPeriod];
+            accountingPeriods.Add(AccountingPeriod(prevMonth));
+            pbRepositories[AccountingPeriod(prevMonth)] = CreateRepository(prevMonth);
         }
 
         private string AccountingPeriod(DateTime dateTime)
         {
             return dateTime.ToString("MMM") + dateTime.Year; // e.g. "Dec2012"
         }
-        private IPaymentBatchRepository GetRepo(DateTime dateTime)
+        private IPaymentBatchRepository CreateRepository(DateTime dateTime)
         {
             var config = new EomEntitiesConfigBase()
             {
@@ -50,41 +47,63 @@ namespace EomToolWeb.Controllers
             var repo = new PaymentBatchRepository(eomEntities);
             return repo;
         }
+        private IPaymentBatchRepository GetRepository(string acctperiod)
+        {
+            if (pbRepositories.Keys.Contains(acctperiod))
+                return pbRepositories[acctperiod];
+            else
+            {
+                if (accountingPeriods.Count > 0)
+                    return pbRepositories[accountingPeriods[0]];
+                else
+                    return null;
+            }
+        }
 
         public ActionResult Index(string test)
         {
-            IQueryable<PaymentBatch> pbatches;
-            if (test != null)
-            {
-                if (test == "all")
-                    pbatches = pbRepository.PaymentBatches;
-                else
-                    pbatches = pbRepository.PaymentBatchesForUser("DIRECTAGENTS\\" + test, false);
-            }
-            else
-            {
-                string identityName = User.Identity.Name;
-                pbatches = pbRepository.PaymentBatchesForUser(identityName, true);
-            }
-            var payments = pbRepository.PublisherPayments;
-            foreach (var pbatch in pbatches)
-            {
-                pbatch.Payments = payments.Where(p => p.PaymentBatchId == pbatch.id);
-            }
-
             var model = new PaymentBatchesViewModel()
             {
-                AccountingPeriod = latestAccountingPeriod,
-                Batches = pbatches,
                 AllowHold = true
             };
+
+            for (int i = accountingPeriods.Count - 1; i >= 0; i--)
+            {
+                var accountingPeriod = accountingPeriods[i];
+                var pbRepo = pbRepositories[accountingPeriod];
+
+                IQueryable<PaymentBatch> pbatches;
+                if (test != null)
+                {
+                    if (test == "all")
+                        pbatches = pbRepo.PaymentBatches;
+                    else
+                        pbatches = pbRepo.PaymentBatchesForUser("DIRECTAGENTS\\" + test, false);
+                }
+                else
+                {
+                    string identityName = User.Identity.Name;
+                    pbatches = pbRepo.PaymentBatchesForUser(identityName, true);
+                }
+                var payments = pbRepo.PublisherPayments;
+                foreach (var pbatch in pbatches)
+                {
+                    pbatch.AccountingPeriod = accountingPeriod;
+                    pbatch.Payments = payments.Where(p => p.PaymentBatchId == pbatch.id);
+                }
+
+                model.Batches = model.Batches == null ? pbatches : model.Batches.Concat(pbatches);
+            }
+
             return View(model);
         }
 
-        public ActionResult ReleaseItems(string itemids)
+        public ActionResult ReleaseItems(string itemids, string acctperiod)
         {
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
-            pbRepository.SetAccountingStatus(itemIdsArray, ItemAccountingStatus.CheckSignedAndPaid);
+
+            var pbRepo = GetRepository(acctperiod);
+            pbRepo.SetAccountingStatus(itemIdsArray, ItemAccountingStatus.CheckSignedAndPaid);
 
             if (Request.IsAjaxRequest())
                 return Content("(released)");
@@ -92,10 +111,12 @@ namespace EomToolWeb.Controllers
                 return RedirectToAction("Index");
         }
 
-        public ActionResult HoldItems(string itemids)
+        public ActionResult HoldItems(string itemids, string acctperiod)
         {
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
-            pbRepository.SetAccountingStatus(itemIdsArray, ItemAccountingStatus.Hold);
+
+            var pbRepo = GetRepository(acctperiod);
+            pbRepo.SetAccountingStatus(itemIdsArray, ItemAccountingStatus.Hold);
 
             if (Request.IsAjaxRequest())
                 return Content("(held)");
@@ -105,14 +126,14 @@ namespace EomToolWeb.Controllers
 
         public ActionResult PubNotes(string pubName)
         {
-            var model = pbRepository.PublisherNotesForPublisher(pubName).OrderByDescending(n => n.created);
+            var model = daMain1Repository.PublisherNotesForPublisher(pubName).OrderByDescending(n => n.created);
             return PartialView(model);
         }
 
         public ActionResult SavePubNote(string pubname, string note)
         {
             string identityName = User.Identity.Name;
-            pbRepository.AddPublisherNote(pubname, note, identityName);
+            daMain1Repository.AddPublisherNote(pubname, note, identityName);
 
             if (Request.IsAjaxRequest())
                 return Content("saved");
@@ -123,7 +144,7 @@ namespace EomToolWeb.Controllers
         // ---testing---
         public ActionResult Payments()
         {
-            var model = pbRepository.PublisherPayments;
+            var model = pbRepositories[accountingPeriods[0]].PublisherPayments;
             return View(model);
         }
 

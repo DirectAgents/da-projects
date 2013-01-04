@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Security.Principal;
 using EomTool.Domain.Entities;
 
 namespace EomTool.Domain.Abstract
@@ -12,9 +11,5 @@ namespace EomTool.Domain.Abstract
         IQueryable<PublisherPayment> PublisherPayments { get; }
 
         void SetAccountingStatus(int[] itemIds, int accountingStatus);
-
-        IQueryable<PublisherNote> PublisherNotes { get; }
-        IQueryable<PublisherNote> PublisherNotesForPublisher(string pubName);
-        void AddPublisherNote(string pubName, string note, string identity);
     }
 }

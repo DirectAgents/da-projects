@@ -13,7 +13,7 @@
 {
     <br />
     <span>
-        Batch @pbatch.id
+        @pbatch.AccountingPeriod Batch @pbatch.id
         @if (pbatch.payment_threshold != null) {
             <text>(threshold: @pbatch.payment_threshold)</text>
         }
@@ -48,6 +48,7 @@
                     <td id="actionarea@(iPayment)">
                         @using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { id = "form" + iPayment }))
                         {
+                            <input type="hidden" name="acctperiod" value="@pbatch.AccountingPeriod" />
                             <input type="hidden" name="itemids" value="@payment.ItemIds" />
                             <input type="button" value="Release" onclick="if (confirm('Press OK to confirm Release')) ReleasePayment(@iPayment)" />
                             if (Model.AllowHold) {
@@ -73,6 +74,7 @@
                     {
                         using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { onsubmit = "return confirm('Press OK to confirm Release All')" }))
                         {
+                            <input type="hidden" name="acctperiod" value="@pbatch.AccountingPeriod" />
                             <input type="hidden" name="itemids" value="@allItemIds" />
                             <input type="submit" value="Release All" />
                         }

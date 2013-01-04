@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DAMain1Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="DAMain1Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="DAMain1ModelStoreContainer">
           <EntitySet Name="DADatabase" EntityType="DAMain1Model.Store.DADatabase" store:Type="Tables" store:Schema="dbo" store:Name="DADatabase">
             <DefiningQuery>SELECT 
@@ -15,6 +15,7 @@
       [DADatabase].[am_view_name] AS [am_view_name]
       FROM [dbo].[DADatabase] AS [DADatabase]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="PublisherNotes" EntityType="DAMain1Model.Store.PublisherNotes" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'DAMain1.dbo.DADatabase' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -32,13 +33,23 @@
           <Property Name="effective_date" Type="datetime" />
           <Property Name="am_view_name" Type="varchar" Nullable="false" MaxLength="255" />
         </EntityType>
-      </Schema>
-    </edmx:StorageModels>
+        <EntityType Name="PublisherNotes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="publisher_name" Type="varchar(max)" Nullable="false" />
+          <Property Name="note" Type="varchar(max)" Nullable="false" />
+          <Property Name="added_by_system_user" Type="varchar" MaxLength="255" />
+          <Property Name="created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DAMain1Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityContainer Name="DAMain1Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="DADatabases" EntityType="DAMain1Model.DADatabase" />
+          <EntitySet Name="PublisherNotes" EntityType="DAMain1Model.PublisherNote" />
         </EntityContainer>
         <EntityType Name="DADatabase">
           <Key>
@@ -50,8 +61,18 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
           <Property Name="connection_string" Type="String" Nullable="false" MaxLength="500" Unicode="false" FixedLength="false" />
-          <Property Name="effective_date" Type="DateTime" />
+          <Property Name="effective_date" Type="DateTime" Precision="3" />
           <Property Name="am_view_name" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="PublisherNote">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="publisher_name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="added_by_system_user" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="created" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -66,6 +87,17 @@
             <ScalarProperty Name="effective_date" ColumnName="effective_date" />
             <ScalarProperty Name="am_view_name" ColumnName="am_view_name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="PublisherNotes">
+            <EntityTypeMapping TypeName="DAMain1Model.PublisherNote">
+              <MappingFragment StoreEntitySet="PublisherNotes">
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="added_by_system_user" ColumnName="added_by_system_user" />
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="publisher_name" ColumnName="publisher_name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -88,6 +120,7 @@
     <Diagrams>
       <Diagram Name="DAMain1">
         <EntityTypeShape EntityType="DAMain1Model.DADatabase" Width="1.5" PointX="0.75" PointY="0.75" Height="1.9802864583333331" IsExpanded="true" />
+        <EntityTypeShape EntityType="DAMain1Model.PublisherNote" Width="1.875" PointX="3" PointY="1.5" />
       </Diagram>
     </Diagrams>
   </Designer>

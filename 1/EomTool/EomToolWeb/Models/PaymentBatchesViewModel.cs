@@ -6,7 +6,6 @@ namespace EomToolWeb.Models
 {
     public class PaymentBatchesViewModel
     {
-        public string AccountingPeriod { get; set; }
         public IEnumerable<PaymentBatch> Batches { get; set; }
         public bool AllowHold { get; set; }
 

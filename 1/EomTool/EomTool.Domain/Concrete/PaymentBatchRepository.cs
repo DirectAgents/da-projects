@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Security.Principal;
+﻿using System.Linq;
 using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 
@@ -41,30 +39,6 @@ namespace EomTool.Domain.Concrete
             {
                 item.item_accounting_status_id = accountingStatus;
             }
-            context.SaveChanges();
-        }
-
-        // --- Notes ---
-
-        public IQueryable<PublisherNote> PublisherNotes
-        {
-            get { return context.PublisherNotes; }
-        }
-
-        public IQueryable<PublisherNote> PublisherNotesForPublisher(string pubName)
-        {
-            return context.PublisherNotes.Where(n => n.publisher_name == pubName);
-        }
-
-        public void AddPublisherNote(string pubName, string note, string identity)
-        {
-            var pubNote = new PublisherNote()
-            {
-                note = note,
-                added_by_system_user = identity,
-                publisher_name = pubName
-            };
-            context.PublisherNotes.AddObject(pubNote);
             context.SaveChanges();
         }
     }
