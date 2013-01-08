@@ -9,6 +9,7 @@ namespace EomTool.Domain.Abstract
         IQueryable<PaymentBatch> PaymentBatchesForUser(string identity, bool sentOnly);
 
         IQueryable<PublisherPayment> PublisherPayments { get; }
+        IQueryable<PublisherPayment> PublisherPaymentsForUser(string identity, bool sentOnly);
 
         void SetAccountingStatus(int[] itemIds, int accountingStatus);
     }

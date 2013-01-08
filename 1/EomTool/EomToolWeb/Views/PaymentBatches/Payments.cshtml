@@ -6,14 +6,18 @@
 
 <h2>Payments</h2>
 
+<table>
 @foreach (var payment in Model)
 {
-<text>
-    @payment.AffIds
-    @payment.Publisher
-    @payment.PubPayCurr
-    @payment.PubPayout
-    @payment.PaymentBatchId
-    <br />
-</text>
+<tr>
+    <td>@payment.AccountingPeriod</td>
+    <td>@payment.Publisher</td>
+    <td>@payment.PubPayCurr</td>
+    <td style="text-align:right">@string.Format("{0:N2}", payment.PubPayout)</td>
+    <td>@payment.PaymentMethod</td>
+    <td>@payment.NetTermType</td>
+    <td>@payment.PaymentBatchId</td>
+    <td>@payment.AccountingStatus</td>
+</tr>
 }
+</table>

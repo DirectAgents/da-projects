@@ -76,7 +76,7 @@ namespace EomToolWeb.Controllers
                 if (test != null)
                 {
                     if (test == "all")
-                        pbatches = pbRepo.PaymentBatches;
+                        pbatches = pbRepo.PaymentBatchesForUser(null, false);
                     else
                         pbatches = pbRepo.PaymentBatchesForUser("DIRECTAGENTS\\" + test, false);
                 }
@@ -95,6 +95,30 @@ namespace EomToolWeb.Controllers
                 model.Batches = model.Batches == null ? pbatches : model.Batches.Concat(pbatches);
             }
 
+            return View(model);
+        }
+
+        // Summary view
+        public ActionResult Payments(string test)
+        {
+            string identity = null;
+            if (test != "all") identity = "DIRECTAGENTS\\" + test;
+
+            IEnumerable<PublisherPayment> allPayments = null;
+            for (int i = accountingPeriods.Count - 1; i >= 0; i--)
+            {
+                var accountingPeriod = accountingPeriods[i];
+                var pbRepo = pbRepositories[accountingPeriod];
+
+                var payments = pbRepo.PublisherPaymentsForUser(identity, true);
+                foreach (var payment in payments)
+                {
+                    payment.AccountingPeriod = accountingPeriod;
+                }
+                allPayments = allPayments == null ? payments : allPayments.Concat(payments);
+            }
+
+            var model = allPayments.OrderBy(p => p.Publisher);
             return View(model);
         }
 
@@ -139,13 +163,6 @@ namespace EomToolWeb.Controllers
                 return Content("saved");
             else
                 return RedirectToAction("Index");
-        }
-
-        // ---testing---
-        public ActionResult Payments()
-        {
-            var model = pbRepositories[accountingPeriods[0]].PublisherPayments;
-            return View(model);
         }
 
     }
