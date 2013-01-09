@@ -52,12 +52,16 @@ namespace EomToolWeb
         [DisplayName("Exclude Inactive")]
         public bool ExcludeInactive { get; set; }
 
+        [DisplayName("Exclude CPM (light blue)")]
+        public bool ExcludeCPM { get; set; }
+
         public WikiSettings()
         {
-            ExcludeNotLiveYet = false;
-            ExcludePaused = false;
+            ExcludeNotLiveYet = true;
+            ExcludePaused = true;
             ExcludeHidden = false;
             ExcludeInactive = true;
+            ExcludeCPM = true;
         }
 
         public List<string> ExcludeStrings()
@@ -67,6 +71,8 @@ namespace EomToolWeb
                 excludeStrings.Add("NOT LIVE YET");
             if (ExcludePaused)
                 excludeStrings.Add("PAUSED");
+            if (ExcludeCPM)
+                excludeStrings.Add("CPM");
 
             return excludeStrings;
         }

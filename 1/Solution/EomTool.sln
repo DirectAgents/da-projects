@@ -49,6 +49,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EomApp.Controls.Wpf", "..\EomApp.Controls.Wpf\EomApp.Controls.Wpf.csproj", "{6DE348DC-663F-4251-A8E4-A1107E1B0497}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EomToolWeb", "..\EomTool\EomToolWeb\EomToolWeb.csproj", "{DC30DCE4-D767-4DDC-AEA0-959703093913}"
+	ProjectSection(ProjectDependencies) = postProject
+		{278911AB-CB92-4316-843E-4571CD0C3410} = {278911AB-CB92-4316-843E-4571CD0C3410}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EomToolWeb.Tests", "..\EomTool\EomToolWeb.Tests\EomToolWeb.Tests.csproj", "{768819DE-541A-4208-9D3B-06FD70AFA769}"
 EndProject

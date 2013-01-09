@@ -100,6 +100,11 @@ namespace EomToolWeb.Controllers
             if (!string.IsNullOrWhiteSpace(search))
             {
                 viewModel.SearchString = search;
+                if (search.ToLower() == "cpm")
+                {
+                    var settings = SessionUtility.WikiSettings;
+                    settings.ExcludeCPM = false;
+                }
             }
             int pidInt;
             if (Int32.TryParse(pid, out pidInt))

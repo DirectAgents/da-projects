@@ -47,6 +47,9 @@ namespace EomToolWeb.Controllers
             else
             {
                 var settings = SessionUtility.WikiSettings;
+                if (search != null && search.ToLower() == "cpm")
+                    settings.ExcludeCPM = false;
+
                 var excludeStrings = settings.ExcludeStrings().ToArray();
                 campaigns = campaignRepository.CampaignsFiltered(excludeStrings, search, country, vertical, traffictype, settings.ExcludeHidden, settings.ExcludeInactive);
 
