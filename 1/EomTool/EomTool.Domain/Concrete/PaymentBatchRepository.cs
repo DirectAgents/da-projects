@@ -42,6 +42,14 @@ namespace EomTool.Domain.Concrete
             return context.PublisherPayments.Where(p => p.PaymentBatchId != null && batchIds.Contains(p.PaymentBatchId.Value));
         }
 
+        // These are separate payouts (by campaign) used in publisher reports...
+        public IQueryable<PublisherPayout> PublisherPayouts
+        {
+            get { return context.PublisherPayouts; }
+        }
+
+        // --- Actions ---
+
         public void SetAccountingStatus(int[] itemIds, int accountingStatus)
         {
             var items = context.Items.Where(item => itemIds.Contains(item.id));

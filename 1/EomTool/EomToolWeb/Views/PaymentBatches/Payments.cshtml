@@ -4,20 +4,68 @@
     ViewBag.Title = "Payments";
 }
 
-<h2>Payments</h2>
+<style type="text/css">
+    #summaryOuter
+    {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+    #summaryGridContainer
+    {
+        position: absolute;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        overflow: auto;
+    }
+    #publisherReportContainer
+    {
+        border-left: 3px solid Black;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        overflow: auto;
+    }
+</style>
+<div id="summaryOuter">
+    <div id="summaryGridContainer">
 
-<table>
-@foreach (var payment in Model)
-{
-<tr>
-    <td>@payment.AccountingPeriod</td>
-    <td>@payment.Publisher</td>
-    <td>@payment.PubPayCurr</td>
-    <td style="text-align:right">@string.Format("{0:N2}", payment.PubPayout)</td>
-    <td>@payment.PaymentMethod</td>
-    <td>@payment.NetTermType</td>
-    <td>@payment.PaymentBatchId</td>
-    <td>@payment.AccountingStatus</td>
-</tr>
+        <h2>Payments</h2>
+
+        <table>
+        @foreach (var payment in Model)
+        {
+        <tr>
+            <td>@payment.AccountingPeriod</td>
+            <td><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
+            <td>@payment.PubPayCurr</td>
+            <td style="text-align:right">@string.Format("{0:N2}", payment.PubPayout)</td>
+            <td>@payment.PaymentMethod</td>
+            <td>@payment.NetTermType</td>
+            <td>@payment.PaymentBatchId</td>
+            <td>@payment.AccountingStatus</td>
+            <td>@payment.AffIds</td>
+        </tr>
+        }
+        </table>
+
+    </div>
+    <div id="publisherReportContainer">
+        <div id="publisherReport" style="width: 100%;">
+        </div>
+    </div>
+</div>
+@section scripts {
+<script type="text/javascript">
+
+    function ShowPubRep(pubname, acctperiod) {
+        $.get('@Url.Action("PubRep")?pubname=' + pubname + '&acctperiod=' + acctperiod + '&ts=' + new Date().getTime(), function (publisherReportContent) {
+            $('#publisherReport').empty().html(publisherReportContent);
+        });
+    }
+
+</script>
 }
-</table>

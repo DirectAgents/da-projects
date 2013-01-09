@@ -122,6 +122,18 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
+        public ActionResult PubRep(string pubname, string acctperiod)
+        {
+            var pbRepo = GetRepository(acctperiod);
+            var payouts = pbRepo.PublisherPayouts.Where(p => p.Publisher.StartsWith(pubname) && p.status_id == CampaignStatus.Verified);
+            var date = DateTime.Parse(acctperiod);
+            var pubRep = PayoutsController.GetPublisherReport(payouts, date);
+            var pubRepEncoded = MvcHtmlString.Create(pubRep).ToHtmlString();
+            return Content(pubRepEncoded);
+        }
+
+        // --- Release & Hold ---
+
         public ActionResult ReleaseItems(string itemids, string acctperiod)
         {
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
@@ -148,9 +160,11 @@ namespace EomToolWeb.Controllers
                 return RedirectToAction("Index");
         }
 
-        public ActionResult PubNotes(string pubName)
+        // --- Notes ---
+
+        public ActionResult PubNotes(string pubname)
         {
-            var model = daMain1Repository.PublisherNotesForPublisher(pubName).OrderByDescending(n => n.created);
+            var model = daMain1Repository.PublisherNotesForPublisher(pubname).OrderByDescending(n => n.created);
             return PartialView(model);
         }
 
