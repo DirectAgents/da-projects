@@ -90,17 +90,8 @@
     }
 } @* loop through batches *@
 
-<div id="divNotesSummary" title="Notes">
-    New note:
-    <form id="frmNote" action="@Url.Action("SavePubNote")" method="post">
-        <input id="dlgPubName" type="hidden" name="pubname" value="" />
-        <textarea id="txtNote" style="width: 355px; height: 55px" name="note"></textarea>
-        <br />
-        <input type="button" value="Save" onclick="SaveNote()" />
-    </form>
-    <div id="divNotesSummaryInner">
-    </div>
-</div>
+@Html.Partial("PubNotesInfrastructure")
+
 @section scripts {
 <script type="text/javascript">
     function ReleasePayment(formid)
@@ -114,35 +105,5 @@
         var form = $('#form' + formid);
         $('#statusarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
     }
-
-    function ShowNotes(pubname) {
-        $.get('@Url.Action("PubNotes")', { pubname: pubname }, function (data) {
-                $('#divNotesSummaryInner').html(data);
-                $('#divNotesSummary').dialog("option", "title", pubname);
-                $('#dlgPubName').val(pubname);
-                $('#txtNote').val("");
-                $('#divNotesSummary').dialog("open");
-            });
-        }
-
-    function SaveNote() {
-        if ($.trim($('#txtNote').val()) == "") {
-            alert("Please enter a note.");
-            return;
-        }
-        var url = $('#frmNote').attr('action');
-        $.post(url, $('#frmNote').serialize(), function(data) {
-            $('#divNotesSummary').dialog("close");
-        });
-    }
-
-    $(function () {
-        $("#divNotesSummary").dialog({
-            autoOpen: false,
-            height: 500,
-            width: 400,
-            modal: true
-        });
-    });
 </script>
 }

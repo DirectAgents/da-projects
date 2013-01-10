@@ -37,7 +37,7 @@
 
 @{
     int iGroup = 0;
-    ViewData["AllowHold"] = Model.AllowHold;
+    ViewBag.PaymentsViewModel = Model;
     foreach (var group in Model.PaymentGroups)
     {
         ViewData["iGroup"] = iGroup;
@@ -52,6 +52,9 @@
         </div>
     </div>
 </div>
+
+@Html.Partial("PubNotesInfrastructure")
+
 @section scripts {
 <script type="text/javascript">
 
@@ -63,12 +66,17 @@
 
     function ReleasePayment(formid) {
         var form = $('#form' + formid);
-        $('#statusarea' + formid).load('@Url.Action("ReleaseItems")', form.serialize());
+        $('#actionarea' + formid).load('@Url.Action("ReleaseItems")', form.serialize());
     }
 
     function HoldPayment(formid) {
         var form = $('#form' + formid);
-        $('#statusarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
+        $('#actionarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
+    }
+
+    function ResetPayment(formid) {
+        var form = $('#form' + formid);
+        $('#actionarea' + formid).load('@Url.Action("ResetItems")', form.serialize());
     }
 
 </script>

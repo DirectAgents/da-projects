@@ -1,6 +1,6 @@
 ﻿@model System.Linq.IGrouping<PaymentGroup, EomTool.Domain.Entities.PublisherPayment>
 @{
-    bool allowHold = ViewBag.AllowHold ?? false;
+    PaymentsViewModel pvm = ViewBag.PaymentsViewModel;
     var iGroup = ViewData["iGroup"];
     int iPayment = 0;
     var payoutTotal = Model.Sum(p => p.PubPayout);
@@ -14,20 +14,33 @@
     <td>@payment.AccountingPeriod</td>
     <td><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
     <td style="text-align:right">@Html.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
+    <td><a href="#" onclick="ShowNotes('@payment.Publisher');return false">notes</a></td>
     <td id="actionarea@(iGroup)_@(iPayment)">
         @using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { id = "form" + iGroup + "_" + iPayment }))
         {
             <input type="hidden" name="acctperiod" value="@payment.AccountingPeriod" />
             <input type="hidden" name="itemids" value="@payment.ItemIds" />
-            <a href="#" onclick="if (confirm('Press OK to confirm Release')) ReleasePayment('@(iGroup +"_"+ iPayment)'); return false">Release</a>
-            if (allowHold) {
-                <a href="#" onclick="if (confirm('Press OK to confirm Hold')) HoldPayment('@(iGroup +"_"+ iPayment)')">Hold</a>
+            if (payment.AccountingStatusId == ItemAccountingStatus.CheckSignedAndPaid) {
+                <text>Release</text>
+            } else {
+                <a href="#" onclick="if (confirm('Press OK to confirm Release')) ReleasePayment('@(iGroup +"_"+ iPayment)'); return false">Release</a>
+            }
+            if (pvm.AllowHold) {
+                if (payment.AccountingStatusId == ItemAccountingStatus.Hold) {
+                    <text>Hold</text>
+                } else {
+                    <a href="#" onclick="if (confirm('Press OK to confirm Hold')) HoldPayment('@(iGroup +"_"+ iPayment)'); return false">Hold</a>
+                }
+            }
+            if (pvm.Test == "all") {
+                <a href="#" onclick="if (confirm('Press OK to confirm Reset')) ResetPayment('@(iGroup +"_"+ iPayment)'); return false">Reset</a>
             }
         }
     </td>
-    <td id="statusarea@(iGroup)_@(iPayment)">@payment.AccountingStatus</td>
+@if (pvm.Test == "all") {
     <td>@payment.PaymentBatchId</td>
-    <td>@payment.AffIds</td>
+    <td id="statusarea@(iGroup)_@(iPayment)">@payment.AccountingStatus.Substring(0, 4)</td>
+}
 </tr>
     iPayment++;
 }
@@ -37,7 +50,9 @@
     <td style="font-weight:bold">@Html.FormatCurrency(Model.Key.Currency, payoutTotal.Value)</td>
     <td></td>
     <td></td>
+@if (pvm.Test == "all") {
     <td></td>
     <td></td>
+}
 </tr>
 </table>

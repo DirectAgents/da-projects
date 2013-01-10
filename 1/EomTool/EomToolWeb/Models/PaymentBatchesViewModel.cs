@@ -8,6 +8,7 @@ namespace EomToolWeb.Models
     public class PaymentsViewModelBase
     {
         public bool AllowHold { get; set; }
+        public string Test { get; set; }
     }
 
     public class PaymentBatchesViewModel : PaymentsViewModelBase

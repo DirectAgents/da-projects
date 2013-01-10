@@ -64,7 +64,8 @@ namespace EomToolWeb.Controllers
         {
             var model = new PaymentBatchesViewModel()
             {
-                AllowHold = true
+                AllowHold = true,
+                Test = test
             };
 
             for (int i = accountingPeriods.Count - 1; i >= 0; i--)
@@ -102,7 +103,8 @@ namespace EomToolWeb.Controllers
         {
             var model = new PaymentsViewModel()
             {
-                AllowHold = true
+                AllowHold = true,
+                Test = test
             };
 
             string identity = null;
@@ -140,26 +142,26 @@ namespace EomToolWeb.Controllers
 
         public ActionResult ReleaseItems(string itemids, string acctperiod)
         {
-            int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
-
-            var pbRepo = GetRepository(acctperiod);
-            pbRepo.SetAccountingStatus(itemIdsArray, ItemAccountingStatus.CheckSignedAndPaid);
-
-            if (Request.IsAjaxRequest())
-                return Content("(released)");
-            else
-                return RedirectToAction("Index");
+            return ChangeItems(itemids, acctperiod, ItemAccountingStatus.CheckSignedAndPaid, "(released)");
+        }
+        public ActionResult HoldItems(string itemids, string acctperiod)
+        {
+            return ChangeItems(itemids, acctperiod, ItemAccountingStatus.Hold, "(held)");
+        }
+        public ActionResult ResetItems(string itemids, string acctperiod)
+        {
+            return ChangeItems(itemids, acctperiod, ItemAccountingStatus.Approved, "(reset)");
         }
 
-        public ActionResult HoldItems(string itemids, string acctperiod)
+        private ActionResult ChangeItems(string itemids, string acctperiod, int toStatus, string msg)
         {
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
 
             var pbRepo = GetRepository(acctperiod);
-            pbRepo.SetAccountingStatus(itemIdsArray, ItemAccountingStatus.Hold);
+            pbRepo.SetAccountingStatus(itemIdsArray, toStatus);
 
             if (Request.IsAjaxRequest())
-                return Content("(held)");
+                return Content(msg);
             else
                 return RedirectToAction("Index");
         }
