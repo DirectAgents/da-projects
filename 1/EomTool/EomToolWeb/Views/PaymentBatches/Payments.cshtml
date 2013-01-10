@@ -49,7 +49,9 @@
     <td style="font-weight:bold">TOTAL</td>
     <td style="font-weight:bold">@Html.FormatCurrency(Model.Key.Currency, payoutTotal.Value)</td>
     <td></td>
-    <td></td>
+    <td>@if(Model.Count() > 1){
+            <a href="#" onclick="if (confirm('Press OK to confirm Release All')) ReleaseAll(@iGroup, @Model.Count()); return false">Release All</a>
+    }</td>
 @if (pvm.Test == "all") {
     <td></td>
     <td></td>

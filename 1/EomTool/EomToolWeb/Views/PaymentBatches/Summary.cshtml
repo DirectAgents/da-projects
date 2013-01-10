@@ -68,15 +68,19 @@
         var form = $('#form' + formid);
         $('#actionarea' + formid).load('@Url.Action("ReleaseItems")', form.serialize());
     }
-
     function HoldPayment(formid) {
         var form = $('#form' + formid);
         $('#actionarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
     }
-
     function ResetPayment(formid) {
         var form = $('#form' + formid);
         $('#actionarea' + formid).load('@Url.Action("ResetItems")', form.serialize());
+    }
+
+    function ReleaseAll(iGroup, numRows) {
+        for (var i = 0; i < numRows; i++) {
+            ReleasePayment(iGroup + '_' + i);
+        }
     }
 
 </script>
