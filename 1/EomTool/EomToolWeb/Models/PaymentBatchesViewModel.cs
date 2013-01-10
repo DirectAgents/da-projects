@@ -21,7 +21,10 @@ namespace EomToolWeb.Models
 
         public void SetPayments(IEnumerable<PublisherPayment> payments)
         {
-            PaymentGroups = payments.GroupBy(p => new PaymentGroup { Currency = p.PubPayCurr, PaymentMethod = p.PaymentMethod });
+            PaymentGroups = payments.GroupBy(p => new PaymentGroup { Currency = p.PubPayCurr, PaymentMethod = p.PaymentMethod, NetTermType = p.NetTermType })
+                .OrderBy(g => g.Key.NetTermType)
+                .ThenByDescending(g => g.Key.Currency)
+                .ThenBy(g => g.Key.PaymentMethod);
         }
     }
 
@@ -29,5 +32,6 @@ namespace EomToolWeb.Models
     {
         public string Currency;
         public string PaymentMethod;
+        public string NetTermType;
     }
 }

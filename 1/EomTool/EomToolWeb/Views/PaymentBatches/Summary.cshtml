@@ -35,10 +35,16 @@
 
         <h2>Payment Approval</h2>
 
-        @foreach (var group in Model.PaymentGroups)
-        {
-            Html.RenderPartial("Payments", group.Select(p => p).OrderBy(p => p.Publisher));
-        }
+@{
+    int iGroup = 0;
+    ViewData["AllowHold"] = Model.AllowHold;
+    foreach (var group in Model.PaymentGroups)
+    {
+        ViewData["iGroup"] = iGroup;
+        Html.RenderPartial("Payments", group);
+        iGroup++;
+    }
+}
 
     </div>
     <div id="publisherReportContainer">
@@ -53,6 +59,16 @@
         $.get('@Url.Action("PubRep")?pubname=' + pubname + '&acctperiod=' + acctperiod + '&ts=' + new Date().getTime(), function (publisherReportContent) {
             $('#publisherReport').empty().html(publisherReportContent);
         });
+    }
+
+    function ReleasePayment(formid) {
+        var form = $('#form' + formid);
+        $('#statusarea' + formid).load('@Url.Action("ReleaseItems")', form.serialize());
+    }
+
+    function HoldPayment(formid) {
+        var form = $('#form' + formid);
+        $('#statusarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
     }
 
 </script>
