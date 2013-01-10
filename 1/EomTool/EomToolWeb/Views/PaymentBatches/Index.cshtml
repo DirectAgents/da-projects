@@ -41,7 +41,7 @@
                 <tr>
                     <td>@payment.AffIds</td>
                     <td>@payment.Publisher</td>
-                    <td>@Model.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
+                    <td>@Html.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
                     <td>@payment.PaymentMethod</td>
                     <td>@payment.NetTermType</td>
                     <td id="statusarea@(iPayment)">@payment.AccountingStatus</td>
@@ -65,7 +65,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>@Model.FormatCurrency(currency, batchTotal.Value)</td>
+                <td>@Html.FormatCurrency(currency, batchTotal.Value)</td>
                 <td></td>
                 <td></td>
                 <td></td>

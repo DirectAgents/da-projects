@@ -6,8 +6,7 @@
 <tr>
     <td>@payment.AccountingPeriod</td>
     <td><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
-    <td>@payment.PubPayCurr</td>
-    <td style="text-align:right">@string.Format("{0:N2}", payment.PubPayout)</td>
+    <td style="text-align:right">@Html.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
     <td>@payment.PaymentMethod</td>
     <td>@payment.NetTermType</td>
     <td>@payment.PaymentBatchId</td>
