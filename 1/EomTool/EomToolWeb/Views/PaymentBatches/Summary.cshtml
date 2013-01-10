@@ -1,0 +1,56 @@
+﻿@model IEnumerable<EomTool.Domain.Entities.PublisherPayment>
+
+@{
+    ViewBag.Title = "Payment Approval";
+}
+
+<style type="text/css">
+    #summaryOuter
+    {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+    #summaryGridContainer
+    {
+        position: absolute;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        overflow: auto;
+    }
+    #publisherReportContainer
+    {
+        border-left: 3px solid Black;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        overflow: auto;
+    }
+</style>
+<div id="summaryOuter">
+    <div id="summaryGridContainer">
+
+        <h2>Payment Approval</h2>
+
+        @Html.Partial("Payments", Model)
+
+    </div>
+    <div id="publisherReportContainer">
+        <div id="publisherReport" style="width: 100%;">
+        </div>
+    </div>
+</div>
+@section scripts {
+<script type="text/javascript">
+
+    function ShowPubRep(pubname, acctperiod) {
+        $.get('@Url.Action("PubRep")?pubname=' + pubname + '&acctperiod=' + acctperiod + '&ts=' + new Date().getTime(), function (publisherReportContent) {
+            $('#publisherReport').empty().html(publisherReportContent);
+        });
+    }
+
+</script>
+}

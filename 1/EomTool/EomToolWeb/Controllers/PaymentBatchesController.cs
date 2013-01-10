@@ -98,8 +98,7 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
-        // Summary view
-        public ActionResult Payments(string test)
+        public ActionResult Summary(string test)
         {
             string identity = null;
             if (test != "all") identity = "DIRECTAGENTS\\" + test;

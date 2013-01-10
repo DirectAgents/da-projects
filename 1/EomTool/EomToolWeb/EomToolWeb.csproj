@@ -2660,6 +2660,7 @@
     <Content Include="Views\PaymentBatches\Payments.cshtml" />
     <Content Include="Views\Shared\ChooseMonth.cshtml" />
     <Content Include="Views\PaymentBatches\PubNotes.cshtml" />
+    <Content Include="Views\PaymentBatches\Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
