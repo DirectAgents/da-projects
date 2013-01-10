@@ -100,6 +100,11 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Summary(string test)
         {
+            var model = new PaymentsViewModel()
+            {
+                AllowHold = true
+            };
+
             string identity = null;
             if (test != "all") identity = "DIRECTAGENTS\\" + test;
 
@@ -117,7 +122,7 @@ namespace EomToolWeb.Controllers
                 allPayments = allPayments == null ? payments : allPayments.Concat(payments);
             }
 
-            var model = allPayments.OrderBy(p => p.Publisher);
+            model.SetPayments(allPayments);
             return View(model);
         }
 

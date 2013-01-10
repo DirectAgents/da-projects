@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<EomTool.Domain.Entities.PublisherPayment>
+@{
+    string currency = Model.First().PubPayCurr;
+    var payoutTotal = Model.Sum(p => p.PubPayout);
+}
 
 <table>
 @foreach (var payment in Model)
@@ -12,5 +16,11 @@
     <td>@payment.PaymentBatchId</td>
     <td>@payment.AffIds</td>
 </tr>
+    if (payment.PubPayCurr != currency) { currency = null; }
 }
+<tr>
+    <td></td>
+    <td style="font-weight:bold">TOTAL</td>
+    <td style="font-weight:bold">@Html.FormatCurrency(currency, payoutTotal.Value)</td>
+</tr>
 </table>

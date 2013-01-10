@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EomTool.Domain.Entities.PublisherPayment>
+﻿@model PaymentsViewModel
 
 @{
     ViewBag.Title = "Payment Approval";
@@ -35,7 +35,10 @@
 
         <h2>Payment Approval</h2>
 
-        @Html.Partial("Payments", Model)
+        @foreach (var group in Model.PaymentGroups)
+        {
+            Html.RenderPartial("Payments", group.Select(p => p).OrderBy(p => p.Publisher));
+        }
 
     </div>
     <div id="publisherReportContainer">
