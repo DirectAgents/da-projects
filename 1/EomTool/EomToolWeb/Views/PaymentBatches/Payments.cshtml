@@ -5,15 +5,33 @@
     int iPayment = 0;
     var payoutTotal = Model.Sum(p => p.PubPayout);
     var publisherGroups = Model.GroupBy(p => p.Publisher).OrderBy(pg => pg.Key);
+    int iPubGroup = 0;
 }
 
 <table style="border:solid">
 <caption style="text-align:left">@Model.Key.Currency | @Model.Key.PaymentMethod | @Model.Key.NetTermType</caption>
 @foreach (var pubGroup in publisherGroups)
 {
+    if (pubGroup.Count() > 1) // the publisher has payments from multiple accounting periods
+    {
+        var currencies = pubGroup.Select(p => p.PubPayCurr).Distinct();
+        var pubCurrency = (currencies.Count() == 1) ? currencies.First() : null;
+        var pubPayoutTotal = pubGroup.Sum(p => p.PubPayout.Value);
+    <tr class="pubTotalRow">
+        <td style="text-align:right"></td>
+        <td>@pubGroup.Key</td>
+        <td style="text-align:right">@Html.FormatCurrency(pubCurrency, pubPayoutTotal)</td>
+        <td><a href="#" onclick="ShowNotes('@pubGroup.Key');return false">notes</a></td>
+        <td><a href="#" onclick="$('.pubGroup@(iPubGroup)Sub').toggle(); return false">Multiple months</a></td>
+        @if (pvm.Test == "all") {
+            <td></td>
+            <td></td>
+        }
+    </tr>
+    }
     foreach (var payment in pubGroup)
     {
-    <tr class="@(pubGroup.Count() > 1 ? "pubSubtotalRow" : "")">
+    <tr class="@(pubGroup.Count() > 1 ? "pubSubtotalRow" : "") pubGroup@(iPubGroup)Sub" style="@(pubGroup.Count() > 1 ? "display:none" : "")">
         <td>@payment.AccountingPeriod</td>
         <td><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
         <td style="text-align:right">@Html.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
@@ -49,23 +67,7 @@
     </tr>
         iPayment++;
     }
-    if (pubGroup.Count() > 1) // the publisher has payments from multiple accounting periods
-    {
-        var currencies = pubGroup.Select(p => p.PubPayCurr).Distinct();
-        var pubCurrency = (currencies.Count() == 1) ? currencies.First() : null;
-        var pubPayoutTotal = pubGroup.Sum(p => p.PubPayout.Value);
-    <tr class="pubTotalRow">
-        <td style="text-align:right">TOTAL</td>
-        <td>@pubGroup.Key</td>
-        <td style="text-align:right">@Html.FormatCurrency(pubCurrency, pubPayoutTotal)</td>
-        <td><a href="#" onclick="ShowNotes('@pubGroup.Key');return false">notes</a></td>
-        <td></td>
-        @if (pvm.Test == "all") {
-            <td></td>
-            <td></td>
-        }
-    </tr>
-    }
+    iPubGroup++;
 }
 <tr>
     <td></td>
