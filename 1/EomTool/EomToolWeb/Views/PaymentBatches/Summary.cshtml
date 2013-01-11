@@ -29,11 +29,16 @@
         height: 100%;
         overflow: auto;
     }
+    .pubTotalRow
+    {
+        font-style: italic;
+        color: gray;
+    }
 </style>
 <div id="summaryOuter">
     <div id="summaryGridContainer">
 
-        <h2>Payment Approval</h2>
+        <h2><a href="#" onclick="TogglePubRowMode(); return false">Payment Approval</a></h2>
 
 @{
     int iGroup = 0;
@@ -80,6 +85,21 @@
     function ReleaseAll(iGroup, numRows) {
         for (var i = 0; i < numRows; i++) {
             ReleasePayment(iGroup + '_' + i);
+        }
+    }
+
+    pubRowMode = 0;
+    function TogglePubRowMode() {
+        pubRowMode++;
+        if (pubRowMode == 2) pubRowMode = 0;
+
+        if (pubRowMode == 0) {
+            $('.pubSubtotalRow').show();
+            $('.pubTotalRow').show();
+        }
+        if (pubRowMode == 1) {
+            $('.pubSubtotalRow').hide();
+            $('.pubTotalRow').show();
         }
     }
 
