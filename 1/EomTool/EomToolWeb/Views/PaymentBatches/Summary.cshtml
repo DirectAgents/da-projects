@@ -64,17 +64,17 @@
         });
     }
 
-    function ReleasePayment(formid) {
-        var form = $('#form' + formid);
-        $('#actionarea' + formid).load('@Url.Action("ReleaseItems")', form.serialize());
+    function ReleasePayment(formId) {
+        var form = $('#form' + formId);
+        $('#actionarea' + formId).load('@Url.Action("ReleaseItems")', form.serialize());
     }
-    function HoldPayment(formid) {
-        var form = $('#form' + formid);
-        $('#actionarea' + formid).load('@Url.Action("HoldItems")', form.serialize());
+    function HoldPayment(formId) {
+        var form = $('#form' + formId);
+        $('#actionarea' + formId).load('@Url.Action("HoldItems")', form.serialize());
     }
-    function ResetPayment(formid) {
-        var form = $('#form' + formid);
-        $('#actionarea' + formid).load('@Url.Action("ResetItems")', form.serialize());
+    function ResetPayment(formId) {
+        var form = $('#form' + formId);
+        $('#actionarea' + formId).load('@Url.Action("ResetItems")', form.serialize());
     }
 
     function ReleaseAll(iGroup, numRows) {

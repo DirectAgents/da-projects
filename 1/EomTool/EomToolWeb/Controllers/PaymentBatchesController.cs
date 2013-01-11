@@ -56,33 +56,30 @@ namespace EomToolWeb.Controllers
             return repo;
         }
 
+        private string GetIdentityName(string test)
+        {
+            string identityName = null;
+            if (test == null)
+                identityName = User.Identity.Name;
+            else if (test != "all")
+                identityName = "DIRECTAGENTS\\" + test;
+            return identityName;
+        }
+
         public ActionResult Index(string test)
         {
-            var model = new PaymentBatchesViewModel()
-            {
-                AllowHold = true,
-                Test = test
-            };
+            string identityName = GetIdentityName(test);
+            var model = new PaymentBatchesViewModel(test, identityName);
 
             for (int i = 0; i < numAccountingPeriods; i++)
             {
                 var accountingPeriod = AccountingPeriods[i];
                 var pbRepo = pbRepositories[accountingPeriod];
 
-                IQueryable<PaymentBatch> pbatches;
-                if (test != null)
-                {
-                    if (test == "all")
-                        pbatches = pbRepo.PaymentBatchesForUser(null, false);
-                    else
-                        pbatches = pbRepo.PaymentBatchesForUser("DIRECTAGENTS\\" + test, false);
-                }
-                else
-                {
-                    string identityName = User.Identity.Name;
-                    pbatches = pbRepo.PaymentBatchesForUser(identityName, true);
-                }
+                bool sentOnly = (test == null);
+                var pbatches = pbRepo.PaymentBatchesForUser(identityName, sentOnly);
                 var payments = pbRepo.PublisherPayments;
+
                 foreach (var pbatch in pbatches)
                 {
                     pbatch.AccountingPeriod = accountingPeriod;
@@ -97,14 +94,8 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Summary(string test)
         {
-            var model = new PaymentsViewModel()
-            {
-                AllowHold = true,
-                Test = test
-            };
-
-            string identity = null;
-            if (test != "all") identity = "DIRECTAGENTS\\" + test;
+            string identityName = GetIdentityName(test);
+            var model = new PaymentsViewModel(test, identityName);
 
             IEnumerable<PublisherPayment> allPayments = null;
             for (int i = 0; i < numAccountingPeriods; i++)
@@ -112,7 +103,7 @@ namespace EomToolWeb.Controllers
                 var accountingPeriod = AccountingPeriods[i];
                 var pbRepo = pbRepositories[accountingPeriod];
 
-                var payments = pbRepo.PublisherPaymentsForUser(identity, true);
+                var payments = pbRepo.PublisherPaymentsForUser(identityName, true);
                 foreach (var payment in payments)
                 {
                     payment.AccountingPeriod = accountingPeriod;

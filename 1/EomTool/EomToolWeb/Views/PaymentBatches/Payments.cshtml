@@ -29,7 +29,7 @@
                 if (payment.AccountingStatusId == ItemAccountingStatus.Hold) {
                     <text>Hold</text>
                 } else {
-                    <a href="#" onclick="if (confirm('Press OK to confirm Hold')) HoldPayment('@(iGroup +"_"+ iPayment)'); return false">Hold</a>
+                    <a href="#" onclick="ShowNotesForHold('@payment.Publisher', '@(iGroup +"_"+ iPayment)'); return false">Hold</a>
                 }
             }
             if (pvm.Test == "all") {

@@ -1,10 +1,11 @@
 ﻿<div id="divNotesSummary" title="Notes">
-    New note:
+    <span id="dlgNoteCaption"></span>
     <form id="frmNote" action="@Url.Action("SavePubNote")" method="post">
         <input id="dlgPubName" type="hidden" name="pubname" value="" />
         <textarea id="txtNote" style="width: 355px; height: 55px" name="note"></textarea>
         <br />
-        <input type="button" value="Save" onclick="SaveNote()" />
+        <input id="btnSaveNote" type="button" value="Save" onclick="SaveNote()" />
+        <input id="btnSaveNoteAndHold" type="button" value="Hold" onclick="SaveNoteAndHold()" style="display:none" />
     </form>
     <div id="divNotesSummaryInner">
     </div>
@@ -12,6 +13,12 @@
 
 <script type="text/javascript">
     function ShowNotes(pubname) {
+        $('#btnSaveNote').show();
+        $('#btnSaveNoteAndHold').hide();
+        $('#dlgNoteCaption').html("New note:");
+        DisplayNotesDialog(pubname);
+    }
+    function DisplayNotesDialog(pubname) {
         $.get('@Url.Action("PubNotes")', { pubname: pubname }, function (data) {
             $('#divNotesSummaryInner').html(data);
             $('#divNotesSummary').dialog("option", "title", pubname);
@@ -24,12 +31,27 @@
     function SaveNote() {
         if ($.trim($('#txtNote').val()) == "") {
             alert("Please enter a note.");
-            return;
+            return false;
         }
         var url = $('#frmNote').attr('action');
         $.post(url, $('#frmNote').serialize(), function (data) {
             $('#divNotesSummary').dialog("close");
         });
+        return true;
+    }
+
+    function ShowNotesForHold(pubname, formId) {
+        $('#btnSaveNote').hide();
+        $('#btnSaveNoteAndHold').show();
+        $('#dlgNoteCaption').html("Enter a note:");
+        $('#divNotesSummary').data("paymentFormId", formId);
+        DisplayNotesDialog(pubname);
+    }
+    function SaveNoteAndHold() {
+        if (SaveNote()) {
+            var paymentFormId = $('#divNotesSummary').data("paymentFormId");
+            HoldPayment(paymentFormId);
+        }
     }
 
     $(function () {
