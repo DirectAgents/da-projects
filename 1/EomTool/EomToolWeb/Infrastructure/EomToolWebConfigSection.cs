@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Configuration;
+using System.Web.Configuration;
 
 namespace EomToolWeb.Infrastructure
 {
     [ConfigurationSection("eomToolWeb")]
     public class EomToolWebConfigSection : ConfigurationSection
     {
+        public static EomToolWebConfigSection GetConfigSection()
+        {
+            var config = WebConfigurationManager.OpenWebConfiguration("/EomToolWeb");
+            var eomToolConfig = config.GetSection<EomToolWebConfigSection>();
+            return eomToolConfig;
+        }
+
         [ConfigurationProperty("replaceIntegratedSecurityWithSALogin", DefaultValue = "false", IsRequired = false)]
         public Boolean ReplaceIntegratedSecurityWithSALogin
         {
