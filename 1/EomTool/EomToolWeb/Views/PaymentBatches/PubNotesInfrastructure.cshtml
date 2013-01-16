@@ -2,6 +2,7 @@
     <span id="dlgNoteCaption"></span>
     <form id="frmNote" action="@Url.Action("SavePubNote")" method="post">
         <input id="dlgPubName" type="hidden" name="pubname" value="" />
+        <input id="dlgAcctPeriod" type="hidden" name="acctperiod" value="" />
         <textarea id="txtNote" style="width: 355px; height: 55px" name="note"></textarea>
         <br />
         <input id="btnSaveNote" type="button" value="Save" onclick="SaveNote()" />
@@ -12,17 +13,18 @@
 </div>
 
 <script type="text/javascript">
-    function ShowNotes(pubname) {
+    function ShowNotes(pubname, acctperiod) {
         $('#btnSaveNote').show();
         $('#btnSaveNoteAndHold').hide();
         $('#dlgNoteCaption').html("New note:");
-        DisplayNotesDialog(pubname);
+        DisplayNotesDialog(pubname, acctperiod);
     }
-    function DisplayNotesDialog(pubname) {
-        $.get('@Url.Action("PubNotes")', { pubname: pubname }, function (data) {
+    function DisplayNotesDialog(pubname, acctperiod) {
+        $.get('@Url.Action("PubNotes")', { pubname: pubname, acctperiod: acctperiod }, function (data) {
             $('#divNotesSummaryInner').html(data);
             $('#divNotesSummary').dialog("option", "title", pubname);
             $('#dlgPubName').val(pubname);
+            $('#dlgAcctPeriod').val(acctperiod);
             $('#txtNote').val("");
             $('#divNotesSummary').dialog("open");
         });
@@ -40,12 +42,12 @@
         return true;
     }
 
-    function ShowNotesForHold(pubname, formId) {
+    function ShowNotesForHold(pubname, acctperiod, formId) {
         $('#btnSaveNote').hide();
         $('#btnSaveNoteAndHold').show();
         $('#dlgNoteCaption').html("Enter a note:");
         $('#divNotesSummary').data("paymentFormId", formId);
-        DisplayNotesDialog(pubname);
+        DisplayNotesDialog(pubname, acctperiod);
     }
     function SaveNoteAndHold() {
         if (SaveNote()) {

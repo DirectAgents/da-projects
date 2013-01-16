@@ -59,5 +59,29 @@ namespace EomTool.Domain.Concrete
             }
             context.SaveChanges();
         }
+
+        // --- Notes ---
+
+        public IQueryable<PubNote> PubNotes
+        {
+            get { return context.PubNotes; }
+        }
+
+        public IQueryable<PubNote> PubNotesForPublisher(string pubName)
+        {
+            return context.PubNotes.Where(n => n.publisher_name == pubName);
+        }
+
+        public void AddPubNote(string pubName, string note, string identity)
+        {
+            var pubNote = new PubNote()
+            {
+                note = note,
+                added_by_system_user = identity,
+                publisher_name = pubName
+            };
+            context.PubNotes.AddObject(pubNote);
+            context.SaveChanges();
+        }
     }
 }

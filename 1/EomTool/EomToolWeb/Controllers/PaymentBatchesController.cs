@@ -155,17 +155,35 @@ namespace EomToolWeb.Controllers
 
         // --- Notes ---
 
-        public ActionResult PubNotes(string pubname)
+        public ActionResult PubNotes(string pubname, string acctperiod)
         {
-            var model = daMain1Repository.PublisherNotesForPublisher(pubname).OrderByDescending(n => n.created);
-            return PartialView(model);
+            if (string.IsNullOrEmpty(acctperiod))
+            {
+                var model = daMain1Repository.PublisherNotesForPublisher(pubname)
+                    .Select(p => new PubNote() {publisher_name = p.publisher_name, note = p.note, added_by_system_user = p.added_by_system_user, created = p.created})
+                    .OrderByDescending(n => n.created);
+                return PartialView(model);
+            }
+            else
+            {
+                var pbRepo = pbRepositories[acctperiod];
+                var model = pbRepo.PubNotesForPublisher(pubname).OrderByDescending(n => n.created);
+                return PartialView(model);
+            }
         }
 
-        public ActionResult SavePubNote(string pubname, string note)
+        public ActionResult SavePubNote(string pubname, string acctperiod, string note)
         {
             string identityName = User.Identity.Name;
-            daMain1Repository.AddPublisherNote(pubname, note, identityName);
-
+            if (string.IsNullOrEmpty(acctperiod))
+            {
+                daMain1Repository.AddPublisherNote(pubname, note, identityName);
+            }
+            else
+            {
+                var pbRepo = pbRepositories[acctperiod];
+                pbRepo.AddPubNote(pubname, note, identityName);
+            }
             if (Request.IsAjaxRequest())
                 return Content("saved");
             else

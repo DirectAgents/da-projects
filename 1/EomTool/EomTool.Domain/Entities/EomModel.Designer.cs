@@ -490,6 +490,22 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<PublisherPayment> _PublisherPayments;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<PubNote> PubNotes
+        {
+            get
+            {
+                if ((_PubNotes == null))
+                {
+                    _PubNotes = base.CreateObjectSet<PubNote>("PubNotes");
+                }
+                return _PubNotes;
+            }
+        }
+        private ObjectSet<PubNote> _PubNotes;
 
         #endregion
 
@@ -693,6 +709,14 @@ namespace EomTool.Domain.Entities
         public void AddToPublisherPayments(PublisherPayment publisherPayment)
         {
             base.AddObject("PublisherPayments", publisherPayment);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the PubNotes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToPubNotes(PubNote pubNote)
+        {
+            base.AddObject("PubNotes", pubNote);
         }
 
         #endregion
@@ -8527,6 +8551,165 @@ namespace EomTool.Domain.Entities
         private Nullable<global::System.Decimal> _Total;
         partial void OnTotalChanging(Nullable<global::System.Decimal> value);
         partial void OnTotalChanged();
+
+        #endregion
+
+    
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="PubNote")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class PubNote : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new PubNote object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="publisher_name">Initial value of the publisher_name property.</param>
+        /// <param name="note">Initial value of the note property.</param>
+        /// <param name="created">Initial value of the created property.</param>
+        public static PubNote CreatePubNote(global::System.Int32 id, global::System.String publisher_name, global::System.String note, global::System.DateTime created)
+        {
+            PubNote pubNote = new PubNote();
+            pubNote.id = id;
+            pubNote.publisher_name = publisher_name;
+            pubNote.note = note;
+            pubNote.created = created;
+            return pubNote;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String publisher_name
+        {
+            get
+            {
+                return _publisher_name;
+            }
+            set
+            {
+                Onpublisher_nameChanging(value);
+                ReportPropertyChanging("publisher_name");
+                _publisher_name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("publisher_name");
+                Onpublisher_nameChanged();
+            }
+        }
+        private global::System.String _publisher_name;
+        partial void Onpublisher_nameChanging(global::System.String value);
+        partial void Onpublisher_nameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String note
+        {
+            get
+            {
+                return _note;
+            }
+            set
+            {
+                OnnoteChanging(value);
+                ReportPropertyChanging("note");
+                _note = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("note");
+                OnnoteChanged();
+            }
+        }
+        private global::System.String _note;
+        partial void OnnoteChanging(global::System.String value);
+        partial void OnnoteChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String added_by_system_user
+        {
+            get
+            {
+                return _added_by_system_user;
+            }
+            set
+            {
+                Onadded_by_system_userChanging(value);
+                ReportPropertyChanging("added_by_system_user");
+                _added_by_system_user = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("added_by_system_user");
+                Onadded_by_system_userChanged();
+            }
+        }
+        private global::System.String _added_by_system_user;
+        partial void Onadded_by_system_userChanging(global::System.String value);
+        partial void Onadded_by_system_userChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime created
+        {
+            get
+            {
+                return _created;
+            }
+            set
+            {
+                OncreatedChanging(value);
+                ReportPropertyChanging("created");
+                _created = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("created");
+                OncreatedChanged();
+            }
+        }
+        private global::System.DateTime _created;
+        partial void OncreatedChanging(global::System.DateTime value);
+        partial void OncreatedChanged();
 
         #endregion
 
