@@ -84,7 +84,9 @@
 
     function ReleaseAll(iGroup, numRows) {
         for (var i = 0; i < numRows; i++) {
-            ReleasePayment(iGroup + '_' + i);
+            var formId = iGroup + '_' + i;
+            if ($('#form' + formId).data('state') == 'initial')
+                ReleasePayment(formId);
         }
     }
 

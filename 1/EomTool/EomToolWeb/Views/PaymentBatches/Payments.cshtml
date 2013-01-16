@@ -31,6 +31,7 @@
     }
     foreach (var payment in pubGroup)
     {
+        bool isInitialstate = (payment.AccountingStatusId != ItemAccountingStatus.CheckSignedAndPaid && payment.AccountingStatusId != ItemAccountingStatus.Hold);
     <tr class="@(pubGroup.Count() > 1 ? "pubSubtotalRow" : "") pubGroup@(iGroup +"_"+ iPubGroup)Sub" style="@(pubGroup.Count() > 1 ? "display:none" : "")">
         <td>@payment.AccountingPeriod</td>
         <td><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
@@ -39,7 +40,7 @@
             <a href="#" onclick="ShowNotes('@payment.Publisher');return false">notes</a>
         }</td>
         <td id="actionarea@(iGroup)_@(iPayment)">
-        @using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { id = "form" + iGroup + "_" + iPayment }))
+        @using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { id = "form" + iGroup + "_" + iPayment, data_state = (isInitialstate ? "initial" : "") }))
         {
             <input type="hidden" name="acctperiod" value="@payment.AccountingPeriod" />
             <input type="hidden" name="itemids" value="@payment.ItemIds" />
