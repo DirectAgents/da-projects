@@ -22,7 +22,7 @@
         <td>@pubGroup.Key</td>
         <td style="text-align:right">@Html.FormatCurrency(pubCurrency, pubPayoutTotal)</td>
         <td><a href="#" onclick="ShowNotes('@pubGroup.Key');return false">notes</a></td>
-        <td><a href="#" onclick="$('.pubGroup@(iPubGroup)Sub').toggle(); return false">Multiple months</a></td>
+        <td><a href="#" onclick="$('.pubGroup@(iGroup +"_"+ iPubGroup)Sub').toggle(); return false">Multiple months</a></td>
         @if (pvm.Test == "all") {
             <td></td>
             <td></td>
@@ -31,7 +31,7 @@
     }
     foreach (var payment in pubGroup)
     {
-    <tr class="@(pubGroup.Count() > 1 ? "pubSubtotalRow" : "") pubGroup@(iPubGroup)Sub" style="@(pubGroup.Count() > 1 ? "display:none" : "")">
+    <tr class="@(pubGroup.Count() > 1 ? "pubSubtotalRow" : "") pubGroup@(iGroup +"_"+ iPubGroup)Sub" style="@(pubGroup.Count() > 1 ? "display:none" : "")">
         <td>@payment.AccountingPeriod</td>
         <td><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
         <td style="text-align:right">@Html.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
