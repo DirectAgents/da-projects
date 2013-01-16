@@ -12,17 +12,18 @@
 <caption style="text-align:left">@Model.Key.Currency | @Model.Key.PaymentMethod | @Model.Key.NetTermType</caption>
 @foreach (var pubGroup in publisherGroups)
 {
+    string altRowClass = (iPubGroup % 2 == 1) ? "altRow" : "";
     if (pubGroup.Count() > 1) // the publisher has payments from multiple accounting periods
     {
         var currencies = pubGroup.Select(p => p.PubPayCurr).Distinct();
         var pubCurrency = (currencies.Count() == 1) ? currencies.First() : null;
         var pubPayoutTotal = pubGroup.Sum(p => p.PubPayout.Value);
-    <tr class="pubTotalRow">
-        <td style="text-align:center"><a href="#" onclick="$('.pubGroup@(iGroup +"_"+ iPubGroup)Sub').toggle(); return false">+</a></td>
+    <tr class="pubTotalRow @altRowClass">
+        <td class="bigIndentCell"><a href="#" onclick="$('.pubGroup@(iGroup +"_"+ iPubGroup)Sub').toggle(300); return false">+</a></td>
         <td>@pubGroup.Key</td>
         <td style="text-align:right">@Html.FormatCurrency(pubCurrency, pubPayoutTotal)</td>
         <td>@if (false) {<a href="#" onclick="ShowNotes('@pubGroup.Key'); return false">notes</a>}</td>
-        <td><a href="#" onclick="$('.pubGroup@(iGroup +"_"+ iPubGroup)Sub').toggle(); return false">Multiple months</a></td>
+        <td><a href="#" onclick="$('.pubGroup@(iGroup +"_"+ iPubGroup)Sub').toggle(300); return false">(Multiple months)</a></td>
         @if (pvm.Test == "all") {
             <td></td>
             <td></td>
@@ -32,9 +33,10 @@
     foreach (var payment in pubGroup)
     {
         bool isInitialstate = (payment.AccountingStatusId != ItemAccountingStatus.CheckSignedAndPaid && payment.AccountingStatusId != ItemAccountingStatus.Hold);
-    <tr class="@(pubGroup.Count() > 1 ? "pubSubtotalRow" : "") pubGroup@(iGroup +"_"+ iPubGroup)Sub" style="@(pubGroup.Count() > 1 ? "display:none" : "")">
-        <td>@payment.AccountingPeriod</td>
-        <td><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
+        string indentClass = (pubGroup.Count() > 1) ? "indentCell" : "";
+    <tr class="@(pubGroup.Count() > 1 ? "pubSubtotalRow" : "") pubGroup@(iGroup +"_"+ iPubGroup)Sub @altRowClass" style="@(pubGroup.Count() > 1 ? "display:none" : "")">
+        <td class="@indentClass">@payment.AccountingPeriod</td>
+        <td class="@indentClass"><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
         <td style="text-align:right">@Html.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
         <td><a href="#" onclick="ShowNotes('@payment.Publisher', '@payment.AccountingPeriod'); return false">notes</a></td>
         <td id="actionarea@(iGroup)_@(iPayment)">
@@ -43,13 +45,13 @@
             <input type="hidden" name="acctperiod" value="@payment.AccountingPeriod" />
             <input type="hidden" name="itemids" value="@payment.ItemIds" />
             if (payment.AccountingStatusId == ItemAccountingStatus.CheckSignedAndPaid) {
-                <text>Release</text>
+                <span class="actionReleased">RELEASED</span>
             } else {
                 <a href="#" onclick="if (confirm('Press OK to confirm Release')) ReleasePayment('@(iGroup +"_"+ iPayment)'); return false">Release</a>
             }
             if (pvm.AllowHold) {
                 if (payment.AccountingStatusId == ItemAccountingStatus.Hold) {
-                    <text>Hold</text>
+                    <span class="actionHeld">HELD</span>
                 } else {
                     <a href="#" onclick="ShowNotesForHold('@payment.Publisher', '@payment.AccountingPeriod', '@(iGroup +"_"+ iPayment)'); return false">Hold</a>
                 }
@@ -68,12 +70,12 @@
     }
     iPubGroup++;
 }
-<tr>
+<tr class="paymentGroupTotal">
     <td></td>
-    <td style="font-weight:bold">TOTAL</td>
-    <td style="font-weight:bold; text-align:right">@Html.FormatCurrency(Model.Key.Currency, payoutTotal.Value)</td>
+    <td>TOTAL</td>
+    <td style="text-align:right">@Html.FormatCurrency(Model.Key.Currency, payoutTotal.Value)</td>
     <td></td>
-    <td style="font-weight:bold">@if(Model.Count() > 1){
+    <td>@if(Model.Count() > 1){
             <a href="#" onclick="if (confirm('Press OK to confirm Release All')) ReleaseAll(@iGroup, @Model.Count()); return false">Release All</a>
     }</td>
 @if (pvm.Test == "all") {

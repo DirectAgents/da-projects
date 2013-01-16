@@ -5,22 +5,50 @@
 }
 
 <style type="text/css">
-    #summaryOuter
-    {
+    a {
+        padding-left: 0px;
+    }
+    td {
+        padding-left: .1em;
+    }
+
+    .actionReleased {
+        color: green;
+    }
+    .actionHeld {
+        color: red;
+    }
+    .pubTotalRow {
+        font-style: italic;
+        color: gray;
+    }
+    .altRow {
+        background-color: lightyellow;
+    }
+    .indentCell {
+        padding-left: .6em;
+    }
+    .bigIndentCell {
+        padding-left: 1.75em;
+    }
+    .paymentGroupTotal {
+        font-weight: bold;
+        background-color: lightsteelblue;
+    }
+
+    #summaryOuter {
         position: absolute;
         height: 100%;
         width: 100%;
     }
-    #summaryGridContainer
-    {
+    #summaryGridContainer {
         position: absolute;
         left: 0;
         width: 50%;
         height: 100%;
         overflow: auto;
     }
-    #publisherReportContainer
-    {
+    #publisherReportContainer {
         border-left: 3px solid Black;
         position: absolute;
         top: 0;
@@ -28,11 +56,6 @@
         width: 50%;
         height: 100%;
         overflow: auto;
-    }
-    .pubTotalRow
-    {
-        font-style: italic;
-        color: gray;
     }
 </style>
 <div id="summaryOuter">
@@ -96,12 +119,12 @@
         if (pubRowMode == 2) pubRowMode = 0;
 
         if (pubRowMode == 0) {
-            $('.pubSubtotalRow').hide();
-            $('.pubTotalRow').show();
+            $('.pubSubtotalRow').hide(300);
+            $('.pubTotalRow').show(300);
         }
         if (pubRowMode == 1) {
-            $('.pubSubtotalRow').show();
-            $('.pubTotalRow').show();
+            $('.pubSubtotalRow').show(300);
+            $('.pubTotalRow').show(300);
         }
     }
 
