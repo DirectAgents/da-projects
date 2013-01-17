@@ -9,25 +9,17 @@ namespace EomToolWeb.Models
     {
         public string Test { get; set; }
         public bool AllowHold { get; set; }
-
-        public PaymentsViewModelBase(string test, string identityName)
-        {
-            this.Test = test;
-            this.AllowHold = (identityName == null || identityName.Contains("jboaz"));
-        }
     }
+
 
     public class PaymentBatchesViewModel : PaymentsViewModelBase
     {
-        public PaymentBatchesViewModel(string test, string identityName) : base(test, identityName) { }
-
         public IEnumerable<PaymentBatch> Batches { get; set; }
     }
 
+
     public class PaymentsViewModel : PaymentsViewModelBase
     {
-        public PaymentsViewModel(string test, string identityName) : base(test, identityName) { }
-
         public IEnumerable<IGrouping<PaymentGroup, PublisherPayment>> PaymentGroups { get; set; }
 
         public void SetPayments(IEnumerable<PublisherPayment> payments)

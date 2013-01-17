@@ -35,6 +35,13 @@ namespace EomToolWeb.Infrastructure
             set { this["debugMode"] = value; }
         }
 
+        [ConfigurationProperty("paymentBatches")]
+        public PaymentBatchesElement PaymentBatches
+        {
+            get { return (PaymentBatchesElement)this["paymentBatches"]; }
+            set { this["paymentBatches"] = value; }
+        }
+
         public string GetConnectionString(string connectionStringName)
         {
             ConnectionStringSettings connectionString;
@@ -50,6 +57,16 @@ namespace EomToolWeb.Infrastructure
         public string MasterConnectionString
         {
             get { return GetConnectionString("DAMain1"); }
+        }
+    }
+
+    public class PaymentBatchesElement : ConfigurationElement
+    {
+        [ConfigurationProperty("canHold", DefaultValue="", IsRequired = false)]
+        public String canHold
+        {
+            get { return (string)this["canHold"]; }
+            set { this["canHold"] = value; }
         }
     }
 }

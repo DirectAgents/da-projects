@@ -66,10 +66,21 @@ namespace EomToolWeb.Controllers
             return identityName;
         }
 
+        private bool AllowHold(string identity)
+        {
+            var eomToolConfig = EomToolWebConfigSection.GetConfigSection();
+            var identitiesCanHold = eomToolConfig.PaymentBatches.canHold.Split(new char[] { ',' });
+            return (identity == null || identitiesCanHold.Contains(identity));
+        }
+
         public ActionResult Index(string test)
         {
             string identityName = GetIdentityName(test);
-            var model = new PaymentBatchesViewModel(test, identityName);
+            var model = new PaymentBatchesViewModel()
+            {
+                Test = test,
+                AllowHold = AllowHold(identityName)
+            };
 
             for (int i = 0; i < numAccountingPeriods; i++)
             {
@@ -95,7 +106,11 @@ namespace EomToolWeb.Controllers
         public ActionResult Summary(string test)
         {
             string identityName = GetIdentityName(test);
-            var model = new PaymentsViewModel(test, identityName);
+            var model = new PaymentsViewModel()
+            {
+                Test = test,
+                AllowHold = AllowHold(identityName)
+            };
 
             IEnumerable<PublisherPayment> allPayments = null;
             for (int i = 0; i < numAccountingPeriods; i++)
