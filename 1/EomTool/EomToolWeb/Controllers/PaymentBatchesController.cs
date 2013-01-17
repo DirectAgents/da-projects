@@ -17,7 +17,6 @@ namespace EomToolWeb.Controllers
         private Dictionary<string, IPaymentBatchRepository> pbRepositories = new Dictionary<string, IPaymentBatchRepository>();
             // the keys are accounting periods (e.g. "Dec2012")
 
-        private int numAccountingPeriods = 4; // how many to go back
         private List<string> AccountingPeriods { get; set; }
 
         public PaymentBatchesController(IDAMain1Repository daMain1Repository)
@@ -27,6 +26,7 @@ namespace EomToolWeb.Controllers
             AccountingPeriods = new List<string>();
             var today = DateTime.Now;
             var eomToolConfig = EomToolWebConfigSection.GetConfigSection();
+            int numAccountingPeriods = eomToolConfig.PaymentBatches.NumAccountingPeriods;
             if (eomToolConfig.DebugMode)
             {
                 today = new DateTime(2012, 12, 25);
@@ -69,7 +69,7 @@ namespace EomToolWeb.Controllers
         private bool AllowHold(string identity)
         {
             var eomToolConfig = EomToolWebConfigSection.GetConfigSection();
-            var identitiesCanHold = eomToolConfig.PaymentBatches.canHold.Split(new char[] { ',' });
+            var identitiesCanHold = eomToolConfig.PaymentBatches.CanHold.Split(new char[] { ',' });
             return (identity == null || identitiesCanHold.Contains(identity));
         }
 
@@ -82,7 +82,7 @@ namespace EomToolWeb.Controllers
                 AllowHold = AllowHold(identityName)
             };
 
-            for (int i = 0; i < numAccountingPeriods; i++)
+            for (int i = 0; i < AccountingPeriods.Count; i++)
             {
                 var accountingPeriod = AccountingPeriods[i];
                 var pbRepo = pbRepositories[accountingPeriod];
@@ -113,7 +113,7 @@ namespace EomToolWeb.Controllers
             };
 
             IEnumerable<PublisherPayment> allPayments = null;
-            for (int i = 0; i < numAccountingPeriods; i++)
+            for (int i = 0; i < AccountingPeriods.Count; i++)
             {
                 var accountingPeriod = AccountingPeriods[i];
                 var pbRepo = pbRepositories[accountingPeriod];

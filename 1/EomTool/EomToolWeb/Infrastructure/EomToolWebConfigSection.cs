@@ -63,10 +63,17 @@ namespace EomToolWeb.Infrastructure
     public class PaymentBatchesElement : ConfigurationElement
     {
         [ConfigurationProperty("canHold", DefaultValue="", IsRequired = false)]
-        public String canHold
+        public String CanHold
         {
             get { return (string)this["canHold"]; }
             set { this["canHold"] = value; }
+        }
+
+        [ConfigurationProperty("numAccountingPeriods", DefaultValue = 4, IsRequired = false)]
+        public int NumAccountingPeriods
+        {
+            get { return (int)this["numAccountingPeriods"]; }
+            set { this["numAccountingPeriods"] = value; }
         }
     }
 }
