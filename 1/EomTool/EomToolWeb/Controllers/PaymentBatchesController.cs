@@ -102,11 +102,13 @@ namespace EomToolWeb.Controllers
             {
                 var accountingPeriod = AccountingPeriods[i];
                 var pbRepo = pbRepositories[accountingPeriod];
+                var pubNotes = pbRepo.PubNotes;
 
                 var payments = pbRepo.PublisherPaymentsForUser(identityName, true);
                 foreach (var payment in payments)
                 {
                     payment.AccountingPeriod = accountingPeriod;
+                    payment.NumNotes = pubNotes.Where(n => n.publisher_name == payment.Publisher).Count();
                 }
                 allPayments = allPayments == null ? payments : allPayments.Concat(payments);
             }

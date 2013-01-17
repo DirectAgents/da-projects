@@ -38,7 +38,7 @@
         <td class="@indentClass">@payment.AccountingPeriod</td>
         <td class="@indentClass"><a href="#" onclick="ShowPubRep('@payment.Publisher', '@payment.AccountingPeriod'); return false">@payment.Publisher</a></td>
         <td style="text-align:right">@Html.FormatCurrency(payment.PubPayCurr, payment.PubPayout.Value)</td>
-        <td><a href="#" onclick="ShowNotes('@payment.Publisher', '@payment.AccountingPeriod'); return false">notes</a></td>
+        <td><a href="#" onclick="ShowNotes('@payment.Publisher', '@payment.AccountingPeriod'); return false">notes(@payment.NumNotes)</a></td>
         <td id="actionarea@(iGroup)_@(iPayment)">
         @using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { id = "form" + iGroup + "_" + iPayment, data_state = (isInitialstate ? "initial" : "") }))
         {
