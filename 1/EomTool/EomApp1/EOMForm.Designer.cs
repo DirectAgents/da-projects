@@ -45,11 +45,13 @@
             this.publisherMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.publisherReportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.paymentBatchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currenciesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountingSheetToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.verifiedRevenueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.auditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mBApprovalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.selectDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.securityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +68,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.mBApprovalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quickBooksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.class1BindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -194,6 +196,8 @@
             // 
             this.accountingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.publisherReportsToolStripMenuItem,
+            this.paymentBatchesToolStripMenuItem,
+            this.quickBooksToolStripMenuItem,
             this.currenciesToolStripMenuItem,
             this.accountingSheetToolStripMenuItem1,
             this.verifiedRevenueToolStripMenuItem,
@@ -210,6 +214,13 @@
             this.publisherReportsToolStripMenuItem.Tag = "Screens.PublisherReports";
             this.publisherReportsToolStripMenuItem.Text = "Publisher Reports";
             this.publisherReportsToolStripMenuItem.Click += new System.EventHandler(this.publisherReportsToolStripMenuItem_Click);
+            // 
+            // paymentBatchesToolStripMenuItem
+            // 
+            this.paymentBatchesToolStripMenuItem.Name = "paymentBatchesToolStripMenuItem";
+            this.paymentBatchesToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.paymentBatchesToolStripMenuItem.Text = "Payment Batches";
+            this.paymentBatchesToolStripMenuItem.Click += new System.EventHandler(this.paymentBatchesToolStripMenuItem_Click);
             // 
             // currenciesToolStripMenuItem
             // 
@@ -251,6 +262,13 @@
             this.itemsToolStripMenuItem.Tag = "Screens.Audit.Items";
             this.itemsToolStripMenuItem.Text = "Campaign Finalization";
             this.itemsToolStripMenuItem.Click += new System.EventHandler(this.itemsToolStripMenuItem_Click);
+            // 
+            // mBApprovalToolStripMenuItem
+            // 
+            this.mBApprovalToolStripMenuItem.Name = "mBApprovalToolStripMenuItem";
+            this.mBApprovalToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.mBApprovalToolStripMenuItem.Text = "MB Approval";
+            this.mBApprovalToolStripMenuItem.Click += new System.EventHandler(this.mBApprovalToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem1
             // 
@@ -353,7 +371,7 @@
             this.databaseLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::EomApp1.Properties.Settings.Default, "DADatabaseName", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.databaseLabel.Location = new System.Drawing.Point(587, 271);
             this.databaseLabel.Name = "databaseLabel";
-            this.databaseLabel.Size = new System.Drawing.Size(42, 13);
+            this.databaseLabel.Size = new System.Drawing.Size(53, 13);
             this.databaseLabel.TabIndex = 3;
             this.databaseLabel.Text = global::EomApp1.Properties.Settings.Default.DADatabaseName;
             this.databaseLabel.Click += new System.EventHandler(this.label1_Click);
@@ -378,12 +396,12 @@
             this.webBrowser1.Size = new System.Drawing.Size(46, 20);
             this.webBrowser1.TabIndex = 5;
             // 
-            // mBApprovalToolStripMenuItem
+            // quickBooksToolStripMenuItem
             // 
-            this.mBApprovalToolStripMenuItem.Name = "mBApprovalToolStripMenuItem";
-            this.mBApprovalToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
-            this.mBApprovalToolStripMenuItem.Text = "MB Approval";
-            this.mBApprovalToolStripMenuItem.Click += new System.EventHandler(this.mBApprovalToolStripMenuItem_Click);
+            this.quickBooksToolStripMenuItem.Name = "quickBooksToolStripMenuItem";
+            this.quickBooksToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.quickBooksToolStripMenuItem.Text = "Quick Books";
+            this.quickBooksToolStripMenuItem.Click += new System.EventHandler(this.quickBooksToolStripMenuItem_Click);
             // 
             // EOMForm
             // 
@@ -451,6 +469,8 @@
         private System.Windows.Forms.ToolStripMenuItem auditToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem itemsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mBApprovalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem paymentBatchesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quickBooksToolStripMenuItem;
 
     }
 }

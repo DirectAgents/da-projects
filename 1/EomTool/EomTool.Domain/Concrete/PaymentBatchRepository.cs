@@ -51,5 +51,15 @@ namespace EomTool.Domain.Concrete
             }
             context.SaveChanges();
         }
+
+        public void SetPaymentBatchId(int[] itemIds, int paymentBatchId)
+        {
+            var items = context.Items.Where(item => itemIds.Contains(item.id));
+            foreach (var item in items)
+            {
+                item.payment_batch_id = paymentBatchId;
+            }
+            context.SaveChanges();
+        }
     }
 }

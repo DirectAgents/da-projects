@@ -11,6 +11,11 @@ namespace EomTool.Domain.Entities
         {
         }
 
+        public EomEntities(string cs, bool dummy) // dummy ignored, used for overloading
+            : this(CreateEntityConnection(cs))
+        {
+        }
+
         private static EntityConnection CreateEntityConnection(string databaseConnectionString)
         {
             return new EntityConnection(new EntityConnectionStringBuilder

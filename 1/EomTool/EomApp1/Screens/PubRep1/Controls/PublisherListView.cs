@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Eom.Common;
+using EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters;
+using EomAppControls;
+using EomTool.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -6,10 +10,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using EomApp1.Screens.PubRep1.Data;
-using EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters;
-using EomAppControls;
-using Eom.Common;
 
 namespace EomApp1.Screens.PubRep1.Controls
 {
@@ -20,8 +20,10 @@ namespace EomApp1.Screens.PubRep1.Controls
         bool _allCampaignsMode;
         StopClock _stopClock = new StopClock();
         DateTime _timeOfLastKeyPress;
+        Dictionary<string, PublisherRelatedItemCount> publisherRelatedItemCount;
         public event PublisherSelected PublisherSelected;
         public event PayModeChanged PayModeChanged;
+
 
         enum StatusChangeMode
         {
@@ -83,6 +85,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             _dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             _dgv.RowHeadersVisible = true;
             _dgv.KeyPress += new KeyPressEventHandler(dataGridView1_KeyPress);
+            _dgv.RowPostPaint += _dgv_RowPostPaint;
 
             // Initialize the time of the last key press
             _timeOfLastKeyPress = DateTime.Now;
@@ -90,6 +93,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             // Hook up to binding source position change event
             _bindingSource.PositionChanged += new EventHandler(BindingSource_PositionChanged);
 
+            RefreshPublisherRelatedItemCounts();
             Fill();
 
             var cs = new DataGridViewColumnSelector();
@@ -100,8 +104,48 @@ namespace EomApp1.Screens.PubRep1.Controls
             _stopClock.Mark("end Form.Load");
         }
 
+        public void RefreshPublisherRelatedItemCounts()
+        {
+            using (var context = new EomEntities(EomAppCommon.EomAppSettings.ConnStr, false))
+            {
+                this.publisherRelatedItemCount = 
+                        context.PublisherRelatedItemCounts.ToList()
+                                    .Distinct(new PublisherRelatedItemCountsComparer())
+                                    .ToDictionary(c => c.Publisher);
+            }
+        }
+
+        class PublisherRelatedItemCountsComparer : IEqualityComparer<PublisherRelatedItemCount>
+        {
+            public bool Equals(PublisherRelatedItemCount x, PublisherRelatedItemCount y)
+            {
+                return x.Publisher == y.Publisher;
+            }
+
+            public int GetHashCode(PublisherRelatedItemCount obj)
+            {
+                return obj.Publisher.GetHashCode();
+            }
+        }
+
+        void _dgv_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            string publisherName = (string)(_dgv.Rows[e.RowIndex].Cells[publisherDataGridViewTextBoxColumn.Index].Value ?? String.Empty);
+            if (this.publisherRelatedItemCount.ContainsKey(publisherName))
+            {
+                if (this.publisherRelatedItemCount[publisherName].NumNotes > 0)
+                {
+                    e.Graphics.DrawImage(Properties.Resources.editing, e.RowBounds.Left + 2, e.RowBounds.Top + 2);
+                }
+                if (this.publisherRelatedItemCount[publisherName].NumAttachments > 0)
+                {
+                    e.Graphics.DrawImage(Properties.Resources.editing, e.RowBounds.Left + 20, e.RowBounds.Top + 2);
+                }
+            }
+        }
+
         // The status columns reflect the state of the status check box
-        private void ShowUnShowStatusCols()
+        void ShowUnShowStatusCols()
         {
             bool statusCheckBoxChecked = statusCheckBox.Checked;
             unverifiedColumn.Visible = statusCheckBoxChecked;

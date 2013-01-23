@@ -97,10 +97,15 @@
     <Reference Include="Common.Logging">
       <HintPath>..\..\Solution\packages\Common.Logging.2.0.0\lib\2.0\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Solution\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
@@ -417,6 +422,63 @@
     <Compile Include="Screens\MediaBuyerWorkflow\PublishersSubform.Designer.cs">
       <DependentUpon>PublishersSubform.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\PaymentBatches\AffiliatePaymentMethod.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\CampaignPublisherPaymentBatchesSummary.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\Item.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\NetTermType.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatch.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchApprovalState.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchAttachment.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesDataSet.cs">
+      <DependentUpon>PaymentBatchesDataSet.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PaymentBatchesDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesForm.Designer.cs">
+      <DependentUpon>PaymentBatchesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PaymentBatchesModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PaymentBatchesModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchState.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchUpdate.cs">
+      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Screens\PublisherNameCombine\PublisherCombineDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -440,12 +502,26 @@
     <Compile Include="Screens\PubRep1\Controls\CampaignsForIDs.Designer.cs">
       <DependentUpon>CampaignsForIDs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\PubRep1\Controls\PublisherNotes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Screens\PubRep1\Controls\PublisherNotes.Designer.cs">
+      <DependentUpon>PublisherNotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PubRep1\Controls\PublisherDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Screens\PubRep1\Controls\PublisherDetails.Designer.cs">
+      <DependentUpon>PublisherDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\PubRep1\Controls\PublisherListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Screens\PubRep1\Controls\PublisherListView.Designer.cs">
       <DependentUpon>PublisherListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\PubRep1\Presenters\PublisherNotesPresenter.cs" />
+    <Compile Include="Screens\PubRep1\Views\IPublisherNotesView.cs" />
     <Compile Include="Screens\PubRep1\Controls\Report2.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -456,6 +532,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PublisherReportDataSet1.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PubRep1\Forms\NoteDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\PubRep1\Forms\NoteDialog.Designer.cs">
+      <DependentUpon>NoteDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\QB\QuickBooksSynchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\QB\QuickBooksSynchForm.Designer.cs">
+      <DependentUpon>QuickBooksSynchForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\Settings\SecurityForm.cs">
       <SubType>Form</SubType>
@@ -760,6 +848,9 @@
     <EmbeddedResource Include="Screens\MediaBuyerWorkflow\PublishersSubform.resx">
       <DependentUpon>PublishersSubform.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\PaymentBatches\PaymentBatchesForm.resx">
+      <DependentUpon>PaymentBatchesForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\PublisherNameCombine\PublisherCombine.resx">
       <DependentUpon>PublisherCombine.cs</DependentUpon>
     </EmbeddedResource>
@@ -774,6 +865,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Final\UI\VerifiedRevenueForm.resx">
       <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\PubRep1\Controls\PublisherNotes.resx">
+      <DependentUpon>PublisherNotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\PubRep1\Controls\PublisherDetails.resx">
+      <DependentUpon>PublisherDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\PubRep1\Forms\NoteDialog.resx">
+      <DependentUpon>NoteDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\QB\QuickBooksSynchForm.resx">
+      <DependentUpon>QuickBooksSynchForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\Settings\SecurityForm.resx">
       <DependentUpon>SecurityForm.cs</DependentUpon>
@@ -825,6 +928,8 @@
     <None Include="Models\Generated\PetaPoco.Core.ttinclude" />
     <None Include="Models\Generated\PetaPoco.Generator.ttinclude" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\EomTool.Domain.Entities.PubAttachment.datasource" />
+    <None Include="Properties\DataSources\EomTool.Domain.Entities.PubNote.datasource" />
     <None Include="Screens\Accounting\Data\AccountingDataClasses.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>AccountingDataClasses.designer.cs</LastGenOutput>
@@ -1084,6 +1189,34 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>MediaBuyerWorkflowModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Screens\PaymentBatches\PaymentBatchesDataSet.xsc">
+      <DependentUpon>PaymentBatchesDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="Screens\PaymentBatches\PaymentBatchesDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PaymentBatchesDataSet.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Screens\PaymentBatches\PaymentBatchesDataSet.xss">
+      <DependentUpon>PaymentBatchesDataSet.xsd</DependentUpon>
+    </None>
+    <EntityDeploy Include="Screens\PaymentBatches\PaymentBatchesModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PaymentBatchesModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Screens\PaymentBatches\PaymentBatchesModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PaymentBatchesModel.edmx</DependentUpon>
+      <LastGenOutput>PaymentBatchesModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Screens\PaymentBatches\PaymentBatchesModel.edmx.diagram">
+      <DependentUpon>PaymentBatchesModel.edmx</DependentUpon>
+    </None>
+    <None Include="Screens\PaymentBatches\PaymentBatchesModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PaymentBatchesModel.edmx</DependentUpon>
+      <LastGenOutput>PaymentBatchesModel.cs</LastGenOutput>
+    </None>
     <None Include="Screens\PublisherNameCombine\PublisherCombineDataSet.xsc">
       <DependentUpon>PublisherCombineDataSet.xsd</DependentUpon>
     </None>
@@ -1290,9 +1423,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\DataSources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\pic1.jpg" />
   </ItemGroup>
@@ -1328,6 +1459,10 @@
     <ProjectReference Include="..\..\EomApp.Controls.Wpf\EomApp.Controls.Wpf.csproj">
       <Project>{6DE348DC-663F-4251-A8E4-A1107E1B0497}</Project>
       <Name>EomApp.Controls.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QuickBooks\QuickBooks.csproj">
+      <Project>{7ab15a9f-c226-449b-ab25-91e2ad18f4dc}</Project>
+      <Name>QuickBooks</Name>
     </ProjectReference>
     <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>

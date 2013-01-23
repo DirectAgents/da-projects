@@ -1,0 +1,487 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DADatabasePaymentBatchesModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="DADatabasePaymentBatchesModelStoreContainer">
+          <EntitySet Name="AffiliatePaymentMethod" EntityType="DADatabasePaymentBatchesModel.Store.AffiliatePaymentMethod" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Item" EntityType="DADatabasePaymentBatchesModel.Store.Item" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PaymentBatch" EntityType="DADatabasePaymentBatchesModel.Store.PaymentBatch" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PaymentBatchAttachment" EntityType="DADatabasePaymentBatchesModel.Store.PaymentBatchAttachment" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PaymentBatchState" EntityType="DADatabasePaymentBatchesModel.Store.PaymentBatchState" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CampaignPublisherPaymentBatchesSummary" EntityType="DADatabasePaymentBatchesModel.Store.CampaignPublisherPaymentBatchesSummary" store:Type="Views" store:Schema="dbo" store:Name="CampaignPublisherPaymentBatchesSummary">
+            <DefiningQuery>SELECT 
+      [CampaignPublisherPaymentBatchesSummary].[PublisherName] AS [PublisherName], 
+      [CampaignPublisherPaymentBatchesSummary].[NetTermTypeName] AS [NetTermTypeName], 
+      [CampaignPublisherPaymentBatchesSummary].[PaymentMethodName] AS [PaymentMethodName], 
+      [CampaignPublisherPaymentBatchesSummary].[AffiliateCurrencyName] AS [AffiliateCurrencyName], 
+      [CampaignPublisherPaymentBatchesSummary].[SumItemTotalCost] AS [SumItemTotalCost], 
+      [CampaignPublisherPaymentBatchesSummary].[ItemAccountingStatusName] AS [ItemAccountingStatusName], 
+      [CampaignPublisherPaymentBatchesSummary].[PaymentBatchId] AS [PaymentBatchId], 
+      [CampaignPublisherPaymentBatchesSummary].[ItemIds] AS [ItemIds]
+      FROM [dbo].[CampaignPublisherPaymentBatchesSummary] AS [CampaignPublisherPaymentBatchesSummary]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Item_PaymentBatch" Association="DADatabasePaymentBatchesModel.Store.FK_Item_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_AffiliatePaymentMethod" Association="DADatabasePaymentBatchesModel.Store.FK_PaymentBatch_AffiliatePaymentMethod">
+            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatch" Association="DADatabasePaymentBatchesModel.Store.FK_PaymentBatch_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+            <End Role="PaymentBatch1" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatchState" Association="DADatabasePaymentBatchesModel.Store.FK_PaymentBatch_PaymentBatchState">
+            <End Role="PaymentBatchState" EntitySet="PaymentBatchState" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatchAttachment_PaymentBatch" Association="DADatabasePaymentBatchesModel.Store.FK_PaymentBatchAttachment_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
+            <End Role="PaymentBatchAttachment" EntitySet="PaymentBatchAttachment" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="AffiliatePaymentMethod">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" MaxLength="300" />
+          <Property Name="pid" Type="int" Nullable="false" />
+          <Property Name="affid" Type="int" Nullable="false" />
+          <Property Name="source_id" Type="int" Nullable="false" />
+          <Property Name="unit_type_id" Type="int" Nullable="false" />
+          <Property Name="stat_id_n" Type="int" />
+          <Property Name="revenue_currency_id" Type="int" Nullable="false" />
+          <Property Name="cost_currency_id" Type="int" Nullable="false" />
+          <Property Name="revenue_per_unit" Type="money" Nullable="false" />
+          <Property Name="cost_per_unit" Type="money" Nullable="false" />
+          <Property Name="num_units" Type="decimal" Nullable="false" Precision="16" Scale="6" />
+          <Property Name="notes" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="accounting_notes" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="item_accounting_status_id" Type="int" Nullable="false" />
+          <Property Name="item_reporting_status_id" Type="int" Nullable="false" />
+          <Property Name="campaign_status_id" Type="int" Nullable="false" />
+          <Property Name="total_revenue" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
+          <Property Name="total_cost" Type="decimal" Precision="36" Scale="10" StoreGeneratedPattern="Computed" />
+          <Property Name="margin" Type="money" StoreGeneratedPattern="Computed" />
+          <Property Name="modified" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
+          <Property Name="batch_id" Type="int" />
+          <Property Name="payment_batch_id" Type="int" />
+        </EntityType>
+        <EntityType Name="PaymentBatch">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="approver_identity" Type="varchar" MaxLength="255" />
+          <Property Name="payment_batch_state_id" Type="int" Nullable="false" />
+          <Property Name="is_current" Type="bit" Nullable="false" />
+          <Property Name="payment_threshold" Type="money" />
+          <Property Name="parent_batch_id" Type="int" />
+          <Property Name="payment_method_id" Type="int" />
+        </EntityType>
+        <EntityType Name="PaymentBatchAttachment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="description" Type="nvarchar" MaxLength="255" />
+          <Property Name="binary_content" Type="varbinary(max)" Nullable="false" />
+          <Property Name="payment_batch_id" Type="int" />
+        </EntityType>
+        <EntityType Name="PaymentBatchState">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'zDADatabaseNov2012Test.dbo.CampaignPublisherPaymentBatchesSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="CampaignPublisherPaymentBatchesSummary">
+          <Key>
+            <PropertyRef Name="NetTermTypeName" />
+            <PropertyRef Name="PaymentMethodName" />
+            <PropertyRef Name="AffiliateCurrencyName" />
+            <PropertyRef Name="ItemAccountingStatusName" />
+          </Key>
+          <Property Name="PublisherName" Type="varchar" MaxLength="255" />
+          <Property Name="NetTermTypeName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="PaymentMethodName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="AffiliateCurrencyName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="SumItemTotalCost" Type="decimal" Precision="38" Scale="6" />
+          <Property Name="ItemAccountingStatusName" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="PaymentBatchId" Type="int" />
+          <Property Name="ItemIds" Type="nvarchar" />
+        </EntityType>
+        <Association Name="FK_Item_PaymentBatch">
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.Store.PaymentBatch" Multiplicity="0..1" />
+          <End Role="Item" Type="DADatabasePaymentBatchesModel.Store.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_AffiliatePaymentMethod">
+          <End Role="AffiliatePaymentMethod" Type="DADatabasePaymentBatchesModel.Store.AffiliatePaymentMethod" Multiplicity="0..1" />
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.Store.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AffiliatePaymentMethod">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="payment_method_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_PaymentBatch">
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.Store.PaymentBatch" Multiplicity="0..1" />
+          <End Role="PaymentBatch1" Type="DADatabasePaymentBatchesModel.Store.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch1">
+              <PropertyRef Name="parent_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_PaymentBatchState">
+          <End Role="PaymentBatchState" Type="DADatabasePaymentBatchesModel.Store.PaymentBatchState" Multiplicity="1" />
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.Store.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatchState">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="payment_batch_state_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatchAttachment_PaymentBatch">
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.Store.PaymentBatch" Multiplicity="0..1" />
+          <End Role="PaymentBatchAttachment" Type="DADatabasePaymentBatchesModel.Store.PaymentBatchAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatchAttachment">
+              <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DADatabasePaymentBatchesModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="zDADatabaseNov2012TestEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AffiliatePaymentMethods" EntityType="DADatabasePaymentBatchesModel.AffiliatePaymentMethod" />
+          <EntitySet Name="Items" EntityType="DADatabasePaymentBatchesModel.Item" />
+          <EntitySet Name="PaymentBatches" EntityType="DADatabasePaymentBatchesModel.PaymentBatch" />
+          <EntitySet Name="PaymentBatchAttachments" EntityType="DADatabasePaymentBatchesModel.PaymentBatchAttachment" />
+          <EntitySet Name="PaymentBatchStates" EntityType="DADatabasePaymentBatchesModel.PaymentBatchState" />
+          <EntitySet Name="CampaignPublisherPaymentBatchesSummaries" EntityType="DADatabasePaymentBatchesModel.CampaignPublisherPaymentBatchesSummary" />
+          <AssociationSet Name="FK_PaymentBatch_AffiliatePaymentMethod" Association="DADatabasePaymentBatchesModel.FK_PaymentBatch_AffiliatePaymentMethod">
+            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethods" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_PaymentBatch" Association="DADatabasePaymentBatchesModel.FK_Item_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatch" Association="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+            <End Role="PaymentBatch1" EntitySet="PaymentBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_PaymentBatchState" Association="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatchState">
+            <End Role="PaymentBatchState" EntitySet="PaymentBatchStates" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatchAttachment_PaymentBatch" Association="DADatabasePaymentBatchesModel.FK_PaymentBatchAttachment_PaymentBatch">
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+            <End Role="PaymentBatchAttachment" EntitySet="PaymentBatchAttachments" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="AffiliatePaymentMethod">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="PaymentBatches" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_AffiliatePaymentMethod" FromRole="AffiliatePaymentMethod" ToRole="PaymentBatch" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="300" Unicode="false" FixedLength="false" />
+          <Property Name="pid" Type="Int32" Nullable="false" />
+          <Property Name="affid" Type="Int32" Nullable="false" />
+          <Property Name="source_id" Type="Int32" Nullable="false" />
+          <Property Name="unit_type_id" Type="Int32" Nullable="false" />
+          <Property Name="stat_id_n" Type="Int32" />
+          <Property Name="revenue_currency_id" Type="Int32" Nullable="false" />
+          <Property Name="cost_currency_id" Type="Int32" Nullable="false" />
+          <Property Name="revenue_per_unit" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="cost_per_unit" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="num_units" Type="Decimal" Nullable="false" Precision="16" Scale="6" />
+          <Property Name="notes" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="accounting_notes" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="item_accounting_status_id" Type="Int32" Nullable="false" />
+          <Property Name="item_reporting_status_id" Type="Int32" Nullable="false" />
+          <Property Name="campaign_status_id" Type="Int32" Nullable="false" />
+          <Property Name="total_revenue" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="total_cost" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="margin" Type="Decimal" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="modified" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" Precision="3" />
+          <Property Name="media_buyer_approval_status_id" Type="Int32" Nullable="false" />
+          <Property Name="batch_id" Type="Int32" />
+          <Property Name="payment_batch_id" Type="Int32" />
+          <NavigationProperty Name="PaymentBatch" Relationship="DADatabasePaymentBatchesModel.FK_Item_PaymentBatch" FromRole="Item" ToRole="PaymentBatch" />
+        </EntityType>
+        <EntityType Name="PaymentBatch">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="approver_identity" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="payment_batch_state_id" Type="Int32" Nullable="false" />
+          <Property Name="is_current" Type="Boolean" Nullable="false" />
+          <Property Name="payment_threshold" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="parent_batch_id" Type="Int32" />
+          <Property Name="payment_method_id" Type="Int32" />
+          <NavigationProperty Name="AffiliatePaymentMethod" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_AffiliatePaymentMethod" FromRole="PaymentBatch" ToRole="AffiliatePaymentMethod" />
+          <NavigationProperty Name="Items" Relationship="DADatabasePaymentBatchesModel.FK_Item_PaymentBatch" FromRole="PaymentBatch" ToRole="Item" />
+          <NavigationProperty Name="PaymentBatch1" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatch" FromRole="PaymentBatch" ToRole="PaymentBatch1" />
+          <NavigationProperty Name="PaymentBatch2" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatch" FromRole="PaymentBatch1" ToRole="PaymentBatch" />
+          <NavigationProperty Name="PaymentBatchState" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatchState" FromRole="PaymentBatch" ToRole="PaymentBatchState" />
+          <NavigationProperty Name="PaymentBatchAttachments" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatchAttachment_PaymentBatch" FromRole="PaymentBatch" ToRole="PaymentBatchAttachment" />
+        </EntityType>
+        <EntityType Name="PaymentBatchAttachment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="description" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="binary_content" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="payment_batch_id" Type="Int32" />
+          <NavigationProperty Name="PaymentBatch" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatchAttachment_PaymentBatch" FromRole="PaymentBatchAttachment" ToRole="PaymentBatch" />
+        </EntityType>
+        <EntityType Name="PaymentBatchState">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="PaymentBatches" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatchState" FromRole="PaymentBatchState" ToRole="PaymentBatch" />
+        </EntityType>
+        <EntityType Name="CampaignPublisherPaymentBatchesSummary">
+          <Key>
+            <PropertyRef Name="NetTermTypeName" />
+            <PropertyRef Name="PaymentMethodName" />
+            <PropertyRef Name="AffiliateCurrencyName" />
+            <PropertyRef Name="ItemAccountingStatusName" />
+          </Key>
+          <Property Name="PublisherName" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="NetTermTypeName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="PaymentMethodName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="AffiliateCurrencyName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="SumItemTotalCost" Type="Decimal" Precision="38" Scale="6" />
+          <Property Name="ItemAccountingStatusName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="PaymentBatchId" Type="Int32" />
+          <Property Name="ItemIds" Type="String" MaxLength="4000" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_PaymentBatch_AffiliatePaymentMethod">
+          <End Role="AffiliatePaymentMethod" Type="DADatabasePaymentBatchesModel.AffiliatePaymentMethod" Multiplicity="0..1" />
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AffiliatePaymentMethod">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="payment_method_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_PaymentBatch">
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.PaymentBatch" Multiplicity="0..1" />
+          <End Role="Item" Type="DADatabasePaymentBatchesModel.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_PaymentBatch">
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.PaymentBatch" Multiplicity="0..1" />
+          <End Role="PaymentBatch1" Type="DADatabasePaymentBatchesModel.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch1">
+              <PropertyRef Name="parent_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_PaymentBatchState">
+          <End Role="PaymentBatchState" Type="DADatabasePaymentBatchesModel.PaymentBatchState" Multiplicity="1" />
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatchState">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="payment_batch_state_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatchAttachment_PaymentBatch">
+          <End Role="PaymentBatch" Type="DADatabasePaymentBatchesModel.PaymentBatch" Multiplicity="0..1" />
+          <End Role="PaymentBatchAttachment" Type="DADatabasePaymentBatchesModel.PaymentBatchAttachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentBatch">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatchAttachment">
+              <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DADatabasePaymentBatchesModelStoreContainer" CdmEntityContainer="zDADatabaseNov2012TestEntities">
+          <EntitySetMapping Name="AffiliatePaymentMethods">
+            <EntityTypeMapping TypeName="DADatabasePaymentBatchesModel.AffiliatePaymentMethod">
+              <MappingFragment StoreEntitySet="AffiliatePaymentMethod">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Items">
+            <EntityTypeMapping TypeName="DADatabasePaymentBatchesModel.Item">
+              <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="source_id" ColumnName="source_id" />
+                <ScalarProperty Name="unit_type_id" ColumnName="unit_type_id" />
+                <ScalarProperty Name="stat_id_n" ColumnName="stat_id_n" />
+                <ScalarProperty Name="revenue_currency_id" ColumnName="revenue_currency_id" />
+                <ScalarProperty Name="cost_currency_id" ColumnName="cost_currency_id" />
+                <ScalarProperty Name="revenue_per_unit" ColumnName="revenue_per_unit" />
+                <ScalarProperty Name="cost_per_unit" ColumnName="cost_per_unit" />
+                <ScalarProperty Name="num_units" ColumnName="num_units" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+                <ScalarProperty Name="accounting_notes" ColumnName="accounting_notes" />
+                <ScalarProperty Name="item_accounting_status_id" ColumnName="item_accounting_status_id" />
+                <ScalarProperty Name="item_reporting_status_id" ColumnName="item_reporting_status_id" />
+                <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
+                <ScalarProperty Name="total_revenue" ColumnName="total_revenue" />
+                <ScalarProperty Name="total_cost" ColumnName="total_cost" />
+                <ScalarProperty Name="margin" ColumnName="margin" />
+                <ScalarProperty Name="modified" ColumnName="modified" />
+                <ScalarProperty Name="media_buyer_approval_status_id" ColumnName="media_buyer_approval_status_id" />
+                <ScalarProperty Name="batch_id" ColumnName="batch_id" />
+                <ScalarProperty Name="payment_batch_id" ColumnName="payment_batch_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentBatches">
+            <EntityTypeMapping TypeName="DADatabasePaymentBatchesModel.PaymentBatch">
+              <MappingFragment StoreEntitySet="PaymentBatch">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="approver_identity" ColumnName="approver_identity" />
+                <ScalarProperty Name="payment_batch_state_id" ColumnName="payment_batch_state_id" />
+                <ScalarProperty Name="is_current" ColumnName="is_current" />
+                <ScalarProperty Name="payment_threshold" ColumnName="payment_threshold" />
+                <ScalarProperty Name="parent_batch_id" ColumnName="parent_batch_id" />
+                <ScalarProperty Name="payment_method_id" ColumnName="payment_method_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentBatchAttachments">
+            <EntityTypeMapping TypeName="DADatabasePaymentBatchesModel.PaymentBatchAttachment">
+              <MappingFragment StoreEntitySet="PaymentBatchAttachment">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="binary_content" ColumnName="binary_content" />
+                <ScalarProperty Name="payment_batch_id" ColumnName="payment_batch_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentBatchStates">
+            <EntityTypeMapping TypeName="DADatabasePaymentBatchesModel.PaymentBatchState">
+              <MappingFragment StoreEntitySet="PaymentBatchState">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CampaignPublisherPaymentBatchesSummaries">
+            <EntityTypeMapping TypeName="DADatabasePaymentBatchesModel.CampaignPublisherPaymentBatchesSummary">
+              <MappingFragment StoreEntitySet="CampaignPublisherPaymentBatchesSummary">
+                <ScalarProperty Name="PublisherName" ColumnName="PublisherName" />
+                <ScalarProperty Name="NetTermTypeName" ColumnName="NetTermTypeName" />
+                <ScalarProperty Name="PaymentMethodName" ColumnName="PaymentMethodName" />
+                <ScalarProperty Name="AffiliateCurrencyName" ColumnName="AffiliateCurrencyName" />
+                <ScalarProperty Name="SumItemTotalCost" ColumnName="SumItemTotalCost" />
+                <ScalarProperty Name="ItemAccountingStatusName" ColumnName="ItemAccountingStatusName" />
+                <ScalarProperty Name="PaymentBatchId" ColumnName="PaymentBatchId" />
+                <ScalarProperty Name="ItemIds" ColumnName="ItemIds" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

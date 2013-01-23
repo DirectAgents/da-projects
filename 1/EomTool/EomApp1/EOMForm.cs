@@ -255,5 +255,15 @@ namespace EomApp1
         {
             LaunchForm<Screens.MediaBuyerWorkflow.MediaBuyerWorkflowForm>();
         }
+
+        private void paymentBatchesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchForm<Screens.PaymentBatches.PaymentBatchesForm>();
+        }
+
+        private void quickBooksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LaunchForm<Screens.QB.QuickBooksSynchForm>();
+        }
     }
 }

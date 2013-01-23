@@ -73,7 +73,7 @@ namespace EomApp1.Screens.PubRep1.Controls
             this.paidColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this._bindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this._dataSet = new PublisherReportDataSet1();
+            this._dataSet = new Eom.Common.PublisherReportDataSet1();
             this._tableAdapter = new EomApp1.Screens.PubRep1.Data.PublisherReportDataSet1TableAdapters.CampaignsPublisherReportSummaryTableAdapter();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();

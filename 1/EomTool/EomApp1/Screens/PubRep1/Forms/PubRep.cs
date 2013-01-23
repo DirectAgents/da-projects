@@ -18,9 +18,18 @@ namespace EomApp1.Screens.PubRep1.Forms
         public PubRep()
         {
             InitializeComponent();
+
             publisherListView1.PublisherSelected += PublisherListViewPublisherSelected;
-            publisherListView1.PayModeChanged += new PayModeChanged(publisherListView1_PayModeChanged);
+            publisherListView1.PayModeChanged += publisherListView1_PayModeChanged;
+
+            publisherDetails1.RelatedItemCountChanged += publisherDetails1_RelatedItemCountChanged;
+
             lastRefreshTimeStatusValue.Text = "Loaded at " + DateTime.Now.ToString();
+        }
+
+        void publisherDetails1_RelatedItemCountChanged(object sender, EventArgs e)
+        {
+            publisherListView1.RefreshPublisherRelatedItemCounts();
         }
 
         void publisherListView1_PayModeChanged(bool payMode)
@@ -32,11 +41,7 @@ namespace EomApp1.Screens.PubRep1.Forms
         {
             accountingView1.Publisher = publisher;
             pubReport1.Publisher = publisher;
-        }
-
-        private void toolStripButton1_Click_1(object sender, EventArgs e)
-        {
-
+            publisherDetails1.Publisher = publisher;
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)

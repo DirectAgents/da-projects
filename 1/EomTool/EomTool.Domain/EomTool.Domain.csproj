@@ -60,6 +60,7 @@
     <Compile Include="Concrete\BatchRepository.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="Concrete\PaymentBatchRepository.cs" />
+    <Compile Include="Concrete\PublisherRelatedItemsRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="Entities\BatchUpdate.cs" />
     <Compile Include="Entities\CampaignStatus.cs" />
