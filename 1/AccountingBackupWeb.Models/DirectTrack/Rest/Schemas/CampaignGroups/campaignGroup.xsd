@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/campaignGroup/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/campaignGroup/v1_0"
+elementFormDefault="qualified">
+
+	<!-- simple elements -->
+	
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="groupName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	<xs:element name="comments">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<!-- END simple elements -->
+
+	<!-- element groups -->
+	<!-- END element groups -->
+
+	<!-- attributes -->
+	<!-- END attributes -->
+
+	<!-- complex elements -->
+	<xs:element name="resourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="campaigns">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="resourceURL" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+	<!-- END complex elements -->
+
+	<!-- PRIMARY ELEMENT -->
+	<xs:element name="campaignGroup">
+	  <xs:complexType>
+	    <xs:sequence>
+				<xs:element ref="groupName" minOccurs="1" maxOccurs="1"/>    
+				<xs:element ref="comments" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="campaigns" minOccurs="0" maxOccurs="1"/>	
+			</xs:sequence>
+	    <xs:attribute name="location" type="resourceURI"/>
+	  </xs:complexType>
+	</xs:element>
+
+</xs:schema>
+
+

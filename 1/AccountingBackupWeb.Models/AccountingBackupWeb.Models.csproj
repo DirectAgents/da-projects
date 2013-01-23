@@ -1,0 +1,599 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D09AA1DE-FB06-4334-A9D2-DAE8A035CD7D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccountingBackupWeb.Models</RootNamespace>
+    <AssemblyName>AccountingBackupWeb.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - Client Portal|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug - Client Portal\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - DADatabaseService|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug - DADatabaseService\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - z|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug - z\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug - Direct Track|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug - Direct Track\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountingBackup\AccountingBackupEntities.cs" />
+    <Compile Include="AccountingBackup\AccountingBackupData.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccountingBackupData.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="AccountingBackup\AccountingBackupEntitiesFactory.cs" />
+    <Compile Include="AccountingBackup\AccountReceivable.cs" />
+    <Compile Include="AccountingBackup\Advertiser.cs" />
+    <Compile Include="AccountingBackup\CodeGen\Enums.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Enums.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AccountingBackup\Company.cs" />
+    <Compile Include="AccountingBackup\Config\ABWebConfig.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ABWebConfig.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="AccountingBackup\Currency.cs" />
+    <Compile Include="AccountingBackup\Customer.cs" />
+    <Compile Include="AccountingBackup\EntryType.cs" />
+    <Compile Include="AccountingBackup\Log.cs" />
+    <Compile Include="AccountingBackup\SynchTime.cs" />
+    <Compile Include="AccountingBackup\Terms.cs" />
+    <Compile Include="DirectTrack\DirectTrackSynch.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DirectTrackSynch.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DirectTrack\DirectTrackSynchContainer.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AdvertiserContacts\classes\advertiserContact.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AdvertiserContacts\dataset\advertiserContact.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\Advertisers\classes\advertiser.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\Advertisers\dataset\advertiser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateBlacklists\classes\affiliateBlacklist.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateBlacklists\dataset\affiliateBlacklist.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateCampaignAccessRequests\classes\campaignAccessRequest.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateCampaignAccessRequests\dataset\campaignAccessRequest.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateEditRequests\classes\affiliateEditRequest.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateEditRequests\dataset\affiliateEditRequest.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateGroups\classes\advertiserGroup.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateGroups\classes\affiliateGroup.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateGroups\dataset\advertiserGroup.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateGroups\dataset\affiliateGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateHistories\classes\affiliateHistory.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\AffiliateHistories\dataset\affiliateHistory.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\Affiliates\classes\affiliate.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\Affiliates\dataset\affiliate.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\APIUsers\classes\apiUser.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\APIUsers\dataset\apiUser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\CampaignAffiliateCreativeandCreativeDeploymentStatistics\classes\stats.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\CampaignAffiliateCreativeandCreativeDeploymentStatistics\dataset\stats.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\CampaignCategories\classes\campaignCategory.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\CampaignCategories\dataset\campaignCategory.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\CampaignGroups\classes\campaignGroup.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\CampaignGroups\dataset\campaignGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\Campaigns\classes\campaign.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\Campaigns\dataset\campaign.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ClickReferralDetails\classes\clickReferral.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ClickReferralDetails\dataset\clickReferral.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ClickReferralStatistics\classes\statClickReferral.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ClickReferralStatistics\dataset\statClickReferral.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ClientUsers\classes\client.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ClientUsers\dataset\client.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ConsumerLeads\classes\consumerLead.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ConsumerLeads\dataset\consumerLead.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\CreativeDeployments\classes\creativeDeployment.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\CreativeDeployments\dataset\creativeDeployment.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\Creatives\classes\creative.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\Creatives\dataset\creative.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\CrossPublication\classes\xpubClassified.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\CrossPublication\classes\xpubCompany.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\CrossPublication\classes\xpubOffer.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\CrossPublication\classes\xpubRequest.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\CrossPublication\dataset\xpubClassified.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\CrossPublication\dataset\xpubCompany.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\CrossPublication\dataset\xpubOffer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\CrossPublication\dataset\xpubRequest.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\DetailedClicks\classes\clickDetail.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\DetailedClicks\dataset\clickDetail.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\DetailedLeads\classes\leadDetail.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\DetailedLeads\dataset\leadDetail.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\DetailedSales\classes\saleDetail.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\DetailedSales\dataset\saleDetail.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\EmailingAffiliates\classes\affiliateAutoEmail.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\EmailingAffiliates\classes\affiliateEmailTemplate.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\EmailingAffiliates\classes\affiliateManualEmail.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\EmailingAffiliates\classes\emailReport.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\EmailingAffiliates\dataset\affiliateAutoEmail.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\EmailingAffiliates\dataset\affiliateEmailTemplate.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\EmailingAffiliates\dataset\affiliateManualEmail.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\EmailingAffiliates\dataset\emailReport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\MobileCreativeHelperSMSContactLists\classes\smsContactList.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\MobileCreativeHelperSMSContactLists\dataset\smsContactList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\MobileCreativeHelperSMSShortCodes\classes\smsShortCode.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\MobileCreativeHelperSMSShortCodes\dataset\smsShortCode.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\OptionalInfoStatistics\classes\optInfo.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\OptionalInfoStatistics\dataset\optInfo.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\Payouts\classes\payout.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\Payouts\dataset\payout.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ProductBrands\classes\productBrand.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ProductBrands\dataset\productBrand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ProductCategories\classes\productCategory.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ProductCategories\dataset\productCategory.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ProductStatistics\classes\statProduct.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ProductStatistics\dataset\statProduct.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\Products\classes\product.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\Products\dataset\product.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ProgramClicks\classes\programClick.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ProgramClicks\dataset\programClick.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ProgramImpressions\classes\programImpression.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ProgramImpressions\dataset\programImpression.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ProgramLeads\classes\programLead.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ProgramLeads\dataset\programLead.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\SaleLineItems\classes\saleLineItem.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\SaleLineItems\dataset\saleLineItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\SuperAffiliateStatistics\classes\statSuperAffiliate.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\SuperAffiliateStatistics\dataset\statSuperAffiliate.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\ThirdPartyPixels\classes\thirdPartyPixel.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\ThirdPartyPixels\dataset\thirdPartyPixel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\TrackingURLs\classes\trackingURL.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\TrackingURLs\dataset\trackingURL.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\Schemas\XSDLocations\classes\xpubCommunication.cs" />
+    <Compile Include="DirectTrack\Rest\Schemas\XSDLocations\dataset\xpubCommunication.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectTrack\Rest\DirectTrack.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DirectTrack.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EntityComparer.cs" />
+    <Compile Include="EntityConnectionFactory.cs" />
+    <Compile Include="EOM\EomDatabaseModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EomDatabaseModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EOM\EomModel.cs" />
+    <Compile Include="EOM\IEomModel.cs" />
+    <Compile Include="GoogleDocs\GoogleDocSpreadsheets.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GoogleDocSpreadsheets.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectContextExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickBooks\PreTextTemplate1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PreTextTemplate1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuickBooks\QuickBooks.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QuickBooks.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="QuickBooks\Template1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Template1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuickBooks\Template2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Template2.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuickBooks\TextTemplate11.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TextTemplate11.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Reports.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reports.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Staging\CustomerStartingBalance.cs" />
+    <Compile Include="Staging\Staging.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Staging.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Staging\StagingEntities.cs" />
+    <Compile Include="Staging\StagingEntitiesFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="AccountingBackup\AccountingBackupData.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AccountingBackupData.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="AccountingBackup\CodeGen\Enums.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Enums.cs</LastGenOutput>
+    </None>
+    <EntityDeploy Include="AccountingBackup\Config\ABWebConfig.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ABWebConfig.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="App.config" />
+    <EntityDeploy Include="Staging\Staging.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Staging.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="EOM\EomDatabaseModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EomDatabaseModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="QuickBooks\QuickBooks.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>QuickBooks.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="DirectTrack\DirectTrackSynch.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DirectTrackSynch.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DirectTrack\Rest\Schemas\AdvertiserContacts\advertiserContact.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\Advertisers\advertiser.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\AffiliateBlacklists\affiliateBlacklist.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\AffiliateCampaignAccessRequests\campaignAccessRequest.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\AffiliateEditRequests\affiliateEditRequest.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\AffiliateGroups\advertiserGroup.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\AffiliateGroups\affiliateGroup.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\AffiliateHistories\affiliateHistory.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\Affiliates\affiliate.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\APIUsers\apiUser.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\CampaignAffiliateCreativeandCreativeDeploymentStatistics\stats.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\CampaignCategories\campaignCategory.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\CampaignGroups\campaignGroup.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\Campaigns\campaign.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ClickReferralDetails\clickReferral.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ClickReferralStatistics\statClickReferral.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ClientUsers\client.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ConsumerLeads\consumerLead.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\CreativeDeployments\creativeDeployment.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\Creatives\creative.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\CrossPublication\xpubClassified.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\CrossPublication\xpubCompany.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\CrossPublication\xpubOffer.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\CrossPublication\xpubRequest.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\DetailedClicks\clickDetail.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\DetailedLeads\leadDetail.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\DetailedSales\saleDetail.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\EmailingAffiliates\affiliateAutoEmail.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\EmailingAffiliates\affiliateEmailTemplate.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\EmailingAffiliates\affiliateManualEmail.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\EmailingAffiliates\emailReport.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\MobileCreativeHelperSMSContactLists\smsContactList.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\MobileCreativeHelperSMSShortCodes\smsShortCode.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\OptionalInfoStatistics\optInfo.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\Payouts\payout.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ProductBrands\productBrand.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ProductCategories\productCategory.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ProductStatistics\statProduct.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\Products\product.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ProgramClicks\programClick.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ProgramImpressions\programImpression.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ProgramLeads\programLead.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\SaleLineItems\saleLineItem.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\SuperAffiliateStatistics\statSuperAffiliate.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\ThirdPartyPixels\thirdPartyPixel.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\TrackingURLs\trackingURL.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DirectTrack\Rest\Schemas\XSDLocations\xpubCommunication.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="DirectTrack\Rest\DirectTrack.edmx">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DirectTrack.tt</DependentUpon>
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DirectTrack.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DirectTrack\Rest\DirectTrack.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DirectTrack.edmx</LastGenOutput>
+      <TransformOnBuild>False</TransformOnBuild>
+    </None>
+    <EntityDeploy Include="GoogleDocs\GoogleDocSpreadsheets.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>GoogleDocSpreadsheets.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="QuickBooks\PreTextTemplate1.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>PreTextTemplate1.cs</LastGenOutput>
+    </None>
+    <None Include="QuickBooks\Template1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Template1.cs</LastGenOutput>
+    </None>
+    <None Include="QuickBooks\Template2.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Template2.cs</LastGenOutput>
+    </None>
+    <None Include="QuickBooks\TextTemplate1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TextTemplate11.edmx</LastGenOutput>
+    </None>
+    <EntityDeploy Include="QuickBooks\TextTemplate11.edmx">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TextTemplate1.tt</DependentUpon>
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TextTemplate11.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="Reports\Reports.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Reports.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AccountingBackup\AccountingBackupData.edmx.sql" />
+    <Content Include="GoogleDocs\GoogleDocSpreadsheets.edmx.sql" />
+    <Content Include="QuickBooks\QuickBooks.edmx.sql" />
+    <Content Include="QuickBooks\TextTemplate11.edmx.sql" />
+    <Content Include="Reports\Reports.edmx.sql" />
+    <Content Include="Staging\Staging.edmx.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EomTool\DAgents.Common\DirectAgents.Common.csproj">
+      <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
+      <Name>DirectAgents.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

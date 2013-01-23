@@ -1,0 +1,3064 @@
+<?xml version="1.0" standalone="yes"?>
+<Settings>
+  <ReceivedPayments>
+    <ReceivedPayment>
+      <TxnID>18E4-1294333980</TxnID>
+      <TxnNumber>1023</TxnNumber>
+      <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-05T00:00:00-05:00</TxnDate>
+      <TotalAmount>4794.30</TotalAmount>
+      <PaymentMethodRefFullName>Check</PaymentMethodRefFullName>
+      <Memo>DA-016528, DA-016585</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>18D0-1294330465</TxnID>
+      <TxnNumber>1021</TxnNumber>
+      <CustomerRefListID>8000005B-1270497718</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-06T00:00:00-05:00</TxnDate>
+      <TotalAmount>0.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>BAD DEBT</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>18F1-1294334289</TxnID>
+      <TxnNumber>1024</TxnNumber>
+      <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-06T00:00:00-05:00</TxnDate>
+      <TotalAmount>15.00</TotalAmount>
+      <PaymentMethodRefFullName>Check</PaymentMethodRefFullName>
+      <Memo>DA-016437</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1911-1294670833</TxnID>
+      <TxnNumber>1031</TxnNumber>
+      <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-06T00:00:00-05:00</TxnDate>
+      <RefNumber>BAS</RefNumber>
+      <TotalAmount>1089.69</TotalAmount>
+      <PaymentMethodRefFullName>Check</PaymentMethodRefFullName>
+      <Memo>DA-016298, DA-016436, DA-016490</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1A8F-1295546093</TxnID>
+      <TxnNumber>1094</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-07T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>6142.40</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016579</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1953-1294766849</TxnID>
+      <TxnNumber>1043</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-07T00:00:00-05:00</TxnDate>
+      <TotalAmount>20455.00</TotalAmount>
+      <PaymentMethodRefFullName>Check</PaymentMethodRefFullName>
+      <Memo>DA-016574</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>20F9-1297960023</TxnID>
+      <TxnNumber>1315</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>11.36</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016584</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>20B3-1297959819</TxnID>
+      <TxnNumber>1314</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>6384.60</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016578</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>211D-1297960274</TxnID>
+      <TxnNumber>1316</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1913.89</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016581</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>195B-1294767104</TxnID>
+      <TxnNumber>1044</TxnNumber>
+      <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+      <TotalAmount>5400.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016560</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1967-1294767160</TxnID>
+      <TxnNumber>1045</TxnNumber>
+      <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+      <TotalAmount>3300.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016561</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1973-1294772673</TxnID>
+      <TxnNumber>1047</TxnNumber>
+      <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>57894.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016558</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>196D-1294767187</TxnID>
+      <TxnNumber>1046</TxnNumber>
+      <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+      <TotalAmount>2400.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016562</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2143-1297960358</TxnID>
+      <TxnNumber>1318</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-11T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5580.43</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016575</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>19A4-1294858831</TxnID>
+      <TxnNumber>1059</TxnNumber>
+      <CustomerRefListID>800000E5-1279833268</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-11T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>10000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016604</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2130-1297960325</TxnID>
+      <TxnNumber>1317</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-11T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>11.36</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016584</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2156-1297960394</TxnID>
+      <TxnNumber>1319</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-12T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>6923.20</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016577</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1A5D-1295460754</TxnID>
+      <TxnNumber>1088</TxnNumber>
+      <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-14T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>196.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016254</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1AA0-1295549417</TxnID>
+      <TxnNumber>1095</TxnNumber>
+      <CustomerRefListID>800000FB-1285346528</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-14T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>51.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016471</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1A67-1295477487</TxnID>
+      <TxnNumber>1089</TxnNumber>
+      <CustomerRefListID>80000148-1294681706</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-17T00:00:00-05:00</TxnDate>
+      <TotalAmount>2500.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016650</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1A7F-1295478437</TxnID>
+      <TxnNumber>1091</TxnNumber>
+      <CustomerRefListID>800000D7-1275492658</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-18T00:00:00-05:00</TxnDate>
+      <TotalAmount>1188.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016632</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1A6D-1295477685</TxnID>
+      <TxnNumber>1090</TxnNumber>
+      <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-19T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>70.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1AB4-1295552855</TxnID>
+      <TxnNumber>1096</TxnNumber>
+      <CustomerRefListID>80000155-1295535505</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-20T00:00:00-05:00</TxnDate>
+      <TotalAmount>8269.73</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1AD8-1295637394</TxnID>
+      <TxnNumber>1098</TxnNumber>
+      <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-21T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>274.54</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016424</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1AD1-1295637353</TxnID>
+      <TxnNumber>1097</TxnNumber>
+      <CustomerRefListID>800000E0-1276876899</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-21T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2350.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016647</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1AE1-1295642274</TxnID>
+      <TxnNumber>1099</TxnNumber>
+      <CustomerRefListID>8000010B-1286990117</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-21T00:00:00-05:00</TxnDate>
+      <TotalAmount>3000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016676</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1D95-1296745328</TxnID>
+      <TxnNumber>1208</TxnNumber>
+      <CustomerRefListID>800000C2-1273094544</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-21T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>13000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>Payment from OLd UK account(client sent money to wrong account)</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1DB5-1296769634</TxnID>
+      <TxnNumber>1211</TxnNumber>
+      <CustomerRefListID>800000D7-1275492658</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-26T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>87.12</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-01632</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2169-1297960460</TxnID>
+      <TxnNumber>1320</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-27T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>10.17</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016580</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1BE0-1296569876</TxnID>
+      <TxnNumber>1163</TxnNumber>
+      <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-27T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>30.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016596</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1C35-1296580384</TxnID>
+      <TxnNumber>1164</TxnNumber>
+      <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-28T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>722.63</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016500</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1C3C-1296580425</TxnID>
+      <TxnNumber>1165</TxnNumber>
+      <CustomerRefListID>80000116-1288733649</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-01-28T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>105.75</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016607</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1BD7-1296516324</TxnID>
+      <TxnNumber>1162</TxnNumber>
+      <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-01-31T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>38594.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016655</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2DAC-1303423539</TxnID>
+      <TxnNumber>1826</TxnNumber>
+      <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+      <TotalAmount>58569.01</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D9D-1303423375</TxnID>
+      <TxnNumber>1823</TxnNumber>
+      <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+      <TotalAmount>3341.91</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1E31-1297182517</TxnID>
+      <TxnNumber>1233</TxnNumber>
+      <CustomerRefListID>800000FB-1285346528</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-08T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1488.54</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016616</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1EC5-1297368615</TxnID>
+      <TxnNumber>1256</TxnNumber>
+      <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-10T00:00:00-05:00</TxnDate>
+      <TotalAmount>176.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016571</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1ECE-1297368706</TxnID>
+      <TxnNumber>1257</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4613.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016774, DA-016775, DA-016776</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1EB5-1297368258</TxnID>
+      <TxnNumber>1254</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>7756.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016779</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>1EBD-1297368303</TxnID>
+      <TxnNumber>1255</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>7302.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016778</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2561-1299889687</TxnID>
+      <TxnNumber>1479</TxnNumber>
+      <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-11T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1074.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016781</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2204-1298404373</TxnID>
+      <TxnNumber>1358</TxnNumber>
+      <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-14T00:00:00-05:00</TxnDate>
+      <RefNumber>83-07-06</RefNumber>
+      <TotalAmount>18.80</TotalAmount>
+      <PaymentMethodRefFullName>Check</PaymentMethodRefFullName>
+      <Memo>DA-015849</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2038-1297794804</TxnID>
+      <TxnNumber>1300</TxnNumber>
+      <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-14T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>13937.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-01677</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2665-1300305793</TxnID>
+      <TxnNumber>1540</TxnNumber>
+      <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-16T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2907.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016716</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>21FD-1298403985</TxnID>
+      <TxnNumber>1357</TxnNumber>
+      <CustomerRefListID>80000026-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-17T00:00:00-05:00</TxnDate>
+      <RefNumber>30-97-84</RefNumber>
+      <TotalAmount>5875.00</TotalAmount>
+      <PaymentMethodRefFullName>Check</PaymentMethodRefFullName>
+      <Memo>DA-016756</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>21F3-1298403808</TxnID>
+      <TxnNumber>1356</TxnNumber>
+      <CustomerRefListID>80000136-1293566219</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-17T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016538</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>222B-1298475489</TxnID>
+      <TxnNumber>1364</TxnNumber>
+      <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-18T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>317.25</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016598</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>21DC-1298058100</TxnID>
+      <TxnNumber>1350</TxnNumber>
+      <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-18T00:00:00-05:00</TxnDate>
+      <RefNumber>83-07-06</RefNumber>
+      <TotalAmount>1316.00</TotalAmount>
+      <PaymentMethodRefFullName>Check</PaymentMethodRefFullName>
+      <Memo>DA-016622</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2224-1298475443</TxnID>
+      <TxnNumber>1363</TxnNumber>
+      <CustomerRefListID>80000046-1270497717</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-21T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1011.68</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016486</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>221D-1298475326</TxnID>
+      <TxnNumber>1362</TxnNumber>
+      <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-21T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1264.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016782</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2214-1298475266</TxnID>
+      <TxnNumber>1361</TxnNumber>
+      <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-22T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>290.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016731</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2267-1298643255</TxnID>
+      <TxnNumber>1373</TxnNumber>
+      <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-24T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1889.83</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016258, DA-016570</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2241-1298557749</TxnID>
+      <TxnNumber>1367</TxnNumber>
+      <CustomerRefListID>8000016A-1298557391</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-02-24T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>31.33</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016299</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>227A-1298908357</TxnID>
+      <TxnNumber>1378</TxnNumber>
+      <CustomerRefListID>8000016C-1298562310</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-02-28T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>875.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016866</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2DB1-1303423554</TxnID>
+      <TxnNumber>1827</TxnNumber>
+      <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+      <TotalAmount>38940.96</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2DA2-1303423393</TxnID>
+      <TxnNumber>1824</TxnNumber>
+      <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+      <TotalAmount>2753.62</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2397-1299084097</TxnID>
+      <TxnNumber>1411</TxnNumber>
+      <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>568.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016684, DA-016800</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>235C-1299004464</TxnID>
+      <TxnNumber>1401</TxnNumber>
+      <CustomerRefListID>800000E0-1276876899</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>50.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016647</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>23E8-1299188716</TxnID>
+      <TxnNumber>1422</TxnNumber>
+      <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-02T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>34994.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016873</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>23D3-1299167982</TxnID>
+      <TxnNumber>1419</TxnNumber>
+      <CustomerRefListID>8000015D-1296606792</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-03T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016729</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2406-1299259068</TxnID>
+      <TxnNumber>1427</TxnNumber>
+      <CustomerRefListID>800000D7-1275492658</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-04T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2.70</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016746</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>23FA-1299259007</TxnID>
+      <TxnNumber>1425</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-04T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>6920.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016780</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2400-1299259043</TxnID>
+      <TxnNumber>1426</TxnNumber>
+      <CustomerRefListID>80000067-1270497719</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-04T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>800.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016827</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2444-1299508633</TxnID>
+      <TxnNumber>1437</TxnNumber>
+      <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-07T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>810.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016913</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>23B5-1299092649</TxnID>
+      <TxnNumber>1412</TxnNumber>
+      <CustomerRefListID>80000026-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-08T00:00:00-05:00</TxnDate>
+      <RefNumber>30-97-84</RefNumber>
+      <TotalAmount>125.00</TotalAmount>
+      <PaymentMethodRefFullName>Check</PaymentMethodRefFullName>
+      <Memo>DA-016756</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2597-1300134672</TxnID>
+      <TxnNumber>1487</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>6008.21</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016955</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>252F-1299859727</TxnID>
+      <TxnNumber>1473</TxnNumber>
+      <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>3277.37</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016091 AND DA-016258</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>24EE-1299786446</TxnID>
+      <TxnNumber>1465</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>14.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016862</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>24F4-1299786484</TxnID>
+      <TxnNumber>1466</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>13958.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016956</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>24FC-1299786511</TxnID>
+      <TxnNumber>1467</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-10T00:00:00-05:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4830.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016953</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2589-1300117931</TxnID>
+      <TxnNumber>1484</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>581.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016963</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>257F-1300117340</TxnID>
+      <TxnNumber>1483</TxnNumber>
+      <CustomerRefListID>80000116-1288733649</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>64.63</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016762</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2569-1300117085</TxnID>
+      <TxnNumber>1480</TxnNumber>
+      <CustomerRefListID>80000103-1285963347</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>10000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016966</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>256F-1300117231</TxnID>
+      <TxnNumber>1481</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5206.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016949, DA-016952</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2579-1300117267</TxnID>
+      <TxnNumber>1482</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>816.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016961</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2683-1300373794</TxnID>
+      <TxnNumber>1544</TxnNumber>
+      <CustomerRefListID>80000180-1300303100</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>965.94</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016888</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>265A-1300302855</TxnID>
+      <TxnNumber>1538</TxnNumber>
+      <CustomerRefListID>800000E5-1279833268</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>10000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016908</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>26BB-1300399948</TxnID>
+      <TxnNumber>1548</TxnNumber>
+      <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-17T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>14693.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016979</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2722-1300981687</TxnID>
+      <TxnNumber>1566</TxnNumber>
+      <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-21T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>48.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016957</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2710-1300981636</TxnID>
+      <TxnNumber>1565</TxnNumber>
+      <CustomerRefListID>800000FB-1285346528</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-21T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4151.90</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016812</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2781-1301087353</TxnID>
+      <TxnNumber>1578</TxnNumber>
+      <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>10.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016602</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>27CD-1301349477</TxnID>
+      <TxnNumber>1590</TxnNumber>
+      <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-24T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4.11</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>27D1-1301349783</TxnID>
+      <TxnNumber>1591</TxnNumber>
+      <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-25T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>203.72</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016785C</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>27C6-1301349413</TxnID>
+      <TxnNumber>1589</TxnNumber>
+      <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-25T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>288.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016798</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>27D7-1301407110</TxnID>
+      <TxnNumber>1593</TxnNumber>
+      <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-03-28T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>260.81</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>27EB-1301408106</TxnID>
+      <TxnNumber>1597</TxnNumber>
+      <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>104.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016958</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>27E5-1301408004</TxnID>
+      <TxnNumber>1596</TxnNumber>
+      <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>705.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016771</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>27DB-1301407760</TxnID>
+      <TxnNumber>1594</TxnNumber>
+      <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>780.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>27DF-1301407841</TxnID>
+      <TxnNumber>1595</TxnNumber>
+      <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>738.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016959</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>29E5-1301668562</TxnID>
+      <TxnNumber>1657</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-03-30T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>958.40</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016960</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2DB7-1303423569</TxnID>
+      <TxnNumber>1828</TxnNumber>
+      <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+      <TotalAmount>12707.96</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2DA7-1303423406</TxnID>
+      <TxnNumber>1825</TxnNumber>
+      <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+      <TotalAmount>4611.83</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2A2E-1301952599</TxnID>
+      <TxnNumber>1668</TxnNumber>
+      <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-04T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>34994.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017028</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2A66-1302025675</TxnID>
+      <TxnNumber>1676</TxnNumber>
+      <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-05T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1238.16</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2AF5-1302129923</TxnID>
+      <TxnNumber>1706</TxnNumber>
+      <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-06T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>382.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017083</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B10-1302300890</TxnID>
+      <TxnNumber>1710</TxnNumber>
+      <CustomerRefListID>800000D3-1274295502</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-08T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4843.02</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017069</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B21-1302300999</TxnID>
+      <TxnNumber>1712</TxnNumber>
+      <CustomerRefListID>80000185-1301673377</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-08T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017156</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B65-1302715155</TxnID>
+      <TxnNumber>1722</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-11T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>6465.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017115</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B4D-1302714194</TxnID>
+      <TxnNumber>1719</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-11T00:00:00-04:00</TxnDate>
+      <RefNumber>BCAS</RefNumber>
+      <TotalAmount>23166.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017120</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B5F-1302714380</TxnID>
+      <TxnNumber>1721</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-11T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1430.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017134</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B87-1302716686</TxnID>
+      <TxnNumber>1725</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-12T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>489.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017112</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B73-1302716535</TxnID>
+      <TxnNumber>1723</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-12T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>17446.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016594</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B81-1302716594</TxnID>
+      <TxnNumber>1724</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-12T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>48.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-01717</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2BAA-1302717288</TxnID>
+      <TxnNumber>1730</TxnNumber>
+      <CustomerRefListID>8000018E-1302111028</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017170</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B8D-1302716765</TxnID>
+      <TxnNumber>1726</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>8008.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017126</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2B9A-1302717190</TxnID>
+      <TxnNumber>1728</TxnNumber>
+      <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>7445.60</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017129</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2BE7-1302790350</TxnID>
+      <TxnNumber>1735</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1482.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017114</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2CAE-1303155964</TxnID>
+      <TxnNumber>1788</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-15T00:00:00-04:00</TxnDate>
+      <TotalAmount>13377.97</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-01716G</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2C5A-1302905247</TxnID>
+      <TxnNumber>1771</TxnNumber>
+      <CustomerRefListID>8000016D-1298576203</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>10303.93</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016868</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2C69-1302906207</TxnID>
+      <TxnNumber>1772</TxnNumber>
+      <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>16970.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017059</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D04-1303234979</TxnID>
+      <TxnNumber>1799</TxnNumber>
+      <CustomerRefListID>80000180-1300303100</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-18T00:00:00-04:00</TxnDate>
+      <TotalAmount>581.12</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-0168152E</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2CF3-1303234448</TxnID>
+      <TxnNumber>1796</TxnNumber>
+      <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>460.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017109</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2CF9-1303234474</TxnID>
+      <TxnNumber>1797</TxnNumber>
+      <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>118.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016951</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D48-1303312341</TxnID>
+      <TxnNumber>1811</TxnNumber>
+      <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2563.20</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016810</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D84-1303320961</TxnID>
+      <TxnNumber>1820</TxnNumber>
+      <CustomerRefListID>80000190-1302618930</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-19T00:00:00-04:00</TxnDate>
+      <TotalAmount>1500.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017185</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D09-1303235024</TxnID>
+      <TxnNumber>1800</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2561.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017121</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D1F-1303235160</TxnID>
+      <TxnNumber>1801</TxnNumber>
+      <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-19T00:00:00-04:00</TxnDate>
+      <TotalAmount>688.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017006</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D26-1303235222</TxnID>
+      <TxnNumber>1802</TxnNumber>
+      <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-19T00:00:00-04:00</TxnDate>
+      <TotalAmount>25.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017125</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D55-1303312936</TxnID>
+      <TxnNumber>1813</TxnNumber>
+      <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-20T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>146.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017121</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D4F-1303312884</TxnID>
+      <TxnNumber>1812</TxnNumber>
+      <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-20T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>630.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016897</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2DE3-1303843945</TxnID>
+      <TxnNumber>1838</TxnNumber>
+      <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-26T00:00:00-04:00</TxnDate>
+      <TotalAmount>11.32</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016967</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2DEA-1303843973</TxnID>
+      <TxnNumber>1839</TxnNumber>
+      <CustomerRefListID>80000116-1288733649</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-26T00:00:00-04:00</TxnDate>
+      <TotalAmount>3.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-06931</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2DDC-1303843799</TxnID>
+      <TxnNumber>1837</TxnNumber>
+      <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-26T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>45.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016768</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2D5F-1303319714</TxnID>
+      <TxnNumber>1814</TxnNumber>
+      <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-04-27T00:00:00-04:00</TxnDate>
+      <RefNumber>56-00-03</RefNumber>
+      <TotalAmount>2807.24</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016783, DA-016919</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2E49-1304011201</TxnID>
+      <TxnNumber>1851</TxnNumber>
+      <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-04-27T00:00:00-04:00</TxnDate>
+      <TotalAmount>2000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017155, DA-017175</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>365A-1307032311</TxnID>
+      <TxnNumber>2143</TxnNumber>
+      <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+      <TotalAmount>6408.96</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3655-1307032295</TxnID>
+      <TxnNumber>2142</TxnNumber>
+      <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+      <TotalAmount>11512.49</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2FE1-1304437119</TxnID>
+      <TxnNumber>1902</TxnNumber>
+      <CustomerRefListID>8000018F-1302279033</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-02T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017146</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2FEB-1304438768</TxnID>
+      <TxnNumber>1904</TxnNumber>
+      <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-03T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>9994.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017202</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>2FF4-1304439252</TxnID>
+      <TxnNumber>1905</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-03T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>36.40</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016964</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3024-1304527282</TxnID>
+      <TxnNumber>1916</TxnNumber>
+      <CustomerRefListID>8000019B-1304449648</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-03T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017237</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3047-1304606384</TxnID>
+      <TxnNumber>1921</TxnNumber>
+      <CustomerRefListID>80000198-1303761778</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-05T00:00:00-04:00</TxnDate>
+      <TotalAmount>1500.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017198</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>30FB-1304962883</TxnID>
+      <TxnNumber>1955</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-05T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>562.90</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017107</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>32F0-1305652589</TxnID>
+      <TxnNumber>2036</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-05T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>331.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017118</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>30D0-1304962041</TxnID>
+      <TxnNumber>1950</TxnNumber>
+      <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-06T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>954.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016909</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>30E6-1304962185</TxnID>
+      <TxnNumber>1952</TxnNumber>
+      <CustomerRefListID>8000019A-1304436051</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-09T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>3600.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017234</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>313B-1305147286</TxnID>
+      <TxnNumber>1962</TxnNumber>
+      <CustomerRefListID>8000019E-1305129445</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-09T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016937</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>30ED-1304962787</TxnID>
+      <TxnNumber>1953</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-09T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>19100.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017116</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>30F5-1304962816</TxnID>
+      <TxnNumber>1954</TxnNumber>
+      <CustomerRefListID>80000103-1285963347</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-09T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>10000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017169</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3144-1305147577</TxnID>
+      <TxnNumber>1964</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-10T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>19338.79</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017235</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>317A-1305211132</TxnID>
+      <TxnNumber>1966</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-11T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>253.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017296</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>315E-1305159680</TxnID>
+      <TxnNumber>1965</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-11T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>764.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017294</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3295-1305315773</TxnID>
+      <TxnNumber>2018</TxnNumber>
+      <CustomerRefListID>80000188-1302107686</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-12T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>380.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017289</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3181-1305211188</TxnID>
+      <TxnNumber>1967</TxnNumber>
+      <CustomerRefListID>80000170-1299259892</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-12T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>750.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017132</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>328C-1305315687</TxnID>
+      <TxnNumber>2017</TxnNumber>
+      <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-12T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>3485.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017304</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>32AD-1305316720</TxnID>
+      <TxnNumber>2021</TxnNumber>
+      <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>690.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA--017288</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>32A3-1305316025</TxnID>
+      <TxnNumber>2020</TxnNumber>
+      <CustomerRefListID>8000010B-1286990117</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017265</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3310-1305664850</TxnID>
+      <TxnNumber>2038</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>3143.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017299</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>329C-1305315858</TxnID>
+      <TxnNumber>2019</TxnNumber>
+      <CustomerRefListID>80000189-1302107877</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>9770.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017290</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3303-1305664755</TxnID>
+      <TxnNumber>2037</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>3007.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017302</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>333B-1305665275</TxnID>
+      <TxnNumber>2042</TxnNumber>
+      <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-17T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>328.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3335-1305665176</TxnID>
+      <TxnNumber>2041</TxnNumber>
+      <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-17T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1380.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-01786</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>331F-1305665038</TxnID>
+      <TxnNumber>2039</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-17T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>15403.20</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017306</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>332A-1305665135</TxnID>
+      <TxnNumber>2040</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-17T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1079.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017297</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>347B-1305917860</TxnID>
+      <TxnNumber>2087</TxnNumber>
+      <CustomerRefListID>8000016D-1298576203</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-20T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>9774.17</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017027</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>34F4-1306273182</TxnID>
+      <TxnNumber>2102</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-23T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>8.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017305</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>34D9-1306272745</TxnID>
+      <TxnNumber>2101</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-23T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1302.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017426</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>34C1-1306272629</TxnID>
+      <TxnNumber>2098</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-23T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>11688.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017427</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>34D0-1306272708</TxnID>
+      <TxnNumber>2100</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-23T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1701.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017428</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3521-1306274100</TxnID>
+      <TxnNumber>2107</TxnNumber>
+      <CustomerRefListID>80000181-1300476320</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-24T00:00:00-04:00</TxnDate>
+      <TotalAmount>5000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017009</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>350B-1306273371</TxnID>
+      <TxnNumber>2105</TxnNumber>
+      <CustomerRefListID>80000123-1291907454</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-24T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>47.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016739</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3585-1306419622</TxnID>
+      <TxnNumber>2112</TxnNumber>
+      <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-24T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1353.60</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016940</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>34CA-1306272661</TxnID>
+      <TxnNumber>2099</TxnNumber>
+      <CustomerRefListID>800000C2-1273094544</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-24T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017023</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>34FB-1306273291</TxnID>
+      <TxnNumber>2103</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-24T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>3127.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017420</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3502-1306273335</TxnID>
+      <TxnNumber>2104</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-24T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>836.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017432</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3598-1306435548</TxnID>
+      <TxnNumber>2114</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-25T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>321.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017423</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3591-1306435367</TxnID>
+      <TxnNumber>2113</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-25T00:00:00-04:00</TxnDate>
+      <RefNumber>BCAS</RefNumber>
+      <TotalAmount>133.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017422</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>357A-1306419216</TxnID>
+      <TxnNumber>2111</TxnNumber>
+      <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-26T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>592.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017225</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>35A3-1306435587</TxnID>
+      <TxnNumber>2115</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-26T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017419</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3486-1305918198</TxnID>
+      <TxnNumber>2088</TxnNumber>
+      <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-05-26T00:00:00-04:00</TxnDate>
+      <TotalAmount>87.10</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>Check Received 5/19/11, waiting to be processed to UK bank</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>35C2-1306514582</TxnID>
+      <TxnNumber>2119</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-27T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>7694.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017293</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>35B9-1306514541</TxnID>
+      <TxnNumber>2118</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-27T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1736.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017425</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>362F-1306961357</TxnID>
+      <TxnNumber>2134</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-05-31T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1024.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017110</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3EAC-1310672746</TxnID>
+      <TxnNumber>2469</TxnNumber>
+      <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+      <TotalAmount>11099.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3EA7-1310672727</TxnID>
+      <TxnNumber>2468</TxnNumber>
+      <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+      <TotalAmount>8970.25</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>37BF-1307397904</TxnID>
+      <TxnNumber>2179</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-02T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>152.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017424</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>37D0-1307398012</TxnID>
+      <TxnNumber>2181</TxnNumber>
+      <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-06T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>15000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017440</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>389C-1307732361</TxnID>
+      <TxnNumber>2219</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-09T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1765.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017453</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3885-1307650055</TxnID>
+      <TxnNumber>2217</TxnNumber>
+      <CustomerRefListID>8000018F-1302279033</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-09T00:00:00-04:00</TxnDate>
+      <TotalAmount>2000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017432</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>38AE-1307732448</TxnID>
+      <TxnNumber>2221</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-10T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>794.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017445</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>38A5-1307732407</TxnID>
+      <TxnNumber>2220</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-10T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>25131.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017452</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>38EB-1308080179</TxnID>
+      <TxnNumber>2233</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>218.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017418</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>38E4-1308080158</TxnID>
+      <TxnNumber>2232</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>220.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017443</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>38D6-1308080038</TxnID>
+      <TxnNumber>2230</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>9552.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017416</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>38DD-1308080130</TxnID>
+      <TxnNumber>2231</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>370.40</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017460</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39FF-1308253833</TxnID>
+      <TxnNumber>2292</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1742.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017295</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3A08-1308253872</TxnID>
+      <TxnNumber>2293</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>478.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017291</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39F8-1308253798</TxnID>
+      <TxnNumber>2291</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>374.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017113</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3A0F-1308253901</TxnID>
+      <TxnNumber>2294</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>240.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017421</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39C8-1308253524</TxnID>
+      <TxnNumber>2286</TxnNumber>
+      <CustomerRefListID>80000123-1291907454</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>224.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-016453, DA-016590, DA-016930</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39D8-1308253589</TxnID>
+      <TxnNumber>2287</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>17116.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017456</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39E1-1308253649</TxnID>
+      <TxnNumber>2288</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>518.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017458</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39F1-1308253767</TxnID>
+      <TxnNumber>2290</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>59.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017442</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39EA-1308253708</TxnID>
+      <TxnNumber>2289</TxnNumber>
+      <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>254.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017451</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39C4-1308250026</TxnID>
+      <TxnNumber>2285</TxnNumber>
+      <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1255.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>Refunded - Wire</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>38CD-1308079976</TxnID>
+      <TxnNumber>2229</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2653.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017449</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>39B7-1308249448</TxnID>
+      <TxnNumber>2284</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>698.10</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017286</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3AD2-1308691513</TxnID>
+      <TxnNumber>2328</TxnNumber>
+      <CustomerRefListID>80000170-1299259892</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-17T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>270.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017314</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3AE8-1308691728</TxnID>
+      <TxnNumber>2331</TxnNumber>
+      <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-06-21T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1944.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017246</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3AD8-1308691569</TxnID>
+      <TxnNumber>2329</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-21T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5508.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3AE0-1308691651</TxnID>
+      <TxnNumber>2330</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-21T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>435.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017350</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3AFA-1308865247</TxnID>
+      <TxnNumber>2335</TxnNumber>
+      <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-06-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>464.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017417</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3B1E-1308865416</TxnID>
+      <TxnNumber>2339</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4915.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017533</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3B05-1308865321</TxnID>
+      <TxnNumber>2336</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2320.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017535</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3B0E-1308865364</TxnID>
+      <TxnNumber>2337</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>13717.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017532</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3B17-1308865394</TxnID>
+      <TxnNumber>2338</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>183.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017526</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3B8C-1308937659</TxnID>
+      <TxnNumber>2355</TxnNumber>
+      <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-06-24T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1404.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017087</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3C63-1309282246</TxnID>
+      <TxnNumber>2381</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-28T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>80.80</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017538</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3C5C-1309282211</TxnID>
+      <TxnNumber>2380</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-28T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017525</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3C8D-1309440539</TxnID>
+      <TxnNumber>2386</TxnNumber>
+      <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>114.40</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>Payment was already processed via credit card in USD QB</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3C86-1309439690</TxnID>
+      <TxnNumber>2385</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>24.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017523</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3C91-1309440617</TxnID>
+      <TxnNumber>2387</TxnNumber>
+      <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>120.90</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>Payment was already received ($52.00 + 68.90)</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3C6A-1309439050</TxnID>
+      <TxnNumber>2382</TxnNumber>
+      <CustomerRefListID>800001A6-1307551517</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>63.75</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017462</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3C78-1309439335</TxnID>
+      <TxnNumber>2383</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>52.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017537</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3C7F-1309439398</TxnID>
+      <TxnNumber>2384</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-06-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>68.90</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017461</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3CB3-1309530504</TxnID>
+      <TxnNumber>2392</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>586.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017444</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3CAD-1309530459</TxnID>
+      <TxnNumber>2391</TxnNumber>
+      <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>765.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017254</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3CC5-1309873952</TxnID>
+      <TxnNumber>2395</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-04T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>330.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017447</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3CCC-1309874128</TxnID>
+      <TxnNumber>2396</TxnNumber>
+      <CustomerRefListID>8000005F-1270497718</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-07-05T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2011.99</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017199</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3D3E-1309979648</TxnID>
+      <TxnNumber>2408</TxnNumber>
+      <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-06T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4500.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017442, DA-017443</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3D1A-1309979459</TxnID>
+      <TxnNumber>2405</TxnNumber>
+      <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-06T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>124.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017259, DA-017403, DA-017438, DA-017518</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3DDD-1310137685</TxnID>
+      <TxnNumber>2438</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-08T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>294.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017529</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3DD8-1310137629</TxnID>
+      <TxnNumber>2437</TxnNumber>
+      <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-08T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2500.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017445</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E78-1310662794</TxnID>
+      <TxnNumber>2463</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-11T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>52.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017540</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E71-1310662736</TxnID>
+      <TxnNumber>2462</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-11T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>494.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017300</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E68-1310662540</TxnID>
+      <TxnNumber>2461</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>7526.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017616</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E63-1310662453</TxnID>
+      <TxnNumber>2460</TxnNumber>
+      <CustomerRefListID>8000010B-1286990117</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017563</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E4A-1310661947</TxnID>
+      <TxnNumber>2457</TxnNumber>
+      <CustomerRefListID>8000018F-1302279033</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5000.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017616</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E50-1310662178</TxnID>
+      <TxnNumber>2458</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-13T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>5189.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017606</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E96-1310663515</TxnID>
+      <TxnNumber>2467</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>721.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017614</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E82-1310663097</TxnID>
+      <TxnNumber>2465</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>66.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017613</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3E8B-1310663120</TxnID>
+      <TxnNumber>2466</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-14T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>264.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017595</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3F55-1311083191</TxnID>
+      <TxnNumber>2495</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-07-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>27089.25</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017548</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3ED7-1311081261</TxnID>
+      <TxnNumber>2478</TxnNumber>
+      <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-15T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>173.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017600</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3EF3-1311081842</TxnID>
+      <TxnNumber>2482</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>198.90</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017411, DA-017527, DA-017601</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3EEC-1311081556</TxnID>
+      <TxnNumber>2481</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>284.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017522</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3EDE-1311081409</TxnID>
+      <TxnNumber>2479</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>188.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017108</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3EE5-1311081481</TxnID>
+      <TxnNumber>2480</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>706.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017287</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3F44-1311082641</TxnID>
+      <TxnNumber>2492</TxnNumber>
+      <CustomerRefListID>80000136-1293566219</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>598.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017441</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3EF7-1311081885</TxnID>
+      <TxnNumber>2483</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1199.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017604</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3F00-1311082015</TxnID>
+      <TxnNumber>2484</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>314.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017448</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>3FF0-1311256695</TxnID>
+      <TxnNumber>2512</TxnNumber>
+      <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-20T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>14016.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017429, DA-017608</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>408A-1311282065</TxnID>
+      <TxnNumber>2550</TxnNumber>
+      <CustomerRefListID>80000067-1270497719</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-21T00:00:00-04:00</TxnDate>
+      <TotalAmount>0.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>BAD DEBT will be accounted for 2010 Tax return added on 7/21/2011</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4007-1311257048</TxnID>
+      <TxnNumber>2513</TxnNumber>
+      <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-21T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>374.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4102-1311776981</TxnID>
+      <TxnNumber>2569</TxnNumber>
+      <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-07-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2610.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017442</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>40BD-1311774855</TxnID>
+      <TxnNumber>2558</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2408.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017292, DA-017603</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>410E-1311777070</TxnID>
+      <TxnNumber>2571</TxnNumber>
+      <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-07-25T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1993.20</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017165</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4109-1311777009</TxnID>
+      <TxnNumber>2570</TxnNumber>
+      <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-07-25T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>15.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017267</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>40C4-1311774940</TxnID>
+      <TxnNumber>2559</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-25T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4764.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017678</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>40CD-1311775008</TxnID>
+      <TxnNumber>2560</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-25T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>10515.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017676</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4117-1311777117</TxnID>
+      <TxnNumber>2572</TxnNumber>
+      <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-07-26T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>258.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017542</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>40D6-1311775058</TxnID>
+      <TxnNumber>2561</TxnNumber>
+      <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-26T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1395.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017437</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4120-1311777154</TxnID>
+      <TxnNumber>2573</TxnNumber>
+      <CustomerRefListID>800001A4-1306949197</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-07-27T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>827.52</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017416</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>40DC-1311775100</TxnID>
+      <TxnNumber>2562</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-27T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>102.40</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017681</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>40E3-1311775143</TxnID>
+      <TxnNumber>2563</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-27T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>167.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017690</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4156-1311959441</TxnID>
+      <TxnNumber>2578</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-28T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2023.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>Da-017692</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4204-1312378388</TxnID>
+      <TxnNumber>2595</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-07-29T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1571.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017675</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4269-1312378802</TxnID>
+      <TxnNumber>2599</TxnNumber>
+      <CustomerRefListID>8000005F-1270497718</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-08-02T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>894.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017618</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>420D-1312378430</TxnID>
+      <TxnNumber>2596</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-02T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>22528.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017677</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4216-1312378595</TxnID>
+      <TxnNumber>2597</TxnNumber>
+      <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-03T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>16672.60</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017301, DA-017413</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>441D-1312811956</TxnID>
+      <TxnNumber>2648</TxnNumber>
+      <CustomerRefListID>800001A6-1307551517</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-04T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>660.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017594</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4416-1312811755</TxnID>
+      <TxnNumber>2647</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-04T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>890.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017528</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4423-1312812354</TxnID>
+      <TxnNumber>2649</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-05T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>25358.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>442E-1312812772</TxnID>
+      <TxnNumber>2651</TxnNumber>
+      <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-08-08T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>347.39</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017150</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4427-1312812389</TxnID>
+      <TxnNumber>2650</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-08T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>642.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017674</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>455F-1313499579</TxnID>
+      <TxnNumber>2690</TxnNumber>
+      <CustomerRefListID>800000D3-1274295502</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-08-10T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1260.38</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017765</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4530-1313444413</TxnID>
+      <TxnNumber>2685</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-10T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>570.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017688</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4556-1313499531</TxnID>
+      <TxnNumber>2689</TxnNumber>
+      <CustomerRefListID>800001A4-1306949197</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-08-10T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>773.04</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017544</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>45C0-1313501668</TxnID>
+      <TxnNumber>2701</TxnNumber>
+      <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-11T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017611, DA-017683</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4544-1313444817</TxnID>
+      <TxnNumber>2687</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-12T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>7762.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017783</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>453B-1313444777</TxnID>
+      <TxnNumber>2686</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-12T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>13153.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017781</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>454D-1313499366</TxnID>
+      <TxnNumber>2688</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2029.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017792</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>46DC-1313674516</TxnID>
+      <TxnNumber>2734</TxnNumber>
+      <CustomerRefListID>8000016C-1298562310</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-17T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1476.40</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017322</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>46BF-1313673980</TxnID>
+      <TxnNumber>2733</TxnNumber>
+      <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-17T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>516.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017630, DA017631, DA-017721</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>46F3-1313674799</TxnID>
+      <TxnNumber>2737</TxnNumber>
+      <CustomerRefListID>800001B1-1312321901</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>94.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017726</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>46E4-1313674589</TxnID>
+      <TxnNumber>2735</TxnNumber>
+      <CustomerRefListID>80000170-1299259892</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>250.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017439</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>46EA-1313674754</TxnID>
+      <TxnNumber>2736</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-18T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>349.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017791</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>470A-1314018228</TxnID>
+      <TxnNumber>2742</TxnNumber>
+      <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+      <ARAccountRefFullName>Accounts Receivable - GBP</ARAccountRefFullName>
+      <TxnDate>2011-08-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>32301.88</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017624</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4767-1314040959</TxnID>
+      <TxnNumber>2749</TxnNumber>
+      <CustomerRefListID>80000190-1302618930</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>500.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017798</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4740-1314039174</TxnID>
+      <TxnNumber>2745</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>1002.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017779</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>474B-1314039492</TxnID>
+      <TxnNumber>2746</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2130.00</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-17780</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4754-1314040039</TxnID>
+      <TxnNumber>2747</TxnNumber>
+      <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-19T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>4.50</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017689 AND DA-017599</Memo>
+    </ReceivedPayment>
+    <ReceivedPayment>
+      <TxnID>4732-1314038844</TxnID>
+      <TxnNumber>2744</TxnNumber>
+      <CustomerRefListID>800001A6-1307551517</CustomerRefListID>
+      <ARAccountRefFullName>*Accounts Receivable - EUR</ARAccountRefFullName>
+      <TxnDate>2011-08-22T00:00:00-04:00</TxnDate>
+      <RefNumber>BACS</RefNumber>
+      <TotalAmount>2306.75</TotalAmount>
+      <PaymentMethodRefFullName>BACS</PaymentMethodRefFullName>
+      <Memo>DA-017766</Memo>
+    </ReceivedPayment>
+  </ReceivedPayments>
+</Settings>

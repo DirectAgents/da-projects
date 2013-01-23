@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/clickDetail/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/clickDetail/v1_0"
+elementFormDefault="qualified">
+
+<!-- simple elements -->
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+    <xs:element name="affiliateResourceURL">
+        <xs:complexType>
+            <xs:attribute name="location" type="resourceURI" use="required"/>
+        </xs:complexType>
+    </xs:element>   
+    
+    <xs:element name="campaignResourceURL">
+        <xs:complexType>
+            <xs:attribute name="location" type="resourceURI" use="required"/>
+        </xs:complexType>
+    </xs:element>   
+    
+    <xs:element name="creativeResourceURL">
+        <xs:complexType>
+            <xs:attribute name="location" type="resourceURI" use="required"/>
+        </xs:complexType>
+    </xs:element>   
+    
+    <xs:element name="creativeDeploymentResourceURL">
+        <xs:complexType>
+            <xs:attribute name="location" type="resourceURI" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cookieID">
+        <xs:simpleType>
+           <xs:restriction base="xs:string">
+                <xs:maxLength value="32"/>
+           </xs:restriction>
+        </xs:simpleType>
+    </xs:element> 
+    
+    <xs:element name="clickDate">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+                <xs:maxLength value="19"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="ip">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="20"/>
+                <xs:pattern value="(\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3})?"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="referrer">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="255"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>    
+    
+    <xs:element name="affOptInfo">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="255"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="landingPageID" type="xs:unsignedInt"/>
+    
+    <xs:element name="poolID" type="xs:unsignedInt"/>
+    
+    <xs:element name="userAgent">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="subID1">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="subID2">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="subID3">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="subID4">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="subID5">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:maxLength value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="subIDs">
+      <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="subID1" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="subID2" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="subID3" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="subID4" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="subID5" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+<!-- END simple elements -->
+
+<!-- complex elements -->
+    
+<!-- END complex elements -->
+
+<!-- PRIMARY ELEMENT -->
+    <xs:element name="clickDetail">
+      <xs:complexType>
+        <xs:sequence>
+            <xs:element ref="affiliateResourceURL" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="campaignResourceURL" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="creativeResourceURL" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="creativeDeploymentResourceURL" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="cookieID" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="clickDate" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="ip" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="referrer" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="affOptInfo" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="landingPageID" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="poolID" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="userAgent" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="subIDs" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="location" type="resourceURI"/>
+      </xs:complexType>
+    </xs:element>
+<!-- END PRIMARY ELEMENT -->
+
+</xs:schema>

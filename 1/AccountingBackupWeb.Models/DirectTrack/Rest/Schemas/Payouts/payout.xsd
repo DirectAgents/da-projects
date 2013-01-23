@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/payout/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/payout/v1_0"
+elementFormDefault="qualified">
+
+	<!-- start definition of simple elements -->
+	<xs:simpleType name="booleanInt">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+		
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="payoutType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="campaign"/>
+				<xs:enumeration value="affiliate"/>
+				<xs:enumeration value="product"/>
+				<xs:enumeration value="view-through campaign"/>
+				<xs:enumeration value="view-through affiliate"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="impression">
+ 		<xs:simpleType>
+           <xs:restriction base='xs:decimal'>
+	           <xs:totalDigits value='10'/>
+	           <xs:fractionDigits value='2'/>
+	           <xs:minInclusive value='0'/>
+	           <xs:maxInclusive value='99999999.99'/>
+           </xs:restriction>
+ 		</xs:simpleType>
+	</xs:element>
+	<xs:element name="click">
+ 		<xs:simpleType>
+           <xs:restriction base='xs:decimal'>
+	           <xs:totalDigits value='10'/>
+	           <xs:fractionDigits value='2'/>
+	           <xs:minInclusive value='0'/>
+	           <xs:maxInclusive value='99999999.99'/>
+           </xs:restriction>
+ 		</xs:simpleType>
+	</xs:element>
+	<xs:element name="lead">
+ 		<xs:simpleType>
+           <xs:restriction base='xs:decimal'>
+	           <xs:totalDigits value='10'/>
+	           <xs:fractionDigits value='2'/>
+	           <xs:minInclusive value='0'/>
+	           <xs:maxInclusive value='99999999.99'/>
+           </xs:restriction>
+ 		</xs:simpleType>
+	</xs:element>
+	<xs:element name="percentSale">
+ 		<xs:simpleType>
+           <xs:restriction base='xs:decimal'>
+	           <xs:totalDigits value='10'/>
+	           <xs:fractionDigits value='2'/>
+	           <xs:minInclusive value='0'/>
+	           <xs:maxInclusive value='99999999.99'/>
+           </xs:restriction>
+ 		</xs:simpleType>
+	</xs:element>
+	<xs:element name="flatSale">
+ 		<xs:simpleType>
+           <xs:restriction base='xs:decimal'>
+	           <xs:totalDigits value='10'/>
+	           <xs:fractionDigits value='2'/>
+	           <xs:minInclusive value='0'/>
+	           <xs:maxInclusive value='99999999.99'/>
+           </xs:restriction>
+ 		</xs:simpleType>
+	</xs:element>
+	<xs:element name="percentSubSale">
+ 		<xs:simpleType>
+           <xs:restriction base='xs:decimal'>
+	           <xs:totalDigits value='10'/>
+	           <xs:fractionDigits value='2'/>
+	           <xs:minInclusive value='0'/>
+	           <xs:maxInclusive value='99999999.99'/>
+           </xs:restriction>
+ 		</xs:simpleType>
+	</xs:element>
+	<xs:element name="flatSubSale">
+ 		<xs:simpleType>
+           <xs:restriction base='xs:decimal'>
+	           <xs:totalDigits value='10'/>
+	           <xs:fractionDigits value='2'/>
+	           <xs:minInclusive value='0'/>
+	           <xs:maxInclusive value='99999999.99'/>
+           </xs:restriction>
+ 		</xs:simpleType>
+	</xs:element>
+	<xs:element name="effectiveDate">
+     <xs:simpleType>
+      <xs:restriction base="xs:string">
+       <xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+       <xs:maxLength value="10"/>
+      </xs:restriction>
+     </xs:simpleType>
+    </xs:element>
+    <xs:element name="modifyDate">
+     <xs:simpleType>
+      <xs:restriction base="xs:string">
+       <xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+       <xs:maxLength value="10"/>
+      </xs:restriction>
+     </xs:simpleType>
+    </xs:element>
+    <xs:element name="currency">
+     <xs:simpleType>
+	  <xs:restriction base="xs:string">
+	  <xs:maxLength value="3"/>
+	  <xs:minLength value="3"/>
+	  </xs:restriction>
+	 </xs:simpleType> 
+	</xs:element>
+	<!-- end definition of simple elements -->
+
+	<!-- start definition of attributes -->
+	<!-- end definition of attributes -->
+
+	<!-- start definition of complex elements -->
+	<xs:element name="campaignResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="productResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="affiliate">
+		<xs:complexType>
+			<xs:attribute name="allAffiliates" type="booleanInt"/>
+			<!-- <xs:attribute name="affiliateCode" type="xs:string"/> -->
+            <xs:attribute name="affiliateResourceURL" type="resourceURI"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="payout">
+	  <xs:complexType>
+	    <xs:sequence>
+				<xs:element ref="payoutType" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="campaignResourceURL" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="affiliate" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="impression" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="click" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="lead" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="percentSale" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="flatSale" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="percentSubSale" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="flatSubSale" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="effectiveDate" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="modifyDate" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="productResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="currency" minOccurs="0" maxOccurs="1"/>
+	    </xs:sequence>
+		<xs:attribute name="location" type="resourceURI"/>
+	  </xs:complexType>
+	</xs:element>
+	<!-- end definition of complex elements -->
+
+</xs:schema>

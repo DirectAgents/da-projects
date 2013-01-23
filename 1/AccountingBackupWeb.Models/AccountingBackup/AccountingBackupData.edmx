@@ -1,0 +1,2049 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ABWebDatabase1Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="ABWebDatabase1ModelStoreContainer">
+    <EntitySet Name="Advertisers" EntityType="ABWebDatabase1Model.Store.Advertisers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Currencies" EntityType="ABWebDatabase1Model.Store.Currencies" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Employees" EntityType="ABWebDatabase1Model.Store.Employees" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Periods" EntityType="ABWebDatabase1Model.Store.Periods" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SpendItems" EntityType="ABWebDatabase1Model.Store.SpendItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UnitTypes" EntityType="ABWebDatabase1Model.Store.UnitTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Invoices" EntityType="ABWebDatabase1Model.Store.Invoices" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Terms" EntityType="ABWebDatabase1Model.Store.Terms" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Customers" EntityType="ABWebDatabase1Model.Store.Customers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Companies" EntityType="ABWebDatabase1Model.Store.Companies" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ReceivedPayments" EntityType="ABWebDatabase1Model.Store.ReceivedPayments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="AccountsReceivable" EntityType="ABWebDatabase1Model.Store.AccountsReceivable" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SynchTimes" EntityType="ABWebDatabase1Model.Store.SynchTimes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Notes" EntityType="ABWebDatabase1Model.Store.Notes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CampaignSpends" EntityType="ABWebDatabase1Model.Store.CampaignSpends" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Campaigns" EntityType="ABWebDatabase1Model.Store.Campaigns" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Rates" EntityType="ABWebDatabase1Model.Store.Rates" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="vAdvertiserEmployees" EntityType="ABWebDatabase1Model.Store.vAdvertiserEmployees" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EntryTypes" EntityType="ABWebDatabase1Model.Store.EntryTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Logs" EntityType="ABWebDatabase1Model.Store.Logs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="CreditMemoes" EntityType="ABWebDatabase1Model.Store.CreditMemoes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="QuickBooksTables" EntityType="ABWebDatabase1Model.Store.QuickBooksTables" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="QuickBooksColumns" EntityType="ABWebDatabase1Model.Store.QuickBooksColumns" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BudgetReportRows" EntityType="ABWebDatabase1Model.Store.BudgetReportRows" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tabs" EntityType="ABWebDatabase1Model.Store.Tabs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TabGroups" EntityType="ABWebDatabase1Model.Store.TabGroups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TabTabGroup" EntityType="ABWebDatabase1Model.Store.TabTabGroup" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="ARAccountReceivedPayment" Association="ABWebDatabase1Model.Store.ARAccountReceivedPayment">
+      <End Role="ARAccount" EntitySet="AccountsReceivable" />
+      <End Role="ReceivedPayment" EntitySet="ReceivedPayments" />
+    </AssociationSet>
+    <AssociationSet Name="CurrencyARAccount" Association="ABWebDatabase1Model.Store.CurrencyARAccount">
+      <End Role="Currency" EntitySet="Currencies" />
+      <End Role="ARAccount" EntitySet="AccountsReceivable" />
+    </AssociationSet>
+    <AssociationSet Name="QuickBooksCompanyCustomer" Association="ABWebDatabase1Model.Store.QuickBooksCompanyCustomer">
+      <End Role="QuickBooksCompany" EntitySet="Companies" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerInvoice" Association="ABWebDatabase1Model.Store.CustomerInvoice">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Invoice" EntitySet="Invoices" />
+    </AssociationSet>
+    <AssociationSet Name="TermsInvoice" Association="ABWebDatabase1Model.Store.TermsInvoice">
+      <End Role="Terms" EntitySet="Terms" />
+      <End Role="Invoice" EntitySet="Invoices" />
+    </AssociationSet>
+    <AssociationSet Name="AdvertiserCustomer" Association="ABWebDatabase1Model.Store.AdvertiserCustomer">
+      <End Role="Advertiser" EntitySet="Advertisers" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerReceivedPayment" Association="ABWebDatabase1Model.Store.CustomerReceivedPayment">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="ReceivedPayment" EntitySet="ReceivedPayments" />
+    </AssociationSet>
+    <AssociationSet Name="AccountReceivableInvoice" Association="ABWebDatabase1Model.Store.AccountReceivableInvoice">
+      <End Role="AccountReceivable" EntitySet="AccountsReceivable" />
+      <End Role="Invoice" EntitySet="Invoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CurrencyCampaignSpend" Association="ABWebDatabase1Model.Store.FK_CurrencyCampaignSpend">
+      <End Role="Currency" EntitySet="Currencies" />
+      <End Role="CampaignSpend" EntitySet="CampaignSpends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PeriodCampaignSpend" Association="ABWebDatabase1Model.Store.FK_PeriodCampaignSpend">
+      <End Role="Period" EntitySet="Periods" />
+      <End Role="CampaignSpend" EntitySet="CampaignSpends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UnitTypeCampaignSpend" Association="ABWebDatabase1Model.Store.FK_UnitTypeCampaignSpend">
+      <End Role="UnitType" EntitySet="UnitTypes" />
+      <End Role="CampaignSpend" EntitySet="CampaignSpends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_AdvertiserCampaign" Association="ABWebDatabase1Model.Store.FK_AdvertiserCampaign">
+      <End Role="Advertiser" EntitySet="Advertisers" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CampaignCampaignSpend" Association="ABWebDatabase1Model.Store.FK_CampaignCampaignSpend">
+      <End Role="Campaign" EntitySet="Campaigns" />
+      <End Role="CampaignSpend" EntitySet="CampaignSpends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeCampaign" Association="ABWebDatabase1Model.Store.FK_EmployeeCampaign">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EmployeeCampaign1" Association="ABWebDatabase1Model.Store.FK_EmployeeCampaign1">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CurrencyRate" Association="ABWebDatabase1Model.Store.FK_CurrencyRate">
+      <End Role="Currency" EntitySet="Currencies" />
+      <End Role="Rate" EntitySet="Rates" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PeriodRate" Association="ABWebDatabase1Model.Store.FK_PeriodRate">
+      <End Role="Period" EntitySet="Periods" />
+      <End Role="Rate" EntitySet="Rates" />
+    </AssociationSet>
+    <AssociationSet Name="TermsCustomer" Association="ABWebDatabase1Model.Store.TermsCustomer">
+      <End Role="Terms" EntitySet="Terms" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="AdvertiserTerms" Association="ABWebDatabase1Model.Store.AdvertiserTerms">
+      <End Role="Advertiser" EntitySet="Advertisers" />
+      <End Role="Terms" EntitySet="Terms" />
+    </AssociationSet>
+    <AssociationSet Name="AdvertiserCurrency" Association="ABWebDatabase1Model.Store.AdvertiserCurrency">
+      <End Role="Advertiser" EntitySet="Advertisers" />
+      <End Role="Currency" EntitySet="Currencies" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LogEntryType" Association="ABWebDatabase1Model.Store.FK_LogEntryType">
+      <End Role="EntryType" EntitySet="EntryTypes" />
+      <End Role="Log" EntitySet="Logs" />
+    </AssociationSet>
+    <AssociationSet Name="QuickBooksTableQuickBooksColumn" Association="ABWebDatabase1Model.Store.QuickBooksTableQuickBooksColumn">
+      <End Role="QuickBooksTable" EntitySet="QuickBooksTables" />
+      <End Role="QuickBooksColumn" EntitySet="QuickBooksColumns" />
+    </AssociationSet>
+    <AssociationSet Name="CustomerCreditMemo" Association="ABWebDatabase1Model.Store.CustomerCreditMemo">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="CreditMemo" EntitySet="CreditMemoes" />
+    </AssociationSet>
+    <AssociationSet Name="AccountReceivableCreditMemo" Association="ABWebDatabase1Model.Store.AccountReceivableCreditMemo">
+      <End Role="AccountReceivable" EntitySet="AccountsReceivable" />
+      <End Role="CreditMemo" EntitySet="CreditMemoes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TabTabGroup_Tab" Association="ABWebDatabase1Model.Store.FK_TabTabGroup_Tab">
+      <End Role="Tab" EntitySet="Tabs" />
+      <End Role="TabTabGroup" EntitySet="TabTabGroup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TabTabGroup_TabGroup" Association="ABWebDatabase1Model.Store.FK_TabTabGroup_TabGroup">
+      <End Role="TabGroup" EntitySet="TabGroups" />
+      <End Role="TabTabGroup" EntitySet="TabTabGroup" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Advertisers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreditCheck" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreditLimit" Type="decimal" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EOM" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Suppression" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="StartingBalance" Type="decimal" Nullable="true" Precision="14" Scale="4" />
+    <Property Name="ContactName1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactRole1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactEmail1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactPhone1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactName2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactRole2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactEmail2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactPhone2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactName3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactRole3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactEmail3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ContactPhone3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="LoginName1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="URL1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="UserName1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Password1" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="LoginName2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="URL2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="UserName2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Password2" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="LoginName3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="URL3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="UserName3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Password3" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Term_Id" Type="int" Nullable="false" />
+    <Property Name="Currency_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Currencies">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Culture" Type="nvarchar" Nullable="false" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="Employees">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Identity" Type="nvarchar(max)" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Periods">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="BeginDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SpendItems">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Period" Type="datetime" Nullable="false" />
+    <Property Name="Advertiser" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PID" Type="int" Nullable="false" />
+    <Property Name="Currency" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Rate" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="Volume" Type="decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="UnitType" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UnitTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Invoices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TxnID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TxnDate" Type="datetime" Nullable="false" />
+    <Property Name="RefNumber" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="AppliedAmount" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="BalanceRemaining" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="AccountReceivableId" Type="int" Nullable="false" />
+    <Property Name="IsPending" Type="bit" Nullable="false" />
+    <Property Name="DueDate" Type="datetime" Nullable="false" />
+    <Property Name="Memo" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsPaid" Type="bit" Nullable="false" />
+    <Property Name="LineType" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="LineSeq" Type="int" Nullable="false" />
+    <Property Name="LineDesc" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LineClass" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Notes" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TxnID2" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Customer_Id" Type="int" Nullable="false" />
+    <Property Name="Term_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Terms">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Days" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FullName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ListID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="QuickBooksCompany_Id" Type="int" Nullable="false" />
+    <Property Name="Advertiser_Id" Type="int" Nullable="false" />
+    <Property Name="Term_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Companies">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ReceivedPayments">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TxnID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TxnDate" Type="datetime" Nullable="false" />
+    <Property Name="TotalAmount" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="Memo" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="AppliedToTxnTxnID" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="AppliedToTxnTxnType" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="AppliedToTxnAmount" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="FQPrimaryKey" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="RefNumber" Type="nvarchar" Nullable="true" MaxLength="255" />
+    <Property Name="ARAccount_Id" Type="int" Nullable="false" />
+    <Property Name="Customer_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AccountsReceivable">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Currency_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SynchTimes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TimeStamp" Type="datetime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Notes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Key" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Data" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CampaignSpends">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Rate" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="Volume" Type="decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="Currency_Id" Type="int" Nullable="false" />
+    <Property Name="Period_Id" Type="int" Nullable="false" />
+    <Property Name="UnitType_Id" Type="int" Nullable="false" />
+    <Property Name="Campaign_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Campaigns">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Pid" Type="int" Nullable="false" />
+    <Property Name="Advertiser_Id" Type="int" Nullable="false" />
+    <Property Name="Employee_Id" Type="int" Nullable="false" />
+    <Property Name="Employee1_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Rates">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ToUSD" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="Currency_Id" Type="int" Nullable="false" />
+    <Property Name="Period_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vAdvertiserEmployees">
+    <Key>
+      <PropertyRef Name="AdvertiserName" />
+      <PropertyRef Name="AdvertiserId" />
+      <PropertyRef Name="AM" />
+      <PropertyRef Name="AD" />
+    </Key>
+    <Property Name="AdvertiserName" Type="nvarchar" Nullable="false" MaxLength="255" />
+    <Property Name="AdvertiserId" Type="int" Nullable="false" />
+    <Property Name="AM" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="AD" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="EntryTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Logs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Entry" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Timestamp" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="EntryType_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CreditMemoes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TxnID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TxnDate" Type="datetime" Nullable="false" />
+    <Property Name="TxnType" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Amount" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="Customer_Id" Type="int" Nullable="false" />
+    <Property Name="AccountReceivable_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="QuickBooksTables">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="QUALIFIERNAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TABLENAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TYPENAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="REMARKS" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DELETEABLE" Type="int" Nullable="false" />
+    <Property Name="VOIDABLE" Type="int" Nullable="false" />
+    <Property Name="INSERT_ONLY" Type="int" Nullable="false" />
+    <Property Name="BestRowID" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="QuickBooksColumns">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="QUALIFIERNAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TABLENAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="COLUMNNAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TYPE" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="TYPENAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PRECISION" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LENGTH" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="SCALE" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="NULLABLE" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DEFAULT" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DATATYPE" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="OCTET_LENGTH" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ORDINAL_POSITION" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IS_NULLABLE" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="QUERYABLE" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UPDATEABLE" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="INSERTABLE" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="REQUIRED_ON_INSERT" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FORMAT" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="RELATES_TO" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="JUMPIN_TYPE" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="FORCE_UNOPTIMIZED" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ADVANCED" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="SDK_QB_NAME" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="COLUMNFULLNAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="COLUMNSHORTNAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="QuickBooksTable_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BudgetReportRows">
+    <Key>
+      <PropertyRef Name="AdvertiserId" />
+    </Key>
+    <Property Name="AdvertiserId" Type="int" Nullable="false" />
+    <Property Name="Total" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="CurrencyName" Type="nvarchar" Nullable="false" MaxLength="3" />
+    <Property Name="StartingBalance" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="Payments" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="InvoiceCredits" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="Spends" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="CheckCredits" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+  </EntityType>
+  <EntityType Name="Tabs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Location" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TabGroups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TabTabGroup">
+    <Key>
+      <PropertyRef Name="Tabs_Id" />
+      <PropertyRef Name="TabGroups_Id" />
+    </Key>
+    <Property Name="Tabs_Id" Type="int" Nullable="false" />
+    <Property Name="TabGroups_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="ARAccountReceivedPayment">
+    <End Role="ARAccount" Type="ABWebDatabase1Model.Store.AccountsReceivable" Multiplicity="1" />
+    <End Role="ReceivedPayment" Type="ABWebDatabase1Model.Store.ReceivedPayments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ARAccount">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ReceivedPayment">
+        <PropertyRef Name="ARAccount_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CurrencyARAccount">
+    <End Role="Currency" Type="ABWebDatabase1Model.Store.Currencies" Multiplicity="1" />
+    <End Role="ARAccount" Type="ABWebDatabase1Model.Store.AccountsReceivable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currency">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ARAccount">
+        <PropertyRef Name="Currency_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="QuickBooksCompanyCustomer">
+    <End Role="QuickBooksCompany" Type="ABWebDatabase1Model.Store.Companies" Multiplicity="1" />
+    <End Role="Customer" Type="ABWebDatabase1Model.Store.Customers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="QuickBooksCompany">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="QuickBooksCompany_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CustomerInvoice">
+    <End Role="Customer" Type="ABWebDatabase1Model.Store.Customers" Multiplicity="1" />
+    <End Role="Invoice" Type="ABWebDatabase1Model.Store.Invoices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="Customer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="TermsInvoice">
+    <End Role="Terms" Type="ABWebDatabase1Model.Store.Terms" Multiplicity="1" />
+    <End Role="Invoice" Type="ABWebDatabase1Model.Store.Invoices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Terms">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="Term_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AdvertiserCustomer">
+    <End Role="Advertiser" Type="ABWebDatabase1Model.Store.Advertisers" Multiplicity="1" />
+    <End Role="Customer" Type="ABWebDatabase1Model.Store.Customers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Advertiser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="Advertiser_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CustomerReceivedPayment">
+    <End Role="Customer" Type="ABWebDatabase1Model.Store.Customers" Multiplicity="1" />
+    <End Role="ReceivedPayment" Type="ABWebDatabase1Model.Store.ReceivedPayments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ReceivedPayment">
+        <PropertyRef Name="Customer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AccountReceivableInvoice">
+    <End Role="AccountReceivable" Type="ABWebDatabase1Model.Store.AccountsReceivable" Multiplicity="1" />
+    <End Role="Invoice" Type="ABWebDatabase1Model.Store.Invoices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AccountReceivable">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="AccountReceivableId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CurrencyCampaignSpend">
+    <End Role="Currency" Type="ABWebDatabase1Model.Store.Currencies" Multiplicity="1" />
+    <End Role="CampaignSpend" Type="ABWebDatabase1Model.Store.CampaignSpends" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currency">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CampaignSpend">
+        <PropertyRef Name="Currency_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PeriodCampaignSpend">
+    <End Role="Period" Type="ABWebDatabase1Model.Store.Periods" Multiplicity="1" />
+    <End Role="CampaignSpend" Type="ABWebDatabase1Model.Store.CampaignSpends" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Period">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CampaignSpend">
+        <PropertyRef Name="Period_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UnitTypeCampaignSpend">
+    <End Role="UnitType" Type="ABWebDatabase1Model.Store.UnitTypes" Multiplicity="1" />
+    <End Role="CampaignSpend" Type="ABWebDatabase1Model.Store.CampaignSpends" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UnitType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CampaignSpend">
+        <PropertyRef Name="UnitType_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AdvertiserCampaign">
+    <End Role="Advertiser" Type="ABWebDatabase1Model.Store.Advertisers" Multiplicity="1" />
+    <End Role="Campaign" Type="ABWebDatabase1Model.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Advertiser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="Advertiser_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CampaignCampaignSpend">
+    <End Role="Campaign" Type="ABWebDatabase1Model.Store.Campaigns" Multiplicity="1" />
+    <End Role="CampaignSpend" Type="ABWebDatabase1Model.Store.CampaignSpends" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Campaign">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CampaignSpend">
+        <PropertyRef Name="Campaign_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeCampaign">
+    <End Role="Employee" Type="ABWebDatabase1Model.Store.Employees" Multiplicity="1" />
+    <End Role="Campaign" Type="ABWebDatabase1Model.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="Employee_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EmployeeCampaign1">
+    <End Role="Employee" Type="ABWebDatabase1Model.Store.Employees" Multiplicity="1" />
+    <End Role="Campaign" Type="ABWebDatabase1Model.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employee">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="Employee1_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CurrencyRate">
+    <End Role="Currency" Type="ABWebDatabase1Model.Store.Currencies" Multiplicity="1" />
+    <End Role="Rate" Type="ABWebDatabase1Model.Store.Rates" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currency">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Rate">
+        <PropertyRef Name="Currency_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PeriodRate">
+    <End Role="Period" Type="ABWebDatabase1Model.Store.Periods" Multiplicity="1" />
+    <End Role="Rate" Type="ABWebDatabase1Model.Store.Rates" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Period">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Rate">
+        <PropertyRef Name="Period_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="TermsCustomer">
+    <End Role="Terms" Type="ABWebDatabase1Model.Store.Terms" Multiplicity="1" />
+    <End Role="Customer" Type="ABWebDatabase1Model.Store.Customers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Terms">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="Term_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AdvertiserTerms">
+    <End Role="Advertiser" Type="ABWebDatabase1Model.Store.Advertisers" Multiplicity="*" />
+    <End Role="Terms" Type="ABWebDatabase1Model.Store.Terms" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Terms">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Advertiser">
+        <PropertyRef Name="Term_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AdvertiserCurrency">
+    <End Role="Advertiser" Type="ABWebDatabase1Model.Store.Advertisers" Multiplicity="*" />
+    <End Role="Currency" Type="ABWebDatabase1Model.Store.Currencies" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Currency">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Advertiser">
+        <PropertyRef Name="Currency_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LogEntryType">
+    <End Role="EntryType" Type="ABWebDatabase1Model.Store.EntryTypes" Multiplicity="1" />
+    <End Role="Log" Type="ABWebDatabase1Model.Store.Logs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EntryType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Log">
+        <PropertyRef Name="EntryType_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="QuickBooksTableQuickBooksColumn">
+    <End Role="QuickBooksTable" Type="ABWebDatabase1Model.Store.QuickBooksTables" Multiplicity="1" />
+    <End Role="QuickBooksColumn" Type="ABWebDatabase1Model.Store.QuickBooksColumns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="QuickBooksTable">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuickBooksColumn">
+        <PropertyRef Name="QuickBooksTable_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="CustomerCreditMemo">
+    <End Role="Customer" Type="ABWebDatabase1Model.Store.Customers" Multiplicity="1" />
+    <End Role="CreditMemo" Type="ABWebDatabase1Model.Store.CreditMemoes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CreditMemo">
+        <PropertyRef Name="Customer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AccountReceivableCreditMemo">
+    <End Role="AccountReceivable" Type="ABWebDatabase1Model.Store.AccountsReceivable" Multiplicity="1" />
+    <End Role="CreditMemo" Type="ABWebDatabase1Model.Store.CreditMemoes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AccountReceivable">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CreditMemo">
+        <PropertyRef Name="AccountReceivable_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TabTabGroup_Tab">
+    <End Role="Tab" Type="ABWebDatabase1Model.Store.Tabs" Multiplicity="1" />
+    <End Role="TabTabGroup" Type="ABWebDatabase1Model.Store.TabTabGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tab">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TabTabGroup">
+        <PropertyRef Name="Tabs_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TabTabGroup_TabGroup">
+    <End Role="TabTabGroup" Type="ABWebDatabase1Model.Store.TabTabGroup" Multiplicity="*" />
+    <End Role="TabGroup" Type="ABWebDatabase1Model.Store.TabGroups" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="TabGroup">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TabTabGroup">
+        <PropertyRef Name="TabGroups_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ABWebDatabase1Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="AccountingBackupEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Advertisers" EntityType="ABWebDatabase1Model.Advertiser" />
+          <EntitySet Name="Currencies" EntityType="ABWebDatabase1Model.Currency" />
+          <EntitySet Name="Employees" EntityType="ABWebDatabase1Model.Employee" />
+          <EntitySet Name="Periods" EntityType="ABWebDatabase1Model.Period" />
+          <EntitySet Name="SpendItems" EntityType="ABWebDatabase1Model.SpendItem" />
+          <EntitySet Name="UnitTypes" EntityType="ABWebDatabase1Model.UnitType" />
+          <EntitySet Name="Invoices" EntityType="ABWebDatabase1Model.Invoice" />
+          <EntitySet Name="Terms" EntityType="ABWebDatabase1Model.Terms" />
+          <EntitySet Name="Customers" EntityType="ABWebDatabase1Model.Customer" />
+          <EntitySet Name="Companies" EntityType="ABWebDatabase1Model.Company" />
+          <EntitySet Name="ReceivedPayments" EntityType="ABWebDatabase1Model.ReceivedPayment" />
+          <EntitySet Name="AccountsReceivable" EntityType="ABWebDatabase1Model.AccountReceivable" />
+          <AssociationSet Name="ARAccountReceivedPayment" Association="ABWebDatabase1Model.ARAccountReceivedPayment">
+            <End Role="ARAccount" EntitySet="AccountsReceivable" />
+            <End Role="ReceivedPayment" EntitySet="ReceivedPayments" />
+          </AssociationSet>
+          <AssociationSet Name="CurrencyARAccount" Association="ABWebDatabase1Model.CurrencyARAccount">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="ARAccount" EntitySet="AccountsReceivable" />
+          </AssociationSet>
+          <AssociationSet Name="QuickBooksCompanyCustomer" Association="ABWebDatabase1Model.QuickBooksCompanyCustomer">
+            <End Role="QuickBooksCompany" EntitySet="Companies" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="CustomerInvoice" Association="ABWebDatabase1Model.CustomerInvoice">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Invoice" EntitySet="Invoices" />
+          </AssociationSet>
+          <AssociationSet Name="TermsInvoice" Association="ABWebDatabase1Model.TermsInvoice">
+            <End Role="Terms" EntitySet="Terms" />
+            <End Role="Invoice" EntitySet="Invoices" />
+          </AssociationSet>
+          <AssociationSet Name="AdvertiserCustomer" Association="ABWebDatabase1Model.AdvertiserCustomer">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="CustomerReceivedPayment" Association="ABWebDatabase1Model.CustomerReceivedPayment">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="ReceivedPayment" EntitySet="ReceivedPayments" />
+          </AssociationSet>
+          <EntitySet Name="SynchTimes" EntityType="ABWebDatabase1Model.SynchTime" />
+          <AssociationSet Name="AccountReceivableInvoice" Association="ABWebDatabase1Model.AccountReceivableInvoice">
+            <End Role="AccountReceivable" EntitySet="AccountsReceivable" />
+            <End Role="Invoice" EntitySet="Invoices" />
+          </AssociationSet>
+          <EntitySet Name="Notes" EntityType="ABWebDatabase1Model.Note" />
+          <EntitySet Name="CampaignSpends" EntityType="ABWebDatabase1Model.CampaignSpend" />
+          <AssociationSet Name="FK_CurrencyCampaignSpend" Association="ABWebDatabase1Model.FK_CurrencyCampaignSpend">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="CampaignSpend" EntitySet="CampaignSpends" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PeriodCampaignSpend" Association="ABWebDatabase1Model.FK_PeriodCampaignSpend">
+            <End Role="Period" EntitySet="Periods" />
+            <End Role="CampaignSpend" EntitySet="CampaignSpends" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UnitTypeCampaignSpend" Association="ABWebDatabase1Model.FK_UnitTypeCampaignSpend">
+            <End Role="UnitType" EntitySet="UnitTypes" />
+            <End Role="CampaignSpend" EntitySet="CampaignSpends" />
+          </AssociationSet>
+          <EntitySet Name="Campaigns" EntityType="ABWebDatabase1Model.Campaign" />
+          <AssociationSet Name="FK_AdvertiserCampaign" Association="ABWebDatabase1Model.FK_AdvertiserCampaign">
+            <End EntitySet="Advertisers" Role="Advertiser" />
+            <End EntitySet="Campaigns" Role="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampaignCampaignSpend" Association="ABWebDatabase1Model.FK_CampaignCampaignSpend">
+            <End Role="Campaign" EntitySet="Campaigns" />
+            <End Role="CampaignSpend" EntitySet="CampaignSpends" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeCampaign" Association="ABWebDatabase1Model.FK_EmployeeCampaign">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeCampaign1" Association="ABWebDatabase1Model.FK_EmployeeCampaign1">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <EntitySet Name="Rates" EntityType="ABWebDatabase1Model.Rate" />
+          <AssociationSet Name="FK_CurrencyRate" Association="ABWebDatabase1Model.FK_CurrencyRate">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="Rate" EntitySet="Rates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PeriodRate" Association="ABWebDatabase1Model.FK_PeriodRate">
+            <End Role="Period" EntitySet="Periods" />
+            <End Role="Rate" EntitySet="Rates" />
+          </AssociationSet>
+          <AssociationSet Name="TermsCustomer" Association="ABWebDatabase1Model.TermsCustomer">
+            <End Role="Terms" EntitySet="Terms" />
+            <End Role="Customer" EntitySet="Customers" />
+          </AssociationSet>
+          <AssociationSet Name="AdvertiserTerms" Association="ABWebDatabase1Model.AdvertiserTerms">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Terms" EntitySet="Terms" />
+          </AssociationSet>
+          <AssociationSet Name="AdvertiserCurrency" Association="ABWebDatabase1Model.AdvertiserCurrency">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Currency" EntitySet="Currencies" />
+          </AssociationSet>
+          <EntitySet Name="vAdvertiserEmployees" EntityType="ABWebDatabase1Model.vAdvertiserEmployee" />
+          <EntitySet Name="EntryTypes" EntityType="ABWebDatabase1Model.EntryType" />
+          <EntitySet Name="Logs" EntityType="ABWebDatabase1Model.Log" />
+          <AssociationSet Name="FK_LogEntryType" Association="ABWebDatabase1Model.FK_LogEntryType">
+            <End Role="EntryType" EntitySet="EntryTypes" />
+            <End Role="Log" EntitySet="Logs" />
+          </AssociationSet>
+          <EntitySet Name="CreditMemoes" EntityType="ABWebDatabase1Model.CreditMemo" />
+          <EntitySet Name="QuickBooksTables" EntityType="ABWebDatabase1Model.QuickBooksTable" />
+          <EntitySet Name="QuickBooksColumns" EntityType="ABWebDatabase1Model.QuickBooksColumn" />
+          <AssociationSet Name="QuickBooksTableQuickBooksColumn" Association="ABWebDatabase1Model.QuickBooksTableQuickBooksColumn">
+            <End Role="QuickBooksTable" EntitySet="QuickBooksTables" />
+            <End Role="QuickBooksColumn" EntitySet="QuickBooksColumns" />
+          </AssociationSet>
+          <AssociationSet Name="CustomerCreditMemo" Association="ABWebDatabase1Model.CustomerCreditMemo">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="CreditMemo" EntitySet="CreditMemoes" />
+          </AssociationSet>
+          <AssociationSet Name="AccountReceivableCreditMemo" Association="ABWebDatabase1Model.AccountReceivableCreditMemo">
+            <End Role="AccountReceivable" EntitySet="AccountsReceivable" />
+            <End Role="CreditMemo" EntitySet="CreditMemoes" />
+          </AssociationSet>
+          <EntitySet Name="BudgetReportRows" EntityType="ABWebDatabase1Model.BudgetReportRow" />
+          <EntitySet Name="Tabs" EntityType="ABWebDatabase1Model.Tab" />
+          <EntitySet Name="TabGroups" EntityType="ABWebDatabase1Model.TabGroup" />
+          <AssociationSet Name="TabTabGroup" Association="ABWebDatabase1Model.TabTabGroup">
+            <End Role="Tab" EntitySet="Tabs" />
+            <End Role="TabGroup" EntitySet="TabGroups" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Customers" Relationship="ABWebDatabase1Model.AdvertiserCustomer" FromRole="Advertiser" ToRole="Customer" />
+          <NavigationProperty Name="Campaigns" Relationship="ABWebDatabase1Model.FK_AdvertiserCampaign" FromRole="Advertiser" ToRole="Campaign" />
+          <NavigationProperty Name="Term" Relationship="ABWebDatabase1Model.AdvertiserTerms" FromRole="Advertiser" ToRole="Terms" />
+          <Property Name="CreditCheck" Nullable="false" Type="String" />
+          <Property Name="CreditLimit" Nullable="false" Type="Decimal" />
+          <NavigationProperty Name="Currency" Relationship="ABWebDatabase1Model.AdvertiserCurrency" FromRole="Advertiser" ToRole="Currency" />
+          <Property Name="Notes" Nullable="false" Type="String" />
+          <Property Name="EOM" Type="String" Nullable="true" />
+          <Property Name="Suppression" Type="String" Nullable="true" />
+          <Property Name="StartingBalance" Type="Decimal" Nullable="true" Precision="14" Scale="4" />
+          <Property Name="ContactName1" Type="String" Nullable="true" />
+          <Property Name="ContactRole1" Type="String" Nullable="true" />
+          <Property Name="ContactEmail1" Type="String" Nullable="true" />
+          <Property Name="ContactPhone1" Type="String" Nullable="true" />
+          <Property Name="ContactName2" Type="String" Nullable="true" />
+          <Property Name="ContactRole2" Type="String" Nullable="true" />
+          <Property Name="ContactEmail2" Type="String" Nullable="true" />
+          <Property Name="ContactPhone2" Type="String" Nullable="true" />
+          <Property Name="ContactName3" Type="String" Nullable="true" />
+          <Property Name="ContactRole3" Type="String" Nullable="true" />
+          <Property Name="ContactEmail3" Type="String" Nullable="true" />
+          <Property Name="ContactPhone3" Type="String" Nullable="true" />
+          <Property Name="LoginName1" Type="String" Nullable="true" />
+          <Property Name="URL1" Type="String" Nullable="true" />
+          <Property Name="UserName1" Type="String" Nullable="true" />
+          <Property Name="Password1" Type="String" Nullable="true" />
+          <Property Name="LoginName2" Type="String" Nullable="true" />
+          <Property Name="URL2" Type="String" Nullable="true" />
+          <Property Name="UserName2" Type="String" Nullable="true" />
+          <Property Name="Password2" Type="String" Nullable="true" />
+          <Property Name="LoginName3" Type="String" Nullable="true" />
+          <Property Name="URL3" Type="String" Nullable="true" />
+          <Property Name="UserName3" Type="String" Nullable="true" />
+          <Property Name="Password3" Type="String" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="ARAccounts" Relationship="ABWebDatabase1Model.CurrencyARAccount" FromRole="Currency" ToRole="ARAccount" />
+          <Property Type="String" Name="Culture" Nullable="false" MaxLength="10" />
+          <NavigationProperty Name="CampaignSpends" Relationship="ABWebDatabase1Model.FK_CurrencyCampaignSpend" FromRole="Currency" ToRole="CampaignSpend" />
+          <NavigationProperty Name="Rates" Relationship="ABWebDatabase1Model.FK_CurrencyRate" FromRole="Currency" ToRole="Rate" />
+          <NavigationProperty Name="Advertisers" Relationship="ABWebDatabase1Model.AdvertiserCurrency" FromRole="Currency" ToRole="Advertiser" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Identity" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Campaigns" Relationship="ABWebDatabase1Model.FK_EmployeeCampaign" FromRole="Employee" ToRole="Campaign" />
+          <NavigationProperty Name="Campaigns1" Relationship="ABWebDatabase1Model.FK_EmployeeCampaign1" FromRole="Employee" ToRole="Campaign" />
+          </EntityType>
+        <EntityType Name="Period">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="BeginDate" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="CampaignSpends" Relationship="ABWebDatabase1Model.FK_PeriodCampaignSpend" FromRole="Period" ToRole="CampaignSpend" />
+          <NavigationProperty Name="Rates" Relationship="ABWebDatabase1Model.FK_PeriodRate" FromRole="Period" ToRole="Rate" />
+        </EntityType>
+        <EntityType Name="SpendItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Period" Type="DateTime" Nullable="false" />
+          <Property Name="Advertiser" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="PID" Type="Int32" Nullable="false" />
+          <Property Name="Currency" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Rate" Type="Decimal" Nullable="false" Precision="14" Scale="4" />
+          <Property Name="Volume" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="String" Name="UnitType" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UnitType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+          <Property Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+          <NavigationProperty Name="CampaignSpends" Relationship="ABWebDatabase1Model.FK_UnitTypeCampaignSpend" FromRole="UnitType" ToRole="CampaignSpend" />
+        </EntityType>
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="TxnID" Nullable="false" />
+          <Property Type="DateTime" Name="TxnDate" Nullable="false" />
+          <Property Type="String" Name="RefNumber" Nullable="false" />
+          <Property Type="Decimal" Name="AppliedAmount" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="BalanceRemaining" Nullable="false" Precision="14" Scale="4" />
+          <NavigationProperty Name="Customer" Relationship="ABWebDatabase1Model.CustomerInvoice" FromRole="Invoice" ToRole="Customer" />
+          <NavigationProperty Name="Term" Relationship="ABWebDatabase1Model.TermsInvoice" FromRole="Invoice" ToRole="Terms" />
+          <NavigationProperty Name="AccountReceivable" Relationship="ABWebDatabase1Model.AccountReceivableInvoice" FromRole="Invoice" ToRole="AccountReceivable" />
+          <Property Type="Int32" Name="AccountReceivableId" Nullable="false" />
+          <Property Type="Boolean" Name="IsPending" Nullable="false" />
+          <Property Type="DateTime" Name="DueDate" Nullable="false" />
+          <Property Type="String" Name="Memo" Nullable="false" />
+          <Property Type="Boolean" Name="IsPaid" Nullable="false" />
+          <Property Type="String" Name="LineType" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="LineSeq" Nullable="false" />
+          <Property Type="String" Name="LineDesc" Nullable="false" />
+          <Property Type="String" Name="LineClass" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="String" Name="Notes" Nullable="false" />
+          <Property Type="String" Name="TxnID2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Terms">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="Int32" Name="Days" Nullable="false" />
+          <NavigationProperty Name="Invoices" Relationship="ABWebDatabase1Model.TermsInvoice" FromRole="Terms" ToRole="Invoice" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="FullName" Nullable="false" />
+          <NavigationProperty Name="QuickBooksCompany" Relationship="ABWebDatabase1Model.QuickBooksCompanyCustomer" FromRole="Customer" ToRole="QuickBooksCompany" />
+          <Property Type="String" Name="ListID" Nullable="false" />
+          <NavigationProperty Name="Invoices" Relationship="ABWebDatabase1Model.CustomerInvoice" FromRole="Customer" ToRole="Invoice" />
+          <NavigationProperty Name="Advertiser" Relationship="ABWebDatabase1Model.AdvertiserCustomer" FromRole="Customer" ToRole="Advertiser" />
+          <NavigationProperty Name="ReceivedPayments" Relationship="ABWebDatabase1Model.CustomerReceivedPayment" FromRole="Customer" ToRole="ReceivedPayment" />
+          <NavigationProperty Name="Term" Relationship="ABWebDatabase1Model.TermsCustomer" FromRole="Customer" ToRole="Terms" />
+          <NavigationProperty Name="CreditMemos" Relationship="ABWebDatabase1Model.CustomerCreditMemo" FromRole="Customer" ToRole="CreditMemo" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Customers" Relationship="ABWebDatabase1Model.QuickBooksCompanyCustomer" FromRole="QuickBooksCompany" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="ReceivedPayment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="TxnID" Nullable="false" />
+          <NavigationProperty Name="ARAccount" Relationship="ABWebDatabase1Model.ARAccountReceivedPayment" FromRole="ReceivedPayment" ToRole="ARAccount" />
+          <Property Type="DateTime" Name="TxnDate" Nullable="false" />
+          <Property Type="Decimal" Name="TotalAmount" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="String" Name="Memo" Nullable="true" />
+          <NavigationProperty Name="Customer" Relationship="ABWebDatabase1Model.CustomerReceivedPayment" FromRole="ReceivedPayment" ToRole="Customer" />
+          <Property Type="String" Name="AppliedToTxnTxnID" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="AppliedToTxnTxnType" Nullable="false" MaxLength="255" />
+          <Property Type="Decimal" Name="AppliedToTxnAmount" Nullable="false" Precision="14" Scale="4" />
+          <Property Name="FQPrimaryKey" Nullable="false" MaxLength="255" Type="String" />
+          <Property Type="String" Name="RefNumber" MaxLength="255" Nullable="true" />
+        </EntityType>
+        <EntityType Name="AccountReceivable">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="ReceivedPayments" Relationship="ABWebDatabase1Model.ARAccountReceivedPayment" FromRole="ARAccount" ToRole="ReceivedPayment" />
+          <NavigationProperty Name="Currency" Relationship="ABWebDatabase1Model.CurrencyARAccount" FromRole="ARAccount" ToRole="Currency" />
+        </EntityType>
+        <Association Name="ARAccountReceivedPayment">
+          <End Type="ABWebDatabase1Model.AccountReceivable" Role="ARAccount" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.ReceivedPayment" Role="ReceivedPayment" Multiplicity="*" />
+        </Association>
+        <Association Name="CurrencyARAccount">
+          <End Type="ABWebDatabase1Model.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.AccountReceivable" Role="ARAccount" Multiplicity="*" />
+        </Association>
+        <Association Name="QuickBooksCompanyCustomer">
+          <End Type="ABWebDatabase1Model.Company" Role="QuickBooksCompany" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Customer" Role="Customer" Multiplicity="*" />
+        </Association>
+        <Association Name="CustomerInvoice">
+          <End Type="ABWebDatabase1Model.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Invoice" Role="Invoice" Multiplicity="*" />
+        </Association>
+        <Association Name="TermsInvoice">
+          <End Type="ABWebDatabase1Model.Terms" Role="Terms" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Invoice" Role="Invoice" Multiplicity="*" />
+        </Association>
+        <Association Name="AdvertiserCustomer">
+          <End Type="ABWebDatabase1Model.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Customer" Role="Customer" Multiplicity="*" />
+        </Association>
+        <Association Name="CustomerReceivedPayment">
+          <End Type="ABWebDatabase1Model.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.ReceivedPayment" Role="ReceivedPayment" Multiplicity="*" />
+        </Association>
+        <EntityType Name="SynchTime">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="DateTime" Name="TimeStamp" Nullable="true" />
+        </EntityType>
+        <Association Name="AccountReceivableInvoice">
+          <End Type="ABWebDatabase1Model.AccountReceivable" Role="AccountReceivable" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Invoice" Role="Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountReceivable">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="AccountReceivableId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Note">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Key" Nullable="false" />
+          <Property Type="String" Name="Data" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CampaignSpend">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Decimal" Name="Rate" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="Volume" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="Currency" Relationship="ABWebDatabase1Model.FK_CurrencyCampaignSpend" FromRole="CampaignSpend" ToRole="Currency" />
+          <NavigationProperty Name="Period" Relationship="ABWebDatabase1Model.FK_PeriodCampaignSpend" FromRole="CampaignSpend" ToRole="Period" />
+          <NavigationProperty Name="UnitType" Relationship="ABWebDatabase1Model.FK_UnitTypeCampaignSpend" FromRole="CampaignSpend" ToRole="UnitType" />
+          <NavigationProperty Name="Campaign" Relationship="ABWebDatabase1Model.FK_CampaignCampaignSpend" FromRole="CampaignSpend" ToRole="Campaign" />
+        </EntityType>
+        <Association Name="FK_CurrencyCampaignSpend">
+          <End Type="ABWebDatabase1Model.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.CampaignSpend" Role="CampaignSpend" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_PeriodCampaignSpend">
+          <End Type="ABWebDatabase1Model.Period" Role="Period" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.CampaignSpend" Role="CampaignSpend" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UnitTypeCampaignSpend">
+          <End Type="ABWebDatabase1Model.UnitType" Role="UnitType" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.CampaignSpend" Role="CampaignSpend" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Pid" Nullable="false" />
+          <NavigationProperty Name="Advertiser" Relationship="ABWebDatabase1Model.FK_AdvertiserCampaign" FromRole="Campaign" ToRole="Advertiser" />
+          <NavigationProperty Name="CampaignSpends" Relationship="ABWebDatabase1Model.FK_CampaignCampaignSpend" FromRole="Campaign" ToRole="CampaignSpend" />
+          <NavigationProperty Name="Employee" Relationship="ABWebDatabase1Model.FK_EmployeeCampaign" FromRole="Campaign" ToRole="Employee" />
+          <NavigationProperty Name="Employee1" Relationship="ABWebDatabase1Model.FK_EmployeeCampaign1" FromRole="Campaign" ToRole="Employee" />
+        </EntityType>
+        <Association Name="FK_AdvertiserCampaign">
+          <End Type="ABWebDatabase1Model.Advertiser" Multiplicity="1" Role="Advertiser" />
+          <End Type="ABWebDatabase1Model.Campaign" Multiplicity="*" Role="Campaign" />
+        </Association>
+        <Association Name="FK_CampaignCampaignSpend">
+          <End Type="ABWebDatabase1Model.Campaign" Role="Campaign" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.CampaignSpend" Role="CampaignSpend" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_EmployeeCampaign">
+          <End Type="ABWebDatabase1Model.Employee" Role="Employee" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Campaign" Role="Campaign" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_EmployeeCampaign1">
+          <End Type="ABWebDatabase1Model.Employee" Role="Employee" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Campaign" Role="Campaign" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Rate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Decimal" Name="ToUSD" Nullable="false" Precision="14" Scale="4" />
+          <NavigationProperty Name="Currency" Relationship="ABWebDatabase1Model.FK_CurrencyRate" FromRole="Rate" ToRole="Currency" />
+          <NavigationProperty Name="Period" Relationship="ABWebDatabase1Model.FK_PeriodRate" FromRole="Rate" ToRole="Period" />
+        </EntityType>
+        <Association Name="FK_CurrencyRate">
+          <End Type="ABWebDatabase1Model.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Rate" Role="Rate" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_PeriodRate">
+          <End Type="ABWebDatabase1Model.Period" Role="Period" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Rate" Role="Rate" Multiplicity="*" />
+        </Association>
+        <Association Name="TermsCustomer">
+          <End Type="ABWebDatabase1Model.Terms" Role="Terms" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Customer" Role="Customer" Multiplicity="*" />
+        </Association>
+        <Association Name="AdvertiserTerms">
+          <End Type="ABWebDatabase1Model.Advertiser" Role="Advertiser" Multiplicity="*" />
+          <End Type="ABWebDatabase1Model.Terms" Role="Terms" Multiplicity="1" />
+        </Association>
+        <Association Name="AdvertiserCurrency">
+          <End Type="ABWebDatabase1Model.Advertiser" Role="Advertiser" Multiplicity="*" />
+          <End Type="ABWebDatabase1Model.Currency" Role="Currency" Multiplicity="1" />
+        </Association>
+        <EntityType Name="vAdvertiserEmployee">
+          <Key>
+            <PropertyRef Name="AdvertiserName" />
+            <PropertyRef Name="AdvertiserId" />
+            <PropertyRef Name="AM" />
+            <PropertyRef Name="AD" />
+          </Key>
+          <Property Type="String" Name="AdvertiserName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="String" Name="AM" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AD" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="EntryType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <NavigationProperty Name="Logs" Relationship="ABWebDatabase1Model.FK_LogEntryType" FromRole="EntryType" ToRole="Log" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Entry" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Timestamp" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="EntryType_Id" Nullable="false" />
+          <NavigationProperty Name="EntryType" Relationship="ABWebDatabase1Model.FK_LogEntryType" FromRole="Log" ToRole="EntryType" />
+        </EntityType>
+        <Association Name="FK_LogEntryType">
+          <End Type="ABWebDatabase1Model.EntryType" Role="EntryType" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.Log" Role="Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EntryType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Log">
+              <PropertyRef Name="EntryType_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CreditMemo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="TxnID" Nullable="false" />
+          <Property Type="DateTime" Name="TxnDate" Nullable="false" />
+          <Property Type="String" Name="TxnType" Nullable="false" />
+          <Property Type="Decimal" Name="Amount" Nullable="false" Precision="14" Scale="4" />
+          <NavigationProperty Name="Customer" Relationship="ABWebDatabase1Model.CustomerCreditMemo" FromRole="CreditMemo" ToRole="Customer" />
+          <NavigationProperty Name="AccountReceivable" Relationship="ABWebDatabase1Model.AccountReceivableCreditMemo" FromRole="CreditMemo" ToRole="AccountReceivable" />
+        </EntityType>
+        <EntityType Name="QuickBooksTable">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="QUALIFIERNAME" Nullable="false" />
+          <Property Type="String" Name="TABLENAME" Nullable="false" />
+          <Property Type="String" Name="TYPENAME" Nullable="false" />
+          <Property Type="String" Name="REMARKS" Nullable="false" />
+          <Property Type="Int32" Name="DELETEABLE" Nullable="false" />
+          <Property Type="Int32" Name="VOIDABLE" Nullable="false" />
+          <Property Type="Int32" Name="INSERT_ONLY" Nullable="false" />
+          <NavigationProperty Name="QuickBooksColumns" Relationship="ABWebDatabase1Model.QuickBooksTableQuickBooksColumn" FromRole="QuickBooksTable" ToRole="QuickBooksColumn" />
+          <Property Type="String" Name="BestRowID" Nullable="false" />
+        </EntityType>
+        <EntityType Name="QuickBooksColumn">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="QuickBooksTable" Relationship="ABWebDatabase1Model.QuickBooksTableQuickBooksColumn" FromRole="QuickBooksColumn" ToRole="QuickBooksTable" />
+          <Property Type="String" Name="QUALIFIERNAME" Nullable="false" />
+          <Property Type="String" Name="TABLENAME" Nullable="false" />
+          <Property Type="String" Name="COLUMNNAME" Nullable="false" />
+          <Property Type="String" Name="TYPE" Nullable="false" />
+          <Property Type="String" Name="TYPENAME" Nullable="false" />
+          <Property Type="String" Name="PRECISION" Nullable="false" />
+          <Property Type="String" Name="LENGTH" Nullable="false" />
+          <Property Type="String" Name="SCALE" Nullable="false" />
+          <Property Type="String" Name="NULLABLE" Nullable="false" />
+          <Property Type="String" Name="DEFAULT" Nullable="false" />
+          <Property Type="String" Name="DATATYPE" Nullable="false" />
+          <Property Type="String" Name="OCTET_LENGTH" Nullable="true" />
+          <Property Type="String" Name="ORDINAL_POSITION" Nullable="false" />
+          <Property Type="String" Name="IS_NULLABLE" Nullable="true" />
+          <Property Type="String" Name="QUERYABLE" Nullable="false" />
+          <Property Type="String" Name="UPDATEABLE" Nullable="false" />
+          <Property Type="String" Name="INSERTABLE" Nullable="false" />
+          <Property Type="String" Name="REQUIRED_ON_INSERT" Nullable="false" />
+          <Property Type="String" Name="FORMAT" Nullable="false" />
+          <Property Type="String" Name="RELATES_TO" Nullable="true" />
+          <Property Type="String" Name="JUMPIN_TYPE" Nullable="true" />
+          <Property Type="String" Name="FORCE_UNOPTIMIZED" Nullable="false" />
+          <Property Type="String" Name="ADVANCED" Nullable="false" />
+          <Property Type="String" Name="SDK_QB_NAME" Nullable="true" />
+          <Property Type="String" Name="COLUMNFULLNAME" Nullable="false" />
+          <Property Type="String" Name="COLUMNSHORTNAME" Nullable="false" />
+        </EntityType>
+        <Association Name="QuickBooksTableQuickBooksColumn">
+          <End Type="ABWebDatabase1Model.QuickBooksTable" Role="QuickBooksTable" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.QuickBooksColumn" Role="QuickBooksColumn" Multiplicity="*" />
+        </Association>
+        <Association Name="CustomerCreditMemo">
+          <End Type="ABWebDatabase1Model.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.CreditMemo" Role="CreditMemo" Multiplicity="*" />
+        </Association>
+        <Association Name="AccountReceivableCreditMemo">
+          <End Type="ABWebDatabase1Model.AccountReceivable" Role="AccountReceivable" Multiplicity="1" />
+          <End Type="ABWebDatabase1Model.CreditMemo" Role="CreditMemo" Multiplicity="*" />
+        </Association>
+        <EntityType Name="BudgetReportRow">
+          <Key>
+            <PropertyRef Name="AdvertiserId" />
+          </Key>
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="Decimal" Name="Total" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="String" Name="CurrencyName" Nullable="false" MaxLength="3" />
+          <Property Type="Decimal" Name="StartingBalance" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="Payments" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="InvoiceCredits" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="Spends" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="CheckCredits" Nullable="false" Precision="14" Scale="4" />
+        </EntityType>
+        <EntityType Name="Tab">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="TabGroups" Relationship="ABWebDatabase1Model.TabTabGroup" FromRole="Tab" ToRole="TabGroup" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Location" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TabGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Tabs" Relationship="ABWebDatabase1Model.TabTabGroup" FromRole="TabGroup" ToRole="Tab" />
+          <Property Type="String" Name="Name" Nullable="false" />
+        </EntityType>
+        <Association Name="TabTabGroup">
+          <End Type="ABWebDatabase1Model.Tab" Role="Tab" Multiplicity="*" />
+          <End Type="ABWebDatabase1Model.TabGroup" Role="TabGroup" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ABWebDatabase1ModelStoreContainer" CdmEntityContainer="AccountingBackupEntities">
+    <EntitySetMapping Name="Advertisers">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Advertiser)">
+        <MappingFragment StoreEntitySet="Advertisers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="CreditCheck" ColumnName="CreditCheck" />
+          <ScalarProperty Name="CreditLimit" ColumnName="CreditLimit" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="EOM" ColumnName="EOM" />
+          <ScalarProperty Name="Suppression" ColumnName="Suppression" />
+          <ScalarProperty Name="StartingBalance" ColumnName="StartingBalance" />
+          <ScalarProperty Name="ContactName1" ColumnName="ContactName1" />
+          <ScalarProperty Name="ContactRole1" ColumnName="ContactRole1" />
+          <ScalarProperty Name="ContactEmail1" ColumnName="ContactEmail1" />
+          <ScalarProperty Name="ContactPhone1" ColumnName="ContactPhone1" />
+          <ScalarProperty Name="ContactName2" ColumnName="ContactName2" />
+          <ScalarProperty Name="ContactRole2" ColumnName="ContactRole2" />
+          <ScalarProperty Name="ContactEmail2" ColumnName="ContactEmail2" />
+          <ScalarProperty Name="ContactPhone2" ColumnName="ContactPhone2" />
+          <ScalarProperty Name="ContactName3" ColumnName="ContactName3" />
+          <ScalarProperty Name="ContactRole3" ColumnName="ContactRole3" />
+          <ScalarProperty Name="ContactEmail3" ColumnName="ContactEmail3" />
+          <ScalarProperty Name="ContactPhone3" ColumnName="ContactPhone3" />
+          <ScalarProperty Name="LoginName1" ColumnName="LoginName1" />
+          <ScalarProperty Name="URL1" ColumnName="URL1" />
+          <ScalarProperty Name="UserName1" ColumnName="UserName1" />
+          <ScalarProperty Name="Password1" ColumnName="Password1" />
+          <ScalarProperty Name="LoginName2" ColumnName="LoginName2" />
+          <ScalarProperty Name="URL2" ColumnName="URL2" />
+          <ScalarProperty Name="UserName2" ColumnName="UserName2" />
+          <ScalarProperty Name="Password2" ColumnName="Password2" />
+          <ScalarProperty Name="LoginName3" ColumnName="LoginName3" />
+          <ScalarProperty Name="URL3" ColumnName="URL3" />
+          <ScalarProperty Name="UserName3" ColumnName="UserName3" />
+          <ScalarProperty Name="Password3" ColumnName="Password3" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Currencies">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Currency)">
+        <MappingFragment StoreEntitySet="Currencies">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Culture" ColumnName="Culture" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Employees">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Employee)">
+        <MappingFragment StoreEntitySet="Employees">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Identity" ColumnName="Identity" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Periods">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Period)">
+        <MappingFragment StoreEntitySet="Periods">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="BeginDate" ColumnName="BeginDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SpendItems">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.SpendItem)">
+        <MappingFragment StoreEntitySet="SpendItems">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Period" ColumnName="Period" />
+          <ScalarProperty Name="Advertiser" ColumnName="Advertiser" />
+          <ScalarProperty Name="PID" ColumnName="PID" />
+          <ScalarProperty Name="Currency" ColumnName="Currency" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="Volume" ColumnName="Volume" />
+          <ScalarProperty Name="UnitType" ColumnName="UnitType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UnitTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.UnitType)">
+        <MappingFragment StoreEntitySet="UnitTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Invoices">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Invoice)">
+        <MappingFragment StoreEntitySet="Invoices">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="TxnID" ColumnName="TxnID" />
+          <ScalarProperty Name="TxnDate" ColumnName="TxnDate" />
+          <ScalarProperty Name="RefNumber" ColumnName="RefNumber" />
+          <ScalarProperty Name="AppliedAmount" ColumnName="AppliedAmount" />
+          <ScalarProperty Name="BalanceRemaining" ColumnName="BalanceRemaining" />
+          <ScalarProperty Name="AccountReceivableId" ColumnName="AccountReceivableId" />
+          <ScalarProperty Name="IsPending" ColumnName="IsPending" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="Memo" ColumnName="Memo" />
+          <ScalarProperty Name="IsPaid" ColumnName="IsPaid" />
+          <ScalarProperty Name="LineType" ColumnName="LineType" />
+          <ScalarProperty Name="LineSeq" ColumnName="LineSeq" />
+          <ScalarProperty Name="LineDesc" ColumnName="LineDesc" />
+          <ScalarProperty Name="LineClass" ColumnName="LineClass" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="TxnID2" ColumnName="TxnID2" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Terms">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Terms)">
+        <MappingFragment StoreEntitySet="Terms">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Days" ColumnName="Days" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Customer)">
+        <MappingFragment StoreEntitySet="Customers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FullName" ColumnName="FullName" />
+          <ScalarProperty Name="ListID" ColumnName="ListID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Companies">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Company)">
+        <MappingFragment StoreEntitySet="Companies">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ReceivedPayments">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.ReceivedPayment)">
+        <MappingFragment StoreEntitySet="ReceivedPayments">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="TxnID" ColumnName="TxnID" />
+          <ScalarProperty Name="TxnDate" ColumnName="TxnDate" />
+          <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+          <ScalarProperty Name="Memo" ColumnName="Memo" />
+          <ScalarProperty Name="AppliedToTxnTxnID" ColumnName="AppliedToTxnTxnID" />
+          <ScalarProperty Name="AppliedToTxnTxnType" ColumnName="AppliedToTxnTxnType" />
+          <ScalarProperty Name="AppliedToTxnAmount" ColumnName="AppliedToTxnAmount" />
+          <ScalarProperty Name="FQPrimaryKey" ColumnName="FQPrimaryKey" />
+          <ScalarProperty Name="RefNumber" ColumnName="RefNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountsReceivable">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.AccountReceivable)">
+        <MappingFragment StoreEntitySet="AccountsReceivable">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SynchTimes">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.SynchTime)">
+        <MappingFragment StoreEntitySet="SynchTimes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TimeStamp" ColumnName="TimeStamp" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Notes">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Note)">
+        <MappingFragment StoreEntitySet="Notes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Key" ColumnName="Key" />
+          <ScalarProperty Name="Data" ColumnName="Data" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CampaignSpends">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.CampaignSpend)">
+        <MappingFragment StoreEntitySet="CampaignSpends">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="Volume" ColumnName="Volume" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Campaigns">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Campaign)">
+        <MappingFragment StoreEntitySet="Campaigns">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Pid" ColumnName="Pid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Rates">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Rate)">
+        <MappingFragment StoreEntitySet="Rates">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ToUSD" ColumnName="ToUSD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vAdvertiserEmployees">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.vAdvertiserEmployee)">
+        <MappingFragment StoreEntitySet="vAdvertiserEmployees">
+          <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
+          <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+          <ScalarProperty Name="AM" ColumnName="AM" />
+          <ScalarProperty Name="AD" ColumnName="AD" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EntryTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.EntryType)">
+        <MappingFragment StoreEntitySet="EntryTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Logs">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Log)">
+        <MappingFragment StoreEntitySet="Logs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Entry" ColumnName="Entry" />
+          <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+          <ScalarProperty Name="EntryType_Id" ColumnName="EntryType_Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CreditMemoes">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.CreditMemo)">
+        <MappingFragment StoreEntitySet="CreditMemoes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="TxnID" ColumnName="TxnID" />
+          <ScalarProperty Name="TxnDate" ColumnName="TxnDate" />
+          <ScalarProperty Name="TxnType" ColumnName="TxnType" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuickBooksTables">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.QuickBooksTable)">
+        <MappingFragment StoreEntitySet="QuickBooksTables">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="QUALIFIERNAME" ColumnName="QUALIFIERNAME" />
+          <ScalarProperty Name="TABLENAME" ColumnName="TABLENAME" />
+          <ScalarProperty Name="TYPENAME" ColumnName="TYPENAME" />
+          <ScalarProperty Name="REMARKS" ColumnName="REMARKS" />
+          <ScalarProperty Name="DELETEABLE" ColumnName="DELETEABLE" />
+          <ScalarProperty Name="VOIDABLE" ColumnName="VOIDABLE" />
+          <ScalarProperty Name="INSERT_ONLY" ColumnName="INSERT_ONLY" />
+          <ScalarProperty Name="BestRowID" ColumnName="BestRowID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuickBooksColumns">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.QuickBooksColumn)">
+        <MappingFragment StoreEntitySet="QuickBooksColumns">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="QUALIFIERNAME" ColumnName="QUALIFIERNAME" />
+          <ScalarProperty Name="TABLENAME" ColumnName="TABLENAME" />
+          <ScalarProperty Name="COLUMNNAME" ColumnName="COLUMNNAME" />
+          <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+          <ScalarProperty Name="TYPENAME" ColumnName="TYPENAME" />
+          <ScalarProperty Name="PRECISION" ColumnName="PRECISION" />
+          <ScalarProperty Name="LENGTH" ColumnName="LENGTH" />
+          <ScalarProperty Name="SCALE" ColumnName="SCALE" />
+          <ScalarProperty Name="NULLABLE" ColumnName="NULLABLE" />
+          <ScalarProperty Name="DEFAULT" ColumnName="DEFAULT" />
+          <ScalarProperty Name="DATATYPE" ColumnName="DATATYPE" />
+          <ScalarProperty Name="OCTET_LENGTH" ColumnName="OCTET_LENGTH" />
+          <ScalarProperty Name="ORDINAL_POSITION" ColumnName="ORDINAL_POSITION" />
+          <ScalarProperty Name="IS_NULLABLE" ColumnName="IS_NULLABLE" />
+          <ScalarProperty Name="QUERYABLE" ColumnName="QUERYABLE" />
+          <ScalarProperty Name="UPDATEABLE" ColumnName="UPDATEABLE" />
+          <ScalarProperty Name="INSERTABLE" ColumnName="INSERTABLE" />
+          <ScalarProperty Name="REQUIRED_ON_INSERT" ColumnName="REQUIRED_ON_INSERT" />
+          <ScalarProperty Name="FORMAT" ColumnName="FORMAT" />
+          <ScalarProperty Name="RELATES_TO" ColumnName="RELATES_TO" />
+          <ScalarProperty Name="JUMPIN_TYPE" ColumnName="JUMPIN_TYPE" />
+          <ScalarProperty Name="FORCE_UNOPTIMIZED" ColumnName="FORCE_UNOPTIMIZED" />
+          <ScalarProperty Name="ADVANCED" ColumnName="ADVANCED" />
+          <ScalarProperty Name="SDK_QB_NAME" ColumnName="SDK_QB_NAME" />
+          <ScalarProperty Name="COLUMNFULLNAME" ColumnName="COLUMNFULLNAME" />
+          <ScalarProperty Name="COLUMNSHORTNAME" ColumnName="COLUMNSHORTNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BudgetReportRows">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.BudgetReportRow)">
+        <MappingFragment StoreEntitySet="BudgetReportRows">
+          <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+          <ScalarProperty Name="StartingBalance" ColumnName="StartingBalance" />
+          <ScalarProperty Name="Payments" ColumnName="Payments" />
+          <ScalarProperty Name="InvoiceCredits" ColumnName="InvoiceCredits" />
+          <ScalarProperty Name="Spends" ColumnName="Spends" />
+          <ScalarProperty Name="CheckCredits" ColumnName="CheckCredits" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tabs">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.Tab)">
+        <MappingFragment StoreEntitySet="Tabs">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TabGroups">
+      <EntityTypeMapping TypeName="IsTypeOf(ABWebDatabase1Model.TabGroup)">
+        <MappingFragment StoreEntitySet="TabGroups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="ARAccountReceivedPayment" TypeName="ABWebDatabase1Model.ARAccountReceivedPayment" StoreEntitySet="ReceivedPayments">
+      <EndProperty Name="ARAccount">
+        <ScalarProperty Name="Id" ColumnName="ARAccount_Id" />
+      </EndProperty>
+      <EndProperty Name="ReceivedPayment">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CurrencyARAccount" TypeName="ABWebDatabase1Model.CurrencyARAccount" StoreEntitySet="AccountsReceivable">
+      <EndProperty Name="Currency">
+        <ScalarProperty Name="Id" ColumnName="Currency_Id" />
+      </EndProperty>
+      <EndProperty Name="ARAccount">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="QuickBooksCompanyCustomer" TypeName="ABWebDatabase1Model.QuickBooksCompanyCustomer" StoreEntitySet="Customers">
+      <EndProperty Name="QuickBooksCompany">
+        <ScalarProperty Name="Id" ColumnName="QuickBooksCompany_Id" />
+      </EndProperty>
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CustomerInvoice" TypeName="ABWebDatabase1Model.CustomerInvoice" StoreEntitySet="Invoices">
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Customer_Id" />
+      </EndProperty>
+      <EndProperty Name="Invoice">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="TermsInvoice" TypeName="ABWebDatabase1Model.TermsInvoice" StoreEntitySet="Invoices">
+      <EndProperty Name="Terms">
+        <ScalarProperty Name="Id" ColumnName="Term_Id" />
+      </EndProperty>
+      <EndProperty Name="Invoice">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AdvertiserCustomer" TypeName="ABWebDatabase1Model.AdvertiserCustomer" StoreEntitySet="Customers">
+      <EndProperty Name="Advertiser">
+        <ScalarProperty Name="Id" ColumnName="Advertiser_Id" />
+      </EndProperty>
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CustomerReceivedPayment" TypeName="ABWebDatabase1Model.CustomerReceivedPayment" StoreEntitySet="ReceivedPayments">
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Customer_Id" />
+      </EndProperty>
+      <EndProperty Name="ReceivedPayment">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_CurrencyCampaignSpend" TypeName="ABWebDatabase1Model.FK_CurrencyCampaignSpend" StoreEntitySet="CampaignSpends">
+      <EndProperty Name="Currency">
+        <ScalarProperty Name="Id" ColumnName="Currency_Id" />
+      </EndProperty>
+      <EndProperty Name="CampaignSpend">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_PeriodCampaignSpend" TypeName="ABWebDatabase1Model.FK_PeriodCampaignSpend" StoreEntitySet="CampaignSpends">
+      <EndProperty Name="Period">
+        <ScalarProperty Name="Id" ColumnName="Period_Id" />
+      </EndProperty>
+      <EndProperty Name="CampaignSpend">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_UnitTypeCampaignSpend" TypeName="ABWebDatabase1Model.FK_UnitTypeCampaignSpend" StoreEntitySet="CampaignSpends">
+      <EndProperty Name="UnitType">
+        <ScalarProperty Name="Id" ColumnName="UnitType_Id" />
+      </EndProperty>
+      <EndProperty Name="CampaignSpend">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_AdvertiserCampaign" TypeName="ABWebDatabase1Model.FK_AdvertiserCampaign" StoreEntitySet="Campaigns">
+      <EndProperty Name="Advertiser">
+        <ScalarProperty Name="Id" ColumnName="Advertiser_Id" />
+      </EndProperty>
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_CampaignCampaignSpend" TypeName="ABWebDatabase1Model.FK_CampaignCampaignSpend" StoreEntitySet="CampaignSpends">
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Campaign_Id" />
+      </EndProperty>
+      <EndProperty Name="CampaignSpend">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_EmployeeCampaign" TypeName="ABWebDatabase1Model.FK_EmployeeCampaign" StoreEntitySet="Campaigns">
+      <EndProperty Name="Employee">
+        <ScalarProperty Name="Id" ColumnName="Employee_Id" />
+      </EndProperty>
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_EmployeeCampaign1" TypeName="ABWebDatabase1Model.FK_EmployeeCampaign1" StoreEntitySet="Campaigns">
+      <EndProperty Name="Employee">
+        <ScalarProperty Name="Id" ColumnName="Employee1_Id" />
+      </EndProperty>
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_CurrencyRate" TypeName="ABWebDatabase1Model.FK_CurrencyRate" StoreEntitySet="Rates">
+      <EndProperty Name="Currency">
+        <ScalarProperty Name="Id" ColumnName="Currency_Id" />
+      </EndProperty>
+      <EndProperty Name="Rate">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FK_PeriodRate" TypeName="ABWebDatabase1Model.FK_PeriodRate" StoreEntitySet="Rates">
+      <EndProperty Name="Period">
+        <ScalarProperty Name="Id" ColumnName="Period_Id" />
+      </EndProperty>
+      <EndProperty Name="Rate">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="TermsCustomer" TypeName="ABWebDatabase1Model.TermsCustomer" StoreEntitySet="Customers">
+      <EndProperty Name="Terms">
+        <ScalarProperty Name="Id" ColumnName="Term_Id" />
+      </EndProperty>
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AdvertiserTerms" TypeName="ABWebDatabase1Model.AdvertiserTerms" StoreEntitySet="Advertisers">
+      <EndProperty Name="Terms">
+        <ScalarProperty Name="Id" ColumnName="Term_Id" />
+      </EndProperty>
+      <EndProperty Name="Advertiser">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AdvertiserCurrency" TypeName="ABWebDatabase1Model.AdvertiserCurrency" StoreEntitySet="Advertisers">
+      <EndProperty Name="Currency">
+        <ScalarProperty Name="Id" ColumnName="Currency_Id" />
+      </EndProperty>
+      <EndProperty Name="Advertiser">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="QuickBooksTableQuickBooksColumn" TypeName="ABWebDatabase1Model.QuickBooksTableQuickBooksColumn" StoreEntitySet="QuickBooksColumns">
+      <EndProperty Name="QuickBooksTable">
+        <ScalarProperty Name="Id" ColumnName="QuickBooksTable_Id" />
+      </EndProperty>
+      <EndProperty Name="QuickBooksColumn">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="CustomerCreditMemo" TypeName="ABWebDatabase1Model.CustomerCreditMemo" StoreEntitySet="CreditMemoes">
+      <EndProperty Name="Customer">
+        <ScalarProperty Name="Id" ColumnName="Customer_Id" />
+      </EndProperty>
+      <EndProperty Name="CreditMemo">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AccountReceivableCreditMemo" TypeName="ABWebDatabase1Model.AccountReceivableCreditMemo" StoreEntitySet="CreditMemoes">
+      <EndProperty Name="AccountReceivable">
+        <ScalarProperty Name="Id" ColumnName="AccountReceivable_Id" />
+      </EndProperty>
+      <EndProperty Name="CreditMemo">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="TabTabGroup" TypeName="ABWebDatabase1Model.TabTabGroup" StoreEntitySet="TabTabGroup">
+      <EndProperty Name="Tab">
+        <ScalarProperty Name="Id" ColumnName="Tabs_Id" />
+      </EndProperty>
+      <EndProperty Name="TabGroup">
+        <ScalarProperty Name="Id" ColumnName="TabGroups_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="AccountingBackupData" ZoomLevel="88">
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Advertiser" Width="1.5" PointX="4.75" PointY="4.25" Height="7.9416308593750031" IsExpanded="true" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Currency" Width="1.625" PointX="3.875" PointY="0.5" Height="2.364889322916667" IsExpanded="true" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Employee" Width="1.5" PointX="2.625" PointY="10.25" Height="1.98028645833333" IsExpanded="true" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Period" Width="1.5" PointX="0.5" PointY="3" Height="1.9802864583333335" IsExpanded="true" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.SpendItem" Width="1.5" PointX="3.125" PointY="17.25" Height="2.5571907552083335" IsExpanded="true" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.UnitType" PointX="0.5" PointY="5.5" Width="1.5" Height="1.595683593749996" IsExpanded="true" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Invoice" Width="2.125" PointX="9.75" PointY="7" Height="5.057109375" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Terms" Width="1.5" PointX="7" PointY="8.875" Height="1.7879850260416657" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Customer" Width="1.625" PointX="7" PointY="5.375" Height="2.5571907552083326" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Company" Width="1.75" PointX="7" PointY="3" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.ReceivedPayment" Width="2" PointX="9.75" PointY="1.125" Height="3.3263964843749996" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.AccountReceivable" Width="1.875" PointX="13.75" PointY="0.5" Height="1.7879850260416665" />
+        <AssociationConnector Association="ABWebDatabase1Model.ARAccountReceivedPayment">
+          <ConnectorPoint PointX="13.75" PointY="1.7064925130208337" />
+          <ConnectorPoint PointX="11.75" PointY="1.7064925130208337" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.CurrencyARAccount">
+          <ConnectorPoint PointX="5.5" PointY="0.78125000000000044" />
+          <ConnectorPoint PointX="13.75" PointY="0.78125000000000044" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.QuickBooksCompanyCustomer">
+          <ConnectorPoint PointX="7.8125" PointY="4.59568359375" />
+          <ConnectorPoint PointX="7.8125" PointY="5.375" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.CustomerInvoice">
+          <ConnectorPoint PointX="8.625" PointY="7.4660953776041659" />
+          <ConnectorPoint PointX="9.75" PointY="7.4660953776041659" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.TermsInvoice">
+          <ConnectorPoint PointX="8.5" PointY="9.7689925130208337" />
+          <ConnectorPoint PointX="9.75" PointY="9.7689925130208337" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.AdvertiserCustomer">
+          <ConnectorPoint PointX="6.25" PointY="6.6535953776041659" />
+          <ConnectorPoint PointX="7" PointY="6.6535953776041659" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.CustomerReceivedPayment">
+          <ConnectorPoint PointX="8.625" PointY="5.3762490000000005" />
+          <ConnectorPoint PointX="9.0012490000000014" PointY="5" />
+          <ConnectorPoint PointX="10.75" PointY="5" />
+          <ConnectorPoint PointX="10.75" PointY="4.451396484375" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="ABWebDatabase1Model.SynchTime" Width="1.5" PointX="3.125" PointY="15.25" Height="1.5956835937500031" />
+        <AssociationConnector Association="ABWebDatabase1Model.AccountReceivableInvoice">
+          <ConnectorPoint PointX="14.96875" PointY="2.2879850260416665" />
+          <ConnectorPoint PointX="14.96875" PointY="9.5285546875" />
+          <ConnectorPoint PointX="11.875" PointY="9.5285546875" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Note" Width="1.875" PointX="0.5" PointY="13.125" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.CampaignSpend" Width="1.5" PointX="2.625" PointY="3.75" Height="2.3648893229166665" />
+        <AssociationConnector Association="ABWebDatabase1Model.FK_CurrencyCampaignSpend" >
+          <ConnectorPoint PointX="4.0093703208965463" PointY="2.864889322916667" />
+          <ConnectorPoint PointX="4.0093703208965463" PointY="3.375" />
+          <ConnectorPoint PointX="4.0070457319803765" PointY="3.375" />
+          <ConnectorPoint PointX="4.0070457319803765" PointY="3.75" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.FK_PeriodCampaignSpend" >
+          <ConnectorPoint PointX="2" PointY="4.3651432291666667" />
+          <ConnectorPoint PointX="2.625" PointY="4.3651432291666667" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.FK_UnitTypeCampaignSpend" >
+          <ConnectorPoint PointX="2" PointY="5.8074446614583337" />
+          <ConnectorPoint PointX="2.625" PointY="5.8074446614583337" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Campaign" Width="1.5" PointX="2.625" PointY="7" Height="2.3648893229166674" />
+        <AssociationConnector Association="ABWebDatabase1Model.FK_AdvertiserCampaign">
+          <ConnectorPoint PointX="4.75" PointY="9.1786885289981335" />
+          <ConnectorPoint PointX="4.125" PointY="9.1786885289981335" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.FK_CampaignCampaignSpend" >
+          <ConnectorPoint PointX="3.375" PointY="7" />
+          <ConnectorPoint PointX="3.375" PointY="6.1148893229166665" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.FK_EmployeeCampaign" >
+          <ConnectorPoint PointX="3.375" PointY="10.25" />
+          <ConnectorPoint PointX="3.375" PointY="9.3648893229166674" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.FK_EmployeeCampaign1" >
+          <ConnectorPoint PointX="3.8125" PointY="10.25" />
+          <ConnectorPoint PointX="3.8125" PointY="9.3648893229166674" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Rate" Width="1.5" PointX="0.5" PointY="0.5" Height="1.7879850260416674" />
+        <AssociationConnector Association="ABWebDatabase1Model.FK_CurrencyRate" >
+          <ConnectorPoint PointX="3.875" PointY="1.3939925130208337" />
+          <ConnectorPoint PointX="2" PointY="1.3939925130208337" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.FK_PeriodRate" >
+          <ConnectorPoint PointX="1.25" PointY="3" />
+          <ConnectorPoint PointX="1.25" PointY="2.2879850260416674" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.TermsCustomer">
+          <ConnectorPoint PointX="7.75" PointY="8.875" />
+          <ConnectorPoint PointX="7.75" PointY="7.9321907552083326" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.AdvertiserTerms">
+          <ConnectorPoint PointX="6.25" PointY="9.7689925130208337" />
+          <ConnectorPoint PointX="7" PointY="9.7689925130208337" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.AdvertiserCurrency">
+          <ConnectorPoint PointX="5.0615474971561536" PointY="4.25" />
+          <ConnectorPoint PointX="5.0615474971561536" PointY="3.875" />
+          <ConnectorPoint PointX="5.0544469379495709" PointY="3.875" />
+          <ConnectorPoint PointX="5.0544469379495709" PointY="2.864889322916667" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="ABWebDatabase1Model.vAdvertiserEmployee" Width="1.875" PointX="3" PointY="13.125" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.EntryType" Width="1.5" PointX="0.625" PointY="17.625" Height="1.787985026041671" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Log" Width="1.5" PointX="0.625" PointY="15" Height="1.9802864583333388" />
+        <AssociationConnector Association="ABWebDatabase1Model.FK_LogEntryType" >
+          <ConnectorPoint PointX="1.375" PointY="17.625" />
+          <ConnectorPoint PointX="1.375" PointY="16.980286458333339" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="ABWebDatabase1Model.CreditMemo" Width="2.25" PointX="12" PointY="4.625" Height="1.9802864583333326" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.QuickBooksTable" Width="2.25" PointX="5.5" PointY="13.125" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.QuickBooksColumn" Width="2" PointX="8.5" PointY="13.125" Height="6.403219401041671" />
+        <AssociationConnector Association="ABWebDatabase1Model.QuickBooksTableQuickBooksColumn">
+          <ConnectorPoint PointX="7.75" PointY="14.595896809895834" />
+          <ConnectorPoint PointX="8.5" PointY="14.595896809895834" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.CustomerCreditMemo">
+          <ConnectorPoint PointX="8.625" PointY="6.1181709453125013" />
+          <ConnectorPoint PointX="12" PointY="6.1181709453125013" />
+        </AssociationConnector>
+        <AssociationConnector Association="ABWebDatabase1Model.AccountReceivableCreditMemo">
+          <ConnectorPoint PointX="14" PointY="2.2879850260416665" />
+          <ConnectorPoint PointX="14" PointY="4.625" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="ABWebDatabase1Model.BudgetReportRow" Width="2.25" PointX="5.5" PointY="16.375" Height="2.5571907552083353" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.Tab" Width="1.5" PointX="10.875" PointY="13.125" Height="1.7879850260416657" />
+        <EntityTypeShape EntityType="ABWebDatabase1Model.TabGroup" Width="1.5" PointX="12.875" PointY="13.125" Height="1.5956835937499996" />
+        <AssociationConnector Association="ABWebDatabase1Model.TabTabGroup">
+          <ConnectorPoint PointX="12.375" PointY="13.922841796875" />
+          <ConnectorPoint PointX="12.875" PointY="13.922841796875" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

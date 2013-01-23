@@ -1,0 +1,33 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#
+string ConnectionString = @"Data Source=biz2\da;Initial Catalog=ABWebDatabase1_prod;Integrated Security=True";
+string TableName = "EntryTypes";
+string IdColumnName = "Id";
+string NameColumnName = "Name";
+string EnumTypePrefix = "e";
+#>
+namespace AccountingBackupWeb.Models.AccountingBackup
+{
+	public enum <#=EnumTypePrefix#><#=TableName#>
+	{
+<#
+using(SqlConnection con = new SqlConnection(ConnectionString)) {	
+	con.Open();
+	using(SqlCommand cmd = new SqlCommand("select * from " + TableName, con)) {	
+		using(SqlDataReader reader = cmd.ExecuteReader()) {		
+			bool first = true;	
+			while(reader.Read()) {		
+				Write(first ? "" : ",\r\n");	
+				first = false;	
+				#>		<#=(string)reader[NameColumnName]#> = <#= (int)reader[IdColumnName]#><#
+			}
+		}
+	}
+}
+#>
+
+	}
+}

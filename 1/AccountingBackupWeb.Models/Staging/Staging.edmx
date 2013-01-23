@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Staging.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="StagingStoreContainer">
+          <EntitySet Name="ChoiceNames" EntityType="Staging.Store.ChoiceNames" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerCreditLimits" EntityType="Staging.Store.CustomerCreditLimits" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CustomerStartingBalances" EntityType="Staging.Store.CustomerStartingBalances" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EomAccountManagerViewRows" EntityType="Staging.Store.EomAccountManagerViewRows" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="ChoiceNames">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TableName" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="ChoiceName" Type="varchar" Nullable="false" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="CustomerCreditLimits">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreditLimitText" Type="nvarchar(max)" />
+          <Property Name="CreditLimitAmount" Type="decimal" Precision="14" Scale="4" />
+        </EntityType>
+        <EntityType Name="CustomerStartingBalances">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CurrencyName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="StartingBalanceAmount" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+          <Property Name="StartingBalanceDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EomAccountManagerViewRows">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Period" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Publisher" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Advertiser" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CampaignNumber" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CampaignName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="RevCurrency" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CostCurrency" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CostPerUnit" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="RevPerUnit" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Units" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Revenue" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Cost" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AccountManager" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AdManager" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Staging" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="StagingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CustomerStartingBalances" EntityType="Staging.CustomerStartingBalance" />
+          <EntitySet Name="CustomerCreditLimits" EntityType="Staging.CustomerCreditLimit" />
+          <EntitySet Name="EomAccountManagerViewRows" EntityType="Staging.EomAccountManagerViewRow" />
+          <EntitySet Name="ChoiceNames" EntityType="Staging.ChoiceName" />
+        </EntityContainer>
+        <EntityType Name="CustomerStartingBalance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="CustomerName" Nullable="false" />
+          <Property Type="String" Name="CurrencyName" Nullable="false" />
+          <Property Type="Decimal" Name="StartingBalanceAmount" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="DateTime" Name="StartingBalanceDate" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerCreditLimit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="CustomerName" Nullable="false" />
+          <Property Type="String" Name="CreditLimitText" Nullable="true" />
+          <Property Type="Decimal" Name="CreditLimitAmount" Nullable="true" Precision="14" Scale="4" />
+        </EntityType>
+        <EntityType Name="EomAccountManagerViewRow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Period" Nullable="false" />
+          <Property Type="String" Name="Publisher" Nullable="false" />
+          <Property Type="String" Name="Advertiser" Nullable="false" />
+          <Property Type="String" Name="CampaignNumber" Nullable="false" />
+          <Property Type="String" Name="CampaignName" Nullable="false" />
+          <Property Type="String" Name="RevCurrency" Nullable="false" />
+          <Property Type="String" Name="CostCurrency" Nullable="false" />
+          <Property Type="String" Name="CostPerUnit" Nullable="false" />
+          <Property Type="String" Name="RevPerUnit" Nullable="false" />
+          <Property Type="String" Name="Units" Nullable="false" />
+          <Property Type="String" Name="Revenue" Nullable="false" />
+          <Property Type="String" Name="Cost" Nullable="false" />
+          <Property Type="String" Name="AccountManager" Nullable="false" />
+          <Property Type="String" Name="AdManager" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ChoiceName">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="TableName" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ChoiceName1" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="StagingStoreContainer" CdmEntityContainer="StagingEntities">
+    <EntitySetMapping Name="CustomerStartingBalances">
+      <EntityTypeMapping TypeName="IsTypeOf(Staging.CustomerStartingBalance)">
+        <MappingFragment StoreEntitySet="CustomerStartingBalances">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+          <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+          <ScalarProperty Name="StartingBalanceAmount" ColumnName="StartingBalanceAmount" />
+          <ScalarProperty Name="StartingBalanceDate" ColumnName="StartingBalanceDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CustomerCreditLimits">
+      <EntityTypeMapping TypeName="IsTypeOf(Staging.CustomerCreditLimit)">
+        <MappingFragment StoreEntitySet="CustomerCreditLimits">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+          <ScalarProperty Name="CreditLimitText" ColumnName="CreditLimitText" />
+          <ScalarProperty Name="CreditLimitAmount" ColumnName="CreditLimitAmount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EomAccountManagerViewRows">
+      <EntityTypeMapping TypeName="IsTypeOf(Staging.EomAccountManagerViewRow)">
+        <MappingFragment StoreEntitySet="EomAccountManagerViewRows">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Period" ColumnName="Period" />
+          <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+          <ScalarProperty Name="Advertiser" ColumnName="Advertiser" />
+          <ScalarProperty Name="CampaignNumber" ColumnName="CampaignNumber" />
+          <ScalarProperty Name="CampaignName" ColumnName="CampaignName" />
+          <ScalarProperty Name="RevCurrency" ColumnName="RevCurrency" />
+          <ScalarProperty Name="CostCurrency" ColumnName="CostCurrency" />
+          <ScalarProperty Name="CostPerUnit" ColumnName="CostPerUnit" />
+          <ScalarProperty Name="RevPerUnit" ColumnName="RevPerUnit" />
+          <ScalarProperty Name="Units" ColumnName="Units" />
+          <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+          <ScalarProperty Name="AccountManager" ColumnName="AccountManager" />
+          <ScalarProperty Name="AdManager" ColumnName="AdManager" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+          <EntitySetMapping Name="ChoiceNames">
+            <EntityTypeMapping TypeName="Staging.ChoiceName">
+              <MappingFragment StoreEntitySet="ChoiceNames">
+                <ScalarProperty Name="ChoiceName1" ColumnName="ChoiceName" />
+                <ScalarProperty Name="TableName" ColumnName="TableName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="Staging" >
+        <EntityTypeShape EntityType="Staging.CustomerStartingBalance" Width="2.25" PointX="4.125" PointY="0.5" Height="1.9802864583333331" />
+        <EntityTypeShape EntityType="Staging.CustomerCreditLimit" Width="2.5" PointX="5.875" PointY="3.125" Height="1.7879850260416665" />
+        <EntityTypeShape EntityType="Staging.EomAccountManagerViewRow" Width="2.25" PointX="0.75" PointY="2.125" Height="3.9233007812499991" />
+        <EntityTypeShape EntityType="Staging.ChoiceName" Width="1.5" PointX="4.375" PointY="5.75" Height="1.5956835937499996" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

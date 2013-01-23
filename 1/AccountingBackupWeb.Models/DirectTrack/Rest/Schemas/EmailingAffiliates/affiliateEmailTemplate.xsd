@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/affiliateEmailTemplate/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/affiliateEmailTemplate/v1_0"
+elementFormDefault="qualified">
+
+<!-- PRIMARY ELEMENT -->
+
+<xs:element name="affiliateEmailTemplate">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="templateName" minOccurs="1" maxOccurs="1" />
+			<xs:element ref="subject" minOccurs="0" maxOccurs="1" />
+			<xs:element ref="plainTextMessage" minOccurs="0" maxOccurs="1" />
+			<xs:element ref="htmlMessage" minOccurs="0" maxOccurs="1" />
+			<xs:element ref="sendPreviewToEmail" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="location" type="resourceURI" />
+	</xs:complexType>
+</xs:element>
+
+<!-- COMPLEX ELEMENTS -->
+
+<!-- SIMPLE ELEMENTS -->
+
+<xs:element name="templateName">
+	<xs:simpleType>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="128" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:element>
+
+<xs:element name="subject">
+	<xs:simpleType>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="128" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:element>
+
+<xs:element name="plainTextMessage">
+	<xs:simpleType>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="65535" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:element>
+
+<xs:element name="htmlMessage">
+	<xs:simpleType>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="65535" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:element>
+
+<xs:element name="sendPreviewToEmail" type="emailAddress" />
+
+<xs:simpleType name="emailAddress">
+	<xs:restriction base="xs:string">
+		<xs:maxLength value="100" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="resourceURI">
+	<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]" />
+	</xs:restriction>
+</xs:simpleType>
+
+</xs:schema>

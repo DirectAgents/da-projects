@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.digitalriver.com/directtrack/api/emailReport/v1_0" xmlns="http://www.digitalriver.com/directtrack/api/emailReport/v1_0" elementFormDefault="qualified">
+
+<!-- PRIMARY ELEMENT -->
+
+<xs:element name="emailReport">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="toAddress" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element name="fromAddress" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element name="subject" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element ref="status" minOccurs="1" maxOccurs="1" />
+			<xs:element name="errors" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element name="smtpServer" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element name="smtpUsername" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element name="smtpPassword" minOccurs="1" maxOccurs="1" type="xs:string" />
+			<xs:element ref="emailType" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="location" type="resourceURI" />
+	</xs:complexType>
+</xs:element>
+
+<!-- COMPLEX ELEMENTS -->
+
+<!-- SIMPLE ELEMENTS -->
+
+<xs:simpleType name="resourceURI">
+	<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]" />
+	</xs:restriction>
+</xs:simpleType>
+
+<xs:element name="status">
+	<xs:simpleType>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="QUEUED" />
+			<xs:enumeration value="PROCESSING" />
+			<xs:enumeration value="SENT" />
+			<xs:enumeration value="ERROR" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:element>
+
+<xs:element name="emailType">
+	<xs:simpleType>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NORMAL" />
+			<xs:enumeration value="AUTOMATIC" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:element>
+
+</xs:schema>

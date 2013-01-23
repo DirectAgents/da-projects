@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/affiliateEditRequest/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/affiliateEditRequest/v1_0"
+elementFormDefault="qualified">
+
+<!-- simple elements -->
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+<!-- END simple elements -->
+
+<!-- complex elements -->
+	<xs:element name="approval">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Pending"/>
+				<xs:enumeration value="Approved"/>
+				<xs:enumeration value="Denied"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:simpleType name="fieldType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value='255'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="field">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="fieldType">
+					<xs:attribute name="name" type="xs:string"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="information">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="field" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="bankingDetails">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="field" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="wireDetails">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="field" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="website">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:unsignedInt"/>
+			<xs:attribute name="website" type="xs:string"/>
+			<xs:attribute name="action" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="websites">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="website" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+<!-- END complex elements -->
+
+<!-- PRIMARY ELEMENT -->
+	<xs:element name="affiliateEditRequest">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="approval" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="information" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="wireDetails" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="bankingDetails" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="websites" minOccurs="0" maxOccurs="1"/>
+	    </xs:sequence>
+		<xs:attribute name="location" type="resourceURI"/>
+	  </xs:complexType>
+	</xs:element>
+<!-- END PRIMARY ELEMENT -->
+
+</xs:schema>

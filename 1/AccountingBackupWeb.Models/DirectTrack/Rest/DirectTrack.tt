@@ -1,0 +1,526 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".edmx" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="System.Data" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml.XPath " #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+string ModelName = "DirectTrack";
+string StorageModelsSchemaNamespace = ModelName + ".Store";
+string StorageModelsSchemaEntityContainerName = ModelName + "StoreContainer";
+string ConceptualModelsSchemaNamespace = ModelName;
+string ConceptualModelsSchemaEntityContainerName = ModelName + "Entities";
+string ConceptualModelsSchemaEntityContainerLazyLoadingEnabled = "true";
+var Tables = _tables;
+CreateTablesFromXsdFile(@"C:\Code2011\da2\AccountingBackupWeb.Models\DirectTrack\Rest\Schemas\Campaigns\campaign.xsd", "campaign");
+CreateTablesFromXsdFile(@"C:\Code2011\da2\AccountingBackupWeb.Models\DirectTrack\Rest\Schemas\Affiliates\affiliate.xsd", "affiliate");
+CreateTablesFromXsdFile(@"C:\Code2011\da2\AccountingBackupWeb.Models\DirectTrack\Rest\Schemas\Advertisers\advertiser.xsd", "advertiser");
+CreateTablesFromXsdFile(@"C:\Code2011\da2\AccountingBackupWeb.Models\DirectTrack\Rest\Schemas\Payouts\payout.xsd", "payout");
+CreateTablesFromXsdFile(@"C:\Code2011\da2\AccountingBackupWeb.Models\DirectTrack\Rest\Schemas\DetailedSales\saleDetail.xsd", "saleDetail");
+CreateTablesFromXsdFile(@"C:\Code2011\da2\AccountingBackupWeb.Models\DirectTrack\Rest\Schemas\DetailedLeads\leadDetail.xsd", "leadDetail");
+CreateTablesFromXsdFile(@"C:\Code2011\da2\AccountingBackupWeb.Models\DirectTrack\Rest\Schemas\Creatives\creative.xsd", "creative");
+#>
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx"
+	xmlns:init="http://schemas.directagents.com/InitializationSql">
+	<!-- EF Runtime content -->
+	<edmx:Runtime>
+		<!-- SSDL content -->
+		<edmx:StorageModels>
+			<Schema Namespace="<#=StorageModelsSchemaNamespace#>" Alias="Self" Provider="System.Data.SqlClient" 
+				ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" 
+				xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+				<EntityContainer Name="<#=StorageModelsSchemaEntityContainerName#>">
+<#foreach (var table in Tables) {#>
+					<EntitySet Name="<#=table.Name#>" EntityType="<#=StorageModelsSchemaNamespace + "." + table.Name#>" store:Type="Tables" Schema="dbo" />
+<#}
+#>				</EntityContainer>			
+<#foreach (var table in Tables)	{#>
+				<EntityType Name="<#=table.Name#>">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+<#foreach (var column in table.Columns) {#>	
+					<Property Name="<#=column.Name#>" Type="<#=column.GetStorageType()#>" Nullable="<#=column.IsNullable()#>"	
+<#
+if(column.GetTypeName() == eTypeName.DECIMAL) {#>
+						Precision="<#=column.Precision#>" Scale="<#=column.Scale#>"
+<#}
+#>
+					/>
+<#}
+#>
+				</EntityType>
+<#}
+#>
+			</Schema>
+		</edmx:StorageModels>
+
+		<!-- CSDL content -->
+		<edmx:ConceptualModels>
+			<Schema 
+				xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" 
+				xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="<#=ConceptualModelsSchemaNamespace#>" 
+				Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+				<EntityContainer Name="<#=ConceptualModelsSchemaEntityContainerName#>" annotation:LazyLoadingEnabled="<#=ConceptualModelsSchemaEntityContainerLazyLoadingEnabled#>">
+<#foreach (var table in Tables) {#>
+					<EntitySet Name="<#=table.Name#>" EntityType="<#=ConceptualModelsSchemaNamespace + "." + table.Name#>" />
+<#}
+#>
+				</EntityContainer>
+<#foreach (var table in Tables) {#>
+				<EntityType Name="<#=table.Name#>">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+<#foreach (var column in table.Columns) {#>
+					<Property Type="<#=column.GetConceptualType()#>"  Name="<#=column.Name#>" Nullable="<#=column.IsNullable()#>" />
+<#
+}#>
+				</EntityType>
+<#}
+#>
+			</Schema>
+		</edmx:ConceptualModels>
+
+		<!-- C-S mapping content -->
+		<edmx:Mappings>
+			<Mapping xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs" Space="C-S">
+				<EntityContainerMapping CdmEntityContainer="<#=ConceptualModelsSchemaEntityContainerName#>" StorageEntityContainer="<#=StorageModelsSchemaEntityContainerName#>">
+<#foreach (var table in Tables)	{#>
+						<EntitySetMapping Name="<#=table.Name#>">
+							<EntityTypeMapping TypeName="IsTypeOf(<#=ConceptualModelsSchemaNamespace + "." + table.Name#>)">
+								<MappingFragment StoreEntitySet="<#=table.Name#>">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+<#foreach (var column in table.Columns) {#>
+									<ScalarProperty Name="<#=column.Name#>" ColumnName="<#=column.Name#>" />
+<#
+}#>
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+<#}
+#>
+				</EntityContainerMapping>
+			</Mapping>
+		</edmx:Mappings>
+	</edmx:Runtime>
+	<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+	<edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+		<edmx:Connection>
+			<DesignerInfoPropertySet>
+				<DesignerProperty 
+					Name="MetadataArtifactProcessing"
+					Value="EmbedInOutputAssembly" />
+			</DesignerInfoPropertySet>
+		</edmx:Connection>
+		<edmx:Options>
+			<DesignerInfoPropertySet>
+				<DesignerProperty 
+					Name="ValidateOnBuild" 
+					Value="true" />
+				<DesignerProperty 
+					Name="EnablePluralization" 
+					Value="True" />
+			</DesignerInfoPropertySet>
+		</edmx:Options>
+		<!-- Diagram content (shape and connector positions) -->
+		<edmx:Diagrams>
+			<Diagram Name="<#=ConceptualModelsSchemaNamespace#>" >
+<#
+int i = 0;
+foreach (var table in Tables) {#>
+				<EntityTypeShape EntityType="<#=ConceptualModelsSchemaNamespace + "." + table.Name#>" Width="1.5" PointX="<#=i#>" PointY="<#=i#>" Height="2" />
+<#
+i++;
+}
+#>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
+<#StageChoices();#>
+<#+ 
+List<Table> _tables = new List<Table>(); 
+public void StageChoices()
+{
+	DeleteChoices();	
+	var tables = 
+		from t in _tables
+		from c in t.Columns
+		where c.Choices.Count > 0
+		select new {
+			Name = c.ChoiceTable.Name,
+			Choices = c.Choices
+		};
+	foreach (var t in tables)
+	{
+		foreach (var c in t.Choices)
+		{
+			AddChoice(t.Name, c);	 
+		}
+	}
+}
+public void AddChoice(string table, string choice)
+{
+	SqlConnection conn = null;
+	SqlDataReader rdr  = null;
+	try
+	{
+		conn = new SqlConnection(@"Data Source=biz2\da;Initial Catalog=ABWeb_staging;Integrated Security=True");
+		conn.Open();
+		SqlCommand cmd  = new SqlCommand("AddChoice", conn);
+		cmd.CommandType = CommandType.StoredProcedure;
+		cmd.Parameters.Add(new SqlParameter("@table", table));
+		cmd.Parameters.Add(new SqlParameter("@choice", choice));
+		rdr = cmd.ExecuteReader();
+	}
+	finally
+	{
+		if (conn != null)
+		{
+			conn.Close();
+		}
+		if (rdr != null)
+		{
+			rdr.Close();
+		}
+	}	
+}
+
+public void DeleteChoices()
+{
+	SqlConnection conn = null;
+	SqlDataReader rdr  = null;
+	try
+	{
+		conn = new SqlConnection(@"Data Source=biz2\da;Initial Catalog=ABWeb_staging;Integrated Security=True");
+		conn.Open();
+		SqlCommand cmd  = new SqlCommand("delete from ChoiceNames", conn);
+		cmd.ExecuteNonQuery();
+	}
+	finally
+	{
+		if (conn != null)
+		{
+			conn.Close();
+		}
+		if (rdr != null)
+		{
+			rdr.Close();
+		}
+	}	
+}
+
+public void CreateTablesFromXsdFile(string fileName, string elementName)
+{
+	Table table = new Table(elementName);
+	_tables.Add(table);
+		
+	XDocument document = XDocument.Load(fileName);
+	
+	XNamespace xs = "http://www.w3.org/2001/XMLSchema";   
+	var namespaceManager = new XmlNamespaceManager(new NameTable()); 
+	namespaceManager.AddNamespace("xs", xs.NamespaceName);
+	
+	var elements = document.XPathSelectElements(string.Format("//node()[@name='{0}']/xs:complexType/xs:sequence/xs:element", elementName), namespaceManager);
+                                   
+	foreach (var element in elements.Select(c => new {
+		Name = c.Attribute("ref").Value,
+        Min = c.Attribute("minOccurs").Value,
+        Max = c.Attribute("maxOccurs").Value
+	}))
+	{
+        Column column = new Column(table, element.Name);
+
+        column.Nullable = (element.Min == "0") && (element.Max == "1");
+		
+		if(element.Name.EndsWith("URL"))
+        {
+            column.TypeName = "resourceURI";
+            continue;
+        }
+
+        var elementDefinition = document.XPathSelectElements(string.Format("//node()[@name='{0}']", element.Name));
+		
+		// Special case for payout.xsd
+        if(elementName == "payout" && element.Name == "affiliate")
+        {
+            Column column2 = new Column(table, "allAffiliates");
+            column2.TypeName="booleanInt";  
+            Column column3 = new Column(table, "affiliateResourceURL");
+            column3.TypeName="resourceURI";
+            continue;
+        }
+		
+		var types = elementDefinition.Attributes("type");
+        if(types.Count() == 1)
+        {
+            column.TypeName = types.First().Value;
+            continue;
+        }
+        
+		var simpleTypes = elementDefinition.Elements(xs + "simpleType");
+
+        if(simpleTypes.Count() == 1)
+        {
+            var restrictions = simpleTypes.First().Elements(xs + "restriction");
+            if(restrictions.Count() == 1)
+            {
+                string type =  restrictions.First().Attribute("base").Value;  
+                column.TypeName = type;
+                
+                var enumerations = restrictions.First().Elements(xs + "enumeration");
+                if(enumerations.Count() > 0)
+                {
+                    foreach (var enumeration in enumerations)
+                    {
+                        column.AddChoice(enumeration.Attribute("value").Value);
+                    }
+                }
+                var maxLengths = restrictions.First().Elements(xs + "maxLength");
+                if(maxLengths.Count() == 1)
+                {
+                    column.MaxLength = maxLengths.First().Attribute("value").Value;
+                }
+                if(type == "xs:decimal")
+                {
+                    var totalDigits = restrictions.First().Elements(xs + "totalDigits");
+                    if(totalDigits.Count() == 1)
+                    {
+                        column.Precision = int.Parse(totalDigits.First().Attribute("value").Value);
+                    }
+                    var fractionalDigits = restrictions.First().Elements(xs + "fractionDigits");
+                    if(fractionalDigits.Count() == 1)
+                    {
+                        column.Scale = int.Parse(fractionalDigits.First().Attribute("value").Value);
+                    }
+                }
+            }
+        }
+	}
+	
+    var locationAttributeElements = document.XPathSelectElements(
+        string.Format("//node()[@name='{0}']/xs:complexType/xs:attribute[@name='location']", elementName), namespaceManager);
+    
+    if(locationAttributeElements.Count() == 1)
+    {
+        Column locationColumn = new Column(table, "location");
+        locationColumn.TypeName = "resourceURI"; 
+    }
+	
+	var choiceTables =
+		from c in table.Columns
+		where c.Choices.Count > 0
+		select c.ChoiceTable;
+	
+	_tables.AddRange(choiceTables);
+}
+
+class Table
+{
+    public Table(string name)
+    {
+        Name = name[0].ToString().ToUpper() + name.Substring(1);  
+        Columns = new List<Column>();
+    }
+    public string Name { get; set; }
+    public List<Column> Columns { get; set; }
+}
+
+class Column
+{
+    public Column(Table table, string name)
+    {
+        table.Columns.Add(this);
+        Table = table;
+        Name = name[0].ToString().ToUpper() + name.Substring(1);
+        MaxLength = "0";
+        Nullable = false;
+        _choices = new List<string>();
+		_type = "INTEGER";
+    }
+    
+    public string Name { get; set; }
+    
+    string _type;
+    public string TypeName
+    { 
+        get { return _type; }
+        set 
+        {
+            if(value == "xs:string" || value == "string")
+            {
+                _type = "VARCHAR";
+            }
+            else if(value == "xs:decimal")
+            {
+                _type = "DECIMAL";
+            }
+            else if(value == "xs:short")
+            {
+                _type = "INTEGER";
+            }
+            else if(value == "booleanInt")
+            {
+                _type = "BIT";
+            }
+            else if(value == "xs:unsignedInt")
+            {
+                _type = "INTEGER";
+            }
+            else if(value == "resourceURI" || value == "xs:anyURI")
+            {
+                _type = "VARCHAR";
+                URI = true;
+                Matches = ".*/.*[^/]";
+                MaxLength = "max";
+            }
+        }
+    }
+	
+	public eTypeName GetTypeName()
+	{
+		eTypeName result;
+		
+		try 
+		{	        
+			result = (eTypeName)Enum.Parse(typeof(eTypeName), TypeName);
+		}
+		catch
+		{
+			throw new Exception(string.Format("exception while trying GetTypeName({0})...", TypeName));
+		}
+		
+		return result;
+	}
+	
+    List<string> _choices;
+    public List<string> Choices 
+    { 
+        get { return _choices; } set { _choices = value; }
+    }  
+	
+	Table _choiceTable = null;
+	public Table ChoiceTable { get { return _choiceTable; } }
+    public void AddChoice(string choice)
+    {
+        if(_type != "INTEGER")
+        {
+            _type = "INTEGER";
+        }
+        
+        _choices.Add(choice);
+		
+		if(_choices.Count > 0)
+		{
+			if(_choiceTable == null)
+			{
+				_choiceTable = new Table(Table.Name + "_" + Name);
+				Column column1 = new Column(_choiceTable, "Name");
+				column1._type = "VARCHAR";
+				column1.MaxLength="100";
+			}
+		}
+    }   
+	
+	public string GetStorageType()
+	{
+		string result;	
+		switch (GetTypeName())
+		{
+			case eTypeName.DECIMAL:
+				result = "decimal";
+				break;
+			case eTypeName.DOUBLE:
+				result = "float";
+				break;
+			case eTypeName.DATE:
+				result = "datetime";
+				break;
+			case eTypeName.TIMESTAMP:
+				result = "datetime";
+				break;
+			case eTypeName.INTEGER:
+				result = "int";
+				break;
+			case eTypeName.BIT:
+				result = "bit";
+				break;
+			default:
+				result = "nvarchar(max)";
+				break;
+		}
+
+		return result; 
+	}
+	
+	public string GetConceptualType()
+	{
+		string result;
+		switch (GetTypeName())
+		{
+			case eTypeName.DECIMAL:
+				result = "Decimal";
+				break;
+			case eTypeName.DOUBLE:
+				result = "Double";
+				break;
+			case eTypeName.DATE:
+				result = "DateTime";
+				break;
+			case eTypeName.TIMESTAMP:
+				result = "DateTime";
+				break;
+			case eTypeName.INTEGER:
+				result = "Int32";
+				break;
+			case eTypeName.BIT:
+				result = "Boolean";
+				break;
+			default:
+				result = "String";
+				break;
+		}
+		return result;
+	}
+	
+    public string MaxLength { get; set; }
+	
+    public Table Table { get; set; }
+	
+    public bool Nullable { get; set; }
+	public string IsNullable()
+	{
+		return Nullable ? "true" : "false"; 
+	}
+	
+    public string Matches { get; set; }
+	
+    public bool URI { get; set; } 
+	
+    public int Precision { get; set; } 
+	
+    public int Scale { get; set; }
+}
+
+enum eTypeName
+{ 
+	BIT,
+	DATE,
+	DECIMAL,
+	DOUBLE,
+	INTEGER,
+	TIMESTAMP,
+	VARCHAR
+}
+#>

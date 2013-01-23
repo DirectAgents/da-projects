@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/client/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/client/v1_0"
+elementFormDefault="qualified">
+
+	<!-- start definition of simple elements -->
+	<xs:simpleType name="booleanInt">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="userName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="password">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="email">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>	
+    <xs:element name="isAdmin" type="booleanInt"/>
+    <xs:element name="accessID" type="xs:unsignedInt"/>
+	<!-- end definition of simple elements -->
+	
+	<!-- start definition of attributes -->
+	<!-- end definition of attributes -->
+
+	<!-- start definition of complex elements -->
+	<xs:element name="client">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="userName" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="email" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="password" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="isAdmin" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="accessID" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="location" type="xs:anyURI"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- end definition of complex elements -->
+
+</xs:schema>

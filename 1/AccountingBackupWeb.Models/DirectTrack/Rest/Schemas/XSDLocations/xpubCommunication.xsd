@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/xpubCommunication/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/xpubCommunication/v1_0"
+elementFormDefault="qualified">
+
+	<!-- start definition of simple elements -->
+	<xs:simpleType name="booleanInt">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+		
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="xpubClassifiedResourceURLType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\.\./xpubClassified/[0-9]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="xpubClassifiedResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="xpubClassifiedResourceURLType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="respondingCompanyResourceURLType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\.\./xpubCompany/[0-9]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="respondingCompanyResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="respondingCompanyResourceURLType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="campaignResourceURLType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\.\./campaign/[0-9]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="campaignResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="campaignResourceURLType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="responseComment">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:simpleType name="amountType">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value='10'/>
+			<xs:fractionDigits value='2'/>
+			<xs:minInclusive value='0'/>
+			<xs:maxInclusive value='99999999.99'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="impressionPayout" type="amountType"/>
+	
+	<xs:element name="clickPayout" type="amountType"/>
+	
+	<xs:element name="leadPayout" type="amountType"/>
+	
+	<xs:element name="flatSalePayout" type="amountType"/>
+	
+	<xs:element name="flatSubSalePayout" type="amountType"/>
+	
+	<xs:element name="percentSalePayout" type="amountType"/>
+	
+	<xs:element name="percentSubSalePayout" type="amountType"/>
+
+	<xs:element name="digitalSignature">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+				<xs:pattern value="/.+/"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="approval">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Pending"/>
+				<xs:enumeration value="Sent"/>
+				<xs:enumeration value="Accepted"/>
+				<xs:enumeration value="Rejected"/>
+				<xs:enumeration value="Counter"/>
+				<xs:enumeration value="Closed"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="allowChildEditCreatives" type="booleanInt"/>
+
+	<xs:simpleType name="commentType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="comment">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="commentType">
+			<xs:attribute name="date" type="xs:string" use="required"/>
+			<xs:attribute name="respondingCompanyResourceURL" type="respondingCompanyResourceURLType" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="commentHistory">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="comment" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+	<!-- end definition of simple elements -->
+	
+	<!-- start definition of attributes -->
+	<!-- end definition of attributes -->
+	
+	<!-- start definition of complex elements -->
+
+	<xs:element name="xpubCommunication">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="xpubClassifiedResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="respondingCompanyResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="campaignResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="responseComment" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="impressionPayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="clickPayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="leadPayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="flatSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="flatSubSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="percentSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="percentSubSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="digitalSignature" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="approval" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="allowChildEditCreatives" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="commentHistory" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="location" type="resourceURI"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- end definition of complex elements -->
+
+</xs:schema>

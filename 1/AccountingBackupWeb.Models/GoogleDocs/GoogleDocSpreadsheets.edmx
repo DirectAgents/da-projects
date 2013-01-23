@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="GoogleDocSpreadsheets.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="GoogleDocSpreadsheetsStoreContainer">
+    <EntitySet Name="Spreadsheets" EntityType="GoogleDocSpreadsheets.Store.Spreadsheets" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Worksheets" EntityType="GoogleDocSpreadsheets.Store.Worksheets" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Cells" EntityType="GoogleDocSpreadsheets.Store.Cells" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="WorksheetCell" Association="GoogleDocSpreadsheets.Store.WorksheetCell">
+      <End Role="Worksheet" EntitySet="Worksheets" />
+      <End Role="Cell" EntitySet="Cells" />
+    </AssociationSet>
+    <AssociationSet Name="SpreadsheetWorksheet" Association="GoogleDocSpreadsheets.Store.SpreadsheetWorksheet">
+      <End Role="Spreadsheet" EntitySet="Spreadsheets" />
+      <End Role="Worksheet" EntitySet="Worksheets" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Spreadsheets">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="Worksheets">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="200" />
+    <Property Name="Spreadsheet_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Cells">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Row" Type="int" Nullable="false" />
+    <Property Name="Column" Type="int" Nullable="false" />
+    <Property Name="Value" Type="nvarchar" Nullable="false" MaxLength="500" />
+    <Property Name="Worksheet_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="WorksheetCell">
+    <End Role="Worksheet" Type="GoogleDocSpreadsheets.Store.Worksheets" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Cell" Type="GoogleDocSpreadsheets.Store.Cells" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Worksheet">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Cell">
+        <PropertyRef Name="Worksheet_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SpreadsheetWorksheet">
+    <End Role="Spreadsheet" Type="GoogleDocSpreadsheets.Store.Spreadsheets" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Worksheet" Type="GoogleDocSpreadsheets.Store.Worksheets" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Spreadsheet">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Worksheet">
+        <PropertyRef Name="Spreadsheet_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="GoogleDocSpreadsheets" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="GoogleDocSpreadsheetsContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Spreadsheets" EntityType="GoogleDocSpreadsheets.Spreadsheet" />
+          <EntitySet Name="Worksheets" EntityType="GoogleDocSpreadsheets.Worksheet" />
+          <EntitySet Name="Cells" EntityType="GoogleDocSpreadsheets.Cell" />
+          <AssociationSet Name="WorksheetCell" Association="GoogleDocSpreadsheets.WorksheetCell">
+            <End Role="Worksheet" EntitySet="Worksheets" />
+            <End Role="Cell" EntitySet="Cells" />
+          </AssociationSet>
+          <AssociationSet Name="SpreadsheetWorksheet" Association="GoogleDocSpreadsheets.SpreadsheetWorksheet">
+            <End Role="Spreadsheet" EntitySet="Spreadsheets" />
+            <End Role="Worksheet" EntitySet="Worksheets" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Spreadsheet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Worksheets" Relationship="GoogleDocSpreadsheets.SpreadsheetWorksheet" FromRole="Spreadsheet" ToRole="Worksheet" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Worksheet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Cells" Relationship="GoogleDocSpreadsheets.WorksheetCell" FromRole="Worksheet" ToRole="Cell" />
+          <NavigationProperty Name="Spreadsheet" Relationship="GoogleDocSpreadsheets.SpreadsheetWorksheet" FromRole="Worksheet" ToRole="Spreadsheet" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Cell">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="Row" Nullable="false" />
+          <Property Type="Int32" Name="Column" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="500" />
+          <NavigationProperty Name="Worksheet" Relationship="GoogleDocSpreadsheets.WorksheetCell" FromRole="Cell" ToRole="Worksheet" />
+        </EntityType>
+        <Association Name="WorksheetCell">
+          <End Type="GoogleDocSpreadsheets.Worksheet" Role="Worksheet" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GoogleDocSpreadsheets.Cell" Role="Cell" Multiplicity="*" />
+        </Association>
+        <Association Name="SpreadsheetWorksheet">
+          <End Type="GoogleDocSpreadsheets.Spreadsheet" Role="Spreadsheet" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GoogleDocSpreadsheets.Worksheet" Role="Worksheet" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="GoogleDocSpreadsheetsStoreContainer" CdmEntityContainer="GoogleDocSpreadsheetsContainer">
+    <EntitySetMapping Name="Spreadsheets">
+      <EntityTypeMapping TypeName="IsTypeOf(GoogleDocSpreadsheets.Spreadsheet)">
+        <MappingFragment StoreEntitySet="Spreadsheets">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Worksheets">
+      <EntityTypeMapping TypeName="IsTypeOf(GoogleDocSpreadsheets.Worksheet)">
+        <MappingFragment StoreEntitySet="Worksheets">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cells">
+      <EntityTypeMapping TypeName="IsTypeOf(GoogleDocSpreadsheets.Cell)">
+        <MappingFragment StoreEntitySet="Cells">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Row" ColumnName="Row" />
+          <ScalarProperty Name="Column" ColumnName="Column" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="WorksheetCell" TypeName="GoogleDocSpreadsheets.WorksheetCell" StoreEntitySet="Cells">
+      <EndProperty Name="Worksheet">
+        <ScalarProperty Name="Id" ColumnName="Worksheet_Id" />
+      </EndProperty>
+      <EndProperty Name="Cell">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="SpreadsheetWorksheet" TypeName="GoogleDocSpreadsheets.SpreadsheetWorksheet" StoreEntitySet="Worksheets">
+      <EndProperty Name="Spreadsheet">
+        <ScalarProperty Name="Id" ColumnName="Spreadsheet_Id" />
+      </EndProperty>
+      <EndProperty Name="Worksheet">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="GoogleDocSpreadsheets" >
+        <EntityTypeShape EntityType="GoogleDocSpreadsheets.Spreadsheet" Width="1.5" PointX="0.625" PointY="0.625" Height="1.59568359375" />
+        <EntityTypeShape EntityType="GoogleDocSpreadsheets.Worksheet" Width="1.5" PointX="3" PointY="0.625" Height="1.7879850260416665" />
+        <EntityTypeShape EntityType="GoogleDocSpreadsheets.Cell" Width="1.5" PointX="5.5" PointY="0.625" Height="1.9802864583333335" />
+        <AssociationConnector Association="GoogleDocSpreadsheets.WorksheetCell">
+          <ConnectorPoint PointX="4.5" PointY="1.5189925130208333" />
+          <ConnectorPoint PointX="5.5" PointY="1.5189925130208333" />
+        </AssociationConnector>
+        <AssociationConnector Association="GoogleDocSpreadsheets.SpreadsheetWorksheet">
+          <ConnectorPoint PointX="2.125" PointY="1.422841796875" />
+          <ConnectorPoint PointX="3" PointY="1.422841796875" />
+        </AssociationConnector>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

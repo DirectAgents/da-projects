@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/affiliateHistory/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/affiliateHistory/v1_0"
+elementFormDefault="qualified">
+
+	<!-- simple elements -->
+	
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="timestamp">
+     <xs:simpleType>
+      <xs:restriction base="xs:string">
+       <xs:pattern value="\d{4}-\d{2}-\d{2}"/>
+       <xs:maxLength value="10"/>
+      </xs:restriction>
+     </xs:simpleType>
+    </xs:element>
+	
+	<xs:element name="username">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	<xs:element name="actionTaken">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="1000"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	<!-- END simple elements -->
+
+	<!-- attributes -->
+	<!-- END attributes -->
+
+	<!-- complex elements -->
+
+	<xs:element name="affiliateResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="campaignResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- END complex elements -->
+	
+	
+<!-- PRIMARY ELEMENT -->
+	<xs:element name="resource">
+	  <xs:complexType>
+			<xs:sequence>
+				<xs:element ref="affiliateResourceURL" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="campaignResourceURL" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="username" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="actionTaken" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="timestamp" type="xs:string"/>
+	  </xs:complexType>
+	</xs:element>
+<!-- END PRIMARY ELEMENT -->
+
+<xs:element name="affiliateHistory">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element ref="resource" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="location" type="xs:anyURI"/>
+	</xs:complexType>
+</xs:element>
+	
+</xs:schema>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/optInfo/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/optInfo/v1_0"
+elementFormDefault="qualified">
+
+<!-- simple elements -->
+
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="date">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+				<xs:maxLength value="10"/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 
+
+	<xs:element name="campaignResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>	
+
+	<xs:element name="info">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 	
+	
+	<xs:element name="amount">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:totalDigits value='10'/>
+				<xs:fractionDigits value='2'/>
+				<xs:minInclusive value='0'/>
+				<xs:maxInclusive value='99999999.99'/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 	
+
+	<xs:element name="transactionID">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 	
+
+	<xs:element name="lineItemID">
+		<xs:simpleType>
+			<xs:restriction base="xs:unsignedInt">
+				<xs:minInclusive value='0'/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 	
+	
+	<xs:element name="commission">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:totalDigits value='10'/>
+				<xs:fractionDigits value='2'/>
+				<xs:minInclusive value='0'/>
+				<xs:maxInclusive value='99999999.99'/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 	
+
+<!-- END simple elements -->
+
+<!-- complex elements -->
+	
+<!-- END complex elements -->
+
+<!-- PRIMARY ELEMENT -->
+	<xs:element name="optInfo">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="date" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="campaignResourceURL" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="info" minOccurs="1" maxOccurs="1"/>
+			<xs:element ref="amount" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="transactionID" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="lineItemID" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="commission" minOccurs="0" maxOccurs="1"/>
+	    </xs:sequence>
+	    <xs:attribute name="location" type="resourceURI"/>
+	  </xs:complexType>
+	</xs:element>
+<!-- END PRIMARY ELEMENT -->
+
+</xs:schema>

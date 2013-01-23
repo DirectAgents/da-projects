@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/xpubRequest/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/xpubRequest/v1_0"
+elementFormDefault="qualified">
+
+	<!-- start definition of simple elements -->
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="approvalStatus">
+	<xs:simpleType>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="approved"/>
+			<xs:enumeration value="denied"/>
+			<xs:enumeration value="pending"/>
+			<xs:enumeration value="completed"/>
+		</xs:restriction>
+	</xs:simpleType>
+	</xs:element>
+	<xs:element name="perClickPayout" type="xs:double" />
+	<xs:element name="perLeadPayout" type="xs:double" />
+	<xs:element name="perSalePayout" type="xs:double" />
+	<xs:element name="subPerSalePayout" type="xs:double" />
+	<xs:element name="flatPerSalePayout" type="xs:double" />
+	<xs:element name="flatSubPerSalePayout" type="xs:double" />
+	<xs:element name="perImpressionPayout" type="xs:double" />
+	<!-- end definition of simple elements -->
+	
+	<!-- start definition of attributes -->
+	<!-- end definition of attributes -->
+	
+	<!-- start definition of complex elements -->
+	<xs:element name="childCompanyResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="offerResourceURL">
+	<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="affiliatePayout">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="perClickPayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="perLeadPayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="perSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="subPerSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="flatPerSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="flatSubPerSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="perImpressionPayout" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="xpubRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="childCompanyResourceURL" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="offerResourceURL" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="affiliatePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="approvalStatus" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="location" type="resourceURI"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- end definition of complex elements -->
+
+</xs:schema>

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/saleLineItem/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/saleLineItem/v1_0"
+elementFormDefault="qualified">
+
+	<!-- start definition of simple elements -->
+	<xs:simpleType name="booleanInt">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+		
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="saleAmountType">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value='20'/>
+			<xs:fractionDigits value='10'/>
+			<xs:minInclusive value='-99999999.99'/>
+			<xs:maxInclusive value='99999999.99'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="saleAmount" type="saleAmountType"/>
+
+	<xs:simpleType name="saleStatusType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="saleStatus">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="saleStatusType">
+					<xs:attribute name="deleted" type="booleanInt"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="statusDate">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+				<xs:maxLength value="19"/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 
+
+	<xs:element name="affiliateResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>	
+
+	<xs:element name="productID">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 
+
+	<xs:element name="owned" type="booleanInt" />
+
+	<!-- end definition of simple elements -->
+	
+	<!-- start definition of attributes -->
+	<!-- end definition of attributes -->
+
+	<xs:element name="theyGet">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="weGet">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	
+	<!-- start definition of complex elements -->
+	<xs:element name="lineItem">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="saleAmount" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="saleStatus" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="statusDate" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="affiliateResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="productID" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="owned" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="theyGet" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="weGet" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>			
+			<xs:attribute name="id" type="xs:unsignedInt"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- end definition of complex elements -->
+
+	<xs:element name="saleLineItem">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lineItem" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="location" type="resourceURI"/>
+		</xs:complexType>
+	</xs:element>
+
+
+</xs:schema>

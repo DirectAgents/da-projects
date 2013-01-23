@@ -1,0 +1,714 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Reports.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="ReportsStoreContainer">
+    <EntitySet Name="Databases" EntityType="Reports.Store.Databases" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Periods" EntityType="Reports.Store.Periods" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Publishers" EntityType="Reports.Store.Publishers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Advertisers" EntityType="Reports.Store.Advertisers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Campaigns" EntityType="Reports.Store.Campaigns" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="AdManagers" EntityType="Reports.Store.AdManagers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="AccountManagers" EntityType="Reports.Store.AccountManagers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MediaBuyers" EntityType="Reports.Store.MediaBuyers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Items" EntityType="Reports.Store.Items" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Sources" EntityType="Reports.Store.Sources" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UnitTypes" EntityType="Reports.Store.UnitTypes" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="CampaignItem" Association="Reports.Store.CampaignItem">
+      <End Role="Campaign" EntitySet="Campaigns" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="PublisherItem" Association="Reports.Store.PublisherItem">
+      <End Role="Publisher" EntitySet="Publishers" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="SourceItem" Association="Reports.Store.SourceItem">
+      <End Role="Source" EntitySet="Sources" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="UnitTypeItem" Association="Reports.Store.UnitTypeItem">
+      <End Role="UnitType" EntitySet="UnitTypes" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="AdvertiserCampaign" Association="Reports.Store.AdvertiserCampaign">
+      <End Role="Advertiser" EntitySet="Advertisers" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="MediaBuyerPublisher" Association="Reports.Store.MediaBuyerPublisher">
+      <End Role="MediaBuyer" EntitySet="MediaBuyers" />
+      <End Role="Publisher" EntitySet="Publishers" />
+    </AssociationSet>
+    <AssociationSet Name="AdManagerCampaign" Association="Reports.Store.AdManagerCampaign">
+      <End Role="AdManager" EntitySet="AdManagers" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="AccountManagerCampaign" Association="Reports.Store.AccountManagerCampaign">
+      <End Role="AccountManager" EntitySet="AccountManagers" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="PeriodItem" Association="Reports.Store.PeriodItem">
+      <End Role="Period" EntitySet="Periods" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Databases">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ConnectionString" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FriendlyName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="StartDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Periods">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Publishers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="MediaBuyer_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Advertisers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Campaigns">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ProgramId" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Advertiser_Id" Type="int" Nullable="false" />
+    <Property Name="AdManager_Id" Type="int" Nullable="false" />
+    <Property Name="AccountManager_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AdManagers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AccountManagers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MediaBuyers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Items">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="300" />
+    <Property Name="RevenueCurrency" Type="nchar" Nullable="false" MaxLength="3" />
+    <Property Name="CostCurrency" Type="nchar" Nullable="false" MaxLength="3" />
+    <Property Name="RevenuePerUnit" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="CostPerUnit" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="NumUnits" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="TotalRevenue" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+    <Property Name="TotalCost" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Margin" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Campaign_Id" Type="int" Nullable="false" />
+    <Property Name="Publisher_Id" Type="int" Nullable="false" />
+    <Property Name="Source_Id" Type="int" Nullable="false" />
+    <Property Name="UnitType_Id" Type="int" Nullable="false" />
+    <Property Name="Period_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Sources">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UnitTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <Association Name="CampaignItem">
+    <End Role="Campaign" Type="Reports.Store.Campaigns" Multiplicity="1" />
+    <End Role="Item" Type="Reports.Store.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Campaign">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="Campaign_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PublisherItem">
+    <End Role="Publisher" Type="Reports.Store.Publishers" Multiplicity="1" />
+    <End Role="Item" Type="Reports.Store.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Publisher">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="Publisher_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SourceItem">
+    <End Role="Source" Type="Reports.Store.Sources" Multiplicity="1" />
+    <End Role="Item" Type="Reports.Store.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Source">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="Source_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UnitTypeItem">
+    <End Role="UnitType" Type="Reports.Store.UnitTypes" Multiplicity="1" />
+    <End Role="Item" Type="Reports.Store.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UnitType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="UnitType_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AdvertiserCampaign">
+    <End Role="Advertiser" Type="Reports.Store.Advertisers" Multiplicity="1" />
+    <End Role="Campaign" Type="Reports.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Advertiser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="Advertiser_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="MediaBuyerPublisher">
+    <End Role="MediaBuyer" Type="Reports.Store.MediaBuyers" Multiplicity="1" />
+    <End Role="Publisher" Type="Reports.Store.Publishers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MediaBuyer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Publisher">
+        <PropertyRef Name="MediaBuyer_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AdManagerCampaign">
+    <End Role="AdManager" Type="Reports.Store.AdManagers" Multiplicity="1" />
+    <End Role="Campaign" Type="Reports.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AdManager">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="AdManager_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AccountManagerCampaign">
+    <End Role="AccountManager" Type="Reports.Store.AccountManagers" Multiplicity="1" />
+    <End Role="Campaign" Type="Reports.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AccountManager">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="AccountManager_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PeriodItem">
+    <End Role="Period" Type="Reports.Store.Periods" Multiplicity="1" />
+    <End Role="Item" Type="Reports.Store.Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Period">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="Period_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Reports" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="ReportsContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Databases" EntityType="Reports.Database" />
+          <EntitySet Name="Periods" EntityType="Reports.Period" />
+          <EntitySet Name="Publishers" EntityType="Reports.Publisher" />
+          <EntitySet Name="Advertisers" EntityType="Reports.Advertiser" />
+          <EntitySet Name="Campaigns" EntityType="Reports.Campaign" />
+          <EntitySet Name="AdManagers" EntityType="Reports.AdManager" />
+          <EntitySet Name="AccountManagers" EntityType="Reports.AccountManager" />
+          <EntitySet Name="MediaBuyers" EntityType="Reports.MediaBuyer" />
+          <EntitySet Name="Items" EntityType="Reports.Item" />
+          <AssociationSet Name="CampaignItem" Association="Reports.CampaignItem">
+            <End Role="Campaign" EntitySet="Campaigns" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="PublisherItem" Association="Reports.PublisherItem">
+            <End Role="Publisher" EntitySet="Publishers" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <EntitySet Name="Sources" EntityType="Reports.Source" />
+          <EntitySet Name="UnitTypes" EntityType="Reports.UnitType" />
+          <AssociationSet Name="SourceItem" Association="Reports.SourceItem">
+            <End Role="Source" EntitySet="Sources" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="UnitTypeItem" Association="Reports.UnitTypeItem">
+            <End Role="UnitType" EntitySet="UnitTypes" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="AdvertiserCampaign" Association="Reports.AdvertiserCampaign">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="MediaBuyerPublisher" Association="Reports.MediaBuyerPublisher">
+            <End Role="MediaBuyer" EntitySet="MediaBuyers" />
+            <End Role="Publisher" EntitySet="Publishers" />
+          </AssociationSet>
+          <AssociationSet Name="AdManagerCampaign" Association="Reports.AdManagerCampaign">
+            <End Role="AdManager" EntitySet="AdManagers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="AccountManagerCampaign" Association="Reports.AccountManagerCampaign">
+            <End Role="AccountManager" EntitySet="AccountManagers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="PeriodItem" Association="Reports.PeriodItem">
+            <End Role="Period" EntitySet="Periods" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Database">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="ConnectionString" Nullable="false" />
+          <Property Type="String" Name="FriendlyName" Nullable="false" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Period">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Items" Relationship="Reports.PeriodItem" FromRole="Period" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="Publisher">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Items" Relationship="Reports.PublisherItem" FromRole="Publisher" ToRole="Item" />
+          <NavigationProperty Name="MediaBuyer" Relationship="Reports.MediaBuyerPublisher" FromRole="Publisher" ToRole="MediaBuyer" />
+        </EntityType>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Campaigns" Relationship="Reports.AdvertiserCampaign" FromRole="Advertiser" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="ProgramId" Nullable="false" />
+          <NavigationProperty Name="Items" Relationship="Reports.CampaignItem" FromRole="Campaign" ToRole="Item" />
+          <NavigationProperty Name="Advertiser" Relationship="Reports.AdvertiserCampaign" FromRole="Campaign" ToRole="Advertiser" />
+          <NavigationProperty Name="AdManager" Relationship="Reports.AdManagerCampaign" FromRole="Campaign" ToRole="AdManager" />
+          <NavigationProperty Name="AccountManager" Relationship="Reports.AccountManagerCampaign" FromRole="Campaign" ToRole="AccountManager" />
+        </EntityType>
+        <EntityType Name="AdManager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Campaigns" Relationship="Reports.AdManagerCampaign" FromRole="AdManager" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="AccountManager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Campaigns" Relationship="Reports.AccountManagerCampaign" FromRole="AccountManager" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="MediaBuyer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Publishers" Relationship="Reports.MediaBuyerPublisher" FromRole="MediaBuyer" ToRole="Publisher" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="300" />
+          <NavigationProperty Name="Campaign" Relationship="Reports.CampaignItem" FromRole="Item" ToRole="Campaign" />
+          <NavigationProperty Name="Publisher" Relationship="Reports.PublisherItem" FromRole="Item" ToRole="Publisher" />
+          <NavigationProperty Name="Source" Relationship="Reports.SourceItem" FromRole="Item" ToRole="Source" />
+          <NavigationProperty Name="UnitType" Relationship="Reports.UnitTypeItem" FromRole="Item" ToRole="UnitType" />
+          <Property Type="String" Name="RevenueCurrency" Nullable="false" FixedLength="true" MaxLength="3" />
+          <Property Type="String" Name="CostCurrency" Nullable="false" FixedLength="true" MaxLength="3" />
+          <Property Type="Decimal" Name="RevenuePerUnit" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="CostPerUnit" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="NumUnits" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="Decimal" Name="TotalRevenue" Nullable="false" Precision="14" Scale="4" />
+          <Property Type="String" Name="TotalCost" Nullable="false" />
+          <Property Type="String" Name="Margin" Nullable="false" />
+          <NavigationProperty Name="Period" Relationship="Reports.PeriodItem" FromRole="Item" ToRole="Period" />
+        </EntityType>
+        <Association Name="CampaignItem">
+          <End Type="Reports.Campaign" Role="Campaign" Multiplicity="1" />
+          <End Type="Reports.Item" Role="Item" Multiplicity="*" />
+        </Association>
+        <Association Name="PublisherItem">
+          <End Type="Reports.Publisher" Role="Publisher" Multiplicity="1" />
+          <End Type="Reports.Item" Role="Item" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Items" Relationship="Reports.SourceItem" FromRole="Source" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="UnitType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Items" Relationship="Reports.UnitTypeItem" FromRole="UnitType" ToRole="Item" />
+        </EntityType>
+        <Association Name="SourceItem">
+          <End Type="Reports.Source" Role="Source" Multiplicity="1" />
+          <End Type="Reports.Item" Role="Item" Multiplicity="*" />
+        </Association>
+        <Association Name="UnitTypeItem">
+          <End Type="Reports.UnitType" Role="UnitType" Multiplicity="1" />
+          <End Type="Reports.Item" Role="Item" Multiplicity="*" />
+        </Association>
+        <Association Name="AdvertiserCampaign">
+          <End Type="Reports.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="Reports.Campaign" Role="Campaign" Multiplicity="*" />
+        </Association>
+        <Association Name="MediaBuyerPublisher">
+          <End Type="Reports.MediaBuyer" Role="MediaBuyer" Multiplicity="1" />
+          <End Type="Reports.Publisher" Role="Publisher" Multiplicity="*" />
+        </Association>
+        <Association Name="AdManagerCampaign">
+          <End Type="Reports.AdManager" Role="AdManager" Multiplicity="1" />
+          <End Type="Reports.Campaign" Role="Campaign" Multiplicity="*" />
+        </Association>
+        <Association Name="AccountManagerCampaign">
+          <End Type="Reports.AccountManager" Role="AccountManager" Multiplicity="1" />
+          <End Type="Reports.Campaign" Role="Campaign" Multiplicity="*" />
+        </Association>
+        <Association Name="PeriodItem">
+          <End Type="Reports.Period" Role="Period" Multiplicity="1" />
+          <End Type="Reports.Item" Role="Item" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ReportsStoreContainer" CdmEntityContainer="ReportsContainer">
+    <EntitySetMapping Name="Databases">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.Database)">
+        <MappingFragment StoreEntitySet="Databases">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ConnectionString" ColumnName="ConnectionString" />
+          <ScalarProperty Name="FriendlyName" ColumnName="FriendlyName" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Periods">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.Period)">
+        <MappingFragment StoreEntitySet="Periods">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Publishers">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.Publisher)">
+        <MappingFragment StoreEntitySet="Publishers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Advertisers">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.Advertiser)">
+        <MappingFragment StoreEntitySet="Advertisers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Campaigns">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.Campaign)">
+        <MappingFragment StoreEntitySet="Campaigns">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ProgramId" ColumnName="ProgramId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AdManagers">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.AdManager)">
+        <MappingFragment StoreEntitySet="AdManagers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountManagers">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.AccountManager)">
+        <MappingFragment StoreEntitySet="AccountManagers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MediaBuyers">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.MediaBuyer)">
+        <MappingFragment StoreEntitySet="MediaBuyers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Items">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.Item)">
+        <MappingFragment StoreEntitySet="Items">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="RevenueCurrency" ColumnName="RevenueCurrency" />
+          <ScalarProperty Name="CostCurrency" ColumnName="CostCurrency" />
+          <ScalarProperty Name="RevenuePerUnit" ColumnName="RevenuePerUnit" />
+          <ScalarProperty Name="CostPerUnit" ColumnName="CostPerUnit" />
+          <ScalarProperty Name="NumUnits" ColumnName="NumUnits" />
+          <ScalarProperty Name="TotalRevenue" ColumnName="TotalRevenue" />
+          <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+          <ScalarProperty Name="Margin" ColumnName="Margin" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Sources">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.Source)">
+        <MappingFragment StoreEntitySet="Sources">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UnitTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(Reports.UnitType)">
+        <MappingFragment StoreEntitySet="UnitTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="CampaignItem" TypeName="Reports.CampaignItem" StoreEntitySet="Items">
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Campaign_Id" />
+      </EndProperty>
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PublisherItem" TypeName="Reports.PublisherItem" StoreEntitySet="Items">
+      <EndProperty Name="Publisher">
+        <ScalarProperty Name="Id" ColumnName="Publisher_Id" />
+      </EndProperty>
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="SourceItem" TypeName="Reports.SourceItem" StoreEntitySet="Items">
+      <EndProperty Name="Source">
+        <ScalarProperty Name="Id" ColumnName="Source_Id" />
+      </EndProperty>
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UnitTypeItem" TypeName="Reports.UnitTypeItem" StoreEntitySet="Items">
+      <EndProperty Name="UnitType">
+        <ScalarProperty Name="Id" ColumnName="UnitType_Id" />
+      </EndProperty>
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AdvertiserCampaign" TypeName="Reports.AdvertiserCampaign" StoreEntitySet="Campaigns">
+      <EndProperty Name="Advertiser">
+        <ScalarProperty Name="Id" ColumnName="Advertiser_Id" />
+      </EndProperty>
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="MediaBuyerPublisher" TypeName="Reports.MediaBuyerPublisher" StoreEntitySet="Publishers">
+      <EndProperty Name="MediaBuyer">
+        <ScalarProperty Name="Id" ColumnName="MediaBuyer_Id" />
+      </EndProperty>
+      <EndProperty Name="Publisher">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AdManagerCampaign" TypeName="Reports.AdManagerCampaign" StoreEntitySet="Campaigns">
+      <EndProperty Name="AdManager">
+        <ScalarProperty Name="Id" ColumnName="AdManager_Id" />
+      </EndProperty>
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="AccountManagerCampaign" TypeName="Reports.AccountManagerCampaign" StoreEntitySet="Campaigns">
+      <EndProperty Name="AccountManager">
+        <ScalarProperty Name="Id" ColumnName="AccountManager_Id" />
+      </EndProperty>
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="PeriodItem" TypeName="Reports.PeriodItem" StoreEntitySet="Items">
+      <EndProperty Name="Period">
+        <ScalarProperty Name="Id" ColumnName="Period_Id" />
+      </EndProperty>
+      <EndProperty Name="Item">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="Reports" ZoomLevel="88" >
+        <EntityTypeShape EntityType="Reports.Database" Width="1.5" PointX="6" PointY="5.75" Height="1.9802864583333326" />
+        <EntityTypeShape EntityType="Reports.Period" Width="1.5" PointX="3.25" PointY="5.375" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="Reports.Publisher" Width="1.5" PointX="3.25" PointY="2.125" Height="1.7879850268363953" />
+        <EntityTypeShape EntityType="Reports.Advertiser" Width="1.5" PointX="1" PointY="7.625" Height="1.5956835933029652" />
+        <EntityTypeShape EntityType="Reports.Campaign" Width="1.5" PointX="3.25" PointY="9.625" Height="2.3648893237113953" />
+        <EntityTypeShape EntityType="Reports.AdManager" Width="1.5" PointX="1" PointY="10" Height="1.5956835933029652" />
+        <EntityTypeShape EntityType="Reports.AccountManager" Width="1.75" PointX="0.75" PointY="12.375" Height="1.5956835933029652" />
+        <EntityTypeShape EntityType="Reports.MediaBuyer" Width="1.5" PointX="1" PointY="2.125" Height="1.5956835933029652" />
+        <EntityTypeShape EntityType="Reports.Item" Width="1.5" PointX="5.5" PointY="1" Height="3.9033007812499996" />
+        <AssociationConnector Association="Reports.CampaignItem">
+          <ConnectorPoint PointX="4.75" PointY="10.807444661855698" />
+          <ConnectorPoint PointX="5.4947891666666671" PointY="10.807444661855698" />
+          <ConnectorPoint PointX="5.6614558333333331" PointY="10.807444661855698" />
+          <ConnectorPoint PointX="5.71875" PointY="10.807444661855698" />
+          <ConnectorPoint PointX="5.71875" PointY="4.90330078125" />
+        </AssociationConnector>
+        <AssociationConnector Association="Reports.PublisherItem">
+          <ConnectorPoint PointX="4.75" PointY="3.0189925134181976" />
+          <ConnectorPoint PointX="5.5" PointY="3.0189925134181976" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="Reports.Source" Width="1.5" PointX="3.25" PointY="14.75" Height="1.5956835933029652" />
+        <EntityTypeShape EntityType="Reports.UnitType" Width="1.5" PointX="3.25" PointY="17" Height="1.5956835933029652" />
+        <AssociationConnector Association="Reports.SourceItem">
+          <ConnectorPoint PointX="4.75" PointY="15.547841796651483" />
+          <ConnectorPoint PointX="5.5781225" PointY="15.547841796651483" />
+          <ConnectorPoint PointX="5.5781225" PointY="4.90330078125" />
+        </AssociationConnector>
+        <AssociationConnector Association="Reports.UnitTypeItem">
+          <ConnectorPoint PointX="4.75" PointY="17.797841796651483" />
+          <ConnectorPoint PointX="5.8593775" PointY="17.797841796651483" />
+          <ConnectorPoint PointX="5.8593775" PointY="4.90330078125" />
+        </AssociationConnector>
+        <AssociationConnector Association="Reports.AdvertiserCampaign">
+          <ConnectorPoint PointX="2.5" PointY="8.4228417966514826" />
+          <ConnectorPoint PointX="4" PointY="8.4228417966514826" />
+          <ConnectorPoint PointX="4" PointY="9.625" />
+        </AssociationConnector>
+        <AssociationConnector Association="Reports.MediaBuyerPublisher">
+          <ConnectorPoint PointX="2.5" PointY="2.9228417966514826" />
+          <ConnectorPoint PointX="3.25" PointY="2.9228417966514826" />
+        </AssociationConnector>
+        <AssociationConnector Association="Reports.AdManagerCampaign">
+          <ConnectorPoint PointX="2.5" PointY="10.797841796651483" />
+          <ConnectorPoint PointX="3.25" PointY="10.797841796651483" />
+        </AssociationConnector>
+        <AssociationConnector Association="Reports.AccountManagerCampaign">
+          <ConnectorPoint PointX="2.5" PointY="13.172841796651483" />
+          <ConnectorPoint PointX="4" PointY="13.172841796651483" />
+          <ConnectorPoint PointX="4" PointY="11.989889323711395" />
+        </AssociationConnector>
+        <AssociationConnector Association="Reports.PeriodItem">
+          <ConnectorPoint PointX="4.75" PointY="5.53125" />
+          <ConnectorPoint PointX="5.54687" PointY="5.53125" />
+          <ConnectorPoint PointX="5.54687" PointY="4.90330078125" />
+        </AssociationConnector>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

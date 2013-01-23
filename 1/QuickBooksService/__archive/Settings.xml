@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Units>
+    <Unit>USD</Unit>
+    <Unit>GBP</Unit>
+    <Unit>EUR</Unit>
+    <Unit>CAD</Unit>
+    <Unit>AUD</Unit>
+  </Units>
+  <RecordSourceTypes>
+    <RecordSourceType>Direct Agents Monthly Database</RecordSourceType>
+    <RecordSourceType>Quick Books Company File</RecordSourceType>
+  </RecordSourceTypes>
+  <Periods>
+    <Period>
+      <Name>January 2011</Name>
+      <DateSpan>
+        <FromDate>2011-01-01</FromDate>
+        <ToDate>2011-01-31</ToDate>
+      </DateSpan>
+    </Period>
+    <Period>
+      <Name>February 2011</Name>
+      <DateSpan>
+        <FromDate>2011-02-01</FromDate>
+        <ToDate>2011-02-28</ToDate>
+      </DateSpan>
+    </Period>
+  </Periods>
+  <CompanyFiles>
+    <CompanyFile>US Quick Books Company File</CompanyFile>
+    <CompanyFile>INTL Quick Books Company File</CompanyFile>
+  </CompanyFiles>
+  <DirectAgentsDatabases>
+    <DirectAgentsDatabase>
+      <PeriodName>January 2011</PeriodName>
+      <DatabaseName>January 2011 Direct Agents Monthly Database</DatabaseName>
+      <ConStr>Data Source=biz2\da;Initial Catalog=DADatabaseR2;Integrated Security=True</ConStr>
+      <FromDate>2011-01-01</FromDate>
+      <ToDate>2011-01-31</ToDate>
+    </DirectAgentsDatabase>
+    <DirectAgentsDatabase>
+      <PeriodName>Feb 11</PeriodName>
+      <DatabaseName>DADatabaseR3</DatabaseName>
+      <ConStr>Data Source=biz2\da;Initial Catalog=DADatabaseR3;Integrated Security=True</ConStr>
+      <FromDate>2011-02-01</FromDate>
+      <ToDate>2011-02-28</ToDate>
+    </DirectAgentsDatabase>
+    <DirectAgentsDatabase>
+      <PeriodName>Mar 11</PeriodName>
+      <DatabaseName>DADatabaseMarch11</DatabaseName>
+      <ConStr>Data Source=biz2\da;Initial Catalog=DADatabaseMarch11;Integrated Security=True</ConStr>
+      <FromDate>2011-03-01</FromDate>
+      <ToDate>2011-03-31</ToDate>
+    </DirectAgentsDatabase>
+    <DirectAgentsDatabase>
+      <PeriodName>Apr 11</PeriodName>
+      <DatabaseName>DADatabaseApr11</DatabaseName>
+      <ConStr>Data Source=biz2\da;Initial Catalog=DADatabaseApr11;Integrated Security=True</ConStr>
+      <FromDate>2011-04-01</FromDate>
+      <ToDate>2011-04-30</ToDate>
+    </DirectAgentsDatabase>
+    <DirectAgentsDatabase>
+      <PeriodName>May 11</PeriodName>
+      <DatabaseName>DADatabaseMay11</DatabaseName>
+      <ConStr>Data Source=biz2\da;Initial Catalog=DADatabaseMay11;Integrated Security=True</ConStr>
+      <FromDate>2011-05-01</FromDate>
+      <ToDate>2011-05-31</ToDate>
+    </DirectAgentsDatabase>
+    <DirectAgentsDatabase>
+      <PeriodName>Jun 11</PeriodName>
+      <DatabaseName>DADatabaseJun11</DatabaseName>
+      <ConStr>Data Source=biz2\da;Initial Catalog=DADatabaseJun11;Integrated Security=True</ConStr>
+      <FromDate>2011-06-01</FromDate>
+      <ToDate>2011-06-30</ToDate>
+    </DirectAgentsDatabase>
+    <DirectAgentsDatabase>
+      <PeriodName>Jul 11</PeriodName>
+      <DatabaseName>DADatabaseJul11</DatabaseName>
+      <ConStr>Data Source=biz2\da;Initial Catalog=DADatabaseJul11;Integrated Security=True</ConStr>
+      <FromDate>2011-07-01</FromDate>
+      <ToDate>2011-07-31</ToDate>
+    </DirectAgentsDatabase>
+    <DirectAgentsDatabase>
+      <PeriodName>Aug 11</PeriodName>
+      <DatabaseName>DADatabaseAug11</DatabaseName>
+      <ConStr>Data Source=biz2\da;Initial Catalog=DADatabaseAug11;Integrated Security=True</ConStr>
+      <FromDate>2011-08-01</FromDate>
+      <ToDate>2011-08-31</ToDate>
+    </DirectAgentsDatabase>
+  </DirectAgentsDatabases>
+</Settings>

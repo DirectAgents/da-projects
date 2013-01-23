@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+  <ConnectionString>Data Source=biz2\da;Initial Catalog=ABWebDatabase1_prod;Integrated Security=True</ConnectionString>
+  <DatabaseProvider>System.Data.SqlClient</DatabaseProvider>
+  <DatabaseServer>biz2\da</DatabaseServer>
+  <DatabaseName>ABWebDatabase1_prod</DatabaseName>
+  <StagingDatabaseName>ABWeb_staging</StagingDatabaseName>
+  <ExtractFiles>
+    <US>\\ad1\accounting$\Xml\qb_us.xml</US>
+    <Intl>\\ad1\accounting$\Xml\qb_intl.xml</Intl>
+  </ExtractFiles>
+  <FromDate>1980-01-01</FromDate>
+</Config>

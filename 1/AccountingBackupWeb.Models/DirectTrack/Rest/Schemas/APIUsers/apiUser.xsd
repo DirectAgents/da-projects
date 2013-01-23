@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/apiUser/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/apiUser/v1_0"
+elementFormDefault="qualified">
+
+	<!-- start definition of simple elements -->
+	<xs:element name="userName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="password">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="32"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="userType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="affiliate"/>
+				<xs:enumeration value="advertiser"/>
+				<xs:enumeration value="client"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:simpleType name="resourceURLType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\.\./(affiliate|advertiser|client)/[0-9]+"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="resourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURLType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- end definition of simple elements -->
+	
+	<!-- start definition of attributes -->
+	<!-- end definition of attributes -->
+	
+	<!-- start definition of complex elements -->
+	<xs:element name="apiUser">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="userType" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="resourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="userName" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="password" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="location" type="xs:anyURI"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- end definition of complex elements -->
+
+</xs:schema>

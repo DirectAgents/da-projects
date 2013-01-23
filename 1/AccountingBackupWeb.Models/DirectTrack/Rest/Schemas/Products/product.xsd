@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/product/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/product/v1_0"
+elementFormDefault="qualified">
+
+	<xs:simpleType name="booleanInt">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- start definition of simple elements -->
+	<xs:element name="campaignResourceURL">
+	<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="categoryResourceURL">
+	<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="productName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="productID">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="1"/>
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="price" type="xs:double"/>
+
+	<xs:element name="productBrandResourceURL">
+	<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="payoutResourceURL">
+	<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="websiteURL">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="imageURL">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="popularProduct" type="booleanInt"/>
+	<!-- end definition of simple elements -->
+	
+	<!-- start definition of attributes -->
+	<!-- end definition of attributes -->
+	
+	<!-- start definition of complex elements -->
+
+	<xs:element name="alternateURL">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:unsignedInt"/>
+			<xs:attribute name="title" type="xs:string" use="required"/>
+			<xs:attribute name="location" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="alternateURLs">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="alternateURL" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="detail">
+		<xs:complexType>
+			<xs:attribute name="title" type="xs:string" use="required"/>
+			<xs:attribute name="description" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="details">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="detail" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="categories">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="categoryResourceURL" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="payouts">
+	  <xs:complexType>
+	    <xs:sequence>
+			<xs:element ref="payoutResourceURL" minOccurs="0" maxOccurs="unbounded"/>
+	    </xs:sequence>
+	  </xs:complexType>
+	</xs:element>
+
+	<xs:element name="product">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="campaignResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="categories" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="productName" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="productID" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="price" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="productBrandResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="alternateURLs" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="details" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="websiteURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="imageURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="popularProduct" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="payouts" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="location" type="resourceURI"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- end definition of complex elements -->
+
+</xs:schema>

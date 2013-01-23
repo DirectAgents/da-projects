@@ -1,0 +1,301 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".edmx" #>
+<#@ assembly name="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Collections.Generic" #>
+<# 
+string ConnectionString = @"Data Source=biz2\da;Initial Catalog=ABWebDatabase1_prod;Integrated Security=True";
+List<Table> Tables = new List<Table>();
+using(SqlConnection con = new SqlConnection(ConnectionString)) 
+{	
+	con.Open(); 
+	using(SqlCommand cmd = new SqlCommand("select * from QuickBooksTables", con)) 
+	{	
+		using(SqlDataReader reader = cmd.ExecuteReader()) 
+		{		
+			while(reader.Read()) 
+			{
+				string tableName = (string)reader["TABLENAME"];		
+				if(tableName != "ClearedStatus")
+				{
+					var table = new Table(tableName); 
+					using(SqlConnection con2 = new SqlConnection(ConnectionString)) 
+					{
+						con2.Open();		
+						string query2 = string.Format(Settings.SelectColumnsQuery, tableName);	
+						using(SqlCommand cmd2 = new SqlCommand(query2, con2))
+						{	
+							using(SqlDataReader reader2 = cmd2.ExecuteReader()) 
+							{	
+								while(reader2.Read()) 
+								{
+									var column = new Column {
+										Name = (string)reader2["COLUMNNAME"],
+										TypeName = (string)reader2["TYPENAME"],
+										RelatesTo =  (string)reader2["RELATES_TO"],
+										Precision = reader2["PRECISION"].ToString(),
+										Scale = reader2["SCALE"].ToString(),
+										Nullable = reader2["NULLABLE"].ToString(),
+									};
+									
+									table.Columns.Add(column);
+								}
+							}
+						}
+					}
+					Tables.Add(table);
+				}
+			}
+		}
+	}
+}
+string StorageModelsSchemaNamespace = "Aaron.Store";
+string StorageModelsSchemaEntityContainerName = "AaronStoreContainer";
+string ConceptualModelsSchemaNamespace = "Aaron";
+string ConceptualModelsSchemaEntityContainerName = "AaronContainer";
+string ConceptualModelsSchemaEntityContainerLazyLoadingEnabled = "true";
+#>
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+	<!-- EF Runtime content -->
+	<edmx:Runtime>
+		<!-- SSDL content -->
+		<edmx:StorageModels>
+			<Schema Namespace="<#=StorageModelsSchemaNamespace#>" Alias="Self" Provider="System.Data.SqlClient" 
+				ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" 
+				xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+				<EntityContainer Name="<#=StorageModelsSchemaEntityContainerName#>">
+<#foreach (var table in Tables) {#>
+					<EntitySet Name="<#=table.Name#>" EntityType="<#=StorageModelsSchemaNamespace + "." + table.Name#>" store:Type="Tables" Schema="dbo" />
+<#}
+#>				</EntityContainer>			
+<#foreach (var table in Tables)	{#>
+				<EntityType Name="<#=table.Name#>">
+					<Key>
+						<PropertyRef Name="RowId" />
+					</Key>
+					<Property Name="RowId" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+					<Property Name="CompanyId" Type="int" Nullable="false"/>
+<#foreach (var column in table.Columns) {#>	
+					<Property Name="<#=column.Name#>" Type="<#=column.GetStorageType()#>" Nullable="<#=column.IsNullable()#>"	
+<#
+if(column.GetTypeName() == eTypeName.DECIMAL) {#>
+						Precision="<#=column.Precision#>" Scale="<#=column.Scale#>"
+<#}
+#>
+					/>
+<#}
+#>
+				</EntityType>
+<#}
+#>
+			</Schema>
+		</edmx:StorageModels>
+
+		<!-- CSDL content -->
+		<edmx:ConceptualModels>
+			<Schema 
+				xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" 
+				xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="<#=ConceptualModelsSchemaNamespace#>" 
+				Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+				<EntityContainer Name="<#=ConceptualModelsSchemaEntityContainerName#>" annotation:LazyLoadingEnabled="<#=ConceptualModelsSchemaEntityContainerLazyLoadingEnabled#>">
+<#foreach (var table in Tables) {#>
+					<EntitySet Name="<#=table.Name#>" EntityType="<#=ConceptualModelsSchemaNamespace + "." + table.Name#>" />
+<#}
+#>
+				</EntityContainer>
+<#foreach (var table in Tables) {#>
+				<EntityType Name="<#=table.Name#>">
+					<Key>
+						<PropertyRef Name="RowId" />
+					</Key>
+					<Property Type="Int32" Name="RowId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="Int32" Name="CompanyId" Nullable="false" />
+<#foreach (var column in table.Columns) {#>
+					<Property Type="<#=column.GetConceptualType()#>"  Name="<#=column.Name#>" Nullable="<#=column.IsNullable()#>" />
+<#
+}#>
+				</EntityType>
+<#}
+#>
+			</Schema>
+		</edmx:ConceptualModels>
+
+		<!-- C-S mapping content -->
+		<edmx:Mappings>
+			<Mapping xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs" Space="C-S">
+				<EntityContainerMapping CdmEntityContainer="<#=ConceptualModelsSchemaEntityContainerName#>" StorageEntityContainer="<#=StorageModelsSchemaEntityContainerName#>">
+<#foreach (var table in Tables)	{#>
+						<EntitySetMapping Name="<#=table.Name#>">
+							<EntityTypeMapping TypeName="IsTypeOf(<#=ConceptualModelsSchemaNamespace + "." + table.Name#>)">
+								<MappingFragment StoreEntitySet="<#=table.Name#>">
+									<ScalarProperty Name="RowId" ColumnName="RowId" />
+									<ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+<#foreach (var column in table.Columns) {#>
+									<ScalarProperty Name="<#=column.Name#>" ColumnName="<#=column.Name#>" />
+<#
+}#>
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+<#}
+#>
+				</EntityContainerMapping>
+			</Mapping>
+		</edmx:Mappings>
+	</edmx:Runtime>
+	<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+	<edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+		<edmx:Connection>
+			<DesignerInfoPropertySet>
+				<DesignerProperty 
+					Name="MetadataArtifactProcessing"
+					Value="EmbedInOutputAssembly" />
+			</DesignerInfoPropertySet>
+		</edmx:Connection>
+		<edmx:Options>
+			<DesignerInfoPropertySet>
+				<DesignerProperty 
+					Name="ValidateOnBuild" 
+					Value="true" />
+				<DesignerProperty 
+					Name="EnablePluralization" 
+					Value="True" />
+			</DesignerInfoPropertySet>
+		</edmx:Options>
+		<!-- Diagram content (shape and connector positions) -->
+		<edmx:Diagrams>
+			<Diagram Name="<#=ConceptualModelsSchemaNamespace#>" >
+<#
+int i = 0;
+foreach (var table in Tables) {#>
+				<EntityTypeShape EntityType="<#=ConceptualModelsSchemaNamespace + "." + table.Name#>" Width="1.5" PointX="<#=i#>" PointY="<#=i#>" Height="2" />
+<#
+i++;
+}
+#>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
+<#+
+class Table 
+{
+	public string Name { get; set; }
+	public List<Column> Columns { get; set; }
+	public Table(string name)
+	{
+		Name = name;
+		Columns = new List<Column>();
+	}
+}
+class Column
+{
+	public string Name { get; set; }
+	public string TypeName { get; set; }
+	public string RelatesTo { get; set; }
+	public string Nullable { get; set; }
+	public string Precision { get; set; }
+	public string Scale { get; set; }
+	public eTypeName GetTypeName()
+	{
+		return (eTypeName)Enum.Parse(typeof(eTypeName), TypeName);
+	}
+	public string IsNullable()
+	{
+		// temp
+		//return Nullable == "0" ? "false" : "true"; 
+		
+		return "true";
+	}
+	public string GetStorageType()
+	{
+		string result;	
+		switch (GetTypeName())
+		{
+			case eTypeName.DECIMAL:
+				result = "decimal";
+				break;
+			case eTypeName.DOUBLE:
+				result = "float";
+				break;
+			case eTypeName.DATE:
+				result = "datetime";
+				break;
+			case eTypeName.TIMESTAMP:
+				result = "datetime";
+				break;
+			case eTypeName.INTEGER:
+				result = "int";
+				break;
+			case eTypeName.BIT:
+				result = "bit";
+				break;
+			default:
+				result = "nvarchar(max)";
+				break;
+		}
+
+		return result; 
+	}
+	public string GetConceptualType()
+	{
+		string result;
+		switch (GetTypeName())
+		{
+			case eTypeName.DECIMAL:
+				result = "Decimal";
+				break;
+			case eTypeName.DOUBLE:
+				result = "Double";
+				break;
+			case eTypeName.DATE:
+				result = "DateTime";
+				break;
+			case eTypeName.TIMESTAMP:
+				result = "DateTime";
+				break;
+			case eTypeName.INTEGER:
+				result = "Int32";
+				break;
+			case eTypeName.BIT:
+				result = "Boolean";
+				break;
+			default:
+				result = "String";
+				break;
+		}
+		return result;
+	}
+}
+enum eTypeName
+{ 
+	BIT,
+	DATE,
+	DECIMAL,
+	DOUBLE,
+	INTEGER,
+	TIMESTAMP,
+	VARCHAR
+}
+class Settings
+{
+	static public string SelectColumnsQuery = @"
+							SELECT 
+								QuickBooksColumns.COLUMNNAME, QuickBooksColumns.TYPENAME, QuickBooksColumns.RELATES_TO, 
+								QuickBooksColumns.NULLABLE, QuickBooksColumns.PRECISION, QuickBooksColumns.SCALE
+							FROM 
+								QuickBooksColumns INNER JOIN QuickBooksTables ON QuickBooksColumns.QuickBooksTable_Id = QuickBooksTables.Id
+							WHERE 
+								QuickBooksTables.TABLENAME = N'{0}' 
+								AND
+								not columnname like 'Address%' and
+								not columnname like '' and
+								not columnname like '%RefFullName'
+								and not columnname like 'BillAddress%' 
+								and not columnname='TxnDateMacro'
+							    and not columnname like 'ShipAddress%' 
+							    and not columnname like 'CreditCard%'
+							";
+}
+#>

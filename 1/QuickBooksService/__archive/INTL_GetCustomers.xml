@@ -1,0 +1,742 @@
+<?xml version="1.0" standalone="yes"?>
+<Settings>
+  <Customers>
+    <Customer>
+      <ListID>800000C2-1273094544</ListID>
+      <FullName>Affinitas GmbH</FullName>
+      <CompanyName>Affinitas GmbH</CompanyName>
+      <Phone>49 30 991 9495 21</Phone>
+      <Email>akos.pozsgai@affinitas.de; viktor.zawadzki@affinitas.de</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000109-1286554771</ListID>
+      <FullName>Assicurazione.it S.r.l.</FullName>
+      <CompanyName>Assicurazione.it S.r.l.</CompanyName>
+      <Email>mauro.giacobbe@assicurazione.it</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000C3-1273094544</ListID>
+      <FullName>Astroway Ltd - Unit 2605</FullName>
+      <CompanyName>Astroway Ltd - Unit 2605</CompanyName>
+      <Phone>+41 (0) 22 907 73 17</Phone>
+      <Fax>+41 (0) 22 907 73 01</Fax>
+      <Email>t.yin@b-fly.biz</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000E2-1278429503</ListID>
+      <FullName>Astroway Ltd - Unit 2605 UK</FullName>
+      <CompanyName>Astroway Ltd - Unit 2605</CompanyName>
+      <Phone>+41 (0) 22 907 73 17</Phone>
+      <Fax>+41 (0) 22 907 73 01</Fax>
+      <Email>t.yin@b-fly.biz</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000108-1286477639</ListID>
+      <FullName>Astrum Online Entertainment/ Mail. RU</FullName>
+      <CompanyName>Astrum Online Entertainment</CompanyName>
+      <Phone>+49 40 41 43 42 122</Phone>
+      <Fax>+49 40 41 43 42 499</Fax>
+      <Email>werbung@astrumonline.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000005-1270497713</ListID>
+      <FullName>be2 GmbH</FullName>
+      <CompanyName>be2 GmbH</CompanyName>
+      <Phone>0041 442710748</Phone>
+      <Fax>0041 442710749</Fax>
+      <Email>Jan-jaap.anbeek@be2.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000100-1285872055</ListID>
+      <FullName>BeRuby/ Maruby Internet</FullName>
+      <CompanyName>BeRuby</CompanyName>
+      <Email>andrea@beruby.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>8000019E-1305129445</ListID>
+      <FullName>Betreut.de</FullName>
+      <CompanyName>Betreut.de</CompanyName>
+      <Email>'steffen.zoller@betreut.de'</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000000C-1270497713</ListID>
+      <FullName>Brands 4 Friends</FullName>
+      <CompanyName>Brands 4 Friends</CompanyName>
+      <Phone>49-(0)30-726-194-823</Phone>
+      <Email>ns@brands4friends.de</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000185-1301673377</ListID>
+      <FullName>Clube Fashion</FullName>
+      <CompanyName>Clube Fashion</CompanyName>
+      <Phone>351 965759120</Phone>
+      <Fax>351 213627293</Fax>
+      <Email>tmouta@clubefashion.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000FC-1285859692</ListID>
+      <FullName>Complaint Handling Services Limited</FullName>
+      <CompanyName>Complaint Handling Services Limited</CompanyName>
+      <Email>simon.baker@leadbay.co.uk</Email>
+    </Customer>
+    <Customer>
+      <ListID>800000D3-1274295502</ListID>
+      <FullName>Cross Digital/INTERACTIVE AVENUE</FullName>
+      <CompanyName>Cross Digital</CompanyName>
+      <Phone>44 0207 520 2639</Phone>
+      <Email>sha@crossdigitallux.co.uk, Syed@crossdigitallux.co.uk</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000198-1303761778</ListID>
+      <FullName>Digital North - DNA</FullName>
+      <CompanyName>Digital North - DNA</CompanyName>
+      <Phone>+44 (0)2076115083</Phone>
+      <Email>tim@digital-north.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000103-1285963347</ListID>
+      <FullName>Digital Performance</FullName>
+      <CompanyName>Digital Performance</CompanyName>
+      <Email>erlend.christoffersen@digitalperformance.de</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000154-1295041130</ListID>
+      <FullName>Direct Agents - EURO</FullName>
+      <CompanyName>Direct Agents - EURO</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>800000FD-1285863212</ListID>
+      <FullName>Direct Agents - GBP</FullName>
+      <CompanyName>Direct Agents Inc</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>8000001A-1270497714</ListID>
+      <FullName>Direct Agents, Inc. - US Transfer</FullName>
+      <CompanyName>Direct Agents, Inc. - US</CompanyName>
+      <Email>mani@directagents.com, angelica@directagents,josh@directagents.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>8000001C-1270497714</ListID>
+      <FullName>eCircle GmbH</FullName>
+      <CompanyName>eCircle GmbH</CompanyName>
+      <Phone>+49 (0)89 / 120 09-74</Phone>
+      <Fax>+49 (0)89 / 120 09-75</Fax>
+      <Email>m.leppaenen@ecircle.com</Email>
+      <TermsRefFullName>Net 60</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000001E-1270497714</ListID>
+      <FullName>Ecircle Ltd. UK</FullName>
+      <CompanyName>Ecircle Ltd.</CompanyName>
+      <Phone>+44 (0)20 7280 4917</Phone>
+      <Fax>+44 (0)20 7618 4201</Fax>
+      <Email>y.peiris@ecircle.com, a.negus@ecircle.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000E3-1279730632</ListID>
+      <FullName>Eskupina/Cdate</FullName>
+      <CompanyName>Eskupina/Cdate</CompanyName>
+      <Phone>421 (0) 2 330 02 810</Phone>
+      <Fax>421 (0) 2 335 20 101</Fax>
+      <Email>media@interdatesa.com, ap@eskupina.com, Giuliano.com, accounting@eskupina.com, geraldine.hoehne@insparx.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800001B3-1312468426</ListID>
+      <FullName>Everything Legal</FullName>
+      <CompanyName>Everything Legal</CompanyName>
+      <Email>baskew@claimsfinancial.co.uk</Email>
+      <TermsRefFullName>Net 7</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000026-1270497715</ListID>
+      <FullName>Flightline.co.uk</FullName>
+      <CompanyName>Flightline.co.uk</CompanyName>
+      <Phone>08701431995</Phone>
+      <Fax>08700600661</Fax>
+      <Email>andy@flightline.co.uk</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000015D-1296606792</ListID>
+      <FullName>Frogster Online Gaming GmbH</FullName>
+      <CompanyName>Frogster Online Gaming GmbH</CompanyName>
+      <Email>shock@frogster.de</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000029-1270497715</ListID>
+      <FullName>FunStage</FullName>
+      <CompanyName>FunStage</CompanyName>
+      <Email>jochen.martinez@greentube.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000180-1300303100</ListID>
+      <FullName>GameDuell - Especial</FullName>
+    </Customer>
+    <Customer>
+      <ListID>8000002D-1270497715</ListID>
+      <FullName>GameDuell GmbH</FullName>
+      <CompanyName>GameDuell GmbH</CompanyName>
+      <Phone>+49 (0)30 288 768 261</Phone>
+      <Fax>+49 (0)30 288 768 299</Fax>
+      <Email>anna.stig@gameduell.de, lisa.leinonen@gameduell.de, accounting@gameduell.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800001B1-1312321901</ListID>
+      <FullName>Gamigo AG</FullName>
+      <CompanyName>Gamigo AG</CompanyName>
+      <Email>stanislav.koval@gamigo.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000107-1286388667</ListID>
+      <FullName>Global Test Market / GMI</FullName>
+      <CompanyName>Global Test Market / GMI</CompanyName>
+      <Email>accountspayable@gmi-mr.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000D7-1275492658</ListID>
+      <FullName>Greentube I.E.S. GmbH/Funstage</FullName>
+      <CompanyName>Greentube I.E.S. GmbH</CompanyName>
+      <Email>jochen.martinez@greentube.com, grzegorz.stoma@greentube.com, annemarie.genilla@funstage.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000153-1295033426</ListID>
+      <FullName>Groupon-Especial</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000119-1288974477</ListID>
+      <FullName>Groupon Gmbh</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000019D-1304965797</ListID>
+      <FullName>Groupon Gmbh:AE - Groupon FZ-LLC</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000187-1302106492</ListID>
+      <FullName>Groupon Gmbh:AT - Groupon AT GmbH</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000171-1299520741</ListID>
+      <FullName>Groupon Gmbh:AU - Stardeal Pty Ltd</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000188-1302107686</ListID>
+      <FullName>Groupon Gmbh:BE - Groupon S.P.R.L</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000189-1302107877</ListID>
+      <FullName>Groupon Gmbh:BR - Groupon Serviços Digitais Ltda.</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000018A-1302108042</ListID>
+      <FullName>Groupon Gmbh:CH - Groupon CH GmbH</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000139-1294181862</ListID>
+      <FullName>Groupon Gmbh:ES - Groupon Spain SL</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000013A-1294182239</ListID>
+      <FullName>Groupon Gmbh:FI - CityDeal Oy</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000013B-1294182268</ListID>
+      <FullName>Groupon Gmbh:FR - Groupon France SAS</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000018B-1302108585</ListID>
+      <FullName>Groupon Gmbh:IE - Groupon-CityDeal Ireland Ltd.</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000018C-1302109249</ListID>
+      <FullName>Groupon Gmbh:IL - Grouper Social Shopping Ltd.</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000013C-1294182289</ListID>
+      <FullName>Groupon Gmbh:IT - Groupon S.r.l.</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000013D-1294182310</ListID>
+      <FullName>Groupon Gmbh:NL - Groupon B.V.</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000013E-1294182341</ListID>
+      <FullName>Groupon Gmbh:NO - CityDeal AS</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800001AD-1311194193</ListID>
+      <FullName>Groupon Gmbh:NZ - Groupon New Zealand Ltd</FullName>
+      <CompanyName>Groupon New Zealand Ltd</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000172-1299520961</ListID>
+      <FullName>Groupon Gmbh:PH - Beeconomic Philippines Inc.</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000013F-1294182361</ListID>
+      <FullName>Groupon Gmbh:PL - Groupon Sp. z o.o.</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000174-1299521174</ListID>
+      <FullName>Groupon Gmbh:RO - Groupon Internet SRL</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000140-1294182378</ListID>
+      <FullName>Groupon Gmbh:SE - MyCityDeal AB</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000173-1299521108</ListID>
+      <FullName>Groupon Gmbh:SG - Beeconomic Singapore Pte. Ltd.</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000175-1299521217</ListID>
+      <FullName>Groupon Gmbh:TR - Groupon Bilisim Pazarlama Hizmetleri</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000176-1299521268</ListID>
+      <FullName>Groupon Gmbh:ZA - Twangoo South Africa Pty (LTD)</FullName>
+      <CompanyName>Groupon Gmbh</CompanyName>
+      <Phone>+49 (0)178 950 24 48</Phone>
+      <Fax>+49 (0)30 - 47 37 53</Fax>
+      <Email>silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000018E-1302111028</ListID>
+      <FullName>Heritage Resorts and Hotels</FullName>
+      <CompanyName>Heritage Resorts and Hotels</CompanyName>
+      <Email>katie@heritageresorts.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000018F-1302279033</ListID>
+      <FullName>Hifficiency/AdRoi</FullName>
+      <CompanyName>Hifficiency/AdRoi</CompanyName>
+      <Email>david.garrett@hifficiency.com, fernando.jorge@hifficiency.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000123-1291907454</ListID>
+      <FullName>HP DE</FullName>
+      <CompanyName>HP DE</CompanyName>
+      <Email>ines.bagger@hp.com, katharina.custer@hp.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000030-1270497715</ListID>
+      <FullName>HP Enterprise Services UK Ltd</FullName>
+      <CompanyName>HP Enterprise Services UK Ltd</CompanyName>
+      <Email>greg.baines@hp.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000149-1294697902</ListID>
+      <FullName>HP Enterprise Services UK Ltd:HP AU</FullName>
+      <CompanyName>HP AU</CompanyName>
+      <Email>jenny.andersen@hp.com</Email>
+      <TermsRefFullName>Net 45</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000181-1300476320</ListID>
+      <FullName>Just a Game GmbH</FullName>
+      <CompanyName>Just a Game GmbH</CompanyName>
+      <Email>stephan.liedtke@justagame.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000016D-1298576203</ListID>
+      <FullName>KGB UK</FullName>
+      <CompanyName>KGB UK</CompanyName>
+      <Email>christian.kudzi@118118.com, paul.swain@118118.com, brian.kenton@kgb.com, ap@kgb.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000116-1288733649</ListID>
+      <FullName>King.com</FullName>
+      <CompanyName>King.com</CompanyName>
+      <Email>Angus.Lovitt@king.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000016C-1298562310</ListID>
+      <FullName>LIGHTSPEED RESEARCH</FullName>
+      <CompanyName>LIGHTSPEED RESEARCH</CompanyName>
+      <Phone>0031 120-522-5347</Phone>
+      <Email>abrzeska@lightspeedresearch.com, ukfinance@lightspeedresearch.com, ammfinance@lightspeedresearch.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000E0-1276876899</ListID>
+      <FullName>Little Star Media</FullName>
+      <CompanyName>Little Star Media</CompanyName>
+      <Email>alessandra@littlestarmedia.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000D2-1274131433</ListID>
+      <FullName>LOVEFiLM Deutschland GmbH 1</FullName>
+      <CompanyName>LOVEFiLM Deutschland GmbH</CompanyName>
+      <Phone>+49.(0)89.452093-306</Phone>
+      <Fax>+49.(0)89.452093-301</Fax>
+      <Email>michael.walch@lovefilm.de, lukasz.wiertel@lovefilm.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000003D-1270497716</ListID>
+      <FullName>LOVEFiLM International Limited</FullName>
+      <CompanyName>LOVEFiLM International Limited</CompanyName>
+      <Phone>0844 482 0123</Phone>
+      <Email>jason.norris@lovefilm.com, accounts.payable@lovefilm.com, lindsey.aymer@lovefilm.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000041-1270497716</ListID>
+      <FullName>Marketing Craze</FullName>
+      <CompanyName>Marketing Craze</CompanyName>
+      <Phone>44(0) 207 5828312</Phone>
+      <Email>martin@marketingcraze.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800001A4-1306949197</ListID>
+      <FullName>Maximiles UK</FullName>
+      <CompanyName>Maximiles UK</CompanyName>
+      <Email>e.rodia@maximiles.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000042-1270497716</ListID>
+      <FullName>Meetic</FullName>
+      <CompanyName>Meetic</CompanyName>
+      <Phone>+33(0)1.58.17.04.14</Phone>
+      <Fax>+33(0)1.58.17.05.71</Fax>
+      <Email>cmulette@cj.com, fchacar@cj.com, meetic_am@cj.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000043-1270497716</ListID>
+      <FullName>MobiKlix Ltd</FullName>
+      <CompanyName>MobiKlix Ltd</CompanyName>
+      <Email>brian.k@mobiklix.com, aaron.b@mobiklix.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000046-1270497717</ListID>
+      <FullName>MoneyNet/Sterling Business Consultants</FullName>
+      <CompanyName>MoneyNet</CompanyName>
+      <Phone>020-8313-6734</Phone>
+      <Email>MSimpson@moneynet.co.uk, jarcher@moneynet.co.uk</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000F6-1283870874</ListID>
+      <FullName>MyCityDeal</FullName>
+      <CompanyName>MyCityDeal</CompanyName>
+      <Phone>44 (0)20 7956  2659</Phone>
+      <Email>Steven.post@groupon.de, silja.markus@groupon.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000010F-1287438486</ListID>
+      <FullName>MyTheresa.com</FullName>
+      <CompanyName>MyTheresa.com</CompanyName>
+      <Email>g.franck@mytheresa.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>8000004B-1270497717</ListID>
+      <FullName>NeoPoint Technologies</FullName>
+      <CompanyName>NeoPoint Technologies</CompanyName>
+      <Phone>+972 3 6072574</Phone>
+      <Email>Jonathanr@neogames.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000019C-1304529306</ListID>
+      <FullName>Next Idea GMBH</FullName>
+      <CompanyName>Next Idea GMBH</CompanyName>
+      <Phone>+49 2534 97 33 53 - 3</Phone>
+      <Fax>+49 (02534) 97 33 53-</Fax>
+      <Email>philipp.prinzmeier@nextidea.de</Email>
+    </Customer>
+    <Customer>
+      <ListID>8000004D-1270497717</ListID>
+      <FullName>Nivoria Online Marketing Agency</FullName>
+      <CompanyName>Nivoria Online Marketing Agency</CompanyName>
+      <Phone>+34  93 530 59 70</Phone>
+      <Fax>+34  93 530 59 75</Fax>
+      <Email>alex@nivoria.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000019B-1304449648</ListID>
+      <FullName>Noatel</FullName>
+      <CompanyName>Noatel</CompanyName>
+      <Phone>+39 0910 848400</Phone>
+      <Fax>+39 091 6788227</Fax>
+      <Email>giusi.palazzolo@noatel.it</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000E1-1278013107</ListID>
+      <FullName>Optical Express</FullName>
+      <CompanyName>Optical Express</CompanyName>
+      <Phone>44-1236795178</Phone>
+      <Email>ewanfisher@opticalexpress.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000170-1299259892</ListID>
+      <FullName>Optical Express - DE</FullName>
+      <CompanyName>Optical Express - DE</CompanyName>
+      <Email>ewanfisher@opticalexpress.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000136-1293566219</ListID>
+      <FullName>Psychonomics</FullName>
+      <CompanyName>Psychonomics</CompanyName>
+      <Phone>+49 221 42061-472</Phone>
+      <Fax>+49 221 42061-100</Fax>
+      <Email>Holger.Nowak@yougov.de</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000019A-1304436051</ListID>
+      <FullName>SCBmedia</FullName>
+      <CompanyName>SCBmedia Ltd</CompanyName>
+      <Phone>0845 257 7717</Phone>
+      <Email>simon.booth@scbmedia.co.uk</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000010B-1286990117</ListID>
+      <FullName>SD&amp;P Online Media Group</FullName>
+      <CompanyName>SD&amp;P Online Media Group</CompanyName>
+      <Phone>076 5146788</Phone>
+      <Fax>076 5144432</Fax>
+      <Email>alexandros.t@sdp-int.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000011F-1291409636</ListID>
+      <FullName>Shoebuy UK</FullName>
+      <CompanyName>Shoebuy UK</CompanyName>
+      <Email>ttao@shoebuy.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000FB-1285346528</ListID>
+      <FullName>Smartdate</FullName>
+      <CompanyName>Smartdate</CompanyName>
+      <Email>laurie-anne.moussier@smartdate.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800001A6-1307551517</ListID>
+      <FullName>Stay Friends</FullName>
+      <CompanyName>Stay Friends</CompanyName>
+      <Email>dm@stayfriends.de, zuzana.husarovicova@stayfriends.de</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000016A-1298557391</ListID>
+      <FullName>Survey Sampling International-GBP payment</FullName>
+    </Customer>
+    <Customer>
+      <ListID>80000118-1288967892</ListID>
+      <FullName>Survey Sampling International / SSI</FullName>
+      <CompanyName>Survey Sampling International / SSI</CompanyName>
+      <Email>lin_to@SurveySampling.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000005F-1270497718</ListID>
+      <FullName>Terra Matrix Media</FullName>
+      <CompanyName>Terra Matrix Media</CompanyName>
+      <Email>David.Resnik@terramatrixmedia.com, jkindervater@estalea.com, bcass@estalea.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000160-1297870617</ListID>
+      <FullName>Twistbox Entertainment/AMV Holding Ltd.</FullName>
+      <CompanyName>Twistbox Entertainment/AMV Holding Ltd.</CompanyName>
+      <Phone>818-301-6200 Ext. 252</Phone>
+      <Email>jgabra@twistbox.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000190-1302618930</ListID>
+      <FullName>Urban Rivals</FullName>
+      <CompanyName>Urban Rivals</CompanyName>
+      <Phone>+33 01 80 96 98 22</Phone>
+      <Email>mbardot@boostr.net, aaminta@boostr.net</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000066-1270497719</ListID>
+      <FullName>Virtual World Direct Limited.</FullName>
+      <CompanyName>Virtual World Direct Limited.</CompanyName>
+      <Phone>+44 (0)1624 660177</Phone>
+      <Email>tom@vwdmail.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000067-1270497719</ListID>
+      <FullName>Vistaprint-Germany</FullName>
+      <CompanyName>Vistaprint Espana</CompanyName>
+      <Email>apes@vistaprint.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000068-1270497719</ListID>
+      <FullName>VISTAPRINT ESPAÑA S.L</FullName>
+      <CompanyName>VISTAPRINT ESPAÑA S.L</CompanyName>
+      <Email>VGuevara@vistaprint.com, nfariss@vistaprint.com; apes@vistaprint.com; lwanstall@vistaprint.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800000E5-1279833268</ListID>
+      <FullName>Zamano</FullName>
+      <CompanyName>Zamano</CompanyName>
+      <Phone>00353 1 690 8051</Phone>
+      <Email>gareth@zamano.com, accounts@zamano.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000006A-1270497719</ListID>
+      <FullName>ZED Germany GmbH</FullName>
+      <CompanyName>ZED Germany GmbH</CompanyName>
+      <Phone>+49 (0)30 2000 384 45</Phone>
+      <Fax>+49 (0)30 2000 384 99</Fax>
+      <Email>Catrin.Klupiec-Lemke@zed.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+  </Customers>
+</Settings>

@@ -1,0 +1,1893 @@
+<Settings>
+  <Customers>
+    <Customer>
+      <ListID>2D00000-1128440706</ListID>
+      <FullName>Accuquote</FullName>
+      <CompanyName>Accuquote</CompanyName>
+      <Phone>847-850-2000 x 262</Phone>
+      <Email>mkraus@accuquote.com, licensing@accuquote.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>7E50000-1228405089</ListID>
+      <FullName>Admarketers</FullName>
+      <CompanyName>Admarketers</CompanyName>
+      <Email>jgallinaro@moneytip.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C4D-1274813848</ListID>
+      <FullName>Afaze</FullName>
+      <CompanyName>Afaze, Inc.</CompanyName>
+      <Email>Dora@afaze.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D14-1282140878</ListID>
+      <FullName>Affiliate Walla/Qwando LLC</FullName>
+      <CompanyName>Affiliate Walla/Media Impact Advertising</CompanyName>
+      <Email>kelly@affiliatewalla.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000FF3-1310506954</ListID>
+      <FullName>Alice.com</FullName>
+      <CompanyName>Alice.com</CompanyName>
+      <Phone>608-662-1323</Phone>
+      <Fax>608-662-0883</Fax>
+      <Email>kris@alice.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B3D-1264447905</ListID>
+      <FullName>Alliance Health Networks</FullName>
+      <CompanyName>Alliance Health Networks</CompanyName>
+      <Phone>801.708.7886</Phone>
+      <Fax>814.777.1568</Fax>
+      <Email>GBurton@alliancehealth.com, invoices@alliancehealth.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D28-1283904568</ListID>
+      <FullName>Allied Van Lines</FullName>
+      <CompanyName>Allied Van Lines</CompanyName>
+      <Email>Steven.Knight@SIRVA.com, Chris.borrink@sirva.com, Sharon.Pugh@SIRVA.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C6B-1276198671</ListID>
+      <FullName>Any House Exterminating services</FullName>
+      <CompanyName>Any House Exterminating services</CompanyName>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A7E-1254492636</ListID>
+      <FullName>Art.com</FullName>
+      <CompanyName>Art.com</CompanyName>
+      <Phone>510) 879-4793</Phone>
+      <Email>HGallup@art.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>6E40000-1220560085</ListID>
+      <FullName>Ascentive</FullName>
+      <CompanyName>Ascentive</CompanyName>
+      <Phone>(215) 320-6000 x198</Phone>
+      <Fax>(215) 320-6001</Fax>
+      <Email>esimaeichler@ascentive.com, crichmond@ascentive.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D88-1286899964</ListID>
+      <FullName>Astroway CAD</FullName>
+      <Phone>+41 (0) 22 907 73 17</Phone>
+      <Fax>+41 (0) 22 907 73 01</Fax>
+      <Email>t.yin@b-fly.biz</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C1B-1273672103</ListID>
+      <FullName>Astroway Ltd - Unit 2605</FullName>
+      <CompanyName>Astroway Ltd - Unit 2605</CompanyName>
+      <Phone>+41 (0) 22 907 73 17</Phone>
+      <Email>t.yin@b-fly.biz</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D8A-1286906957</ListID>
+      <FullName>Astroway Ltd - Unit 2605:Astroway CAD</FullName>
+      <CompanyName>Astroway Ltd - Unit 2605</CompanyName>
+      <Phone>+41 (0) 22 907 73 17</Phone>
+      <Email>t.yin@b-fly.biz</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AEC-1260299715</ListID>
+      <FullName>Azure Media AD</FullName>
+      <CompanyName>Azure Media</CompanyName>
+      <Phone>917.686.1508</Phone>
+      <Email>blisi@azuremedia.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D1E-1282751503</ListID>
+      <FullName>B2E Marketing</FullName>
+      <CompanyName>B2E Marketing</CompanyName>
+      <Phone>1-609-799-5878</Phone>
+      <Fax>1-253-369-6410</Fax>
+      <Email>sfecko@b2emarketing.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000DFF-1291219795</ListID>
+      <FullName>Babylon</FullName>
+      <CompanyName>Babylon</CompanyName>
+      <Email>greg@babylon.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F76-1305130162</ListID>
+      <FullName>Betterment LLC</FullName>
+      <CompanyName>Betterment LLC</CompanyName>
+      <Email>mary@betterment.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B14-1262704334</ListID>
+      <FullName>Beyond the Rack</FullName>
+      <CompanyName>OPMPROS</CompanyName>
+      <Phone>514-816-7745</Phone>
+      <Email>paresh@opmpros.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000DFA-1291131976</ListID>
+      <FullName>Bid Rivals</FullName>
+      <CompanyName>Bid Rivals</CompanyName>
+      <Email>marcello@bidrivals.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D1B-1282661736</ListID>
+      <FullName>Bidcactus</FullName>
+      <CompanyName>Bidcactus</CompanyName>
+      <Email>heather@bidcactus.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F02-1300913316</ListID>
+      <FullName>Bidooka.com / Bidzpedia LLC</FullName>
+      <CompanyName>Bidooka.com / Bidzpedia LLC</CompanyName>
+      <Phone>(510) 818-1424</Phone>
+      <Email>laddi@bidooka.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>2F40000-1164661049</ListID>
+      <FullName>Bidz.com</FullName>
+      <CompanyName>Bidz.com</CompanyName>
+      <Phone>310.280.7324</Phone>
+      <Fax>310.388.0351</Fax>
+      <Email>edvinas@bidz.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000CCB-1280855518</ListID>
+      <FullName>Bigdeal.com</FullName>
+      <CompanyName>Bigdeal.com</CompanyName>
+      <Phone>(917) 447-6167</Phone>
+      <Email>jay@bigdeal.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B15-1262705879</ListID>
+      <FullName>Bigpoint GmbH</FullName>
+      <CompanyName>Bigpoint GmbH</CompanyName>
+      <Phone>+49 (0)40/88 14 13 -</Phone>
+      <Fax>+49 (0)40/88 14 13 -</Fax>
+      <Email>dnorcia@bigpoint.net, isoroker@bigpoint.net</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FFA-1311172708</ListID>
+      <FullName>Bigpoint GmbH:BR Bigpoint</FullName>
+      <CompanyName>Bigpoint GmbH</CompanyName>
+      <Phone>+49 (0)40/88 14 13 -</Phone>
+      <Fax>+49 (0)40/88 14 13 -</Fax>
+      <Email>l.debiase@bigpoint.net, dnorcia@bigpoint.net, isoroker@bigpoint.net</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FF9-1311172696</ListID>
+      <FullName>Bigpoint GmbH:US Bigpoint</FullName>
+      <CompanyName>Bigpoint GmbH</CompanyName>
+      <Phone>+49 (0)40/88 14 13 -</Phone>
+      <Fax>+49 (0)40/88 14 13 -</Fax>
+      <Email>dnorcia@bigpoint.net, isoroker@bigpoint.net</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D54-1285272568</ListID>
+      <FullName>BloomSpot</FullName>
+      <CompanyName>BloomSpot</CompanyName>
+      <Email>rudy@bloomspot.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B65-1265730192</ListID>
+      <FullName>Blue Stone Interactive Entertainment LTD</FullName>
+      <CompanyName>Blue Stone Interactive Entertainment LTD</CompanyName>
+      <Phone>+44 (0)1481 234460</Phone>
+      <Fax>+44 (0)1481 234470</Fax>
+      <Email>shaun@iwmagency.net</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E2F-1292943453</ListID>
+      <FullName>Borderless Access Panels Pvt Ltd</FullName>
+      <CompanyName>Borderless Access Panels Pvt Ltd</CompanyName>
+      <Email>poornima.vijayan@borderlessaccess.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000DBE-1289253136</ListID>
+      <FullName>Brainy Baby</FullName>
+      <CompanyName>Brainy Baby</CompanyName>
+      <Phone>516-472-0074</Phone>
+      <Email>john.benfield@wallmadisonmedia.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000EA3-1297459119</ListID>
+      <FullName>BuildMyMove</FullName>
+      <CompanyName>BuildMyMove</CompanyName>
+      <Email>johng@buildmymove.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000101C-1312554156</ListID>
+      <FullName>BuyWithMe</FullName>
+      <CompanyName>BuyWithMe</CompanyName>
+      <Email>awong@buywithme.com, accounting@buywithme.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B95-1267805081</ListID>
+      <FullName>CalFinder</FullName>
+      <CompanyName>CalFinder</CompanyName>
+      <Phone>510-834-4677</Phone>
+      <Email>gabe@calfinder.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000FDB-1309287666</ListID>
+      <FullName>Carchex</FullName>
+      <CompanyName>Carchex</CompanyName>
+      <Email>LDorman@carchex.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>890000-1057258352</ListID>
+      <FullName>Career Education Corporation</FullName>
+      <CompanyName>Career Education Corporation</CompanyName>
+      <Phone>(847) 585-3633</Phone>
+      <Fax>847) 585-3673</Fax>
+      <Email>bhubert@careered.com, accountspayable@careered.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800009DD-1246917939</ListID>
+      <FullName>Chews-4-Health, Inc.</FullName>
+      <CompanyName>Chews-4-Health, Inc.</CompanyName>
+      <Email>kristinew@chews4health.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C1F-1273759884</ListID>
+      <FullName>Chilay Leads</FullName>
+      <CompanyName>Chilay Leads</CompanyName>
+      <Phone>302-294-0988</Phone>
+      <Email>Dave@chilayleads.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AD1-1258478483</ListID>
+      <FullName>Christophe Danhier</FullName>
+      <CompanyName>Christophe Danhier</CompanyName>
+      <Email>danhier@me.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000A25-1250711500</ListID>
+      <FullName>Chrome Bags</FullName>
+      <CompanyName>Chrome Industries</CompanyName>
+      <Phone>415-503-1221 ext.116</Phone>
+      <Email>meghan@chromebags.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000ABA-1256667904</ListID>
+      <FullName>Clever Eve</FullName>
+      <CompanyName>Clever Eve</CompanyName>
+      <Phone>(866) 303-3876</Phone>
+      <Fax>213-623-5530</Fax>
+      <Email>artin.sepani@clevereve.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E65-1294768267</ListID>
+      <FullName>Cole Haan</FullName>
+      <CompanyName>Cole Haan</CompanyName>
+      <Email>isabelle.cote@colehaan.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E04-1291405852</ListID>
+      <FullName>Connect Your Home/Dish Systems</FullName>
+      <CompanyName>Connect Your Home/Dish Systems</CompanyName>
+      <Phone>(949) 777-0100 x 7002</Phone>
+      <Fax>(949) 777-0110</Fax>
+      <Email>michaelg@connectyourhome.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E9B-1296779579</ListID>
+      <FullName>ConnectionEngine</FullName>
+      <CompanyName>ConnectionEngine</CompanyName>
+      <Email>ekirby@connectionengine.com, tjudson@connectionengine.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E99-1296754783</ListID>
+      <FullName>CouponCoupon</FullName>
+      <CompanyName>CouponCoupon</CompanyName>
+      <Email>kennydeangelis@gmail.com, admin@couponcoupon.co.uk</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E0B-1291681023</ListID>
+      <FullName>Coupons.com</FullName>
+      <CompanyName>Coupons.com</CompanyName>
+      <Email>doba@couponsinc.com, Ego@couponsinc.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E12-1291924817</ListID>
+      <FullName>Credit Sesame</FullName>
+      <CompanyName>Credit Sesame</CompanyName>
+      <Phone>(650) 539-4143</Phone>
+      <Email>irene@creditsesame.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AE2-1259861170</ListID>
+      <FullName>Credit.com</FullName>
+      <CompanyName>Credit.com</CompanyName>
+      <Email>ryan@credit.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E02-1291311840</ListID>
+      <FullName>Cupid plc/EasyDate plc</FullName>
+      <CompanyName>Cupid plc</CompanyName>
+      <Email>volchek@cupid.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A16-1249651723</ListID>
+      <FullName>Datamark</FullName>
+      <CompanyName>Datamark</CompanyName>
+      <Email>interactive.invoice@datamark.com, Jolene.Casey@Datamark.com, David.Smith@Datamark.com</Email>
+      <TermsRefFullName>Net 45</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AE5-1259955411</ListID>
+      <FullName>Debt Managers CAD</FullName>
+      <CompanyName>Debt Managers</CompanyName>
+      <Email>d.dickey@debtmanagers.ca</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A35-1251823984</ListID>
+      <FullName>Debt Managers US</FullName>
+      <CompanyName>Debt Managers</CompanyName>
+      <Email>d.dickey@debtmanagers.ca, denise@debtmanagers.ca</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000BE6-1271278339</ListID>
+      <FullName>Debtmanagers.ca</FullName>
+      <CompanyName>Debtmanagers.ca</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000B9B-1268249892</ListID>
+      <FullName>Defender Direct</FullName>
+      <CompanyName>Defender Direct</CompanyName>
+      <Phone>317.810.4720 x 176</Phone>
+      <Fax>317.810.4723</Fax>
+      <Email>brian.minter@defenderdirect.com, paul.simpson@defenderdirect.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D98-1287755822</ListID>
+      <FullName>Digi Network Group</FullName>
+      <CompanyName>Digi Network Group</CompanyName>
+      <Email>michael.walter@diginetworkgroup.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>8000099C-1245183782</ListID>
+      <FullName>Digital Target</FullName>
+      <CompanyName>Digital Target</CompanyName>
+      <Email>emauck@digitaltargetmarketing.com, jpapesh@digitaltargetmarketing.com, wdoran@digitaltargetmarketing.com</Email>
+      <TermsRefFullName>Net 7</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000CFB-1281992634</ListID>
+      <FullName>Direct Agents Interactive Limited</FullName>
+      <CompanyName>Direct Agents Interactive Limited</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000D5F-1285863641</ListID>
+      <FullName>Direct Agents Interactive Limited:Direct Agents Interactive - EURO</FullName>
+      <CompanyName>Direct Agents Interactive limited</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000D5E-1285863616</ListID>
+      <FullName>Direct Agents Interactive Limited:Direct Agents Interactive - GBP</FullName>
+      <CompanyName>Direct Agents Interactive limited</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000DBC-1288984608</ListID>
+      <FullName>Direct Brands US</FullName>
+      <CompanyName>Direct Brands US</CompanyName>
+      <Email>virginia.patterson@directbrands.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8320000-1231864186</ListID>
+      <FullName>Direct Brands, Inc.</FullName>
+      <CompanyName>Direct Brands, Inc. (Doubleday)</CompanyName>
+      <Phone>(416)299-2747 Ext 565</Phone>
+      <Email>yasmine.chang@directbrands.com, rob.weatherall@directbrands.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E9E-1297113700</ListID>
+      <FullName>Direct Partners</FullName>
+      <CompanyName>Direct Partners</CompanyName>
+      <Email>nhill@directpartners.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F9D-1307050330</ListID>
+      <FullName>Direct Wines ? Virgin Wines</FullName>
+      <CompanyName>Direct Wines ? Virgin Wines</CompanyName>
+      <Email>Mark.ribaudo@virginwines.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000AE9-1259964374</ListID>
+      <FullName>Disney Publishing Worldwide</FullName>
+      <CompanyName>Disney Publishing Worldwide</CompanyName>
+      <Email>Kieran.J.Hawe@disney.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80001019-1312406850</ListID>
+      <FullName>dLife</FullName>
+      <CompanyName>dLife</CompanyName>
+      <Phone>203 221-3444</Phone>
+      <Fax>203 454-6986</Fax>
+      <Email>luehrs@dlife.com, pulaski@dlife.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FC9-1308174031</ListID>
+      <FullName>DragonsMeet</FullName>
+      <CompanyName>DragonsMeet</CompanyName>
+      <Email>Kelly@dragonsmeet.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000E6D-1294867580</ListID>
+      <FullName>eCGlobal</FullName>
+      <CompanyName>eCGlobal</CompanyName>
+      <Email>massimo_gaggino@ecglobal.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000EB4-1297805144</ListID>
+      <FullName>EcomBuffet.com</FullName>
+      <CompanyName>EcomBuffet.com</CompanyName>
+      <Phone>(714) 225-0891</Phone>
+      <Email>ecombuffet@yahoo.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A89-1255377492</ListID>
+      <FullName>Education Dynamics</FullName>
+      <CompanyName>Education Dynamics</CompanyName>
+      <Email>invoices@educationdynamics.com, crepoles@educationdynamics.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>32C0000-1170958174</ListID>
+      <FullName>EFinancial/Termfinder</FullName>
+      <CompanyName>EFinancial</CompanyName>
+      <Phone>425.216.1240</Phone>
+      <Email>neilj@efinancial.com</Email>
+      <TermsRefFullName>Net 5</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F52-1304688221</ListID>
+      <FullName>Elite Mate</FullName>
+      <CompanyName>Elite Mate</CompanyName>
+      <Email>Fran@elitemate.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B6F-1265903413</ListID>
+      <FullName>Eminata Group</FullName>
+      <CompanyName>Wave Maker Marketing</CompanyName>
+      <Email>marketinginvoices@wavemail.net</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FBF-1308061406</ListID>
+      <FullName>Emma Stine</FullName>
+      <CompanyName>Emma Stine</CompanyName>
+      <Email>ijb@emmastine.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F36-1303163008</ListID>
+      <FullName>Envision Media/Accurix, LLC</FullName>
+      <CompanyName>Accurix, LLC</CompanyName>
+      <Phone>(719) 634-7484</Phone>
+      <Fax>(719) 352-3567</Fax>
+      <Email>matt.ricci@envisionesolutions.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E59-1294180963</ListID>
+      <FullName>ESE Marketing, Inc</FullName>
+      <CompanyName>ESE Marketing, Inc</CompanyName>
+      <Email>patrickh@expsat.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F98-1306956293</ListID>
+      <FullName>Everyday Health</FullName>
+      <CompanyName>Everyday Health</CompanyName>
+      <Email>mediaap@everydayhealthinc.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000ED3-1299257189</ListID>
+      <FullName>Evony</FullName>
+      <CompanyName>Evony</CompanyName>
+      <Phone>(631) 517-9261</Phone>
+      <Email>David@evony.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>2E50000-1162831697</ListID>
+      <FullName>Experian</FullName>
+      <CompanyName>Experian</CompanyName>
+      <Phone>949.567.3770</Phone>
+      <Email>ecdmarketinginvoices@Experianinteractivemedia.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>4D50000-1194554589</ListID>
+      <FullName>Experian UK</FullName>
+      <CompanyName>Experian UK</CompanyName>
+      <Phone>+44 (0)20 3042 4296</Phone>
+      <Fax>44 (0) 7967 567 266</Fax>
+      <Email>jesal.shah@uk.experian.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>7E00000-1228271079</ListID>
+      <FullName>Fandango, Inc.</FullName>
+      <CompanyName>Fandango, Inc.</CompanyName>
+      <Phone>310-451-7690 x157</Phone>
+      <Fax>310-954-0292</Fax>
+      <Email>Mimi.Vuong@fandango.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>6650000-1215630893</ListID>
+      <FullName>Far Heap Solutions</FullName>
+      <CompanyName>Far Heap Solutions</CompanyName>
+      <Phone>(949) 417-1500</Phone>
+      <Email>karol.phan@farheap.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E10-1291900565</ListID>
+      <FullName>First Impression Interactive (Your Degree</FullName>
+      <CompanyName>First Impression Interactive (Your Degree</CompanyName>
+      <Phone>(877) 764-3477</Phone>
+      <Email>jgiles@fii-inc.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000094B-1240944389</ListID>
+      <FullName>Fortune Builders</FullName>
+      <CompanyName>Fortune Builders</CompanyName>
+      <Email>geoff@fortunebuilders.com, konrad@fortunebuilders.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>7B00000-1227554436</ListID>
+      <FullName>Fosina Marketing Group</FullName>
+      <CompanyName>Fosina Marketing Group</CompanyName>
+      <Phone>203-546-5541</Phone>
+      <Fax>203-790-0031</Fax>
+      <Email>kwarner@fosinamarketinggroup.com, JGonfiantini@FosinaMarketingGroup.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000EC5-1298496632</ListID>
+      <FullName>Fubar/Social Concepts, Inc</FullName>
+      <CompanyName>Fubar</CompanyName>
+      <Email>bryan@socialconcepts.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A12-1249483452</ListID>
+      <FullName>Full Sail University</FullName>
+      <CompanyName>Full Sail University</CompanyName>
+      <Email>jmaura@fullsail.com,  elindstrom@fullsail.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800009A0-1245253264</ListID>
+      <FullName>Funspire Interactive Limited</FullName>
+      <CompanyName>Funspire Interactive Limited</CompanyName>
+      <Email>fionaho@funmobile.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C3E-1274127070</ListID>
+      <FullName>GameTap LLC</FullName>
+      <CompanyName>GameTap LLC</CompanyName>
+      <Phone>415 568 5858</Phone>
+      <Fax>801 838 1389</Fax>
+      <Email>jesse.gould@gametap.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AD0-1258383590</ListID>
+      <FullName>Gaylord Security</FullName>
+      <CompanyName>Gaylord Industries, Inc.</CompanyName>
+      <Phone>800.575.4939 Xt. 7199</Phone>
+      <Fax>425.227.7650</Fax>
+      <Email>kevin@gaylordsecurity.com, MelanieM@gaylordsecurity.com</Email>
+      <TermsRefFullName>Net 7</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E08-1291429525</ListID>
+      <FullName>Global Test Market / GMI USD</FullName>
+      <CompanyName>Global Test Market / GMI USD</CompanyName>
+      <Email>accountspayable@gmi-mr.com, clarson@gmi-mr.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F99-1306958881</ListID>
+      <FullName>Globe Life/Torch</FullName>
+      <CompanyName>GMAD/Torchmark</CompanyName>
+      <Phone>310-258-0292</Phone>
+      <Email>ahoffman@torchmarkcorp.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E9A-1296767016</ListID>
+      <FullName>Gold Clerk</FullName>
+      <CompanyName>Gold Clerk</CompanyName>
+      <Email>todd@thegoldclerk.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000EB3-1297799376</ListID>
+      <FullName>GoldStar Events</FullName>
+      <CompanyName>GoldStar Events</CompanyName>
+      <Phone>(626) 204-3979</Phone>
+      <Email>elarson@goldstar.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F43-1303413049</ListID>
+      <FullName>Green Dot Corporation</FullName>
+      <CompanyName>Green Dot Corporation</CompanyName>
+      <Phone>(626) 739-3932</Phone>
+      <Email>dkjellen@greendotcorp.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000CFF-1282052278</ListID>
+      <FullName>Guidant Financial</FullName>
+      <CompanyName>Guidant Financial</CompanyName>
+      <Phone>888.472.4455 x3248</Phone>
+      <Email>marty.weishaar@guidantfinancial.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000E06-1291413725</ListID>
+      <FullName>Guthy-Renker</FullName>
+      <CompanyName>Guthy-Renker</CompanyName>
+      <Email>CDill-Lerner@guthy-renker.com, schung@guthy-renker.com, lmitten@guthy-renker.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000997-1243884764</ListID>
+      <FullName>Haran, Watson &amp; Company Inc</FullName>
+      <CompanyName>Haran, Watson &amp; Company Inc</CompanyName>
+      <Email>sri@haranwatson.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C39-1273856831</ListID>
+      <FullName>HealthPlanOne (Medicare Solutions)</FullName>
+      <CompanyName>HealthPlanOne (Medicare Solutions)</CompanyName>
+      <Phone>1-877-567-5267</Phone>
+      <Email>akennedy@healthplanone.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C70-1276532328</ListID>
+      <FullName>Hebrew Seniorlife</FullName>
+      <CompanyName>Hebrew Rehabilitation Center</CompanyName>
+      <Phone>781-2478170</Phone>
+      <Email>jdavis@hrca.harvard.edu</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F4C-1304087755</ListID>
+      <FullName>HLG Solutions</FullName>
+      <CompanyName>HLG Solutions</CompanyName>
+      <Email>fsinta@hlgsolutions.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F74-1305055126</ListID>
+      <FullName>HotChalk</FullName>
+      <CompanyName>HotChalk</CompanyName>
+      <Email>nick.saia@hotchalk.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B19-1262718604</ListID>
+      <FullName>HP (Snapfish US)</FullName>
+      <CompanyName>Bleu Marketing Solutions, Inc</CompanyName>
+      <Email>joella.jones@bleumarketing.com,helpdesk@bleumarketing.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E07-1291421288</ListID>
+      <FullName>HP AU</FullName>
+      <CompanyName>HP AU</CompanyName>
+      <Email>jenny.andersen@hp.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>6A10000-1217019205</ListID>
+      <FullName>iMarketing LTD</FullName>
+      <CompanyName>iMarketing LTD</CompanyName>
+      <Phone>(516) 557-2639</Phone>
+      <Email>bbarth@imarketingltd.com, sbaker@imarketingltd.com, pcaola@imarketingltd.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C18-1273609023</ListID>
+      <FullName>IMVU</FullName>
+      <CompanyName>IMVU</CompanyName>
+      <Phone>(650) 353-5940</Phone>
+      <Email>clai@imvu.com, lfleetham@imvu.com, ctuma@imvu.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D21-1282916776</ListID>
+      <FullName>insuranceagents</FullName>
+      <CompanyName>Insuranceagents</CompanyName>
+      <Email>asong@insuranceagents.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>3F30000-1182264781</ListID>
+      <FullName>InsWeb Corporation</FullName>
+      <CompanyName>InsWeb</CompanyName>
+      <Phone>916-853-3401</Phone>
+      <Fax>916-853-3363</Fax>
+      <Email>dgreen@insweb.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A7B-1254411949</ListID>
+      <FullName>InterMundo Media LLC</FullName>
+      <CompanyName>InterMundo Media LLC</CompanyName>
+      <Phone>303.633.4993 x102</Phone>
+      <Fax>303.633.4998</Fax>
+      <Email>accounting@intermundomedia.com, kristin@intermundomedia.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>7180000-1223514844</ListID>
+      <FullName>Internet Brands</FullName>
+      <CompanyName>Internet Brands</CompanyName>
+      <Phone>310.280.5220</Phone>
+      <Fax>310.280.4782</Fax>
+      <Email>toan.truong@internetbrands.com, autoinvoices@internetbrands.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D51-1285084804</ListID>
+      <FullName>Internet Order/Stroll</FullName>
+      <CompanyName>Stroll</CompanyName>
+      <Phone>(215) 701-3300 x 1108</Phone>
+      <Email>cmurray@InternetOrderLLC.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D52-1285085078</ListID>
+      <FullName>iRelocation</FullName>
+      <CompanyName>iRelocation</CompanyName>
+      <Phone>(480) 785-7400 x102</Phone>
+      <Email>katrina@irelocation.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>5A30000-1205159788</ListID>
+      <FullName>Itsol, Inc/Insurance Leads</FullName>
+      <CompanyName>Itsol, Inc</CompanyName>
+      <Phone>800) 647-2164 x 127</Phone>
+      <Email>mparshin@insuranceleads.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>1700000-1081888402</ListID>
+      <FullName>ITT Educational Services, Inc</FullName>
+      <CompanyName>ITT Educational Services, Inc</CompanyName>
+      <Phone>317-706-9426</Phone>
+      <Fax>317-706-3040</Fax>
+      <Email>REme@itt-tech.edu</Email>
+      <TermsRefFullName>Net 45</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B61-1265315894</ListID>
+      <FullName>Jack Cards</FullName>
+      <CompanyName>Jack Cards</CompanyName>
+      <Phone>978) 828-7036</Phone>
+      <Email>ksanter@jackcards.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F91-1306445807</ListID>
+      <FullName>JAG Method</FullName>
+      <CompanyName>JAG Method</CompanyName>
+      <Email>gidon@jagmethod.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>1FB0000-1103296596</ListID>
+      <FullName>Jamster /Fox Mobile Distribution GmbH</FullName>
+      <CompanyName>Jamster International Sarl.</CompanyName>
+      <Phone>+49 (0) 30-69-538-241</Phone>
+      <Fax>+49 (0) 30-69-538-501</Fax>
+      <Email>Celine.Mamane@foxmobile.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B1B-1262812077</ListID>
+      <FullName>Jan-Pro of Phoenix</FullName>
+      <CompanyName>Jan-Pro of Phoenix</CompanyName>
+      <Phone>602-438-1000</Phone>
+      <Fax>602-288-5212</Fax>
+      <Email>Justin.cali@jan-pro.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AED-1260467584</ListID>
+      <FullName>Jan-Pro of Raleigh</FullName>
+      <CompanyName>Jan-Pro of Raleigh</CompanyName>
+      <Phone>919-460-1777</Phone>
+      <Email>Sean.hassan@jan-pro.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000BAF-1268922974</ListID>
+      <FullName>Jan-Pro of Sacramento</FullName>
+      <CompanyName>Jan-Pro of Sacramento</CompanyName>
+      <Phone>916-376-8977</Phone>
+      <Fax>916-376-8978</Fax>
+      <Email>mcendro@msn.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000B18-1262712886</ListID>
+      <FullName>Jan-Pro of San Antonio</FullName>
+      <CompanyName>Jan-Pro of San Antonio</CompanyName>
+      <Phone>210-525-1997</Phone>
+      <Fax>210-525-1915</Fax>
+    </Customer>
+    <Customer>
+      <ListID>80000B17-1262711742</ListID>
+      <FullName>Jan Pro of Austin</FullName>
+      <CompanyName>Jan Pro of Austin</CompanyName>
+      <Phone>512-459-1100</Phone>
+      <Fax>512-459-1102</Fax>
+      <Email>Steve.block@jan-pro.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000B1A-1262724191</ListID>
+      <FullName>Jan Pro of Charlotte</FullName>
+      <CompanyName>Jan Pro of Charlotte</CompanyName>
+      <Email>Vicki.schwall@jan-pro.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000B2E-1263930887</ListID>
+      <FullName>Jan Pro of Northern Illinois</FullName>
+      <CompanyName>Jan Pro of Northern Illinois</CompanyName>
+      <Phone>630-468-1920</Phone>
+      <Fax>630-468-1925</Fax>
+      <Email>heather.turk@jan-pro.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B89-1267134518</ListID>
+      <FullName>Jan Pro of Twin Cities</FullName>
+      <CompanyName>Jan Pro of Twin Cities</CompanyName>
+      <Phone>952-238-1005</Phone>
+      <Fax>952-933-5455</Fax>
+      <Email>Kevin.johnson@jan-pro.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000AEA-1260199580</ListID>
+      <FullName>Jelly Belly</FullName>
+      <CompanyName>Jelly Belly</CompanyName>
+      <Email>jmarrone@jellybelly.com, APdepartment@jellybelly.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B57-1265235695</ListID>
+      <FullName>JRM Enterprises, LLC</FullName>
+      <CompanyName>JRM Enterprises, LLC</CompanyName>
+      <Phone>972-331-7491</Phone>
+      <Email>ek@jrmllc.net</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D8B-1286907986</ListID>
+      <FullName>Kelly Brady Advertising</FullName>
+      <CompanyName>Kelly Brady Advertising</CompanyName>
+      <Email>jen.desutter@kellybrady.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E76-1295395199</ListID>
+      <FullName>KGB</FullName>
+      <CompanyName>KGB</CompanyName>
+      <Email>brian.kenton@kgb.com, ap@kgb.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AC9-1257372726</ListID>
+      <FullName>KidRobot</FullName>
+      <CompanyName>KidRobot</CompanyName>
+      <Email>ap@kidrobot.com, Bafrica@kidrobot.com, swallace@kidrobot.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FD9-1308324959</ListID>
+      <FullName>Kupikupon</FullName>
+      <CompanyName>Kupikupon</CompanyName>
+      <Email>shavkat@kupikupon.ru</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FE0-1309981162</ListID>
+      <FullName>Lead Click Media</FullName>
+      <CompanyName>Lead Click Media</CompanyName>
+      <Phone>(415) 365-2833</Phone>
+      <Email>accounting@leadclick.com, mgardoce@leadclick.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000DEC-1290619382</ListID>
+      <FullName>LEC Connect LLC</FullName>
+      <CompanyName>LEC Connect LLC</CompanyName>
+      <Phone>415-717-5047</Phone>
+      <Email>zackg@bebeverlyhills.</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F11-1302124141</ListID>
+      <FullName>Legacy Learning</FullName>
+      <CompanyName>Legacy Learning Systems, Inc</CompanyName>
+      <Phone>(615) 649-4393</Phone>
+      <Email>pvesperman@leglearn.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000FA3-1307379740</ListID>
+      <FullName>LexisNexis</FullName>
+      <CompanyName>LexisNexis</CompanyName>
+      <Email>stephen.smith@lexisnexis.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F4D-1304094865</ListID>
+      <FullName>Life Script</FullName>
+      <CompanyName>Life Script</CompanyName>
+      <Email>mikemarcantonio@lifescript.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000C8A-1276868270</ListID>
+      <FullName>Little Star Media</FullName>
+      <CompanyName>Little Star Media</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000B46-1264625287</ListID>
+      <FullName>LottoElite</FullName>
+      <CompanyName>LottoElite</CompanyName>
+      <Email>leigh@lottoelite.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B64-1265657895</ListID>
+      <FullName>Lumos Labs, Inc.</FullName>
+      <CompanyName>Lumos Labs, Inc.</CompanyName>
+      <Phone>415-651-4288</Phone>
+      <Email>kunal@lumoslabs.com, billing@lumoslabs.com, charles@lumoslabs.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>6160000-1210178795</ListID>
+      <FullName>Marathon Data Systems, LLC</FullName>
+      <CompanyName>Marathon Data Systems, LLC</CompanyName>
+      <Phone>732 686 7807</Phone>
+      <Fax>503 214 6092</Fax>
+      <Email>ralfano@marathondata.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E97-1296600518</ListID>
+      <FullName>Match.com1</FullName>
+      <CompanyName>Match.com</CompanyName>
+      <Email>Margaret.Ochoa@match.com, Erin.OLeary@match.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>3980000-1178140266</ListID>
+      <FullName>Matrix Direct</FullName>
+      <CompanyName>Matrix Direct</CompanyName>
+      <Phone>858.309.3621</Phone>
+      <Fax>858.309.3901</Fax>
+      <Email>Patty.Karstein@matrixdirect.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000CDB-1280950277</ListID>
+      <FullName>may2tor, Inc.</FullName>
+      <CompanyName>2tor, Inc.</CompanyName>
+      <Email>2tor@bill.com; kgammariello@2tor.com; jhanlon@2tor.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D1A-1282604119</ListID>
+      <FullName>MayYeung.com</FullName>
+      <CompanyName>MayYeung.com</CompanyName>
+      <Email>kathy@mayyeung.com, kara@mayyeung.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000BFD-1272660865</ListID>
+      <FullName>Meetic</FullName>
+      <CompanyName>Meetic</CompanyName>
+      <Phone>+33(0)1.58.17.04.14</Phone>
+      <Fax>+33(0)1.58.17.05.71</Fax>
+      <Email>n.boullay@meetic-corp.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>5820000-1201891834</ListID>
+      <FullName>Merkle, Inc</FullName>
+      <CompanyName>Merkle, Inc</CompanyName>
+      <Phone>720-836-2071</Phone>
+      <Email>TMcGregor@merkleinc.com, MChang@merkleinc.com, KMoore@merkleinc.com, CDAmbrosio@merkleinc.com, JADSmith@merkleinc.com, listbrokerageinvoices@merkleinc.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800009DE-1246993692</ListID>
+      <FullName>Mighty Net (Credit Report)</FullName>
+      <CompanyName>Mighty Net (Credit Report)</CompanyName>
+      <Phone>818-534-1915</Phone>
+      <Email>crmarketinginvoices@experianinteractivemedia.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E5B-1294263007</ListID>
+      <FullName>Military Advantage Inc</FullName>
+      <CompanyName>Military Advantage Inc</CompanyName>
+      <Phone>(415) 820-3436</Phone>
+      <Fax>(415) 820-0552</Fax>
+      <Email>charity.newby@military-inc.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D97-1287609500</ListID>
+      <FullName>Millionaire Network</FullName>
+      <CompanyName>Millionaire Network</CompanyName>
+      <Phone>702-353-6951</Phone>
+      <Fax>702-577-1004</Fax>
+      <Email>Ronen@MillionaireNetwork.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>800009A2-1245335614</ListID>
+      <FullName>Mind Spark</FullName>
+      <CompanyName>Mind Spark</CompanyName>
+      <Phone>914-826-2135</Phone>
+      <Email>joseph.difiore@mindspark.com, accounts-payable@mindspark.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D23-1283287289</ListID>
+      <FullName>Mixbook</FullName>
+      <CompanyName>Mixbook</CompanyName>
+      <Email>ralph@mixbook.com, phil@mixbook.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000C95-1278465248</ListID>
+      <FullName>Modnique</FullName>
+      <CompanyName>Modnique</CompanyName>
+      <Email>einaras@modnique.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>25B0000-1117733586</ListID>
+      <FullName>Monster Worldwide</FullName>
+      <CompanyName>Monster Worldwide</CompanyName>
+      <Phone>312.832.2128</Phone>
+      <Fax>312.467.0638</Fax>
+      <Email>invoices@monster.com; accountspayable@monsterworldwide.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000CF7-1281648979</ListID>
+      <FullName>move.com</FullName>
+      <CompanyName>move.com</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000B13-1262641924</ListID>
+      <FullName>Movers.com</FullName>
+      <CompanyName>Movers.com</CompanyName>
+      <Phone>732 333 3051</Phone>
+      <Fax>732 940 4300</Fax>
+      <Email>gv@movers.com , kanthi@movers.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8A70000-1236032431</ListID>
+      <FullName>Mozy</FullName>
+      <CompanyName>Mozy</CompanyName>
+      <Phone>801.756.2331x351</Phone>
+      <Fax>801.443.1801</Fax>
+      <Email>benn@decho.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F96-1306872131</ListID>
+      <FullName>MyCityDeal - ZA</FullName>
+      <CompanyName>MyCityDeal - ZA</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000DB8-1288880117</ListID>
+      <FullName>NAPW/National Association of Professional</FullName>
+      <CompanyName>NAPW</CompanyName>
+      <Email>Optima22@aol.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B9C-1268259086</ListID>
+      <FullName>Nars/Shiseido</FullName>
+      <CompanyName>Nars Cosmetics</CompanyName>
+      <Phone>201.405.2279</Phone>
+      <Fax>480.365.0336</Fax>
+      <Email>dblitzstein@sac.shiseido.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E4D-1293033397</ListID>
+      <FullName>New Peak Media</FullName>
+      <CompanyName>New Peak Media</CompanyName>
+      <Email>nolan@donerightmedia.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E09-1291663042</ListID>
+      <FullName>NewStream</FullName>
+      <CompanyName>NewStream</CompanyName>
+      <Email>drew@newstreamco.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C97-1278692669</ListID>
+      <FullName>Next Level Entertainment NV</FullName>
+      <CompanyName>Next Level Entertainment NV</CompanyName>
+      <Email>larry@newaspectsystems.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000E87-1295896598</ListID>
+      <FullName>NFIB</FullName>
+      <CompanyName>National Federation of Independent Busine</CompanyName>
+      <Email>Carole.Ricks@nfib.org</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FAB-1307553050</ListID>
+      <FullName>Nielsen/Netratings</FullName>
+      <CompanyName>Nielsen</CompanyName>
+      <Email>Jian.Zhou@nielsen.com, Ana.Reales@nielsen.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>63E0000-1212433498</ListID>
+      <FullName>NPD Group</FullName>
+      <CompanyName>The NPD Group, Inc</CompanyName>
+      <Phone>(516) 625-0700</Phone>
+      <Email>gina.tarantini@npd.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F90-1306445418</ListID>
+      <FullName>Nutrasource LLC</FullName>
+      <CompanyName>Nutrasource LLC</CompanyName>
+      <Phone>1.800.906.0107</Phone>
+      <Email>ashoka@nutrasource.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8720000-1234199112</ListID>
+      <FullName>Offer Shot</FullName>
+      <CompanyName>Offer Shot</CompanyName>
+      <Phone>(410) 320-7900</Phone>
+      <Email>jlavin@emoryday.com, joejaap@emoryday.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000EC7-1298506478</ListID>
+      <FullName>Offermatic</FullName>
+      <CompanyName>Offermatic</CompanyName>
+      <Phone>(415) 606-5618</Phone>
+      <Email>beth@offermatic.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F49-1304003143</ListID>
+      <FullName>OHP Direct, Inc.</FullName>
+      <CompanyName>OHP Direct, Inc.</CompanyName>
+      <Phone>(559) 561-3822</Phone>
+      <Email>jimbocurley@gmail.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>6470000-1213720897</ListID>
+      <FullName>One Technologies</FullName>
+      <CompanyName>OneTechnologies</CompanyName>
+      <Phone>469.916.1700</Phone>
+      <Fax>469.916.1707</Fax>
+      <Email>accounting@onetechnologies.net</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B90-1267550368</ListID>
+      <FullName>Opinionology/Western Wats</FullName>
+      <CompanyName>Opinionology/Western Wats</CompanyName>
+      <Phone>(801) 379-4009</Phone>
+      <Email>nmcclellan@opinionology.com, oo_affiliatemgt@opinionology.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E93-1296589852</ListID>
+      <FullName>PAMLI Capital Management</FullName>
+      <CompanyName>PAMLI Capital Management</CompanyName>
+      <Email>sharad.dutta@pamlicapital.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000C6A-1276024561</ListID>
+      <FullName>Peak Advertising</FullName>
+      <CompanyName>Peak Advertising</CompanyName>
+      <Phone>818-766-0171x111</Phone>
+      <Email>accounting@peakadvertising.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>6CB0000-1219864998</ListID>
+      <FullName>Personalization Mall</FullName>
+      <CompanyName>Personalization Mall</CompanyName>
+      <Phone>631-910-6000 x208</Phone>
+      <Fax>630-910-7007</Fax>
+      <Email>jillS@pmall.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000BE7-1271342971</ListID>
+      <FullName>Pinney Insurance Center Inc.</FullName>
+      <CompanyName>Pinney Insurance Center Inc.</CompanyName>
+      <Phone>916-773-2800</Phone>
+      <Fax>916-773-4484</Fax>
+      <Email>jonpinney@pinneyinsurance.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FE1-1310054188</ListID>
+      <FullName>Pipeline Success</FullName>
+      <CompanyName>Pipeline Success</CompanyName>
+      <Email>accounting@pipelinesuccess.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E5C-1294326884</ListID>
+      <FullName>Planet49</FullName>
+      <CompanyName>Planet49</CompanyName>
+      <Phone>+1 (786) 453-0355</Phone>
+      <Fax>+1 (954) 309-0858</Fax>
+      <Email>allison.sens@planet49.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AB2-1256310827</ListID>
+      <FullName>Platnium Y &amp; E/ EZ Carpet</FullName>
+      <CompanyName>Platnium Y &amp; E</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000ED6-1299267930</ListID>
+      <FullName>Precise Auto Quote - Esurance</FullName>
+      <CompanyName>Esurance Insurance Services, Inc.</CompanyName>
+      <Email>tcossette@esurance.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AE8-1259963937</ListID>
+      <FullName>Precise Auto Quote - Geico</FullName>
+      <CompanyName>Government Employees Insurance Co.</CompanyName>
+      <Phone>301.986.3994</Phone>
+      <Email>GTroidl@geico.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B30-1264110132</ListID>
+      <FullName>Precise Auto Quote - The Hartford</FullName>
+      <CompanyName>The Hartford/Converge Direct</CompanyName>
+      <Phone>212.213.9056</Phone>
+      <Fax>212.213.9570</Fax>
+      <Email>jennifern@convergedirect.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>C0000-1049579087</ListID>
+      <FullName>PrintPal</FullName>
+      <CompanyName>PrintPal</CompanyName>
+      <Email>mark@printpal.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C20-1273760180</ListID>
+      <FullName>PrintRunner.com</FullName>
+      <CompanyName>PrintRunner.com</CompanyName>
+      <Phone>818-993-9111 x 268</Phone>
+      <Email>igor@printrunner.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F75-1305055668</ListID>
+      <FullName>Prodege, LLC</FullName>
+      <CompanyName>Prodege, LLC</CompanyName>
+      <Phone>(877) 748 - 2714</Phone>
+      <Email>Sholom@Prodege.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F51-1304610361</ListID>
+      <FullName>Progrexion/eFolks</FullName>
+      <CompanyName>Progrexion</CompanyName>
+      <Phone>801-828-1700</Phone>
+      <Email>spetersen@progrexion.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A80-1254512784</ListID>
+      <FullName>QuinStreet LLC</FullName>
+      <CompanyName>QuinStreet LLC</CompanyName>
+      <Phone>650-578-7612</Phone>
+      <Fax>650-350-1427</Fax>
+      <Email>kcramer@surehits.com, wmomand@quinstreet.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000BB5-1269526712</ListID>
+      <FullName>QuotesHound/Flexita LLC</FullName>
+      <CompanyName>QuotesHound</CompanyName>
+      <Phone>925-914-7282</Phone>
+      <Email>martin@quoteshound.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F42-1303404623</ListID>
+      <FullName>Radley and Co.</FullName>
+      <CompanyName>Radley and Co.</CompanyName>
+      <Email>Irene.atkins@radleyandco.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000E1C-1292358076</ListID>
+      <FullName>Reimage/Goldeneye</FullName>
+      <CompanyName>Reimage</CompanyName>
+      <Email>avi@reimage.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000994-1243615370</ListID>
+      <FullName>Reliaquote (Certainquote Insurance)</FullName>
+      <CompanyName>Reliaquote</CompanyName>
+      <Phone>703-855-8446</Phone>
+      <Email>matt_derrick@reliaquote.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C3F-1274127410</ListID>
+      <FullName>Remedy Health Media/MediZine</FullName>
+      <CompanyName>Remedy Health Media/MediZine</CompanyName>
+      <Phone>212.994.9347</Phone>
+      <Fax>212.994.9372</Fax>
+      <Email>ingrid@remedyhealthmedia.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000102A-1313177362</ListID>
+      <FullName>Rent The Runway</FullName>
+      <CompanyName>Rent The Runway</CompanyName>
+      <Phone>212-524-2872</Phone>
+      <Email>am@renttherunway.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A22-1250706022</ListID>
+      <FullName>Research Now</FullName>
+      <CompanyName>Research Now</CompanyName>
+      <Phone>800-599-7938</Phone>
+      <Fax> 416-599-3885</Fax>
+      <Email>PanelAccountsPayable@researchnow.com, rarmstrong@researchnow.ca, qtnguyen@researchnow.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D19-1282598238</ListID>
+      <FullName>Runge Moving &amp; Storage</FullName>
+      <CompanyName>Runge Moving &amp; Storage</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000DF5-1291045827</ListID>
+      <FullName>RushCard</FullName>
+      <CompanyName>RushCard</CompanyName>
+      <Phone>513-246-6614</Phone>
+      <Email>khyrun.rabbani@rushcard.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>8FD0000-1237990702</ListID>
+      <FullName>Scholastic Inc. Creative (Brian)</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Email>APendharkar-temp@scholastic.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E5E-1294348930</ListID>
+      <FullName>Scholastic Inc. Creative (Brian):Brett Albert</FullName>
+      <CompanyName>Scholastic inc.</CompanyName>
+      <Email>BAlbert@scholastic.com</Email>
+      <TermsRefFullName>Net 60</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F12-1302191863</ListID>
+      <FullName>Scholastic Inc. Creative (Brian):Letecia Stewart</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Email>APendharkar-temp@scholastic.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C57-1275580567</ListID>
+      <FullName>Scholastic Inc. GAN</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Phone>(212) 343-7879</Phone>
+      <Email>liaa@directagents.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E5F-1294349986</ListID>
+      <FullName>Scholastic Inc. GAN:Brett Albert</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Phone>(212) 343-7879</Phone>
+      <Email>Balbert@scholastic.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E61-1294353781</ListID>
+      <FullName>Scholastic Inc. GAN:Christine Rochford/Jocelyn Forman</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Phone>212-343-6108</Phone>
+      <Email>CRochford@scholastic.com, jforman@scholastic.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000CEB-1281130245</ListID>
+      <FullName>Scholastic Inc. PPC</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Phone>212-343-6108</Phone>
+      <Email>CRochford@scholastic.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F0E-1302019612</ListID>
+      <FullName>Scholastic Inc. PPC:Brett Albert</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Phone>212-343-6108</Phone>
+      <Email>CRochford@scholastic.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F0F-1302019922</ListID>
+      <FullName>Scholastic Inc. PPC:Christine Rochford</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Phone>212-343-6108</Phone>
+      <Email>CRochford@scholastic.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F0C-1302019401</ListID>
+      <FullName>Scholastic Inc. SEO</FullName>
+      <CompanyName>Scholastic Inc.</CompanyName>
+      <Email>liaa@directagents.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F0D-1302019602</ListID>
+      <FullName>Scholastic Inc. SEO:Brett Albert</FullName>
+    </Customer>
+    <Customer>
+      <ListID>80000ED2-1299009711</ListID>
+      <FullName>ScoreLuxe.com, Bid Tech LLC</FullName>
+      <CompanyName>ScoreLuxe.com, Bid Tech LLC</CompanyName>
+      <Email>scarnahan@scoreluxe.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>34A0000-1173734363</ListID>
+      <FullName>ServiceMaster Brands Management, LLC.</FullName>
+      <CompanyName>ServiceMaster Brands Management, LLC.</CompanyName>
+      <Phone>901-597-8917</Phone>
+      <Fax>901-597-9917</Fax>
+      <Email>barbara.mcgovern@servicemaster.com, Anthony.Roy@servicemaster.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000101B-1312496231</ListID>
+      <FullName>Sherman's Travel</FullName>
+      <CompanyName>Sherman's Travel</CompanyName>
+      <Email>jrienzo@shermanstravelmedia.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>2FA0000-1165246725</ListID>
+      <FullName>Shoebuy</FullName>
+      <CompanyName>Shoebuy</CompanyName>
+      <Phone>617-451-2929 x254</Phone>
+      <Email>ttao@shoebuy.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000BB6-1269612449</ListID>
+      <FullName>ShoeDazzle.com</FullName>
+      <CompanyName>ShoeDazzle.com</CompanyName>
+      <Phone>213-389-8889x241</Phone>
+      <Fax>213-389-8899</Fax>
+      <Email>chris@shoedazzle.com, jmyers@shoedazzle.com</Email>
+      <TermsRefFullName>Net 7</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E88-1295896636</ListID>
+      <FullName>SignPost</FullName>
+      <CompanyName>Signpost</CompanyName>
+      <Email>swall@signpost.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000BE9-1271444409</ListID>
+      <FullName>Simple Tuition</FullName>
+      <CompanyName>Simple Tuition Inc</CompanyName>
+      <Phone>617.630.6127</Phone>
+      <Fax>617.630.1104</Fax>
+      <Email>mawad@simpletuition.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AB3-1256330140</ListID>
+      <FullName>SimplyInk.com/LD PRODUCTS INC</FullName>
+      <CompanyName>SimplyInk.com</CompanyName>
+      <Phone>310.734.2623</Phone>
+      <Fax>845.875.1278</Fax>
+      <Email>katd@ldproducts.com, poolak@ldproducts.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>10E0001-1145293663</ListID>
+      <FullName>SinglesNet/Match.com</FullName>
+      <CompanyName>SinglesNet</CompanyName>
+      <Phone>617-301-6211</Phone>
+      <Fax>617-301-6265</Fax>
+      <Email>accountspayable@singlesnet-corp.com</Email>
+      <TermsRefFullName>Net 7</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E8B-1296052228</ListID>
+      <FullName>Sir Alistair Rai</FullName>
+      <CompanyName>Sir Alistair Rai</CompanyName>
+      <Phone>(480) 813-2168</Phone>
+      <Email>tony@siralistairrai.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C91-1277759743</ListID>
+      <FullName>Sixt Rent A Car</FullName>
+      <CompanyName>Sixt Rent A Car</CompanyName>
+      <Email>Suzanne.Machado@sixt.de, sandra.kleineberg-wildhagen@sixt.net</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E77-1295395522</ListID>
+      <FullName>Smart Auto Savings / Chrome Systems / Aut</FullName>
+      <CompanyName>Autotegrity</CompanyName>
+      <Phone>781-228-5689</Phone>
+      <Email>rburt@autotegrity.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E79-1295552384</ListID>
+      <FullName>Smart Quote, LLC</FullName>
+      <CompanyName>Smart Quote, LLC</CompanyName>
+      <Email>mike@smartquote.com, Johnny@Smartquote.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000EA1-1297209003</ListID>
+      <FullName>Smartdate USD</FullName>
+      <CompanyName>Smartdate USD</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000C55-1275492069</ListID>
+      <FullName>Source Interlink Media - Automotive.com</FullName>
+      <CompanyName>Source Interlink Media - Automotive.com</CompanyName>
+      <Phone>714.389.5013</Phone>
+      <Fax> 714.389.5063</Fax>
+      <Email>cbuccola@automotive.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>86B0000-1233699759</ListID>
+      <FullName>Strategic Financial Publishing</FullName>
+      <CompanyName>Strategic Financial Publishing</CompanyName>
+      <Phone>801 687 0599</Phone>
+      <Email>mark@sfpnetwork.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000BDB-1270846135</ListID>
+      <FullName>Studs-Up</FullName>
+      <CompanyName>Studs-Up</CompanyName>
+      <Phone>852 23117982</Phone>
+      <Email>chris@studsupfootballclub.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000FA8-1307457104</ListID>
+      <FullName>T33ZE/Specs Optics/EyeBuyNow</FullName>
+      <CompanyName>T33ZE/Specs Optics/EyeBuyNow</CompanyName>
+      <Email>dtom@cluxury.us</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C1D-1273689040</ListID>
+      <FullName>Target Direct Marketing Inc.</FullName>
+      <CompanyName>Target Direct Marketing Inc.</CompanyName>
+      <Phone>978-865-8233</Phone>
+      <Fax>978-282-0311</Fax>
+      <Email>edaleo@tdmkt.com, lellis@tdmkt.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>7E90000-1228940912</ListID>
+      <FullName>Tax Defense Network, Inc.</FullName>
+      <CompanyName>Tax Defense Network, Inc.</CompanyName>
+      <Email>joe.valinho@taxdefensenetwork.com, dwayne.harmon@taxdefensenetwork.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F48-1303935626</ListID>
+      <FullName>Termbusters</FullName>
+      <CompanyName>Termbusters</CompanyName>
+      <Phone>(800) 862-8376</Phone>
+      <Email>rlevinger@aol.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>6EF0000-1221686726</ListID>
+      <FullName>Test</FullName>
+      <Email>rehena@directagents.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000AE1-1259706574</ListID>
+      <FullName>The Chicago School of Professional Psycho</FullName>
+      <CompanyName>The Chicago School of Professional Psycho</CompanyName>
+      <Phone>312.467.2170</Phone>
+      <Email>jhunt@thechicagoschool.edu</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B5E-1265239957</ListID>
+      <FullName>The LASIK Vision Institute, LLC</FullName>
+      <CompanyName>The LASIK Vision Institute, LLC</CompanyName>
+      <Phone>561) 965-9110</Phone>
+      <Fax>(561) 684-7551</Fax>
+      <Email>JGeary@lasikvisioninstitute.com, DDavies@visioncareholdings.com, SKaufman@lasikvisioninstitute.com, DAirdo@lasikvisioninstitute.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000C49-1274474454</ListID>
+      <FullName>The Nurse Company</FullName>
+      <CompanyName>The Nurse Company</CompanyName>
+    </Customer>
+    <Customer>
+      <ListID>80000DFE-1291219041</ListID>
+      <FullName>The Performance Factory/Affiliate Marketi</FullName>
+      <CompanyName>The Performance Factory/Affiliate Marketi</CompanyName>
+      <Email>Dobrana.Holmes@quickflix.com.au</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F4A-1304081643</ListID>
+      <FullName>The Scooter Store Ltd</FullName>
+      <CompanyName>The Scooter Store Ltd</CompanyName>
+      <Phone>830-627-4913</Phone>
+      <Email>sewe@thescooterstore.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>1A50001-1134151521</ListID>
+      <FullName>Tickets Now</FullName>
+      <CompanyName>Tickets Now</CompanyName>
+      <Email>bdomich@TicketsNow.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000CE9-1281033894</ListID>
+      <FullName>Tightrope Interactive</FullName>
+      <CompanyName>Tightrope Interactive</CompanyName>
+      <Email>accounting@tightropeinteractive.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000F3E-1303227542</ListID>
+      <FullName>Tioga Downs</FullName>
+      <CompanyName>Tioga Downs</CompanyName>
+      <Email>jhorowitz@tiogadowns.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000DD6-1289576324</ListID>
+      <FullName>Totsy.com</FullName>
+      <CompanyName>Totsy.com</CompanyName>
+      <Email>chung@totsy.com, imikheyeva@totsy.com, rdebrant@totsy.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000F10-1302120649</ListID>
+      <FullName>Trafford Consulting SL</FullName>
+      <CompanyName>Trafford Consulting SL</CompanyName>
+      <Email>dost@traffordconsulting.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E62-1294673249</ListID>
+      <FullName>Tree.com</FullName>
+      <CompanyName>Tree.com</CompanyName>
+      <Email>SEE NOTES - ASK AM WHICH CONTACT TO SEND TO</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000BDD-1271169595</ListID>
+      <FullName>Twistbox Entertainment/AMV Holding Ltd.</FullName>
+      <CompanyName>Twistbox Entertainment/AMV Holding Ltd.</CompanyName>
+      <Phone>818-301-6200 Ext. 252</Phone>
+      <Email>jgabra@twistbox.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>800009FB-1248705181</ListID>
+      <FullName>UltraDiamonds.com</FullName>
+      <CompanyName> UltraDiamonds.com</CompanyName>
+      <Phone> 312-525-3248</Phone>
+      <Fax>1-888-483-8477</Fax>
+      <Email>bsappington@ultradiamonds.com, EcommerceAP@ultradiamonds.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000B12-1262633527</ListID>
+      <FullName>United Sample</FullName>
+      <CompanyName>United Sample</CompanyName>
+      <Phone>(310) 779-7500</Phone>
+      <Email>ap@unitedsample.com, jrose@usamp.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E9D-1296839212</ListID>
+      <FullName>Universal McCann</FullName>
+      <CompanyName>Universal McCann</CompanyName>
+      <Email>mewloudigitalap@mccann.com, justin.Mathews@umww.com, josh.bock@umj3.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000A78-1254253116</ListID>
+      <FullName>USA Coverage</FullName>
+      <CompanyName>USA Coverage</CompanyName>
+      <Phone>913-814-7360</Phone>
+      <Fax>913?897-5510</Fax>
+      <Email>eric@usacoverage.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000AEE-1260472920</ListID>
+      <FullName>Vision Critical</FullName>
+      <CompanyName>Vision Critical</CompanyName>
+      <Email>Caroline.Park@visioncritical.com, billing@visioncritical.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>960000-1059773203</ListID>
+      <FullName>Vistaprint</FullName>
+      <CompanyName>Vista Print</CompanyName>
+      <Phone>781-577-7224</Phone>
+      <Fax>781-547-6344</Fax>
+      <Email>lwaitkun@vistaprint.com</Email>
+      <TermsRefFullName>Net 30</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8A90000-1236114617</ListID>
+      <FullName>Webjuice</FullName>
+      <CompanyName>Webjuice</CompanyName>
+      <Phone>650-793-9073</Phone>
+      <Email>katherine@webjuice.com, accounting@webjuice.com</Email>
+      <TermsRefFullName>Net 15</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000E91-1296509310</ListID>
+      <FullName>WestCorp./InterCall</FullName>
+      <CompanyName>WestCorp./InterCall</CompanyName>
+      <Phone>(773) 671-4422</Phone>
+      <Email>AccountsPayable@Intercall.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000CA0-1279057682</ListID>
+      <FullName>Winterbridge Media</FullName>
+      <CompanyName>Winterbridge Media</CompanyName>
+      <Phone>(914) 500-8428</Phone>
+      <Fax>(914) 801-5926</Fax>
+      <Email>pthau@winterbridge.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>8000102D-1313698458</ListID>
+      <FullName>World Commerce1</FullName>
+      <CompanyName>World Commerce</CompanyName>
+      <Email>webneilmail@gmail.com</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000EC6-1298502047</ListID>
+      <FullName>Yellow Stone Interactive</FullName>
+      <CompanyName>Yellow Stone Interactive</CompanyName>
+      <Email>david@yellowstoneinteractive.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D64-1286310943</ListID>
+      <FullName>YPnations</FullName>
+      <CompanyName>YPnations</CompanyName>
+      <Phone>646.763.0504</Phone>
+      <Fax>212.686.9010</Fax>
+      <Email>meisenstadt@YPNation.net</Email>
+    </Customer>
+    <Customer>
+      <ListID>80000ECF-1298925889</ListID>
+      <FullName>Yves Rocher</FullName>
+      <CompanyName>Yves Rocher</CompanyName>
+      <Email>genevieve.bussieres@yrnet.com</Email>
+      <TermsRefFullName>Due on receipt</TermsRefFullName>
+    </Customer>
+    <Customer>
+      <ListID>80000D26-1283872164</ListID>
+      <FullName>Zoosk</FullName>
+      <CompanyName>Zoosk</CompanyName>
+      <Phone>415.728.9578</Phone>
+      <Email>jonells@zoosk.com</Email>
+    </Customer>
+  </Customers>
+</Settings>

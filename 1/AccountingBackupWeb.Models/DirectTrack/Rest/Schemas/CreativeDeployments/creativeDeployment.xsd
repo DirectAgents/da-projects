@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.digitalriver.com/directtrack/api/creativeDeployment/v1_0"
+	xmlns="http://www.digitalriver.com/directtrack/api/creativeDeployment/v1_0"
+	elementFormDefault="qualified">
+
+	<!-- simple elements -->
+	<xs:simpleType name="booleanInt">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+		
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="deployName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="password">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="active">
+		<xs:simpleType>
+			<xs:restriction base="booleanInt" />
+		</xs:simpleType>
+	</xs:element>
+
+	<!-- complex elements -->
+	<xs:element name="affiliateResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI"
+				use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="creativeResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI"
+				use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="campaignResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI"
+				use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="URLType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="landingPageURL">
+		<xs:complexType>
+			<xs:attribute name="URL" type="URLType" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- PRIMARY ELEMENT -->
+	<xs:element name="creativeDeployment">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="deployName" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="password" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="active" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="landingPageURL" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="affiliateResourceURL" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="creativeResourceURL" minOccurs="0" maxOccurs="1" />
+				<xs:element ref="campaignResourceURL" minOccurs="0" maxOccurs="1" />
+			</xs:sequence>
+			<xs:attribute name="location" type="resourceURI" />
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
+

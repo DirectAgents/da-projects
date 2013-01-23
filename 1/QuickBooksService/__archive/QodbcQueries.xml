@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<queries>
+  <query name="GetCustomers">
+    SELECT
+    ListID,
+    FullName,
+    CompanyName,
+    Phone,
+    Fax,
+    Email,
+    TermsRefFullName
+    FROM Customer
+    WHERE IsActive=TRUE
+  </query>
+  <query name="GetInvoices">
+    SELECT
+    Invoice.TxnID,
+    Invoice.TimeCreated,
+    Invoice.TxnNumber,
+    Invoice.CustomerRefListID,
+    Invoice.TxnDate,
+    Invoice.RefNumber,
+    Invoice.TermsRefFullName,
+    Invoice.AppliedAmount,
+    Invoice.BalanceRemaining,
+    Invoice.Memo
+    FROM Invoice Invoice
+    WHERE (Invoice.TimeCreated>={ts '2011-01-01 00:00:00'})
+    ORDER BY Invoice.TimeCreated
+  </query>
+  <query name="GetReceivedPayments">
+    SELECT
+    ReceivePayment.TxnID,
+    ReceivePayment.TxnNumber,
+    ReceivePayment.CustomerRefListID,
+    ReceivePayment.ARAccountRefFullName,
+    ReceivePayment.TxnDate,
+    ReceivePayment.RefNumber,
+    ReceivePayment.TotalAmount,
+    ReceivePayment.PaymentMethodRefFullName,
+    ReceivePayment.Memo
+    FROM ReceivePayment ReceivePayment
+    WHERE ((ReceivePayment.TxnDate>={d'2011-01-01'}))
+    ORDER BY ReceivePayment.TxnDate
+  </query>
+</queries>

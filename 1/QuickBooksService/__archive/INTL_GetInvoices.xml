@@ -1,0 +1,4558 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <GetInvoices>
+    <TxnID>1812-1294080483</TxnID>
+    <TimeCreated>2011-01-03T13:48:03-05:00</TimeCreated>
+    <TxnNumber>991</TxnNumber>
+    <CustomerRefListID>800000C2-1273094544</CustomerRefListID>
+    <TxnDate>2010-12-15T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016549</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-3655.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Affinitas GmbH-2010-12-15-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1816-1294091079</TxnID>
+    <TimeCreated>2011-01-03T16:44:39-05:00</TimeCreated>
+    <TxnNumber>992</TxnNumber>
+    <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016558</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-57900.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Astroway UK-2011-01-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>181A-1294091270</TxnID>
+    <TimeCreated>2011-01-03T16:47:50-05:00</TimeCreated>
+    <TxnNumber>993</TxnNumber>
+    <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016560</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-5400.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Astroway EUR-2011-01-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>181E-1294091303</TxnID>
+    <TimeCreated>2011-01-03T16:48:23-05:00</TimeCreated>
+    <TxnNumber>994</TxnNumber>
+    <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016561</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-3300.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Astroway EUR-2011-01-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1822-1294091331</TxnID>
+    <TimeCreated>2011-01-03T16:48:51-05:00</TimeCreated>
+    <TxnNumber>995</TxnNumber>
+    <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016562</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2400.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Astroway EUR-2011-01-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1840-1294155714</TxnID>
+    <TimeCreated>2011-01-04T10:41:54-05:00</TimeCreated>
+    <TxnNumber>997</TxnNumber>
+    <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016570</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-78.43</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>HP UK Snapfish December 2010 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1846-1294160071</TxnID>
+    <TimeCreated>2011-01-04T11:54:31-05:00</TimeCreated>
+    <TxnNumber>998</TxnNumber>
+    <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016571</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-176.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>GameDuell December Invoice 12/1/10 - 12/31/10</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>184C-1294178112</TxnID>
+    <TimeCreated>2011-01-04T16:55:12-05:00</TimeCreated>
+    <TxnNumber>999</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016574</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-20455.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal DE Groupon December 2010 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1852-1294178310</TxnID>
+    <TimeCreated>2011-01-04T16:58:30-05:00</TimeCreated>
+    <TxnNumber>1000</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016575</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal ES - Groupon December 2010 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1858-1294178416</TxnID>
+    <TimeCreated>2011-01-04T17:00:16-05:00</TimeCreated>
+    <TxnNumber>1001</TxnNumber>
+    <CustomerRefListID>8000013A-1294182239</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016576</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal FI Groupon December 2010</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>185C-1294178674</TxnID>
+    <TimeCreated>2011-01-04T17:04:34-05:00</TimeCreated>
+    <TxnNumber>1002</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016577</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal FR Groupon December 2010</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1861-1294179124</TxnID>
+    <TimeCreated>2011-01-04T17:12:04-05:00</TimeCreated>
+    <TxnNumber>1003</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016578</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal IT Groupon December 2010 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1867-1294179341</TxnID>
+    <TimeCreated>2011-01-04T17:15:41-05:00</TimeCreated>
+    <TxnNumber>1004</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016579</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal NL Groupon December 2010</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>186D-1294179429</TxnID>
+    <TimeCreated>2011-01-04T17:17:09-05:00</TimeCreated>
+    <TxnNumber>1005</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016580</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal NO Groupon December 2010</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1871-1294179606</TxnID>
+    <TimeCreated>2011-01-04T17:20:06-05:00</TimeCreated>
+    <TxnNumber>1006</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016581</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal PL Groupon December 2010</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1877-1294179713</TxnID>
+    <TimeCreated>2011-01-04T17:21:53-05:00</TimeCreated>
+    <TxnNumber>1007</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016584</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal SE Groupon December 2010</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>188B-1294185658</TxnID>
+    <TimeCreated>2011-01-04T19:00:58-05:00</TimeCreated>
+    <TxnNumber>1010</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016585</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2038.63</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1890-1294189928</TxnID>
+    <TimeCreated>2011-01-04T20:12:08-05:00</TimeCreated>
+    <TxnNumber>1011</TxnNumber>
+    <CustomerRefListID>80000123-1291907454</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016590</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-146.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>HP DE Snapfish December 2010</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1895-1294198499</TxnID>
+    <TimeCreated>2011-01-04T22:34:59-05:00</TimeCreated>
+    <TxnNumber>1012</TxnNumber>
+    <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016596</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-30.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Shoebuy UK-2010-1-04-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>189F-1294246215</TxnID>
+    <TimeCreated>2011-01-05T11:50:15-05:00</TimeCreated>
+    <TxnNumber>1013</TxnNumber>
+    <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016598</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-317.25</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>LoveFilm GBP-2011-01-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>18A6-1294247321</TxnID>
+    <TimeCreated>2011-01-05T12:08:41-05:00</TimeCreated>
+    <TxnNumber>1014</TxnNumber>
+    <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016602</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-10.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Lovefilm EUR-2011-01-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>18AA-1294248804</TxnID>
+    <TimeCreated>2011-01-05T12:33:24-05:00</TimeCreated>
+    <TxnNumber>1015</TxnNumber>
+    <CustomerRefListID>800000E5-1279833268</CustomerRefListID>
+    <TxnDate>2011-01-05T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016604</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-10000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>zamano-2011-01-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>18B7-1294256200</TxnID>
+    <TimeCreated>2011-01-05T14:36:40-05:00</TimeCreated>
+    <TxnNumber>1017</TxnNumber>
+    <CustomerRefListID>80000116-1288733649</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016607</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-105.75</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>King.com December 2010 Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>18BC-1294263040</TxnID>
+    <TimeCreated>2011-01-05T16:30:40-05:00</TimeCreated>
+    <TxnNumber>1018</TxnNumber>
+    <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016609</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-206.21</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>eCircle - UK-2011-01-05-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>18C3-1294271544</TxnID>
+    <TimeCreated>2011-01-05T18:52:24-05:00</TimeCreated>
+    <TxnNumber>1019</TxnNumber>
+    <CustomerRefListID>800000FB-1285346528</CustomerRefListID>
+    <TxnDate>2011-01-06T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016616</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1472.54</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>SmartDate December Activity 2010</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>18CB-1294285400</TxnID>
+    <TimeCreated>2011-01-05T22:43:20-05:00</TimeCreated>
+    <TxnNumber>1020</TxnNumber>
+    <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016622</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-1316.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Optical Express December 2010 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>18F6-1294353034</TxnID>
+    <TimeCreated>2011-01-06T17:30:34-05:00</TimeCreated>
+    <TxnNumber>1025</TxnNumber>
+    <CustomerRefListID>800000D7-1275492658</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016632</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1188.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>GreenTube-2011-01-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>18FA-1294354921</TxnID>
+    <TimeCreated>2011-01-06T18:02:01-05:00</TimeCreated>
+    <TxnNumber>1026</TxnNumber>
+    <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+    <TxnDate>2010-11-02T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-016258</RefNumber>
+    <TermsRefFullName>Net 45</TermsRefFullName>
+    <AppliedAmount>-4600.65</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>October 2010 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1907-1294430995</TxnID>
+    <TimeCreated>2011-01-07T15:09:55-05:00</TimeCreated>
+    <TxnNumber>1029</TxnNumber>
+    <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+    <TxnDate>2011-01-07T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016642</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-10000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Eskupina/Cdate-2011-01-07-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>190D-1294445070</TxnID>
+    <TimeCreated>2011-01-07T19:04:30-05:00</TimeCreated>
+    <TxnNumber>1030</TxnNumber>
+    <CustomerRefListID>800000E0-1276876899</CustomerRefListID>
+    <TxnDate>2011-01-07T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016647</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2400.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Little Star Media-2011-01-07-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>192C-1294681708</TxnID>
+    <TimeCreated>2011-01-10T12:48:28-05:00</TimeCreated>
+    <TxnNumber>1034</TxnNumber>
+    <CustomerRefListID>80000148-1294681706</CustomerRefListID>
+    <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016650</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2500.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Initial Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1932-1294698355</TxnID>
+    <TimeCreated>2011-01-10T17:25:55-05:00</TimeCreated>
+    <TxnNumber>1035</TxnNumber>
+    <CustomerRefListID>80000149-1294697902</CustomerRefListID>
+    <TxnDate>2011-01-07T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016645</RefNumber>
+    <TermsRefFullName>Net 45</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>48.04</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1937-1294701811</TxnID>
+    <TimeCreated>2011-01-10T18:23:31-05:00</TimeCreated>
+    <TxnNumber>1036</TxnNumber>
+    <CustomerRefListID>80000149-1294697902</CustomerRefListID>
+    <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016447</RefNumber>
+    <TermsRefFullName>Net 45</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>20.84</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>193C-1294703059</TxnID>
+    <TimeCreated>2011-01-10T18:44:19-05:00</TimeCreated>
+    <TxnNumber>1037</TxnNumber>
+    <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+    <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016655</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-38600.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Astroway UK-2010-01-10-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1940-1294703723</TxnID>
+    <TimeCreated>2011-01-10T18:55:23-05:00</TimeCreated>
+    <TxnNumber>1038</TxnNumber>
+    <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+    <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016656</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID: Astroway EUR-2010-01-10-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1948-1294703875</TxnID>
+    <TimeCreated>2011-01-10T18:57:55-05:00</TimeCreated>
+    <TxnNumber>1040</TxnNumber>
+    <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+    <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016657</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID: Astroway EUR-2010-01-10-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>194C-1294703943</TxnID>
+    <TimeCreated>2011-01-10T18:59:03-05:00</TimeCreated>
+    <TxnNumber>1041</TxnNumber>
+    <CustomerRefListID>800000C3-1273094544</CustomerRefListID>
+    <TxnDate>2011-01-10T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016658</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID: Astroway EUR-2010-01-10-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>19B5-1294939981</TxnID>
+    <TimeCreated>2011-01-13T12:33:01-05:00</TimeCreated>
+    <TxnNumber>1062</TxnNumber>
+    <CustomerRefListID>8000010B-1286990117</CustomerRefListID>
+    <TxnDate>2011-01-13T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016676</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-3000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>SD&amp;P Global-2011-01-13-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>19B9-1294956695</TxnID>
+    <TimeCreated>2011-01-13T17:11:35-05:00</TimeCreated>
+    <TxnNumber>1063</TxnNumber>
+    <CustomerRefListID>80000108-1286477639</CustomerRefListID>
+    <TxnDate>2011-01-13T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016677</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-270.20</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Astrum Online War of Dragons Nov &amp; Dec Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>19C1-1295034463</TxnID>
+    <TimeCreated>2011-01-14T14:47:43-05:00</TimeCreated>
+    <TxnNumber>1064</TxnNumber>
+    <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016656</RefNumber>
+    <AppliedAmount>-26977.41</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>19DD-1295041111</TxnID>
+    <TimeCreated>2011-01-14T16:38:31-05:00</TimeCreated>
+    <TxnNumber>1068</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2010-12-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016657G</RefNumber>
+    <AppliedAmount>-3973.23</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>19E1-1295041193</TxnID>
+    <TimeCreated>2011-01-14T16:39:53-05:00</TimeCreated>
+    <TxnNumber>1069</TxnNumber>
+    <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+    <TxnDate>2010-12-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016658E</RefNumber>
+    <AppliedAmount>-19943.61</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>19E5-1295041255</TxnID>
+    <TimeCreated>2011-01-14T16:40:55-05:00</TimeCreated>
+    <TxnNumber>1070</TxnNumber>
+    <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016659E</RefNumber>
+    <AppliedAmount>-45408.23</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>19E9-1295041306</TxnID>
+    <TimeCreated>2011-01-14T16:41:46-05:00</TimeCreated>
+    <TxnNumber>1071</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016660E</RefNumber>
+    <AppliedAmount>-5064.31</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>19F5-1295395280</TxnID>
+    <TimeCreated>2011-01-18T19:01:20-05:00</TimeCreated>
+    <TxnNumber>1074</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-01-18T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016684</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-524.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Global Test Market / GMI Euro-2011-01-15-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1A85-1295535915</TxnID>
+    <TimeCreated>2011-01-20T10:05:15-05:00</TimeCreated>
+    <TxnNumber>1092</TxnNumber>
+    <CustomerRefListID>80000155-1295535505</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016685C</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-8286.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1D6C-1296591696</TxnID>
+    <TimeCreated>2011-02-01T15:21:36-05:00</TimeCreated>
+    <TxnNumber>1201</TxnNumber>
+    <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+    <TxnDate>2011-01-27T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016716</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2913.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1D78-1296602013</TxnID>
+    <TimeCreated>2011-02-01T18:13:33-05:00</TimeCreated>
+    <TxnNumber>1204</TxnNumber>
+    <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016731</RefNumber>
+    <TermsRefFullName>Net 7</TermsRefFullName>
+    <AppliedAmount>-290.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1D7E-1296607027</TxnID>
+    <TimeCreated>2011-02-01T19:37:07-05:00</TimeCreated>
+    <TxnNumber>1205</TxnNumber>
+    <CustomerRefListID>8000015D-1296606792</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016729</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-1000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Frogster Online Gaming GmbH-2011-02-01-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1D8C-1296664708</TxnID>
+    <TimeCreated>2011-02-02T11:38:28-05:00</TimeCreated>
+    <TxnNumber>1206</TxnNumber>
+    <CustomerRefListID>80000123-1291907454</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016739</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-47.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>HP DE-2011-02-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DA9-1296747285</TxnID>
+    <TimeCreated>2011-02-03T10:34:45-05:00</TimeCreated>
+    <TxnNumber>1209</TxnNumber>
+    <CustomerRefListID>80000026-1270497715</CustomerRefListID>
+    <TxnDate>2011-02-03T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016756</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-6000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Flightline - Additional Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DAD-1296766973</TxnID>
+    <TimeCreated>2011-02-03T16:02:53-05:00</TimeCreated>
+    <TxnNumber>1210</TxnNumber>
+    <CustomerRefListID>80000116-1288733649</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016762</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-64.63</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>King.com January 2011 Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DBF-1296778449</TxnID>
+    <TimeCreated>2011-02-03T19:14:09-05:00</TimeCreated>
+    <TxnNumber>1212</TxnNumber>
+    <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016768</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-15.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Shoebuy UK-2011-02-03-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DC3-1296789180</TxnID>
+    <TimeCreated>2011-02-03T22:13:00-05:00</TimeCreated>
+    <TxnNumber>1213</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016774</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-59.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal UAE Groupon January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DC7-1296789587</TxnID>
+    <TimeCreated>2011-02-03T22:19:47-05:00</TimeCreated>
+    <TxnNumber>1214</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016775</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-24.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal AU Groupon January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DCB-1296789677</TxnID>
+    <TimeCreated>2011-02-03T22:21:17-05:00</TimeCreated>
+    <TxnNumber>1215</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016776</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-4530.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal DE Groupon January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DCF-1296789835</TxnID>
+    <TimeCreated>2011-02-03T22:23:55-05:00</TimeCreated>
+    <TxnNumber>1216</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016777</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-13937.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal ES Groupon January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DD4-1296789943</TxnID>
+    <TimeCreated>2011-02-03T22:25:43-05:00</TimeCreated>
+    <TxnNumber>1217</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016778</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-7302.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal FR Groupon January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DD9-1296790040</TxnID>
+    <TimeCreated>2011-02-03T22:27:20-05:00</TimeCreated>
+    <TxnNumber>1218</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016779</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-7756.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal IT Groupon January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DDE-1296790298</TxnID>
+    <TimeCreated>2011-02-03T22:31:38-05:00</TimeCreated>
+    <TxnNumber>1219</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016780</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-6920.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal NL Groupon January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DE2-1296790406</TxnID>
+    <TimeCreated>2011-02-03T22:33:26-05:00</TimeCreated>
+    <TxnNumber>1220</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016781</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1074.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal PL Groupon January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DFA-1296834374</TxnID>
+    <TimeCreated>2011-02-04T10:46:14-05:00</TimeCreated>
+    <TxnNumber>1224</TxnNumber>
+    <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016783</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-62.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>eCircle - UK-2011-02-04-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1DFE-1296835866</TxnID>
+    <TimeCreated>2011-02-04T11:11:06-05:00</TimeCreated>
+    <TxnNumber>1225</TxnNumber>
+    <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016784</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-4.20</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>HP UK-2011-02-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1E02-1296840674</TxnID>
+    <TimeCreated>2011-02-04T12:31:14-05:00</TimeCreated>
+    <TxnNumber>1226</TxnNumber>
+    <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016771</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-705.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1E13-1296851631</TxnID>
+    <TimeCreated>2011-02-04T15:33:51-05:00</TimeCreated>
+    <TxnNumber>1227</TxnNumber>
+    <CustomerRefListID>800000D7-1275492658</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016746</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2.70</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Intl - Skill 7 - Invoice 1/1/11</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1E1C-1296861605</TxnID>
+    <TimeCreated>2011-02-04T18:20:05-05:00</TimeCreated>
+    <TxnNumber>1228</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-02-04T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016782</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1264.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1E20-1296863107</TxnID>
+    <TimeCreated>2011-02-04T18:45:07-05:00</TimeCreated>
+    <TxnNumber>1229</TxnNumber>
+    <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016798</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-288.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>LoveFilm GBP-2011-02-04-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1E28-1296864817</TxnID>
+    <TimeCreated>2011-02-04T19:13:37-05:00</TimeCreated>
+    <TxnNumber>1231</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016800</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-64.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Global Test Market / GMI Euro-2011-02-04-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1E42-1297205989</TxnID>
+    <TimeCreated>2011-02-08T17:59:49-05:00</TimeCreated>
+    <TxnNumber>1235</TxnNumber>
+    <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016810</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2563.20</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Optical Express January 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1E8B-1297208411</TxnID>
+    <TimeCreated>2011-02-08T18:40:11-05:00</TimeCreated>
+    <TxnNumber>1252</TxnNumber>
+    <CustomerRefListID>800000FB-1285346528</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016812</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-4151.90</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Smartdate January 2011 Invoice EUR</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1E93-1297208787</TxnID>
+    <TimeCreated>2011-02-08T18:46:27-05:00</TimeCreated>
+    <TxnNumber>1253</TxnNumber>
+    <CustomerRefListID>80000149-1294697902</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016811</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>14.99</BalanceRemaining>
+    <Memo>HP AU-2011-02-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1F3B-1297699596</TxnID>
+    <TimeCreated>2011-02-14T11:06:36-05:00</TimeCreated>
+    <TxnNumber>1272</TxnNumber>
+    <CustomerRefListID>80000067-1270497719</CustomerRefListID>
+    <TxnDate>2010-11-12T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016827</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-800.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Vistaprint International - PT CPM 10/26/11</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1FEB-1297783776</TxnID>
+    <TimeCreated>2011-02-15T10:29:36-05:00</TimeCreated>
+    <TxnNumber>1291</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016813G</RefNumber>
+    <AppliedAmount>-3341.91</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>1FEF-1297783939</TxnID>
+    <TimeCreated>2011-02-15T10:32:19-05:00</TimeCreated>
+    <TxnNumber>1292</TxnNumber>
+    <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+    <TxnDate>2011-02-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016814E</RefNumber>
+    <AppliedAmount>-58569.01</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>205E-1297879673</TxnID>
+    <TimeCreated>2011-02-16T13:07:53-05:00</TimeCreated>
+    <TxnNumber>1307</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-02-16T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016843</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-4.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Global Test Market / GMI Euro-2011-02-16-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>220B-1298406655</TxnID>
+    <TimeCreated>2011-02-22T15:30:55-05:00</TimeCreated>
+    <TxnNumber>1359</TxnNumber>
+    <CustomerRefListID>80000149-1294697902</CustomerRefListID>
+    <TxnDate>2011-02-22T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016856</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-2.76</AppliedAmount>
+    <BalanceRemaining>13.78</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2238-1298483881</TxnID>
+    <TimeCreated>2011-02-23T12:58:01-05:00</TimeCreated>
+    <TxnNumber>1365</TxnNumber>
+    <CustomerRefListID>80000046-1270497717</CustomerRefListID>
+    <TxnDate>2011-02-23T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016861</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID:</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>223C-1298557720</TxnID>
+    <TimeCreated>2011-02-24T09:28:40-05:00</TimeCreated>
+    <TxnNumber>1366</TxnNumber>
+    <CustomerRefListID>8000016A-1298557391</CustomerRefListID>
+    <TxnDate>2011-02-24T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016862GB</RefNumber>
+    <AppliedAmount>-31.33</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2254-1298562497</TxnID>
+    <TimeCreated>2011-02-24T10:48:17-05:00</TimeCreated>
+    <TxnNumber>1369</TxnNumber>
+    <CustomerRefListID>8000016C-1298562310</CustomerRefListID>
+    <TxnDate>2011-02-24T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016866</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-875.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2258-1298576437</TxnID>
+    <TimeCreated>2011-02-24T14:40:37-05:00</TimeCreated>
+    <TxnNumber>1370</TxnNumber>
+    <CustomerRefListID>8000016D-1298576203</CustomerRefListID>
+    <TxnDate>2011-02-24T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016868</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-7814.64</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2262-1298581145</TxnID>
+    <TimeCreated>2011-02-24T15:59:05-05:00</TimeCreated>
+    <TxnNumber>1372</TxnNumber>
+    <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+    <TxnDate>2011-02-24T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016869</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.09</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>226A-1298663183</TxnID>
+    <TimeCreated>2011-02-25T14:46:23-05:00</TimeCreated>
+    <TxnNumber>1374</TxnNumber>
+    <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+    <TxnDate>2011-02-25T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016873</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-35000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>236D-1299021171</TxnID>
+    <TimeCreated>2011-03-01T18:12:51-05:00</TimeCreated>
+    <TxnNumber>1405</TxnNumber>
+    <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016888</RefNumber>
+    <TermsRefFullName>Net 7</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>23BC-1299096739</TxnID>
+    <TimeCreated>2011-03-02T15:12:19-05:00</TimeCreated>
+    <TxnNumber>1413</TxnNumber>
+    <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016897</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-630.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Lovefilm February 2011</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>23CF-1299167570</TxnID>
+    <TimeCreated>2011-03-03T10:52:50-05:00</TimeCreated>
+    <TxnNumber>1418</TxnNumber>
+    <CustomerRefListID>800000FB-1285346528</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016907</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>2006.40</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>23E0-1299186195</TxnID>
+    <TimeCreated>2011-03-03T16:03:15-05:00</TimeCreated>
+    <TxnNumber>1420</TxnNumber>
+    <CustomerRefListID>800000E5-1279833268</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016908</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-10000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>23E4-1299186312</TxnID>
+    <TimeCreated>2011-03-03T16:05:12-05:00</TimeCreated>
+    <TxnNumber>1421</TxnNumber>
+    <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016909</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-954.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>240C-1299259723</TxnID>
+    <TimeCreated>2011-03-04T12:28:43-05:00</TimeCreated>
+    <TxnNumber>1428</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016913</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-810.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2410-1299260066</TxnID>
+    <TimeCreated>2011-03-04T12:34:26-05:00</TimeCreated>
+    <TxnNumber>1429</TxnNumber>
+    <CustomerRefListID>80000170-1299259892</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016918</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2418-1299260503</TxnID>
+    <TimeCreated>2011-03-04T12:41:43-05:00</TimeCreated>
+    <TxnNumber>1430</TxnNumber>
+    <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016914</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-54.60</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>241C-1299260577</TxnID>
+    <TimeCreated>2011-03-04T12:42:57-05:00</TimeCreated>
+    <TxnNumber>1431</TxnNumber>
+    <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016919</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-2746.14</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2420-1299260686</TxnID>
+    <TimeCreated>2011-03-04T12:44:46-05:00</TimeCreated>
+    <TxnNumber>1432</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016920</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-796.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2424-1299260843</TxnID>
+    <TimeCreated>2011-03-04T12:47:23-05:00</TimeCreated>
+    <TxnNumber>1433</TxnNumber>
+    <CustomerRefListID>80000123-1291907454</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016930</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-11.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2429-1299261027</TxnID>
+    <TimeCreated>2011-03-04T12:50:27-05:00</TimeCreated>
+    <TxnNumber>1434</TxnNumber>
+    <CustomerRefListID>80000116-1288733649</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016931</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-3.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2430-1299274715</TxnID>
+    <TimeCreated>2011-03-04T16:38:35-05:00</TimeCreated>
+    <TxnNumber>1435</TxnNumber>
+    <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016940</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-1353.60</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2434-1299281629</TxnID>
+    <TimeCreated>2011-03-04T18:33:49-05:00</TimeCreated>
+    <TxnNumber>1436</TxnNumber>
+    <CustomerRefListID>8000016D-1298576203</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016947</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2489.29</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>244B-1299516058</TxnID>
+    <TimeCreated>2011-03-07T11:40:58-05:00</TimeCreated>
+    <TxnNumber>1438</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016949</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-345.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>244F-1299516167</TxnID>
+    <TimeCreated>2011-03-07T11:42:47-05:00</TimeCreated>
+    <TxnNumber>1439</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016951</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-118.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2453-1299516257</TxnID>
+    <TimeCreated>2011-03-07T11:44:17-05:00</TimeCreated>
+    <TxnNumber>1440</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016952</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-4861.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2458-1299516359</TxnID>
+    <TimeCreated>2011-03-07T11:45:59-05:00</TimeCreated>
+    <TxnNumber>1441</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016953</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-4830.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>245E-1299516424</TxnID>
+    <TimeCreated>2011-03-07T11:47:04-05:00</TimeCreated>
+    <TxnNumber>1442</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016954</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-17446.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2464-1299516506</TxnID>
+    <TimeCreated>2011-03-07T11:48:26-05:00</TimeCreated>
+    <TxnNumber>1443</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016955</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2469-1299516572</TxnID>
+    <TimeCreated>2011-03-07T11:49:32-05:00</TimeCreated>
+    <TxnNumber>1444</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016956</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-13958.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>246E-1299516632</TxnID>
+    <TimeCreated>2011-03-07T11:50:32-05:00</TimeCreated>
+    <TxnNumber>1445</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016957</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-48.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2472-1299516684</TxnID>
+    <TimeCreated>2011-03-07T11:51:24-05:00</TimeCreated>
+    <TxnNumber>1446</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016958</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-104.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2476-1299516745</TxnID>
+    <TimeCreated>2011-03-07T11:52:25-05:00</TimeCreated>
+    <TxnNumber>1447</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016959</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-738.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>247A-1299516823</TxnID>
+    <TimeCreated>2011-03-07T11:53:43-05:00</TimeCreated>
+    <TxnNumber>1448</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-03-10T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016960</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-958.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>247E-1299516878</TxnID>
+    <TimeCreated>2011-03-07T11:54:38-05:00</TimeCreated>
+    <TxnNumber>1449</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016961</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-816.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2482-1299516932</TxnID>
+    <TimeCreated>2011-03-07T11:55:32-05:00</TimeCreated>
+    <TxnNumber>1450</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016962</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-14.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2486-1299516996</TxnID>
+    <TimeCreated>2011-03-07T11:56:36-05:00</TimeCreated>
+    <TxnNumber>1451</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016963</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-616.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>248A-1299517046</TxnID>
+    <TimeCreated>2011-03-07T11:57:26-05:00</TimeCreated>
+    <TxnNumber>1452</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016964</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-36.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>24A1-1299533497</TxnID>
+    <TimeCreated>2011-03-07T16:31:37-05:00</TimeCreated>
+    <TxnNumber>1454</TxnNumber>
+    <CustomerRefListID>80000103-1285963347</CustomerRefListID>
+    <TxnDate>2011-03-07T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016966</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-10000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>24A5-1299537349</TxnID>
+    <TimeCreated>2011-03-07T17:35:49-05:00</TimeCreated>
+    <TxnNumber>1455</TxnNumber>
+    <CustomerRefListID>80000149-1294697902</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016967</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-11.32</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>AU - Snapfish February 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>24D7-1299707246</TxnID>
+    <TimeCreated>2011-03-09T16:47:26-05:00</TimeCreated>
+    <TxnNumber>1463</TxnNumber>
+    <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+    <TxnDate>2011-03-09T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016979</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-14699.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2593-1300134236</TxnID>
+    <TimeCreated>2011-03-14T16:23:56-04:00</TimeCreated>
+    <TxnNumber>1486</TxnNumber>
+    <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+    <TxnDate>2011-03-14T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-016980E</RefNumber>
+    <AppliedAmount>-6008.21</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2652-1300293751</TxnID>
+    <TimeCreated>2011-03-16T12:42:31-04:00</TimeCreated>
+    <TxnNumber>1536</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-03-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017006</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-708.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Global Test Market / GMI Euro-2011-03-16-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2660-1300303199</TxnID>
+    <TimeCreated>2011-03-16T15:19:59-04:00</TimeCreated>
+    <TxnNumber>1539</TxnNumber>
+    <CustomerRefListID>80000180-1300303100</CustomerRefListID>
+    <TxnDate>2011-03-15T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-016888EU</RefNumber>
+    <AppliedAmount>-965.94</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>26CC-1300476735</TxnID>
+    <TimeCreated>2011-03-18T15:32:15-04:00</TimeCreated>
+    <TxnNumber>1550</TxnNumber>
+    <CustomerRefListID>80000181-1300476320</CustomerRefListID>
+    <TxnDate>2011-03-18T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017009</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Just a Game GmbH-2011-03-18-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2740-1300985138</TxnID>
+    <TimeCreated>2011-03-24T12:45:38-04:00</TimeCreated>
+    <TxnNumber>1569</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016981G</RefNumber>
+    <AppliedAmount>-2753.62</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2744-1300985204</TxnID>
+    <TimeCreated>2011-03-24T12:46:44-04:00</TimeCreated>
+    <TxnNumber>1570</TxnNumber>
+    <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+    <TxnDate>2011-03-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-016815E</RefNumber>
+    <AppliedAmount>-38940.96</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>277D-1301068026</TxnID>
+    <TimeCreated>2011-03-25T11:47:06-04:00</TimeCreated>
+    <TxnNumber>1577</TxnNumber>
+    <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+    <TxnDate>2011-03-25T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017028</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-35000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2812-1301428384</TxnID>
+    <TimeCreated>2011-03-29T15:53:04-04:00</TimeCreated>
+    <TxnNumber>1603</TxnNumber>
+    <CustomerRefListID>800000C2-1273094544</CustomerRefListID>
+    <TxnDate>2011-03-23T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017023</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-5000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Affinitas GmbH-2011-03-23-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2968-1301602962</TxnID>
+    <TimeCreated>2011-03-31T16:22:42-04:00</TimeCreated>
+    <TxnNumber>1637</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2011-01-01T00:00:00-05:00</TxnDate>
+    <RefNumber>DA-017030C</RefNumber>
+    <AppliedAmount>-3188.98</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>29EF-1301669706</TxnID>
+    <TimeCreated>2011-04-01T10:55:06-04:00</TimeCreated>
+    <TxnNumber>1659</TxnNumber>
+    <CustomerRefListID>8000016D-1298576203</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017027</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-9774.17</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A11-1301686598</TxnID>
+    <TimeCreated>2011-04-01T15:36:38-04:00</TimeCreated>
+    <TxnNumber>1662</TxnNumber>
+    <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017049</RefNumber>
+    <TermsRefFullName>Net 7</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A1D-1301949763</TxnID>
+    <TimeCreated>2011-04-04T16:42:43-04:00</TimeCreated>
+    <TxnNumber>1664</TxnNumber>
+    <CustomerRefListID>800000D3-1274295502</CustomerRefListID>
+    <TxnDate>2011-04-04T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017069</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-4843.02</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A23-1301949926</TxnID>
+    <TimeCreated>2011-04-04T16:45:26-04:00</TimeCreated>
+    <TxnNumber>1665</TxnNumber>
+    <CustomerRefListID>8000001E-1270497714</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017070</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-85.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A27-1301950259</TxnID>
+    <TimeCreated>2011-04-04T16:50:59-04:00</TimeCreated>
+    <TxnNumber>1666</TxnNumber>
+    <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017059</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-16976.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A4C-1301955418</TxnID>
+    <TimeCreated>2011-04-04T18:16:58-04:00</TimeCreated>
+    <TxnNumber>1671</TxnNumber>
+    <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+    <TxnDate>2011-04-04T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-016785C</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-203.72</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A53-1302013987</TxnID>
+    <TimeCreated>2011-04-05T10:33:07-04:00</TimeCreated>
+    <TxnNumber>1672</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017083</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-382.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal UK Groupon March 2011</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A57-1302018420</TxnID>
+    <TimeCreated>2011-04-05T11:47:00-04:00</TimeCreated>
+    <TxnNumber>1673</TxnNumber>
+    <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017086</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-1380.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Lovefilm EUR-2011-04-05-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A5B-1302019144</TxnID>
+    <TimeCreated>2011-04-05T11:59:04-04:00</TimeCreated>
+    <TxnNumber>1674</TxnNumber>
+    <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017087</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-1404.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>LoveFilm GBP-2011-04-05-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A5F-1302023769</TxnID>
+    <TimeCreated>2011-04-05T13:16:09-04:00</TimeCreated>
+    <TxnNumber>1675</TxnNumber>
+    <CustomerRefListID>800000FB-1285346528</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017088</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>1082.00</BalanceRemaining>
+    <Memo>Smartdate March 2011 Invoice EUR</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A85-1302041988</TxnID>
+    <TimeCreated>2011-04-05T18:19:48-04:00</TimeCreated>
+    <TxnNumber>1681</TxnNumber>
+    <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017094</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-30.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A89-1302105799</TxnID>
+    <TimeCreated>2011-04-06T12:03:19-04:00</TimeCreated>
+    <TxnNumber>1682</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017130</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-228.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A8D-1302106130</TxnID>
+    <TimeCreated>2011-04-06T12:08:50-04:00</TimeCreated>
+    <TxnNumber>1683</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017107</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-562.90</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A91-1302106448</TxnID>
+    <TimeCreated>2011-04-06T12:14:08-04:00</TimeCreated>
+    <TxnNumber>1684</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017108</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-188.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A96-1302106603</TxnID>
+    <TimeCreated>2011-04-06T12:16:43-04:00</TimeCreated>
+    <TxnNumber>1685</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017109</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-460.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A9A-1302106923</TxnID>
+    <TimeCreated>2011-04-06T12:22:03-04:00</TimeCreated>
+    <TxnNumber>1686</TxnNumber>
+    <CustomerRefListID>80000188-1302107686</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017110</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1024.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2A9F-1302107823</TxnID>
+    <TimeCreated>2011-04-06T12:37:03-04:00</TimeCreated>
+    <TxnNumber>1687</TxnNumber>
+    <CustomerRefListID>80000189-1302107877</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017112</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-489.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AA4-1302108017</TxnID>
+    <TimeCreated>2011-04-06T12:40:17-04:00</TimeCreated>
+    <TxnNumber>1688</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017113</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-374.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>CH - Groupon March 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AA8-1302108153</TxnID>
+    <TimeCreated>2011-04-06T12:42:33-04:00</TimeCreated>
+    <TxnNumber>1689</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017114</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1482.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AAC-1302108332</TxnID>
+    <TimeCreated>2011-04-06T12:45:32-04:00</TimeCreated>
+    <TxnNumber>1690</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017115</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-6465.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AB1-1302108451</TxnID>
+    <TimeCreated>2011-04-06T12:47:31-04:00</TimeCreated>
+    <TxnNumber>1691</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017116</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-19100.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AB6-1302108531</TxnID>
+    <TimeCreated>2011-04-06T12:48:51-04:00</TimeCreated>
+    <TxnNumber>1692</TxnNumber>
+    <CustomerRefListID>8000018B-1302108585</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017117</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-48.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2ABB-1302109302</TxnID>
+    <TimeCreated>2011-04-06T13:01:42-04:00</TimeCreated>
+    <TxnNumber>1693</TxnNumber>
+    <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017118</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-346.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2ABF-1302109430</TxnID>
+    <TimeCreated>2011-04-06T13:03:50-04:00</TimeCreated>
+    <TxnNumber>1694</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017119</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AC4-1302109537</TxnID>
+    <TimeCreated>2011-04-06T13:05:37-04:00</TimeCreated>
+    <TxnNumber>1695</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017120</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-23166.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2ACA-1302109671</TxnID>
+    <TimeCreated>2011-04-06T13:07:51-04:00</TimeCreated>
+    <TxnNumber>1696</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017121</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-146.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2ACE-1302109757</TxnID>
+    <TimeCreated>2011-04-06T13:09:17-04:00</TimeCreated>
+    <TxnNumber>1697</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017122</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2561.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AD2-1302109867</TxnID>
+    <TimeCreated>2011-04-06T13:11:07-04:00</TimeCreated>
+    <TxnNumber>1698</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017123</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>11915.20</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AD6-1302109982</TxnID>
+    <TimeCreated>2011-04-06T13:13:02-04:00</TimeCreated>
+    <TxnNumber>1699</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017124</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1430.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2ADA-1302110070</TxnID>
+    <TimeCreated>2011-04-06T13:14:30-04:00</TimeCreated>
+    <TxnNumber>1700</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017125</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-25.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2ADE-1302110192</TxnID>
+    <TimeCreated>2011-04-06T13:16:32-04:00</TimeCreated>
+    <TxnNumber>1701</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017126</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-8008.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AE3-1302110298</TxnID>
+    <TimeCreated>2011-04-06T13:18:18-04:00</TimeCreated>
+    <TxnNumber>1702</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017127</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-114.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AE8-1302110431</TxnID>
+    <TimeCreated>2011-04-06T13:20:31-04:00</TimeCreated>
+    <TxnNumber>1703</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017129</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-7445.60</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AEC-1302110784</TxnID>
+    <TimeCreated>2011-04-06T13:26:24-04:00</TimeCreated>
+    <TxnNumber>1704</TxnNumber>
+    <CustomerRefListID>80000170-1299259892</CustomerRefListID>
+    <TxnDate>2011-03-31T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017132</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-750.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2AFE-1302210129</TxnID>
+    <TimeCreated>2011-04-07T17:02:09-04:00</TimeCreated>
+    <TxnNumber>1707</TxnNumber>
+    <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017150</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-347.39</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2B0C-1302290947</TxnID>
+    <TimeCreated>2011-04-08T15:29:07-04:00</TimeCreated>
+    <TxnNumber>1709</TxnNumber>
+    <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+    <TxnDate>2011-04-08T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017155</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-1000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Eskupina/Cdate-2011-04-08-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2B17-1302300958</TxnID>
+    <TimeCreated>2011-04-08T18:15:58-04:00</TimeCreated>
+    <TxnNumber>1711</TxnNumber>
+    <CustomerRefListID>80000185-1301673377</CustomerRefListID>
+    <TxnDate>2011-04-08T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017156</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-1000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2B48-1302635424</TxnID>
+    <TimeCreated>2011-04-12T15:10:24-04:00</TimeCreated>
+    <TxnNumber>1718</TxnNumber>
+    <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+    <TxnDate>2011-03-31T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017165</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-1993.20</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Optical Express - UK - March Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2B5B-1302714315</TxnID>
+    <TimeCreated>2011-04-13T13:05:15-04:00</TimeCreated>
+    <TxnNumber>1720</TxnNumber>
+    <CustomerRefListID>80000103-1285963347</CustomerRefListID>
+    <TxnDate>2011-04-13T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017169</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-10000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Digital Performance-2011-04-13-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2BA0-1302717248</TxnID>
+    <TimeCreated>2011-04-13T13:54:08-04:00</TimeCreated>
+    <TxnNumber>1729</TxnNumber>
+    <CustomerRefListID>8000018E-1302111028</CustomerRefListID>
+    <TxnDate>2011-04-13T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017170</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-1000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2C56-1302894562</TxnID>
+    <TimeCreated>2011-04-15T15:09:22-04:00</TimeCreated>
+    <TxnNumber>1770</TxnNumber>
+    <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+    <TxnDate>2011-04-15T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017175</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-1000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Eskupina/Cdate-2011-04-15-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2C7A-1303153958</TxnID>
+    <TimeCreated>2011-04-18T15:12:38-04:00</TimeCreated>
+    <TxnNumber>1775</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017166G</RefNumber>
+    <AppliedAmount>-4611.83</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2C7E-1303154006</TxnID>
+    <TimeCreated>2011-04-18T15:13:26-04:00</TimeCreated>
+    <TxnNumber>1776</TxnNumber>
+    <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+    <TxnDate>2011-04-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-0168151E</RefNumber>
+    <AppliedAmount>-12707.96</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2CAA-1303155610</TxnID>
+    <TimeCreated>2011-04-18T15:40:10-04:00</TimeCreated>
+    <TxnNumber>1787</TxnNumber>
+    <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+    <TxnDate>2011-04-15T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017167G</RefNumber>
+    <AppliedAmount>-13377.97</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2D00-1303234940</TxnID>
+    <TimeCreated>2011-04-19T13:42:20-04:00</TimeCreated>
+    <TxnNumber>1798</TxnNumber>
+    <CustomerRefListID>80000180-1300303100</CustomerRefListID>
+    <TxnDate>2011-04-18T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-0168152E</RefNumber>
+    <AppliedAmount>-581.12</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2D32-1303252562</TxnID>
+    <TimeCreated>2011-04-19T18:36:02-04:00</TimeCreated>
+    <TxnNumber>1805</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-04-15T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017184</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-120.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2D7A-1303320925</TxnID>
+    <TimeCreated>2011-04-20T13:35:25-04:00</TimeCreated>
+    <TxnNumber>1819</TxnNumber>
+    <CustomerRefListID>80000190-1302618930</CustomerRefListID>
+    <TxnDate>2011-04-20T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017185</RefNumber>
+    <AppliedAmount>-1500.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Urban Rivals Intial Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2E34-1303918154</TxnID>
+    <TimeCreated>2011-04-27T11:29:14-04:00</TimeCreated>
+    <TxnNumber>1848</TxnNumber>
+    <CustomerRefListID>8000005F-1270497718</CustomerRefListID>
+    <TxnDate>2011-04-27T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017199</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-10000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Terra Matrix Media-2011-04-27-Retainer</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2E38-1303924897</TxnID>
+    <TimeCreated>2011-04-27T13:21:37-04:00</TimeCreated>
+    <TxnNumber>1849</TxnNumber>
+    <CustomerRefListID>800000E2-1278429503</CustomerRefListID>
+    <TxnDate>2011-04-27T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017202</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-10000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2F43-1304356590</TxnID>
+    <TimeCreated>2011-05-02T13:16:30-04:00</TimeCreated>
+    <TxnNumber>1882</TxnNumber>
+    <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017225</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-592.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>GameDuell 4/1/2011 to 4/30/2011</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>2FD7-1304437054</TxnID>
+    <TimeCreated>2011-05-03T11:37:34-04:00</TimeCreated>
+    <TxnNumber>1901</TxnNumber>
+    <CustomerRefListID>8000018F-1302279033</CustomerRefListID>
+    <TxnDate>2011-05-03T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017146</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>300B-1304449694</TxnID>
+    <TimeCreated>2011-05-03T15:08:14-04:00</TimeCreated>
+    <TxnNumber>1910</TxnNumber>
+    <CustomerRefListID>8000019B-1304449648</CustomerRefListID>
+    <TxnDate>2011-05-03T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017237</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>300F-1304460128</TxnID>
+    <TimeCreated>2011-05-03T18:02:08-04:00</TimeCreated>
+    <TxnNumber>1911</TxnNumber>
+    <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017246</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-1944.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3020-1304526475</TxnID>
+    <TimeCreated>2011-05-04T12:27:55-04:00</TimeCreated>
+    <TxnNumber>1915</TxnNumber>
+    <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017254</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-765.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>Lovefilm EUR-2011-05-01-Invoice</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>303D-1304606127</TxnID>
+    <TimeCreated>2011-05-05T10:35:27-04:00</TimeCreated>
+    <TxnNumber>1920</TxnNumber>
+    <CustomerRefListID>80000198-1303761778</CustomerRefListID>
+    <TxnDate>2011-05-05T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017198</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-1500.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>304E-1304607826</TxnID>
+    <TimeCreated>2011-05-05T11:03:46-04:00</TimeCreated>
+    <TxnNumber>1922</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017259</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-32.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3052-1304608153</TxnID>
+    <TimeCreated>2011-05-05T11:09:13-04:00</TimeCreated>
+    <TxnNumber>1923</TxnNumber>
+    <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017267</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-15.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3056-1304608263</TxnID>
+    <TimeCreated>2011-05-05T11:11:03-04:00</TimeCreated>
+    <TxnNumber>1924</TxnNumber>
+    <CustomerRefListID>8000010B-1286990117</CustomerRefListID>
+    <TxnDate>2011-05-05T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017265</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-5000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>305A-1304611571</TxnID>
+    <TimeCreated>2011-05-05T12:06:11-04:00</TimeCreated>
+    <TxnNumber>1925</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017261</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-87.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3067-1304711297</TxnID>
+    <TimeCreated>2011-05-06T15:48:17-04:00</TimeCreated>
+    <TxnNumber>1926</TxnNumber>
+    <CustomerRefListID>80000170-1299259892</CustomerRefListID>
+    <TxnDate>2011-04-30T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017314</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-270.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>306B-1304711508</TxnID>
+    <TimeCreated>2011-05-06T15:51:48-04:00</TimeCreated>
+    <TxnNumber>1927</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017287</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-706.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>306F-1304711688</TxnID>
+    <TimeCreated>2011-05-06T15:54:48-04:00</TimeCreated>
+    <TxnNumber>1928</TxnNumber>
+    <CustomerRefListID>8000019D-1304965797</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017286</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-698.10</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3073-1304712511</TxnID>
+    <TimeCreated>2011-05-06T16:08:31-04:00</TimeCreated>
+    <TxnNumber>1929</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017288</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-690.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal AU Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3077-1304712570</TxnID>
+    <TimeCreated>2011-05-06T16:09:30-04:00</TimeCreated>
+    <TxnNumber>1930</TxnNumber>
+    <CustomerRefListID>80000189-1302107877</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017290</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-9770.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>307B-1304712644</TxnID>
+    <TimeCreated>2011-05-06T16:10:44-04:00</TimeCreated>
+    <TxnNumber>1931</TxnNumber>
+    <CustomerRefListID>80000188-1302107686</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017289</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-380.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal BE Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>307F-1304712739</TxnID>
+    <TimeCreated>2011-05-06T16:12:19-04:00</TimeCreated>
+    <TxnNumber>1932</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017291</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-478.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3083-1304712836</TxnID>
+    <TimeCreated>2011-05-06T16:13:56-04:00</TimeCreated>
+    <TxnNumber>1933</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017292</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1164.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal DE Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3087-1304712907</TxnID>
+    <TimeCreated>2011-05-06T16:15:07-04:00</TimeCreated>
+    <TxnNumber>1934</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017293</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-7694.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>308C-1304713012</TxnID>
+    <TimeCreated>2011-05-06T16:16:52-04:00</TimeCreated>
+    <TxnNumber>1935</TxnNumber>
+    <CustomerRefListID>8000013A-1294182239</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017294</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-764.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal FI Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3090-1304713070</TxnID>
+    <TimeCreated>2011-05-06T16:17:50-04:00</TimeCreated>
+    <TxnNumber>1936</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017295</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1742.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal FR Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3096-1304713125</TxnID>
+    <TimeCreated>2011-05-06T16:18:45-04:00</TimeCreated>
+    <TxnNumber>1937</TxnNumber>
+    <CustomerRefListID>8000018B-1302108585</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017296</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-253.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>309A-1304713167</TxnID>
+    <TimeCreated>2011-05-06T16:19:27-04:00</TimeCreated>
+    <TxnNumber>1938</TxnNumber>
+    <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017297</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1096.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>309E-1304713217</TxnID>
+    <TimeCreated>2011-05-06T16:20:17-04:00</TimeCreated>
+    <TxnNumber>1939</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017298</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal IT Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30A3-1304713282</TxnID>
+    <TimeCreated>2011-05-06T16:21:22-04:00</TimeCreated>
+    <TxnNumber>1940</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017299</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-3143.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal NL Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30A9-1304713366</TxnID>
+    <TimeCreated>2011-05-06T16:22:46-04:00</TimeCreated>
+    <TxnNumber>1941</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017301</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-13027.20</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>MyCityDeal PH Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30AD-1304713404</TxnID>
+    <TimeCreated>2011-05-06T16:23:24-04:00</TimeCreated>
+    <TxnNumber>1942</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017300</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-494.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30B1-1304713449</TxnID>
+    <TimeCreated>2011-05-06T16:24:09-04:00</TimeCreated>
+    <TxnNumber>1943</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017302</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-3007.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30B7-1304713512</TxnID>
+    <TimeCreated>2011-05-06T16:25:12-04:00</TimeCreated>
+    <TxnNumber>1944</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017303</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>4607.20</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30BB-1304713564</TxnID>
+    <TimeCreated>2011-05-06T16:26:04-04:00</TimeCreated>
+    <TxnNumber>1945</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017304</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-3485.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30C0-1304713601</TxnID>
+    <TimeCreated>2011-05-06T16:26:41-04:00</TimeCreated>
+    <TxnNumber>1946</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017305</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-8.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30C4-1304713687</TxnID>
+    <TimeCreated>2011-05-06T16:28:07-04:00</TimeCreated>
+    <TxnNumber>1947</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017306</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-15403.20</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30C8-1304713721</TxnID>
+    <TimeCreated>2011-05-06T16:28:41-04:00</TimeCreated>
+    <TxnNumber>1948</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017307</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID: MyCityDeal ZA Groupon April 2011 Activity</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>30DC-1304962163</TxnID>
+    <TimeCreated>2011-05-09T13:29:23-04:00</TimeCreated>
+    <TxnNumber>1951</TxnNumber>
+    <CustomerRefListID>8000019A-1304436051</CustomerRefListID>
+    <TxnDate>2011-05-09T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017234</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-3600.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3107-1305060729</TxnID>
+    <TimeCreated>2011-05-10T16:52:09-04:00</TimeCreated>
+    <TxnNumber>1957</TxnNumber>
+    <CustomerRefListID>8000016C-1298562310</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017322</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-1476.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3137-1305129500</TxnID>
+    <TimeCreated>2011-05-11T11:58:20-04:00</TimeCreated>
+    <TxnNumber>1961</TxnNumber>
+    <CustomerRefListID>8000019E-1305129445</CustomerRefListID>
+    <TxnDate>2011-05-09T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-016937</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-5000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3140-1305147501</TxnID>
+    <TimeCreated>2011-05-11T16:58:21-04:00</TimeCreated>
+    <TxnNumber>1963</TxnNumber>
+    <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+    <TxnDate>2011-05-10T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017235</RefNumber>
+    <AppliedAmount>-19338.79</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>31FF-1305305594</TxnID>
+    <TimeCreated>2011-05-13T12:53:14-04:00</TimeCreated>
+    <TxnNumber>1981</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017236</RefNumber>
+    <AppliedAmount>-6408.96</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3204-1305305635</TxnID>
+    <TimeCreated>2011-05-13T12:53:55-04:00</TimeCreated>
+    <TxnNumber>1982</TxnNumber>
+    <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-016938</RefNumber>
+    <AppliedAmount>-11512.49</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>32D5-1305580900</TxnID>
+    <TimeCreated>2011-05-16T17:21:40-04:00</TimeCreated>
+    <TxnNumber>2031</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-05-15T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017403</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-24.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3348-1305734491</TxnID>
+    <TimeCreated>2011-05-18T12:01:31-04:00</TimeCreated>
+    <TxnNumber>2043</TxnNumber>
+    <CustomerRefListID>8000019D-1304965797</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017411</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-132.60</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>334C-1305734539</TxnID>
+    <TimeCreated>2011-05-18T12:02:19-04:00</TimeCreated>
+    <TxnNumber>2044</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017412</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-496.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3350-1305734575</TxnID>
+    <TimeCreated>2011-05-18T12:02:55-04:00</TimeCreated>
+    <TxnNumber>2045</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017413</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-3670.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3354-1305734653</TxnID>
+    <TimeCreated>2011-05-18T12:04:13-04:00</TimeCreated>
+    <TxnNumber>2046</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017414</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>185.60</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3358-1305734683</TxnID>
+    <TimeCreated>2011-05-18T12:04:43-04:00</TimeCreated>
+    <TxnNumber>2047</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017415</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>1.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>335C-1305734714</TxnID>
+    <TimeCreated>2011-05-18T12:05:14-04:00</TimeCreated>
+    <TxnNumber>2048</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017416</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-9552.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3360-1305734753</TxnID>
+    <TimeCreated>2011-05-18T12:05:53-04:00</TimeCreated>
+    <TxnNumber>2049</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017417</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID:</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3364-1305734810</TxnID>
+    <TimeCreated>2011-05-18T12:06:50-04:00</TimeCreated>
+    <TxnNumber>2050</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017418</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-45.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>338E-1305751845</TxnID>
+    <TimeCreated>2011-05-18T16:50:45-04:00</TimeCreated>
+    <TxnNumber>2055</TxnNumber>
+    <CustomerRefListID>80000030-1270497715</CustomerRefListID>
+    <TxnDate>2011-05-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017413</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-0.09</AppliedAmount>
+    <BalanceRemaining>144.48</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33BE-1305818727</TxnID>
+    <TimeCreated>2011-05-19T11:25:27-04:00</TimeCreated>
+    <TxnNumber>2059</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017418</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-218.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33C2-1305818777</TxnID>
+    <TimeCreated>2011-05-19T11:26:17-04:00</TimeCreated>
+    <TxnNumber>2060</TxnNumber>
+    <CustomerRefListID>80000188-1302107686</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017419</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-4.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33C6-1305818812</TxnID>
+    <TimeCreated>2011-05-19T11:26:52-04:00</TimeCreated>
+    <TxnNumber>2061</TxnNumber>
+    <CustomerRefListID>80000189-1302107877</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017420</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-3127.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33CA-1305818846</TxnID>
+    <TimeCreated>2011-05-19T11:27:26-04:00</TimeCreated>
+    <TxnNumber>2062</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017421</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-240.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33CE-1305818874</TxnID>
+    <TimeCreated>2011-05-19T11:27:54-04:00</TimeCreated>
+    <TxnNumber>2063</TxnNumber>
+    <CustomerRefListID>8000018B-1302108585</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017422</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-133.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33D2-1305818898</TxnID>
+    <TimeCreated>2011-05-19T11:28:18-04:00</TimeCreated>
+    <TxnNumber>2064</TxnNumber>
+    <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017423</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-336.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33D6-1305818932</TxnID>
+    <TimeCreated>2011-05-19T11:28:52-04:00</TimeCreated>
+    <TxnNumber>2065</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017424</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-152.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33DA-1305818982</TxnID>
+    <TimeCreated>2011-05-19T11:29:42-04:00</TimeCreated>
+    <TxnNumber>2066</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017425</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1736.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33DF-1305819023</TxnID>
+    <TimeCreated>2011-05-19T11:30:23-04:00</TimeCreated>
+    <TxnNumber>2067</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017426</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1302.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33E5-1305819061</TxnID>
+    <TimeCreated>2011-05-19T11:31:01-04:00</TimeCreated>
+    <TxnNumber>2068</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017427</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-11688.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33EB-1305819111</TxnID>
+    <TimeCreated>2011-05-19T11:31:51-04:00</TimeCreated>
+    <TxnNumber>2069</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017428</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1701.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33F0-1305819152</TxnID>
+    <TimeCreated>2011-05-19T11:32:32-04:00</TimeCreated>
+    <TxnNumber>2070</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017429</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-13121.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33F5-1305819189</TxnID>
+    <TimeCreated>2011-05-19T11:33:09-04:00</TimeCreated>
+    <TxnNumber>2071</TxnNumber>
+    <CustomerRefListID>8000013A-1294182239</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017430</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>8.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33F9-1305819220</TxnID>
+    <TimeCreated>2011-05-19T11:33:40-04:00</TimeCreated>
+    <TxnNumber>2072</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017431</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>78.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>33FE-1305819252</TxnID>
+    <TimeCreated>2011-05-19T11:34:12-04:00</TimeCreated>
+    <TxnNumber>2073</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-05-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017432</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-836.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>351D-1306274063</TxnID>
+    <TimeCreated>2011-05-24T17:54:23-04:00</TimeCreated>
+    <TxnNumber>2106</TxnNumber>
+    <CustomerRefListID>80000181-1300476320</CustomerRefListID>
+    <TxnDate>2011-05-24T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017009</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-5000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3526-1306360095</TxnID>
+    <TimeCreated>2011-05-25T17:48:15-04:00</TimeCreated>
+    <TxnNumber>2108</TxnNumber>
+    <CustomerRefListID>80000108-1286477639</CustomerRefListID>
+    <TxnDate>2011-05-25T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017010</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-144.34</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3542-1306360216</TxnID>
+    <TimeCreated>2011-05-25T17:50:16-04:00</TimeCreated>
+    <TxnNumber>2109</TxnNumber>
+    <CustomerRefListID>800000D7-1275492658</CustomerRefListID>
+    <TxnDate>2011-05-25T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017011</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-87.12</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>354E-1306360344</TxnID>
+    <TimeCreated>2011-05-25T17:52:24-04:00</TimeCreated>
+    <TxnNumber>2110</TxnNumber>
+    <CustomerRefListID>800000FB-1285346528</CustomerRefListID>
+    <TxnDate>2011-05-25T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017012</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-16.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>35F6-1306949250</TxnID>
+    <TimeCreated>2011-06-01T13:27:30-04:00</TimeCreated>
+    <TxnNumber>2125</TxnNumber>
+    <CustomerRefListID>800001A4-1306949197</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017416</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-827.52</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>363A-1306964595</TxnID>
+    <TimeCreated>2011-06-01T17:43:15-04:00</TimeCreated>
+    <TxnNumber>2136</TxnNumber>
+    <CustomerRefListID>800000E5-1279833268</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017436</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>364E-1307023812</TxnID>
+    <TimeCreated>2011-06-02T10:10:12-04:00</TimeCreated>
+    <TxnNumber>2141</TxnNumber>
+    <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017417</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-464.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37A6-1307116346</TxnID>
+    <TimeCreated>2011-06-03T11:52:26-04:00</TimeCreated>
+    <TxnNumber>2175</TxnNumber>
+    <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017437</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-1395.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37B7-1307371028</TxnID>
+    <TimeCreated>2011-06-06T10:37:08-04:00</TimeCreated>
+    <TxnNumber>2177</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017438</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-44.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37BB-1307371124</TxnID>
+    <TimeCreated>2011-06-06T10:38:44-04:00</TimeCreated>
+    <TxnNumber>2178</TxnNumber>
+    <CustomerRefListID>80000170-1299259892</CustomerRefListID>
+    <TxnDate>2011-05-31T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017439</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-250.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37C6-1307397990</TxnID>
+    <TimeCreated>2011-06-06T18:06:30-04:00</TimeCreated>
+    <TxnNumber>2180</TxnNumber>
+    <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+    <TxnDate>2011-06-06T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017440</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-15000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37D9-1307457463</TxnID>
+    <TimeCreated>2011-06-07T10:37:43-04:00</TimeCreated>
+    <TxnNumber>2183</TxnNumber>
+    <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017442</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-2610.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37DD-1307457575</TxnID>
+    <TimeCreated>2011-06-07T10:39:35-04:00</TimeCreated>
+    <TxnNumber>2184</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017443</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-43.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37F6-1307460722</TxnID>
+    <TimeCreated>2011-06-07T11:32:02-04:00</TimeCreated>
+    <TxnNumber>2186</TxnNumber>
+    <CustomerRefListID>8000019D-1304965797</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-0174421</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-59.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37FA-1307460781</TxnID>
+    <TimeCreated>2011-06-07T11:33:01-04:00</TimeCreated>
+    <TxnNumber>2187</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017443</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-220.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>37FE-1307460817</TxnID>
+    <TimeCreated>2011-06-07T11:33:37-04:00</TimeCreated>
+    <TxnNumber>2188</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017444</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-586.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3802-1307460859</TxnID>
+    <TimeCreated>2011-06-07T11:34:19-04:00</TimeCreated>
+    <TxnNumber>2189</TxnNumber>
+    <CustomerRefListID>80000189-1302107877</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017445</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-794.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3806-1307460898</TxnID>
+    <TimeCreated>2011-06-07T11:34:58-04:00</TimeCreated>
+    <TxnNumber>2190</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017446</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>216.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>380A-1307460931</TxnID>
+    <TimeCreated>2011-06-07T11:35:31-04:00</TimeCreated>
+    <TxnNumber>2191</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017447</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-330.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>380E-1307460974</TxnID>
+    <TimeCreated>2011-06-07T11:36:14-04:00</TimeCreated>
+    <TxnNumber>2192</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017448</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-314.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3813-1307461013</TxnID>
+    <TimeCreated>2011-06-07T11:36:53-04:00</TimeCreated>
+    <TxnNumber>2193</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017449</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2653.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3819-1307461065</TxnID>
+    <TimeCreated>2011-06-07T11:37:45-04:00</TimeCreated>
+    <TxnNumber>2194</TxnNumber>
+    <CustomerRefListID>8000018B-1302108585</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017450</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>30.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>381D-1307461120</TxnID>
+    <TimeCreated>2011-06-07T11:38:40-04:00</TimeCreated>
+    <TxnNumber>2195</TxnNumber>
+    <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017451</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-254.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3821-1307461161</TxnID>
+    <TimeCreated>2011-06-07T11:39:21-04:00</TimeCreated>
+    <TxnNumber>2196</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017452</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-25131.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3826-1307461237</TxnID>
+    <TimeCreated>2011-06-07T11:40:37-04:00</TimeCreated>
+    <TxnNumber>2197</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017453</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1765.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>382B-1307461276</TxnID>
+    <TimeCreated>2011-06-07T11:41:16-04:00</TimeCreated>
+    <TxnNumber>2198</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017454</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>353.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3831-1307461304</TxnID>
+    <TimeCreated>2011-06-07T11:41:44-04:00</TimeCreated>
+    <TxnNumber>2199</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017455</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>336.80</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3835-1307461366</TxnID>
+    <TimeCreated>2011-06-07T11:42:46-04:00</TimeCreated>
+    <TxnNumber>2200</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017456</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-17116.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>383A-1307461444</TxnID>
+    <TimeCreated>2011-06-07T11:44:04-04:00</TimeCreated>
+    <TxnNumber>2201</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017457</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>188.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>383E-1307461501</TxnID>
+    <TimeCreated>2011-06-07T11:45:01-04:00</TimeCreated>
+    <TxnNumber>2202</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017458</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-518.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3843-1307461529</TxnID>
+    <TimeCreated>2011-06-07T11:45:29-04:00</TimeCreated>
+    <TxnNumber>2203</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017459</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>2.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3847-1307461561</TxnID>
+    <TimeCreated>2011-06-07T11:46:01-04:00</TimeCreated>
+    <TxnNumber>2204</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017460</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-370.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>384B-1307461591</TxnID>
+    <TimeCreated>2011-06-07T11:46:31-04:00</TimeCreated>
+    <TxnNumber>2205</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017461</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-68.90</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3862-1307551611</TxnID>
+    <TimeCreated>2011-06-08T12:46:51-04:00</TimeCreated>
+    <TxnNumber>2211</TxnNumber>
+    <CustomerRefListID>800001A6-1307551517</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017462</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-63.75</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3866-1307570579</TxnID>
+    <TimeCreated>2011-06-08T18:02:59-04:00</TimeCreated>
+    <TxnNumber>2212</TxnNumber>
+    <CustomerRefListID>80000136-1293566219</CustomerRefListID>
+    <TxnDate>2011-06-07T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017441</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-598.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>387B-1307650028</TxnID>
+    <TimeCreated>2011-06-09T16:07:08-04:00</TimeCreated>
+    <TxnNumber>2216</TxnNumber>
+    <CustomerRefListID>8000018F-1302279033</CustomerRefListID>
+    <TxnDate>2011-06-09T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-0174321</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3968-1308236548</TxnID>
+    <TimeCreated>2011-06-16T11:02:28-04:00</TimeCreated>
+    <TxnNumber>2270</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-06-15T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017518</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-44.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A36-1308318992</TxnID>
+    <TimeCreated>2011-06-17T09:56:32-04:00</TimeCreated>
+    <TxnNumber>2296</TxnNumber>
+    <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017518E</RefNumber>
+    <AppliedAmount>-8970.25</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A3B-1308319033</TxnID>
+    <TimeCreated>2011-06-17T09:57:13-04:00</TimeCreated>
+    <TxnNumber>2297</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2011-06-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017236G</RefNumber>
+    <AppliedAmount>-11099.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A50-1308320954</TxnID>
+    <TimeCreated>2011-06-17T10:29:14-04:00</TimeCreated>
+    <TxnNumber>2302</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017521</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-40.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A69-1308321152</TxnID>
+    <TimeCreated>2011-06-17T10:32:32-04:00</TimeCreated>
+    <TxnNumber>2303</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017522</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-284.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A6D-1308321194</TxnID>
+    <TimeCreated>2011-06-17T10:33:14-04:00</TimeCreated>
+    <TxnNumber>2304</TxnNumber>
+    <CustomerRefListID>80000189-1302107877</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017523</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-24.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A71-1308321225</TxnID>
+    <TimeCreated>2011-06-17T10:33:45-04:00</TimeCreated>
+    <TxnNumber>2305</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017524</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>366.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A75-1308321255</TxnID>
+    <TimeCreated>2011-06-17T10:34:15-04:00</TimeCreated>
+    <TxnNumber>2306</TxnNumber>
+    <CustomerRefListID>8000018B-1302108585</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017525</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-4.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A79-1308321283</TxnID>
+    <TimeCreated>2011-06-17T10:34:43-04:00</TimeCreated>
+    <TxnNumber>2307</TxnNumber>
+    <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017526</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-183.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A7D-1308321316</TxnID>
+    <TimeCreated>2011-06-17T10:35:16-04:00</TimeCreated>
+    <TxnNumber>2308</TxnNumber>
+    <CustomerRefListID>8000019D-1304965797</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017527</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-54.60</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A81-1308321343</TxnID>
+    <TimeCreated>2011-06-17T10:35:43-04:00</TimeCreated>
+    <TxnNumber>2309</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017528</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-890.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A85-1308321376</TxnID>
+    <TimeCreated>2011-06-17T10:36:16-04:00</TimeCreated>
+    <TxnNumber>2310</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017529</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-294.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A89-1308321417</TxnID>
+    <TimeCreated>2011-06-17T10:36:57-04:00</TimeCreated>
+    <TxnNumber>2311</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017530</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-435.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A8E-1308321480</TxnID>
+    <TimeCreated>2011-06-17T10:38:00-04:00</TimeCreated>
+    <TxnNumber>2312</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017531</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-5508.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A93-1308321516</TxnID>
+    <TimeCreated>2011-06-17T10:38:36-04:00</TimeCreated>
+    <TxnNumber>2313</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017532</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-13717.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A98-1308321559</TxnID>
+    <TimeCreated>2011-06-17T10:39:19-04:00</TimeCreated>
+    <TxnNumber>2314</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017533</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-4915.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3A9D-1308321591</TxnID>
+    <TimeCreated>2011-06-17T10:39:51-04:00</TimeCreated>
+    <TxnNumber>2315</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017534</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>596.80</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3AA1-1308321627</TxnID>
+    <TimeCreated>2011-06-17T10:40:27-04:00</TimeCreated>
+    <TxnNumber>2316</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017535</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2320.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3AA6-1308321652</TxnID>
+    <TimeCreated>2011-06-17T10:40:52-04:00</TimeCreated>
+    <TxnNumber>2317</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017536</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>180.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3AAA-1308321680</TxnID>
+    <TimeCreated>2011-06-17T10:41:20-04:00</TimeCreated>
+    <TxnNumber>2318</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017537</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>2.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3AAE-1308321709</TxnID>
+    <TimeCreated>2011-06-17T10:41:49-04:00</TimeCreated>
+    <TxnNumber>2319</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017538</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-80.80</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3AB2-1308321733</TxnID>
+    <TimeCreated>2011-06-17T10:42:13-04:00</TimeCreated>
+    <TxnNumber>2320</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017539</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-52.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3AB6-1308321762</TxnID>
+    <TimeCreated>2011-06-17T10:42:42-04:00</TimeCreated>
+    <TxnNumber>2321</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-06-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017540</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-52.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3CD5-1309900470</TxnID>
+    <TimeCreated>2011-07-05T17:14:30-04:00</TimeCreated>
+    <TxnNumber>2398</TxnNumber>
+    <CustomerRefListID>8000003D-1270497716</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017541</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>1404.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3CDD-1309967346</TxnID>
+    <TimeCreated>2011-07-06T11:49:06-04:00</TimeCreated>
+    <TxnNumber>2400</TxnNumber>
+    <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017542</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-258.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3CE3-1309967416</TxnID>
+    <TimeCreated>2011-07-06T11:50:16-04:00</TimeCreated>
+    <TxnNumber>2401</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017543</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-37.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D00-1309967565</TxnID>
+    <TimeCreated>2011-07-06T11:52:45-04:00</TimeCreated>
+    <TxnNumber>2402</TxnNumber>
+    <CustomerRefListID>800001A4-1306949197</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017544</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-773.04</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D05-1309969741</TxnID>
+    <TimeCreated>2011-07-06T12:29:01-04:00</TimeCreated>
+    <TxnNumber>2403</TxnNumber>
+    <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017573</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>765.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D2A-1309979563</TxnID>
+    <TimeCreated>2011-07-06T15:12:43-04:00</TimeCreated>
+    <TxnNumber>2406</TxnNumber>
+    <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+    <TxnDate>2011-07-06T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017442</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2500.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D34-1309979614</TxnID>
+    <TimeCreated>2011-07-06T15:13:34-04:00</TimeCreated>
+    <TxnNumber>2407</TxnNumber>
+    <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+    <TxnDate>2011-07-06T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017443</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D53-1309992617</TxnID>
+    <TimeCreated>2011-07-06T18:50:17-04:00</TimeCreated>
+    <TxnNumber>2409</TxnNumber>
+    <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017545</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>30.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D57-1310052371</TxnID>
+    <TimeCreated>2011-07-07T11:26:11-04:00</TimeCreated>
+    <TxnNumber>2410</TxnNumber>
+    <CustomerRefListID>800001A6-1307551517</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017594</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-660.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D5B-1310052486</TxnID>
+    <TimeCreated>2011-07-07T11:28:06-04:00</TimeCreated>
+    <TxnNumber>2411</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017595</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-264.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D5F-1310052539</TxnID>
+    <TimeCreated>2011-07-07T11:28:59-04:00</TimeCreated>
+    <TxnNumber>2412</TxnNumber>
+    <CustomerRefListID>80000188-1302107686</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017596</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>2.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D63-1310052566</TxnID>
+    <TimeCreated>2011-07-07T11:29:26-04:00</TimeCreated>
+    <TxnNumber>2413</TxnNumber>
+    <CustomerRefListID>80000189-1302107877</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017597</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>3.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D67-1310052610</TxnID>
+    <TimeCreated>2011-07-07T11:30:10-04:00</TimeCreated>
+    <TxnNumber>2414</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017598</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>486.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D6B-1310052630</TxnID>
+    <TimeCreated>2011-07-07T11:30:30-04:00</TimeCreated>
+    <TxnNumber>2415</TxnNumber>
+    <CustomerRefListID>8000018B-1302108585</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017599</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D6F-1310052645</TxnID>
+    <TimeCreated>2011-07-07T11:30:45-04:00</TimeCreated>
+    <TxnNumber>2416</TxnNumber>
+    <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017600</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-173.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D73-1310052666</TxnID>
+    <TimeCreated>2011-07-07T11:31:06-04:00</TimeCreated>
+    <TxnNumber>2417</TxnNumber>
+    <CustomerRefListID>8000019D-1304965797</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017601</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-11.70</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D77-1310052683</TxnID>
+    <TimeCreated>2011-07-07T11:31:23-04:00</TimeCreated>
+    <TxnNumber>2418</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017602</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1708.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D7B-1310052708</TxnID>
+    <TimeCreated>2011-07-07T11:31:48-04:00</TimeCreated>
+    <TxnNumber>2419</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017603</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1244.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D7F-1310052850</TxnID>
+    <TimeCreated>2011-07-07T11:34:10-04:00</TimeCreated>
+    <TxnNumber>2420</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017604</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1199.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D84-1310052888</TxnID>
+    <TimeCreated>2011-07-07T11:34:48-04:00</TimeCreated>
+    <TxnNumber>2421</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017605</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D89-1310052917</TxnID>
+    <TimeCreated>2011-07-07T11:35:17-04:00</TimeCreated>
+    <TxnNumber>2422</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017606</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-5189.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D8E-1310052958</TxnID>
+    <TimeCreated>2011-07-07T11:35:58-04:00</TimeCreated>
+    <TxnNumber>2423</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017607</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>443.20</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D92-1310052990</TxnID>
+    <TimeCreated>2011-07-07T11:36:30-04:00</TimeCreated>
+    <TxnNumber>2424</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017608</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-895.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D97-1310053014</TxnID>
+    <TimeCreated>2011-07-07T11:36:54-04:00</TimeCreated>
+    <TxnNumber>2425</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017609</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>123.20</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D9B-1310053040</TxnID>
+    <TimeCreated>2011-07-07T11:37:20-04:00</TimeCreated>
+    <TxnNumber>2426</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017610</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>1.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3D9F-1310053066</TxnID>
+    <TimeCreated>2011-07-07T11:37:46-04:00</TimeCreated>
+    <TxnNumber>2427</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017611</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3DA3-1310053188</TxnID>
+    <TimeCreated>2011-07-07T11:39:48-04:00</TimeCreated>
+    <TxnNumber>2428</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017612</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-36.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3DA7-1310053225</TxnID>
+    <TimeCreated>2011-07-07T11:40:25-04:00</TimeCreated>
+    <TxnNumber>2429</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017613</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-66.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3DAC-1310053279</TxnID>
+    <TimeCreated>2011-07-07T11:41:19-04:00</TimeCreated>
+    <TxnNumber>2430</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017614</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-721.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3DB3-1310055084</TxnID>
+    <TimeCreated>2011-07-07T12:11:24-04:00</TimeCreated>
+    <TxnNumber>2431</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017616</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-7526.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3DBC-1310055419</TxnID>
+    <TimeCreated>2011-07-07T12:16:59-04:00</TimeCreated>
+    <TxnNumber>2433</TxnNumber>
+    <CustomerRefListID>8000011F-1291409636</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017546</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID:</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3DCA-1310137197</TxnID>
+    <TimeCreated>2011-07-08T10:59:57-04:00</TimeCreated>
+    <TxnNumber>2435</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017630</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-56.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3DCE-1310137353</TxnID>
+    <TimeCreated>2011-07-08T11:02:33-04:00</TimeCreated>
+    <TxnNumber>2436</TxnNumber>
+    <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+    <TxnDate>2011-07-08T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017445</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-2500.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3DE4-1310151426</TxnID>
+    <TimeCreated>2011-07-08T14:57:06-04:00</TimeCreated>
+    <TxnNumber>2439</TxnNumber>
+    <CustomerRefListID>800000E1-1278013107</CustomerRefListID>
+    <TxnDate>2011-06-30T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017547</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>5.40</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3E40-1310661914</TxnID>
+    <TimeCreated>2011-07-14T12:45:14-04:00</TimeCreated>
+    <TxnNumber>2456</TxnNumber>
+    <CustomerRefListID>8000018F-1302279033</CustomerRefListID>
+    <TxnDate>2011-07-14T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017616</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-5000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3E59-1310662425</TxnID>
+    <TimeCreated>2011-07-14T12:53:45-04:00</TimeCreated>
+    <TxnNumber>2459</TxnNumber>
+    <CustomerRefListID>8000010B-1286990117</CustomerRefListID>
+    <TxnDate>2011-07-13T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017563</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-5000.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3EC3-1311003443</TxnID>
+    <TimeCreated>2011-07-18T11:37:23-04:00</TimeCreated>
+    <TxnNumber>2473</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-07-18T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017631</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-20.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3F51-1311083075</TxnID>
+    <TimeCreated>2011-07-19T09:44:35-04:00</TimeCreated>
+    <TxnNumber>2494</TxnNumber>
+    <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+    <TxnDate>2011-07-15T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017548</RefNumber>
+    <AppliedAmount>-27089.25</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3F74-1311193264</TxnID>
+    <TimeCreated>2011-07-20T16:21:04-04:00</TimeCreated>
+    <TxnNumber>2497</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017671</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-97.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FB2-1311193409</TxnID>
+    <TimeCreated>2011-07-20T16:23:29-04:00</TimeCreated>
+    <TxnNumber>2498</TxnNumber>
+    <CustomerRefListID>8000019D-1304965797</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017672</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>14.30</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FB6-1311193445</TxnID>
+    <TimeCreated>2011-07-20T16:24:05-04:00</TimeCreated>
+    <TxnNumber>2499</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017673</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>2308.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FBA-1311193491</TxnID>
+    <TimeCreated>2011-07-20T16:24:51-04:00</TimeCreated>
+    <TxnNumber>2500</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017674</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-642.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FBE-1311193525</TxnID>
+    <TimeCreated>2011-07-20T16:25:25-04:00</TimeCreated>
+    <TxnNumber>2501</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017675</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1571.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FC3-1311193578</TxnID>
+    <TimeCreated>2011-07-20T16:26:18-04:00</TimeCreated>
+    <TxnNumber>2502</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017676</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-10515.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FC8-1311193635</TxnID>
+    <TimeCreated>2011-07-20T16:27:15-04:00</TimeCreated>
+    <TxnNumber>2503</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017677</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-22528.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FCD-1311193704</TxnID>
+    <TimeCreated>2011-07-20T16:28:24-04:00</TimeCreated>
+    <TxnNumber>2504</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017678</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-4764.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FD3-1311193850</TxnID>
+    <TimeCreated>2011-07-20T16:30:50-04:00</TimeCreated>
+    <TxnNumber>2505</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017679</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>324.80</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FD7-1311193884</TxnID>
+    <TimeCreated>2011-07-20T16:31:24-04:00</TimeCreated>
+    <TxnNumber>2506</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017680</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>121.50</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FDC-1311193909</TxnID>
+    <TimeCreated>2011-07-20T16:31:49-04:00</TimeCreated>
+    <TxnNumber>2507</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017681</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-102.40</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FE0-1311193936</TxnID>
+    <TimeCreated>2011-07-20T16:32:16-04:00</TimeCreated>
+    <TxnNumber>2508</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017682</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>1.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FE4-1311193960</TxnID>
+    <TimeCreated>2011-07-20T16:32:40-04:00</TimeCreated>
+    <TxnNumber>2509</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017683</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1.60</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FE8-1311194001</TxnID>
+    <TimeCreated>2011-07-20T16:33:21-04:00</TimeCreated>
+    <TxnNumber>2510</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017684</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-31.20</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>3FEC-1311194215</TxnID>
+    <TimeCreated>2011-07-20T16:36:55-04:00</TimeCreated>
+    <TxnNumber>2511</TxnNumber>
+    <CustomerRefListID>800001AD-1311194193</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017685</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>6.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4029-1311265338</TxnID>
+    <TimeCreated>2011-07-21T12:22:18-04:00</TimeCreated>
+    <TxnNumber>2524</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017686</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>442.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4033-1311265371</TxnID>
+    <TimeCreated>2011-07-21T12:22:51-04:00</TimeCreated>
+    <TxnNumber>2527</TxnNumber>
+    <CustomerRefListID>80000189-1302107877</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017687</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>1.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4037-1311265392</TxnID>
+    <TimeCreated>2011-07-21T12:23:12-04:00</TimeCreated>
+    <TxnNumber>2528</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017688</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-570.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>403E-1311265410</TxnID>
+    <TimeCreated>2011-07-21T12:23:30-04:00</TimeCreated>
+    <TxnNumber>2530</TxnNumber>
+    <CustomerRefListID>8000018B-1302108585</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017689</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-3.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4042-1311265436</TxnID>
+    <TimeCreated>2011-07-21T12:23:56-04:00</TimeCreated>
+    <TxnNumber>2531</TxnNumber>
+    <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017690</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-167.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4046-1311265463</TxnID>
+    <TimeCreated>2011-07-21T12:24:23-04:00</TimeCreated>
+    <TxnNumber>2532</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017691</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>282.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>404E-1311265492</TxnID>
+    <TimeCreated>2011-07-21T12:24:52-04:00</TimeCreated>
+    <TxnNumber>2534</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-07-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017692</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2023.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4090-1311356636</TxnID>
+    <TimeCreated>2011-07-22T13:43:56-04:00</TimeCreated>
+    <TxnNumber>2551</TxnNumber>
+    <CustomerRefListID>80000154-1295041130</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017693E</RefNumber>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>8521.93</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4095-1311356728</TxnID>
+    <TimeCreated>2011-07-22T13:45:28-04:00</TimeCreated>
+    <TxnNumber>2552</TxnNumber>
+    <CustomerRefListID>800000FD-1285863212</CustomerRefListID>
+    <TxnDate>2011-07-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017237G</RefNumber>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>11452.95</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>40B5-1311629804</TxnID>
+    <TimeCreated>2011-07-25T17:36:44-04:00</TimeCreated>
+    <TxnNumber>2556</TxnNumber>
+    <CustomerRefListID>800000E3-1279730632</CustomerRefListID>
+    <TxnDate>2011-07-25T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017704</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>41E7-1312306756</TxnID>
+    <TimeCreated>2011-08-02T13:39:16-04:00</TimeCreated>
+    <TxnNumber>2589</TxnNumber>
+    <CustomerRefListID>800001A4-1306949197</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017715</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>3605.40</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>41ED-1312306864</TxnID>
+    <TimeCreated>2011-08-02T13:41:04-04:00</TimeCreated>
+    <TxnNumber>2590</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017721</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-460.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>41F1-1312311421</TxnID>
+    <TimeCreated>2011-08-02T14:57:01-04:00</TimeCreated>
+    <TxnNumber>2591</TxnNumber>
+    <CustomerRefListID>8000002D-1270497715</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017723</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>252.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>41F7-1312321999</TxnID>
+    <TimeCreated>2011-08-02T17:53:19-04:00</TimeCreated>
+    <TxnNumber>2592</TxnNumber>
+    <CustomerRefListID>800001B1-1312321901</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017726</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>-94.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4223-1312378761</TxnID>
+    <TimeCreated>2011-08-03T09:39:21-04:00</TimeCreated>
+    <TxnNumber>2598</TxnNumber>
+    <CustomerRefListID>8000005F-1270497718</CustomerRefListID>
+    <TxnDate>2011-08-03T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017618</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-894.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>43F8-1312386747</TxnID>
+    <TimeCreated>2011-08-03T11:52:27-04:00</TimeCreated>
+    <TxnNumber>2641</TxnNumber>
+    <CustomerRefListID>800000D2-1274131433</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017727</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>2224.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4400-1312468460</TxnID>
+    <TimeCreated>2011-08-04T10:34:20-04:00</TimeCreated>
+    <TxnNumber>2643</TxnNumber>
+    <CustomerRefListID>800001B3-1312468426</CustomerRefListID>
+    <TxnDate>2011-08-04T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017619</RefNumber>
+    <TermsRefFullName>Net 7</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>38.40</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>440C-1312557023</TxnID>
+    <TimeCreated>2011-08-05T11:10:23-04:00</TimeCreated>
+    <TxnNumber>2645</TxnNumber>
+    <CustomerRefListID>800000E5-1279833268</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017747</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>504.90</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>444E-1312839464</TxnID>
+    <TimeCreated>2011-08-08T17:37:44-04:00</TimeCreated>
+    <TxnNumber>2657</TxnNumber>
+    <CustomerRefListID>8000005F-1270497718</CustomerRefListID>
+    <TxnDate>2011-08-08T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017762</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>1729.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>445A-1312840353</TxnID>
+    <TimeCreated>2011-08-08T17:52:33-04:00</TimeCreated>
+    <TxnNumber>2658</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017763</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-18.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4484-1312907989</TxnID>
+    <TimeCreated>2011-08-09T12:39:49-04:00</TimeCreated>
+    <TxnNumber>2660</TxnNumber>
+    <CustomerRefListID>800000D3-1274295502</CustomerRefListID>
+    <TxnDate>2011-08-09T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017765</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>-1260.38</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4488-1312915200</TxnID>
+    <TimeCreated>2011-08-09T14:40:00-04:00</TimeCreated>
+    <TxnNumber>2661</TxnNumber>
+    <CustomerRefListID>800001A6-1307551517</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017766</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2306.75</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44AF-1312929070</TxnID>
+    <TimeCreated>2011-08-09T18:31:10-04:00</TimeCreated>
+    <TxnNumber>2662</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017773</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>582.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44B3-1312929144</TxnID>
+    <TimeCreated>2011-08-09T18:32:24-04:00</TimeCreated>
+    <TxnNumber>2663</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017774</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>678.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44B7-1312929202</TxnID>
+    <TimeCreated>2011-08-09T18:33:22-04:00</TimeCreated>
+    <TxnNumber>2664</TxnNumber>
+    <CustomerRefListID>8000018B-1302108585</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017775</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>1.50</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44BB-1312929269</TxnID>
+    <TimeCreated>2011-08-09T18:34:29-04:00</TimeCreated>
+    <TxnNumber>2665</TxnNumber>
+    <CustomerRefListID>8000018C-1302109249</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017776</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>112.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44BF-1312929314</TxnID>
+    <TimeCreated>2011-08-09T18:35:14-04:00</TimeCreated>
+    <TxnNumber>2666</TxnNumber>
+    <CustomerRefListID>8000019D-1304965797</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017777</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>10.40</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44C3-1312929357</TxnID>
+    <TimeCreated>2011-08-09T18:35:57-04:00</TimeCreated>
+    <TxnNumber>2667</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017778</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>3888.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44C7-1312929420</TxnID>
+    <TimeCreated>2011-08-09T18:37:00-04:00</TimeCreated>
+    <TxnNumber>2668</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017779</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-1002.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44CB-1312929495</TxnID>
+    <TimeCreated>2011-08-09T18:38:15-04:00</TimeCreated>
+    <TxnNumber>2669</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017780</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2130.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44D0-1312929548</TxnID>
+    <TimeCreated>2011-08-09T18:39:08-04:00</TimeCreated>
+    <TxnNumber>2670</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017781</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-13153.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44D6-1312929610</TxnID>
+    <TimeCreated>2011-08-09T18:40:10-04:00</TimeCreated>
+    <TxnNumber>2671</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017782</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44DC-1312929674</TxnID>
+    <TimeCreated>2011-08-09T18:41:14-04:00</TimeCreated>
+    <TxnNumber>2672</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017783</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-7762.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44E1-1312929726</TxnID>
+    <TimeCreated>2011-08-09T18:42:06-04:00</TimeCreated>
+    <TxnNumber>2673</TxnNumber>
+    <CustomerRefListID>800001AD-1311194193</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017784</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>22.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44E6-1312929805</TxnID>
+    <TimeCreated>2011-08-09T18:43:25-04:00</TimeCreated>
+    <TxnNumber>2674</TxnNumber>
+    <CustomerRefListID>80000172-1299520961</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017785</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>119.20</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44EA-1312929864</TxnID>
+    <TimeCreated>2011-08-09T18:44:24-04:00</TimeCreated>
+    <TxnNumber>2675</TxnNumber>
+    <CustomerRefListID>8000013F-1294182361</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017786</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID:</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44EF-1312929917</TxnID>
+    <TimeCreated>2011-08-09T18:45:17-04:00</TimeCreated>
+    <TxnNumber>2676</TxnNumber>
+    <CustomerRefListID>80000174-1299521174</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017787</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID:</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44F3-1312929975</TxnID>
+    <TimeCreated>2011-08-09T18:46:15-04:00</TimeCreated>
+    <TxnNumber>2677</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017788</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>12.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44F7-1312930036</TxnID>
+    <TimeCreated>2011-08-09T18:47:16-04:00</TimeCreated>
+    <TxnNumber>2678</TxnNumber>
+    <CustomerRefListID>80000175-1299521217</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017789</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID:</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44FB-1312930098</TxnID>
+    <TimeCreated>2011-08-09T18:48:18-04:00</TimeCreated>
+    <TxnNumber>2679</TxnNumber>
+    <CustomerRefListID>80000176-1299521268</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017790</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>VOID:</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>44FF-1312930203</TxnID>
+    <TimeCreated>2011-08-09T18:50:03-04:00</TimeCreated>
+    <TxnNumber>2680</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017791</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-349.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4505-1312930258</TxnID>
+    <TimeCreated>2011-08-09T18:50:58-04:00</TimeCreated>
+    <TxnNumber>2681</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-08-01T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017792</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-2029.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>45E1-1313531062</TxnID>
+    <TimeCreated>2011-08-16T17:44:22-04:00</TimeCreated>
+    <TxnNumber>2707</TxnNumber>
+    <CustomerRefListID>80000187-1302106492</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017810</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>334.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>45E5-1313531158</TxnID>
+    <TimeCreated>2011-08-16T17:45:58-04:00</TimeCreated>
+    <TxnNumber>2708</TxnNumber>
+    <CustomerRefListID>8000018A-1302108042</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017811</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>594.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>45EA-1313531229</TxnID>
+    <TimeCreated>2011-08-16T17:47:09-04:00</TimeCreated>
+    <TxnNumber>2709</TxnNumber>
+    <CustomerRefListID>8000019D-1304965797</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017812</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>250.90</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>45EE-1313531268</TxnID>
+    <TimeCreated>2011-08-16T17:47:48-04:00</TimeCreated>
+    <TxnNumber>2710</TxnNumber>
+    <CustomerRefListID>80000171-1299520741</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017813</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>2920.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>45F3-1313531336</TxnID>
+    <TimeCreated>2011-08-16T17:48:56-04:00</TimeCreated>
+    <TxnNumber>2711</TxnNumber>
+    <CustomerRefListID>80000119-1288974477</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017814</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>516.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>45F7-1313531386</TxnID>
+    <TimeCreated>2011-08-16T17:49:46-04:00</TimeCreated>
+    <TxnNumber>2712</TxnNumber>
+    <CustomerRefListID>80000139-1294181862</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017815</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>948.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>45FC-1313531454</TxnID>
+    <TimeCreated>2011-08-16T17:50:54-04:00</TimeCreated>
+    <TxnNumber>2713</TxnNumber>
+    <CustomerRefListID>8000013B-1294182268</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017816</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>8831.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4601-1313531572</TxnID>
+    <TimeCreated>2011-08-16T17:52:52-04:00</TimeCreated>
+    <TxnNumber>2714</TxnNumber>
+    <CustomerRefListID>8000013C-1294182289</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017817</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>27068.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4606-1313531638</TxnID>
+    <TimeCreated>2011-08-16T17:53:58-04:00</TimeCreated>
+    <TxnNumber>2715</TxnNumber>
+    <CustomerRefListID>8000013D-1294182310</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017818</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>2915.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>460B-1313531700</TxnID>
+    <TimeCreated>2011-08-16T17:55:00-04:00</TimeCreated>
+    <TxnNumber>2716</TxnNumber>
+    <CustomerRefListID>800001AD-1311194193</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017819</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>402.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>460F-1313531742</TxnID>
+    <TimeCreated>2011-08-16T17:55:42-04:00</TimeCreated>
+    <TxnNumber>2717</TxnNumber>
+    <CustomerRefListID>80000173-1299521108</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017820</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>29.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4614-1313531814</TxnID>
+    <TimeCreated>2011-08-16T17:56:54-04:00</TimeCreated>
+    <TxnNumber>2718</TxnNumber>
+    <CustomerRefListID>8000013E-1294182341</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017821</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>139.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4619-1313531888</TxnID>
+    <TimeCreated>2011-08-16T17:58:08-04:00</TimeCreated>
+    <TxnNumber>2719</TxnNumber>
+    <CustomerRefListID>80000140-1294182378</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017822</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>743.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4621-1313531963</TxnID>
+    <TimeCreated>2011-08-16T17:59:23-04:00</TimeCreated>
+    <TxnNumber>2720</TxnNumber>
+    <CustomerRefListID>800000F6-1283870874</CustomerRefListID>
+    <TxnDate>2011-08-16T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017823</RefNumber>
+    <TermsRefFullName>Net 15</TermsRefFullName>
+    <AppliedAmount>-73.50</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>464E-1313610250</TxnID>
+    <TimeCreated>2011-08-17T15:44:10-04:00</TimeCreated>
+    <TxnNumber>2721</TxnNumber>
+    <CustomerRefListID>80000107-1286388667</CustomerRefListID>
+    <TxnDate>2011-08-15T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017825</RefNumber>
+    <TermsRefFullName>Net 30</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>112.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>4706-1314018169</TxnID>
+    <TimeCreated>2011-08-22T09:02:49-04:00</TimeCreated>
+    <TxnNumber>2741</TxnNumber>
+    <CustomerRefListID>80000153-1295033426</CustomerRefListID>
+    <TxnDate>2011-08-19T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017624</RefNumber>
+    <AppliedAmount>-32301.88</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+    <Memo>To Record payment for invoice DA-017782.  Payment was received in GBP instead of EUR.</Memo>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>475D-1314040938</TxnID>
+    <TimeCreated>2011-08-22T15:22:18-04:00</TimeCreated>
+    <TxnNumber>2748</TxnNumber>
+    <CustomerRefListID>80000190-1302618930</CustomerRefListID>
+    <TxnDate>2011-08-19T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017798</RefNumber>
+    <AppliedAmount>-500.00</AppliedAmount>
+    <BalanceRemaining>0.00</BalanceRemaining>
+  </GetInvoices>
+  <GetInvoices>
+    <TxnID>47B8-1314051092</TxnID>
+    <TimeCreated>2011-08-22T18:11:32-04:00</TimeCreated>
+    <TxnNumber>2775</TxnNumber>
+    <CustomerRefListID>80000041-1270497716</CustomerRefListID>
+    <TxnDate>2011-07-08T00:00:00-04:00</TxnDate>
+    <RefNumber>DA-017634</RefNumber>
+    <TermsRefFullName>Due on receipt</TermsRefFullName>
+    <AppliedAmount>0.00</AppliedAmount>
+    <BalanceRemaining>521.64</BalanceRemaining>
+  </GetInvoices>
+</DocumentElement>

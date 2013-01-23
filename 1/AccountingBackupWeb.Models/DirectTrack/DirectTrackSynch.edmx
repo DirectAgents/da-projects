@@ -1,0 +1,583 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DirectTrackModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="DirectTrackModelStoreContainer">
+    <EntitySet Name="Entities" EntityType="DirectTrackModel.Store.Entities" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EntityTypes" EntityType="DirectTrackModel.Store.EntityTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DirectTracks" EntityType="DirectTrackModel.Store.DirectTracks" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ApiLogins" EntityType="DirectTrackModel.Store.ApiLogins" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Campaigns" EntityType="DirectTrackModel.Store.Campaigns" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SynchTasks" EntityType="DirectTrackModel.Store.SynchTasks" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SynchTaskTypes" EntityType="DirectTrackModel.Store.SynchTaskTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SynchTaskParameters" EntityType="DirectTrackModel.Store.SynchTaskParameters" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SynchTaskSynchTask" EntityType="DirectTrackModel.Store.SynchTaskSynchTask" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="EntityTypeEntity" Association="DirectTrackModel.Store.EntityTypeEntity">
+      <End Role="EntityType" EntitySet="EntityTypes" />
+      <End Role="Entity" EntitySet="Entities" />
+    </AssociationSet>
+    <AssociationSet Name="ApiLoginDirectTrack" Association="DirectTrackModel.Store.ApiLoginDirectTrack">
+      <End Role="ApiLogin" EntitySet="ApiLogins" />
+      <End Role="DirectTrack" EntitySet="DirectTracks" />
+    </AssociationSet>
+    <AssociationSet Name="EntityCampaign" Association="DirectTrackModel.Store.EntityCampaign">
+      <End Role="Entity" EntitySet="Entities" />
+      <End Role="Campaign" EntitySet="Campaigns" />
+    </AssociationSet>
+    <AssociationSet Name="EntitySynchTask" Association="DirectTrackModel.Store.EntitySynchTask">
+      <End Role="Entity" EntitySet="Entities" />
+      <End Role="SynchTask" EntitySet="SynchTasks" />
+    </AssociationSet>
+    <AssociationSet Name="SynchTaskTypeSynchTask" Association="DirectTrackModel.Store.SynchTaskTypeSynchTask">
+      <End Role="SynchTaskType" EntitySet="SynchTaskTypes" />
+      <End Role="SynchTask" EntitySet="SynchTasks" />
+    </AssociationSet>
+    <AssociationSet Name="SynchTaskSynchTaskParameter" Association="DirectTrackModel.Store.SynchTaskSynchTaskParameter">
+      <End Role="SynchTask" EntitySet="SynchTasks" />
+      <End Role="SynchTaskParameter" EntitySet="SynchTaskParameters" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SynchTaskSynchTask_SynchTask" Association="DirectTrackModel.Store.FK_SynchTaskSynchTask_SynchTask">
+      <End Role="SynchTask" EntitySet="SynchTasks" />
+      <End Role="SynchTaskSynchTask" EntitySet="SynchTaskSynchTask" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SynchTaskSynchTask_SynchTask1" Association="DirectTrackModel.Store.FK_SynchTaskSynchTask_SynchTask1">
+      <End Role="SynchTask1" EntitySet="SynchTasks" />
+      <End Role="SynchTaskSynchTask" EntitySet="SynchTaskSynchTask" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Entities">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Pulled" Type="datetime" Nullable="true" />
+    <Property Name="Pushed" Type="datetime" Nullable="true" />
+    <Property Name="Modified" Type="datetime" Nullable="true" />
+    <Property Name="Key" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EntityType_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EntityTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DirectTracks">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Url" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ApiUrl" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ApiLogin_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ApiLogins">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ClientId" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Campaigns">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Pid" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Entity_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SynchTasks">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Started" Type="datetime" Nullable="true" />
+    <Property Name="Stopped" Type="datetime" Nullable="true" />
+    <Property Name="Error" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Added" Type="datetime" Nullable="false" />
+    <Property Name="Entity_Id" Type="int" Nullable="true" />
+    <Property Name="SynchTaskType_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SynchTaskTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SynchTaskParameters">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="SynchTask_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SynchTaskSynchTask">
+    <Key>
+      <PropertyRef Name="Children_Id" />
+      <PropertyRef Name="Parents_Id" />
+    </Key>
+    <Property Name="Children_Id" Type="int" Nullable="false" />
+    <Property Name="Parents_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="EntityTypeEntity">
+    <End Role="EntityType" Type="DirectTrackModel.Store.EntityTypes" Multiplicity="1" />
+    <End Role="Entity" Type="DirectTrackModel.Store.Entities" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EntityType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Entity">
+        <PropertyRef Name="EntityType_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="ApiLoginDirectTrack">
+    <End Role="ApiLogin" Type="DirectTrackModel.Store.ApiLogins" Multiplicity="1" />
+    <End Role="DirectTrack" Type="DirectTrackModel.Store.DirectTracks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ApiLogin">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DirectTrack">
+        <PropertyRef Name="ApiLogin_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EntityCampaign">
+    <End Role="Entity" Type="DirectTrackModel.Store.Entities" Multiplicity="1" />
+    <End Role="Campaign" Type="DirectTrackModel.Store.Campaigns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Entity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Campaign">
+        <PropertyRef Name="Entity_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EntitySynchTask">
+    <End Role="Entity" Type="DirectTrackModel.Store.Entities" Multiplicity="0..1" />
+    <End Role="SynchTask" Type="DirectTrackModel.Store.SynchTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Entity">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SynchTask">
+        <PropertyRef Name="Entity_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SynchTaskTypeSynchTask">
+    <End Role="SynchTaskType" Type="DirectTrackModel.Store.SynchTaskTypes" Multiplicity="1" />
+    <End Role="SynchTask" Type="DirectTrackModel.Store.SynchTasks" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SynchTaskType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SynchTask">
+        <PropertyRef Name="SynchTaskType_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SynchTaskSynchTaskParameter">
+    <End Role="SynchTask" Type="DirectTrackModel.Store.SynchTasks" Multiplicity="1" />
+    <End Role="SynchTaskParameter" Type="DirectTrackModel.Store.SynchTaskParameters" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SynchTask">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SynchTaskParameter">
+        <PropertyRef Name="SynchTask_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SynchTaskSynchTask_SynchTask">
+    <End Role="SynchTask" Type="DirectTrackModel.Store.SynchTasks" Multiplicity="1" />
+    <End Role="SynchTaskSynchTask" Type="DirectTrackModel.Store.SynchTaskSynchTask" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SynchTask">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SynchTaskSynchTask">
+        <PropertyRef Name="Children_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SynchTaskSynchTask_SynchTask1">
+    <End Role="SynchTaskSynchTask" Type="DirectTrackModel.Store.SynchTaskSynchTask" Multiplicity="*" />
+    <End Role="SynchTask1" Type="DirectTrackModel.Store.SynchTasks" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="SynchTask1">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SynchTaskSynchTask">
+        <PropertyRef Name="Parents_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="DirectTrackModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="DirectTrackSynchContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Entities" EntityType="DirectTrackModel.Entity" />
+          <EntitySet Name="EntityTypes" EntityType="DirectTrackModel.EntityType" />
+          <AssociationSet Name="EntityTypeEntity" Association="DirectTrackModel.EntityTypeEntity">
+            <End EntitySet="EntityTypes" Role="EntityType" />
+            <End EntitySet="Entities" Role="Entity" />
+          </AssociationSet>
+          <EntitySet Name="DirectTracks" EntityType="DirectTrackModel.DirectTrack" />
+          <EntitySet Name="ApiLogins" EntityType="DirectTrackModel.ApiLogin" />
+          <AssociationSet Name="ApiLoginDirectTrack" Association="DirectTrackModel.ApiLoginDirectTrack">
+            <End Role="ApiLogin" EntitySet="ApiLogins" />
+            <End Role="DirectTrack" EntitySet="DirectTracks" />
+          </AssociationSet>
+          <EntitySet Name="Campaigns" EntityType="DirectTrackModel.Campaign" />
+          <AssociationSet Name="EntityCampaign" Association="DirectTrackModel.EntityCampaign">
+            <End Role="Entity" EntitySet="Entities" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <EntitySet Name="SynchTasks" EntityType="DirectTrackModel.SynchTask" />
+          <AssociationSet Name="EntitySynchTask" Association="DirectTrackModel.EntitySynchTask">
+            <End Role="Entity" EntitySet="Entities" />
+            <End Role="SynchTask" EntitySet="SynchTasks" />
+          </AssociationSet>
+          <EntitySet Name="SynchTaskTypes" EntityType="DirectTrackModel.SynchTaskType" />
+          <AssociationSet Name="SynchTaskTypeSynchTask" Association="DirectTrackModel.SynchTaskTypeSynchTask">
+            <End Role="SynchTaskType" EntitySet="SynchTaskTypes" />
+            <End Role="SynchTask" EntitySet="SynchTasks" />
+          </AssociationSet>
+          <EntitySet Name="SynchTaskParameters" EntityType="DirectTrackModel.SynchTaskParameter" />
+          <AssociationSet Name="SynchTaskSynchTaskParameter" Association="DirectTrackModel.SynchTaskSynchTaskParameter">
+            <End Role="SynchTask" EntitySet="SynchTasks" />
+            <End Role="SynchTaskParameter" EntitySet="SynchTaskParameters" />
+          </AssociationSet>
+          <AssociationSet Name="SynchTaskSynchTask" Association="DirectTrackModel.SynchTaskSynchTask">
+            <End Role="SynchTask" EntitySet="SynchTasks" />
+            <End Role="SynchTask1" EntitySet="SynchTasks" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Entity">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+          <NavigationProperty Name="EntityType" Relationship="DirectTrackModel.EntityTypeEntity" FromRole="Entity" ToRole="EntityType" />
+          <NavigationProperty Name="Campaigns" Relationship="DirectTrackModel.EntityCampaign" FromRole="Entity" ToRole="Campaign" />
+          <NavigationProperty Name="SynchTasks" Relationship="DirectTrackModel.EntitySynchTask" FromRole="Entity" ToRole="SynchTask" />
+          <Property Type="DateTime" Name="Pulled" Nullable="true" />
+          <Property Type="DateTime" Name="Pushed" Nullable="true" />
+          <Property Type="DateTime" Name="Modified" Nullable="true" />
+          <Property Type="String" Name="Key" Nullable="false" />
+          <Property Type="String" Name="Content" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EntityType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <NavigationProperty Name="Entities" Relationship="DirectTrackModel.EntityTypeEntity" FromRole="EntityType" ToRole="Entity" />
+        </EntityType>
+        <Association Name="EntityTypeEntity">
+          <End Type="DirectTrackModel.EntityType" Multiplicity="1" Role="EntityType" />
+          <End Type="DirectTrackModel.Entity" Multiplicity="*" Role="Entity" />
+        </Association>
+        <EntityType Name="DirectTrack">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Url" Nullable="false" />
+          <Property Type="String" Name="ApiUrl" Nullable="false" />
+          <NavigationProperty Name="ApiLogin" Relationship="DirectTrackModel.ApiLoginDirectTrack" FromRole="DirectTrack" ToRole="ApiLogin" />
+        </EntityType>
+        <EntityType Name="ApiLogin">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="UserName" Nullable="false" />
+          <Property Type="String" Name="Password" Nullable="false" />
+          <Property Type="String" Name="ClientId" Nullable="false" />
+          <NavigationProperty Name="DirectTracks" Relationship="DirectTrackModel.ApiLoginDirectTrack" FromRole="ApiLogin" ToRole="DirectTrack" />
+        </EntityType>
+        <Association Name="ApiLoginDirectTrack">
+          <End Type="DirectTrackModel.ApiLogin" Role="ApiLogin" Multiplicity="1" />
+          <End Type="DirectTrackModel.DirectTrack" Role="DirectTrack" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Pid" Nullable="false" />
+          <NavigationProperty Name="Entity" Relationship="DirectTrackModel.EntityCampaign" FromRole="Campaign" ToRole="Entity" />
+        </EntityType>
+        <Association Name="EntityCampaign">
+          <End Type="DirectTrackModel.Entity" Role="Entity" Multiplicity="1" />
+          <End Type="DirectTrackModel.Campaign" Role="Campaign" Multiplicity="*" />
+        </Association>
+        <EntityType Name="SynchTask">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Entity" Relationship="DirectTrackModel.EntitySynchTask" FromRole="SynchTask" ToRole="Entity" />
+          <Property Type="DateTime" Name="Started" Nullable="true" />
+          <Property Type="DateTime" Name="Stopped" Nullable="true" />
+          <Property Type="String" Name="Error" Nullable="true" />
+          <NavigationProperty Name="SynchTaskType" Relationship="DirectTrackModel.SynchTaskTypeSynchTask" FromRole="SynchTask" ToRole="SynchTaskType" />
+          <Property Type="DateTime" Name="Added" Nullable="false" />
+          <NavigationProperty Name="SynchTaskParameters" Relationship="DirectTrackModel.SynchTaskSynchTaskParameter" FromRole="SynchTask" ToRole="SynchTaskParameter" />
+          <NavigationProperty Name="Parents" Relationship="DirectTrackModel.SynchTaskSynchTask" FromRole="SynchTask" ToRole="SynchTask1" />
+          <NavigationProperty Name="Children" Relationship="DirectTrackModel.SynchTaskSynchTask" FromRole="SynchTask1" ToRole="SynchTask" />
+          </EntityType>
+        <Association Name="EntitySynchTask">
+          <End Type="DirectTrackModel.Entity" Role="Entity" Multiplicity="0..1" />
+          <End Type="DirectTrackModel.SynchTask" Role="SynchTask" Multiplicity="*" />
+        </Association>
+        <EntityType Name="SynchTaskType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <NavigationProperty Name="SynchTasks" Relationship="DirectTrackModel.SynchTaskTypeSynchTask" FromRole="SynchTaskType" ToRole="SynchTask" />
+        </EntityType>
+        <Association Name="SynchTaskTypeSynchTask">
+          <End Type="DirectTrackModel.SynchTaskType" Role="SynchTaskType" Multiplicity="1" />
+          <End Type="DirectTrackModel.SynchTask" Role="SynchTask" Multiplicity="*" />
+        </Association>
+        <EntityType Name="SynchTaskParameter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="SynchTask" Relationship="DirectTrackModel.SynchTaskSynchTaskParameter" FromRole="SynchTaskParameter" ToRole="SynchTask" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="false" />
+        </EntityType>
+        <Association Name="SynchTaskSynchTaskParameter">
+          <End Type="DirectTrackModel.SynchTask" Role="SynchTask" Multiplicity="1" />
+          <End Type="DirectTrackModel.SynchTaskParameter" Role="SynchTaskParameter" Multiplicity="*" />
+        </Association>
+        <Association Name="SynchTaskSynchTask">
+          <End Type="DirectTrackModel.SynchTask" Role="SynchTask" Multiplicity="*" />
+          <End Type="DirectTrackModel.SynchTask" Role="SynchTask1" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DirectTrackModelStoreContainer" CdmEntityContainer="DirectTrackSynchContainer">
+    <EntitySetMapping Name="Entities">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectTrackModel.Entity)">
+        <MappingFragment StoreEntitySet="Entities">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Pulled" ColumnName="Pulled" />
+          <ScalarProperty Name="Pushed" ColumnName="Pushed" />
+          <ScalarProperty Name="Modified" ColumnName="Modified" />
+          <ScalarProperty Name="Key" ColumnName="Key" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EntityTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectTrackModel.EntityType)">
+        <MappingFragment StoreEntitySet="EntityTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DirectTracks">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectTrackModel.DirectTrack)">
+        <MappingFragment StoreEntitySet="DirectTracks">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="ApiUrl" ColumnName="ApiUrl" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ApiLogins">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectTrackModel.ApiLogin)">
+        <MappingFragment StoreEntitySet="ApiLogins">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Campaigns">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectTrackModel.Campaign)">
+        <MappingFragment StoreEntitySet="Campaigns">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Pid" ColumnName="Pid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SynchTasks">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectTrackModel.SynchTask)">
+        <MappingFragment StoreEntitySet="SynchTasks">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Started" ColumnName="Started" />
+          <ScalarProperty Name="Stopped" ColumnName="Stopped" />
+          <ScalarProperty Name="Error" ColumnName="Error" />
+          <ScalarProperty Name="Added" ColumnName="Added" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SynchTaskTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectTrackModel.SynchTaskType)">
+        <MappingFragment StoreEntitySet="SynchTaskTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SynchTaskParameters">
+      <EntityTypeMapping TypeName="IsTypeOf(DirectTrackModel.SynchTaskParameter)">
+        <MappingFragment StoreEntitySet="SynchTaskParameters">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="EntityTypeEntity" TypeName="DirectTrackModel.EntityTypeEntity" StoreEntitySet="Entities">
+      <EndProperty Name="EntityType">
+        <ScalarProperty Name="Id" ColumnName="EntityType_Id" />
+      </EndProperty>
+      <EndProperty Name="Entity">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="ApiLoginDirectTrack" TypeName="DirectTrackModel.ApiLoginDirectTrack" StoreEntitySet="DirectTracks">
+      <EndProperty Name="ApiLogin">
+        <ScalarProperty Name="Id" ColumnName="ApiLogin_Id" />
+      </EndProperty>
+      <EndProperty Name="DirectTrack">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="EntityCampaign" TypeName="DirectTrackModel.EntityCampaign" StoreEntitySet="Campaigns">
+      <EndProperty Name="Entity">
+        <ScalarProperty Name="Id" ColumnName="Entity_Id" />
+      </EndProperty>
+      <EndProperty Name="Campaign">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="EntitySynchTask" TypeName="DirectTrackModel.EntitySynchTask" StoreEntitySet="SynchTasks">
+      <EndProperty Name="Entity">
+        <ScalarProperty Name="Id" ColumnName="Entity_Id" />
+      </EndProperty>
+      <EndProperty Name="SynchTask">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+      <Condition ColumnName="Entity_Id" IsNull="false" />
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="SynchTaskTypeSynchTask" TypeName="DirectTrackModel.SynchTaskTypeSynchTask" StoreEntitySet="SynchTasks">
+      <EndProperty Name="SynchTaskType">
+        <ScalarProperty Name="Id" ColumnName="SynchTaskType_Id" />
+      </EndProperty>
+      <EndProperty Name="SynchTask">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="SynchTaskSynchTaskParameter" TypeName="DirectTrackModel.SynchTaskSynchTaskParameter" StoreEntitySet="SynchTaskParameters">
+      <EndProperty Name="SynchTask">
+        <ScalarProperty Name="Id" ColumnName="SynchTask_Id" />
+      </EndProperty>
+      <EndProperty Name="SynchTaskParameter">
+        <ScalarProperty Name="Id" ColumnName="Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="SynchTaskSynchTask" TypeName="DirectTrackModel.SynchTaskSynchTask" StoreEntitySet="SynchTaskSynchTask">
+      <EndProperty Name="SynchTask">
+        <ScalarProperty Name="Id" ColumnName="Children_Id" />
+      </EndProperty>
+      <EndProperty Name="SynchTask1">
+        <ScalarProperty Name="Id" ColumnName="Parents_Id" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="DirectTrackModel" >
+        <EntityTypeShape EntityType="DirectTrackModel.Entity" PointX="0.875" PointY="2.75" Width="1.875" Height="2.7494921874999996" />
+        <EntityTypeShape EntityType="DirectTrackModel.EntityType" Width="1.5" PointX="1" PointY="0.5" Height="1.59568359375" />
+        <AssociationConnector Association="DirectTrackModel.EntityTypeEntity">
+          <ConnectorPoint PointX="1.75" PointY="2.09568359375" />
+          <ConnectorPoint PointX="1.75" PointY="2.75" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectTrackModel.DirectTrack" Width="1.5" PointX="11" PointY="3.125" Height="1.787985026041667" />
+        <EntityTypeShape EntityType="DirectTrackModel.ApiLogin" Width="1.5" PointX="11" PointY="5.875" Height="1.9802864583333335" />
+        <AssociationConnector Association="DirectTrackModel.ApiLoginDirectTrack">
+          <ConnectorPoint PointX="11.75" PointY="5.875" />
+          <ConnectorPoint PointX="11.75" PointY="4.9129850260416674" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectTrackModel.Campaign" Width="1.5" PointX="1" PointY="6" Height="1.7879850260416665" />
+        <AssociationConnector Association="DirectTrackModel.EntityCampaign">
+          <ConnectorPoint PointX="1.75" PointY="5.4994921875" />
+          <ConnectorPoint PointX="1.75" PointY="6" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectTrackModel.SynchTask" Width="1.75" PointX="4.125" PointY="2.375" Height="2.9417936197916656" />
+        <AssociationConnector Association="DirectTrackModel.EntitySynchTask">
+          <ConnectorPoint PointX="2.75" PointY="4.0333968098958328" />
+          <ConnectorPoint PointX="4.125" PointY="4.0333968098958328" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectTrackModel.SynchTaskType" Width="1.5" PointX="4.125" PointY="6" Height="1.787985026041667" />
+        <AssociationConnector Association="DirectTrackModel.SynchTaskTypeSynchTask">
+          <ConnectorPoint PointX="4.875" PointY="6" />
+          <ConnectorPoint PointX="4.875" PointY="5.3167936197916656" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="DirectTrackModel.SynchTaskParameter" Width="1.75" PointX="7" PointY="3" Height="1.7879850260416665" />
+        <AssociationConnector Association="DirectTrackModel.SynchTaskSynchTaskParameter">
+          <ConnectorPoint PointX="5.875" PointY="3.8939925130208333" />
+          <ConnectorPoint PointX="7" PointY="3.8939925130208333" />
+        </AssociationConnector>
+        <AssociationConnector Association="DirectTrackModel.SynchTaskSynchTask">
+          <ConnectorPoint PointX="4.7455769230769231" PointY="2.375" />
+          <ConnectorPoint PointX="4.7455769230769231" PointY="2.125" />
+          <ConnectorPoint PointX="5.2665384615384614" PointY="2.125" />
+          <ConnectorPoint PointX="5.2665384615384614" PointY="2.375" />
+        </AssociationConnector>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

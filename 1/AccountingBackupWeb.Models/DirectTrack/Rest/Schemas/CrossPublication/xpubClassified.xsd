@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/xpubClassified/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/xpubClassified/v1_0"
+elementFormDefault="qualified">
+
+	<!-- start definition of simple elements -->
+	<xs:simpleType name="booleanInt">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+		
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="campaignResourceURL">
+	<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="listingName">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="listingType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="bid"/>
+				<xs:enumeration value="proposal"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="listingTitle">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="listingStatus">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Active"/>
+				<xs:enumeration value="Inactive"/>
+				<xs:enumeration value="Closed"/>
+				<xs:enumeration value="Expired"/>
+				<xs:enumeration value="Deleted"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="xpubCompanyResourceURL">
+		<xs:complexType>
+			<xs:attribute name="location" type="resourceURI" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="startDate">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+				<xs:maxLength value="10"/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 
+
+	<xs:element name="endDate">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="(20[0-9]{2})-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))( (([0-1]?[0-9])|([2][0-3])):([0-5]?[0-9])(:([0-5]?[0-9]))?)?"/>
+				<xs:maxLength value="10"/>
+			</xs:restriction>
+		</xs:simpleType>
+    </xs:element> 
+
+	<xs:element name="shortDescription">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="longDescription">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="impressionPayout" type="xs:double"/>
+	
+	<xs:element name="clickPayout" type="xs:double"/>
+	
+	<xs:element name="leadPayout" type="xs:double"/>
+	
+	<xs:element name="flatSalePayout" type="xs:double"/>
+	
+	<xs:element name="flatSubSalePayout" type="xs:double"/>
+	
+	<xs:element name="percentSalePayout" type="xs:double"/>
+	
+	<xs:element name="percentSubSalePayout" type="xs:double"/>
+
+	<xs:element name="allowChildEditCreatives" type="booleanInt"/>
+	<!-- end definition of simple elements -->
+	
+	<!-- start definition of attributes -->
+	<!-- end definition of attributes -->
+	
+	<!-- start definition of complex elements -->
+
+	<xs:element name="xpubClassified">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="campaignResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="listingName" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="listingType" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="listingTitle" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="listingStatus" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="xpubCompanyResourceURL" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="startDate" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="endDate" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="shortDescription" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="longDescription" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="impressionPayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="clickPayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="leadPayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="flatSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="flatSubSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="percentSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="percentSubSalePayout" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="allowChildEditCreatives" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="location" type="resourceURI"/>
+		</xs:complexType>
+	</xs:element>
+	<!-- end definition of complex elements -->
+
+</xs:schema>

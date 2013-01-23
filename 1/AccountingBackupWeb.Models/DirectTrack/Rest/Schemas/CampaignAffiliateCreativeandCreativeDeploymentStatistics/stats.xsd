@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.digitalriver.com/directtrack/api/stats/v1_0"
+xmlns="http://www.digitalriver.com/directtrack/api/stats/v1_0"
+elementFormDefault="qualified">
+
+	<!-- simple elements -->
+	<xs:simpleType name="resourceURI">
+		<xs:restriction base="xs:anyURI">
+		<xs:pattern value=".*/.*[^/]"></xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="impressions">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="contextualImpressions">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="clicks">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="clickthru">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="leads">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="postImpressionLeads">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="signups">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="numSales">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="numPostImpressionSales">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="saleAmount">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="postImpressionSaleAmount">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="numSubSales">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="numPostImpressionSubSales">
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="subSaleAmount">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="postImpressionSubSaleAmount">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="theyGet">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="weGet">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="epc">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+				<xs:minInclusive value="0" /> 
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="revenue">
+		<xs:simpleType>
+			<xs:restriction base="xs:decimal">
+				<xs:fractionDigits value="2" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="currency">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="0"/>
+				<xs:maxLength value="3"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<!-- END simple elements -->
+
+	<!-- attributes -->
+	<!-- END attributes -->
+
+	<!-- complex elements -->
+	<xs:element name="resource">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="impressions" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="contextualImpressions" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="clicks" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="clickthru" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="leads" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="postImpressionLeads" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="signups" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="numSales" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="numPostImpressionSales" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="saleAmount" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="postImpressionSaleAmount" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="numSubSales" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="numPostImpressionSubSales" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="subSaleAmount" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="postImpressionSubSaleAmount" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="theyGet" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="weGet" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="epc" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="revenue" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="currency" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="breakdownResourceURL" type="xs:string"/>
+			<xs:attribute name="date" type="xs:string"/>
+	  </xs:complexType>
+	</xs:element>
+	<!-- END complex elements -->
+
+	<!-- PRIMARY ELEMENT -->
+	<xs:element name="stats">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="resource" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="location" type="resourceURI"/>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

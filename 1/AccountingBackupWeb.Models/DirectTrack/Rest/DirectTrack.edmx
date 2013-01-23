@@ -1,0 +1,2190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx"
+	xmlns:init="http://schemas.directagents.com/InitializationSql">
+	<!-- EF Runtime content -->
+	<edmx:Runtime>
+		<!-- SSDL content -->
+		<edmx:StorageModels>
+			<Schema Namespace="DirectTrack.Store" Alias="Self" Provider="System.Data.SqlClient" 
+				ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" 
+				xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+				<EntityContainer Name="DirectTrackStoreContainer">
+					<EntitySet Name="Campaign" EntityType="DirectTrack.Store.Campaign" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Campaign_CampaignType" EntityType="DirectTrack.Store.Campaign_CampaignType" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Campaign_TrackMethod" EntityType="DirectTrack.Store.Campaign_TrackMethod" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Campaign_Status" EntityType="DirectTrack.Store.Campaign_Status" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Campaign_TrackConversionType" EntityType="DirectTrack.Store.Campaign_TrackConversionType" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Campaign_Target" EntityType="DirectTrack.Store.Campaign_Target" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Campaign_UpdateSchedule" EntityType="DirectTrack.Store.Campaign_UpdateSchedule" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Campaign_UnsubType" EntityType="DirectTrack.Store.Campaign_UnsubType" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Affiliate" EntityType="DirectTrack.Store.Affiliate" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Affiliate_Status" EntityType="DirectTrack.Store.Affiliate_Status" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Affiliate_Approval" EntityType="DirectTrack.Store.Affiliate_Approval" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Affiliate_PaymentFrequency" EntityType="DirectTrack.Store.Affiliate_PaymentFrequency" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Affiliate_PaymentTo" EntityType="DirectTrack.Store.Affiliate_PaymentTo" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Affiliate_PaymentMethod" EntityType="DirectTrack.Store.Affiliate_PaymentMethod" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Affiliate_PaymentStatus" EntityType="DirectTrack.Store.Affiliate_PaymentStatus" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Advertiser" EntityType="DirectTrack.Store.Advertiser" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Advertiser_Status" EntityType="DirectTrack.Store.Advertiser_Status" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Advertiser_Approval" EntityType="DirectTrack.Store.Advertiser_Approval" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Payout" EntityType="DirectTrack.Store.Payout" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Payout_PayoutType" EntityType="DirectTrack.Store.Payout_PayoutType" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="SaleDetail" EntityType="DirectTrack.Store.SaleDetail" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="SaleDetail_SaleType" EntityType="DirectTrack.Store.SaleDetail_SaleType" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="LeadDetail" EntityType="DirectTrack.Store.LeadDetail" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Creative" EntityType="DirectTrack.Store.Creative" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Creative_CreativeType" EntityType="DirectTrack.Store.Creative_CreativeType" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Creative_Status" EntityType="DirectTrack.Store.Creative_Status" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Creative_FileMethod" EntityType="DirectTrack.Store.Creative_FileMethod" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Creative_RevolveExpirationDate" EntityType="DirectTrack.Store.Creative_RevolveExpirationDate" store:Type="Tables" Schema="dbo" />
+					<EntitySet Name="Creative_SmsCreditType" EntityType="DirectTrack.Store.Creative_SmsCreditType" store:Type="Tables" Schema="dbo" />
+				</EntityContainer>			
+				<EntityType Name="Campaign">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="CampaignType" Type="int" Nullable="false"	
+					/>
+	
+					<Property Name="CampaignName" Type="nvarchar(max)" Nullable="false"	
+					/>
+	
+					<Property Name="TrackMethod" Type="int" Nullable="false"	
+					/>
+	
+					<Property Name="Status" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="ExcludeEPC" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="TrackConversionType" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="RecurringPayout" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="SharePerformance" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="CampaignURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="DiscontinueURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="LongDescription" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ShortDescription" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SubjectLines" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="PrimaryAdvertiserEmail" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AdvertiserURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="StartDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="EndDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CookieExpireDays" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Target" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="TurnOffBlanket" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="NotificationDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="NotifyLevelClicks" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="NotifyLevelLeads" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="NotifyLevelSales" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="NotifyLevelImpressions" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="ThresholdEmail" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="InternalNotes" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="UpdateSchedule" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="AuthenticationDomainURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ThirdPartyPlaced" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="AllowAffiliateUpload" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="Hidden" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="CampaignImage" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="NewImageFile" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="CampaignSuppressionList" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="NewSuppressionFile" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="UnsubType" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="RequireDownload" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="DneMerchantCode" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="DneList" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AlternateLinkURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="UnsubLinkURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SuppressionFileLinkURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ApiURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="HashValue" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ExtraTerms" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ExtraTermsRequired" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="Category1ResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Category2ResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Category3ResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="UnsubFileResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CampaignGroups" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="AllowedCountries" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="UsesReservoirTrackingServer" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="RequireApprovedSiteID" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="DefaultSiteID" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="TrafficLimitRedirectURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="TrafficLimits" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="TrafficLimitNotification" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Location" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Campaign_CampaignType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Campaign_TrackMethod">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Campaign_Status">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Campaign_TrackConversionType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Campaign_Target">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Campaign_UpdateSchedule">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Campaign_UnsubType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Affiliate">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="AddCode" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Email" Type="nvarchar(max)" Nullable="false"	
+					/>
+	
+					<Property Name="Status" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Approval" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Password" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="FirstName" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="LastName" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Company" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Address" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Address2" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="City" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="State" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Zip" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Country" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="OutsideNA" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="StateOther" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Phone" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Fax" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Ssn" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AffiliateWebsites" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="FilterWebsite" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="Category1" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Category2" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Category3" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="BlanketCommissions" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="InternalComments" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ApprovalNotes" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="WatchMe" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="ReferredBy" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="AgreedTerms" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="W9OnFile" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="SignUpDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="IpAddress" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SiteType" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SiteDescription" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SiteViews" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="AffiliateGroups" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="LanguageContent" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="GlobalPop" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="HideAdserving" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="AllowThirdPartyUpload" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="SendApprovalEmail" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="RedirectURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="DatafeedApproval" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="PaypalEmail" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="PaymentThreshold" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="PaymentFrequency" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="PaymentTo" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="PaymentMethod" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="PaymentStatus" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Form1099Required" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="TaxIDIsSSN" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="Currency" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="DirectDepositDetails" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="WireTransferDetails" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="TerminateAffiliateReason" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ResetPassword" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="ManualEmail" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="UpdatesNotification" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="PaymentNotification" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="ConversionNotification" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="CustomFields" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="AccessID" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Location" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Affiliate_Status">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Affiliate_Approval">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Affiliate_PaymentFrequency">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Affiliate_PaymentTo">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Affiliate_PaymentMethod">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Affiliate_PaymentStatus">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Advertiser">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Company" Type="nvarchar(max)" Nullable="false"	
+					/>
+	
+					<Property Name="AdvertiserGroup" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Email" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Status" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Approval" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Password" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Salutation" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="FirstName" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="MiddleName" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="LastName" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Website" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Address" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Address2" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="City" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="State" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Zip" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Country" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Phone" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Fax" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CreatedDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AgreedTerms" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="Notes" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Currency" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Called" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="AccessID" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="ExternalID" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Location" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Advertiser_Status">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Advertiser_Approval">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Payout">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="PayoutType" Type="int" Nullable="false"	
+					/>
+	
+					<Property Name="CampaignResourceURL" Type="nvarchar(max)" Nullable="false"	
+					/>
+	
+					<Property Name="Affiliate" Type="int" Nullable="false"	
+					/>
+	
+					<Property Name="AllAffiliates" Type="bit" Nullable="false"	
+					/>
+	
+					<Property Name="AffiliateResourceURL" Type="nvarchar(max)" Nullable="false"	
+					/>
+	
+					<Property Name="Impression" Type="decimal" Nullable="true"	
+						Precision="10" Scale="2"
+					/>
+	
+					<Property Name="Click" Type="decimal" Nullable="true"	
+						Precision="10" Scale="2"
+					/>
+	
+					<Property Name="Lead" Type="decimal" Nullable="true"	
+						Precision="10" Scale="2"
+					/>
+	
+					<Property Name="PercentSale" Type="decimal" Nullable="true"	
+						Precision="10" Scale="2"
+					/>
+	
+					<Property Name="FlatSale" Type="decimal" Nullable="true"	
+						Precision="10" Scale="2"
+					/>
+	
+					<Property Name="PercentSubSale" Type="decimal" Nullable="true"	
+						Precision="10" Scale="2"
+					/>
+	
+					<Property Name="FlatSubSale" Type="decimal" Nullable="true"	
+						Precision="10" Scale="2"
+					/>
+	
+					<Property Name="EffectiveDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ModifyDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ProductResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Currency" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Location" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Payout_PayoutType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="SaleDetail">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="TransactionID" Type="nvarchar(max)" Nullable="false"	
+					/>
+	
+					<Property Name="CookieID" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AffiliateResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CampaignResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="LineItems" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="CreativeResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CreativeDeploymentResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Date" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SubIDs" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="SaleStatus" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SaleInfo" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SaleRep" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="StatusDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="IpAddress" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AdvOptInfo" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="LandingPageID" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="PoolID" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="IsSubSale" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="Currency" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Platform" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SiteID" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Locale" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ClickDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="RecordLead" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="DeleteSale" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="DeleteReason" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="DeleteDetails" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SaleType" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="RefererURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Location" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="SaleDetail_SaleType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="LeadDetail">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="CookieID" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AffiliateResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CampaignResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CreativeResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CreativeDeploymentResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Date" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SubIDs" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="IpAddress" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="RefererURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AffOptInfo" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AdvOptInfo" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="LandingPageID" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="PoolID" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Location" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Creative">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="CreativeType" Type="int" Nullable="false"	
+					/>
+	
+					<Property Name="CampaignResourceURL" Type="nvarchar(max)" Nullable="false"	
+					/>
+	
+					<Property Name="LinkingURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Directlink" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="DirectlinkCode" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Status" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Description" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="TextContents" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AnchorText" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="DisplayAsJS" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="ExpireDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ExpireClicks" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="ExpireImpressions" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="AdPoolOnly" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="Hidden" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="UseCustomURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CustomClickURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ImageName" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="HostImage" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="FileLocation" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="FtpServer" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="FileMethod" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="FtpUsername" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="FtpPassword" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ImageURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="AltTag" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="BannerSize" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CustomImageURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Text" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Html" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="TrackImpressions" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="FromAddress" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SubjectLines" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="MerchantName" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CouponText" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CouponDescription" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="CouponCode" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="EstimatedValue" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Keywords" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="StartDate" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="RevolveExpirationDate" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="Terms" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Category1" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Category2" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Category3" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="MiscSearchCreative" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="SmsCreativeName" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsContactListResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsOwnerResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsCreditType" Type="int" Nullable="true"	
+					/>
+	
+					<Property Name="SmsShortcodeResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsKeyword" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsDoubleByteEncoding" Type="bit" Nullable="true"	
+					/>
+	
+					<Property Name="SmsOptInMessage" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsOptOutMessage" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsOptInPostMessage" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsOptOutPostMessage" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsMarketingMessage" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="SmsDeliveryCreativeResourceURL" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="ClickTag" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="BackgroundColor" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="FlashLocation" Type="nvarchar(max)" Nullable="true"	
+					/>
+	
+					<Property Name="Location" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Creative_CreativeType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Creative_Status">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Creative_FileMethod">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Creative_RevolveExpirationDate">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+				<EntityType Name="Creative_SmsCreditType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+	
+					<Property Name="Name" Type="nvarchar(max)" Nullable="false"	
+					/>
+				</EntityType>
+			</Schema>
+		</edmx:StorageModels>
+
+		<!-- CSDL content -->
+		<edmx:ConceptualModels>
+			<Schema 
+				xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" 
+				xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="DirectTrack" 
+				Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+				<EntityContainer Name="DirectTrackEntities" annotation:LazyLoadingEnabled="true">
+					<EntitySet Name="Campaign" EntityType="DirectTrack.Campaign" />
+					<EntitySet Name="Campaign_CampaignType" EntityType="DirectTrack.Campaign_CampaignType" />
+					<EntitySet Name="Campaign_TrackMethod" EntityType="DirectTrack.Campaign_TrackMethod" />
+					<EntitySet Name="Campaign_Status" EntityType="DirectTrack.Campaign_Status" />
+					<EntitySet Name="Campaign_TrackConversionType" EntityType="DirectTrack.Campaign_TrackConversionType" />
+					<EntitySet Name="Campaign_Target" EntityType="DirectTrack.Campaign_Target" />
+					<EntitySet Name="Campaign_UpdateSchedule" EntityType="DirectTrack.Campaign_UpdateSchedule" />
+					<EntitySet Name="Campaign_UnsubType" EntityType="DirectTrack.Campaign_UnsubType" />
+					<EntitySet Name="Affiliate" EntityType="DirectTrack.Affiliate" />
+					<EntitySet Name="Affiliate_Status" EntityType="DirectTrack.Affiliate_Status" />
+					<EntitySet Name="Affiliate_Approval" EntityType="DirectTrack.Affiliate_Approval" />
+					<EntitySet Name="Affiliate_PaymentFrequency" EntityType="DirectTrack.Affiliate_PaymentFrequency" />
+					<EntitySet Name="Affiliate_PaymentTo" EntityType="DirectTrack.Affiliate_PaymentTo" />
+					<EntitySet Name="Affiliate_PaymentMethod" EntityType="DirectTrack.Affiliate_PaymentMethod" />
+					<EntitySet Name="Affiliate_PaymentStatus" EntityType="DirectTrack.Affiliate_PaymentStatus" />
+					<EntitySet Name="Advertiser" EntityType="DirectTrack.Advertiser" />
+					<EntitySet Name="Advertiser_Status" EntityType="DirectTrack.Advertiser_Status" />
+					<EntitySet Name="Advertiser_Approval" EntityType="DirectTrack.Advertiser_Approval" />
+					<EntitySet Name="Payout" EntityType="DirectTrack.Payout" />
+					<EntitySet Name="Payout_PayoutType" EntityType="DirectTrack.Payout_PayoutType" />
+					<EntitySet Name="SaleDetail" EntityType="DirectTrack.SaleDetail" />
+					<EntitySet Name="SaleDetail_SaleType" EntityType="DirectTrack.SaleDetail_SaleType" />
+					<EntitySet Name="LeadDetail" EntityType="DirectTrack.LeadDetail" />
+					<EntitySet Name="Creative" EntityType="DirectTrack.Creative" />
+					<EntitySet Name="Creative_CreativeType" EntityType="DirectTrack.Creative_CreativeType" />
+					<EntitySet Name="Creative_Status" EntityType="DirectTrack.Creative_Status" />
+					<EntitySet Name="Creative_FileMethod" EntityType="DirectTrack.Creative_FileMethod" />
+					<EntitySet Name="Creative_RevolveExpirationDate" EntityType="DirectTrack.Creative_RevolveExpirationDate" />
+					<EntitySet Name="Creative_SmsCreditType" EntityType="DirectTrack.Creative_SmsCreditType" />
+				</EntityContainer>
+				<EntityType Name="Campaign">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="Int32"  Name="CampaignType" Nullable="false" />
+					<Property Type="String"  Name="CampaignName" Nullable="false" />
+					<Property Type="Int32"  Name="TrackMethod" Nullable="false" />
+					<Property Type="Int32"  Name="Status" Nullable="true" />
+					<Property Type="Boolean"  Name="ExcludeEPC" Nullable="true" />
+					<Property Type="Int32"  Name="TrackConversionType" Nullable="true" />
+					<Property Type="Boolean"  Name="RecurringPayout" Nullable="true" />
+					<Property Type="Boolean"  Name="SharePerformance" Nullable="true" />
+					<Property Type="String"  Name="CampaignURL" Nullable="true" />
+					<Property Type="String"  Name="DiscontinueURL" Nullable="true" />
+					<Property Type="String"  Name="LongDescription" Nullable="true" />
+					<Property Type="String"  Name="ShortDescription" Nullable="true" />
+					<Property Type="String"  Name="SubjectLines" Nullable="true" />
+					<Property Type="String"  Name="PrimaryAdvertiserEmail" Nullable="true" />
+					<Property Type="String"  Name="AdvertiserURL" Nullable="true" />
+					<Property Type="String"  Name="StartDate" Nullable="true" />
+					<Property Type="String"  Name="EndDate" Nullable="true" />
+					<Property Type="Int32"  Name="CookieExpireDays" Nullable="true" />
+					<Property Type="Int32"  Name="Target" Nullable="true" />
+					<Property Type="Boolean"  Name="TurnOffBlanket" Nullable="true" />
+					<Property Type="String"  Name="NotificationDate" Nullable="true" />
+					<Property Type="Int32"  Name="NotifyLevelClicks" Nullable="true" />
+					<Property Type="Int32"  Name="NotifyLevelLeads" Nullable="true" />
+					<Property Type="Int32"  Name="NotifyLevelSales" Nullable="true" />
+					<Property Type="Int32"  Name="NotifyLevelImpressions" Nullable="true" />
+					<Property Type="String"  Name="ThresholdEmail" Nullable="true" />
+					<Property Type="String"  Name="InternalNotes" Nullable="true" />
+					<Property Type="Int32"  Name="UpdateSchedule" Nullable="true" />
+					<Property Type="String"  Name="AuthenticationDomainURL" Nullable="true" />
+					<Property Type="Boolean"  Name="ThirdPartyPlaced" Nullable="true" />
+					<Property Type="Boolean"  Name="AllowAffiliateUpload" Nullable="true" />
+					<Property Type="Boolean"  Name="Hidden" Nullable="true" />
+					<Property Type="String"  Name="CampaignImage" Nullable="true" />
+					<Property Type="Int32"  Name="NewImageFile" Nullable="true" />
+					<Property Type="String"  Name="CampaignSuppressionList" Nullable="true" />
+					<Property Type="Int32"  Name="NewSuppressionFile" Nullable="true" />
+					<Property Type="Int32"  Name="UnsubType" Nullable="true" />
+					<Property Type="Boolean"  Name="RequireDownload" Nullable="true" />
+					<Property Type="String"  Name="DneMerchantCode" Nullable="true" />
+					<Property Type="String"  Name="DneList" Nullable="true" />
+					<Property Type="String"  Name="AlternateLinkURL" Nullable="true" />
+					<Property Type="String"  Name="UnsubLinkURL" Nullable="true" />
+					<Property Type="String"  Name="SuppressionFileLinkURL" Nullable="true" />
+					<Property Type="String"  Name="ApiURL" Nullable="true" />
+					<Property Type="String"  Name="HashValue" Nullable="true" />
+					<Property Type="String"  Name="ExtraTerms" Nullable="true" />
+					<Property Type="Boolean"  Name="ExtraTermsRequired" Nullable="true" />
+					<Property Type="String"  Name="Category1ResourceURL" Nullable="true" />
+					<Property Type="String"  Name="Category2ResourceURL" Nullable="true" />
+					<Property Type="String"  Name="Category3ResourceURL" Nullable="true" />
+					<Property Type="String"  Name="UnsubFileResourceURL" Nullable="true" />
+					<Property Type="Int32"  Name="CampaignGroups" Nullable="true" />
+					<Property Type="Int32"  Name="AllowedCountries" Nullable="true" />
+					<Property Type="Boolean"  Name="UsesReservoirTrackingServer" Nullable="true" />
+					<Property Type="Boolean"  Name="RequireApprovedSiteID" Nullable="true" />
+					<Property Type="String"  Name="DefaultSiteID" Nullable="true" />
+					<Property Type="String"  Name="TrafficLimitRedirectURL" Nullable="true" />
+					<Property Type="Int32"  Name="TrafficLimits" Nullable="true" />
+					<Property Type="Int32"  Name="TrafficLimitNotification" Nullable="true" />
+					<Property Type="String"  Name="Location" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Campaign_CampaignType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Campaign_TrackMethod">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Campaign_Status">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Campaign_TrackConversionType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Campaign_Target">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Campaign_UpdateSchedule">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Campaign_UnsubType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Affiliate">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="AddCode" Nullable="true" />
+					<Property Type="String"  Name="Email" Nullable="false" />
+					<Property Type="Int32"  Name="Status" Nullable="true" />
+					<Property Type="Int32"  Name="Approval" Nullable="true" />
+					<Property Type="String"  Name="Password" Nullable="true" />
+					<Property Type="String"  Name="FirstName" Nullable="true" />
+					<Property Type="String"  Name="LastName" Nullable="true" />
+					<Property Type="String"  Name="Company" Nullable="true" />
+					<Property Type="String"  Name="Address" Nullable="true" />
+					<Property Type="String"  Name="Address2" Nullable="true" />
+					<Property Type="String"  Name="City" Nullable="true" />
+					<Property Type="String"  Name="State" Nullable="true" />
+					<Property Type="String"  Name="Zip" Nullable="true" />
+					<Property Type="String"  Name="Country" Nullable="true" />
+					<Property Type="Boolean"  Name="OutsideNA" Nullable="true" />
+					<Property Type="String"  Name="StateOther" Nullable="true" />
+					<Property Type="String"  Name="Phone" Nullable="true" />
+					<Property Type="String"  Name="Fax" Nullable="true" />
+					<Property Type="String"  Name="Ssn" Nullable="true" />
+					<Property Type="Int32"  Name="AffiliateWebsites" Nullable="true" />
+					<Property Type="Boolean"  Name="FilterWebsite" Nullable="true" />
+					<Property Type="String"  Name="Category1" Nullable="true" />
+					<Property Type="String"  Name="Category2" Nullable="true" />
+					<Property Type="String"  Name="Category3" Nullable="true" />
+					<Property Type="Int32"  Name="BlanketCommissions" Nullable="true" />
+					<Property Type="String"  Name="InternalComments" Nullable="true" />
+					<Property Type="String"  Name="ApprovalNotes" Nullable="true" />
+					<Property Type="Boolean"  Name="WatchMe" Nullable="true" />
+					<Property Type="Int32"  Name="ReferredBy" Nullable="true" />
+					<Property Type="String"  Name="AgreedTerms" Nullable="true" />
+					<Property Type="Boolean"  Name="W9OnFile" Nullable="true" />
+					<Property Type="String"  Name="SignUpDate" Nullable="true" />
+					<Property Type="String"  Name="IpAddress" Nullable="true" />
+					<Property Type="String"  Name="SiteType" Nullable="true" />
+					<Property Type="String"  Name="SiteDescription" Nullable="true" />
+					<Property Type="Int32"  Name="SiteViews" Nullable="true" />
+					<Property Type="Int32"  Name="AffiliateGroups" Nullable="true" />
+					<Property Type="String"  Name="LanguageContent" Nullable="true" />
+					<Property Type="Boolean"  Name="GlobalPop" Nullable="true" />
+					<Property Type="Boolean"  Name="HideAdserving" Nullable="true" />
+					<Property Type="Boolean"  Name="AllowThirdPartyUpload" Nullable="true" />
+					<Property Type="Boolean"  Name="SendApprovalEmail" Nullable="true" />
+					<Property Type="String"  Name="RedirectURL" Nullable="true" />
+					<Property Type="Boolean"  Name="DatafeedApproval" Nullable="true" />
+					<Property Type="String"  Name="PaypalEmail" Nullable="true" />
+					<Property Type="Int32"  Name="PaymentThreshold" Nullable="true" />
+					<Property Type="Int32"  Name="PaymentFrequency" Nullable="true" />
+					<Property Type="Int32"  Name="PaymentTo" Nullable="true" />
+					<Property Type="Int32"  Name="PaymentMethod" Nullable="true" />
+					<Property Type="Int32"  Name="PaymentStatus" Nullable="true" />
+					<Property Type="Boolean"  Name="Form1099Required" Nullable="true" />
+					<Property Type="Boolean"  Name="TaxIDIsSSN" Nullable="true" />
+					<Property Type="String"  Name="Currency" Nullable="true" />
+					<Property Type="Int32"  Name="DirectDepositDetails" Nullable="true" />
+					<Property Type="Int32"  Name="WireTransferDetails" Nullable="true" />
+					<Property Type="String"  Name="TerminateAffiliateReason" Nullable="true" />
+					<Property Type="Boolean"  Name="ResetPassword" Nullable="true" />
+					<Property Type="Boolean"  Name="ManualEmail" Nullable="true" />
+					<Property Type="Boolean"  Name="UpdatesNotification" Nullable="true" />
+					<Property Type="Int32"  Name="PaymentNotification" Nullable="true" />
+					<Property Type="Boolean"  Name="ConversionNotification" Nullable="true" />
+					<Property Type="Int32"  Name="CustomFields" Nullable="true" />
+					<Property Type="Int32"  Name="AccessID" Nullable="true" />
+					<Property Type="String"  Name="Location" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Affiliate_Status">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Affiliate_Approval">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Affiliate_PaymentFrequency">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Affiliate_PaymentTo">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Affiliate_PaymentMethod">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Affiliate_PaymentStatus">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Advertiser">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Company" Nullable="false" />
+					<Property Type="Int32"  Name="AdvertiserGroup" Nullable="true" />
+					<Property Type="String"  Name="Email" Nullable="true" />
+					<Property Type="Int32"  Name="Status" Nullable="true" />
+					<Property Type="Int32"  Name="Approval" Nullable="true" />
+					<Property Type="String"  Name="Password" Nullable="true" />
+					<Property Type="String"  Name="Salutation" Nullable="true" />
+					<Property Type="String"  Name="FirstName" Nullable="true" />
+					<Property Type="String"  Name="MiddleName" Nullable="true" />
+					<Property Type="String"  Name="LastName" Nullable="true" />
+					<Property Type="String"  Name="Website" Nullable="true" />
+					<Property Type="String"  Name="Address" Nullable="true" />
+					<Property Type="String"  Name="Address2" Nullable="true" />
+					<Property Type="String"  Name="City" Nullable="true" />
+					<Property Type="String"  Name="State" Nullable="true" />
+					<Property Type="String"  Name="Zip" Nullable="true" />
+					<Property Type="String"  Name="Country" Nullable="true" />
+					<Property Type="String"  Name="Phone" Nullable="true" />
+					<Property Type="String"  Name="Fax" Nullable="true" />
+					<Property Type="String"  Name="CreatedDate" Nullable="true" />
+					<Property Type="Boolean"  Name="AgreedTerms" Nullable="true" />
+					<Property Type="String"  Name="Notes" Nullable="true" />
+					<Property Type="String"  Name="Currency" Nullable="true" />
+					<Property Type="Boolean"  Name="Called" Nullable="true" />
+					<Property Type="Int32"  Name="AccessID" Nullable="true" />
+					<Property Type="String"  Name="ExternalID" Nullable="true" />
+					<Property Type="String"  Name="Location" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Advertiser_Status">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Advertiser_Approval">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Payout">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="Int32"  Name="PayoutType" Nullable="false" />
+					<Property Type="String"  Name="CampaignResourceURL" Nullable="false" />
+					<Property Type="Int32"  Name="Affiliate" Nullable="false" />
+					<Property Type="Boolean"  Name="AllAffiliates" Nullable="false" />
+					<Property Type="String"  Name="AffiliateResourceURL" Nullable="false" />
+					<Property Type="Decimal"  Name="Impression" Nullable="true" />
+					<Property Type="Decimal"  Name="Click" Nullable="true" />
+					<Property Type="Decimal"  Name="Lead" Nullable="true" />
+					<Property Type="Decimal"  Name="PercentSale" Nullable="true" />
+					<Property Type="Decimal"  Name="FlatSale" Nullable="true" />
+					<Property Type="Decimal"  Name="PercentSubSale" Nullable="true" />
+					<Property Type="Decimal"  Name="FlatSubSale" Nullable="true" />
+					<Property Type="String"  Name="EffectiveDate" Nullable="true" />
+					<Property Type="String"  Name="ModifyDate" Nullable="true" />
+					<Property Type="String"  Name="ProductResourceURL" Nullable="true" />
+					<Property Type="String"  Name="Currency" Nullable="true" />
+					<Property Type="String"  Name="Location" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Payout_PayoutType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="SaleDetail">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="TransactionID" Nullable="false" />
+					<Property Type="String"  Name="CookieID" Nullable="true" />
+					<Property Type="String"  Name="AffiliateResourceURL" Nullable="true" />
+					<Property Type="String"  Name="CampaignResourceURL" Nullable="true" />
+					<Property Type="Int32"  Name="LineItems" Nullable="true" />
+					<Property Type="String"  Name="CreativeResourceURL" Nullable="true" />
+					<Property Type="String"  Name="CreativeDeploymentResourceURL" Nullable="true" />
+					<Property Type="String"  Name="Date" Nullable="true" />
+					<Property Type="Int32"  Name="SubIDs" Nullable="true" />
+					<Property Type="String"  Name="SaleStatus" Nullable="true" />
+					<Property Type="String"  Name="SaleInfo" Nullable="true" />
+					<Property Type="String"  Name="SaleRep" Nullable="true" />
+					<Property Type="String"  Name="StatusDate" Nullable="true" />
+					<Property Type="String"  Name="IpAddress" Nullable="true" />
+					<Property Type="String"  Name="AdvOptInfo" Nullable="true" />
+					<Property Type="Int32"  Name="LandingPageID" Nullable="true" />
+					<Property Type="Int32"  Name="PoolID" Nullable="true" />
+					<Property Type="Boolean"  Name="IsSubSale" Nullable="true" />
+					<Property Type="String"  Name="Currency" Nullable="true" />
+					<Property Type="String"  Name="Platform" Nullable="true" />
+					<Property Type="String"  Name="SiteID" Nullable="true" />
+					<Property Type="String"  Name="Locale" Nullable="true" />
+					<Property Type="String"  Name="ClickDate" Nullable="true" />
+					<Property Type="Boolean"  Name="RecordLead" Nullable="true" />
+					<Property Type="Boolean"  Name="DeleteSale" Nullable="true" />
+					<Property Type="String"  Name="DeleteReason" Nullable="true" />
+					<Property Type="String"  Name="DeleteDetails" Nullable="true" />
+					<Property Type="Int32"  Name="SaleType" Nullable="true" />
+					<Property Type="String"  Name="RefererURL" Nullable="true" />
+					<Property Type="String"  Name="Location" Nullable="false" />
+				</EntityType>
+				<EntityType Name="SaleDetail_SaleType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="LeadDetail">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="CookieID" Nullable="true" />
+					<Property Type="String"  Name="AffiliateResourceURL" Nullable="true" />
+					<Property Type="String"  Name="CampaignResourceURL" Nullable="true" />
+					<Property Type="String"  Name="CreativeResourceURL" Nullable="true" />
+					<Property Type="String"  Name="CreativeDeploymentResourceURL" Nullable="true" />
+					<Property Type="String"  Name="Date" Nullable="true" />
+					<Property Type="Int32"  Name="SubIDs" Nullable="true" />
+					<Property Type="String"  Name="IpAddress" Nullable="true" />
+					<Property Type="String"  Name="RefererURL" Nullable="true" />
+					<Property Type="String"  Name="AffOptInfo" Nullable="true" />
+					<Property Type="String"  Name="AdvOptInfo" Nullable="true" />
+					<Property Type="Int32"  Name="LandingPageID" Nullable="true" />
+					<Property Type="Int32"  Name="PoolID" Nullable="true" />
+					<Property Type="String"  Name="Location" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Creative">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="Int32"  Name="CreativeType" Nullable="false" />
+					<Property Type="String"  Name="CampaignResourceURL" Nullable="false" />
+					<Property Type="String"  Name="LinkingURL" Nullable="true" />
+					<Property Type="Int32"  Name="Directlink" Nullable="true" />
+					<Property Type="String"  Name="DirectlinkCode" Nullable="true" />
+					<Property Type="Int32"  Name="Status" Nullable="true" />
+					<Property Type="String"  Name="Description" Nullable="true" />
+					<Property Type="String"  Name="TextContents" Nullable="true" />
+					<Property Type="String"  Name="AnchorText" Nullable="true" />
+					<Property Type="Boolean"  Name="DisplayAsJS" Nullable="true" />
+					<Property Type="String"  Name="ExpireDate" Nullable="true" />
+					<Property Type="Int32"  Name="ExpireClicks" Nullable="true" />
+					<Property Type="Int32"  Name="ExpireImpressions" Nullable="true" />
+					<Property Type="Boolean"  Name="AdPoolOnly" Nullable="true" />
+					<Property Type="Boolean"  Name="Hidden" Nullable="true" />
+					<Property Type="String"  Name="UseCustomURL" Nullable="true" />
+					<Property Type="String"  Name="CustomClickURL" Nullable="true" />
+					<Property Type="String"  Name="ImageName" Nullable="true" />
+					<Property Type="Boolean"  Name="HostImage" Nullable="true" />
+					<Property Type="String"  Name="FileLocation" Nullable="true" />
+					<Property Type="String"  Name="FtpServer" Nullable="true" />
+					<Property Type="Int32"  Name="FileMethod" Nullable="true" />
+					<Property Type="String"  Name="FtpUsername" Nullable="true" />
+					<Property Type="String"  Name="FtpPassword" Nullable="true" />
+					<Property Type="String"  Name="ImageURL" Nullable="true" />
+					<Property Type="String"  Name="AltTag" Nullable="true" />
+					<Property Type="String"  Name="BannerSize" Nullable="true" />
+					<Property Type="String"  Name="CustomImageURL" Nullable="true" />
+					<Property Type="String"  Name="Text" Nullable="true" />
+					<Property Type="String"  Name="Html" Nullable="true" />
+					<Property Type="Boolean"  Name="TrackImpressions" Nullable="true" />
+					<Property Type="String"  Name="FromAddress" Nullable="true" />
+					<Property Type="String"  Name="SubjectLines" Nullable="true" />
+					<Property Type="String"  Name="MerchantName" Nullable="true" />
+					<Property Type="String"  Name="CouponText" Nullable="true" />
+					<Property Type="String"  Name="CouponDescription" Nullable="true" />
+					<Property Type="String"  Name="CouponCode" Nullable="true" />
+					<Property Type="Int32"  Name="EstimatedValue" Nullable="true" />
+					<Property Type="String"  Name="Keywords" Nullable="true" />
+					<Property Type="String"  Name="StartDate" Nullable="true" />
+					<Property Type="Int32"  Name="RevolveExpirationDate" Nullable="true" />
+					<Property Type="String"  Name="Terms" Nullable="true" />
+					<Property Type="String"  Name="Category1" Nullable="true" />
+					<Property Type="String"  Name="Category2" Nullable="true" />
+					<Property Type="String"  Name="Category3" Nullable="true" />
+					<Property Type="Int32"  Name="MiscSearchCreative" Nullable="true" />
+					<Property Type="String"  Name="SmsCreativeName" Nullable="true" />
+					<Property Type="String"  Name="SmsContactListResourceURL" Nullable="true" />
+					<Property Type="String"  Name="SmsOwnerResourceURL" Nullable="true" />
+					<Property Type="Int32"  Name="SmsCreditType" Nullable="true" />
+					<Property Type="String"  Name="SmsShortcodeResourceURL" Nullable="true" />
+					<Property Type="String"  Name="SmsKeyword" Nullable="true" />
+					<Property Type="Boolean"  Name="SmsDoubleByteEncoding" Nullable="true" />
+					<Property Type="String"  Name="SmsOptInMessage" Nullable="true" />
+					<Property Type="String"  Name="SmsOptOutMessage" Nullable="true" />
+					<Property Type="String"  Name="SmsOptInPostMessage" Nullable="true" />
+					<Property Type="String"  Name="SmsOptOutPostMessage" Nullable="true" />
+					<Property Type="String"  Name="SmsMarketingMessage" Nullable="true" />
+					<Property Type="String"  Name="SmsDeliveryCreativeResourceURL" Nullable="true" />
+					<Property Type="String"  Name="ClickTag" Nullable="true" />
+					<Property Type="String"  Name="BackgroundColor" Nullable="true" />
+					<Property Type="String"  Name="FlashLocation" Nullable="true" />
+					<Property Type="String"  Name="Location" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Creative_CreativeType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Creative_Status">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Creative_FileMethod">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Creative_RevolveExpirationDate">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Creative_SmsCreditType">
+					<Key>
+						<PropertyRef Name="ID" />
+					</Key>
+					<Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Type="String"  Name="Name" Nullable="false" />
+				</EntityType>
+			</Schema>
+		</edmx:ConceptualModels>
+
+		<!-- C-S mapping content -->
+		<edmx:Mappings>
+			<Mapping xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs" Space="C-S">
+				<EntityContainerMapping CdmEntityContainer="DirectTrackEntities" StorageEntityContainer="DirectTrackStoreContainer">
+						<EntitySetMapping Name="Campaign">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Campaign)">
+								<MappingFragment StoreEntitySet="Campaign">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="CampaignType" ColumnName="CampaignType" />
+									<ScalarProperty Name="CampaignName" ColumnName="CampaignName" />
+									<ScalarProperty Name="TrackMethod" ColumnName="TrackMethod" />
+									<ScalarProperty Name="Status" ColumnName="Status" />
+									<ScalarProperty Name="ExcludeEPC" ColumnName="ExcludeEPC" />
+									<ScalarProperty Name="TrackConversionType" ColumnName="TrackConversionType" />
+									<ScalarProperty Name="RecurringPayout" ColumnName="RecurringPayout" />
+									<ScalarProperty Name="SharePerformance" ColumnName="SharePerformance" />
+									<ScalarProperty Name="CampaignURL" ColumnName="CampaignURL" />
+									<ScalarProperty Name="DiscontinueURL" ColumnName="DiscontinueURL" />
+									<ScalarProperty Name="LongDescription" ColumnName="LongDescription" />
+									<ScalarProperty Name="ShortDescription" ColumnName="ShortDescription" />
+									<ScalarProperty Name="SubjectLines" ColumnName="SubjectLines" />
+									<ScalarProperty Name="PrimaryAdvertiserEmail" ColumnName="PrimaryAdvertiserEmail" />
+									<ScalarProperty Name="AdvertiserURL" ColumnName="AdvertiserURL" />
+									<ScalarProperty Name="StartDate" ColumnName="StartDate" />
+									<ScalarProperty Name="EndDate" ColumnName="EndDate" />
+									<ScalarProperty Name="CookieExpireDays" ColumnName="CookieExpireDays" />
+									<ScalarProperty Name="Target" ColumnName="Target" />
+									<ScalarProperty Name="TurnOffBlanket" ColumnName="TurnOffBlanket" />
+									<ScalarProperty Name="NotificationDate" ColumnName="NotificationDate" />
+									<ScalarProperty Name="NotifyLevelClicks" ColumnName="NotifyLevelClicks" />
+									<ScalarProperty Name="NotifyLevelLeads" ColumnName="NotifyLevelLeads" />
+									<ScalarProperty Name="NotifyLevelSales" ColumnName="NotifyLevelSales" />
+									<ScalarProperty Name="NotifyLevelImpressions" ColumnName="NotifyLevelImpressions" />
+									<ScalarProperty Name="ThresholdEmail" ColumnName="ThresholdEmail" />
+									<ScalarProperty Name="InternalNotes" ColumnName="InternalNotes" />
+									<ScalarProperty Name="UpdateSchedule" ColumnName="UpdateSchedule" />
+									<ScalarProperty Name="AuthenticationDomainURL" ColumnName="AuthenticationDomainURL" />
+									<ScalarProperty Name="ThirdPartyPlaced" ColumnName="ThirdPartyPlaced" />
+									<ScalarProperty Name="AllowAffiliateUpload" ColumnName="AllowAffiliateUpload" />
+									<ScalarProperty Name="Hidden" ColumnName="Hidden" />
+									<ScalarProperty Name="CampaignImage" ColumnName="CampaignImage" />
+									<ScalarProperty Name="NewImageFile" ColumnName="NewImageFile" />
+									<ScalarProperty Name="CampaignSuppressionList" ColumnName="CampaignSuppressionList" />
+									<ScalarProperty Name="NewSuppressionFile" ColumnName="NewSuppressionFile" />
+									<ScalarProperty Name="UnsubType" ColumnName="UnsubType" />
+									<ScalarProperty Name="RequireDownload" ColumnName="RequireDownload" />
+									<ScalarProperty Name="DneMerchantCode" ColumnName="DneMerchantCode" />
+									<ScalarProperty Name="DneList" ColumnName="DneList" />
+									<ScalarProperty Name="AlternateLinkURL" ColumnName="AlternateLinkURL" />
+									<ScalarProperty Name="UnsubLinkURL" ColumnName="UnsubLinkURL" />
+									<ScalarProperty Name="SuppressionFileLinkURL" ColumnName="SuppressionFileLinkURL" />
+									<ScalarProperty Name="ApiURL" ColumnName="ApiURL" />
+									<ScalarProperty Name="HashValue" ColumnName="HashValue" />
+									<ScalarProperty Name="ExtraTerms" ColumnName="ExtraTerms" />
+									<ScalarProperty Name="ExtraTermsRequired" ColumnName="ExtraTermsRequired" />
+									<ScalarProperty Name="Category1ResourceURL" ColumnName="Category1ResourceURL" />
+									<ScalarProperty Name="Category2ResourceURL" ColumnName="Category2ResourceURL" />
+									<ScalarProperty Name="Category3ResourceURL" ColumnName="Category3ResourceURL" />
+									<ScalarProperty Name="UnsubFileResourceURL" ColumnName="UnsubFileResourceURL" />
+									<ScalarProperty Name="CampaignGroups" ColumnName="CampaignGroups" />
+									<ScalarProperty Name="AllowedCountries" ColumnName="AllowedCountries" />
+									<ScalarProperty Name="UsesReservoirTrackingServer" ColumnName="UsesReservoirTrackingServer" />
+									<ScalarProperty Name="RequireApprovedSiteID" ColumnName="RequireApprovedSiteID" />
+									<ScalarProperty Name="DefaultSiteID" ColumnName="DefaultSiteID" />
+									<ScalarProperty Name="TrafficLimitRedirectURL" ColumnName="TrafficLimitRedirectURL" />
+									<ScalarProperty Name="TrafficLimits" ColumnName="TrafficLimits" />
+									<ScalarProperty Name="TrafficLimitNotification" ColumnName="TrafficLimitNotification" />
+									<ScalarProperty Name="Location" ColumnName="Location" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Campaign_CampaignType">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Campaign_CampaignType)">
+								<MappingFragment StoreEntitySet="Campaign_CampaignType">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Campaign_TrackMethod">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Campaign_TrackMethod)">
+								<MappingFragment StoreEntitySet="Campaign_TrackMethod">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Campaign_Status">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Campaign_Status)">
+								<MappingFragment StoreEntitySet="Campaign_Status">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Campaign_TrackConversionType">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Campaign_TrackConversionType)">
+								<MappingFragment StoreEntitySet="Campaign_TrackConversionType">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Campaign_Target">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Campaign_Target)">
+								<MappingFragment StoreEntitySet="Campaign_Target">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Campaign_UpdateSchedule">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Campaign_UpdateSchedule)">
+								<MappingFragment StoreEntitySet="Campaign_UpdateSchedule">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Campaign_UnsubType">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Campaign_UnsubType)">
+								<MappingFragment StoreEntitySet="Campaign_UnsubType">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Affiliate">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Affiliate)">
+								<MappingFragment StoreEntitySet="Affiliate">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="AddCode" ColumnName="AddCode" />
+									<ScalarProperty Name="Email" ColumnName="Email" />
+									<ScalarProperty Name="Status" ColumnName="Status" />
+									<ScalarProperty Name="Approval" ColumnName="Approval" />
+									<ScalarProperty Name="Password" ColumnName="Password" />
+									<ScalarProperty Name="FirstName" ColumnName="FirstName" />
+									<ScalarProperty Name="LastName" ColumnName="LastName" />
+									<ScalarProperty Name="Company" ColumnName="Company" />
+									<ScalarProperty Name="Address" ColumnName="Address" />
+									<ScalarProperty Name="Address2" ColumnName="Address2" />
+									<ScalarProperty Name="City" ColumnName="City" />
+									<ScalarProperty Name="State" ColumnName="State" />
+									<ScalarProperty Name="Zip" ColumnName="Zip" />
+									<ScalarProperty Name="Country" ColumnName="Country" />
+									<ScalarProperty Name="OutsideNA" ColumnName="OutsideNA" />
+									<ScalarProperty Name="StateOther" ColumnName="StateOther" />
+									<ScalarProperty Name="Phone" ColumnName="Phone" />
+									<ScalarProperty Name="Fax" ColumnName="Fax" />
+									<ScalarProperty Name="Ssn" ColumnName="Ssn" />
+									<ScalarProperty Name="AffiliateWebsites" ColumnName="AffiliateWebsites" />
+									<ScalarProperty Name="FilterWebsite" ColumnName="FilterWebsite" />
+									<ScalarProperty Name="Category1" ColumnName="Category1" />
+									<ScalarProperty Name="Category2" ColumnName="Category2" />
+									<ScalarProperty Name="Category3" ColumnName="Category3" />
+									<ScalarProperty Name="BlanketCommissions" ColumnName="BlanketCommissions" />
+									<ScalarProperty Name="InternalComments" ColumnName="InternalComments" />
+									<ScalarProperty Name="ApprovalNotes" ColumnName="ApprovalNotes" />
+									<ScalarProperty Name="WatchMe" ColumnName="WatchMe" />
+									<ScalarProperty Name="ReferredBy" ColumnName="ReferredBy" />
+									<ScalarProperty Name="AgreedTerms" ColumnName="AgreedTerms" />
+									<ScalarProperty Name="W9OnFile" ColumnName="W9OnFile" />
+									<ScalarProperty Name="SignUpDate" ColumnName="SignUpDate" />
+									<ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+									<ScalarProperty Name="SiteType" ColumnName="SiteType" />
+									<ScalarProperty Name="SiteDescription" ColumnName="SiteDescription" />
+									<ScalarProperty Name="SiteViews" ColumnName="SiteViews" />
+									<ScalarProperty Name="AffiliateGroups" ColumnName="AffiliateGroups" />
+									<ScalarProperty Name="LanguageContent" ColumnName="LanguageContent" />
+									<ScalarProperty Name="GlobalPop" ColumnName="GlobalPop" />
+									<ScalarProperty Name="HideAdserving" ColumnName="HideAdserving" />
+									<ScalarProperty Name="AllowThirdPartyUpload" ColumnName="AllowThirdPartyUpload" />
+									<ScalarProperty Name="SendApprovalEmail" ColumnName="SendApprovalEmail" />
+									<ScalarProperty Name="RedirectURL" ColumnName="RedirectURL" />
+									<ScalarProperty Name="DatafeedApproval" ColumnName="DatafeedApproval" />
+									<ScalarProperty Name="PaypalEmail" ColumnName="PaypalEmail" />
+									<ScalarProperty Name="PaymentThreshold" ColumnName="PaymentThreshold" />
+									<ScalarProperty Name="PaymentFrequency" ColumnName="PaymentFrequency" />
+									<ScalarProperty Name="PaymentTo" ColumnName="PaymentTo" />
+									<ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+									<ScalarProperty Name="PaymentStatus" ColumnName="PaymentStatus" />
+									<ScalarProperty Name="Form1099Required" ColumnName="Form1099Required" />
+									<ScalarProperty Name="TaxIDIsSSN" ColumnName="TaxIDIsSSN" />
+									<ScalarProperty Name="Currency" ColumnName="Currency" />
+									<ScalarProperty Name="DirectDepositDetails" ColumnName="DirectDepositDetails" />
+									<ScalarProperty Name="WireTransferDetails" ColumnName="WireTransferDetails" />
+									<ScalarProperty Name="TerminateAffiliateReason" ColumnName="TerminateAffiliateReason" />
+									<ScalarProperty Name="ResetPassword" ColumnName="ResetPassword" />
+									<ScalarProperty Name="ManualEmail" ColumnName="ManualEmail" />
+									<ScalarProperty Name="UpdatesNotification" ColumnName="UpdatesNotification" />
+									<ScalarProperty Name="PaymentNotification" ColumnName="PaymentNotification" />
+									<ScalarProperty Name="ConversionNotification" ColumnName="ConversionNotification" />
+									<ScalarProperty Name="CustomFields" ColumnName="CustomFields" />
+									<ScalarProperty Name="AccessID" ColumnName="AccessID" />
+									<ScalarProperty Name="Location" ColumnName="Location" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Affiliate_Status">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Affiliate_Status)">
+								<MappingFragment StoreEntitySet="Affiliate_Status">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Affiliate_Approval">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Affiliate_Approval)">
+								<MappingFragment StoreEntitySet="Affiliate_Approval">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Affiliate_PaymentFrequency">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Affiliate_PaymentFrequency)">
+								<MappingFragment StoreEntitySet="Affiliate_PaymentFrequency">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Affiliate_PaymentTo">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Affiliate_PaymentTo)">
+								<MappingFragment StoreEntitySet="Affiliate_PaymentTo">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Affiliate_PaymentMethod">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Affiliate_PaymentMethod)">
+								<MappingFragment StoreEntitySet="Affiliate_PaymentMethod">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Affiliate_PaymentStatus">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Affiliate_PaymentStatus)">
+								<MappingFragment StoreEntitySet="Affiliate_PaymentStatus">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Advertiser">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Advertiser)">
+								<MappingFragment StoreEntitySet="Advertiser">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Company" ColumnName="Company" />
+									<ScalarProperty Name="AdvertiserGroup" ColumnName="AdvertiserGroup" />
+									<ScalarProperty Name="Email" ColumnName="Email" />
+									<ScalarProperty Name="Status" ColumnName="Status" />
+									<ScalarProperty Name="Approval" ColumnName="Approval" />
+									<ScalarProperty Name="Password" ColumnName="Password" />
+									<ScalarProperty Name="Salutation" ColumnName="Salutation" />
+									<ScalarProperty Name="FirstName" ColumnName="FirstName" />
+									<ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+									<ScalarProperty Name="LastName" ColumnName="LastName" />
+									<ScalarProperty Name="Website" ColumnName="Website" />
+									<ScalarProperty Name="Address" ColumnName="Address" />
+									<ScalarProperty Name="Address2" ColumnName="Address2" />
+									<ScalarProperty Name="City" ColumnName="City" />
+									<ScalarProperty Name="State" ColumnName="State" />
+									<ScalarProperty Name="Zip" ColumnName="Zip" />
+									<ScalarProperty Name="Country" ColumnName="Country" />
+									<ScalarProperty Name="Phone" ColumnName="Phone" />
+									<ScalarProperty Name="Fax" ColumnName="Fax" />
+									<ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+									<ScalarProperty Name="AgreedTerms" ColumnName="AgreedTerms" />
+									<ScalarProperty Name="Notes" ColumnName="Notes" />
+									<ScalarProperty Name="Currency" ColumnName="Currency" />
+									<ScalarProperty Name="Called" ColumnName="Called" />
+									<ScalarProperty Name="AccessID" ColumnName="AccessID" />
+									<ScalarProperty Name="ExternalID" ColumnName="ExternalID" />
+									<ScalarProperty Name="Location" ColumnName="Location" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Advertiser_Status">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Advertiser_Status)">
+								<MappingFragment StoreEntitySet="Advertiser_Status">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Advertiser_Approval">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Advertiser_Approval)">
+								<MappingFragment StoreEntitySet="Advertiser_Approval">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Payout">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Payout)">
+								<MappingFragment StoreEntitySet="Payout">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="PayoutType" ColumnName="PayoutType" />
+									<ScalarProperty Name="CampaignResourceURL" ColumnName="CampaignResourceURL" />
+									<ScalarProperty Name="Affiliate" ColumnName="Affiliate" />
+									<ScalarProperty Name="AllAffiliates" ColumnName="AllAffiliates" />
+									<ScalarProperty Name="AffiliateResourceURL" ColumnName="AffiliateResourceURL" />
+									<ScalarProperty Name="Impression" ColumnName="Impression" />
+									<ScalarProperty Name="Click" ColumnName="Click" />
+									<ScalarProperty Name="Lead" ColumnName="Lead" />
+									<ScalarProperty Name="PercentSale" ColumnName="PercentSale" />
+									<ScalarProperty Name="FlatSale" ColumnName="FlatSale" />
+									<ScalarProperty Name="PercentSubSale" ColumnName="PercentSubSale" />
+									<ScalarProperty Name="FlatSubSale" ColumnName="FlatSubSale" />
+									<ScalarProperty Name="EffectiveDate" ColumnName="EffectiveDate" />
+									<ScalarProperty Name="ModifyDate" ColumnName="ModifyDate" />
+									<ScalarProperty Name="ProductResourceURL" ColumnName="ProductResourceURL" />
+									<ScalarProperty Name="Currency" ColumnName="Currency" />
+									<ScalarProperty Name="Location" ColumnName="Location" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Payout_PayoutType">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Payout_PayoutType)">
+								<MappingFragment StoreEntitySet="Payout_PayoutType">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="SaleDetail">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.SaleDetail)">
+								<MappingFragment StoreEntitySet="SaleDetail">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="TransactionID" ColumnName="TransactionID" />
+									<ScalarProperty Name="CookieID" ColumnName="CookieID" />
+									<ScalarProperty Name="AffiliateResourceURL" ColumnName="AffiliateResourceURL" />
+									<ScalarProperty Name="CampaignResourceURL" ColumnName="CampaignResourceURL" />
+									<ScalarProperty Name="LineItems" ColumnName="LineItems" />
+									<ScalarProperty Name="CreativeResourceURL" ColumnName="CreativeResourceURL" />
+									<ScalarProperty Name="CreativeDeploymentResourceURL" ColumnName="CreativeDeploymentResourceURL" />
+									<ScalarProperty Name="Date" ColumnName="Date" />
+									<ScalarProperty Name="SubIDs" ColumnName="SubIDs" />
+									<ScalarProperty Name="SaleStatus" ColumnName="SaleStatus" />
+									<ScalarProperty Name="SaleInfo" ColumnName="SaleInfo" />
+									<ScalarProperty Name="SaleRep" ColumnName="SaleRep" />
+									<ScalarProperty Name="StatusDate" ColumnName="StatusDate" />
+									<ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+									<ScalarProperty Name="AdvOptInfo" ColumnName="AdvOptInfo" />
+									<ScalarProperty Name="LandingPageID" ColumnName="LandingPageID" />
+									<ScalarProperty Name="PoolID" ColumnName="PoolID" />
+									<ScalarProperty Name="IsSubSale" ColumnName="IsSubSale" />
+									<ScalarProperty Name="Currency" ColumnName="Currency" />
+									<ScalarProperty Name="Platform" ColumnName="Platform" />
+									<ScalarProperty Name="SiteID" ColumnName="SiteID" />
+									<ScalarProperty Name="Locale" ColumnName="Locale" />
+									<ScalarProperty Name="ClickDate" ColumnName="ClickDate" />
+									<ScalarProperty Name="RecordLead" ColumnName="RecordLead" />
+									<ScalarProperty Name="DeleteSale" ColumnName="DeleteSale" />
+									<ScalarProperty Name="DeleteReason" ColumnName="DeleteReason" />
+									<ScalarProperty Name="DeleteDetails" ColumnName="DeleteDetails" />
+									<ScalarProperty Name="SaleType" ColumnName="SaleType" />
+									<ScalarProperty Name="RefererURL" ColumnName="RefererURL" />
+									<ScalarProperty Name="Location" ColumnName="Location" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="SaleDetail_SaleType">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.SaleDetail_SaleType)">
+								<MappingFragment StoreEntitySet="SaleDetail_SaleType">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="LeadDetail">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.LeadDetail)">
+								<MappingFragment StoreEntitySet="LeadDetail">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="CookieID" ColumnName="CookieID" />
+									<ScalarProperty Name="AffiliateResourceURL" ColumnName="AffiliateResourceURL" />
+									<ScalarProperty Name="CampaignResourceURL" ColumnName="CampaignResourceURL" />
+									<ScalarProperty Name="CreativeResourceURL" ColumnName="CreativeResourceURL" />
+									<ScalarProperty Name="CreativeDeploymentResourceURL" ColumnName="CreativeDeploymentResourceURL" />
+									<ScalarProperty Name="Date" ColumnName="Date" />
+									<ScalarProperty Name="SubIDs" ColumnName="SubIDs" />
+									<ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+									<ScalarProperty Name="RefererURL" ColumnName="RefererURL" />
+									<ScalarProperty Name="AffOptInfo" ColumnName="AffOptInfo" />
+									<ScalarProperty Name="AdvOptInfo" ColumnName="AdvOptInfo" />
+									<ScalarProperty Name="LandingPageID" ColumnName="LandingPageID" />
+									<ScalarProperty Name="PoolID" ColumnName="PoolID" />
+									<ScalarProperty Name="Location" ColumnName="Location" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Creative">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Creative)">
+								<MappingFragment StoreEntitySet="Creative">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="CreativeType" ColumnName="CreativeType" />
+									<ScalarProperty Name="CampaignResourceURL" ColumnName="CampaignResourceURL" />
+									<ScalarProperty Name="LinkingURL" ColumnName="LinkingURL" />
+									<ScalarProperty Name="Directlink" ColumnName="Directlink" />
+									<ScalarProperty Name="DirectlinkCode" ColumnName="DirectlinkCode" />
+									<ScalarProperty Name="Status" ColumnName="Status" />
+									<ScalarProperty Name="Description" ColumnName="Description" />
+									<ScalarProperty Name="TextContents" ColumnName="TextContents" />
+									<ScalarProperty Name="AnchorText" ColumnName="AnchorText" />
+									<ScalarProperty Name="DisplayAsJS" ColumnName="DisplayAsJS" />
+									<ScalarProperty Name="ExpireDate" ColumnName="ExpireDate" />
+									<ScalarProperty Name="ExpireClicks" ColumnName="ExpireClicks" />
+									<ScalarProperty Name="ExpireImpressions" ColumnName="ExpireImpressions" />
+									<ScalarProperty Name="AdPoolOnly" ColumnName="AdPoolOnly" />
+									<ScalarProperty Name="Hidden" ColumnName="Hidden" />
+									<ScalarProperty Name="UseCustomURL" ColumnName="UseCustomURL" />
+									<ScalarProperty Name="CustomClickURL" ColumnName="CustomClickURL" />
+									<ScalarProperty Name="ImageName" ColumnName="ImageName" />
+									<ScalarProperty Name="HostImage" ColumnName="HostImage" />
+									<ScalarProperty Name="FileLocation" ColumnName="FileLocation" />
+									<ScalarProperty Name="FtpServer" ColumnName="FtpServer" />
+									<ScalarProperty Name="FileMethod" ColumnName="FileMethod" />
+									<ScalarProperty Name="FtpUsername" ColumnName="FtpUsername" />
+									<ScalarProperty Name="FtpPassword" ColumnName="FtpPassword" />
+									<ScalarProperty Name="ImageURL" ColumnName="ImageURL" />
+									<ScalarProperty Name="AltTag" ColumnName="AltTag" />
+									<ScalarProperty Name="BannerSize" ColumnName="BannerSize" />
+									<ScalarProperty Name="CustomImageURL" ColumnName="CustomImageURL" />
+									<ScalarProperty Name="Text" ColumnName="Text" />
+									<ScalarProperty Name="Html" ColumnName="Html" />
+									<ScalarProperty Name="TrackImpressions" ColumnName="TrackImpressions" />
+									<ScalarProperty Name="FromAddress" ColumnName="FromAddress" />
+									<ScalarProperty Name="SubjectLines" ColumnName="SubjectLines" />
+									<ScalarProperty Name="MerchantName" ColumnName="MerchantName" />
+									<ScalarProperty Name="CouponText" ColumnName="CouponText" />
+									<ScalarProperty Name="CouponDescription" ColumnName="CouponDescription" />
+									<ScalarProperty Name="CouponCode" ColumnName="CouponCode" />
+									<ScalarProperty Name="EstimatedValue" ColumnName="EstimatedValue" />
+									<ScalarProperty Name="Keywords" ColumnName="Keywords" />
+									<ScalarProperty Name="StartDate" ColumnName="StartDate" />
+									<ScalarProperty Name="RevolveExpirationDate" ColumnName="RevolveExpirationDate" />
+									<ScalarProperty Name="Terms" ColumnName="Terms" />
+									<ScalarProperty Name="Category1" ColumnName="Category1" />
+									<ScalarProperty Name="Category2" ColumnName="Category2" />
+									<ScalarProperty Name="Category3" ColumnName="Category3" />
+									<ScalarProperty Name="MiscSearchCreative" ColumnName="MiscSearchCreative" />
+									<ScalarProperty Name="SmsCreativeName" ColumnName="SmsCreativeName" />
+									<ScalarProperty Name="SmsContactListResourceURL" ColumnName="SmsContactListResourceURL" />
+									<ScalarProperty Name="SmsOwnerResourceURL" ColumnName="SmsOwnerResourceURL" />
+									<ScalarProperty Name="SmsCreditType" ColumnName="SmsCreditType" />
+									<ScalarProperty Name="SmsShortcodeResourceURL" ColumnName="SmsShortcodeResourceURL" />
+									<ScalarProperty Name="SmsKeyword" ColumnName="SmsKeyword" />
+									<ScalarProperty Name="SmsDoubleByteEncoding" ColumnName="SmsDoubleByteEncoding" />
+									<ScalarProperty Name="SmsOptInMessage" ColumnName="SmsOptInMessage" />
+									<ScalarProperty Name="SmsOptOutMessage" ColumnName="SmsOptOutMessage" />
+									<ScalarProperty Name="SmsOptInPostMessage" ColumnName="SmsOptInPostMessage" />
+									<ScalarProperty Name="SmsOptOutPostMessage" ColumnName="SmsOptOutPostMessage" />
+									<ScalarProperty Name="SmsMarketingMessage" ColumnName="SmsMarketingMessage" />
+									<ScalarProperty Name="SmsDeliveryCreativeResourceURL" ColumnName="SmsDeliveryCreativeResourceURL" />
+									<ScalarProperty Name="ClickTag" ColumnName="ClickTag" />
+									<ScalarProperty Name="BackgroundColor" ColumnName="BackgroundColor" />
+									<ScalarProperty Name="FlashLocation" ColumnName="FlashLocation" />
+									<ScalarProperty Name="Location" ColumnName="Location" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Creative_CreativeType">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Creative_CreativeType)">
+								<MappingFragment StoreEntitySet="Creative_CreativeType">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Creative_Status">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Creative_Status)">
+								<MappingFragment StoreEntitySet="Creative_Status">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Creative_FileMethod">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Creative_FileMethod)">
+								<MappingFragment StoreEntitySet="Creative_FileMethod">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Creative_RevolveExpirationDate">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Creative_RevolveExpirationDate)">
+								<MappingFragment StoreEntitySet="Creative_RevolveExpirationDate">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+						<EntitySetMapping Name="Creative_SmsCreditType">
+							<EntityTypeMapping TypeName="IsTypeOf(DirectTrack.Creative_SmsCreditType)">
+								<MappingFragment StoreEntitySet="Creative_SmsCreditType">
+									<ScalarProperty Name="ID" ColumnName="ID" />
+									<ScalarProperty Name="Name" ColumnName="Name" />
+								</MappingFragment>
+							</EntityTypeMapping>
+						</EntitySetMapping>
+				</EntityContainerMapping>
+			</Mapping>
+		</edmx:Mappings>
+	</edmx:Runtime>
+	<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+	<edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+		<edmx:Connection>
+			<DesignerInfoPropertySet>
+				<DesignerProperty 
+					Name="MetadataArtifactProcessing"
+					Value="EmbedInOutputAssembly" />
+			</DesignerInfoPropertySet>
+		</edmx:Connection>
+		<edmx:Options>
+			<DesignerInfoPropertySet>
+				<DesignerProperty 
+					Name="ValidateOnBuild" 
+					Value="true" />
+				<DesignerProperty 
+					Name="EnablePluralization" 
+					Value="True" />
+			</DesignerInfoPropertySet>
+		</edmx:Options>
+		<!-- Diagram content (shape and connector positions) -->
+		<edmx:Diagrams>
+			<Diagram Name="DirectTrack" ZoomLevel="66" >
+				<EntityTypeShape EntityType="DirectTrack.Campaign" Width="1.5" PointX="0" PointY="0" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Campaign_CampaignType" Width="1.5" PointX="1" PointY="1" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Campaign_TrackMethod" Width="1.5" PointX="2" PointY="2" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Campaign_Status" Width="1.5" PointX="3" PointY="3" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Campaign_TrackConversionType" Width="1.5" PointX="4" PointY="4" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Campaign_Target" Width="1.5" PointX="5" PointY="5" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Campaign_UpdateSchedule" Width="1.5" PointX="6" PointY="6" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Campaign_UnsubType" Width="1.5" PointX="7" PointY="7" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Affiliate" Width="1.5" PointX="8" PointY="8" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Affiliate_Status" Width="1.5" PointX="9" PointY="9" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Affiliate_Approval" Width="1.5" PointX="10" PointY="10" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Affiliate_PaymentFrequency" Width="1.5" PointX="11" PointY="11" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Affiliate_PaymentTo" Width="1.5" PointX="12" PointY="12" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Affiliate_PaymentMethod" Width="1.5" PointX="13" PointY="13" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Affiliate_PaymentStatus" Width="1.5" PointX="14" PointY="14" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Advertiser" Width="1.5" PointX="15" PointY="15" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Advertiser_Status" Width="1.5" PointX="16" PointY="16" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Advertiser_Approval" Width="1.5" PointX="17" PointY="17" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Payout" Width="1.5" PointX="18" PointY="18" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Payout_PayoutType" Width="1.5" PointX="19" PointY="19" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.SaleDetail" Width="1.5" PointX="20" PointY="20" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.SaleDetail_SaleType" Width="1.5" PointX="21" PointY="21" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.LeadDetail" Width="1.5" PointX="22" PointY="22" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Creative" Width="1.5" PointX="23" PointY="23" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Creative_CreativeType" Width="1.5" PointX="24" PointY="24" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Creative_Status" Width="1.5" PointX="25" PointY="25" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Creative_FileMethod" Width="1.5" PointX="26" PointY="26" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Creative_RevolveExpirationDate" Width="1.5" PointX="27" PointY="27" Height="2" />
+				<EntityTypeShape EntityType="DirectTrack.Creative_SmsCreditType" Width="1.5" PointX="28" PointY="28" Height="2" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
