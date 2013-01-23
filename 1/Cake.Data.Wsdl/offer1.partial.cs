@@ -2,6 +2,7 @@
 using System.Xml.Serialization;
 using System.Xml.Linq;
 using System.Xml;
+using System.Collections.Generic;
 
 namespace Cake.Data.Wsdl.ExportService
 {
@@ -35,9 +36,28 @@ namespace Cake.Data.Wsdl.ExportService
         {
             get
             {
-                string[] result = this.offer_contracts.SelectMany(oc => oc.geo_targeting.allowed_countries.Select(c => c.country.country_code)).ToArray();
-                string resultCSV = string.Join(",", result);
-                return resultCSV;
+                // Get a list of allowed countries
+                var countryCodes = new List<string>();
+                foreach (var contract in this.offer_contracts)
+                {
+                    if (contract.geo_targeting != null)
+                    {
+                        countryCodes.AddRange(
+                            contract.geo_targeting.allowed_countries.Select(c => c.country.country_code)
+                        );
+                    }
+                }
+                // Convert the list to a CSV string
+                string countryCodesCSV;
+                if (countryCodes.Count > 0)
+                {
+                    countryCodesCSV = string.Join(",", countryCodes.ToArray());
+                }
+                else
+                {
+                    countryCodesCSV = "US"; // If there are no allowed countries, default to US
+                }
+                return countryCodesCSV;
             }
         }
 
