@@ -14,13 +14,15 @@ namespace DAgents.Common
         /// <summary>
         ///
         /// </summary>
-        public ConsoleProgramBase()
+        public ConsoleProgramBase(ILogger logger = null)
         {
             this.ConfigFile = "Config.xml";
 
             this.UnityContainer = new UnityContainer();
 
             this.Configure();
+
+            this.Logger = logger ?? new ConsoleLogger();
 
             EnterpriseLibraryContainer.Current = new UnityServiceLocator(UnityContainer);
         }
