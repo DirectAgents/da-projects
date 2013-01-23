@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Configuration;
+using System.Web.Configuration;
 
 namespace EomToolWeb.Infrastructure
 {
     [ConfigurationSection("eomToolWeb")]
     public class EomToolWebConfigSection : ConfigurationSection
     {
+        public static EomToolWebConfigSection GetConfigSection()
+        {
+            var config = WebConfigurationManager.OpenWebConfiguration("/EomToolWeb");
+            var eomToolConfig = config.GetSection<EomToolWebConfigSection>();
+            return eomToolConfig;
+        }
+
         [ConfigurationProperty("replaceIntegratedSecurityWithSALogin", DefaultValue = "false", IsRequired = false)]
         public Boolean ReplaceIntegratedSecurityWithSALogin
         {
@@ -27,6 +35,13 @@ namespace EomToolWeb.Infrastructure
             set { this["debugMode"] = value; }
         }
 
+        [ConfigurationProperty("paymentBatches")]
+        public PaymentBatchesElement PaymentBatches
+        {
+            get { return (PaymentBatchesElement)this["paymentBatches"]; }
+            set { this["paymentBatches"] = value; }
+        }
+
         public string GetConnectionString(string connectionStringName)
         {
             ConnectionStringSettings connectionString;
@@ -42,6 +57,23 @@ namespace EomToolWeb.Infrastructure
         public string MasterConnectionString
         {
             get { return GetConnectionString("DAMain1"); }
+        }
+    }
+
+    public class PaymentBatchesElement : ConfigurationElement
+    {
+        [ConfigurationProperty("canHold", DefaultValue="", IsRequired = false)]
+        public String CanHold
+        {
+            get { return (string)this["canHold"]; }
+            set { this["canHold"] = value; }
+        }
+
+        [ConfigurationProperty("numAccountingPeriods", DefaultValue = 4, IsRequired = false)]
+        public int NumAccountingPeriods
+        {
+            get { return (int)this["numAccountingPeriods"]; }
+            set { this["numAccountingPeriods"] = value; }
         }
     }
 }

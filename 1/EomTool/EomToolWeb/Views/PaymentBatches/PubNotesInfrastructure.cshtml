@@ -1,0 +1,67 @@
+﻿<div id="divNotesSummary" title="Notes">
+    <span id="dlgNoteCaption"></span>
+    <form id="frmNote" action="@Url.Action("SavePubNote")" method="post">
+        <input id="dlgPubName" type="hidden" name="pubname" value="" />
+        <input id="dlgAcctPeriod" type="hidden" name="acctperiod" value="" />
+        <textarea id="txtNote" style="width: 355px; height: 55px" name="note"></textarea>
+        <br />
+        <input id="btnSaveNote" type="button" value="Save" onclick="SaveNote()" />
+        <input id="btnSaveNoteAndHold" type="button" value="Hold" onclick="SaveNoteAndHold()" style="display:none" />
+    </form>
+    <div id="divNotesSummaryInner">
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ShowNotes(pubname, acctperiod) {
+        $('#btnSaveNote').show();
+        $('#btnSaveNoteAndHold').hide();
+        $('#dlgNoteCaption').html("New note:");
+        DisplayNotesDialog(pubname, acctperiod);
+    }
+    function DisplayNotesDialog(pubname, acctperiod) {
+        $.get('@Url.Action("PubNotes")', { pubname: pubname, acctperiod: acctperiod }, function (data) {
+            $('#divNotesSummaryInner').html(data);
+            $('#divNotesSummary').dialog("option", "title", pubname);
+            $('#dlgPubName').val(pubname);
+            $('#dlgAcctPeriod').val(acctperiod);
+            $('#txtNote').val("");
+            $('#divNotesSummary').dialog("open");
+        });
+    }
+
+    function SaveNote() {
+        if ($.trim($('#txtNote').val()) == "") {
+            alert("Please enter a note.");
+            return false;
+        }
+        var url = $('#frmNote').attr('action');
+        $.post(url, $('#frmNote').serialize(), function (data) {
+            $('#divNotesSummary').dialog("close");
+        });
+        return true;
+    }
+
+    function ShowNotesForHold(pubname, acctperiod, formId) {
+        $('#btnSaveNote').hide();
+        $('#btnSaveNoteAndHold').show();
+        $('#dlgNoteCaption').html("Enter a note:");
+        $('#divNotesSummary').data("paymentFormId", formId);
+        DisplayNotesDialog(pubname, acctperiod);
+    }
+    function SaveNoteAndHold() {
+        if (SaveNote()) {
+            var paymentFormId = $('#divNotesSummary').data("paymentFormId");
+            HoldPayment(paymentFormId);
+        }
+    }
+
+    $(function () {
+        $("#divNotesSummary").dialog({
+            autoOpen: false,
+            height: 500,
+            width: 400,
+            modal: true
+        });
+    });
+</script>

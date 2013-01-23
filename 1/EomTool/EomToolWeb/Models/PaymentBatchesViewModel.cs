@@ -1,28 +1,40 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using EomTool.Domain.Entities;
+using System.Linq;
 
 namespace EomToolWeb.Models
 {
-    public class PaymentBatchesViewModel
+    public class PaymentsViewModelBase
+    {
+        public string Test { get; set; }
+        public bool AllowHold { get; set; }
+    }
+
+
+    public class PaymentBatchesViewModel : PaymentsViewModelBase
     {
         public IEnumerable<PaymentBatch> Batches { get; set; }
-        public bool AllowHold { get; set; }
+    }
 
-        Dictionary<string, string> CurrMap = new Dictionary<string, string>
-        {
-            {"USD", "en-us"},
-            {"GBP", "en-gb"},
-            {"EUR", "de-de"},
-            {"AUD", "en-AU"}
-        };
 
-        public string FormatCurrency(string currency, decimal amount)
+    public class PaymentsViewModel : PaymentsViewModelBase
+    {
+        public IEnumerable<IGrouping<PaymentGroup, PublisherPayment>> PaymentGroups { get; set; }
+
+        public void SetPayments(IEnumerable<PublisherPayment> payments)
         {
-            if (currency == null || !CurrMap.ContainsKey(currency))
-                return string.Format("{0:N2}", amount);
-            else
-                return string.Format(CultureInfo.CreateSpecificCulture(CurrMap[currency]), "{0:C}", amount);
+            PaymentGroups = payments.GroupBy(p => new PaymentGroup { Currency = p.PubPayCurr, PaymentMethod = p.PaymentMethod, NetTermType = p.NetTermType })
+                .OrderBy(g => g.Key.NetTermType)
+                .ThenByDescending(g => g.Key.Currency)
+                .ThenBy(g => g.Key.PaymentMethod);
         }
+    }
+
+    public struct PaymentGroup
+    {
+        public string Currency;
+        public string PaymentMethod;
+        public string NetTermType;
     }
 }

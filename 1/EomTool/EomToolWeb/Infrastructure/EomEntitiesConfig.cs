@@ -52,8 +52,7 @@ namespace EomToolWeb.Infrastructure
 
         public string ConnectionStringByDate(DateTime eomDate)
         {
-            var config = WebConfigurationManager.OpenWebConfiguration("/EomToolWeb");
-            var eomToolConfig = config.GetSection<EomToolWebConfigSection>();
+            var eomToolConfig = EomToolWebConfigSection.GetConfigSection();
             string connectionString;
 
             if (eomToolConfig.DebugMode)

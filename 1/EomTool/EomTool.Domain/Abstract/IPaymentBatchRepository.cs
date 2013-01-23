@@ -11,7 +11,14 @@ namespace EomTool.Domain.Abstract
         IQueryable<PublisherPayment> PublisherPayments { get; }
         IQueryable<PublisherPayment> PublisherPaymentsForUser(string identity, bool sentOnly);
 
+        IQueryable<PublisherPayout> PublisherPayouts { get; }
+
         void SetAccountingStatus(int[] itemIds, int accountingStatus);
         void SetPaymentBatchId(int[] itemIds, int paymentBatchId);
+
+        IQueryable<PubNote> PubNotes { get; }
+        IQueryable<PubNote> PubNotesForPublisher(string pubName);
+        void AddPubNote(string pubName, string note, string identity);
+
     }
 }

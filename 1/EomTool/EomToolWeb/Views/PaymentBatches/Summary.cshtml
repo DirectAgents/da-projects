@@ -1,0 +1,132 @@
+﻿@model PaymentsViewModel
+
+@{
+    ViewBag.Title = "Payment Approval";
+}
+
+<style type="text/css">
+    a {
+        padding-left: 0px;
+    }
+    td {
+        padding-left: .1em;
+    }
+
+    .actionReleased {
+        color: green;
+    }
+    .actionHeld {
+        color: red;
+    }
+    .pubTotalRow {
+        font-style: italic;
+        color: gray;
+    }
+    .altRow {
+        background-color: lightyellow;
+    }
+    .indentCell {
+        padding-left: .6em;
+    }
+    .bigIndentCell {
+        padding-left: 1.75em;
+    }
+    .paymentGroupTotal {
+        font-weight: bold;
+        background-color: lightsteelblue;
+    }
+
+    #summaryOuter {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+    #summaryGridContainer {
+        position: absolute;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        overflow: auto;
+    }
+    #publisherReportContainer {
+        border-left: 3px solid Black;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50%;
+        height: 100%;
+        overflow: auto;
+    }
+</style>
+<div id="summaryOuter">
+    <div id="summaryGridContainer">
+
+        <h2><a href="#" onclick="TogglePubRowMode(); return false">Payment Approval</a></h2>
+
+@{
+    int iGroup = 0;
+    ViewBag.PaymentsViewModel = Model;
+    foreach (var group in Model.PaymentGroups)
+    {
+        ViewData["iGroup"] = iGroup;
+        Html.RenderPartial("Payments", group);
+        iGroup++;
+    }
+}
+
+    </div>
+    <div id="publisherReportContainer">
+        <div id="publisherReport" style="width: 100%;">
+        </div>
+    </div>
+</div>
+
+@Html.Partial("PubNotesInfrastructure")
+
+@section scripts {
+<script type="text/javascript">
+
+    function ShowPubRep(pubname, acctperiod) {
+        $.get('@Url.Action("PubRep")?pubname=' + pubname + '&acctperiod=' + acctperiod + '&ts=' + new Date().getTime(), function (publisherReportContent) {
+            $('#publisherReport').empty().html(publisherReportContent);
+        });
+    }
+
+    function ReleasePayment(formId) {
+        var form = $('#form' + formId);
+        $('#actionarea' + formId).load('@Url.Action("ReleaseItems")', form.serialize());
+    }
+    function HoldPayment(formId) {
+        var form = $('#form' + formId);
+        $('#actionarea' + formId).load('@Url.Action("HoldItems")', form.serialize());
+    }
+    function ResetPayment(formId) {
+        var form = $('#form' + formId);
+        $('#actionarea' + formId).load('@Url.Action("ResetItems")', form.serialize());
+    }
+
+    function ReleaseAll(iGroup, numRows) {
+        for (var i = 0; i < numRows; i++) {
+            var formId = iGroup + '_' + i;
+            if ($('#form' + formId).data('state') == 'initial')
+                ReleasePayment(formId);
+        }
+    }
+
+    pubRowMode = 0;
+    function TogglePubRowMode() {
+        pubRowMode++;
+        if (pubRowMode == 2) pubRowMode = 0;
+
+        if (pubRowMode == 0) {
+            $('.pubSubtotalRow').hide(300);
+            $('.pubTotalRow').show(300);
+        }
+        if (pubRowMode == 1) {
+            $('.pubSubtotalRow').show(300);
+            $('.pubTotalRow').show(300);
+        }
+    }
+
+</script>
+}

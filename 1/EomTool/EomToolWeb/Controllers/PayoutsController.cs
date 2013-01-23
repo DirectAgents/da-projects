@@ -126,18 +126,18 @@ namespace EomToolWeb.Controllers
             };
             viewModel.TestMode = (Session["TestMode"] != null && Session["TestMode"].ToString() == "1");
 
-            if (includePublisherReport) viewModel.PublisherReport = MvcHtmlString.Create(GetPublisherReport(payouts));
+            if (includePublisherReport) viewModel.PublisherReport = MvcHtmlString.Create(GetPublisherReport(payouts, eomEntitiesConfig.CurrentEomDate));
 
             return viewModel;
         }
 
-        private string GetPublisherReport(IEnumerable<EomTool.Domain.Entities.PublisherPayout> payouts)
+        public static string GetPublisherReport(IEnumerable<EomTool.Domain.Entities.PublisherPayout> payouts, DateTime eomDate)
         {
             var table = new Eom.Common.PublisherReportDataSet1.CampaignsPublisherReportDetailsDataTable();
             string publisherName = "";
             string mediaBuyer = "";
 
-            foreach (var payout in payouts.Where(c => c.Pub_Payout != 0))
+            foreach (var payout in payouts.Where(c => c.Pub_Payout != 0).OrderBy(p => p.Campaign_Name))
             {
                 var rx = new Regex(@"(?'name'((\w+)\W+)+)\((?'addcode'((CD|CA)(?'cdnumber'([0-9]+))))\)");
                 var publisher = rx.Match(payout.Publisher).Groups;
@@ -165,7 +165,6 @@ namespace EomToolWeb.Controllers
                 table.AddCampaignsPublisherReportDetailsRow(row);
             }
 
-            var eomDate = eomEntitiesConfig.CurrentEomDate;
             var report = new Eom.Common.PublisherReports.PubRepTemplate(Eom.Common.PublisherReports.PubRepTemplateHtmlMode.InnerHtml)
             {
                 Publisher = publisherName,
@@ -179,6 +178,8 @@ namespace EomToolWeb.Controllers
 
             return reportHTML;
         }
+
+        // --- Approve/Hold
 
         public ActionResult Approve(string itemids)
         {

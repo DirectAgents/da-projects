@@ -487,7 +487,7 @@
           <Property Name="publisher_name" Type="varchar(max)" Nullable="false" />
           <Property Name="note" Type="varchar(max)" Nullable="false" />
           <Property Name="added_by_system_user" Type="varchar" MaxLength="255" />
-          <Property Name="created" Type="datetime" Nullable="false" />
+          <Property Name="created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Source">
           <Key>
