@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="QBMetaData">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="Table">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="QUALIFIERNAME" type="xs:string" />
+              <xs:element name="TABLENAME" type="xs:string" />
+              <xs:element name="TYPENAME" type="xs:string" />
+              <xs:element name="REMARKS" type="xs:string" />
+              <xs:element name="DELETEABLE" type="xs:unsignedByte" />
+              <xs:element name="VOIDABLE" type="xs:unsignedByte" />
+              <xs:element name="INSERT_ONLY" type="xs:unsignedByte" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="Column">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="QUALIFIERNAME" type="xs:string" />
+              <xs:element name="TABLENAME" type="xs:string" />
+              <xs:element name="COLUMNNAME" type="xs:string" />
+              <xs:element name="TYPE" type="xs:byte" />
+              <xs:element name="TYPENAME" type="xs:string" />
+              <xs:element name="PRECISION" type="xs:unsignedShort" />
+              <xs:element name="LENGTH" type="xs:unsignedShort" />
+              <xs:element name="SCALE" type="xs:unsignedByte" />
+              <xs:element minOccurs="0" name="RADIX" type="xs:unsignedByte" />
+              <xs:element name="NULLABLE" type="xs:unsignedByte" />
+              <xs:element name="DEFAULT" type="xs:string" />
+              <xs:element name="DATATYPE" type="xs:byte" />
+              <xs:element minOccurs="0" name="DATETIME_SUBTYPE" type="xs:unsignedByte" />
+              <xs:element minOccurs="0" name="OCTET_LENGTH" type="xs:unsignedShort" />
+              <xs:element name="ORDINAL_POSITION" type="xs:unsignedByte" />
+              <xs:element name="IS_NULLABLE" type="xs:string" />
+              <xs:element name="QUERYABLE" type="xs:unsignedByte" />
+              <xs:element name="UPDATEABLE" type="xs:unsignedByte" />
+              <xs:element name="INSERTABLE" type="xs:unsignedByte" />
+              <xs:element name="REQUIRED_ON_INSERT" type="xs:unsignedByte" />
+              <xs:element name="FORMAT" type="xs:string" />
+              <xs:element name="RELATES_TO" type="xs:string" />
+              <xs:element name="JUMPIN_TYPE" type="xs:string" />
+              <xs:element name="FORCE_UNOPTIMIZED" type="xs:unsignedByte" />
+              <xs:element name="ADVANCED" type="xs:unsignedByte" />
+              <xs:element minOccurs="0" name="SDK_QB_NAME" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_QRY_AGG_NAME" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_QRY_AGG_NAME2" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_QRY_AGG_NAME3" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_ADD_AGG_NAME" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_ADD_AGG_NAME2" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_ADD_AGG_NAME3" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_MOD_AGG_NAME" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_MOD_AGG_NAME2" type="xs:string" />
+              <xs:element minOccurs="0" name="SDK_MOD_AGG_NAME3" type="xs:string" />
+              <xs:element name="COLUMNFULLNAME" type="xs:string" />
+              <xs:element name="COLUMNSHORTNAME" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

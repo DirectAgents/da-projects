@@ -42,6 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Metadata\QBMetaData.cs">
+      <DependentUpon>QBMetaData.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Metadata\QBMetaData.partial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\QuickBooksSynchService.cs" />
     <Compile Include="UI\IView.cs" />
@@ -68,8 +72,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Metadata\QBMetaData.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\DataSources\QuickBooks.UI.Models.CompanyFile.datasource" />
     <None Include="Properties\DataSources\QuickBooks.UI.Models.QuickBooksSynchSettings.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Metadata\QBMetaData.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

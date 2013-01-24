@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legacy", "Legacy", "{2D16C2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounting.Domain", "..\Accounting.Domain\Accounting.Domain.csproj", "{5A9EBA3C-0860-47A1-B152-D4468C83E711}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickBooks.Test", "..\QuickBooks.Test\QuickBooks.Test.csproj", "{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug - Client Portal|Any CPU = Debug - Client Portal|Any CPU
@@ -620,13 +622,48 @@ Global
 		{5A9EBA3C-0860-47A1-B152-D4468C83E711}.Try1 Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{5A9EBA3C-0860-47A1-B152-D4468C83E711}.Try1 Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{5A9EBA3C-0860-47A1-B152-D4468C83E711}.Try1 Debug|x86.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Client Portal|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Client Portal|Any CPU.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Client Portal|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Client Portal|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Client Portal|x86.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - DADatabaseService|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - DADatabaseService|Any CPU.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - DADatabaseService|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - DADatabaseService|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - DADatabaseService|x86.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Direct Track|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Direct Track|Any CPU.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Direct Track|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Direct Track|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - Direct Track|x86.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - z|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - z|Any CPU.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - z|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - z|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug - z|x86.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Release|x86.ActiveCfg = Release|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Try1 Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Try1 Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Try1 Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Try1 Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6CD893A9-9ED9-46F6-B347-64EE2C884E6C}.Try1 Debug|x86.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{72427403-94B7-487D-BD9E-E0C1CF1954CA} = {2D16C2F8-1578-449F-AC64-E88BBDB023C1}
-		{709FD9D8-7DEA-4E53-8ED9-244A8082ACC0} = {2D16C2F8-1578-449F-AC64-E88BBDB023C1}
 		{D09AA1DE-FB06-4334-A9D2-DAE8A035CD7D} = {2D16C2F8-1578-449F-AC64-E88BBDB023C1}
+		{709FD9D8-7DEA-4E53-8ED9-244A8082ACC0} = {2D16C2F8-1578-449F-AC64-E88BBDB023C1}
+		{72427403-94B7-487D-BD9E-E0C1CF1954CA} = {2D16C2F8-1578-449F-AC64-E88BBDB023C1}
 	EndGlobalSection
 EndGlobal
