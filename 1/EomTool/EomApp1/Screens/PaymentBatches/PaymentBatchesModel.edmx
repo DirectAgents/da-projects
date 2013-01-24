@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DADatabasePaymentBatchesModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="DADatabasePaymentBatchesModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="DADatabasePaymentBatchesModelStoreContainer">
           <EntitySet Name="AffiliatePaymentMethod" EntityType="DADatabasePaymentBatchesModel.Store.AffiliatePaymentMethod" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Item" EntityType="DADatabasePaymentBatchesModel.Store.Item" store:Type="Tables" Schema="dbo" />
@@ -43,7 +43,7 @@
             <End Role="PaymentBatch" EntitySet="PaymentBatch" />
             <End Role="PaymentBatchAttachment" EntitySet="PaymentBatchAttachment" />
           </AssociationSet>
-          </EntityContainer>
+        </EntityContainer>
         <EntityType Name="AffiliatePaymentMethod">
           <Key>
             <PropertyRef Name="id" />
@@ -91,6 +91,7 @@
           <Property Name="payment_threshold" Type="money" />
           <Property Name="parent_batch_id" Type="int" />
           <Property Name="payment_method_id" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="PaymentBatchAttachment">
           <Key>
@@ -188,8 +189,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DADatabasePaymentBatchesModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -276,6 +276,7 @@
           <NavigationProperty Name="PaymentBatch2" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatch" FromRole="PaymentBatch1" ToRole="PaymentBatch" />
           <NavigationProperty Name="PaymentBatchState" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatchState" FromRole="PaymentBatch" ToRole="PaymentBatchState" />
           <NavigationProperty Name="PaymentBatchAttachments" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatchAttachment_PaymentBatch" FromRole="PaymentBatch" ToRole="PaymentBatchAttachment" />
+          <Property Type="String" Name="name" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="PaymentBatchAttachment">
           <Key>
@@ -419,6 +420,7 @@
           <EntitySetMapping Name="PaymentBatches">
             <EntityTypeMapping TypeName="DADatabasePaymentBatchesModel.PaymentBatch">
               <MappingFragment StoreEntitySet="PaymentBatch">
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="approver_identity" ColumnName="approver_identity" />
                 <ScalarProperty Name="payment_batch_state_id" ColumnName="payment_batch_state_id" />

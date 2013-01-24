@@ -27,12 +27,9 @@ namespace EomApp1.Screens.PaymentBatches
     
         public DbSet<AffiliatePaymentMethod> AffiliatePaymentMethods { get; set; }
         public DbSet<Item> Items { get; set; }
-        public DbSet<NetTermType> NetTermTypes { get; set; }
         public DbSet<PaymentBatch> PaymentBatches { get; set; }
-        public DbSet<PaymentBatchApprovalState> PaymentBatchApprovalStates { get; set; }
         public DbSet<PaymentBatchAttachment> PaymentBatchAttachments { get; set; }
         public DbSet<PaymentBatchState> PaymentBatchStates { get; set; }
-        public DbSet<PaymentBatchUpdate> PaymentBatchUpdates { get; set; }
         public DbSet<CampaignPublisherPaymentBatchesSummary> CampaignPublisherPaymentBatchesSummaries { get; set; }
     }
 }

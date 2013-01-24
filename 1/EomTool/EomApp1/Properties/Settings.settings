@@ -5,9 +5,9 @@
     <Setting Name="Nov10Eom2ConnectionString2" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=aaron\sqlexpress;Initial Catalog=Nov10Eom2;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=Nov10Eom2;Integrated Security=True&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=aaron\sqlexpress;Initial Catalog=Nov10Eom2;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=Nov10Eom2;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DADatabaseName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Sep 2012</Value>
@@ -15,18 +15,18 @@
     <Setting Name="DADatabaseR2ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR2;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DADatabaseR2;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR2;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DADatabaseR2;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DADatabaseMarch11ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseMarch11;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DADatabaseMarch11;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseMarch11;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DADatabaseMarch11;Integrated Security=True</Value>
     </Setting>
     <Setting Name="PubReportLastRefresh" Type="System.String" Scope="User">
       <Value Profile="(Default)">n/a</Value>
@@ -52,9 +52,9 @@
     <Setting Name="OverrideConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=zDADatabaseNov2012Test;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=zDADatabaseNov2012Test;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=zDADatabaseNov2012Test;User=sa;Password=sp0ngbOb</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=zDADatabaseNov2012Test;User=sa;Password=sp0ngbOb</Value>
     </Setting>
     <Setting Name="OverrideDate" Type="System.DateTime" Scope="Application">
       <Value Profile="(Default)">2012-11-01</Value>
@@ -68,92 +68,92 @@
     <Setting Name="DADatabaseR1ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=DADatabaseR1;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DADatabaseR1;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DADatabaseR1;User=sa;Password=sp0ngbOb</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DADatabaseR1;User=sa;Password=sp0ngbOb</Value>
     </Setting>
     <Setting Name="DAMain1ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb</Value>
     </Setting>
     <Setting Name="DADatabaseJul11ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=DADatabaseJul11;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DADatabaseJul11;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DADatabaseJul11;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DADatabaseJul11;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DADatabaseAug11ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=DADatabaseAug11;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DADatabaseAug11;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DADatabaseAug11;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DADatabaseAug11;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DirectTrackConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=DirectTrack;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DirectTrack;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DirectTrack;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DirectTrack;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DirectTrack3ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=DirectTrack3;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DirectTrack3;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DirectTrack3;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DirectTrack3;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DADatabaseApril2012_before_cakeConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=DADatabaseApril2012_before_cake;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DADatabaseApril2012_before_cake;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DADatabaseApril2012_before_cake;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DADatabaseApril2012_before_cake;Integrated Security=True</Value>
     </Setting>
     <Setting Name="EomToolSecurityConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=EOMToolSecurity;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=EOMToolSecurity;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=EOMToolSecurity;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=EOMToolSecurity;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DADatabaseR1ConnectionString1" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=DADatabaseR1;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=DADatabaseR1;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DADatabaseR1;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DADatabaseR1;Integrated Security=True</Value>
     </Setting>
     <Setting Name="OverrideEomToolSecurityConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=EomToolSecurity;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=EomToolSecurity;Integrated Security=True&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=EomToolSecurity;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=EomToolSecurity;Integrated Security=True</Value>
     </Setting>
     <Setting Name="SettingsConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb</Value>
     </Setting>
     <Setting Name="zDADatabaseNov2012TestConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=.;Initial Catalog=zDADatabaseNov2012Test;Integrated Security=True&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz2\da;Initial Catalog=zDADatabaseNov2012Test;Integrated Security=True&lt;/ConnectionString&gt;
   &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=.;Initial Catalog=zDADatabaseNov2012Test;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=biz2\da;Initial Catalog=zDADatabaseNov2012Test;Integrated Security=True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -6,18 +6,11 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
 {
     public partial class SendMailDialog : Form
     {
-        private System.Windows.Forms.BindingSource settingsBindingSource;
-
-        public SendMailDialog(string to, ITransformText bodyTemplate)
+        public SendMailDialog(string subject, string from, string to, ITransformText bodyTemplate)
         {
             InitializeComponent();
-            this.settingsBindingSource = new System.Windows.Forms.BindingSource()
-            {
-                DataSource = EomAppCommon.EomAppSettings.Settings.GetType()
-            };
-            this.fromTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.settingsBindingSource, "EomAppSettings_MediaBuyerWorkflow_Email_From", true));
-            this.subjectTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.settingsBindingSource, "EomAppSettings_MediaBuyerWorkflow_Email_Subject", true));
-            this.settingsBindingSource.AddNew();
+            this.Subject = subject;
+            this.From = from;
             this.To = to;
             this.Body = bodyTemplate.TransformText();
         }

@@ -50,10 +50,7 @@ go
 
 INSERT INTO [dbo].[PaymentBatchState] VALUES 
 	 ('1', 'default')
-	,('2', 'Queued')
 	,('3', 'Sent')
-	,('4', 'Approved')
-	,('5', 'Held')
 GO
 
 /*

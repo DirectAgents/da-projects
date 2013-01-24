@@ -431,13 +431,7 @@
     <Compile Include="Screens\PaymentBatches\Item.cs">
       <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Screens\PaymentBatches\NetTermType.cs">
-      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Screens\PaymentBatches\PaymentBatch.cs">
-      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\PaymentBatches\PaymentBatchApprovalState.cs">
       <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Screens\PaymentBatches\PaymentBatchAttachment.cs">
@@ -452,6 +446,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PaymentBatchesDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesEmailTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PaymentBatchesEmailTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PaymentBatches\PaymentBatchesEmailTemplatePartial.cs" />
     <Compile Include="Screens\PaymentBatches\PaymentBatchesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -474,9 +474,6 @@
       <DependentUpon>PaymentBatchesModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Screens\PaymentBatches\PaymentBatchState.cs">
-      <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\PaymentBatches\PaymentBatchUpdate.cs">
       <DependentUpon>PaymentBatchesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Screens\PublisherNameCombine\PublisherCombineDataSet.Designer.cs">
@@ -1204,6 +1201,10 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>PaymentBatchesModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="Screens\PaymentBatches\PaymentBatchesEmailTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>PaymentBatchesEmailTemplate.cs</LastGenOutput>
+    </None>
     <None Include="Screens\PaymentBatches\PaymentBatchesModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>PaymentBatchesModel.edmx</DependentUpon>
