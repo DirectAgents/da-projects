@@ -42,9 +42,11 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
                         TimePeriod = Properties.Settings.Default.DADatabaseName
                     };
 
+                    string subject = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Subject;
+                    string from = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_From;
                     string mediaBuyerEmailAddress = EomApp1.Security.User.GetEmailAddress(mediaBuyerName);
 
-                    var sendDialog = new EomApp1.Screens.MediaBuyerWorkflow.SendMailDialog(mediaBuyerEmailAddress, emailTemplate);
+                    var sendDialog = new EomApp1.Screens.MediaBuyerWorkflow.SendMailDialog(subject, from, mediaBuyerEmailAddress, emailTemplate);
 
                     var result = MaskedDialog.ShowDialog(this, sendDialog);
 

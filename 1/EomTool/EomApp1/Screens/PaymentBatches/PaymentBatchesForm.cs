@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EomApp1.UI;
+using EomAppControls.DataGrid;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +15,8 @@ namespace EomApp1.Screens.PaymentBatches
 {
     public partial class PaymentBatchesForm : Form
     {
+        const int BATCH_STATE_SENT = 3;
+
         public PaymentBatchesForm()
         {
             InitializeComponent();
@@ -21,6 +25,7 @@ namespace EomApp1.Screens.PaymentBatches
         void PaymentBatchesForm_Load(object sender, EventArgs e)
         {
             this.Fill();
+            this.DisableComponents();
             this.ClearGridSelections();
             this.paymentBatchGrid.DataError += paymentBatchGrid_DataError;
             this.publisherPaymentBatchesGrid.DataError += publisherPaymentBatchesGrid_DataError;
@@ -59,10 +64,58 @@ namespace EomApp1.Screens.PaymentBatches
         {
         }
 
+        void DisableComponents()
+        {
+            foreach (DataGridViewRow row in paymentBatchGrid.Rows)
+            {
+                if (row.DataBoundItem != null)
+                {
+                    var batchRow = (row.DataBoundItem as DataRowView).Row as PaymentBatchesDataSet.PaymentBatchRow;
+                    if (batchRow.payment_batch_state_id == BATCH_STATE_SENT)
+                        ((DataGridViewDisableButtonCell)row.Cells[SendDataGridViewButtonColumn.Index]).Enabled = false;
+                }
+            }
+        }
+            //if (campaignsToFinalizeGrid.Rows.Count > 0)
+            //    foreach (var button in from row in campaignsToFinalizeGrid.Rows.Cast<DataGridViewRow>()
+            //                           let am = ((row.DataBoundItem as DataRowView).Row as FinalizeDataSet1.CampaignRow).AM
+            //                           where !Security.User.Current.CanFinalizeForAccountManager(am)
+            //                           select (DataGridViewDisableButtonCell)row.Cells[FinalizeCol.Index])
+            //        button.Enabled = false;
+
         void ClearGridSelections()
         {
             this.paymentBatchGrid.ClearSelection();
             this.publisherPaymentBatchesGrid.ClearSelection();
+        }
+
+        private void paymentBatchGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // "Send" batch
+            if (e.ColumnIndex == SendDataGridViewButtonColumn.Index && e.RowIndex >= 0 && e.RowIndex < paymentBatchGrid.NewRowIndex &&
+                ((DataGridViewDisableButtonCell)paymentBatchGrid.Rows[e.RowIndex].Cells[SendDataGridViewButtonColumn.Index]).Enabled)
+            {
+                var batchRow = (paymentBatchGrid.Rows[e.RowIndex].DataBoundItem as DataRowView).Row as PaymentBatchesDataSet.PaymentBatchRow;
+                if (batchRow.id > 0)
+                {
+                    var emailTemplate = new PaymentBatchesEmailTemplate()
+                    {
+                        UrlToOpen = "http://localhost/EomToolWeb/PaymentBatches/Summary"
+                    };
+                    // TODO: put in settings...
+                    string subject = "payment batches subject";
+                    string from = "accounting@directagents.com";
+                    string to = "@directagents.com";
+                    var sendDialog = new EomApp1.Screens.MediaBuyerWorkflow.SendMailDialog(subject, from, to, emailTemplate);
+                    var result = MaskedDialog.ShowDialog(this, sendDialog);
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        batchRow.payment_batch_state_id = BATCH_STATE_SENT;
+                        SaveButtonClicked(null, null);
+                        ((DataGridViewDisableButtonCell)paymentBatchGrid.Rows[e.RowIndex].Cells[SendDataGridViewButtonColumn.Index]).Enabled = false;
+                    }
+                }
+            }
         }
 
         /// <summary>

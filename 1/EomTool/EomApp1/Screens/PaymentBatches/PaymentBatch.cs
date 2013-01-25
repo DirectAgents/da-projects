@@ -19,7 +19,6 @@ namespace EomApp1.Screens.PaymentBatches
             this.Items = new HashSet<Item>();
             this.PaymentBatch1 = new HashSet<PaymentBatch>();
             this.PaymentBatchAttachments = new HashSet<PaymentBatchAttachment>();
-            this.PaymentBatchUpdates = new HashSet<PaymentBatchUpdate>();
         }
     
         public int id { get; set; }
@@ -29,6 +28,7 @@ namespace EomApp1.Screens.PaymentBatches
         public Nullable<decimal> payment_threshold { get; set; }
         public Nullable<int> parent_batch_id { get; set; }
         public Nullable<int> payment_method_id { get; set; }
+        public string name { get; set; }
     
         public virtual AffiliatePaymentMethod AffiliatePaymentMethod { get; set; }
         public virtual ICollection<Item> Items { get; set; }
@@ -36,6 +36,5 @@ namespace EomApp1.Screens.PaymentBatches
         public virtual PaymentBatch PaymentBatch2 { get; set; }
         public virtual PaymentBatchState PaymentBatchState { get; set; }
         public virtual ICollection<PaymentBatchAttachment> PaymentBatchAttachments { get; set; }
-        public virtual ICollection<PaymentBatchUpdate> PaymentBatchUpdates { get; set; }
     }
 }
