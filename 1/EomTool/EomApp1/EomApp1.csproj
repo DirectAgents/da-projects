@@ -896,6 +896,9 @@
     <EmbeddedResource Include="UI\CollapsibleSplitter.resx">
       <DependentUpon>CollapsibleSplitter.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config.aaron">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="DADatabaseR1DataSet.xsc">
       <DependentUpon>DADatabaseR1DataSet.xsd</DependentUpon>
     </None>
