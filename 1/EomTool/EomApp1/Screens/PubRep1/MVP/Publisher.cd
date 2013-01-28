@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="EomApp1.Screens.PubRep1.MVP.PublisherDetails.Presenter&lt;TView, TItem, TKey&gt;">
+    <Position X="5.25" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAIAAAAABQAAAAAAAAAACAAA=</HashCode>
+      <FileName>Screens\PubRep1\MVP\Presenters\PublisherDetails\Presenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EomApp1.Screens.PubRep1.MVP.PublisherDetails.NotesPresenter">
+    <Position X="7.25" Y="3.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAAAAAAAAIAAEAAAAAAAAAAAQAAKAAA=</HashCode>
+      <FileName>Screens\PubRep1\MVP\Presenters\PublisherDetails\NotesPresenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EomApp1.Screens.PubRep1.MVP.PublisherDetails.AttachmentsPresenter">
+    <Position X="3.5" Y="3.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Screens\PubRep1\MVP\Presenters\PublisherDetails\AttachmentsPresenter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="EomApp1.Screens.PubRep1.MVP.PublisherDetails.IAttachments">
+    <Position X="0.5" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Screens\PubRep1\MVP\Views\PublisherDetails\IAttachments.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="EomApp1.Screens.PubRep1.MVP.PublisherDetails.INotes">
+    <Position X="2.75" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Screens\PubRep1\MVP\Views\PublisherDetails\INotes.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="EomApp1.Screens.PubRep1.MVP.PublisherDetails.IView&lt;TItem, TKey&gt;">
+    <Position X="1.25" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Screens\PubRep1\MVP\Views\PublisherDetails\IView.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

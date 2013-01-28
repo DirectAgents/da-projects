@@ -487,7 +487,7 @@
           <Property Name="publisher_name" Type="varchar(max)" Nullable="false" />
           <Property Name="note" Type="varchar(max)" Nullable="false" />
           <Property Name="added_by_system_user" Type="varchar" MaxLength="255" />
-          <Property Name="created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="created" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Source">
           <Key>
@@ -2291,7 +2291,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="EomModel" ZoomLevel="102">
+      <Diagram Name="EomModel" ZoomLevel="78">
         <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="5.5" PointY="31.625" Height="1.5956835937500014" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Affiliate" Width="1.5" PointX="7.75" PointY="13.375" Height="4.480205078125" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Campaign" Width="2" PointX="7.75" PointY="25.625" Height="5.634013671875" IsExpanded="true" />
@@ -2304,7 +2304,7 @@
         <EntityTypeShape EntityType="EomModel.Source" Width="1.5" PointX="5.5" PointY="17.5" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.TrackingSystem" Width="1.5" PointX="5.5" PointY="29.125" Height="1.7879850260416674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.UnitType" Width="1.5" PointX="5.5" PointY="19.875" Height="1.5956835937500031" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportDetail" Width="2.5" PointX="0.75" PointY="1.125" Height="3.7109993489583388" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportDetail" Width="2.5" PointX="1" PointY="1.125" Height="3.7109993489583388" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignsPublisherReportSummary" Width="2.75" PointX="0.75" PointY="10.125" Height="2.9417936197916674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.PublisherReportDetail" Width="2" PointX="10.75" PointY="1.125" Height="3.5186979166666674" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.PublisherReport" Width="1.875" PointX="10.75" PointY="6.125" Height="3.7109993489583388" IsExpanded="true" />
@@ -2428,7 +2428,7 @@
         <AssociationConnector Association="EomModel.FK_PaymentBatch_PaymentBatchState" />
         <EntityTypeShape EntityType="EomModel.PublisherPayment" Width="1.75" PointX="13.75" PointY="9.125" />
         <EntityTypeShape EntityType="EomModel.PubAttachment" Width="1.5" PointX="9.75" PointY="14.125" />
-        <EntityTypeShape EntityType="EomModel.PubNote" Width="1.5" PointX="11.75" PointY="14.125" />
+        <EntityTypeShape EntityType="EomModel.PubNote" Width="3.125" PointX="9.875" PointY="16.5" />
         <EntityTypeShape EntityType="EomModel.PublisherRelatedItemCount" Width="1.875" PointX="13.75" PointY="14.125" />
         </Diagram>
     </Diagrams>

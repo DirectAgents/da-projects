@@ -145,6 +145,16 @@
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PetaPoco.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Final\Models\MediaBuyerApprovalStatusId.cs" />
     <Compile Include="Screens\MediaBuyerWorkflow\SendMailDialog.cs">
       <SubType>Form</SubType>
@@ -499,17 +509,24 @@
     <Compile Include="Screens\PubRep1\Controls\CampaignsForIDs.Designer.cs">
       <DependentUpon>CampaignsForIDs.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PublisherNotes.cs">
+    <Compile Include="Screens\PubRep1\MVP\Presenters\PublisherDetails\Presenter.cs" />
+    <Compile Include="Screens\PubRep1\Controls\PublisherDetails\AttachmentsUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PublisherNotes.Designer.cs">
-      <DependentUpon>PublisherNotes.cs</DependentUpon>
+    <Compile Include="Screens\PubRep1\Controls\PublisherDetails\AttachmentsUC.Designer.cs">
+      <DependentUpon>AttachmentsUC.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PublisherDetails.cs">
+    <Compile Include="Screens\PubRep1\Controls\PublisherDetails\NotesUC.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Screens\PubRep1\Controls\PublisherDetails.Designer.cs">
-      <DependentUpon>PublisherDetails.cs</DependentUpon>
+    <Compile Include="Screens\PubRep1\Controls\PublisherDetails\NotesUC.Designer.cs">
+      <DependentUpon>NotesUC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\PubRep1\Controls\PublisherDetails\PublisherDetailsUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Screens\PubRep1\Controls\PublisherDetails\PublisherDetailsUC.Designer.cs">
+      <DependentUpon>PublisherDetailsUC.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\PubRep1\Controls\PublisherListView.cs">
       <SubType>UserControl</SubType>
@@ -517,8 +534,6 @@
     <Compile Include="Screens\PubRep1\Controls\PublisherListView.Designer.cs">
       <DependentUpon>PublisherListView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Screens\PubRep1\Presenters\PublisherNotesPresenter.cs" />
-    <Compile Include="Screens\PubRep1\Views\IPublisherNotesView.cs" />
     <Compile Include="Screens\PubRep1\Controls\Report2.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -536,6 +551,7 @@
     <Compile Include="Screens\PubRep1\Forms\NoteDialog.Designer.cs">
       <DependentUpon>NoteDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\PubRep1\MVP\Views\PublisherDetails\IView.cs" />
     <Compile Include="Screens\QB\QuickBooksSynchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -821,6 +837,10 @@
     <Compile Include="UI\MaskedDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\MediaBuyerWorkflow\SendMailDialog.resx">
       <DependentUpon>SendMailDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -863,11 +883,14 @@
     <EmbeddedResource Include="Screens\Final\UI\VerifiedRevenueForm.resx">
       <DependentUpon>VerifiedRevenueForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\PubRep1\Controls\PublisherNotes.resx">
-      <DependentUpon>PublisherNotes.cs</DependentUpon>
+    <EmbeddedResource Include="Screens\PubRep1\Controls\PublisherDetails\AttachmentsUC.resx">
+      <DependentUpon>AttachmentsUC.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Screens\PubRep1\Controls\PublisherDetails.resx">
-      <DependentUpon>PublisherDetails.cs</DependentUpon>
+    <EmbeddedResource Include="Screens\PubRep1\Controls\PublisherDetails\NotesUC.resx">
+      <DependentUpon>NotesUC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\PubRep1\Controls\PublisherDetails\PublisherDetailsUC.resx">
+      <DependentUpon>PublisherDetailsUC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\PubRep1\Forms\NoteDialog.resx">
       <DependentUpon>NoteDialog.cs</DependentUpon>
@@ -896,6 +919,7 @@
     <None Include="app.config.aaron">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Screens\PubRep1\MVP\Publisher.cd" />
     <None Include="DADatabaseR1DataSet.xsc">
       <DependentUpon>DADatabaseR1DataSet.xsd</DependentUpon>
     </None>
@@ -1320,14 +1344,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -1545,6 +1564,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\editing.bmp" />
+    <None Include="Resources\letterA.bmp" />
+    <None Include="Resources\letterN.bmp" />
     <Content Include="Security\EomToolSecurity.edmx.sql" />
     <None Include="Service References\Cake.WebServices._4.Reports\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>

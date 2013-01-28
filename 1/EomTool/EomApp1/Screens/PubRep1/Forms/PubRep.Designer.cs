@@ -33,10 +33,8 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.lastRefreshTimeStatusValue = new System.Windows.Forms.ToolStripStatusLabel();
             this.publisherListView1 = new EomApp1.Screens.PubRep1.Controls.PublisherListView();
-            this.publisherDetails1 = new EomApp1.Screens.PubRep1.Controls.PublisherDetails();
+            this.publisherDetails1 = new EomApp1.Screens.PubRep1.Controls.PublisherDetails.PublisherDetailsUC();
             this.pubReport1 = new EomApp1.Screens.PubRep1.Controls.Report2();
             this.accountingView1 = new EomApp1.Screens.PubRep1.Controls.AccountingView();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -52,7 +50,6 @@
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -71,8 +68,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.accountingView1);
-            this.splitContainer1.Size = new System.Drawing.Size(1099, 663);
-            this.splitContainer1.SplitterDistance = 503;
+            this.splitContainer1.Size = new System.Drawing.Size(1099, 687);
+            this.splitContainer1.SplitterDistance = 527;
             this.splitContainer1.TabIndex = 2;
             // 
             // splitContainer2
@@ -90,7 +87,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.pubReport1);
-            this.splitContainer2.Size = new System.Drawing.Size(1099, 503);
+            this.splitContainer2.Size = new System.Drawing.Size(1099, 527);
             this.splitContainer2.SplitterDistance = 603;
             this.splitContainer2.TabIndex = 1;
             // 
@@ -108,8 +105,9 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.publisherDetails1);
-            this.splitContainer3.Size = new System.Drawing.Size(603, 478);
-            this.splitContainer3.SplitterDistance = 389;
+            this.splitContainer3.Size = new System.Drawing.Size(603, 502);
+            this.splitContainer3.SplitterDistance = 408;
+            this.splitContainer3.SplitterWidth = 2;
             this.splitContainer3.TabIndex = 4;
             // 
             // toolStrip1
@@ -118,7 +116,7 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 478);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 502);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(603, 25);
             this.toolStrip1.TabIndex = 2;
@@ -134,32 +132,13 @@
             this.toolStripButton1.Text = "toolStripButton1";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.BackColor = System.Drawing.SystemColors.Info;
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lastRefreshTimeStatusValue});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 663);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1099, 24);
-            this.statusStrip1.TabIndex = 2;
-            // 
-            // lastRefreshTimeStatusValue
-            // 
-            this.lastRefreshTimeStatusValue.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.lastRefreshTimeStatusValue.Name = "lastRefreshTimeStatusValue";
-            this.lastRefreshTimeStatusValue.Size = new System.Drawing.Size(85, 19);
-            this.lastRefreshTimeStatusValue.Text = "Refresh Status";
-            // 
             // publisherListView1
             // 
             this.publisherListView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.publisherListView1.Location = new System.Drawing.Point(0, 0);
             this.publisherListView1.Margin = new System.Windows.Forms.Padding(0);
             this.publisherListView1.Name = "publisherListView1";
-            this.publisherListView1.Size = new System.Drawing.Size(603, 389);
+            this.publisherListView1.Size = new System.Drawing.Size(603, 408);
             this.publisherListView1.TabIndex = 1;
             // 
             // publisherDetails1
@@ -167,7 +146,7 @@
             this.publisherDetails1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.publisherDetails1.Location = new System.Drawing.Point(0, 0);
             this.publisherDetails1.Name = "publisherDetails1";
-            this.publisherDetails1.Size = new System.Drawing.Size(603, 85);
+            this.publisherDetails1.Size = new System.Drawing.Size(603, 92);
             this.publisherDetails1.TabIndex = 3;
             // 
             // pubReport1
@@ -179,7 +158,7 @@
             this.pubReport1.ReportText = null;
             this.pubReport1.SendToEmail = "";
             this.pubReport1.SentStatus = "unsent";
-            this.pubReport1.Size = new System.Drawing.Size(492, 503);
+            this.pubReport1.Size = new System.Drawing.Size(492, 527);
             this.pubReport1.TabIndex = 0;
             // 
             // accountingView1
@@ -196,7 +175,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1099, 687);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.statusStrip1);
             this.Name = "PubRep";
             this.Text = "PubRepForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -216,10 +194,7 @@
             this.splitContainer3.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -229,12 +204,10 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private Controls.PublisherListView publisherListView1;
         private Controls.AccountingView accountingView1;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel lastRefreshTimeStatusValue;
         private Controls.Report2 pubReport1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.SplitContainer splitContainer3;
-        private Controls.PublisherDetails publisherDetails1;
+        private Controls.PublisherDetails.PublisherDetailsUC publisherDetails1;
     }
 }

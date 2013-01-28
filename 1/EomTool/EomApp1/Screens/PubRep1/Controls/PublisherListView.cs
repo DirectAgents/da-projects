@@ -133,13 +133,17 @@ namespace EomApp1.Screens.PubRep1.Controls
             string publisherName = (string)(_dgv.Rows[e.RowIndex].Cells[publisherDataGridViewTextBoxColumn.Index].Value ?? String.Empty);
             if (this.publisherRelatedItemCount.ContainsKey(publisherName))
             {
+                int leftMargin = _dgv.RowHeadersWidth;
+                int letterNLeft = e.RowBounds.Left + leftMargin + 2;
+                int letterALeft = letterNLeft + 13; // 
+                int top = e.RowBounds.Top + 2;
                 if (this.publisherRelatedItemCount[publisherName].NumNotes > 0)
                 {
-                    e.Graphics.DrawImage(Properties.Resources.editing, e.RowBounds.Left + 2, e.RowBounds.Top + 2);
+                    e.Graphics.DrawImage(Resource1.letterN, letterNLeft, top);
                 }
                 if (this.publisherRelatedItemCount[publisherName].NumAttachments > 0)
                 {
-                    e.Graphics.DrawImage(Properties.Resources.editing, e.RowBounds.Left + 20, e.RowBounds.Top + 2);
+                    e.Graphics.DrawImage(Resource1.letterA, letterALeft, top);
                 }
             }
         }

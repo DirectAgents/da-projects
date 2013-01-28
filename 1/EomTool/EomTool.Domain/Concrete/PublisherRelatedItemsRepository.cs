@@ -31,6 +31,29 @@ namespace EomTool.Domain.Concrete
             context.PubNotes.AddObject(note);
         }
 
+        public IQueryable<PubAttachment> Attachments(string publisherName)
+        {
+            var result = this.context.PubAttachments.Where(c => c.publisher_name == publisherName);
+            return result;
+        }
+
+        public void AddAttachment(string publisherName, string attachmentName, string attachmentDescription, byte[] binaryContent)
+        {
+            var attachment = new PubAttachment
+            {
+                publisher_name = publisherName,
+                name = attachmentName,
+                description = attachmentDescription,
+                binary_content = binaryContent
+            };
+            context.PubAttachments.AddObject(attachment);
+        }
+
+        public PubAttachment AttachmentContentById(int attachmentID)
+        {
+            return context.PubAttachments.Single(c => c.id == attachmentID);
+        }
+
         public void Dispose()
         {
         }

@@ -29,40 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PaymentBatchesForm));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.publisherPaymentBatchesGrid = new System.Windows.Forms.DataGridView();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
-            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
-            this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.paymentBatchGrid = new System.Windows.Forms.DataGridView();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.bindingNavigator2 = new System.Windows.Forms.BindingNavigator(this.components);
-            this.fKPaymentBatchAttachmentPaymentBatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.bindingNavigatorAddNewItem1 = new System.Windows.Forms.ToolStripButton();
-            this.saveToolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.assignButton = new System.Windows.Forms.ToolStripButton();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.paymentBatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.paymentBatchesDataSet = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSet();
-            this.paymentBatchStateBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.affiliatePaymentMethodBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.paymentbatchidDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.paymentBatchIdDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.publisherNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.netTermTypeNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -72,46 +47,51 @@
             this.itemAccountingStatusNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.itemIdsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.paymentBatchesDataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.campaignPublisherPaymentBatchesSummaryTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.CampaignPublisherPaymentBatchesSummaryTableAdapter();
-            this.paymentBatchTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.PaymentBatchTableAdapter();
-            this.tableAdapterManager = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.TableAdapterManager();
-            this.paymentBatchAttachmentTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.PaymentBatchAttachmentTableAdapter();
-            this.paymentBatchStateTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.PaymentBatchStateTableAdapter();
-            this.affiliatePaymentMethodTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.AffiliatePaymentMethodTableAdapter();
+            this.paymentBatchesDataSet = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSet();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.bindingNavigator1 = new System.Windows.Forms.BindingNavigator(this.components);
+            this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
+            this.paymentBatchBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.paymentBatchGrid = new System.Windows.Forms.DataGridView();
             this.BatchIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SendDataGridViewButtonColumn = new EomAppControls.DataGrid.DataGridViewDisableButtonColumn();
             this.NameTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.paymentBatchStateBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TotalTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.affiliatePaymentMethodBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.assignButton = new System.Windows.Forms.ToolStripButton();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.campaignPublisherPaymentBatchesSummaryTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.CampaignPublisherPaymentBatchesSummaryTableAdapter();
+            this.paymentBatchTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.PaymentBatchTableAdapter();
+            this.tableAdapterManager = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.TableAdapterManager();
+            this.paymentBatchStateTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.PaymentBatchStateTableAdapter();
+            this.affiliatePaymentMethodTableAdapter = new EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.AffiliatePaymentMethodTableAdapter();
             ((System.ComponentModel.ISupportInitialize)(this.publisherPaymentBatchesGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchesDataSetBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchesDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchGrid)).BeginInit();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator2)).BeginInit();
-            this.bindingNavigator2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fKPaymentBatchAttachmentPaymentBatchBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.paymentBatchBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchesDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.paymentBatchStateBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.affiliatePaymentMethodBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchesDataSetBindingSource)).BeginInit();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // publisherPaymentBatchesGrid
@@ -144,6 +124,95 @@
             this.publisherPaymentBatchesGrid.TabIndex = 0;
             this.publisherPaymentBatchesGrid.SelectionChanged += new System.EventHandler(this.GridSelectionChanged);
             // 
+            // paymentBatchIdDataGridViewTextBoxColumn
+            // 
+            this.paymentBatchIdDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.paymentBatchIdDataGridViewTextBoxColumn.DataPropertyName = "PaymentBatchId";
+            this.paymentBatchIdDataGridViewTextBoxColumn.HeaderText = "Batch ID";
+            this.paymentBatchIdDataGridViewTextBoxColumn.Name = "paymentBatchIdDataGridViewTextBoxColumn";
+            this.paymentBatchIdDataGridViewTextBoxColumn.ReadOnly = true;
+            this.paymentBatchIdDataGridViewTextBoxColumn.Width = 69;
+            // 
+            // publisherNameDataGridViewTextBoxColumn
+            // 
+            this.publisherNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.publisherNameDataGridViewTextBoxColumn.DataPropertyName = "PublisherName";
+            this.publisherNameDataGridViewTextBoxColumn.HeaderText = "Publisher";
+            this.publisherNameDataGridViewTextBoxColumn.Name = "publisherNameDataGridViewTextBoxColumn";
+            this.publisherNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.publisherNameDataGridViewTextBoxColumn.Width = 75;
+            // 
+            // netTermTypeNameDataGridViewTextBoxColumn
+            // 
+            this.netTermTypeNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.netTermTypeNameDataGridViewTextBoxColumn.DataPropertyName = "NetTermTypeName";
+            this.netTermTypeNameDataGridViewTextBoxColumn.HeaderText = "Net Terms";
+            this.netTermTypeNameDataGridViewTextBoxColumn.Name = "netTermTypeNameDataGridViewTextBoxColumn";
+            this.netTermTypeNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.netTermTypeNameDataGridViewTextBoxColumn.Width = 75;
+            // 
+            // paymentMethodNameDataGridViewTextBoxColumn
+            // 
+            this.paymentMethodNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.paymentMethodNameDataGridViewTextBoxColumn.DataPropertyName = "PaymentMethodName";
+            this.paymentMethodNameDataGridViewTextBoxColumn.HeaderText = "Payment Method";
+            this.paymentMethodNameDataGridViewTextBoxColumn.Name = "paymentMethodNameDataGridViewTextBoxColumn";
+            this.paymentMethodNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.paymentMethodNameDataGridViewTextBoxColumn.Width = 103;
+            // 
+            // affiliateCurrencyNameDataGridViewTextBoxColumn
+            // 
+            this.affiliateCurrencyNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.affiliateCurrencyNameDataGridViewTextBoxColumn.DataPropertyName = "AffiliateCurrencyName";
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.affiliateCurrencyNameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.affiliateCurrencyNameDataGridViewTextBoxColumn.HeaderText = "Curr";
+            this.affiliateCurrencyNameDataGridViewTextBoxColumn.Name = "affiliateCurrencyNameDataGridViewTextBoxColumn";
+            this.affiliateCurrencyNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.affiliateCurrencyNameDataGridViewTextBoxColumn.Width = 51;
+            // 
+            // sumItemTotalCostDataGridViewTextBoxColumn
+            // 
+            this.sumItemTotalCostDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.sumItemTotalCostDataGridViewTextBoxColumn.DataPropertyName = "SumItemTotalCost";
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.Format = "N2";
+            dataGridViewCellStyle2.NullValue = null;
+            this.sumItemTotalCostDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.sumItemTotalCostDataGridViewTextBoxColumn.HeaderText = "Amount";
+            this.sumItemTotalCostDataGridViewTextBoxColumn.Name = "sumItemTotalCostDataGridViewTextBoxColumn";
+            this.sumItemTotalCostDataGridViewTextBoxColumn.ReadOnly = true;
+            this.sumItemTotalCostDataGridViewTextBoxColumn.Width = 68;
+            // 
+            // itemAccountingStatusNameDataGridViewTextBoxColumn
+            // 
+            this.itemAccountingStatusNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.itemAccountingStatusNameDataGridViewTextBoxColumn.DataPropertyName = "ItemAccountingStatusName";
+            this.itemAccountingStatusNameDataGridViewTextBoxColumn.HeaderText = "Accounting Status";
+            this.itemAccountingStatusNameDataGridViewTextBoxColumn.Name = "itemAccountingStatusNameDataGridViewTextBoxColumn";
+            this.itemAccountingStatusNameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.itemAccountingStatusNameDataGridViewTextBoxColumn.Width = 109;
+            // 
+            // itemIdsDataGridViewTextBoxColumn
+            // 
+            this.itemIdsDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.itemIdsDataGridViewTextBoxColumn.DataPropertyName = "ItemIds";
+            this.itemIdsDataGridViewTextBoxColumn.HeaderText = "Item IDs";
+            this.itemIdsDataGridViewTextBoxColumn.Name = "itemIdsDataGridViewTextBoxColumn";
+            this.itemIdsDataGridViewTextBoxColumn.ReadOnly = true;
+            this.itemIdsDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // paymentBatchesDataSetBindingSource
+            // 
+            this.paymentBatchesDataSetBindingSource.DataMember = "CampaignPublisherPaymentBatchesSummary";
+            this.paymentBatchesDataSetBindingSource.DataSource = this.paymentBatchesDataSet;
+            // 
+            // paymentBatchesDataSet
+            // 
+            this.paymentBatchesDataSet.DataSetName = "PaymentBatchesDataSet";
+            this.paymentBatchesDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -174,10 +243,7 @@
             // 
             this.splitContainer2.Panel1.Controls.Add(this.bindingNavigator1);
             this.splitContainer2.Panel1.Controls.Add(this.paymentBatchGrid);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.tabControl1);
+            this.splitContainer2.Panel2Collapsed = true;
             this.splitContainer2.Size = new System.Drawing.Size(1092, 263);
             this.splitContainer2.SplitterDistance = 602;
             this.splitContainer2.TabIndex = 2;
@@ -199,7 +265,7 @@
             this.bindingNavigator1.MovePreviousItem = null;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = null;
-            this.bindingNavigator1.Size = new System.Drawing.Size(602, 25);
+            this.bindingNavigator1.Size = new System.Drawing.Size(1092, 25);
             this.bindingNavigator1.TabIndex = 1;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -211,6 +277,11 @@
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
             this.bindingNavigatorAddNewItem.Text = "Add new";
+            // 
+            // paymentBatchBindingSource
+            // 
+            this.paymentBatchBindingSource.DataMember = "PaymentBatch";
+            this.paymentBatchBindingSource.DataSource = this.paymentBatchesDataSet;
             // 
             // saveToolStripButton
             // 
@@ -247,328 +318,28 @@
             this.paymentBatchGrid.RowHeadersVisible = false;
             this.paymentBatchGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.paymentBatchGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.paymentBatchGrid.Size = new System.Drawing.Size(602, 235);
+            this.paymentBatchGrid.Size = new System.Drawing.Size(1092, 235);
             this.paymentBatchGrid.TabIndex = 0;
             this.paymentBatchGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.paymentBatchGrid_CellContentClick);
             this.paymentBatchGrid.SelectionChanged += new System.EventHandler(this.GridSelectionChanged);
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(486, 263);
-            this.tabControl1.TabIndex = 0;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.bindingNavigator2);
-            this.tabPage1.Controls.Add(this.dataGridView1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(478, 237);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Attachments";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // bindingNavigator2
-            // 
-            this.bindingNavigator2.AddNewItem = null;
-            this.bindingNavigator2.BindingSource = this.fKPaymentBatchAttachmentPaymentBatchBindingSource;
-            this.bindingNavigator2.CountItem = null;
-            this.bindingNavigator2.DeleteItem = null;
-            this.bindingNavigator2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.bindingNavigator2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bindingNavigatorAddNewItem1,
-            this.saveToolStripButton1});
-            this.bindingNavigator2.Location = new System.Drawing.Point(3, 3);
-            this.bindingNavigator2.MoveFirstItem = null;
-            this.bindingNavigator2.MoveLastItem = null;
-            this.bindingNavigator2.MoveNextItem = null;
-            this.bindingNavigator2.MovePreviousItem = null;
-            this.bindingNavigator2.Name = "bindingNavigator2";
-            this.bindingNavigator2.PositionItem = null;
-            this.bindingNavigator2.Size = new System.Drawing.Size(472, 25);
-            this.bindingNavigator2.TabIndex = 1;
-            this.bindingNavigator2.Text = "bindingNavigator2";
-            // 
-            // fKPaymentBatchAttachmentPaymentBatchBindingSource
-            // 
-            this.fKPaymentBatchAttachmentPaymentBatchBindingSource.DataMember = "FK_PaymentBatchAttachment_PaymentBatch";
-            this.fKPaymentBatchAttachmentPaymentBatchBindingSource.DataSource = this.paymentBatchBindingSource;
-            this.fKPaymentBatchAttachmentPaymentBatchBindingSource.AddingNew += new System.ComponentModel.AddingNewEventHandler(this.AddAttachmentClicked);
-            // 
-            // bindingNavigatorAddNewItem1
-            // 
-            this.bindingNavigatorAddNewItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.bindingNavigatorAddNewItem1.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem1.Image")));
-            this.bindingNavigatorAddNewItem1.Name = "bindingNavigatorAddNewItem1";
-            this.bindingNavigatorAddNewItem1.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem1.Size = new System.Drawing.Size(23, 22);
-            this.bindingNavigatorAddNewItem1.Text = "Add new";
-            this.bindingNavigatorAddNewItem1.Click += new System.EventHandler(this.AddAttachmentClicked);
-            // 
-            // saveToolStripButton1
-            // 
-            this.saveToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.saveToolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripButton1.Image")));
-            this.saveToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveToolStripButton1.Name = "saveToolStripButton1";
-            this.saveToolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.saveToolStripButton1.Text = "&Save";
-            this.saveToolStripButton1.Click += new System.EventHandler(this.AttachmentsSaveButtonClicked);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowDrop = true;
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AutoGenerateColumns = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.idDataGridViewTextBoxColumn,
-            this.nameDataGridViewTextBoxColumn,
-            this.paymentbatchidDataGridViewTextBoxColumn1,
-            this.descriptionDataGridViewTextBoxColumn});
-            this.dataGridView1.DataSource = this.fKPaymentBatchAttachmentPaymentBatchBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 31);
-            this.dataGridView1.MultiSelect = false;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridView1.Size = new System.Drawing.Size(476, 206);
-            this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AttachmentClicked);
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(478, 237);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Notes";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.assignButton});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1092, 25);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // assignButton
-            // 
-            this.assignButton.BackColor = System.Drawing.Color.MediumSpringGreen;
-            this.assignButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.assignButton.Enabled = false;
-            this.assignButton.Image = ((System.Drawing.Image)(resources.GetObject("assignButton.Image")));
-            this.assignButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.assignButton.Margin = new System.Windows.Forms.Padding(6, 1, 0, 2);
-            this.assignButton.Name = "assignButton";
-            this.assignButton.Size = new System.Drawing.Size(72, 22);
-            this.assignButton.Text = "Assign Batch";
-            this.assignButton.Click += new System.EventHandler(this.AssignButtonClicked);
-            this.assignButton.EnabledChanged += new System.EventHandler(this.AssignButtonEnabledChanged);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "name";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
-            // paymentBatchBindingSource
-            // 
-            this.paymentBatchBindingSource.DataMember = "PaymentBatch";
-            this.paymentBatchBindingSource.DataSource = this.paymentBatchesDataSet;
-            // 
-            // paymentBatchesDataSet
-            // 
-            this.paymentBatchesDataSet.DataSetName = "PaymentBatchesDataSet";
-            this.paymentBatchesDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // paymentBatchStateBindingSource
-            // 
-            this.paymentBatchStateBindingSource.DataMember = "PaymentBatchState";
-            this.paymentBatchStateBindingSource.DataSource = this.paymentBatchesDataSet;
-            // 
-            // affiliatePaymentMethodBindingSource
-            // 
-            this.affiliatePaymentMethodBindingSource.DataMember = "AffiliatePaymentMethod";
-            this.affiliatePaymentMethodBindingSource.DataSource = this.paymentBatchesDataSet;
-            // 
-            // idDataGridViewTextBoxColumn
-            // 
-            this.idDataGridViewTextBoxColumn.DataPropertyName = "id";
-            this.idDataGridViewTextBoxColumn.HeaderText = "id";
-            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
-            this.idDataGridViewTextBoxColumn.ReadOnly = true;
-            this.idDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // nameDataGridViewTextBoxColumn
-            // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.nameDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.nameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.nameDataGridViewTextBoxColumn.TrackVisitedState = false;
-            this.nameDataGridViewTextBoxColumn.Width = 60;
-            // 
-            // paymentbatchidDataGridViewTextBoxColumn1
-            // 
-            this.paymentbatchidDataGridViewTextBoxColumn1.DataPropertyName = "payment_batch_id";
-            this.paymentbatchidDataGridViewTextBoxColumn1.HeaderText = "payment_batch_id";
-            this.paymentbatchidDataGridViewTextBoxColumn1.Name = "paymentbatchidDataGridViewTextBoxColumn1";
-            this.paymentbatchidDataGridViewTextBoxColumn1.Visible = false;
-            // 
-            // descriptionDataGridViewTextBoxColumn
-            // 
-            this.descriptionDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "description";
-            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
-            this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
-            // 
-            // paymentBatchIdDataGridViewTextBoxColumn
-            // 
-            this.paymentBatchIdDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.paymentBatchIdDataGridViewTextBoxColumn.DataPropertyName = "PaymentBatchId";
-            this.paymentBatchIdDataGridViewTextBoxColumn.HeaderText = "Batch ID";
-            this.paymentBatchIdDataGridViewTextBoxColumn.Name = "paymentBatchIdDataGridViewTextBoxColumn";
-            this.paymentBatchIdDataGridViewTextBoxColumn.ReadOnly = true;
-            this.paymentBatchIdDataGridViewTextBoxColumn.Width = 74;
-            // 
-            // publisherNameDataGridViewTextBoxColumn
-            // 
-            this.publisherNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.publisherNameDataGridViewTextBoxColumn.DataPropertyName = "PublisherName";
-            this.publisherNameDataGridViewTextBoxColumn.HeaderText = "Publisher";
-            this.publisherNameDataGridViewTextBoxColumn.Name = "publisherNameDataGridViewTextBoxColumn";
-            this.publisherNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.publisherNameDataGridViewTextBoxColumn.Width = 75;
-            // 
-            // netTermTypeNameDataGridViewTextBoxColumn
-            // 
-            this.netTermTypeNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.netTermTypeNameDataGridViewTextBoxColumn.DataPropertyName = "NetTermTypeName";
-            this.netTermTypeNameDataGridViewTextBoxColumn.HeaderText = "Net Terms";
-            this.netTermTypeNameDataGridViewTextBoxColumn.Name = "netTermTypeNameDataGridViewTextBoxColumn";
-            this.netTermTypeNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.netTermTypeNameDataGridViewTextBoxColumn.Width = 81;
-            // 
-            // paymentMethodNameDataGridViewTextBoxColumn
-            // 
-            this.paymentMethodNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.paymentMethodNameDataGridViewTextBoxColumn.DataPropertyName = "PaymentMethodName";
-            this.paymentMethodNameDataGridViewTextBoxColumn.HeaderText = "Payment Method";
-            this.paymentMethodNameDataGridViewTextBoxColumn.Name = "paymentMethodNameDataGridViewTextBoxColumn";
-            this.paymentMethodNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.paymentMethodNameDataGridViewTextBoxColumn.Width = 103;
-            // 
-            // affiliateCurrencyNameDataGridViewTextBoxColumn
-            // 
-            this.affiliateCurrencyNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.affiliateCurrencyNameDataGridViewTextBoxColumn.DataPropertyName = "AffiliateCurrencyName";
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.affiliateCurrencyNameDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle8;
-            this.affiliateCurrencyNameDataGridViewTextBoxColumn.HeaderText = "Curr";
-            this.affiliateCurrencyNameDataGridViewTextBoxColumn.Name = "affiliateCurrencyNameDataGridViewTextBoxColumn";
-            this.affiliateCurrencyNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.affiliateCurrencyNameDataGridViewTextBoxColumn.Width = 51;
-            // 
-            // sumItemTotalCostDataGridViewTextBoxColumn
-            // 
-            this.sumItemTotalCostDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.sumItemTotalCostDataGridViewTextBoxColumn.DataPropertyName = "SumItemTotalCost";
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.Format = "N2";
-            dataGridViewCellStyle9.NullValue = null;
-            this.sumItemTotalCostDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle9;
-            this.sumItemTotalCostDataGridViewTextBoxColumn.HeaderText = "Amount";
-            this.sumItemTotalCostDataGridViewTextBoxColumn.Name = "sumItemTotalCostDataGridViewTextBoxColumn";
-            this.sumItemTotalCostDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sumItemTotalCostDataGridViewTextBoxColumn.Width = 68;
-            // 
-            // itemAccountingStatusNameDataGridViewTextBoxColumn
-            // 
-            this.itemAccountingStatusNameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.itemAccountingStatusNameDataGridViewTextBoxColumn.DataPropertyName = "ItemAccountingStatusName";
-            this.itemAccountingStatusNameDataGridViewTextBoxColumn.HeaderText = "Accounting Status";
-            this.itemAccountingStatusNameDataGridViewTextBoxColumn.Name = "itemAccountingStatusNameDataGridViewTextBoxColumn";
-            this.itemAccountingStatusNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.itemAccountingStatusNameDataGridViewTextBoxColumn.Width = 109;
-            // 
-            // itemIdsDataGridViewTextBoxColumn
-            // 
-            this.itemIdsDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.itemIdsDataGridViewTextBoxColumn.DataPropertyName = "ItemIds";
-            this.itemIdsDataGridViewTextBoxColumn.HeaderText = "Item IDs";
-            this.itemIdsDataGridViewTextBoxColumn.Name = "itemIdsDataGridViewTextBoxColumn";
-            this.itemIdsDataGridViewTextBoxColumn.ReadOnly = true;
-            this.itemIdsDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // paymentBatchesDataSetBindingSource
-            // 
-            this.paymentBatchesDataSetBindingSource.DataMember = "CampaignPublisherPaymentBatchesSummary";
-            this.paymentBatchesDataSetBindingSource.DataSource = this.paymentBatchesDataSet;
-            // 
-            // campaignPublisherPaymentBatchesSummaryTableAdapter
-            // 
-            this.campaignPublisherPaymentBatchesSummaryTableAdapter.ClearBeforeFill = true;
-            // 
-            // paymentBatchTableAdapter
-            // 
-            this.paymentBatchTableAdapter.ClearBeforeFill = true;
-            // 
-            // tableAdapterManager
-            // 
-            this.tableAdapterManager.AffiliatePaymentMethodTableAdapter = null;
-            this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
-            this.tableAdapterManager.PaymentBatchAttachmentTableAdapter = this.paymentBatchAttachmentTableAdapter;
-            this.tableAdapterManager.PaymentBatchStateTableAdapter = null;
-            this.tableAdapterManager.PaymentBatchTableAdapter = this.paymentBatchTableAdapter;
-            this.tableAdapterManager.UpdateOrder = EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
-            // 
-            // paymentBatchAttachmentTableAdapter
-            // 
-            this.paymentBatchAttachmentTableAdapter.ClearBeforeFill = true;
-            // 
-            // paymentBatchStateTableAdapter
-            // 
-            this.paymentBatchStateTableAdapter.ClearBeforeFill = true;
-            // 
-            // affiliatePaymentMethodTableAdapter
-            // 
-            this.affiliatePaymentMethodTableAdapter.ClearBeforeFill = true;
             // 
             // BatchIDDataGridViewTextBoxColumn
             // 
             this.BatchIDDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.BatchIDDataGridViewTextBoxColumn.DataPropertyName = "id";
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.NullValue = null;
-            this.BatchIDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.NullValue = null;
+            this.BatchIDDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.BatchIDDataGridViewTextBoxColumn.HeaderText = "Batch ID";
             this.BatchIDDataGridViewTextBoxColumn.Name = "BatchIDDataGridViewTextBoxColumn";
             this.BatchIDDataGridViewTextBoxColumn.ReadOnly = true;
-            this.BatchIDDataGridViewTextBoxColumn.Width = 74;
+            this.BatchIDDataGridViewTextBoxColumn.Width = 69;
             // 
             // SendDataGridViewButtonColumn
             // 
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.Silver;
-            this.SendDataGridViewButtonColumn.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.Silver;
+            this.SendDataGridViewButtonColumn.DefaultCellStyle = dataGridViewCellStyle4;
             this.SendDataGridViewButtonColumn.HeaderText = "Send";
             this.SendDataGridViewButtonColumn.Name = "SendDataGridViewButtonColumn";
             this.SendDataGridViewButtonColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -596,7 +367,12 @@
             this.dataGridViewTextBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.dataGridViewTextBoxColumn3.ValueMember = "id";
-            this.dataGridViewTextBoxColumn3.Width = 88;
+            this.dataGridViewTextBoxColumn3.Width = 81;
+            // 
+            // paymentBatchStateBindingSource
+            // 
+            this.paymentBatchStateBindingSource.DataMember = "PaymentBatchState";
+            this.paymentBatchStateBindingSource.DataSource = this.paymentBatchesDataSet;
             // 
             // dataGridViewCheckBoxColumn1
             // 
@@ -609,28 +385,27 @@
             // 
             this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn4.DataPropertyName = "payment_threshold";
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.Format = "N2";
-            dataGridViewCellStyle12.NullValue = null;
-            this.dataGridViewTextBoxColumn4.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.Format = "N2";
+            dataGridViewCellStyle5.NullValue = null;
+            this.dataGridViewTextBoxColumn4.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridViewTextBoxColumn4.HeaderText = "Threshold";
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.Visible = false;
-            this.dataGridViewTextBoxColumn4.Width = 79;
             // 
             // TotalTextBoxColumn
             // 
             this.TotalTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.TotalTextBoxColumn.DataPropertyName = "sum_total_cost";
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle13.Format = "N2";
-            dataGridViewCellStyle13.NullValue = null;
-            this.TotalTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.Format = "N2";
+            dataGridViewCellStyle6.NullValue = null;
+            this.TotalTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
             this.TotalTextBoxColumn.HeaderText = "Total Amount";
             this.TotalTextBoxColumn.Name = "TotalTextBoxColumn";
             this.TotalTextBoxColumn.ReadOnly = true;
-            this.TotalTextBoxColumn.Width = 95;
+            this.TotalTextBoxColumn.Width = 87;
             // 
             // dataGridViewTextBoxColumn5
             // 
@@ -654,18 +429,78 @@
             this.dataGridViewTextBoxColumn6.ValueMember = "id";
             this.dataGridViewTextBoxColumn6.Width = 103;
             // 
+            // affiliatePaymentMethodBindingSource
+            // 
+            this.affiliatePaymentMethodBindingSource.DataMember = "AffiliatePaymentMethod";
+            this.affiliatePaymentMethodBindingSource.DataSource = this.paymentBatchesDataSet;
+            // 
             // dataGridViewTextBoxColumn2
             // 
             this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.dataGridViewTextBoxColumn2.DataPropertyName = "approver_identity";
-            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.Format = "N2";
-            dataGridViewCellStyle14.NullValue = null;
-            this.dataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.Format = "N2";
+            dataGridViewCellStyle7.NullValue = null;
+            this.dataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridViewTextBoxColumn2.HeaderText = "Approver Identity";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.assignButton});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(1092, 25);
+            this.toolStrip1.TabIndex = 1;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // assignButton
+            // 
+            this.assignButton.BackColor = System.Drawing.Color.MediumSpringGreen;
+            this.assignButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.assignButton.Enabled = false;
+            this.assignButton.Image = ((System.Drawing.Image)(resources.GetObject("assignButton.Image")));
+            this.assignButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.assignButton.Margin = new System.Windows.Forms.Padding(6, 1, 0, 2);
+            this.assignButton.Name = "assignButton";
+            this.assignButton.Size = new System.Drawing.Size(79, 22);
+            this.assignButton.Text = "Assign Batch";
+            this.assignButton.Click += new System.EventHandler(this.AssignButtonClicked);
+            this.assignButton.EnabledChanged += new System.EventHandler(this.AssignButtonEnabledChanged);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "name";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
+            // campaignPublisherPaymentBatchesSummaryTableAdapter
+            // 
+            this.campaignPublisherPaymentBatchesSummaryTableAdapter.ClearBeforeFill = true;
+            // 
+            // paymentBatchTableAdapter
+            // 
+            this.paymentBatchTableAdapter.ClearBeforeFill = true;
+            // 
+            // tableAdapterManager
+            // 
+            this.tableAdapterManager.AffiliatePaymentMethodTableAdapter = null;
+            this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
+            this.tableAdapterManager.PaymentBatchStateTableAdapter = null;
+            this.tableAdapterManager.PaymentBatchTableAdapter = this.paymentBatchTableAdapter;
+            this.tableAdapterManager.UpdateOrder = EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
+            // 
+            // paymentBatchStateTableAdapter
+            // 
+            this.paymentBatchStateTableAdapter.ClearBeforeFill = true;
+            // 
+            // affiliatePaymentMethodTableAdapter
+            // 
+            this.affiliatePaymentMethodTableAdapter.ClearBeforeFill = true;
             // 
             // PaymentBatchesForm
             // 
@@ -678,6 +513,8 @@
             this.Text = "Payment Batches";
             this.Load += new System.EventHandler(this.PaymentBatchesForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.publisherPaymentBatchesGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchesDataSetBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchesDataSet)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
@@ -685,28 +522,17 @@
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).EndInit();
             this.bindingNavigator1.ResumeLayout(false);
             this.bindingNavigator1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchGrid)).EndInit();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator2)).EndInit();
-            this.bindingNavigator2.ResumeLayout(false);
-            this.bindingNavigator2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fKPaymentBatchAttachmentPaymentBatchBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.paymentBatchBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchesDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.paymentBatchStateBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.affiliatePaymentMethodBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.paymentBatchesDataSetBindingSource)).EndInit();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -732,19 +558,6 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton assignButton;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.BindingSource fKPaymentBatchAttachmentPaymentBatchBindingSource;
-        private PaymentBatchesDataSetTableAdapters.PaymentBatchAttachmentTableAdapter paymentBatchAttachmentTableAdapter;
-        private System.Windows.Forms.BindingNavigator bindingNavigator2;
-        private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem1;
-        private System.Windows.Forms.ToolStripButton saveToolStripButton1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewLinkColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn paymentbatchidDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn paymentBatchIdDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn publisherNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn netTermTypeNameDataGridViewTextBoxColumn;

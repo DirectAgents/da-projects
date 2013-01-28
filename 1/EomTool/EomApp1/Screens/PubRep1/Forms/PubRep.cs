@@ -24,7 +24,7 @@ namespace EomApp1.Screens.PubRep1.Forms
 
             publisherDetails1.RelatedItemCountChanged += publisherDetails1_RelatedItemCountChanged;
 
-            lastRefreshTimeStatusValue.Text = "Loaded at " + DateTime.Now.ToString();
+            //lastRefreshTimeStatusValue.Text = "Loaded at " + DateTime.Now.ToString();
         }
 
         void publisherDetails1_RelatedItemCountChanged(object sender, EventArgs e)
@@ -47,6 +47,11 @@ namespace EomApp1.Screens.PubRep1.Forms
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             splitContainer1.Panel2Collapsed = !splitContainer1.Panel2Collapsed;
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            splitContainer3.Panel2Collapsed = !splitContainer3.Panel2Collapsed;
         }
     }
 }
