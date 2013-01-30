@@ -20,5 +20,7 @@ namespace EomTool.Domain.Abstract
         IQueryable<PubNote> PubNotesForPublisher(string pubName);
         void AddPubNote(string pubName, string note, string identity);
 
+        IQueryable<PubAttachment> PubAttachments { get; }
+        IQueryable<PubAttachment> PubAttachmentsForPublisher(string pubName);
     }
 }

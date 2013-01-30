@@ -7,5 +7,6 @@ namespace EomTool.Domain.Entities
         [NotMapped]
         public string AccountingPeriod { get; set; }
         public int NumNotes { get; set; }
+        public int NumAttachments { get; set; }
     }
 }
