@@ -92,6 +92,7 @@
           <Property Name="parent_batch_id" Type="int" />
           <Property Name="payment_method_id" Type="int" />
           <Property Name="name" Type="varchar" MaxLength="255" />
+          <Property Name="date_sent" Type="datetime" />
         </EntityType>
         <EntityType Name="PaymentBatchAttachment">
           <Key>
@@ -277,6 +278,7 @@
           <NavigationProperty Name="PaymentBatchState" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatch_PaymentBatchState" FromRole="PaymentBatch" ToRole="PaymentBatchState" />
           <NavigationProperty Name="PaymentBatchAttachments" Relationship="DADatabasePaymentBatchesModel.FK_PaymentBatchAttachment_PaymentBatch" FromRole="PaymentBatch" ToRole="PaymentBatchAttachment" />
           <Property Type="String" Name="name" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="date_sent" Precision="3" />
         </EntityType>
         <EntityType Name="PaymentBatchAttachment">
           <Key>
@@ -420,6 +422,7 @@
           <EntitySetMapping Name="PaymentBatches">
             <EntityTypeMapping TypeName="DADatabasePaymentBatchesModel.PaymentBatch">
               <MappingFragment StoreEntitySet="PaymentBatch">
+                <ScalarProperty Name="date_sent" ColumnName="date_sent" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="approver_identity" ColumnName="approver_identity" />

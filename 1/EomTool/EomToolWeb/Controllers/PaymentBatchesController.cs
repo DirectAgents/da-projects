@@ -93,6 +93,14 @@ namespace EomToolWeb.Controllers
                 bool sentOnly = (test == null);
                 var pbatches = pbRepo.PaymentBatchesForUser(identityName, sentOnly);
                 var payments = pbRepo.PublisherPayments;
+                var pubNotes = pbRepo.PubNotes;
+                var pubAttachments = pbRepo.PubAttachments;
+                foreach (var payment in payments)
+                {
+                    payment.AccountingPeriod = accountingPeriod;
+                    payment.NumNotes = pubNotes.Where(n => n.publisher_name == payment.Publisher).Count();
+                    payment.NumAttachments = pubAttachments.Where(a => a.publisher_name == payment.Publisher).Count();
+                }
 
                 foreach (var pbatch in pbatches)
                 {

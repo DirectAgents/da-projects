@@ -6011,6 +6011,54 @@ namespace EomTool.Domain.Entities
         private Nullable<global::System.Int32> _payment_method_id;
         partial void Onpayment_method_idChanging(Nullable<global::System.Int32> value);
         partial void Onpayment_method_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> date_sent
+        {
+            get
+            {
+                return _date_sent;
+            }
+            set
+            {
+                Ondate_sentChanging(value);
+                ReportPropertyChanging("date_sent");
+                _date_sent = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("date_sent");
+                Ondate_sentChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _date_sent;
+        partial void Ondate_sentChanging(Nullable<global::System.DateTime> value);
+        partial void Ondate_sentChanged();
 
         #endregion
 

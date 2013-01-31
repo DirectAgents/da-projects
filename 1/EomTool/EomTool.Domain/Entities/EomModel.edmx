@@ -461,6 +461,8 @@
           <Property Name="payment_threshold" Type="money" />
           <Property Name="parent_batch_id" Type="int" />
           <Property Name="payment_method_id" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="255" />
+          <Property Name="date_sent" Type="datetime" />
         </EntityType>
         <EntityType Name="PaymentBatchState">
           <Key>
@@ -1805,6 +1807,8 @@
           <NavigationProperty Name="PaymentBatchChildren" Relationship="EomModel.FK_PaymentBatch_PaymentBatch" FromRole="PaymentBatch" ToRole="PaymentBatch1" />
           <NavigationProperty Name="PaymentBatchParent" Relationship="EomModel.FK_PaymentBatch_PaymentBatch" FromRole="PaymentBatch1" ToRole="PaymentBatch" />
           <NavigationProperty Name="PaymentBatchState" Relationship="EomModel.FK_PaymentBatch_PaymentBatchState" FromRole="PaymentBatch" ToRole="PaymentBatchState" />
+          <Property Type="String" Name="name" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="date_sent" Precision="3" />
         </EntityType>
         <EntityType Name="PaymentBatchState">
           <Key>
@@ -2200,6 +2204,8 @@
           <EntitySetMapping Name="PaymentBatches">
             <EntityTypeMapping TypeName="EomModel.PaymentBatch">
               <MappingFragment StoreEntitySet="PaymentBatch">
+                <ScalarProperty Name="date_sent" ColumnName="date_sent" />
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="payment_method_id" ColumnName="payment_method_id" />
                 <ScalarProperty Name="parent_batch_id" ColumnName="parent_batch_id" />
                 <ScalarProperty Name="payment_threshold" ColumnName="payment_threshold" />

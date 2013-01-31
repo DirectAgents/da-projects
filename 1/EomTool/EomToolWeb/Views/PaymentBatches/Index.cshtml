@@ -14,10 +14,13 @@
     <br />
     <span>
         @pbatch.AccountingPeriod Batch @pbatch.id
+        @if (!string.IsNullOrWhiteSpace(pbatch.name)) {
+            <text>"@pbatch.name"</text>
+        }
         @if (pbatch.payment_threshold != null) {
             <text>(threshold: @pbatch.payment_threshold)</text>
         }
-        - @pbatch.PaymentBatchState.name
+        - @pbatch.PaymentBatchState.name @pbatch.date_sent
     </span>
     if (pbatch.Payments.Count() > 0)
     {
@@ -33,7 +36,7 @@
                 <th>NetTerms&nbsp;</th>
                 <th>Status</th>
                 <th></th>
-                <th>Notes</th>
+                <th>Notes | Attach</th>
                 <th>ItemIds</th>
             </tr>
             @foreach (var payment in pbatch.Payments)
@@ -56,7 +59,9 @@
                             }
                         }
                     </td>
-                    <td><a href="#" onclick="ShowNotes('@payment.Publisher');return false">notes</a></td>
+                    <td><a href="#" onclick="ShowNotes('@payment.Publisher', '@pbatch.AccountingPeriod');return false">notes(@payment.NumNotes)</a> |
+                        <a href="#" onclick="ShowAttachments('@payment.Publisher', '@pbatch.AccountingPeriod'); return false">attach(@payment.NumAttachments)</a>
+                    </td>
                     <td><span title="@payment.ItemIds">@payment.ItemIds.Substring(0, payment.ItemIds.Length>10 ? 10 : payment.ItemIds.Length)..</span></td>
                 </tr>
                 if (payment.PubPayCurr != currency) { currency = null; }
@@ -91,6 +96,7 @@
 } @* loop through batches *@
 
 @Html.Partial("PubNotesInfrastructure")
+@Html.Partial("PubAttachmentsInfrastructure")
 
 @section scripts {
 <script type="text/javascript">
