@@ -1,4 +1,5 @@
-﻿using QuickBooks.Services;
+﻿using Accounting.Domain.Entities;
+using QuickBooks.Services;
 using QuickBooks.UI.Models;
 using QuickBooks.UI.Views;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace QuickBooks.UI.Presenters
         public QuickBooksSynchPresenter(IQuickBooksSynchView view)
             : base(view)
         {
-            this.quickBooksSynchService = new QuickBooksSynchService();
+            this.quickBooksSynchService = new QuickBooksSynchService("Aaron Corp");
             View.GetCompanyFiles += View_GetCompanyFiles;
             View.GetQuickBooksSynchSettings += View_GetQuickBooksSynchSettings;
             View.Go += View_Go;
@@ -20,20 +21,21 @@ namespace QuickBooks.UI.Presenters
 
         void View_Go(object sender, System.EventArgs e)
         {
-            var synchTargets = View.SynchTargets;
-            foreach (var target in synchTargets)
+            foreach (var target in View.SynchTargets)
             {
                 switch (target)
                 {
                     case QuickBooksSynchTargets.Customer:
-                        this.quickBooksSynchService.ExtractCustomers();
-                        this.quickBooksSynchService.LoadCustomers();
+                        this.quickBooksSynchService.Load(this.quickBooksSynchService.Extract<Customer>(), true);
                         break;
                     case QuickBooksSynchTargets.Invoice:
+                        this.quickBooksSynchService.Load(this.quickBooksSynchService.Extract<Customer>(), true);
                         break;
                     case QuickBooksSynchTargets.Payment:
+                        this.quickBooksSynchService.Load(this.quickBooksSynchService.Extract<Customer>(), true);
                         break;
                     case QuickBooksSynchTargets.CreditMemo:
+                        this.quickBooksSynchService.Load(this.quickBooksSynchService.Extract<Customer>(), true);
                         break;
                     default:
                         break;
@@ -52,7 +54,7 @@ namespace QuickBooks.UI.Presenters
 
         void View_GetCompanyFiles(object sender, GetCompanyFilesEventArgs e)
         {
-            var companyFiles = new List<CompanyFile>();
+            var companyFiles = new List<Models.CompanyFile>();
             companyFiles.Add(new Models.CompanyFile { Id = 1, Name = "US Company File" });
             companyFiles.Add(new Models.CompanyFile { Id = 2, Name = "INTL Company File" });
             e.CompanyFiles = companyFiles;
