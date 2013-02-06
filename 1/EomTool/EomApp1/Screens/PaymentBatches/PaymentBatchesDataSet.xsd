@@ -13,7 +13,9 @@
               <DbSource ConnectionRef="zDADatabaseNov2012TestConnectionString (Settings)" DbObjectName="zDADatabaseNov2012Test.dbo.CampaignPublisherPaymentBatchesSummary" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT PublisherName, NetTermTypeName, PaymentMethodName, AffiliateCurrencyName, SumItemTotalCost, ItemAccountingStatusName, PaymentBatchId, ItemIds FROM dbo.CampaignPublisherPaymentBatchesSummary</CommandText>
+                    <CommandText>SELECT     PublisherName, NetTermTypeName, PaymentMethodName, AffiliateCurrencyName, SumItemTotalCost, ItemAccountingStatusName, PaymentBatchId, ItemIds
+FROM         CampaignPublisherPaymentBatchesSummary
+WHERE     (ItemAccountingStatusName &lt;&gt; 'Check Signed and Paid')</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -290,7 +292,7 @@ SELECT id, name FROM AffiliatePaymentMethod WHERE (id = @id)</CommandText>
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />
-              <xs:element name="approver_identity" msprop:Generator_ColumnVarNameInTable="columnapprover_identity" msprop:Generator_ColumnPropNameInRow="approver_identity" msprop:Generator_ColumnPropNameInTable="approver_identityColumn" msprop:Generator_UserColumnName="approver_identity" minOccurs="0">
+              <xs:element name="approver_identity" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="approver_identity" msprop:Generator_ColumnVarNameInTable="columnapprover_identity" msprop:Generator_ColumnPropNameInTable="approver_identityColumn" msprop:Generator_UserColumnName="approver_identity" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="255" />
@@ -299,10 +301,10 @@ SELECT id, name FROM AffiliatePaymentMethod WHERE (id = @id)</CommandText>
               </xs:element>
               <xs:element name="payment_batch_state_id" msprop:Generator_ColumnVarNameInTable="columnpayment_batch_state_id" msprop:Generator_ColumnPropNameInRow="payment_batch_state_id" msprop:Generator_ColumnPropNameInTable="payment_batch_state_idColumn" msprop:Generator_UserColumnName="payment_batch_state_id" type="xs:int" default="1" />
               <xs:element name="is_current" msprop:Generator_ColumnVarNameInTable="columnis_current" msprop:Generator_ColumnPropNameInRow="is_current" msprop:Generator_ColumnPropNameInTable="is_currentColumn" msprop:Generator_UserColumnName="is_current" type="xs:boolean" default="true" />
-              <xs:element name="payment_threshold" msprop:Generator_ColumnVarNameInTable="columnpayment_threshold" msprop:Generator_ColumnPropNameInRow="payment_threshold" msprop:Generator_ColumnPropNameInTable="payment_thresholdColumn" msprop:Generator_UserColumnName="payment_threshold" type="xs:decimal" minOccurs="0" />
+              <xs:element name="payment_threshold" msprop:nullValue="-1" msprop:Generator_ColumnPropNameInRow="payment_threshold" msprop:Generator_ColumnVarNameInTable="columnpayment_threshold" msprop:Generator_ColumnPropNameInTable="payment_thresholdColumn" msprop:Generator_UserColumnName="payment_threshold" type="xs:decimal" minOccurs="0" />
               <xs:element name="parent_batch_id" msprop:Generator_ColumnVarNameInTable="columnparent_batch_id" msprop:Generator_ColumnPropNameInRow="parent_batch_id" msprop:Generator_ColumnPropNameInTable="parent_batch_idColumn" msprop:Generator_UserColumnName="parent_batch_id" type="xs:int" minOccurs="0" />
               <xs:element name="payment_method_id" msprop:Generator_ColumnVarNameInTable="columnpayment_method_id" msprop:Generator_ColumnPropNameInRow="payment_method_id" msprop:Generator_ColumnPropNameInTable="payment_method_idColumn" msprop:Generator_UserColumnName="payment_method_id" type="xs:int" minOccurs="0" />
-              <xs:element name="sum_total_cost" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnsum_total_cost" msprop:Generator_ColumnPropNameInRow="sum_total_cost" msprop:Generator_ColumnPropNameInTable="sum_total_costColumn" msprop:Generator_UserColumnName="sum_total_cost" type="xs:decimal" minOccurs="0" />
+              <xs:element name="sum_total_cost" msdata:ReadOnly="true" msprop:nullValue="0" msprop:Generator_ColumnPropNameInRow="sum_total_cost" msprop:Generator_ColumnVarNameInTable="columnsum_total_cost" msprop:Generator_ColumnPropNameInTable="sum_total_costColumn" msprop:Generator_UserColumnName="sum_total_cost" type="xs:decimal" minOccurs="0" />
               <xs:element name="name" msprop:Generator_ColumnVarNameInTable="columnname" msprop:Generator_ColumnPropNameInRow="name" msprop:Generator_ColumnPropNameInTable="nameColumn" msprop:Generator_UserColumnName="name" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
