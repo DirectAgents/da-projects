@@ -45,25 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concrete\AccountingRepository.cs" />
     <Compile Include="Entities\AccountingEntities.cs" />
-    <Compile Include="Migrations\201301240833319_first.cs" />
-    <Compile Include="Migrations\201301240833319_first.Designer.cs">
-      <DependentUpon>201301240833319_first.cs</DependentUpon>
+    <Compile Include="Migrations\201301282118126_first.cs" />
+    <Compile Include="Migrations\201301282118126_first.Designer.cs">
+      <DependentUpon>201301282118126_first.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abstract\" />
-    <Folder Include="Concrete\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201301240833319_first.resx">
-      <DependentUpon>201301240833319_first.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201301282118126_first.resx">
+      <DependentUpon>201301282118126_first.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

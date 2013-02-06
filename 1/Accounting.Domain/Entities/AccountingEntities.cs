@@ -1,23 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
 
 namespace Accounting.Domain.Entities
 {
-    // TODO: add to context
     public class CompanyFile
     {
+        [Key]
         public int CompanyId { get; set; }
-        [MaxLength(100), Required]
-        public string Name { get; set; }
+        [MaxLength(255), Required]
+        public string CompanyName { get; set; }
     }
 
     public partial class AccountingContext : DbContext
     {
+        public DbSet<CompanyFile> CompanyFiles { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SalesTaxCode>()
@@ -32,142 +31,142 @@ namespace Accounting.Domain.Entities
         }
     }
 
-    #region QB
+    #region QB Code Gen
     public partial class AccountingContext : DbContext
     {
-        public DbSet<Account> Accounts { get; set; }
-        public DbSet<AccountTaxLineInfo> AccountTaxLineInfoes { get; set; }
-        public DbSet<ARRefundCreditCard> ARRefundCreditCards { get; set; }
-        public DbSet<ARRefundCreditCardRefundAppliedTo> ARRefundCreditCardRefundAppliedToes { get; set; }
-        public DbSet<Bill> Bills { get; set; }
-        public DbSet<BillExpenseLine> BillExpenseLines { get; set; }
-        public DbSet<BillItemLine> BillItemLines { get; set; }
-        public DbSet<BillLinkedTxn> BillLinkedTxns { get; set; }
-        public DbSet<BillingRate> BillingRates { get; set; }
-        public DbSet<BillingRateLine> BillingRateLines { get; set; }
-        public DbSet<BillPaymentCheck> BillPaymentChecks { get; set; }
-        public DbSet<BillPaymentCheckLine> BillPaymentCheckLines { get; set; }
-        public DbSet<BillPaymentCreditCard> BillPaymentCreditCards { get; set; }
-        public DbSet<BillPaymentCreditCardLine> BillPaymentCreditCardLines { get; set; }
-        public DbSet<BillToPay> BillToPays { get; set; }
-        public DbSet<BuildAssembly> BuildAssemblies { get; set; }
-        public DbSet<BuildAssemblyComponentItemLine> BuildAssemblyComponentItemLines { get; set; }
-        public DbSet<Charge> Charges { get; set; }
-        public DbSet<ChargeLinkedTxn> ChargeLinkedTxns { get; set; }
-        public DbSet<Check> Checks { get; set; }
-        public DbSet<CheckApplyCheckToTxn> CheckApplyCheckToTxns { get; set; }
-        public DbSet<CheckExpenseLine> CheckExpenseLines { get; set; }
-        public DbSet<CheckItemLine> CheckItemLines { get; set; }
-        public DbSet<Class> Classes { get; set; }
-        public DbSet<ClearedStatus> ClearedStatus { get; set; }
-        public DbSet<Company> Companies { get; set; }
-        public DbSet<CompanyActivity> CompanyActivities { get; set; }
-        public DbSet<CreditCardCharge> CreditCardCharges { get; set; }
-        public DbSet<CreditCardChargeExpenseLine> CreditCardChargeExpenseLines { get; set; }
-        public DbSet<CreditCardChargeItemLine> CreditCardChargeItemLines { get; set; }
-        public DbSet<CreditCardCredit> CreditCardCredits { get; set; }
-        public DbSet<CreditCardCreditExpenseLine> CreditCardCreditExpenseLines { get; set; }
-        public DbSet<CreditCardCreditItemLine> CreditCardCreditItemLines { get; set; }
-        public DbSet<CreditMemo> CreditMemoes { get; set; }
-        public DbSet<CreditMemoLine> CreditMemoLines { get; set; }
-        public DbSet<CreditMemoLinkedTxn> CreditMemoLinkedTxns { get; set; }
-        public DbSet<Currency> Currencies { get; set; }
+        //public DbSet<Account> Accounts { get; set; }
+        //public DbSet<AccountTaxLineInfo> AccountTaxLineInfoes { get; set; }
+        //public DbSet<ARRefundCreditCard> ARRefundCreditCards { get; set; }
+        //public DbSet<ARRefundCreditCardRefundAppliedTo> ARRefundCreditCardRefundAppliedToes { get; set; }
+        //public DbSet<Bill> Bills { get; set; }
+        //public DbSet<BillExpenseLine> BillExpenseLines { get; set; }
+        //public DbSet<BillItemLine> BillItemLines { get; set; }
+        //public DbSet<BillLinkedTxn> BillLinkedTxns { get; set; }
+        //public DbSet<BillingRate> BillingRates { get; set; }
+        //public DbSet<BillingRateLine> BillingRateLines { get; set; }
+        //public DbSet<BillPaymentCheck> BillPaymentChecks { get; set; }
+        //public DbSet<BillPaymentCheckLine> BillPaymentCheckLines { get; set; }
+        //public DbSet<BillPaymentCreditCard> BillPaymentCreditCards { get; set; }
+        //public DbSet<BillPaymentCreditCardLine> BillPaymentCreditCardLines { get; set; }
+        //public DbSet<BillToPay> BillToPays { get; set; }
+        //public DbSet<BuildAssembly> BuildAssemblies { get; set; }
+        //public DbSet<BuildAssemblyComponentItemLine> BuildAssemblyComponentItemLines { get; set; }
+        //public DbSet<Charge> Charges { get; set; }
+        //public DbSet<ChargeLinkedTxn> ChargeLinkedTxns { get; set; }
+        //public DbSet<Check> Checks { get; set; }
+        //public DbSet<CheckApplyCheckToTxn> CheckApplyCheckToTxns { get; set; }
+        //public DbSet<CheckExpenseLine> CheckExpenseLines { get; set; }
+        //public DbSet<CheckItemLine> CheckItemLines { get; set; }
+        //public DbSet<Class> Classes { get; set; }
+        //public DbSet<ClearedStatus> ClearedStatus { get; set; }
+        //public DbSet<Company> Companies { get; set; }
+        //public DbSet<CompanyActivity> CompanyActivities { get; set; }
+        //public DbSet<CreditCardCharge> CreditCardCharges { get; set; }
+        //public DbSet<CreditCardChargeExpenseLine> CreditCardChargeExpenseLines { get; set; }
+        //public DbSet<CreditCardChargeItemLine> CreditCardChargeItemLines { get; set; }
+        //public DbSet<CreditCardCredit> CreditCardCredits { get; set; }
+        //public DbSet<CreditCardCreditExpenseLine> CreditCardCreditExpenseLines { get; set; }
+        //public DbSet<CreditCardCreditItemLine> CreditCardCreditItemLines { get; set; }
+        //public DbSet<CreditMemo> CreditMemoes { get; set; }
+        //public DbSet<CreditMemoLine> CreditMemoLines { get; set; }
+        //public DbSet<CreditMemoLinkedTxn> CreditMemoLinkedTxns { get; set; }
+        //public DbSet<Currency> Currencies { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<CustomerMsg> CustomerMsgs { get; set; }
-        public DbSet<CustomerType> CustomerTypes { get; set; }
-        public DbSet<CustomField> CustomFields { get; set; }
-        public DbSet<DateDrivenTerms> DateDrivenTerms { get; set; }
-        public DbSet<Deposit> Deposits { get; set; }
-        public DbSet<DepositLine> DepositLines { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<EmployeeEarning> EmployeeEarnings { get; set; }
+        //public DbSet<CustomerMsg> CustomerMsgs { get; set; }
+        //public DbSet<CustomerType> CustomerTypes { get; set; }
+        //public DbSet<CustomField> CustomFields { get; set; }
+        //public DbSet<DateDrivenTerms> DateDrivenTerms { get; set; }
+        //public DbSet<Deposit> Deposits { get; set; }
+        //public DbSet<DepositLine> DepositLines { get; set; }
+        //public DbSet<Employee> Employees { get; set; }
+        //public DbSet<EmployeeEarning> EmployeeEarnings { get; set; }
         public DbSet<Entity> Entities { get; set; }
-        public DbSet<Estimate> Estimates { get; set; }
-        public DbSet<EstimateLine> EstimateLines { get; set; }
-        public DbSet<EstimateLinkedTxn> EstimateLinkedTxns { get; set; }
-        public DbSet<Host> Hosts { get; set; }
-        public DbSet<HostMetaData> HostMetaDatas { get; set; }
-        public DbSet<HostSupportedVersions> HostSupportedVersions { get; set; }
-        public DbSet<InventoryAdjustment> InventoryAdjustments { get; set; }
-        public DbSet<InventoryAdjustmentLine> InventoryAdjustmentLines { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<InvoiceLine> InvoiceLines { get; set; }
-        public DbSet<InvoiceLinkedTxn> InvoiceLinkedTxns { get; set; }
-        public DbSet<Item> Items { get; set; }
-        public DbSet<ItemAssembliesCanBuild> ItemAssembliesCanBuilds { get; set; }
-        public DbSet<ItemDiscount> ItemDiscounts { get; set; }
-        public DbSet<ItemFixedAsset> ItemFixedAssets { get; set; }
-        public DbSet<ItemGroup> ItemGroups { get; set; }
-        public DbSet<ItemGroupLine> ItemGroupLines { get; set; }
-        public DbSet<ItemInventory> ItemInventories { get; set; }
-        public DbSet<ItemInventoryAssembly> ItemInventoryAssemblies { get; set; }
-        public DbSet<ItemInventoryAssemblyLine> ItemInventoryAssemblyLines { get; set; }
-        public DbSet<ItemNonInventory> ItemNonInventories { get; set; }
-        public DbSet<ItemOtherCharge> ItemOtherCharges { get; set; }
-        public DbSet<ItemPayment> ItemPayments { get; set; }
-        public DbSet<ItemReceipt> ItemReceipts { get; set; }
-        public DbSet<ItemReceiptExpenseLine> ItemReceiptExpenseLines { get; set; }
-        public DbSet<ItemReceiptItemLine> ItemReceiptItemLines { get; set; }
-        public DbSet<ItemReceiptLinkedTxn> ItemReceiptLinkedTxns { get; set; }
-        public DbSet<ItemSalesTax> ItemSalesTaxes { get; set; }
-        public DbSet<ItemSalesTaxGroup> ItemSalesTaxGroups { get; set; }
-        public DbSet<ItemSalesTaxGroupLine> ItemSalesTaxGroupLines { get; set; }
-        public DbSet<ItemService> ItemServices { get; set; }
-        public DbSet<ItemSubtotal> ItemSubtotals { get; set; }
-        public DbSet<JobType> JobTypes { get; set; }
-        public DbSet<JournalEntry> JournalEntries { get; set; }
-        public DbSet<JournalEntryCreditLine> JournalEntryCreditLines { get; set; }
-        public DbSet<JournalEntryDebitLine> JournalEntryDebitLines { get; set; }
-        public DbSet<JournalEntryLine> JournalEntryLines { get; set; }
-        public DbSet<ListDeleted> ListDeleteds { get; set; }
-        public DbSet<OtherName> OtherNames { get; set; }
-        public DbSet<PaymentMethod> PaymentMethods { get; set; }
-        public DbSet<PayrollItemNonWage> PayrollItemNonWages { get; set; }
-        public DbSet<PayrollItemWage> PayrollItemWages { get; set; }
-        public DbSet<Preferences> Preferences { get; set; }
-        public DbSet<PriceLevel> PriceLevels { get; set; }
-        public DbSet<PriceLevelPerItem> PriceLevelPerItems { get; set; }
-        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
-        public DbSet<PurchaseOrderLine> PurchaseOrderLines { get; set; }
-        public DbSet<PurchaseOrderLinkedTxn> PurchaseOrderLinkedTxns { get; set; }
-        public DbSet<ReceivePayment> ReceivePayments { get; set; }
-        public DbSet<ReceivePaymentLine> ReceivePaymentLines { get; set; }
-        public DbSet<ReceivePaymentToDeposit> ReceivePaymentToDeposits { get; set; }
-        public DbSet<Sales> Sales { get; set; }
-        public DbSet<SalesLine> SalesLines { get; set; }
-        public DbSet<SalesOrder> SalesOrders { get; set; }
-        public DbSet<SalesOrderLine> SalesOrderLines { get; set; }
-        public DbSet<SalesOrderLinkedTxn> SalesOrderLinkedTxns { get; set; }
-        public DbSet<SalesReceipt> SalesReceipts { get; set; }
-        public DbSet<SalesReceiptLine> SalesReceiptLines { get; set; }
-        public DbSet<SalesRep> SalesReps { get; set; }
-        public DbSet<SalesTaxCode> SalesTaxCodes { get; set; }
-        public DbSet<SalesTaxPaymentCheck> SalesTaxPaymentChecks { get; set; }
-        public DbSet<SalesTaxPaymentCheckLine> SalesTaxPaymentCheckLines { get; set; }
-        public DbSet<ShipMethod> ShipMethods { get; set; }
-        public DbSet<SpecialAccount> SpecialAccounts { get; set; }
-        public DbSet<SpecialItem> SpecialItems { get; set; }
-        public DbSet<StandardTerms> StandardTerms { get; set; }
-        public DbSet<TaxCode> TaxCodes { get; set; }
-        public DbSet<Template> Templates { get; set; }
-        public DbSet<Terms> Terms { get; set; }
-        public DbSet<TimeTracking> TimeTrackings { get; set; }
-        public DbSet<ToDo> ToDoes { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<TxnDeleted> TxnDeleteds { get; set; }
-        public DbSet<UnitOfMeasureSet> UnitOfMeasureSets { get; set; }
-        public DbSet<UnitOfMeasureSetRelatedUnit> UnitOfMeasureSetRelatedUnits { get; set; }
-        public DbSet<UnitOfMeasureSetDefaultUnit> UnitOfMeasureSetDefaultUnits { get; set; }
-        public DbSet<Vehicle> Vehicles { get; set; }
-        public DbSet<VehicleMileage> VehicleMileages { get; set; }
-        public DbSet<Vendor> Vendors { get; set; }
-        public DbSet<VendorCredit> VendorCredits { get; set; }
-        public DbSet<VendorCreditExpenseLine> VendorCreditExpenseLines { get; set; }
-        public DbSet<VendorCreditItemLine> VendorCreditItemLines { get; set; }
-        public DbSet<VendorCreditLinkedTxn> VendorCreditLinkedTxns { get; set; }
-        public DbSet<VendorType> VendorTypes { get; set; }
-        public DbSet<WorkersCompCode> WorkersCompCodes { get; set; }
-        public DbSet<WorkersCompCodeRateHistory> WorkersCompCodeRateHistories { get; set; }
+        //public DbSet<Estimate> Estimates { get; set; }
+        //public DbSet<EstimateLine> EstimateLines { get; set; }
+        //public DbSet<EstimateLinkedTxn> EstimateLinkedTxns { get; set; }
+        //public DbSet<Host> Hosts { get; set; }
+        //public DbSet<HostMetaData> HostMetaDatas { get; set; }
+        //public DbSet<HostSupportedVersions> HostSupportedVersions { get; set; }
+        //public DbSet<InventoryAdjustment> InventoryAdjustments { get; set; }
+        //public DbSet<InventoryAdjustmentLine> InventoryAdjustmentLines { get; set; }
+        //public DbSet<Invoice> Invoices { get; set; }
+        //public DbSet<InvoiceLine> InvoiceLines { get; set; }
+        //public DbSet<InvoiceLinkedTxn> InvoiceLinkedTxns { get; set; }
+        //public DbSet<Item> Items { get; set; }
+        //public DbSet<ItemAssembliesCanBuild> ItemAssembliesCanBuilds { get; set; }
+        //public DbSet<ItemDiscount> ItemDiscounts { get; set; }
+        //public DbSet<ItemFixedAsset> ItemFixedAssets { get; set; }
+        //public DbSet<ItemGroup> ItemGroups { get; set; }
+        //public DbSet<ItemGroupLine> ItemGroupLines { get; set; }
+        //public DbSet<ItemInventory> ItemInventories { get; set; }
+        //public DbSet<ItemInventoryAssembly> ItemInventoryAssemblies { get; set; }
+        //public DbSet<ItemInventoryAssemblyLine> ItemInventoryAssemblyLines { get; set; }
+        //public DbSet<ItemNonInventory> ItemNonInventories { get; set; }
+        //public DbSet<ItemOtherCharge> ItemOtherCharges { get; set; }
+        //public DbSet<ItemPayment> ItemPayments { get; set; }
+        //public DbSet<ItemReceipt> ItemReceipts { get; set; }
+        //public DbSet<ItemReceiptExpenseLine> ItemReceiptExpenseLines { get; set; }
+        //public DbSet<ItemReceiptItemLine> ItemReceiptItemLines { get; set; }
+        //public DbSet<ItemReceiptLinkedTxn> ItemReceiptLinkedTxns { get; set; }
+        //public DbSet<ItemSalesTax> ItemSalesTaxes { get; set; }
+        //public DbSet<ItemSalesTaxGroup> ItemSalesTaxGroups { get; set; }
+        //public DbSet<ItemSalesTaxGroupLine> ItemSalesTaxGroupLines { get; set; }
+        //public DbSet<ItemService> ItemServices { get; set; }
+        //public DbSet<ItemSubtotal> ItemSubtotals { get; set; }
+        //public DbSet<JobType> JobTypes { get; set; }
+        //public DbSet<JournalEntry> JournalEntries { get; set; }
+        //public DbSet<JournalEntryCreditLine> JournalEntryCreditLines { get; set; }
+        //public DbSet<JournalEntryDebitLine> JournalEntryDebitLines { get; set; }
+        //public DbSet<JournalEntryLine> JournalEntryLines { get; set; }
+        //public DbSet<ListDeleted> ListDeleteds { get; set; }
+        //public DbSet<OtherName> OtherNames { get; set; }
+        //public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        //public DbSet<PayrollItemNonWage> PayrollItemNonWages { get; set; }
+        //public DbSet<PayrollItemWage> PayrollItemWages { get; set; }
+        //public DbSet<Preferences> Preferences { get; set; }
+        //public DbSet<PriceLevel> PriceLevels { get; set; }
+        //public DbSet<PriceLevelPerItem> PriceLevelPerItems { get; set; }
+        //public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        //public DbSet<PurchaseOrderLine> PurchaseOrderLines { get; set; }
+        //public DbSet<PurchaseOrderLinkedTxn> PurchaseOrderLinkedTxns { get; set; }
+        //public DbSet<ReceivePayment> ReceivePayments { get; set; }
+        //public DbSet<ReceivePaymentLine> ReceivePaymentLines { get; set; }
+        //public DbSet<ReceivePaymentToDeposit> ReceivePaymentToDeposits { get; set; }
+        //public DbSet<Sales> Sales { get; set; }
+        //public DbSet<SalesLine> SalesLines { get; set; }
+        //public DbSet<SalesOrder> SalesOrders { get; set; }
+        //public DbSet<SalesOrderLine> SalesOrderLines { get; set; }
+        //public DbSet<SalesOrderLinkedTxn> SalesOrderLinkedTxns { get; set; }
+        //public DbSet<SalesReceipt> SalesReceipts { get; set; }
+        //public DbSet<SalesReceiptLine> SalesReceiptLines { get; set; }
+        //public DbSet<SalesRep> SalesReps { get; set; }
+        //public DbSet<SalesTaxCode> SalesTaxCodes { get; set; }
+        //public DbSet<SalesTaxPaymentCheck> SalesTaxPaymentChecks { get; set; }
+        //public DbSet<SalesTaxPaymentCheckLine> SalesTaxPaymentCheckLines { get; set; }
+        //public DbSet<ShipMethod> ShipMethods { get; set; }
+        //public DbSet<SpecialAccount> SpecialAccounts { get; set; }
+        //public DbSet<SpecialItem> SpecialItems { get; set; }
+        //public DbSet<StandardTerms> StandardTerms { get; set; }
+        //public DbSet<TaxCode> TaxCodes { get; set; }
+        //public DbSet<Template> Templates { get; set; }
+        //public DbSet<Terms> Terms { get; set; }
+        //public DbSet<TimeTracking> TimeTrackings { get; set; }
+        //public DbSet<ToDo> ToDoes { get; set; }
+        //public DbSet<Transaction> Transactions { get; set; }
+        //public DbSet<TxnDeleted> TxnDeleteds { get; set; }
+        //public DbSet<UnitOfMeasureSet> UnitOfMeasureSets { get; set; }
+        //public DbSet<UnitOfMeasureSetRelatedUnit> UnitOfMeasureSetRelatedUnits { get; set; }
+        //public DbSet<UnitOfMeasureSetDefaultUnit> UnitOfMeasureSetDefaultUnits { get; set; }
+        //public DbSet<Vehicle> Vehicles { get; set; }
+        //public DbSet<VehicleMileage> VehicleMileages { get; set; }
+        //public DbSet<Vendor> Vendors { get; set; }
+        //public DbSet<VendorCredit> VendorCredits { get; set; }
+        //public DbSet<VendorCreditExpenseLine> VendorCreditExpenseLines { get; set; }
+        //public DbSet<VendorCreditItemLine> VendorCreditItemLines { get; set; }
+        //public DbSet<VendorCreditLinkedTxn> VendorCreditLinkedTxns { get; set; }
+        //public DbSet<VendorType> VendorTypes { get; set; }
+        //public DbSet<WorkersCompCode> WorkersCompCodes { get; set; }
+        //public DbSet<WorkersCompCodeRateHistory> WorkersCompCodeRateHistories { get; set; }
     }
     public partial class Account
     {

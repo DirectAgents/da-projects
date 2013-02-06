@@ -11,7 +11,7 @@ namespace Accounting.Domain.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201301240833319_first"; }
+            get { return "201301282118126_first"; }
         }
         
         string IMigrationMetadata.Source
