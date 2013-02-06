@@ -93,5 +93,18 @@ namespace EomTool.Domain.Concrete
             context.PubNotes.AddObject(pubNote);
             context.SaveChanges();
         }
+
+        // --- Attachments ---
+
+        public IQueryable<PubAttachment> PubAttachments
+        {
+            get { return context.PubAttachments; }
+        }
+
+        public IQueryable<PubAttachment> PubAttachmentsForPublisher(string pubName)
+        {
+            return context.PubAttachments.Where(a => a.publisher_name == pubName);
+        }
+
     }
 }

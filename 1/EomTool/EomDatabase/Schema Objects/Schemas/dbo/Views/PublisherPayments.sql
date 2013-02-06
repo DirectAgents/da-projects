@@ -13,8 +13,7 @@ FROM         dbo.Item INNER JOIN
                       dbo.ItemAccountingStatus ON dbo.Item.item_accounting_status_id = dbo.ItemAccountingStatus.id INNER JOIN
                       dbo.PaymentBatch ON dbo.Item.payment_batch_id = dbo.PaymentBatch.id INNER JOIN
                       dbo.PaymentBatchState ON dbo.PaymentBatch.payment_batch_state_id = dbo.PaymentBatchState.id INNER JOIN
-                      dbo.AffiliatePaymentMethod ON dbo.Affiliate.payment_method_id = dbo.AffiliatePaymentMethod.id AND 
-                      dbo.PaymentBatch.payment_method_id = dbo.AffiliatePaymentMethod.id INNER JOIN
+                      dbo.AffiliatePaymentMethod ON dbo.Affiliate.payment_method_id = dbo.AffiliatePaymentMethod.id INNER JOIN
                       dbo.NetTermType ON dbo.Affiliate.net_term_type_id = dbo.NetTermType.id
 GROUP BY dbo.Affiliate.name, dbo.Item.item_accounting_status_id, dbo.ItemAccountingStatus.name, dbo.Affiliate.payment_method_id, dbo.AffiliatePaymentMethod.name, 
                       dbo.Item.payment_batch_id, dbo.PaymentBatch.payment_batch_state_id, dbo.PaymentBatchState.name, dbo.PaymentBatch.approver_identity, AffCurrency.name, 

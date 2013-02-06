@@ -69,4 +69,5 @@ ALTER TABLE dbo.Item ADD CONSTRAINT
 GO
 
 //TODO: Add first and second batch approvers to DAMain1 Settings table
+//      + thresholds
 */

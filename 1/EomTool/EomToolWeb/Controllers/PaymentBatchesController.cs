@@ -8,6 +8,9 @@ using EomTool.Domain.Concrete;
 using EomTool.Domain.Entities;
 using EomToolWeb.Infrastructure;
 using EomToolWeb.Models;
+using System.IO;
+using Microsoft.Win32;
+using System.Net.Mime;
 
 namespace EomToolWeb.Controllers
 {
@@ -90,6 +93,14 @@ namespace EomToolWeb.Controllers
                 bool sentOnly = (test == null);
                 var pbatches = pbRepo.PaymentBatchesForUser(identityName, sentOnly);
                 var payments = pbRepo.PublisherPayments;
+                var pubNotes = pbRepo.PubNotes;
+                var pubAttachments = pbRepo.PubAttachments;
+                foreach (var payment in payments)
+                {
+                    payment.AccountingPeriod = accountingPeriod;
+                    payment.NumNotes = pubNotes.Where(n => n.publisher_name == payment.Publisher).Count();
+                    payment.NumAttachments = pubAttachments.Where(a => a.publisher_name == payment.Publisher).Count();
+                }
 
                 foreach (var pbatch in pbatches)
                 {
@@ -118,12 +129,14 @@ namespace EomToolWeb.Controllers
                 var accountingPeriod = AccountingPeriods[i];
                 var pbRepo = pbRepositories[accountingPeriod];
                 var pubNotes = pbRepo.PubNotes;
+                var pubAttachments = pbRepo.PubAttachments;
 
                 var payments = pbRepo.PublisherPaymentsForUser(identityName, true);
                 foreach (var payment in payments)
                 {
                     payment.AccountingPeriod = accountingPeriod;
                     payment.NumNotes = pubNotes.Where(n => n.publisher_name == payment.Publisher).Count();
+                    payment.NumAttachments = pubAttachments.Where(a => a.publisher_name == payment.Publisher).Count();
                 }
                 allPayments = allPayments == null ? payments : allPayments.Concat(payments);
             }
@@ -207,5 +220,47 @@ namespace EomToolWeb.Controllers
                 return RedirectToAction("Index");
         }
 
+        // --- Attachments ---
+
+        public ActionResult PubAttachments(string pubname, string acctperiod)
+        {
+            var pbRepo = pbRepositories[acctperiod];
+            var model = pbRepo.PubAttachmentsForPublisher(pubname).OrderBy(pa => pa.id);
+            ViewData["acctperiod"] = acctperiod;
+            return PartialView(model);
+        }
+
+        public FileContentResult PubAttachment(int id, string acctperiod, bool download = false)
+        {
+            var pbRepo = pbRepositories[acctperiod];
+            var pa = pbRepo.PubAttachments.Where(a => a.id == id).First();
+
+            var cd = new ContentDisposition
+            {
+                FileName = pa.name,
+                Inline = !download
+            };
+            Response.AppendHeader("Content-Disposition", cd.ToString());
+            return File(pa.binary_content, GetContentType(pa.name));
+        }
+
+        public static string GetContentType(string filename)
+        {
+            string mimeType = "application/unknown";
+            string extension = Path.GetExtension(filename);
+
+            if (string.IsNullOrWhiteSpace(extension))
+                return mimeType;
+
+            RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(extension.ToLower());
+
+            if (regKey != null)
+            {
+                object contentType = regKey.GetValue("Content Type");
+                if (contentType != null)
+                    mimeType = contentType.ToString();
+            }
+            return mimeType;
+        }
     }
 }

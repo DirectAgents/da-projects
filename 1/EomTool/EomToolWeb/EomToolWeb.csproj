@@ -2663,6 +2663,8 @@
     <Content Include="Views\PaymentBatches\PubNotes.cshtml" />
     <Content Include="Views\PaymentBatches\Summary.cshtml" />
     <Content Include="Views\PaymentBatches\PubNotesInfrastructure.cshtml" />
+    <Content Include="Views\PaymentBatches\PubAttachments.cshtml" />
+    <Content Include="Views\PaymentBatches\PubAttachmentsInfrastructure.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

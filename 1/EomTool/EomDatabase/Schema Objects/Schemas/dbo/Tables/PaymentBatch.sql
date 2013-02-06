@@ -6,6 +6,8 @@
 	[payment_threshold] [money] NULL,
 	[parent_batch_id] [int] NULL,
 	[payment_method_id] [int] NULL,
+	[name] [varchar](255) NULL,
+	[date_sent] [datetime] NULL,
  CONSTRAINT [PK_PaymentBatch] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

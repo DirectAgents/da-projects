@@ -1,0 +1,24 @@
+﻿<div id="divAttachments" title="Attachments">
+    <div id="divAttachmentsInner"></div>
+</div>
+
+<script type="text/javascript">
+
+    function ShowAttachments(pubname, acctperiod) {
+        $.get('@Url.Action("PubAttachments")', { pubname: pubname, acctperiod: acctperiod }, function (data) {
+            $('#divAttachmentsInner').html(data);
+            $('#divAttachments').dialog("option", "title", pubname + " - " + acctperiod + " - attachments");
+            $('#divAttachments').dialog("open");
+        });
+    }
+
+    $(function () {
+        $("#divAttachments").dialog({
+            autoOpen: false,
+            width: 750,
+            height: 400,
+            modal: true
+        });
+    });
+
+</script>

@@ -29,6 +29,7 @@ namespace EomApp1.Screens.PaymentBatches
         public Nullable<int> parent_batch_id { get; set; }
         public Nullable<int> payment_method_id { get; set; }
         public string name { get; set; }
+        public Nullable<System.DateTime> date_sent { get; set; }
     
         public virtual AffiliatePaymentMethod AffiliatePaymentMethod { get; set; }
         public virtual ICollection<Item> Items { get; set; }
