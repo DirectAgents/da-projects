@@ -76,44 +76,59 @@ namespace EomToolWeb.Controllers
             return (identity == null || identitiesCanHold.Contains(identity));
         }
 
-        public ActionResult Index(string test)
+        public ActionResult Index(string test, int? batchid, string acctperiod)
         {
             string identityName = GetIdentityName(test);
             var model = new PaymentBatchesViewModel()
             {
                 Test = test,
+                ShowActions = false,
                 AllowHold = AllowHold(identityName)
             };
 
             for (int i = 0; i < AccountingPeriods.Count; i++)
             {
                 var accountingPeriod = AccountingPeriods[i];
+                if (!string.IsNullOrWhiteSpace(acctperiod) && acctperiod != accountingPeriod)
+                    continue;
+
                 var pbRepo = pbRepositories[accountingPeriod];
+                IQueryable<PaymentBatch> pbatches;
 
-                bool sentOnly = (test == null);
-                var pbatches = pbRepo.PaymentBatchesForUser(identityName, sentOnly);
-                var payments = pbRepo.PublisherPayments;
-                var pubNotes = pbRepo.PubNotes;
-                var pubAttachments = pbRepo.PubAttachments;
-                foreach (var payment in payments)
+                if (batchid.HasValue)
                 {
-                    payment.AccountingPeriod = accountingPeriod;
-                    payment.NumNotes = pubNotes.Where(n => n.publisher_name == payment.Publisher).Count();
-                    payment.NumAttachments = pubAttachments.Where(a => a.publisher_name == payment.Publisher).Count();
+                    pbatches = pbRepo.PaymentBatches.Where(pb => pb.id == batchid.Value);
+                }
+                else
+                {
+                    bool sentOnly = (model.IsTest == false);
+                    pbatches = pbRepo.PaymentBatchesForUser(identityName, sentOnly);
                 }
 
-                foreach (var pbatch in pbatches)
+                if (pbatches.Count() > 0)
                 {
-                    pbatch.AccountingPeriod = accountingPeriod;
-                    pbatch.Payments = payments.Where(p => p.PaymentBatchId == pbatch.id);
+                    var payments = pbRepo.PublisherPayments;
+                    var pubNotes = pbRepo.PubNotes;
+                    var pubAttachments = pbRepo.PubAttachments;
+                    foreach (var payment in payments)
+                    {
+                        payment.AccountingPeriod = accountingPeriod;
+                        payment.NumNotes = pubNotes.Where(n => n.publisher_name == payment.Publisher).Count();
+                        payment.NumAttachments = pubAttachments.Where(a => a.publisher_name == payment.Publisher).Count();
+                    }
+                    foreach (var pbatch in pbatches)
+                    {
+                        pbatch.AccountingPeriod = accountingPeriod;
+                        pbatch.Payments = payments.Where(p => p.PaymentBatchId == pbatch.id);
+                    }
                 }
-
                 model.Batches = model.Batches == null ? pbatches : model.Batches.Concat(pbatches);
             }
 
             return View(model);
         }
 
+        // Summary of Payments
         public ActionResult Summary(string test)
         {
             string identityName = GetIdentityName(test);

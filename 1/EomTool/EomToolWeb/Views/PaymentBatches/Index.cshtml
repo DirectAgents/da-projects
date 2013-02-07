@@ -11,16 +11,18 @@
 }
 @foreach (var pbatch in Model.Batches)
 {
+    string batchTitle = pbatch.AccountingPeriod + " Batch " + pbatch.id;
     <br />
     <span>
-        @pbatch.AccountingPeriod Batch @pbatch.id
+        @Html.ActionLink(batchTitle, "Index", new { acctperiod = pbatch.AccountingPeriod, batchid = pbatch.id })
         @if (!string.IsNullOrWhiteSpace(pbatch.name)) {
-            <text>"@pbatch.name"</text>
+            <b>"@pbatch.name"</b>
         }
         @if (pbatch.payment_threshold != null) {
             <text>(threshold: @pbatch.payment_threshold)</text>
         }
         - @pbatch.PaymentBatchState.name @pbatch.date_sent
+        [@pbatch.approver_abbrev]
     </span>
     if (pbatch.Payments.Count() > 0)
     {
@@ -35,9 +37,13 @@
                 <th>PayMethod&nbsp;</th>
                 <th>NetTerms&nbsp;</th>
                 <th>Status</th>
+@if (Model.ShowActions) {
                 <th></th>
+}
                 <th>Notes | Attach</th>
+@if (Model.IsTest) {
                 <th>ItemIds</th>
+}
             </tr>
             @foreach (var payment in pbatch.Payments)
             {
@@ -48,6 +54,7 @@
                     <td>@payment.PaymentMethod</td>
                     <td>@payment.NetTermType</td>
                     <td id="statusarea@(iPayment)">@payment.AccountingStatus</td>
+@if (Model.ShowActions) {
                     <td id="actionarea@(iPayment)">
                         @using (Html.BeginForm("ReleaseItems", "PaymentBatches", FormMethod.Post, new { id = "form" + iPayment }))
                         {
@@ -59,10 +66,13 @@
                             }
                         }
                     </td>
+}
                     <td><a href="#" onclick="ShowNotes('@payment.Publisher', '@pbatch.AccountingPeriod');return false">notes(@payment.NumNotes)</a> |
                         <a href="#" onclick="ShowAttachments('@payment.Publisher', '@pbatch.AccountingPeriod'); return false">attach(@payment.NumAttachments)</a>
                     </td>
+@if (Model.IsTest) {
                     <td><span title="@payment.ItemIds">@payment.ItemIds.Substring(0, payment.ItemIds.Length>10 ? 10 : payment.ItemIds.Length)..</span></td>
+}
                 </tr>
                 if (payment.PubPayCurr != currency) { currency = null; }
                 iPayment++;
@@ -74,6 +84,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
+@if (Model.ShowActions) {
                 <td>
                     @if (pbatch.Payments.Count() > 1)
                     {
@@ -85,8 +96,11 @@
                         }
                     }
                 </td>
+}
                 <td></td>
+@if (Model.IsTest) {
                 <td></td>
+}
             </tr>
         </table>
     }
