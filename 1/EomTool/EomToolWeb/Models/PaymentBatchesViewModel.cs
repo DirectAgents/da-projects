@@ -8,6 +8,10 @@ namespace EomToolWeb.Models
     public class PaymentsViewModelBase
     {
         public string Test { get; set; }
+        public bool IsTest {
+            get { return !string.IsNullOrWhiteSpace(this.Test); }
+        }
+        public bool ShowActions { get; set; }
         public bool AllowHold { get; set; }
     }
 
