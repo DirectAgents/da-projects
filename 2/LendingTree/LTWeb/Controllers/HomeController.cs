@@ -12,11 +12,11 @@ namespace LTWeb.Controllers
             return RedirectToAction("Show", "Questions");
         }
 
-        public static void PrepareLendingTreeModelForNewSession(ILendingTreeModel lendingTreeModel, int? mode)
+        public static void PrepareLendingTreeModelForNewSession(ILendingTreeModel lendingTreeModel, int? v)
         {
-            if (mode != null)
+            if (v != null)
             {
-                lendingTreeModel.SsnRequired = (mode == AppSettings.SsnRequiredModeValue);
+                lendingTreeModel.SsnRequired = (v == AppSettings.SsnRequiredModeValue);
             }
             lendingTreeModel.VisitorIPAddress = System.Web.HttpContext.Current.Request.UserHostAddress;
             lendingTreeModel.VisitorURL = AppSettings.VisitorUrl;

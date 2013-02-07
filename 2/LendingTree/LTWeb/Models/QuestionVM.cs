@@ -35,6 +35,7 @@ namespace LTWeb.Models
         public bool IsFirstQuestion { get { return (QuestionIndex == 0); } }
 
         public string DefaultValue { get; set; }
+        public string State { get; set; }
     }
 
     public class OptionVM

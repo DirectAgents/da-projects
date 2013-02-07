@@ -157,9 +157,11 @@ h2
 }
 #step1 .form-content
 {
-    background: url('images/bg-narrow-repeat.png') repeat-y scroll right top transparent;
+    background: url('images/bg-narrow-repeat.png') repeat-y scroll left top transparent;
     padding: 0pt;
-    overflow: hidden;
+    overflow:hidden;
+
+   
 }
 #step1 .form-fields .dropdown-item, #step1 .form-fields .radio-item, #step1 .form-fields .enter-item
 {
@@ -479,6 +481,9 @@ div.smartTipWindow
     float: left;
     width: 15px;
 }
+.ssn-input {
+    float:left;
+}
 .smallLabel_blurb
 {
     float: left;
@@ -606,10 +611,12 @@ div.smartTipWindow
     height: 70px;
     position: relative;
     float: left;
+
 }
 #step1 .security
 {
-    margin: 10px 0pt 0pt 10px;
+    float:left;
+    margin: 10px 0px 0px 10px;
 }
 #step1 .security2
 {
@@ -619,6 +626,61 @@ div.smartTipWindow
 {
     margin: 20px 0pt 0pt 150px;
 }
+
+
+a.tip {
+   position: absolute;
+   margin-top:18px;
+   margin-left:-80px;
+  text-decoration: none;
+  font-size:11px;
+}
+a.tip span {display: none;}
+a.tip:hover span {
+  display: block;
+  position: relative; 
+  padding: 1.0em;
+  content: attr(title);
+  text-align: left;
+  width: 325px;
+  height: 80px;
+  white-space: nowrap;
+  top: -125px;
+  left:-30px;
+  background:#55ad1b;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;    
+  color: #fff;
+  font-size: 12px;
+  letter-spacing:0px;
+  line-height:16px;
+  -moz-box-shadow:    1px -1px 4px 4px #ccc;
+  -webkit-box-shadow: 1px -1px 4px 4px #ccc;
+  box-shadow:         1px -1px 4px 4px #ccc;
+  z-index:1 !important;
+}
+a.tip:hover span:after {
+  position: absolute;
+  display: block;
+  content: "";  
+  border-color: #55ad1b transparent transparent transparent;
+  border-style: solid;
+  border-width: 10px;
+  height:0;
+  width:0;
+  position:absolute;
+  bottom: -16px;
+  left:1em;
+  z-index:301 !important;
+}
+
+
+.explain-this{ background:url("https://mortgage-rate-offers.com/images/question-mark.gif") no-repeat; height:12px; width:100px; float:left; 
+margin-left:10px; padding-left:15px; padding-top:4px;}
+
+
+
 .btnPage1, .btnPage2, .btnPage3
 {
     height: 72px;
@@ -632,6 +694,7 @@ div.smartTipWindow
     height: 72px;
     background-image: url('images/btn-getquotes.jpg');
     margin-top: 30px;
+    margin-left:10px;
     border: 0px;
     cursor: pointer;
 }

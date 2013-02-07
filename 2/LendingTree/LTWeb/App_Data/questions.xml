@@ -253,7 +253,7 @@
     <question key="WorkPhone" text="Work Phone:" answertype="phone" />
   </question>
   <question key="SSN" text="Social Security Number:" answertype="ssn" 
-            subtext="(optional)" 
+            subtext="(optional)"
             supertext="NOT REQUIRED, but providing this final detail could help you save!"
             dependencykey="SsnRequired" 
             dependencyvalue="False" />
