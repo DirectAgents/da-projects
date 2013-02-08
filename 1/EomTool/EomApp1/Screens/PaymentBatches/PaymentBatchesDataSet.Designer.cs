@@ -1905,11 +1905,11 @@ namespace EomApp1.Screens.PaymentBatches {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public string approver_identity {
                 get {
-                    try {
-                        return ((string)(this[this.tablePaymentBatch.approver_identityColumn]));
+                    if (this.Isapprover_identityNull()) {
+                        return null;
                     }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'approver_identity\' in table \'PaymentBatch\' is DBNull.", e);
+                    else {
+                        return ((string)(this[this.tablePaymentBatch.approver_identityColumn]));
                     }
                 }
                 set {
@@ -1943,11 +1943,11 @@ namespace EomApp1.Screens.PaymentBatches {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public decimal payment_threshold {
                 get {
-                    try {
-                        return ((decimal)(this[this.tablePaymentBatch.payment_thresholdColumn]));
+                    if (this.Ispayment_thresholdNull()) {
+                        return -1m;
                     }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'payment_threshold\' in table \'PaymentBatch\' is DBNull.", e);
+                    else {
+                        return ((decimal)(this[this.tablePaymentBatch.payment_thresholdColumn]));
                     }
                 }
                 set {
@@ -1991,11 +1991,11 @@ namespace EomApp1.Screens.PaymentBatches {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public decimal sum_total_cost {
                 get {
-                    try {
-                        return ((decimal)(this[this.tablePaymentBatch.sum_total_costColumn]));
+                    if (this.Issum_total_costNull()) {
+                        return 0m;
                     }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'sum_total_cost\' in table \'PaymentBatch\' is DBNull.", e);
+                    else {
+                        return ((decimal)(this[this.tablePaymentBatch.sum_total_costColumn]));
                     }
                 }
                 set {
@@ -2517,9 +2517,9 @@ namespace EomApp1.Screens.PaymentBatches.PaymentBatchesDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT PublisherName, NetTermTypeName, PaymentMethodName, AffiliateCurrencyName, " +
-                "SumItemTotalCost, ItemAccountingStatusName, PaymentBatchId, ItemIds FROM dbo.Cam" +
-                "paignPublisherPaymentBatchesSummary";
+            this._commandCollection[0].CommandText = @"SELECT     PublisherName, NetTermTypeName, PaymentMethodName, AffiliateCurrencyName, SumItemTotalCost, ItemAccountingStatusName, PaymentBatchId, ItemIds
+FROM         CampaignPublisherPaymentBatchesSummary
+WHERE     (ItemAccountingStatusName <> 'Check Signed and Paid')";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         

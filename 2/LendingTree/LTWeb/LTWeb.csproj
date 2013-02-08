@@ -149,13 +149,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\connectionsconfig.xml" />
     <Content Include="App_Data\exampleLead.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\questions.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\connectionsconfig.xml" />
     <Content Include="Content\images\bbb-logo.gif" />
     <Content Include="Content\images\bg-narrow-repeat.png" />
     <Content Include="Content\images\bg-narrowgreen-end.png" />
@@ -230,6 +230,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <None Include="Properties\PublishProfiles\LTWeb.pubxml" />
+    <None Include="Properties\PublishProfiles\LTWebLive.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />

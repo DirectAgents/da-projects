@@ -69,7 +69,7 @@ namespace EomToolWeb.Infrastructure
             set { this["canHold"] = value; }
         }
 
-        [ConfigurationProperty("numAccountingPeriods", DefaultValue = 4, IsRequired = false)]
+        [ConfigurationProperty("numAccountingPeriods", DefaultValue = 5, IsRequired = false)]
         public int NumAccountingPeriods
         {
             get { return (int)this["numAccountingPeriods"]; }

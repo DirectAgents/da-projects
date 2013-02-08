@@ -9,14 +9,14 @@
 </head>
 <body>
     <div class="website-wrapper">
-        <div id="topheader" class="png">F
+        <div id="topheader" class="png">
+            
             <span id="tagline" class="inline">Get mortgage offers</span>
         </div>
         <div id="step1" class="board-content-data">
             <div class="left-rail inline">
                 <div id="page1RailHeader" class="stroke">
-                    <h2>
-                        Lower Your<br />
+                    <h2>Lower Your<br />
                         Mortgage Payment
                         <br />
                         and Save Money Now!</h2>
@@ -25,28 +25,32 @@
                     <h2>Refinance Rates From</h2>
                     <div class="rate">
                         @LTWeb.Session.Admin["Rate1"]%
-                        <br />   
-                        (@LTWeb.Session.Admin["Rate2"]% APR)*</div>
+                        <br />
+                        (@LTWeb.Session.Admin["Rate2"]% APR)*
+                    </div>
                     <h2>Affordable Mortgage Payments</h2>
-                    <div class="smallLabel">Example payments are for a 5/1 ARM rates subject</div>
+                    
                 </div>
                 <div id="payments">
                     <h2 class="green">$200,000 mortgage for $790/month</h2>
                     <h2 class="green">$300,000 mortgage for $1,185/month</h2>
                     <h2 class="green">$400,000 mortgage for $1,581/month</h2>
                     <div class="disclosure">
-                        <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/advertising-disclosures')">
-                            Full Advertising Disclosures
+                        <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/advertising-disclosures')">Full Advertising Disclosures
                         </a>
                     </div>
                 </div>
             </div>
-            
+
+            <div id="form-fields" class="form-fields">
+                @RenderBody()
+            </div>
+
             <div class="clear">
             </div>
         </div>
         <div class="clear">&nbsp;</div>
-        
+
         <div id="footer-wrapper">
             <div id="footer" class="board">
                 <div class="footer-logo">
@@ -63,32 +67,25 @@
                     <!--END CERTIFICATE TRUST LOGO-->
                     <p>
                         Online Security:<a target="_blank" href="http://www.lendingtree.com/about-us/online-security/">
-                            <span>Protect Against Fraud</span></a></p>
+                            <span>Protect Against Fraud</span></a>
+                    </p>
                 </div>
                 <!--End .footer-logo-->
-               <div class="footer-text">
+                <div class="footer-text">
 
-                    <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/privacy-policy', 550, 450)">
-
-                        Privacy Policy</a> | <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/terms-of-use')">
-
-                            Terms of Use</a> | <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/licenses-and-disclosures',550, 450)">
-
-                                Licenses &amp; Disclosures</a> | <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/advertising-disclosures',550, 450)">
-
-                                Full Advertising Disclosures</a><br />
+                    <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/privacy-policy', 550, 450)">Privacy Policy</a> | <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/terms-of-use')">Terms of Use</a> | <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/licenses-and-disclosures',550, 450)">Licenses &amp; Disclosures</a> | <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/advertising-disclosures',550, 450)">Full Advertising Disclosures</a><br />
 
                     <br />
 
                     <p style="text-align: left;">
-
                         LendingTree technology and processes are patented under U.S. Patent Nos. 6,385,594
 
                         and 6,611,816 and licensed under U.S. Patent Nos. 5,995,947 and 5,758,328. © 1998
 
                         - 2011 LendingTree, LLC. All Rights Reserved. This site is directed at, and made
 
-                        available to, persons in the continental U.S., Alaska and Hawaii only.</p>
+                        available to, persons in the continental U.S., Alaska and Hawaii only.
+                    </p>
 
                 </div>
 
@@ -99,10 +96,10 @@
         <!--End .website-wrapper-->
     </div>
     @Scripts.Render(
-                "~/bundles/jquery", 
-                "~/bundles/jqueryui", 
-                "~/Scripts/jquery.history.js", 
-                "~/bundles/validation", 
+                "~/bundles/jquery",
+                "~/bundles/jqueryui",
+                "~/Scripts/jquery.history.js",
+                "~/bundles/validation",
                 "~/Scripts/lt-script.js")
     @Styles.Render("~/Scripts/validation-engine/css/validationEngine.jquery.css")
     @RenderSection("scripts", required: false)

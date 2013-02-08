@@ -76,44 +76,59 @@ namespace EomToolWeb.Controllers
             return (identity == null || identitiesCanHold.Contains(identity));
         }
 
-        public ActionResult Index(string test)
+        public ActionResult Index(string test, int? batchid, string acctperiod)
         {
             string identityName = GetIdentityName(test);
             var model = new PaymentBatchesViewModel()
             {
                 Test = test,
+                ShowActions = false,
                 AllowHold = AllowHold(identityName)
             };
 
             for (int i = 0; i < AccountingPeriods.Count; i++)
             {
                 var accountingPeriod = AccountingPeriods[i];
+                if (!string.IsNullOrWhiteSpace(acctperiod) && acctperiod != accountingPeriod)
+                    continue;
+
                 var pbRepo = pbRepositories[accountingPeriod];
+                IQueryable<PaymentBatch> pbatches;
 
-                bool sentOnly = (test == null);
-                var pbatches = pbRepo.PaymentBatchesForUser(identityName, sentOnly);
-                var payments = pbRepo.PublisherPayments;
-                var pubNotes = pbRepo.PubNotes;
-                var pubAttachments = pbRepo.PubAttachments;
-                foreach (var payment in payments)
+                if (batchid.HasValue)
                 {
-                    payment.AccountingPeriod = accountingPeriod;
-                    payment.NumNotes = pubNotes.Where(n => n.publisher_name == payment.Publisher).Count();
-                    payment.NumAttachments = pubAttachments.Where(a => a.publisher_name == payment.Publisher).Count();
+                    pbatches = pbRepo.PaymentBatches.Where(pb => pb.id == batchid.Value);
+                }
+                else
+                {
+                    bool sentOnly = (model.IsTest == false);
+                    pbatches = pbRepo.PaymentBatchesForUser(identityName, sentOnly);
                 }
 
-                foreach (var pbatch in pbatches)
+                if (pbatches.Count() > 0)
                 {
-                    pbatch.AccountingPeriod = accountingPeriod;
-                    pbatch.Payments = payments.Where(p => p.PaymentBatchId == pbatch.id);
+                    var payments = pbRepo.PublisherPayments;
+                    var pubNotes = pbRepo.PubNotes;
+                    var pubAttachments = pbRepo.PubAttachments;
+                    foreach (var payment in payments)
+                    {
+                        payment.AccountingPeriod = accountingPeriod;
+                        payment.NumNotes = pubNotes.Where(n => n.publisher_name == payment.Publisher).Count();
+                        payment.NumAttachments = pubAttachments.Where(a => a.publisher_name == payment.Publisher).Count();
+                    }
+                    foreach (var pbatch in pbatches)
+                    {
+                        pbatch.AccountingPeriod = accountingPeriod;
+                        pbatch.Payments = payments.Where(p => p.PaymentBatchId == pbatch.id);
+                    }
                 }
-
                 model.Batches = model.Batches == null ? pbatches : model.Batches.Concat(pbatches);
             }
 
             return View(model);
         }
 
+        // Summary of Payments
         public ActionResult Summary(string test)
         {
             string identityName = GetIdentityName(test);
@@ -153,6 +168,41 @@ namespace EomToolWeb.Controllers
             var pubRep = PayoutsController.GetPublisherReport(payouts, date);
             var pubRepEncoded = MvcHtmlString.Create(pubRep).ToHtmlString();
             return Content(pubRepEncoded);
+        }
+
+        // --- Selector ---
+
+        public ActionResult Selector(string acctperiod, int? acctstatus)
+        {
+            var model = SetupSelector(acctperiod, acctstatus);
+            model.PubGroups = model.PayoutsQueryable.GroupBy(p => p.Publisher).OrderBy(g => g.Key);
+            return View(model);
+        }
+        public ActionResult Payouts(string acctperiod, int? acctstatus)
+        {
+            var model = SetupSelector(acctperiod, acctstatus);
+            model.PubPayouts = model.PayoutsQueryable.OrderBy(p => p.Publisher).ThenBy(p => p.Campaign_Name);
+
+            return View("Selector", model);
+        }
+        private SelectorViewModel SetupSelector(string acctperiod, int? acctstatus)
+        {
+            if (string.IsNullOrWhiteSpace(acctperiod))
+                acctperiod = AccountingPeriods.Last();
+            var pbRepo = pbRepositories[acctperiod];
+
+            var payouts = pbRepo.PublisherPayouts.Where(p => p.status_id == CampaignStatus.Verified && p.Pub_Payout > 0);
+            if (acctstatus.HasValue)
+                payouts = payouts.Where(p => p.accounting_status_id == acctstatus.Value);
+
+            var model = new SelectorViewModel()
+            {
+                AccountingPeriods = AccountingPeriods.ToArray(),
+                AccountingPeriod = acctperiod,
+                AccountingStatus = acctstatus,
+                PayoutsQueryable = payouts
+            };
+            return model;
         }
 
         // --- Release & Hold ---

@@ -20,6 +20,8 @@ namespace EomApp1.Screens.PaymentBatches
         public PaymentBatchesForm()
         {
             InitializeComponent();
+
+            this.paymentBatchGrid.Sorted += (s, e) => DisableComponents();
         }
 
         void PaymentBatchesForm_Load(object sender, EventArgs e)
@@ -73,11 +75,12 @@ namespace EomApp1.Screens.PaymentBatches
         {
             foreach (DataGridViewRow row in paymentBatchGrid.Rows)
             {
+                ((DataGridViewDisableButtonCell)row.Cells[SendDataGridViewButtonColumn.Index]).Enabled = false;
                 if (row.DataBoundItem != null)
                 {
                     var batchRow = (row.DataBoundItem as DataRowView).Row as PaymentBatchesDataSet.PaymentBatchRow;
-                    if (batchRow.payment_batch_state_id == BATCH_STATE_SENT)
-                        ((DataGridViewDisableButtonCell)row.Cells[SendDataGridViewButtonColumn.Index]).Enabled = false;
+                    if (batchRow.id > -1 && batchRow.payment_batch_state_id != BATCH_STATE_SENT)
+                        ((DataGridViewDisableButtonCell)row.Cells[SendDataGridViewButtonColumn.Index]).Enabled = true;
                 }
             }
         }
@@ -103,7 +106,18 @@ namespace EomApp1.Screens.PaymentBatches
                     };
                     string subject = "payment batches are ready for your review";
                     string from = "accounting@directagents.com";
-                    string to = "jberger@directagents.com";
+
+                    //TODO: replace this with some kind of lookup
+                    string to = "eddy@directagents.com";
+                    if (batchRow.approver_identity != null)
+                    {
+                        if (batchRow.approver_identity.ToLower().Contains("rakhtar"))
+                            to = "rehena@directagents.com";
+                        else if (batchRow.approver_identity.ToLower().Contains("jberger"))
+                            to = "jonathan@directagents.com";
+                        else if (batchRow.approver_identity.ToLower().Contains("jboaz"))
+                            to = "josh@directagents.com";
+                    }
                     var sendDialog = new EomApp1.Screens.MediaBuyerWorkflow.SendMailDialog(subject, from, to, emailTemplate);
                     var result = MaskedDialog.ShowDialog(this, sendDialog);
                     if (result == System.Windows.Forms.DialogResult.OK)
@@ -116,21 +130,45 @@ namespace EomApp1.Screens.PaymentBatches
             }
         }
 
+        private void paymentBatchGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == ApproverIdentity_Column.Index && e.RowIndex >= 0 && e.RowIndex < paymentBatchGrid.NewRowIndex)
+            {
+                paymentBatchGrid.EndEdit();
+                var cell = paymentBatchGrid[ApproverIdentity_Column.Index, e.RowIndex];
+                if ((cell.Value as string) != null)
+                {
+                    if ((cell.Value as string).ToLower().Contains("rakhtar"))
+                        cell.Value = "DIRECTAGENTS\\Jberger";
+                    else if ((cell.Value as string).ToLower().Contains("jberger"))
+                        cell.Value = "DIRECTAGENTS\\JBoaz";
+                    else
+                        cell.Value = null;
+                }
+                if ((cell.Value as string) == null)
+                    cell.Value = "DIRECTAGENTS\\rakhtar";
+            }
+        }
+
         /// <summary>
         /// Assign the items in the selected rows to the selected batch
         /// </summary>
         void AssignButtonClicked(object sender, EventArgs e)
         {
-            using (var context = new EomTool.Domain.Entities.EomEntities(EomAppCommon.EomAppSettings.ConnStr, false))
+            var batchId = this.SelectedPaymentBatchId;
+            if (batchId > -1)
             {
-                var repository = new EomTool.Domain.Concrete.PaymentBatchRepository(context);
-                foreach (var itemIDs in this.SelectedItemIdsAsInts)
+                using (var context = new EomTool.Domain.Entities.EomEntities(EomAppCommon.EomAppSettings.ConnStr, false))
                 {
-                    repository.SetPaymentBatchId(itemIDs, this.SelectedPaymentBatchId);
+                    var repository = new EomTool.Domain.Concrete.PaymentBatchRepository(context);
+                    foreach (var itemIDs in this.SelectedItemIdsAsInts)
+                    {
+                        repository.SetPaymentBatchId(itemIDs, batchId);
+                    }
+                    context.SaveChanges();
                 }
-                context.SaveChanges();
+                Refill();
             }
-            Refill();
         }
 
         int SelectedPaymentBatchId

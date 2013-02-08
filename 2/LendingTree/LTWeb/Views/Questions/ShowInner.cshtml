@@ -4,11 +4,11 @@
 *@
 @{ 
     string promptPosition;
-    if(Model.IsMultipleQuestions)
+    if (Model.IsMultipleQuestions)
     {
         promptPosition = "centerRight:0,-9";
     }
-    else if(string.IsNullOrWhiteSpace(Model.Subtext))
+    else if (string.IsNullOrWhiteSpace(Model.Subtext))
     {
         promptPosition = "bottomLeft";
     }
@@ -24,56 +24,100 @@
 @*
     Question
 *@
-<div style="float: left; width: 150px; text-align: @( Model.Text.EndsWith(":") ? "right" : "left" ); margin-top: 2px">@Model.Text</div>
+<div style="float: left; width: 150px; text-align: @( Model.Text.EndsWith(":") ? "right" : "left"); margin-top: 2px">@Model.Text</div>
 @* 
     Answer
 *@
 <div style="float: right; width: 220px; margin-left: 10px">
-@switch (Model.AnswerType)
-{
-    case "dropdown":
+    @switch (Model.AnswerType)
+    {
+        case "dropdown":
         <select name="@Model.Key" class="validate[required]" data-prompt-position="@promptPosition">
-        @foreach (var option in Model.Options)
-        {
-            <option value="@option.Value" @( option.Value == Model.Answer ? "selected=\"selected\"" : "" )>@option.Text</option>
-        }
+            @foreach (var option in Model.Options)
+            {
+                <option value="@option.Value" @( option.Value == Model.Answer ? "selected=\"selected\"" : "")>@option.Text</option>
+            }
         </select>
-        break;
-    case "radio":
-        foreach (var option in Model.Options)
-        {
-            <input type="radio" name="@Model.Key" value="@option.Value" @( option.Value == Model.Answer ? "checked=\"checked\"" : "" ) />@option.Text<br />
-        }
-        break;
-    case "3part":
+            break;
+        case "radio":
+            foreach (var option in Model.Options)
+            {
+        <input type="radio" name="@Model.Key" value="@option.Value" @( option.Value == Model.Answer ? "checked=\"checked\"" : "") />@option.Text<br />
+            }
+            break;
+        case "3part":
         <input name="@Model.Key" type="text" value="@Model.Answer" />
-        break;
-    case "zipcode":
+            break;
+        case "zipcode":
         <input name="@Model.Key" type="text" value="@Model.Answer" maxlength="5" class="validate[required,custom[zipcode]]" data-prompt-position="@promptPosition" />
-        break;
-    case "birthday":
+            break;
+        case "birthday":
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[birthday]]" data-prompt-position="@promptPosition" />
-        break;
-    case "email":
+            break;
+        case "email":
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[email]]" data-prompt-position="@promptPosition" />
-        break;
-    case "name":
+            break;
+        case "name":
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
-        break;
-    case "phone":
+            break;
+        case "phone":
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[phone]]" data-prompt-position="@promptPosition" />
-        break;
-    case "ssn":
-        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[ssnumber]]" data-prompt-position="@promptPosition" />
-        break;
-    default:
+            break;
+        case "ssn":
+        <div class="ssn-input">
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[ssnumber]]" data-prompt-position="@promptPosition" />   
+      <br /><span style="font-size: smaller;">@Model.Subtext</span>
+        </div>
+    <div class="smallLabel_img"> <a href="#"><img src="http://mortgage-rate-offers.com/images/small-lock.png" alt="" /></a> </div>
+    
+    
+    
+     <a href="#" class="tip">
+
+            <div class="explain-this">
+                Explain this <span>
+
+                    <div id="tip-list">
+                        We use your information to do what is called a "soft credit
+                        <br>
+                        pull".
+
+       This does not affect your credit. 
+
+    If you choose to
+                        <br>
+                        move forward with one of the offers you receive, you will
+                        <br>
+                        work directly with the lender, 
+
+    and at that time, with your
+                        <br />
+                        approval, 
+
+    they will conduct the official "hard" credit pull.
+
+       
+
+                    </div>
+
+                </span>
+            </div>
+
+        </a>
+ 
+
+            Model.Subtext = null;
+            break;
+        default:
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required]" data-prompt-position="@promptPosition" />
-        break;
-}
-@*
+            break;
+    }
+    @*
     Question Subtext
 *@
-@if (!string.IsNullOrWhiteSpace(Model.Subtext)) {
-    <br /><span style="font-size: smaller">@Model.Subtext</span>
-}
+    @if (!string.IsNullOrWhiteSpace(Model.Subtext))
+    {
+        <br />
+        <span style="font-size: smaller">@Model.Subtext</span>
+    }
 </div>

@@ -162,6 +162,9 @@ namespace LTWeb
                         question.DefaultValue = question.Options.Last().Value; // default to highest cash out value
                     }
                     break;
+                case "SSN":
+                    question.State = ltModel.PropertyState;
+                    break;
             }
             if (question.SamePageQuestion != null)
                 AdjustQuestion(question.SamePageQuestion, ltModel);
