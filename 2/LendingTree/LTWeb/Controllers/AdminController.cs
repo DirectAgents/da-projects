@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using LTWeb.DataAccess;
 using LTWeb.Models;
+using System.Data.Entity.Migrations;
 
 namespace LTWeb.Controllers
 {
@@ -22,7 +23,11 @@ namespace LTWeb.Controllers
                 var model = new AdminVM();
 
                 model.Rate1 = repo.Single<AdminSetting>(c => c.Name == "Rate1").Value;
+
                 model.Rate2 = repo.Single<AdminSetting>(c => c.Name == "Rate2").Value;
+
+                var setting = repo.Single<AdminSetting>(c => c.Name == "Pixel");
+                model.Pixel = setting == null ? string.Empty : setting.Value;
 
                 return View(model);
             }
@@ -36,7 +41,10 @@ namespace LTWeb.Controllers
 
             using (var db = new LTWebDataContext()) // TODO: dependency injection
             {
+                db.AdminSettings.AddOrUpdate(c => c.Name, new[] { new AdminSetting { Name = "Pixel", Value = model.Pixel } });
+
                 db.AdminSettings.Single(c => c.Name == "Rate1").Value = model.Rate1;
+
                 db.AdminSettings.Single(c => c.Name == "Rate2").Value = model.Rate2;
 
                 db.SaveChanges();

@@ -16,6 +16,8 @@ namespace LTWeb
 
         public static int SsnNotRequiredModeValue { get { return GetInt("Mode_SsnNotRequired"); } }
 
+        public static int SsnModeDefaultValue { get { return GetInt("Mode_SsnDefault"); } }
+
         public static string[] AdminIps { get { return GetString("AdminIps").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries); } }
 
         #region Private Helpers

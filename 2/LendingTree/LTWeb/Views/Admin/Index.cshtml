@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";    
 }
 
 <h2>Administration</h2>
@@ -26,6 +27,14 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.Rate2)
             @Html.ValidationMessageFor(model => model.Rate2)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Pixel)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Pixel)
+            @Html.ValidationMessageFor(model => model.Pixel)
         </div>
 
         <p>

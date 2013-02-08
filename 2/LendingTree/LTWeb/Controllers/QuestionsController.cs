@@ -94,6 +94,9 @@ namespace LTWeb.Controllers
                 // TODO!!!: pixel code (put into Admin?)
 
                 // TODO: handle errors
+
+                ViewBag.AppID = model.AppID; // gets inserted into pixel
+
                 //return Content("send result is " + result.IsSuccess.ToString());
                 return PartialView("FormFields", nextQuestionVM);
             }
