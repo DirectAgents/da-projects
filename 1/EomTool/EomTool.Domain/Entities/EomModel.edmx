@@ -489,7 +489,7 @@
           <Property Name="publisher_name" Type="varchar(max)" Nullable="false" />
           <Property Name="note" Type="varchar(max)" Nullable="false" />
           <Property Name="added_by_system_user" Type="varchar" MaxLength="255" />
-          <Property Name="created" Type="datetime" Nullable="false" />
+          <Property Name="created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Source">
           <Key>
@@ -1899,7 +1899,7 @@
           <Property Type="String" Name="publisher_name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="added_by_system_user" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="created" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="created" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="PublisherRelatedItemCount">
           <Key>

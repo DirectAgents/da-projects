@@ -51,6 +51,7 @@ go
 INSERT INTO [dbo].[PaymentBatchState] VALUES 
 	 ('1', 'default')
 	,('3', 'Sent')
+	,('6', 'Complete')
 GO
 
 /*

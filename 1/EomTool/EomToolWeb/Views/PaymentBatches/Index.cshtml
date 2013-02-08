@@ -21,7 +21,8 @@
         @if (pbatch.payment_threshold != null) {
             <text>(threshold: @pbatch.payment_threshold)</text>
         }
-        - @pbatch.PaymentBatchState.name @pbatch.date_sent
+        - @pbatch.PaymentBatchState.name
+        @if (pbatch.payment_batch_state_id == PaymentBatchState.Sent) { @pbatch.date_sent }
         [@pbatch.approver_abbrev]
     </span>
     if (pbatch.Payments.Count() > 0)
