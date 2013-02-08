@@ -14,7 +14,7 @@ namespace EomTool.Domain.Abstract
         IQueryable<PublisherPayout> PublisherPayouts { get; }
 
         IQueryable<PaymentBatch> PaymentBatchesForItemIds(int[] itemIds);
-        void CheckIfBatchesComplete(int[] itemIds);
+        bool CheckIfBatchesComplete(int[] itemIds);
 
         void SetAccountingStatus(int[] itemIds, int accountingStatus);
         void SetPaymentBatchId(int[] itemIds, int paymentBatchId);

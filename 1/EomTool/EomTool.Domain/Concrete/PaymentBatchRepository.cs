@@ -55,19 +55,28 @@ namespace EomTool.Domain.Concrete
             return batches;
         }
 
-        public void CheckIfBatchesComplete(int[] itemIds)
+        // returns true iff a batchState is changed from not complete to complete
+        public bool CheckIfBatchesComplete(int[] itemIds)
         {
+            bool retval = false;
             var batches = PaymentBatchesForItemIds(itemIds);
             foreach (var batch in batches)
             {
                 bool isComplete = !(batch.Items.Any(item => item.item_accounting_status_id != ItemAccountingStatus.CheckSignedAndPaid &&
                                                             item.item_accounting_status_id != ItemAccountingStatus.Hold));
                 if (isComplete)
-                    batch.payment_batch_state_id = PaymentBatchState.Complete;
+                {
+                    if (batch.payment_batch_state_id != PaymentBatchState.Complete)
+                    {
+                        batch.payment_batch_state_id = PaymentBatchState.Complete;
+                        retval = true;
+                    }
+                }
                 else if (batch.payment_batch_state_id == PaymentBatchState.Complete)
                     batch.payment_batch_state_id = PaymentBatchState.Default;
             }
             context.SaveChanges();
+            return retval;
         }
 
         // --- Actions ---

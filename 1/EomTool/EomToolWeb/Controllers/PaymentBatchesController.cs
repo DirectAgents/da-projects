@@ -11,6 +11,8 @@ using EomToolWeb.Models;
 using System.IO;
 using Microsoft.Win32;
 using System.Net.Mime;
+using DAgents.Common;
+using System.Web.Configuration;
 
 namespace EomToolWeb.Controllers
 {
@@ -20,6 +22,7 @@ namespace EomToolWeb.Controllers
         private Dictionary<string, IPaymentBatchRepository> pbRepositories = new Dictionary<string, IPaymentBatchRepository>();
             // the keys are accounting periods (e.g. "Dec2012")
 
+        private EomToolWebConfigSection eomToolConfig = EomToolWebConfigSection.GetConfigSection();
         private List<string> AccountingPeriods { get; set; }
 
         public PaymentBatchesController(IDAMain1Repository daMain1Repository)
@@ -28,7 +31,6 @@ namespace EomToolWeb.Controllers
 
             AccountingPeriods = new List<string>();
             var today = DateTime.Now;
-            var eomToolConfig = EomToolWebConfigSection.GetConfigSection();
             int numAccountingPeriods = eomToolConfig.PaymentBatches.NumAccountingPeriods;
             if (eomToolConfig.DebugMode)
             {
@@ -191,12 +193,40 @@ namespace EomToolWeb.Controllers
             pbRepo.SetAccountingStatus(itemIdsArray, toStatus);
 
             if (checkIfBatchComplete)
-                pbRepo.CheckIfBatchesComplete(itemIdsArray);
+            {
+                bool changedToComplete = pbRepo.CheckIfBatchesComplete(itemIdsArray);
+                if (changedToComplete && !eomToolConfig.DebugMode)
+                {   // Generally there should just be one batch
+                    var batches = pbRepo.PaymentBatchesForItemIds(itemIdsArray);
+                    SendBatchCompleteEmail(acctperiod, batches.ToList());
+                }
+            }
 
             if (Request.IsAjaxRequest())
                 return Content(msg);
             else
                 return RedirectToAction("Index");
+        }
+
+        static void SendBatchCompleteEmail(string acctperiod, List<PaymentBatch> batches)
+        {
+            string batchUrl = "";
+            foreach (var batch in batches)
+            {
+                batchUrl += acctperiod + " - " + batch.name +
+                    "<br/>http://eomweb.directagents.local/PaymentBatches/Index?acctperiod=" + acctperiod + "&batchid=" + batch.id + "<br/>";
+            }
+            string from = WebConfigurationManager.AppSettings["EmailFromDefault"];
+            string to = WebConfigurationManager.AppSettings["EmailToEOM"];
+            string subject = "Payment Batch complete";
+            string body = (@"The following payment batch was completed on [[Date]]:
+<p>
+[[BatchUrl]]
+</p>")
+               .Replace("[[Date]]", DateTime.Now.ToString())
+               .Replace("[[BatchUrl]]", batchUrl);
+
+            EmailUtility.SendEmail(from, new string[] { to }, new string[] { }, subject, body, true);
         }
 
         // --- Notes ---
