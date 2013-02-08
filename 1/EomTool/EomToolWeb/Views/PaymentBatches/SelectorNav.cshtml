@@ -1,0 +1,42 @@
+﻿@model SelectorViewModel
+
+@{
+    var action = ViewContext.RouteData.Values["Action"].ToString();
+}
+
+@if (Model.AccountingStatus == ItemAccountingStatus.Default) {
+    <b>Unverified</b>
+} else {
+    @Html.ActionLink("Unverified", action, new { acctperiod = Model.AccountingPeriod, acctstatus = ItemAccountingStatus.Default })
+} |
+@if (Model.AccountingStatus == ItemAccountingStatus.Verified) {
+    <b>Verified</b>
+} else {
+    @Html.ActionLink("Verified", action, new { acctperiod = Model.AccountingPeriod, acctstatus = ItemAccountingStatus.Verified })
+} |
+@if (Model.AccountingStatus == ItemAccountingStatus.Approved) {
+    <b>Approved</b>
+} else {
+    @Html.ActionLink("Approved", action, new { acctperiod = Model.AccountingPeriod, acctstatus = ItemAccountingStatus.Approved })
+} |
+@if (Model.AccountingStatus == ItemAccountingStatus.CheckSignedAndPaid) {
+    <b>Paid</b>
+} else {
+    @Html.ActionLink("Paid", action, new { acctperiod = Model.AccountingPeriod, acctstatus = ItemAccountingStatus.CheckSignedAndPaid })
+} |
+@if (Model.AccountingStatus == ItemAccountingStatus.Hold) {
+    <b>Held</b>
+} else {
+    @Html.ActionLink("Held", action, new { acctperiod = Model.AccountingPeriod, acctstatus = ItemAccountingStatus.Hold })
+}
+<br />
+
+@foreach (var acctperiod in Model.AccountingPeriods)
+{
+    if (acctperiod == Model.AccountingPeriod) {
+        <b>@acctperiod</b>
+    } else {
+        @Html.ActionLink(acctperiod, action, new { acctperiod = acctperiod, acctstatus = Model.AccountingStatus })
+    }
+}
+<br />

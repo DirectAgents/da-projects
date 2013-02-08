@@ -1,0 +1,123 @@
+﻿@model SelectorViewModel
+
+@{
+    ViewBag.Title = "Pub Selector";
+    bool isPubSelector = (Model.PubGroups != null);
+}
+<style type="text/css">
+    table {
+        white-space: nowrap;
+    }
+    tr {
+        border-style: solid;
+        border-width: 1px;
+    }
+    th, td {
+        padding: 0.25em 10px 0.25em 10px;
+    }
+</style>
+
+@if (isPubSelector)
+{
+    <h2>@Html.ActionLink("Pub Selector", "Payouts", new { acctperiod = Model.AccountingPeriod, acctstatus = Model.AccountingStatus })</h2>
+}
+else
+{
+    <h2>@Html.ActionLink("Pub Selector", "Selector", new { acctperiod = Model.AccountingPeriod, acctstatus = Model.AccountingStatus })</h2>
+}
+
+@Html.Partial("SelectorNav")
+<a href="#" onclick="HideUnchecked(); return false">remove unchecked</a>
+<a href="#" onclick="HideChecked(); return false">remove checked</a>
+<a href="#" onclick="$('.extra').toggle(); return false">trim table</a>
+
+<br /><br />
+&nbsp;@Model.AccountingPeriod
+
+@if (isPubSelector)
+{
+<table>
+    <tr>
+        <th class="extra"></th>
+        <th>Publisher</th>
+        <th>Amount</th>
+        <th>Terms</th>
+        <th>Method</th>
+        <th class="extra"></th>
+    </tr>
+@{
+    int i = 0;
+    foreach (var pubGroup in Model.PubGroups)
+    {
+        string curr = pubGroup.First().Pub_Pay_Curr;
+        var amount = pubGroup.Sum(g => g.Pub_Payout).Value;
+        var netTerms = pubGroup.First().Net_Terms;
+        var payMethod = pubGroup.First().Aff_Pay_Method;
+        <tr id="pubrow@(i)">
+            <td class="extra"><input id="check@(i)" type="checkbox" /></td>
+            <td onclick="ToggleCheckbox(@(i))">@pubGroup.Key</td>
+            <td>@Html.FormatCurrency(curr, amount)</td>
+            <td>@netTerms</td>
+            <td>@payMethod</td>
+            <td class="extra"><a href="#" onclick="HideRow('@(i)'); return false">X</a></td>
+        </tr>
+        i++;
+    }
+}
+</table>
+}
+else
+{
+<table>
+    <tr>
+        <th class="extra"></th>
+        <th>Publisher</th>
+        <th>Advertiser</th>
+        <th>Campaign</th>
+        <th>Payout</th>
+        <th>Actions</th>
+        <th>Amount</th>
+        <th>Terms</th>
+        <th>Method</th>
+        <th class="extra"></th>
+    </tr>
+@{
+    int i = 0;
+    foreach (var payout in Model.PubPayouts)
+    {
+        decimal costPerUnit = payout.Units.Value == 0 ? 0 : (payout.Pub_Payout ?? 0) / payout.Units.Value;
+        <tr id="pubrow@(i)">
+            <td class="extra"><input id="check@(i)" type="checkbox" /></td>
+            <td onclick="ToggleCheckbox(@(i))">@payout.Publisher</td>
+            <td>@payout.Advertiser</td>
+            <td>@payout.Campaign_Name</td>
+            <td style="text-align:center">@Html.FormatCurrency(payout.Pub_Pay_Curr, costPerUnit)</td>
+            <td style="text-align:center">@((int)payout.Units.Value)</td>
+            <td style="text-align:center">@Html.FormatCurrency(payout.Pub_Pay_Curr, payout.Pub_Payout.Value)</td>
+            <td>@payout.Net_Terms</td>
+            <td>@payout.Aff_Pay_Method</td>
+            <td class="extra"><a href="#" onclick="HideRow('@(i)'); return false">X</a></td>
+        </tr>
+        i++;
+    }
+}
+</table>
+}
+    
+@section scripts {
+<script type="text/javascript">
+    function HideRow(rowid) {
+        $('#pubrow' + rowid).hide();
+    }
+    function ToggleCheckbox(checkid) {
+        var checkbox = $('#check' + checkid);
+        checkbox.prop('checked', !checkbox.prop('checked'));
+    }
+    function HideChecked() {
+        $('tr').has('input[type="checkbox"]:checked').hide();
+    }
+    function HideUnchecked() {
+        $('tr').has('input[type="checkbox"]:not(:checked)').hide();
+    }
+</script>
+}

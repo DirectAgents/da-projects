@@ -170,6 +170,41 @@ namespace EomToolWeb.Controllers
             return Content(pubRepEncoded);
         }
 
+        // --- Selector ---
+
+        public ActionResult Selector(string acctperiod, int? acctstatus)
+        {
+            var model = SetupSelector(acctperiod, acctstatus);
+            model.PubGroups = model.PayoutsQueryable.GroupBy(p => p.Publisher).OrderBy(g => g.Key);
+            return View(model);
+        }
+        public ActionResult Payouts(string acctperiod, int? acctstatus)
+        {
+            var model = SetupSelector(acctperiod, acctstatus);
+            model.PubPayouts = model.PayoutsQueryable.OrderBy(p => p.Publisher).ThenBy(p => p.Campaign_Name);
+
+            return View("Selector", model);
+        }
+        private SelectorViewModel SetupSelector(string acctperiod, int? acctstatus)
+        {
+            if (string.IsNullOrWhiteSpace(acctperiod))
+                acctperiod = AccountingPeriods.Last();
+            var pbRepo = pbRepositories[acctperiod];
+
+            var payouts = pbRepo.PublisherPayouts.Where(p => p.status_id == CampaignStatus.Verified && p.Pub_Payout > 0);
+            if (acctstatus.HasValue)
+                payouts = payouts.Where(p => p.accounting_status_id == acctstatus.Value);
+
+            var model = new SelectorViewModel()
+            {
+                AccountingPeriods = AccountingPeriods.ToArray(),
+                AccountingPeriod = acctperiod,
+                AccountingStatus = acctstatus,
+                PayoutsQueryable = payouts
+            };
+            return model;
+        }
+
         // --- Release & Hold ---
 
         public ActionResult ReleaseItems(string itemids, string acctperiod)

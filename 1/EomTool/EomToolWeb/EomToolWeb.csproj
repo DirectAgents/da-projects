@@ -176,6 +176,7 @@
     <Compile Include="Models\PaymentBatchesViewModel.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
+    <Compile Include="Models\SelectorViewModel.cs" />
     <Compile Include="Models\TopViewModel.cs" />
     <Compile Include="Models\TrafficTypeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2665,6 +2666,8 @@
     <Content Include="Views\PaymentBatches\PubNotesInfrastructure.cshtml" />
     <Content Include="Views\PaymentBatches\PubAttachments.cshtml" />
     <Content Include="Views\PaymentBatches\PubAttachmentsInfrastructure.cshtml" />
+    <Content Include="Views\PaymentBatches\Selector.cshtml" />
+    <Content Include="Views\PaymentBatches\SelectorNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
