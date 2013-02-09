@@ -19,13 +19,14 @@ namespace EomTool.Domain.Concrete
         }
 
         // if identity==null, will return everyone's batches
-        public IQueryable<PaymentBatch> PaymentBatchesForUser(string identity, bool sentOnly)
+        // if batchState < 0, won't filter by batchState
+        public IQueryable<PaymentBatch> PaymentBatchesForUser(string identity, int batchState)
         {
             var batches = context.PaymentBatches as IQueryable<PaymentBatch>;
             if (identity != null)
                 batches = batches.Where(b => b.approver_identity == identity);
-            if (sentOnly)
-                batches = batches.Where(pb => pb.payment_batch_state_id == PaymentBatchState.Sent);
+            if (batchState >= 0)
+                batches = batches.Where(pb => pb.payment_batch_state_id == batchState);
             return batches;
         }
 
@@ -34,9 +35,9 @@ namespace EomTool.Domain.Concrete
             get { return context.PublisherPayments; }
         }
 
-        public IQueryable<PublisherPayment> PublisherPaymentsForUser(string identity, bool sentOnly)
+        public IQueryable<PublisherPayment> PublisherPaymentsForUser(string identity, int batchState)
         {
-            var batches = PaymentBatchesForUser(identity, sentOnly);
+            var batches = PaymentBatchesForUser(identity, batchState);
             var batchIds = batches.Select(b => b.id).ToList();
 
             return context.PublisherPayments.Where(p => p.PaymentBatchId != null && batchIds.Contains(p.PaymentBatchId.Value));
@@ -46,6 +47,36 @@ namespace EomTool.Domain.Concrete
         public IQueryable<PublisherPayout> PublisherPayouts
         {
             get { return context.PublisherPayouts; }
+        }
+
+        public IQueryable<PaymentBatch> PaymentBatchesForItemIds(int[] itemIds)
+        {
+            var batches = context.Items.Where(item => itemIds.Contains(item.id)).Select(item => item.PaymentBatch).Distinct();
+            return batches;
+        }
+
+        // returns true iff a batchState is changed from not complete to complete
+        public bool CheckIfBatchesComplete(int[] itemIds)
+        {
+            bool retval = false;
+            var batches = PaymentBatchesForItemIds(itemIds);
+            foreach (var batch in batches)
+            {
+                bool isComplete = !(batch.Items.Any(item => item.item_accounting_status_id != ItemAccountingStatus.CheckSignedAndPaid &&
+                                                            item.item_accounting_status_id != ItemAccountingStatus.Hold));
+                if (isComplete)
+                {
+                    if (batch.payment_batch_state_id != PaymentBatchState.Complete)
+                    {
+                        batch.payment_batch_state_id = PaymentBatchState.Complete;
+                        retval = true;
+                    }
+                }
+                else if (batch.payment_batch_state_id == PaymentBatchState.Complete)
+                    batch.payment_batch_state_id = PaymentBatchState.Default;
+            }
+            context.SaveChanges();
+            return retval;
         }
 
         // --- Actions ---
