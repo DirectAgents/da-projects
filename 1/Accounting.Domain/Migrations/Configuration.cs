@@ -1,5 +1,6 @@
 namespace Accounting.Domain.Migrations
 {
+    using Accounting.Domain.Entities;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -14,6 +15,8 @@ namespace Accounting.Domain.Migrations
 
         protected override void Seed(Accounting.Domain.Entities.AccountingContext context)
         {
+            context.CompanyFiles.AddOrUpdate(c => c.CompanyId, new CompanyFile { CompanyId = 2, CompanyName = "Direct Agents Interactive Limited" });
+
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
