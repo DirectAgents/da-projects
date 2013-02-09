@@ -1,3 +1,68 @@
 ﻿.row {
     width: 1200px;
 }
+
+footer.row {
+    color: white;
+    background-color: #25579D;
+    height: 160px;
+}
+
+.row div.grayband {
+    background-color: #F3F3F3;
+    height: 70px;
+}
+
+.row div.portaltabs-h {
+    margin-top: -40px;
+}
+
+.row div.portaltabs-v {
+    margin-top: 20px;
+}
+
+    .row div.portaltabs-v dl {
+        margin-top: 20px;
+    }
+
+.row div.topinfo {
+    margin-top: 30px;
+    padding-top: 8px;
+}
+
+.row div.logout {
+    margin-top: 30px;
+}
+
+    .row div.logout a.button {
+        background-color: #3195F3;
+    }
+
+
+.row div.toplogo {
+    margin-top: 10px;
+}
+
+.tabs dd.active, .tabs li.active {
+    background-color: #3195F3;
+}
+
+.tabs.vertical dd.active, .tabs.vertical li.active {
+    border-left: none;
+    border-right: 4px solid #3195F3;
+    border-top: none;
+}
+
+    .tabs.vertical dd.active a, .tabs.vertical li.active a {
+        background-color: white;
+        color: black;
+        font-weight: bold;
+    }
+
+.tabs.vertical dd, .tabs.vertical li {
+    border-left: none;
+}
+
+.tabs.vertical {
+    border-top: 1px solid #e6e6e6;
+}

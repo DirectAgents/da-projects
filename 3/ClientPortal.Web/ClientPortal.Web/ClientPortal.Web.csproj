@@ -244,6 +244,7 @@
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="humans.txt" />
+    <Content Include="Images\logo1.png" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\foundation\app.js" />
     <Content Include="Scripts\foundation\foundation.min.js" />
