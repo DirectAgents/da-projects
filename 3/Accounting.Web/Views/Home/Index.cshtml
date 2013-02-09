@@ -1,0 +1,85 @@
+﻿<!-- Header and Nav -->
+
+<div class="row">
+    <div class="twelve columns">
+        <ul class="nav-bar left">
+            <li><a href="#">Customers</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- End Header and Nav -->
+
+<div class="row">
+    <div class="twelve columns">
+        <div id="grid" class="row">
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+
+<footer class="row">
+    <div class="twelve columns">
+        <hr />
+        <div class="row">
+            <div class="six columns">
+                <p>&copy; 2013 Copyright Direct Agents</p>
+            </div>
+            <div class="six columns">
+                <ul class="link-list right">
+                    <li><a href="#">Customers</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+@section head {
+    <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
+    <script>
+        var url = '@Url.Action("Grid")';
+
+        var dataSource = new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            pageSize: 20,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: url
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                model: {
+                    id: 'EmployeeId',
+                    fields: {
+                        Name: { type: 'string' },
+                        EmployeeNumber: { type: 'string' },
+                    }
+                }
+            }
+        });
+
+        $('#grid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                { field: 'Name', title: 'Name' },
+                { field: 'EmployeeNumber', title: 'Employee Number' },
+            ],
+            filterable: true,
+            sortable: true,
+            pageable: true
+        });
+    </script>
+}
