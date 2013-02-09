@@ -32,7 +32,7 @@
         <div class="editor-label">
             @Html.LabelFor(model => model.Pixel)
         </div>
-        <div class="editor-field">
+        <div class="editor-field pixel">
             @Html.EditorFor(model => model.Pixel)
             @Html.ValidationMessageFor(model => model.Pixel)
         </div>
@@ -41,6 +41,15 @@
             <input type="submit" value="Save" />
         </p>
     </fieldset>
+}
+
+@section head  {
+    <style>
+        div.pixel textarea.multi-line {
+            height: 400px;
+            width: 500px;
+        }
+    </style>
 }
 
 @section Scripts {
