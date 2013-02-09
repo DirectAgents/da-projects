@@ -28,5 +28,10 @@ namespace ClientPortal.Web.Controllers
 
             return View();
         }
+
+        public ActionResult Foundation()
+        {
+            return View();
+        }
     }
 }
