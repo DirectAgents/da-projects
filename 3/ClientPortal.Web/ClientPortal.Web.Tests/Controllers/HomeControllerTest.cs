@@ -1,17 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
+﻿using ClientPortal.Web.Controllers;
+using DirectAgents.Mvc.KendoGridBinder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ClientPortal.Web;
-using ClientPortal.Web.Controllers;
+using System;
+using System.Web.Mvc;
 
 namespace ClientPortal.Web.Tests.Controllers
 {
     [TestClass]
     public class HomeControllerTest
     {
+        [TestMethod]
+        public void OfferSummaryGrid()
+        {
+            HomeController controller = new HomeController();
+            KendoGridRequest kendoGridRequest = new KendoGridRequest
+            {
+                 
+            };
+            JsonResult result = controller.OfferSummaryGrid(kendoGridRequest);
+            Console.WriteLine(result.Data);
+        }
+
         [TestMethod]
         public void Index()
         {

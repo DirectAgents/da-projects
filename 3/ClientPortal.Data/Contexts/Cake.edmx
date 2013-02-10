@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CakeModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="CakeModelStoreContainer">
+          <EntitySet Name="CakeAdvertisers" EntityType="CakeModel.Store.CakeAdvertisers" store:Type="Tables" Schema="staging" />
+          <EntitySet Name="CakeOffers" EntityType="CakeModel.Store.CakeOffers" store:Type="Tables" Schema="staging" />
+        </EntityContainer>
+        <EntityType Name="CakeAdvertisers">
+          <Key>
+            <PropertyRef Name="Advertiser_Id" />
+          </Key>
+          <Property Name="Advertiser_Id" Type="int" Nullable="false" />
+          <Property Name="AdvertiserName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AccountManager_Id" Type="int" />
+          <Property Name="AccountManagerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="AdManagerName" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CakeOffers">
+          <Key>
+            <PropertyRef Name="Offer_Id" />
+          </Key>
+          <Property Name="Offer_Id" Type="int" Nullable="false" />
+          <Property Name="OfferName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Advertiser_Id" Type="nvarchar" MaxLength="255" />
+          <Property Name="VerticalName" Type="nvarchar" MaxLength="255" />
+          <Property Name="OfferType" Type="nvarchar" MaxLength="255" />
+          <Property Name="StatusName" Type="nvarchar" MaxLength="255" />
+          <Property Name="DefaultPriceFormat" Type="nvarchar" MaxLength="255" />
+          <Property Name="DefaultPayout" Type="nvarchar" MaxLength="255" />
+          <Property Name="PriceReceived" Type="nvarchar" MaxLength="255" />
+          <Property Name="Secure" Type="nvarchar" MaxLength="255" />
+          <Property Name="OfferLink" Type="nvarchar" MaxLength="255" />
+          <Property Name="ThumbnailImageUrl" Type="nvarchar" MaxLength="255" />
+          <Property Name="ExpirationDate" Type="nvarchar" MaxLength="255" />
+          <Property Name="CookieDays" Type="nvarchar" MaxLength="255" />
+          <Property Name="CookieDaysImpressions" Type="nvarchar" MaxLength="255" />
+          <Property Name="DateCreated" Type="nvarchar" MaxLength="255" />
+          <Property Name="Currency" Type="nchar" MaxLength="3" />
+          <Property Name="AllowedCountries" Type="nvarchar(max)" />
+          <Property Name="Xml" Type="xml" />
+          <Property Name="AllowedMediaTypeNames" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CakeModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="CakeContext" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="CakeAdvertisers" EntityType="CakeModel.CakeAdvertiser" />
+          <EntitySet Name="CakeOffers" EntityType="CakeModel.CakeOffer" />
+        </EntityContainer>
+        <EntityType Name="CakeAdvertiser">
+          <Key>
+            <PropertyRef Name="Advertiser_Id" />
+          </Key>
+          <Property Name="Advertiser_Id" Type="Int32" Nullable="false" />
+          <Property Name="AdvertiserName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AccountManager_Id" Type="Int32" />
+          <Property Name="AccountManagerName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AdManagerName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="CakeOffer">
+          <Key>
+            <PropertyRef Name="Offer_Id" />
+          </Key>
+          <Property Name="Offer_Id" Type="Int32" Nullable="false" />
+          <Property Name="OfferName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Advertiser_Id" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="VerticalName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="OfferType" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="StatusName" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="DefaultPriceFormat" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="DefaultPayout" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="PriceReceived" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Secure" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="OfferLink" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ThumbnailImageUrl" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ExpirationDate" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="CookieDays" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="CookieDaysImpressions" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="DateCreated" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Currency" Type="String" MaxLength="3" Unicode="true" FixedLength="true" />
+          <Property Name="AllowedCountries" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Xml" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="AllowedMediaTypeNames" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CakeModelStoreContainer" CdmEntityContainer="CakeContext">
+          <EntitySetMapping Name="CakeAdvertisers">
+            <EntityTypeMapping TypeName="CakeModel.CakeAdvertiser">
+              <MappingFragment StoreEntitySet="CakeAdvertisers">
+                <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
+                <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
+                <ScalarProperty Name="AccountManager_Id" ColumnName="AccountManager_Id" />
+                <ScalarProperty Name="AccountManagerName" ColumnName="AccountManagerName" />
+                <ScalarProperty Name="AdManagerName" ColumnName="AdManagerName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CakeOffers">
+            <EntityTypeMapping TypeName="CakeModel.CakeOffer">
+              <MappingFragment StoreEntitySet="CakeOffers">
+                <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
+                <ScalarProperty Name="OfferName" ColumnName="OfferName" />
+                <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
+                <ScalarProperty Name="VerticalName" ColumnName="VerticalName" />
+                <ScalarProperty Name="OfferType" ColumnName="OfferType" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />
+                <ScalarProperty Name="DefaultPayout" ColumnName="DefaultPayout" />
+                <ScalarProperty Name="PriceReceived" ColumnName="PriceReceived" />
+                <ScalarProperty Name="Secure" ColumnName="Secure" />
+                <ScalarProperty Name="OfferLink" ColumnName="OfferLink" />
+                <ScalarProperty Name="ThumbnailImageUrl" ColumnName="ThumbnailImageUrl" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="CookieDays" ColumnName="CookieDays" />
+                <ScalarProperty Name="CookieDaysImpressions" ColumnName="CookieDaysImpressions" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="AllowedCountries" ColumnName="AllowedCountries" />
+                <ScalarProperty Name="Xml" ColumnName="Xml" />
+                <ScalarProperty Name="AllowedMediaTypeNames" ColumnName="AllowedMediaTypeNames" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
