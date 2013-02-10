@@ -352,9 +352,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
-    <Content Include="Dynamic Expressions.html" />
     <Content Include="favicon.ico" />
-    <Content Include="Foundation_readme.txt" />
     <Content Include="Global.asax" />
     <Content Include="humans.txt" />
     <Content Include="Images\logo1.png" />
