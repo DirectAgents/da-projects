@@ -86,7 +86,8 @@
         return copytext;
     }
     function AfterCopy() {
-        alert(afterSelectedText);
+        if (!$.browser.mozilla) // issue with firefox 18 and flash 11 (freezes if alert in callback)
+            alert(afterSelectedText);
     }
 
     $(document).ready(function () {
