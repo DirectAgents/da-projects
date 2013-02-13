@@ -32,6 +32,7 @@
         <ul class="tabs-content">
             <li id="tab1Tab"></li>
             <li id="tab2Tab" class="active">
+                (2/1/13 to present)
                 <div id="offerSummaryGrid"></div>
             </li>
             <li id="tab3Tab"></li>
@@ -78,11 +79,14 @@
                     data: 'data',
                     total: 'total',
                     model: {
-                        id: 'Id',
+                        id: 'OfferId',
                         fields: {
                             Name: { type: 'string' },
-                            //Email: { type: 'string' },
-                            //EmployeeNumber: { type: 'number' },
+                            Format: { type: 'string' },
+                            Price: { type: 'number' },
+                            Clicks: { type: 'number' },
+                            Conversions: { type: 'number' },
+                            Revenue: { type: 'number' },
                             //HireDate: { type: 'date' },
                             //Active: { type: 'boolean' }
                         }
@@ -94,9 +98,13 @@
                 dataSource: dataSource,
                 height: 400,
                 columns: [
-                    { field: 'Name', title: 'Name' },
-                    //{ field: 'Email' },
-                    //{ field: 'EmployeeNumber', title: 'Emplyee #' },
+                    { field: 'OfferId', title: 'Id', width: 60 },
+                    { field: 'Name', title: 'Offer'},
+                    { field: 'Format', width: 80 },
+                    { field: 'Price', width: 60 },
+                    { field: 'Clicks', width: 80 },
+                    { field: 'Conversions', title: 'Conv', width: 60 },
+                    { field: 'Revenue', width: 90 },
                     //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
                     //{ field: 'Active' }
                 ],

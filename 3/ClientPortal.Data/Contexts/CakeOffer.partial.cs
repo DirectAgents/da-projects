@@ -2,6 +2,7 @@
 
 namespace ClientPortal.Data.Contexts
 {
+/*
     public partial class CakeOffer : IOffer
     {
         public int Id
@@ -28,4 +29,5 @@ namespace ClientPortal.Data.Contexts
             }
         }
     }
+*/
 }
