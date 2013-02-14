@@ -12,11 +12,9 @@
         @Model.ResponseContent
     </div>
 
-    <textarea style="width: 100%" name="Lead.RequestContent" cols="25" rows="20">@Model.RequestContent</textarea>
-
-    @Html.HiddenFor(model => model.AppId)
+    <textarea style="width: 100%" id="Lead.RequestContent" cols="25" rows="20">@Model.RequestContent</textarea>
 
     <p>
-        <input type="submit" value="Resend" />
+        <input type="submit" value="Resend" onclick="javascript:ResendClicked" />
     </p>
 </fieldset>
