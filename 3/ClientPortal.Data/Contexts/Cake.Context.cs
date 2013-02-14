@@ -27,5 +27,6 @@ namespace ClientPortal.Data.Contexts
     
         public DbSet<CakeAdvertiser> CakeAdvertisers { get; set; }
         public DbSet<CakeOffer> CakeOffers { get; set; }
+        public DbSet<DailySummary> DailySummaries { get; set; }
     }
 }
