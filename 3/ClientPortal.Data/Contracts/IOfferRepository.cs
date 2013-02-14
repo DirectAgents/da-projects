@@ -7,7 +7,6 @@ namespace ClientPortal.Data.Contracts
 {
     public interface IOfferRepository
     {
-        IQueryable<CakeOffer> GetAll();
         IQueryable<OfferInfo> GetOfferInfos(DateTime since);
     }
 }
