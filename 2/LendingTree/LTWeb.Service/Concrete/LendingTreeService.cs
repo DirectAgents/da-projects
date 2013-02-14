@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using LTWeb.DataAccess;
+using System.Linq;
 
 namespace LTWeb.Service
 {
@@ -19,12 +20,15 @@ namespace LTWeb.Service
             {
                 RequestContent = requestXML,
                 Timestamp = DateTime.UtcNow,
+                AppId = request.AppID,
+                AffiliateId = request.AffiliateSiteID,
+                IPAddress = request.VisitorIPAddress
             };
 
             using (var writer = new StreamWriter(webRequest.GetRequestStream()))
             {
                 writer.Write(requestXML);
-            }  
+            }
 
             using (var response = (HttpWebResponse)webRequest.GetResponse())
             using (var reader = new StreamReader(response.GetResponseStream()))
@@ -40,9 +44,14 @@ namespace LTWeb.Service
 
                 return new LendingTreeResult
                 {
-                    IsSuccess = true
+                    IsSuccess = true // hard coded for now
                 };
             }
+        }
+
+        public IQueryable<Lead> GetAllLeads(LTWebDataContext context)
+        {
+            return context.Leads;
         }
     }
 }

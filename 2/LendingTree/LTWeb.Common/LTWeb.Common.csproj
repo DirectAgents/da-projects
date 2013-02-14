@@ -56,23 +56,6 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Lead.cs" />
     <Compile Include="Entities\ServiceConfig.cs" />
-    <Compile Include="Migrations\201211090259433_ServiceConfig.cs" />
-    <Compile Include="Migrations\201211090259433_ServiceConfig.Designer.cs">
-      <DependentUpon>201211090259433_ServiceConfig.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201211090316562_Leads.cs" />
-    <Compile Include="Migrations\201211090316562_Leads.Designer.cs">
-      <DependentUpon>201211090316562_Leads.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201211090342230_ResponseTimeStamp.cs" />
-    <Compile Include="Migrations\201211090342230_ResponseTimeStamp.Designer.cs">
-      <DependentUpon>201211090342230_ResponseTimeStamp.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201211150915333_AdminSetting.cs" />
-    <Compile Include="Migrations\201211150915333_AdminSetting.Designer.cs">
-      <DependentUpon>201211150915333_AdminSetting.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\LTRequest.cs" />
     <Compile Include="Utilities\SessionUtility.cs" />
@@ -86,22 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="connectionsconfig.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201211090259433_ServiceConfig.resx">
-      <DependentUpon>201211090259433_ServiceConfig.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201211090316562_Leads.resx">
-      <DependentUpon>201211090316562_Leads.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201211090342230_ResponseTimeStamp.resx">
-      <DependentUpon>201211090342230_ResponseTimeStamp.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201211150915333_AdminSetting.resx">
-      <DependentUpon>201211150915333_AdminSetting.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

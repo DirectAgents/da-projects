@@ -1,13 +1,17 @@
 ﻿@model LTWeb.Models.AdminVM
-
 @{
     ViewBag.Title = "Admin";
     Layout = "~/Views/Shared/_Layout.cshtml";    
 }
-
-<h2>Administration</h2>
-
-@using (Html.BeginForm()) {
+<div id="example" class="k-content">
+    <div id="fixWindow"></div>
+</div>
+<fieldset>
+    <legend>Leads</legend>
+    <div id="leadsGrid"></div>
+</fieldset>
+@using (Html.BeginForm())
+{    
     @Html.ValidationSummary(true)
 
     <fieldset>
@@ -42,16 +46,102 @@
         </p>
     </fieldset>
 }
-
 @section head  {
     <style>
         div.pixel textarea.multi-line {
-            height: 400px;
+            height: 80px;
             width: 500px;
         }
     </style>
+    <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
 }
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @*Kendo UI*@
+    <script src="~/Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
+    @*Fix Leads*@
+    <script type="text/x-kendo-template" id="fixLeadTemplate">
+        #if(IsError) {#
+            <a href="javascript:fixLead('#=AppId#')">Fix</a>
+        #}#
+    </script>
+    <script>
+        // Open window with FixLead is clicked
+        function fixLead(appID) {
+            $("#fixWindow")
+                .data("kendoWindow")
+                .refresh("@Url.Action("Fix")" + "?appID=" + appID)
+                .title("Fix " + appID)
+                .open();
+        }
+        // Create window when page loads
+        $(function () {
+            if (!$("#fixWindow").data("kendoWindow")) {
+                $("#fixWindow").kendoWindow({
+                    width: "800px",
+                    visible: false,
+                    modal: true,
+                });
+                // Set initial window position
+                var windowWrapper = $("#fixWindow").closest(".k-window");
+                var horizontalCenter = Math.floor(window.innerWidth / 2);
+                windowWrapper.css({
+                    top: 50,
+                    left: horizontalCenter - (Math.floor(windowWrapper.width() / 2))
+                });
+            }
+        });
+    </script>
+    @*Read Functions*@
+    <script>
+        $(function () {
+            var url = '@Url.Action("LeadsGrid")';
+            var dataSource = new kendo.data.DataSource({
+                serverPaging: true, serverSorting: true, serverFiltering: true, pageSize: 20,
+                transport: { read: { type: 'post', dataType: 'json', url: url } },
+                schema: {
+                    data: 'data', total: 'total',
+                    model: {
+                        id: 'Id',
+                        fields: {
+                            Timestamp: { type: 'string' },
+                            AppId: { type: 'string' },
+                            AffiliateId: { type: 'string' },
+                            IPAddress: { type: 'string' },
+                            IsError: { type: 'boolean' }
+                            //Email: { type: 'string' },
+                            //EmployeeNumber: { type: 'number' },
+                            //HireDate: { type: 'date' },
+                            //Active: { type: 'boolean' }
+                        }
+                    }
+                }
+            });
+            $('#leadsGrid').kendoGrid({
+                dataSource: dataSource,
+                height: 400,
+                columns: [
+                    { field: 'Timestamp' },
+                    { field: 'AppId' },
+                    { field: 'AffiliateId' },
+                    { field: 'IPAddress' },
+                    {
+                        field: 'IsError',
+                        template: $("#fixLeadTemplate").html()
+                    }
+                                //template: kendo.template($("#template").html())
+                    //{ field: 'Email' },
+                    //{ field: 'EmployeeNumber', title: 'Emplyee #' },
+                    //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
+                    //{ field: 'Active' }
+                ],
+                filterable: true,
+                sortable: {
+                    mode: 'multiple'
+                },
+                pageable: true
+            });
+        });
+    </script>
 }

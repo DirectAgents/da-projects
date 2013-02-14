@@ -1,16 +1,51 @@
-﻿using System.Linq;
-using System.Web.Mvc;
+﻿using KendoGridBinder;
 using LTWeb.DataAccess;
 using LTWeb.Models;
+using System;
 using System.Data.Entity.Migrations;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace LTWeb.Controllers
 {
     public class AdminController : Controller
     {
+        Lazy<LTWebDataContext> _context = new Lazy<LTWebDataContext>();
+        LTWebDataContext context { get { return _context.Value; } }
+
         bool IsAllowedAdminAccess
         {
             get { return AppSettings.AdminIps.Contains(Request.UserHostAddress); }
+        }
+
+        [HttpPost]
+        public ActionResult LeadsGrid(KendoGridRequest request)
+        {
+            if (!IsAllowedAdminAccess)
+                return null;
+
+            var grid = new KendoGrid<Lead>(request, this.context.Leads);
+            return new JsonDotNetResult(grid);
+        }
+
+        public ActionResult Fix(string appID)
+        {
+            if (!IsAllowedAdminAccess)
+                return null;
+
+            return View(this.context.Leads.First(c => c.AppId == appID));
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult Fix(Lead lead)
+        {
+            if (!IsAllowedAdminAccess)
+                return null;
+
+            lead.ResponseContent = "OK";
+
+            return View(lead);
         }
 
         public ActionResult Index()
@@ -51,6 +86,14 @@ namespace LTWeb.Controllers
             }
 
             return View(model);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && _context.IsValueCreated)
+                this.context.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

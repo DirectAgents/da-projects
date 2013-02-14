@@ -1,0 +1,22 @@
+﻿@model LTWeb.Lead
+
+@{
+    ViewBag.Title = "Admin";
+    Layout = null;    
+}
+
+<fieldset>
+    <legend>Response / Request</legend>
+
+    <div style="width: 100%; border: 1px solid black; background-color: lightpink">
+        @Model.ResponseContent
+    </div>
+
+    <textarea style="width: 100%" name="Lead.RequestContent" cols="25" rows="20">@Model.RequestContent</textarea>
+
+    @Html.HiddenFor(model => model.AppId)
+
+    <p>
+        <input type="submit" value="Resend" />
+    </p>
+</fieldset>

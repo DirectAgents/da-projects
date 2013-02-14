@@ -12,10 +12,10 @@ namespace LTWeb.DataAccess
 
         public LTWebDataContext()
         {
-#if(DEBUG)
-            var initializer = new DropCreateDatabaseIfModelChanges<LTWebDataContext>();
-            Database.SetInitializer(initializer);
-#endif
+//#if(DEBUG)
+//            var initializer = new DropCreateDatabaseIfModelChanges<LTWebDataContext>();
+//            Database.SetInitializer(initializer);
+//#endif
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

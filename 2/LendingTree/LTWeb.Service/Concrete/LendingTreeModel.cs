@@ -94,6 +94,10 @@ namespace LTWeb.Service
             {
                 _request.Request.SourceOfRequest.VisitorIPAddress = value;
             }
+            get
+            {
+                return _request.Request.SourceOfRequest.VisitorIPAddress;
+            }
         }
 
         public string VisitorURL

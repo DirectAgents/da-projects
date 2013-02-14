@@ -21,7 +21,7 @@ namespace LTWeb.Controllers
         public ActionResult Setup()
         {
             var ltModel = LTWeb.Session.LTModel;
-            HomeController.PrepareLendingTreeModelForNewSession(ltModel, null);
+            HomeController.PrepareLendingTreeModelForNewSession(ltModel, null, null);
 
             ltModel.LoanType = "REFINANCE";
             ltModel.PropertyState = "CA";

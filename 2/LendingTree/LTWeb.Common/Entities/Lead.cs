@@ -14,6 +14,15 @@ namespace LTWeb
 
         public DateTime ResponseTimestamp { get; set; }
 
+        public string AppId { get; set; }
+
+        public string AffiliateId { get; set; }
+
+        public string IPAddress { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public int IsError { get; set; }
+
         [NotMapped]
         public XElement RequestContentXml
         {

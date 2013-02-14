@@ -83,7 +83,7 @@ namespace LTWeb.Controllers
             if (nextQuestionVM != null && nextQuestionVM.QuestionIndex > SessionVars.HighestQuestionIndexDisplayed)
                 SessionVars.HighestQuestionIndexDisplayed = nextQuestionVM.QuestionIndex;
 
-            if (nextQuestionVM == null || nextQuestionVM.Key == "Complete")
+            if (nextQuestionVM.Key == "Complete")
             {
                 // submit to LendingTree & save to db
                 //
@@ -95,7 +95,7 @@ namespace LTWeb.Controllers
 
                 // TODO: handle errors
 
-                ViewBag.AppID = model.AppID; // gets inserted into pixel
+                ViewBag.AppID = LendingTreeModel.AppID; // gets inserted into pixel
 
                 //return Content("send result is " + result.IsSuccess.ToString());
                 return PartialView("FormFields", nextQuestionVM);

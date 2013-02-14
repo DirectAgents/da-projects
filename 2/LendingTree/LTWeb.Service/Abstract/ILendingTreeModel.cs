@@ -38,7 +38,7 @@
         bool RequiresDisclosure { get; }
         string ESourceId { get; set; }
         bool IsLoanTypeSet();
-        string VisitorIPAddress { set; }
+        string VisitorIPAddress { set; get; }
         string VisitorURL { set; }
         bool ResponseValidForPixelFire { get; }
     }
