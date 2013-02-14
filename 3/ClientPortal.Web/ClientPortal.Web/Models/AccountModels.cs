@@ -25,6 +25,7 @@ namespace ClientPortal.Web.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string UserName { get; set; }
+        public int? CakeAdvertiserId { get; set; }
     }
 
     public class RegisterExternalLoginModel
@@ -86,6 +87,10 @@ namespace ClientPortal.Web.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Cake Advertiser ID")]
+        public int CakeAdvertiserId { get; set; }
     }
 
     public class ExternalLogin

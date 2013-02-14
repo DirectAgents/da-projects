@@ -81,6 +81,7 @@ namespace ClientPortal.Web.Controllers
                 {
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
                     WebSecurity.Login(model.UserName, model.Password);
+                    AssociateUserToCakeAdvertiser(model.UserName, model.CakeAdvertiserId);
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)
@@ -91,6 +92,16 @@ namespace ClientPortal.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private void AssociateUserToCakeAdvertiser(string userName, int cakeAdvertiserID)
+        {
+            using (var context = new UsersContext())
+            {
+                var userProfile = context.UserProfiles.Single(c => c.UserName == userName);
+                userProfile.CakeAdvertiserId = cakeAdvertiserID;
+                context.SaveChanges();
+            }
         }
 
         //
