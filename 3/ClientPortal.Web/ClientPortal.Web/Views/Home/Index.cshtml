@@ -1,4 +1,19 @@
-﻿<div class="row">
+﻿@{
+    var now = DateTime.Now;
+    var sunday = now;
+    while (sunday.DayOfWeek != DayOfWeek.Sunday) { sunday = sunday.AddDays(-1); }
+
+    var today = now.ToShortDateString();
+    var yesterday = now.AddDays(-1).ToShortDateString();
+    var firstOfMonth = new DateTime(now.Year, now.Month, 1).ToShortDateString();
+    var firstOfYear = new DateTime(now.Year, 1, 1).ToShortDateString();
+    var firstOfLastMonth = new DateTime(now.Year, now.Month, 1).AddMonths(-1).ToShortDateString();
+    var lastOfLastMonth = new DateTime(now.Year, now.Month, 1).AddDays(-1).ToShortDateString();
+    var firstOfWeek = sunday.ToShortDateString();
+    var firstOfLastWeek = sunday.AddDays(-7).ToShortDateString();
+    var lastOfLastWeek = sunday.AddDays(-1).ToShortDateString();
+}
+<div class="row">
     <div class="six columns toplogo">
         <img src="~/Images/logo1.png" />
     </div>
@@ -6,7 +21,7 @@
         <p>User@Domain.com</p>
     </div>
     <div class="three columns logout">
-        <a class="button" href="#">Log Out</a>
+        @Html.Partial("_LoginPartial")
     </div>
 </div>
 <div class="row">
@@ -32,7 +47,22 @@
         <ul class="tabs-content">
             <li id="tab1Tab"></li>
             <li id="tab2Tab" class="active">
-                (2/1/13 to present)
+                <div style="height:35px">
+                    <select style="float:left; width:110px" id="dateRangeSel" onchange="ChangeDateRange()">
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="wtd">Week to Date</option>
+                        <option value="mtd">Month to Date</option>
+                        <option value="ytd">Year to Date</option>
+                        <option value="lastweek">Last Week</option>
+                        <option value="lastmonth">Last Month</option>
+                    </select>
+                    <span style="float:left; margin-left:10px">Start:</span>
+                    <input style="float:left; width:100px" id="startdate" name="startdate" type="text" value="@today" />
+                    <span style="float:left; margin-left:10px">End:</span>
+                    <input style="float:left; width:100px" id="enddate" name="enddate" type="text" value="@today" />
+                    <a class="button" style="padding:3px; margin-left:10px" href="#" onclick="RefreshGrid(); return false">Filter</a>
+                </div>
                 <div id="offerSummaryGrid"></div>
             </li>
             <li id="tab3Tab"></li>
@@ -60,6 +90,45 @@
 @section scripts {
     <script src="~/Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
     <script>
+        function ChangeDateRange() {
+            var dateRange = $('#dateRangeSel').val();
+            switch (dateRange) {
+                case "today":
+                    $('#startdate').val('@today');
+                    $('#enddate').val('@today');
+                    break;
+                case "yesterday":
+                    $('#startdate').val('@yesterday');
+                    $('#enddate').val('@yesterday');
+                    break;
+                case "wtd":
+                    $('#startdate').val('@firstOfWeek');
+                    $('#enddate').val('@today');
+                    break;
+                case "mtd":
+                    $('#startdate').val('@firstOfMonth');
+                    $('#enddate').val('@today');
+                    break;
+                case "ytd":
+                    $('#startdate').val('@firstOfYear');
+                    $('#enddate').val('@today');
+                    break;
+                case "lastweek":
+                    $('#startdate').val('@firstOfLastWeek');
+                    $('#enddate').val('@lastOfLastWeek');
+                    break;
+                case "lastmonth":
+                    $('#startdate').val('@firstOfLastMonth');
+                    $('#enddate').val('@lastOfLastMonth');
+                    break;
+            }
+            RefreshGrid();
+        }
+
+        function RefreshGrid() {
+            $('#offerSummaryGrid').data('kendoGrid').dataSource.read();
+        }
+
         $(function () {
             var url = '@Url.Action("OfferSummaryGrid")';
 
@@ -72,7 +141,13 @@
                     read: {
                         type: 'post',
                         dataType: 'json',
-                        url: url
+                        url: url,
+                        data: function () {
+                            return {
+                                startdate: $('#startdate').val(),
+                                enddate: $('#enddate').val()
+                            };
+                        }
                     }
                 },
                 schema: {
@@ -114,6 +189,9 @@
                 },
                 pageable: true
             });
+
+            $('#startdate').kendoDatePicker();
+            $('#enddate').kendoDatePicker();
         });
     </script>
 }
