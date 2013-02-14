@@ -67,11 +67,9 @@
     <Compile Include="Contexts\CakeOffer.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contexts\CakeOffer.partial.cs" />
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contracts\IOffer.cs" />
     <Compile Include="DTOs\OfferInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Contracts\IOfferRepository.cs" />
