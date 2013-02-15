@@ -184,7 +184,12 @@
                             //Active: { type: 'boolean' }
                         }
                     }
-                }
+                },
+                aggregate: [
+                    { field: "Clicks", aggregate: "sum" },
+                    { field: "Conversions", aggregate: "sum" },
+                    { field: "Revenue", aggregate: "sum" }
+                ]
             });
 
             $('#offerSummaryGrid').kendoGrid({
@@ -195,9 +200,9 @@
                     { field: 'Name', title: 'Offer'},
                     { field: 'Format', width: 80 },
                     { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
-                    { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" } },
-                    { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" } },
-                    { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" } },
+                    { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                     //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
                     //{ field: 'Active' }
                 ],
