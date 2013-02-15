@@ -20,11 +20,13 @@ namespace ClientPortal.Data.Services
             return cakeContext.CakeOffers;
         }
 
-        public IQueryable<OfferInfo> GetOfferInfos(DateTime since)
+        public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end)
         {
-            var summaryGroups = from ds in cakeContext.DailySummaries
-                                where ds.date >= since
-                                group ds by ds.offer_id;
+            var dailySummaries = cakeContext.DailySummaries.AsQueryable();
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
+
+            var summaryGroups = dailySummaries.GroupBy(s => s.offer_id);
 
             var offerInfos = from offer in cakeContext.CakeOffers
                              join sumGroup in summaryGroups on offer.Offer_Id equals sumGroup.Key
@@ -42,27 +44,6 @@ namespace ClientPortal.Data.Services
                              };
             return offerInfos;
         }
-/*
-        public IQueryable<OfferInfo> GetOfferInfos()
-        {
-            var offerInfos = cakeContext.CakeOffers.
-                Select(o => new OfferInfo()
-                {
-                    OfferId = o.Offer_Id,
-                    AdvertiserId = o.Advertiser_Id,
-                    Name = o.OfferName,
-                    Format = o.DefaultPriceFormat
-                }).ToList();
-            // TODO: use a join? groupjoin?
-            var dailySummaries = cakeContext.DailySummaries.Where(ds => ds.date >= new DateTime(2013, 2, 1));
-            foreach (var offerInfo in offerInfos)
-            {
-                var offerSummaries = dailySummaries.Where(ds => ds.offer_id == offerInfo.OfferId);
-                offerInfo.Clicks = (offerSummaries.Count() > 0) ? offerSummaries.Sum(os => os.clicks) : 0;
-            }
-            return offerInfos.AsQueryable();
-        }
-*/
 
     }
 }

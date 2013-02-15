@@ -23,9 +23,8 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult OfferSummaryGrid(KendoGridRequest request)
+        public JsonResult OfferSummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
-            var since = new DateTime(2012, 12, 1); 
             Func<OfferInfo, bool> filter = (oi => true);
 
             // TODO: encapsulate this logic
@@ -46,7 +45,7 @@ namespace ClientPortal.Web.Controllers
                 var offerRepository = new OfferRepository(cakeContext); // TODO: DI
 
                 offers = offerRepository
-                            .GetOfferInfos(since)
+                            .GetOfferInfos(startdate, enddate)
                             .Where(filter)
                             .OrderByDescending(oi => oi.Revenue).ToList();
             }
