@@ -62,7 +62,7 @@
                     <input style="float:left; width:100px" id="startdate" name="startdate" type="text" value="@today" onchange="DateChanged()" />
                     <span style="float:left; margin-left:10px">End:</span>
                     <input style="float:left; width:100px" id="enddate" name="enddate" type="text" value="@today" onchange="DateChanged()" />
-                    <a class="button" style="padding:3px; margin-left:10px" id="filterBtn" href="#" onclick="RefreshGrid(); return false">Filter</a>
+                    <a class="button" style="padding:3px; margin-left:10px" id="filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid(); return false">Filter</a>
                 </div>
                 <div id="offerSummaryGrid"></div>
             </li>
@@ -90,6 +90,9 @@
 
 @section scripts {
     <script src="~/Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
+    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.de-DE.min.js"></script>
+    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-GB.min.js"></script>
+    <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
     <script>
         function DateChanged() {
             $('#dateRangeSel').val('custom');
@@ -139,6 +142,10 @@
             $('#offerSummaryGrid').data('kendoGrid').dataSource.read();
             $('#filterBtn').attr('disabled', true);
         }
+        function FormatCurr(val, culture) {
+            kendo.culture(culture);
+            return kendo.toString(val, "c");
+        }
 
         $(function () {
             var url = '@Url.Action("OfferSummaryGrid")';
@@ -184,13 +191,13 @@
                 dataSource: dataSource,
                 height: 400,
                 columns: [
-                    { field: 'OfferId', title: 'Id', width: 60 },
+                    { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
                     { field: 'Name', title: 'Offer'},
                     { field: 'Format', width: 80 },
-                    { field: 'Price', width: 60 },
-                    { field: 'Clicks', width: 80 },
-                    { field: 'Conversions', title: 'Conv', width: 60 },
-                    { field: 'Revenue', width: 90 },
+                    { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
+                    { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" } },
+                    { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" } },
+                    { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" } },
                     //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
                     //{ field: 'Active' }
                 ],
