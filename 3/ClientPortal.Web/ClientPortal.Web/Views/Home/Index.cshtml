@@ -56,12 +56,13 @@
                         <option value="ytd">Year to Date</option>
                         <option value="lastweek">Last Week</option>
                         <option value="lastmonth">Last Month</option>
+                        <option value="custom">- custom -</option>
                     </select>
                     <span style="float:left; margin-left:10px">Start:</span>
-                    <input style="float:left; width:100px" id="startdate" name="startdate" type="text" value="@today" />
+                    <input style="float:left; width:100px" id="startdate" name="startdate" type="text" value="@today" onchange="DateChanged()" />
                     <span style="float:left; margin-left:10px">End:</span>
-                    <input style="float:left; width:100px" id="enddate" name="enddate" type="text" value="@today" />
-                    <a class="button" style="padding:3px; margin-left:10px" href="#" onclick="RefreshGrid(); return false">Filter</a>
+                    <input style="float:left; width:100px" id="enddate" name="enddate" type="text" value="@today" onchange="DateChanged()" />
+                    <a class="button" style="padding:3px; margin-left:10px" id="filterBtn" href="#" onclick="RefreshGrid(); return false">Filter</a>
                 </div>
                 <div id="offerSummaryGrid"></div>
             </li>
@@ -90,7 +91,13 @@
 @section scripts {
     <script src="~/Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
     <script>
+        function DateChanged() {
+            $('#dateRangeSel').val('custom');
+            $('#filterBtn').attr('disabled', false);
+        }
+
         function ChangeDateRange() {
+            var refresh = true;
             var dateRange = $('#dateRangeSel').val();
             switch (dateRange) {
                 case "today":
@@ -121,12 +128,16 @@
                     $('#startdate').val('@firstOfLastMonth');
                     $('#enddate').val('@lastOfLastMonth');
                     break;
+                default:
+                    refresh = false;
             }
-            RefreshGrid();
+            if (refresh)
+                RefreshGrid();
         }
 
         function RefreshGrid() {
             $('#offerSummaryGrid').data('kendoGrid').dataSource.read();
+            $('#filterBtn').attr('disabled', true);
         }
 
         $(function () {
