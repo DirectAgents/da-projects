@@ -41,6 +41,7 @@ namespace ClientPortal.Data.Services
                                  Clicks = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.clicks),
                                  Conversions = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.conversions),
                                  Revenue = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.revenue),
+                                 Currency = offer.Currency,
                              };
             return offerInfos;
         }
