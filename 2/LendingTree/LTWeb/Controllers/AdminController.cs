@@ -1,6 +1,8 @@
 ﻿using KendoGridBinder;
+using LTWeb.Common;
 using LTWeb.DataAccess;
 using LTWeb.Models;
+using LTWeb.Service;
 using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
@@ -25,7 +27,7 @@ namespace LTWeb.Controllers
                 return null;
 
             var grid = new KendoGrid<Lead>(request, this.context.Leads);
-            return new JsonDotNetResult(grid);
+            return new JsonDotNetResult(grid); // default json serializer had trouble with XML content, switched to Json.NET
         }
 
         public ActionResult Fix(string appID)
@@ -43,7 +45,8 @@ namespace LTWeb.Controllers
             if (!IsAllowedAdminAccess)
                 return null;
 
-            lead.ResponseContent = "OK";
+            var service = new LendingTreeService();
+            service.Resend(lead);
 
             return View(lead);
         }
@@ -69,6 +72,7 @@ namespace LTWeb.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Index(AdminVM model)
         {
             if (!IsAllowedAdminAccess)
@@ -76,15 +80,19 @@ namespace LTWeb.Controllers
 
             using (var db = new LTWebDataContext()) // TODO: dependency injection
             {
-                db.AdminSettings.AddOrUpdate(c => c.Name, new[] { new AdminSetting { Name = "Pixel", Value = model.Pixel } });
-
+                db.AdminSettings.AddOrUpdate(c => c.Name, new[]
+                { 
+                    new AdminSetting
+                    {
+                        Name = "Pixel", 
+                        Value = model.Pixel
+                    } 
+                });
                 db.AdminSettings.Single(c => c.Name == "Rate1").Value = model.Rate1;
-
                 db.AdminSettings.Single(c => c.Name == "Rate2").Value = model.Rate2;
-
                 db.SaveChanges();
             }
-
+            SessionUility.Clear(SessionKeys.Admin); // allow changes to be visible in this session
             return View(model);
         }
 

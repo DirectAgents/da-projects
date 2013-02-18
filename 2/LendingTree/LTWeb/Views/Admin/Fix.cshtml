@@ -5,16 +5,22 @@
     Layout = null;    
 }
 
-<fieldset>
-    <legend>Response / Request</legend>
+@using (Ajax.BeginForm(new AjaxOptions { OnSuccess = "Refresh", OnFailure = "ErrorAndRefresh" }))
+{
+    <fieldset>
+        <legend>Response / Request</legend>
+        @Html.TextAreaFor(m => m.ResponseContent, 5, 25, new { style = "width: 100%; border: 1px solid black; background-color: lightpink" })
+        @Html.TextAreaFor(m => m.RequestContent, 20, 25, new { style = "width: 100%; border: 1px solid black;" })
+        <input type="submit" value="Resend" />
+    </fieldset>
+}
 
-    <div style="width: 100%; border: 1px solid black; background-color: lightpink">
-        @Model.ResponseContent
-    </div>
-
-    <textarea style="width: 100%" id="Lead.RequestContent" cols="25" rows="20">@Model.RequestContent</textarea>
-
-    <p>
-        <input type="submit" value="Resend" onclick="javascript:ResendClicked" />
-    </p>
-</fieldset>
+<script>
+    function Refresh() {
+        $('#leadsGrid').data('kendoGrid').dataSource.read();
+    }
+    function ErrorAndRefresh() {
+        alert('error');
+        Refresh();
+    }
+</script>

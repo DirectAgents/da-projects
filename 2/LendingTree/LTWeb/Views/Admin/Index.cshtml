@@ -13,15 +13,13 @@
 @using (Html.BeginForm())
 {    
     @Html.ValidationSummary(true)
-
     <fieldset>
         <legend>Settings</legend>
-
         <div class="editor-label">
             @Html.LabelFor(model => model.Rate1)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Rate1)
+            @Html.TextAreaFor(m => m.Rate1, 5, 80, new object { })
             @Html.ValidationMessageFor(model => model.Rate1)
         </div>
 
@@ -29,18 +27,9 @@
             @Html.LabelFor(model => model.Rate2)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.Rate2)
+            @Html.TextAreaFor(m => m.Rate2, 5, 80, new object { })
             @Html.ValidationMessageFor(model => model.Rate2)
         </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Pixel)
-        </div>
-        <div class="editor-field pixel">
-            @Html.EditorFor(model => model.Pixel)
-            @Html.ValidationMessageFor(model => model.Pixel)
-        </div>
-
         <p>
             <input type="submit" value="Save" />
         </p>
@@ -92,8 +81,11 @@
                 });
             }
         });
+        // Repost
+        function ResendClicked() {
+            alert("resend!");
+        }
     </script>
-    @*Read Functions*@
     <script>
         $(function () {
             var url = '@Url.Action("LeadsGrid")';
@@ -110,10 +102,6 @@
                             AffiliateId: { type: 'string' },
                             IPAddress: { type: 'string' },
                             IsError: { type: 'boolean' }
-                            //Email: { type: 'string' },
-                            //EmployeeNumber: { type: 'number' },
-                            //HireDate: { type: 'date' },
-                            //Active: { type: 'boolean' }
                         }
                     }
                 }
@@ -130,11 +118,6 @@
                         field: 'IsError',
                         template: $("#fixLeadTemplate").html()
                     }
-                                //template: kendo.template($("#template").html())
-                    //{ field: 'Email' },
-                    //{ field: 'EmployeeNumber', title: 'Emplyee #' },
-                    //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
-                    //{ field: 'Active' }
                 ],
                 filterable: true,
                 sortable: {

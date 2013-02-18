@@ -376,6 +376,7 @@
     <Content Include="Scripts\foundation\jquery.foundation.topbar.js" />
     <Content Include="Scripts\foundation\jquery.placeholder.js" />
     <Content Include="Scripts\foundation\modernizr.foundation.js" />
+    <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />

@@ -3,6 +3,9 @@ using System.Web;
 
 namespace LTWeb.Common
 {
+    /// <summary>
+    /// Static utility class to encapsulate low level interactions with the session.
+    /// </summary>
     public static class SessionUility
     {
         public static T GetOrCreate<T>(string key, Func<T> create = null) where T : class
