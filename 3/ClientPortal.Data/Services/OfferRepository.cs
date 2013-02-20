@@ -46,5 +46,30 @@ namespace ClientPortal.Data.Services
             return offerInfos;
         }
 
+        public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int advertiserId)
+        {
+            string advId = advertiserId.ToString();
+            var offers = cakeContext.CakeOffers.Where(o => o.Advertiser_Id == advId);
+            var offerIds = offers.Select(o => o.Offer_Id).ToList();
+
+            string currency = null; // Assume all offers for the advertiser have the same currency
+            if (offers.Count() > 0) currency = offers.First().Currency;
+
+            var dailySummaries = cakeContext.DailySummaries.Where(ds => offerIds.Contains(ds.offer_id));
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
+
+            var dailyInfos = from sumGroup in dailySummaries.GroupBy(s => s.date)
+                             select new DailyInfo()
+                             {
+                                 Date = sumGroup.Key,
+                                 Impressions = sumGroup.Sum(s => s.views),
+                                 Clicks = sumGroup.Sum(s => s.clicks),
+                                 Conversions = sumGroup.Sum(s => s.conversions),
+                                 Revenue = sumGroup.Sum(s => s.revenue),
+                                 Currency = currency
+                             };
+            return dailyInfos;
+        }
     }
 }

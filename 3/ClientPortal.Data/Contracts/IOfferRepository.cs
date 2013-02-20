@@ -8,5 +8,6 @@ namespace ClientPortal.Data.Contracts
     public interface IOfferRepository
     {
         IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end);
+        IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int advertiserId);
     }
 }

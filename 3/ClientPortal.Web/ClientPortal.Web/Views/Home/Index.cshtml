@@ -66,7 +66,9 @@
                 </div>
                 <div id="offerSummaryGrid"></div>
             </li>
-            <li id="tab3Tab"></li>
+            <li id="tab3Tab">
+                <div id="dailySummaryGrid"></div>
+            </li>
             <li id="tab4Tab"></li>
         </ul>
     </div>
@@ -142,12 +144,26 @@
             $('#offerSummaryGrid').data('kendoGrid').dataSource.read();
             $('#filterBtn').attr('disabled', true);
         }
+
         function FormatCurr(val, culture) {
             kendo.culture(culture);
             return kendo.toString(val, "c");
         }
+        function FormatPct(a, b) {
+            if (b == 0) return "";
+            return kendo.toString(a / b, "p");
+        }
+        function FormatEPC(rev, clicks) {
+            if (clicks == 0) return "";
+            return kendo.toString(rev / clicks, "c");
+        }
 
         $(function () {
+            SetupOfferSummaryGrid();
+            SetupDailySummaryGrid();
+        });
+
+        function SetupOfferSummaryGrid() {
             var url = '@Url.Action("OfferSummaryGrid")';
 
             var dataSource = new kendo.data.DataSource({
@@ -197,12 +213,12 @@
                 height: 400,
                 columns: [
                     { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
-                    { field: 'Name', title: 'Offer'},
+                    { field: 'Name', title: 'Offer' },
                     { field: 'Format', width: 80 },
                     { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
                     { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                     { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                     //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
                     //{ field: 'Active' }
                 ],
@@ -215,6 +231,77 @@
 
             $('#startdate').kendoDatePicker();
             $('#enddate').kendoDatePicker();
-        });
+        }
+
+        function SetupDailySummaryGrid() {
+            var url = '@Url.Action("DailySummaryGrid")';
+
+            var dataSource = new kendo.data.DataSource({
+                serverPaging: true,
+                serverSorting: true,
+                serverFiltering: true,
+                pageSize: 20,
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: url,
+                        data: function () {
+                            return {
+                                //startdate: 'xx',
+                                //enddate: 'yy'
+                            };
+                        }
+                    }
+                },
+                schema: {
+                    data: 'data',
+                    total: 'total',
+                    model: {
+                        id: 'Id',
+                        fields: {
+                            Date: { type: 'date' },
+                            Impressions: { type: 'number' },
+                            Clicks: { type: 'number' },
+                            Conversions: { type: 'number' },
+                            ConversionPct: { type: 'number' },
+                            Revenue: { type: 'number' },
+                            EPC: { type: 'number' }
+                        }
+                    }
+                },
+                aggregate: [
+                    { field: "Impressions", aggregate: "sum" },
+                    { field: "Clicks", aggregate: "sum" },
+                    { field: "Conversions", aggregate: "sum" },
+                    { field: "Revenue", aggregate: "sum" }
+                ]
+            });
+
+            $('#dailySummaryGrid').kendoGrid({
+                dataSource: dataSource,
+                height: 400,
+                columns: [
+                    { field: 'Date', width: 60, format: '{0:d}' },
+                    { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p}', attributes: { style: "text-align: right" }, footerTemplate: function (data) { return FormatPct(data["Conversions"].sum, data["Clicks"].sum); }, footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'EPC', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: function (data) { return FormatEPC(data["Revenue"].sum, data["Clicks"].sum); }, footerAttributes: { style: "font-weight: bold; text-align: right" } }
+                ],
+                filterable: true,
+                sortable: {
+                    mode: 'multiple'
+                },
+                pageable: true
+                //dataBinding: function (e) {
+                //    var data = $('#dailySummaryGrid').data("kendoGrid").dataSource.data();
+                //    if (data.length > 0)
+                //        $('#dailySummaryGrid').data("culture", data[0].Culture); // TODO: include it in the json returned, like "total"
+                //    // retrieve with $('#dailySummaryGrid').data("culture");
+                //}
+            });
+        }
     </script>
 }

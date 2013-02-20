@@ -19,24 +19,23 @@ namespace ClientPortal.Data.DTOs
         }
         public string Currency
         {
-            set {
-                switch (value)
-                {
-                    case "EUR":
-                        Culture = "de-DE";
-                        break;
-                    case "GBP":
-                        Culture = "en-GB";
-                        break;
-                    case "AUD":
-                        Culture = "en-AU";
-                        break;
-                    default:
-                        Culture = "en-US";
-                        break;
-                }
-            }
+            set { Culture = CurrencyToCulture(value); }
         }
         public string Culture { get; set; }
+
+        public static string CurrencyToCulture(string currency)
+        {
+            switch (currency)
+            {
+                case "EUR":
+                    return "de-DE";
+                case "GBP":
+                    return "en-GB";
+                case "AUD":
+                    return "en-AU";
+                default:
+                    return "en-US";
+            }
+        }
     }
 }
