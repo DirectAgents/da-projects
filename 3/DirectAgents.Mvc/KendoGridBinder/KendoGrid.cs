@@ -98,6 +98,7 @@ namespace DirectAgents.Mvc.KendoGridBinder
         public IEnumerable<T> data { get; set; }
 
         public int total { get; set; }
+        public object aggregates { get; set; }
 
         private static string GetExpression(string field, string op, string param)
         {

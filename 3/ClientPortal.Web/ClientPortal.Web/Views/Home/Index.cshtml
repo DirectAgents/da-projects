@@ -149,14 +149,6 @@
             kendo.culture(culture);
             return kendo.toString(val, "c");
         }
-        function FormatPct(a, b) {
-            if (b == 0) return "";
-            return kendo.toString(a / b, "p");
-        }
-        function FormatEPC(rev, clicks) {
-            if (clicks == 0) return "";
-            return kendo.toString(rev / clicks, "c");
-        }
 
         $(function () {
             SetupOfferSummaryGrid();
@@ -170,6 +162,7 @@
                 serverPaging: true,
                 serverSorting: true,
                 serverFiltering: true,
+                serverAggregates: true,
                 pageSize: 20,
                 transport: {
                     read: {
@@ -187,6 +180,7 @@
                 schema: {
                     data: 'data',
                     total: 'total',
+                    aggregates: 'aggregates',
                     model: {
                         id: 'OfferId',
                         fields: {
@@ -240,6 +234,7 @@
                 serverPaging: true,
                 serverSorting: true,
                 serverFiltering: true,
+                serverAggregates: true,
                 pageSize: 20,
                 transport: {
                     read: {
@@ -257,6 +252,7 @@
                 schema: {
                     data: 'data',
                     total: 'total',
+                    aggregates: 'aggregates',
                     model: {
                         id: 'Id',
                         fields: {
@@ -274,7 +270,9 @@
                     { field: "Impressions", aggregate: "sum" },
                     { field: "Clicks", aggregate: "sum" },
                     { field: "Conversions", aggregate: "sum" },
-                    { field: "Revenue", aggregate: "sum" }
+                    { field: "ConversionPct", aggregate: "agg" },
+                    { field: "Revenue", aggregate: "sum" },
+                    { field: "EPC", aggregate: "agg" }
                 ]
             });
 
@@ -286,9 +284,9 @@
                     { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                     { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                     { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p}', attributes: { style: "text-align: right" }, footerTemplate: function (data) { return FormatPct(data["Conversions"].sum, data["Clicks"].sum); }, footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                    { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                     { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'EPC', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: function (data) { return FormatEPC(data["Revenue"].sum, data["Clicks"].sum); }, footerAttributes: { style: "font-weight: bold; text-align: right" } }
+                    { field: 'EPC', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
                 ],
                 filterable: true,
                 sortable: {

@@ -29,17 +29,23 @@ namespace ClientPortal.Web.Controllers
             int? advertiserId = GetAdvertiserId();
             if (advertiserId.HasValue) filter = (oi => oi.AdvertiserId == advertiserId.Value.ToString());
 
-            List<OfferInfo> offers;
+            List<OfferInfo> offerInfos;
             using (var cakeContext = new CakeContext()) // TODO: DI
             {
                 var offerRepository = new OfferRepository(cakeContext); // TODO: DI
 
-                offers = offerRepository
+                offerInfos = offerRepository
                             .GetOfferInfos(startdate, enddate)
                             .Where(filter)
                             .OrderByDescending(oi => oi.Revenue).ToList();
             }
-            var kgrid = new KendoGrid<OfferInfo>(request, offers);
+            var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
+            kgrid.aggregates = new
+            {
+                Clicks = new { sum = offerInfos.Select(i => i.Clicks).Sum() },
+                Conversions = new { sum = offerInfos.Select(i => i.Conversions).Sum() },
+                Revenue = new { sum = offerInfos.Select(i => i.Revenue).Sum() }
+            };
             var json = Json(kgrid);
             return json;
         }
@@ -61,7 +67,24 @@ namespace ClientPortal.Web.Controllers
                             .GetDailyInfos(startdate, enddate, advertiserId.Value)
                             .OrderBy(di => di.Date).ToList();
             }
+
+            int totalImpressions = dailyInfos.Select(i => i.Impressions).Sum();
+            int totalClicks = dailyInfos.Select(i => i.Clicks).Sum();
+            int totalConversions = dailyInfos.Select(i => i.Conversions).Sum();
+            float totalConversionPct = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
+            decimal totalRevenue = dailyInfos.Select(i => i.Revenue).Sum();
+            decimal totalEPC = (totalClicks == 0) ? 0 : Math.Round(totalRevenue / totalClicks, 2);
+
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
+            kgrid.aggregates = new
+            {
+                Impressions = new { sum = totalImpressions },
+                Clicks = new { sum = totalClicks },
+                Conversions = new { sum = totalConversions },
+                ConversionPct = new { agg = totalConversionPct },
+                Revenue = new { sum = totalRevenue },
+                EPC = new { agg = totalEPC }
+            };
             var json = Json(kgrid);
             return json;
         }

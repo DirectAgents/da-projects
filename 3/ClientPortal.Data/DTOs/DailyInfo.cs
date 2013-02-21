@@ -11,12 +11,12 @@ namespace ClientPortal.Data.DTOs
         public int Conversions { get; set; }
         public float ConversionPct
         {
-            get { return (Clicks == 0) ? 0 : (float)Math.Round(((double)Conversions / Clicks), 3); }
+            get { return (Clicks == 0) ? 0 : (float)Math.Round((double)Conversions / Clicks, 3); }
         }
         public decimal Revenue { get; set; }
         public decimal EPC
         {
-            get { return (Clicks == 0) ? 0 : (Revenue / Clicks); }
+            get { return (Clicks == 0) ? 0 : Math.Round(Revenue / Clicks, 2); }
         }
         public string Currency
         {
