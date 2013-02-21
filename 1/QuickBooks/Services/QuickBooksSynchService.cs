@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Design.PluralizationServices;
+//using System.Data.Entity.Design.PluralizationServices;
 using System.Data.Entity.Migrations;
 using System.Data.Odbc;
 using System.Globalization;
@@ -15,7 +15,7 @@ namespace QuickBooks.Services
     public class QuickBooksSynchService
     {
         string qodbcConnectionString = @"DSN=QuickBooks Data;SERVER=QODBC;OptimizerDBFolder=%UserProfile%\QODBC Driver for QuickBooks\Optimizer;OptimizerAllowDirtyReads=N;SyncFromOtherTables=Y;IAppReadOnly=Y";
-        PluralizationService pluralizationService = PluralizationService.CreateService(CultureInfo.CurrentCulture);
+//        PluralizationService pluralizationService = PluralizationService.CreateService(CultureInfo.CurrentCulture);
         readonly int companyID;
 
         public QuickBooksSynchService(string companyName)
@@ -79,26 +79,26 @@ namespace QuickBooks.Services
 
         public void Load<T>(IEnumerable<T> ts, bool save) where T : class
         {
-            using (var context = new AccountingContext())
-            {
-                var dbSet = context
-                                .GetType()
-                                .GetProperty(this.pluralizationService.Pluralize(typeof(T).Name))
-                                .GetValue(context, null) as DbSet<T>;
+            //using (var context = new AccountingContext())
+            //{
+            //    var dbSet = context
+            //                    .GetType()
+            //                    .GetProperty(this.pluralizationService.Pluralize(typeof(T).Name))
+            //                    .GetValue(context, null) as DbSet<T>;
 
-                if (dbSet == null)
-                    throw new Exception("could not cast to DbSet<T> for T = " + typeof(T).Name);
+            //    if (dbSet == null)
+            //        throw new Exception("could not cast to DbSet<T> for T = " + typeof(T).Name);
 
-                foreach (var t in ts)
-                {
-                    dbSet.AddOrUpdate(t);
-                }
+            //    foreach (var t in ts)
+            //    {
+            //        dbSet.AddOrUpdate(t);
+            //    }
 
-                if (save)
-                {
-                    context.SaveChanges();
-                }
-            }
+            //    if (save)
+            //    {
+            //        context.SaveChanges();
+            //    }
+            //}
         }
     }
 }
