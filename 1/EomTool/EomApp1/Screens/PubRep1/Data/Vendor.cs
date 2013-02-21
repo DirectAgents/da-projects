@@ -5,7 +5,7 @@ namespace EomApp1.Screens.PubRep1.Data
     {
         internal static int GetOrCreate(string name)
         {
-            PRDataDataContext db = new PRDataDataContext();
+            PRDataDataContext db = new PRDataDataContext(EomAppCommon.EomAppSettings.ConnStr);
             var query = from c in db.Vendors
                         where c.name == name
                         select c;
