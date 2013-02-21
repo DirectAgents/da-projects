@@ -53,7 +53,9 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult DailySummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
-            if (!startdate.HasValue) startdate = new DateTime(2013, 2, 1); // for testing!
+            var now = DateTime.Now;
+            if (!startdate.HasValue) startdate = new DateTime(now.Year, now.Month, 1);
+            if (!enddate.HasValue) enddate = now;
 
             int? advertiserId = GetAdvertiserId();
             if (advertiserId == null) return null;
