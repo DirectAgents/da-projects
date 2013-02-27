@@ -218,7 +218,15 @@ namespace EomApp1.Screens.Synch
                     logger.Log(string.Format("Cake Offer {0} is redirecting to PID {1}.", this.parameters.CampaignExternalId, this.parameters.CampaignId));
                 }
 
-                item.Update(this.eomEntities, conversionSummary, this.parameters.CampaignId, this.cakeService, this.logger);
+                try
+                {
+                    item.Update(this.eomEntities, conversionSummary, this.parameters.CampaignId, this.cakeService, this.logger);
+                }
+                catch (CannotChangePromotedItemException)
+                {
+                    logger.Log(string.Format("Item for Pid {0} not being updated; already promoted.", this.parameters.CampaignId));
+                    continue;
+                }
 
                 if (item.affid != conversionSummary.Affiliate_Id)
                 {
