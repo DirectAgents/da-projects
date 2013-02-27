@@ -26,33 +26,88 @@ namespace ClientPortal.Web.Controllers
         public JsonResult OfferSummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
             Func<OfferInfo, bool> filter = (oi => true);
+            int? advertiserId = GetAdvertiserId();
+            if (advertiserId.HasValue) filter = (oi => oi.AdvertiserId == advertiserId.Value.ToString());
 
-            // TODO: encapsulate this logic
-            if (WebSecurity.Initialized) 
+            List<OfferInfo> offerInfos;
+            using (var cakeContext = new CakeContext()) // TODO: DI
+            {
+                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
+
+                offerInfos = offerRepository
+                            .GetOfferInfos(startdate, enddate)
+                            .Where(filter)
+                            .OrderByDescending(oi => oi.Revenue).ToList();
+            }
+            var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
+            kgrid.aggregates = new
+            {
+                Clicks = new { sum = offerInfos.Select(i => i.Clicks).Sum() },
+                Conversions = new { sum = offerInfos.Select(i => i.Conversions).Sum() },
+                Revenue = new { sum = offerInfos.Select(i => i.Revenue).Sum() }
+            };
+            var json = Json(kgrid);
+            return json;
+        }
+
+        [HttpPost]
+        public JsonResult DailySummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        {
+            var now = DateTime.Now;
+            if (!startdate.HasValue) startdate = new DateTime(now.Year, now.Month, 1);
+            if (!enddate.HasValue) enddate = now;
+
+            int? advertiserId = GetAdvertiserId();
+            if (advertiserId == null) return null;
+
+            List<DailyInfo> dailyInfos;
+            using (var cakeContext = new CakeContext()) // TODO: DI
+            {
+                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
+
+                dailyInfos = offerRepository
+                            .GetDailyInfos(startdate, enddate, advertiserId.Value)
+                            .OrderBy(di => di.Date).ToList();
+            }
+
+            int totalImpressions = dailyInfos.Select(i => i.Impressions).Sum();
+            int totalClicks = dailyInfos.Select(i => i.Clicks).Sum();
+            int totalConversions = dailyInfos.Select(i => i.Conversions).Sum();
+            float totalConversionPct = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
+            decimal totalRevenue = dailyInfos.Select(i => i.Revenue).Sum();
+            decimal totalEPC = (totalClicks == 0) ? 0 : Math.Round(totalRevenue / totalClicks, 2);
+
+            var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
+            kgrid.aggregates = new
+            {
+                Impressions = new { sum = totalImpressions },
+                Clicks = new { sum = totalClicks },
+                Conversions = new { sum = totalConversions },
+                ConversionPct = new { agg = totalConversionPct },
+                Revenue = new { sum = totalRevenue },
+                EPC = new { agg = totalEPC }
+            };
+            var json = Json(kgrid);
+            return json;
+        }
+
+        private int? GetAdvertiserId()
+        {
+            int? advertiserId = null;
+
+            if (WebSecurity.Initialized)
             {
                 var userID = WebSecurity.CurrentUserId;
                 using (var usersContext = new UsersContext())
                 {
                     var userProfile = usersContext.UserProfiles.FirstOrDefault(c => c.UserId == userID);
-                    if (userProfile != null && userProfile.CakeAdvertiserId != null)
-                        filter = (io => io.AdvertiserId == userProfile.CakeAdvertiserId.Value.ToString()); // TODO: advertiser id shouldn't be a string
+                    if (userProfile != null)
+                        advertiserId = userProfile.CakeAdvertiserId;
                 }
             }
-
-            List<OfferInfo> offers;
-            using (var cakeContext = new CakeContext()) // TODO: DI
-            {
-                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
-
-                offers = offerRepository
-                            .GetOfferInfos(startdate, enddate)
-                            .Where(filter)
-                            .OrderByDescending(oi => oi.Revenue).ToList();
-            }
-            var kgrid = new KendoGrid<OfferInfo>(request, offers);
-            var json = Json(kgrid);
-            return json;
+            return advertiserId;
         }
+
 
         public ActionResult About()
         {

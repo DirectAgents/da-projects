@@ -744,6 +744,7 @@
     <Content Include="Scripts\kendo\2012.3.1114\cultures\kendo.culture.zu-ZA.min.js" />
     <Content Include="Scripts\kendo\2012.3.1114\cultures\kendo.culture.zu.min.js" />
     <Content Include="Scripts\kendo\2012.3.1114\jquery.min.js" />
+    <Content Include="Scripts\kendo\2012.3.1114\kendo.all.min.js" />
     <Content Include="Scripts\kendo\2012.3.1114\kendo.autocomplete.min.js" />
     <Content Include="Scripts\kendo\2012.3.1114\kendo.binder.min.js" />
     <Content Include="Scripts\kendo\2012.3.1114\kendo.calendar.min.js" />
