@@ -22,6 +22,12 @@ namespace ClientPortal.Web.Controllers
             return View();
         }
 
+        public PartialViewResult OfferSummaryPartial()
+        {
+            ViewBag.today = DateTime.Now.ToShortDateString();
+            return PartialView("_OfferSummaryPartial");
+        }
+
         [HttpPost]
         public JsonResult OfferSummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
@@ -48,6 +54,14 @@ namespace ClientPortal.Web.Controllers
             };
             var json = Json(kgrid);
             return json;
+        }
+
+        public PartialViewResult DailySummaryPartial()
+        {
+            var now = DateTime.Now;
+            ViewBag.firstOfMonth = new DateTime(now.Year, now.Month, 1).ToShortDateString(); ;
+            ViewBag.today = DateTime.Now.ToShortDateString();
+            return PartialView("_DailySummaryPartial");
         }
 
         [HttpPost]

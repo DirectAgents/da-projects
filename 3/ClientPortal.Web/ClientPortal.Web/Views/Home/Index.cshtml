@@ -18,10 +18,12 @@
         <img src="~/Images/logo1.png" />
     </div>
     <div class="three columns topinfo">
-        <p>User@Domain.com</p>
+        @Html.Partial("_HelloPartial")
     </div>
     <div class="three columns logout">
-        @Html.Partial("_LoginPartial")
+        <div style="float: right">
+            @Html.Partial("_LoginPartial")
+        </div>
     </div>
 </div>
 <div class="row">
@@ -29,7 +31,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="three columns portaltabs-v">
+    <div class="two columns portaltabs-v">
         <dl class="vertical tabs">
             <dd><a href="#vertical1">My Account</a></dd>
             <dd class="active"><a href="#vertical2">Reports</a></dd>
@@ -37,114 +39,17 @@
             <dd><a href="#vertical4">Contacts</a></dd>
         </dl>
     </div>
-    <div class="nine columns portaltabs-h">
+    <div class="ten columns portaltabs-h">
         <dl class="tabs">
-            <dd><a href="#tab1">Performance</a></dd>
-            <dd class="active"><a href="#tab2">Offer Summary</a></dd>
-            <dd><a href="#tab3">Daily Summary</a></dd>
+            <dd class="active"><a href="#tab1">Performance</a></dd>
+            <dd><a href="#tab2" id="tab2">Offer Summary</a></dd>
+            <dd><a href="#tab3" id="tab3">Daily Summary</a></dd>
             <dd><a href="#tab4">Conversion Report</a></dd>
         </dl>
         <ul class="tabs-content">
-            <li id="tab1Tab"></li>
-            <li id="tab2Tab" class="active">
-                <div style="height:35px">
-                    <select style="float:left; width:110px" id="offsum_dateRangeSel" onchange="ChangeDateRange('offsum')">
-                        <option value="today">Today</option>
-                        <option value="yesterday">Yesterday</option>
-                        <option value="wtd">Week to Date</option>
-                        <option value="mtd">Month to Date</option>
-                        <option value="ytd">Year to Date</option>
-                        <option value="lastweek">Last Week</option>
-                        <option value="lastmonth">Last Month</option>
-                        <option value="custom">- custom -</option>
-                    </select>
-                    <span style="float:left; margin-left:10px">Start:</span>
-                    <input style="float:left; width:100px" id="offsum_startdate" name="startdate" type="text" value="@today" onchange="DateChanged('offsum')" />
-                    <span style="float:left; margin-left:10px">End:</span>
-                    <input style="float:left; width:100px" id="offsum_enddate" name="enddate" type="text" value="@today" onchange="DateChanged('offsum')" />
-                    <a class="button" style="padding:3px; margin-left:10px" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum'); return false">Filter</a>
-                </div>
-                <div id="offsumGrid"></div>
-            </li>
-            <li id="tab3Tab">
-                <div style="height:35px">
-                    <select style="float:left; width:110px" id="daysum_dateRangeSel" onchange="ChangeDateRange('daysum')">
-                        <option value="mtd">Month to Date</option>
-                        <option value="ytd">Year to Date</option>
-                        <option value="lastmonth">Last Month</option>
-                        <option value="custom">- custom -</option>
-                    </select>
-                    <span style="float:left; margin-left:10px">Start:</span>
-                    <input style="float:left; width:100px" id="daysum_startdate" name="startdate" type="text" value="@firstOfMonth" onchange="DateChanged('daysum')" />
-                    <span style="float:left; margin-left:10px">End:</span>
-                    <input style="float:left; width:100px" id="daysum_enddate" name="enddate" type="text" value="@today" onchange="DateChanged('daysum')" />
-                    <a class="button" style="padding:3px; margin-left:10px" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum'); return false">Filter</a>
-                </div>
-                <div id="daysumGrid"></div>
-                <div id="example" class="k-content">
-                    <div class="configuration k-widget k-header" style="width:170px; float:right">
-                        <span class="configHead">Base date unit</span>
-                        <ul class="options">
-                            <li>
-                                <input id="baseUnitAuto" name="baseUnit"
-                                        type="radio" value="" autocomplete="off" />
-                                <label for="baseUnitAuto">Automatic</label>
-                            </li>
-                            <li>
-                                <input id="baseUnitYears" name="baseUnit"
-                                        type="radio" value="years" autocomplete="off" />
-                                <label for="baseUnitYears">Years</label>
-                            </li>
-                            <li>
-                                <input id="baseUnitMonths" name="baseUnit"
-                                        type="radio" value="months" autocomplete="off" />
-                                <label for="baseUnitMonths">Months</label>
-                            </li>
-                            <li>
-                                <input id="baseUnitWeeks" name="baseUnit"
-                                        type="radio" value="weeks" autocomplete="off" />
-                                <label for="baseUnitWeeks">Weeks</label>
-                            </li>
-                            <li>
-                                <input id="baseUnitDays" name="baseUnit"
-                                        type="radio" value="days" checked="checked" autocomplete="off" />
-                                <label for="baseUnitDays">Days</label>
-                            </li>
-                        </ul>
-                        <span class="configHead">Aggregate function</span>
-                        <ul class="options">
-                            <li>
-                                <input id="aggregateMax" name="aggregate"
-                                        type="radio" value="max" autocomplete="off" />
-                                <label for="aggregateMax">Max</label>
-                            </li>
-                            <li>
-                                <input id="aggregateMin" name="aggregate"
-                                        type="radio" value="min" autocomplete="off" />
-                                <label for="aggregateMin">Min</label>
-                            </li>
-                            <li>
-                                <input id="aggregateSum" name="aggregate"
-                                        type="radio" value="sum" checked="checked" autocomplete="off" />
-                                <label for="aggregateSum">Sum</label>
-                            </li>
-                            <li>
-                                <input id="aggregateAvg" name="aggregate"
-                                        type="radio" value="avg" autocomplete="off" />
-                                <label for="aggregateAvg">Avg</label>
-                            </li>
-                            <li>
-                                <input id="aggregateCount" name="aggregate"
-                                        type="radio" value="count" autocomplete="off" />
-                                <label for="aggregateCount">Count</label>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="chart-wrapper">
-                        <div id="chart"></div>
-                    </div>
-                </div>
-            </li>
+            <li id="tab1Tab" class="active"></li>
+            <li id="tab2Tab"></li>
+            <li id="tab3Tab"></li>
             <li id="tab4Tab"></li>
         </ul>
     </div>
@@ -164,120 +69,7 @@
 @section head {
     <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
     <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
-
-<style type="text/css">
-    .k-grid-header-wrap {
-        height: 30px;
-    }
-    .k-grid-footer-wrap {
-        height: 32px;
-    }
-
-    .chart-wrapper {
-        margin: 0 0 0 20px;
-        width: 650px;
-        height: 400px;
-    }
-    .chart-wrapper .k-chart {
-        padding: 37px;
-        width: 650px;
-        height: 400px;
-    }
-    .configuration
-    {
-        float: right;
-        margin: 0 0 0 15px;
-        padding: 10px;
-        border: 1px solid inherit;
-        background-image: none;
-        -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.45), inset 0 0 30px rgba(0,0,0,0.07);
-        -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.45), inset 0 0 30px rgba(0,0,0,0.07);
-        box-shadow: 0 1px 1px rgba(0,0,0,0.45), inset 0 0 30px rgba(0,0,0,0.07);
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
-        border-radius: 8px;
-        min-width: 170px;
-        max-width: 300px;
-    }
-    .configuration .configHead,
-    .configuration .infoHead
-    {
-        display: block;
-        font-size: 14px;
-        margin-top: 0;
-        text-indent: 0;
-        margin-bottom: 10px;
-        padding-bottom: 5px;
-        border-bottom: 1px solid #999;
-        background-position: 0 -178px;
-    }
-    .configuration .infoHead
-    {
-        background-position: -107px -722px;
-    }
-    .configuration .configTitle
-    {
-        font-size: 12px;
-        display: block;
-        line-height: 22px;
-        background-position: 0 21px;
-        margin-bottom: 10px;
-    }
-    .configuration .options
-    {
-        list-style:none;
-        margin: 0;
-        padding: 0;
-    }
-    .configuration button
-    {
-        margin: 0;
-        vertical-align: middle;
-    }
-    .configuration .k-textbox
-    {
-        margin-left: 7px;
-        width: 30px;
-    }
-    .configuration .options li { display: block; margin: 0; padding: 0.2em 0; zoom: 1; }
-    .configuration .options li:after
-    {
-        content: "";
-        display: block;
-        clear: both;
-        height: 0;
-    }
-    .configuration label,
-    .configuration input
-    {
-        font-size: 11px;
-        vertical-align: middle;
-        line-height: 20px;
-    }
-    .configuration label
-    {
-        float: left;
-    }
-    .configuration input
-    {
-        width: 40px;
-    }
-    .configuration input,
-    .configuration select,
-    .configuration .k-numerictextbox
-    {
-        float: right;
-    }
-    .configuration input.k-input
-    {
-        float: none;
-    }
-    .configuration .k-button,
-    .configuration .k-widget
-    {
-        margin-bottom: 3px;
-    }
-</style>
+    <link href="~/Content/index.css" rel="stylesheet" />
 }
 
 @section scripts {
@@ -286,6 +78,10 @@
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
     <script>
+        $(function () {
+            SetupTabs();
+        });
+
         function DateChanged(grid) {
             $('#' + grid + '_dateRangeSel').val('custom');
             $('#' + grid + '_filterBtn').attr('disabled', false);
@@ -315,230 +111,244 @@
                     break;
                 case "ytd":
                     $(startId).val('@firstOfYear');
-                    $(endId).val('@today');
-                    break;
-                case "lastweek":
-                    $(startId).val('@firstOfLastWeek');
-                    $(endId).val('@lastOfLastWeek');
-                    break;
-                case "lastmonth":
-                    $(startId).val('@firstOfLastMonth');
-                    $(endId).val('@lastOfLastMonth');
-                    break;
-                default:
-                    refresh = false;
-            }
-            if (refresh)
-                RefreshGrid(grid);
+                $(endId).val('@today');
+                break;
+            case "lastweek":
+                $(startId).val('@firstOfLastWeek');
+                $(endId).val('@lastOfLastWeek');
+                break;
+            case "lastmonth":
+                $(startId).val('@firstOfLastMonth');
+                $(endId).val('@lastOfLastMonth');
+                break;
+            default:
+                refresh = false;
         }
+        if (refresh)
+            RefreshGrid(grid);
+    }
 
-        function RefreshGrid(grid) {
-            $('#' + grid + 'Grid').data('kendoGrid').dataSource.read();
-            $('#' + grid + '_filterBtn').attr('disabled', true);
-        }
+    function RefreshGrid(grid) {
+        $('#' + grid + 'Grid').data('kendoGrid').dataSource.read();
+        $('#' + grid + '_filterBtn').attr('disabled', true);
+    }
 
-        function FormatCurr(val, culture) {
-            kendo.culture(culture);
-            return kendo.toString(val, "c");
-        }
+    function FormatCurr(val, culture) {
+        kendo.culture(culture);
+        return kendo.toString(val, "c");
+    }
 
-        $(function () {
-            SetupOfferSummaryGrid();
-            SetupDailySummaryGrid();
+    function SetupTabs() {
+        $("#tab2").one("click", function () {
+            $.ajax({
+                url: '@Url.Action("OfferSummaryPartial")',
+                cache: false
+            }).done(function (html) {
+                $("#tab2Tab").html(html);
+                SetupOfferSummaryGrid();
+            });
+        });
+        $("#tab3").one("click", function () {
+            $.ajax({
+                url: '@Url.Action("DailySummaryPartial")',
+                cache: false
+            }).done(function (html) {
+                $("#tab3Tab").html(html);
+                SetupDailySummaryGrid();
+            });
+        });
+    }
+
+    function SetupOfferSummaryGrid() {
+            
+        var dataSource = new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 20,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("OfferSummaryGrid")',
+                    data: function () {
+                        return {
+                            startdate: $('#offsum_startdate').val(),
+                            enddate: $('#offsum_enddate').val()
+                        };
+                    }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'OfferId',
+                    fields: {
+                        Name: { type: 'string' },
+                        Format: { type: 'string' },
+                        Price: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        Conversions: { type: 'number' },
+                        Revenue: { type: 'number' },
+                        //HireDate: { type: 'date' },
+                        //Active: { type: 'boolean' }
+                    }
+                }
+            },
+            aggregate: [
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Conversions", aggregate: "sum" },
+                { field: "Revenue", aggregate: "sum" }
+            ]
         });
 
-        function SetupOfferSummaryGrid() {
-            var url = '@Url.Action("OfferSummaryGrid")';
+        $('#offsumGrid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
+                { field: 'Name', title: 'Offer' },
+                { field: 'Format', width: 80 },
+                { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
+                { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
+                //{ field: 'Active' }
+            ],
+            filterable: true,
+            sortable: {
+                mode: 'multiple'
+            },
+            pageable: true
+        });
 
-            var dataSource = new kendo.data.DataSource({
-                serverPaging: true,
-                serverSorting: true,
-                serverFiltering: true,
-                serverAggregates: true,
-                pageSize: 20,
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: url,
-                        data: function () {
-                            return {
-                                startdate: $('#offsum_startdate').val(),
-                                enddate: $('#offsum_enddate').val()
-                            };
-                        }
+        $('#offsum_startdate').kendoDatePicker();
+        $('#offsum_enddate').kendoDatePicker();
+    }
+
+    function SetupDailySummaryGrid() {
+            
+        var dataSource = new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 62,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("DailySummaryGrid")',
+                    data: function () {
+                        return {
+                            startdate: $('#daysum_startdate').val(),
+                            enddate: $('#daysum_enddate').val()
+                        };
                     }
-                },
-                schema: {
-                    data: 'data',
-                    total: 'total',
-                    aggregates: 'aggregates',
-                    model: {
-                        id: 'OfferId',
-                        fields: {
-                            Name: { type: 'string' },
-                            Format: { type: 'string' },
-                            Price: { type: 'number' },
-                            Clicks: { type: 'number' },
-                            Conversions: { type: 'number' },
-                            Revenue: { type: 'number' },
-                            //HireDate: { type: 'date' },
-                            //Active: { type: 'boolean' }
-                        }
-                    }
-                },
-                aggregate: [
-                    { field: "Clicks", aggregate: "sum" },
-                    { field: "Conversions", aggregate: "sum" },
-                    { field: "Revenue", aggregate: "sum" }
-                ]
-            });
-
-            $('#offsumGrid').kendoGrid({
-                dataSource: dataSource,
-                height: 400,
-                columns: [
-                    { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
-                    { field: 'Name', title: 'Offer' },
-                    { field: 'Format', width: 80 },
-                    { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
-                    { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
-                    //{ field: 'Active' }
-                ],
-                filterable: true,
-                sortable: {
-                    mode: 'multiple'
-                },
-                pageable: true
-            });
-
-            $('#offsum_startdate').kendoDatePicker();
-            $('#offsum_enddate').kendoDatePicker();
-        }
-
-        function SetupDailySummaryGrid() {
-            var url = '@Url.Action("DailySummaryGrid")';
-
-            var dataSource = new kendo.data.DataSource({
-                serverPaging: true,
-                serverSorting: true,
-                serverFiltering: true,
-                serverAggregates: true,
-                pageSize: 62,
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: url,
-                        data: function () {
-                            return {
-                                startdate: $('#daysum_startdate').val(),
-                                enddate: $('#daysum_enddate').val()
-                            };
-                        }
-                    }
-                },
-                schema: {
-                    data: 'data',
-                    total: 'total',
-                    aggregates: 'aggregates',
-                    model: {
-                        id: 'Id',
-                        fields: {
-                            Date: { type: 'date' },
-                            Impressions: { type: 'number' },
-                            Clicks: { type: 'number' },
-                            Conversions: { type: 'number' },
-                            ConversionPct: { type: 'number' },
-                            Revenue: { type: 'number' },
-                            EPC: { type: 'number' }
-                        }
-                    }
-                },
-                aggregate: [
-                    { field: "Impressions", aggregate: "sum" },
-                    { field: "Clicks", aggregate: "sum" },
-                    { field: "Conversions", aggregate: "sum" },
-                    { field: "ConversionPct", aggregate: "agg" },
-                    { field: "Revenue", aggregate: "sum" },
-                    { field: "EPC", aggregate: "agg" }
-                ]
-            });
-
-            $('#daysumGrid').kendoGrid({
-                dataSource: dataSource,
-                height: 400,
-                columns: [
-                    { field: 'Date', width: 60, format: '{0:d}' },
-                    { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    { field: 'EPC', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
-                ],
-                filterable: true,
-                sortable: {
-                    mode: 'multiple'
-                },
-                pageable: true
-                //dataBinding: function (e) {
-                //    var data = $('#dailySummaryGrid').data("kendoGrid").dataSource.data();
-                //    if (data.length > 0)
-                //        $('#dailySummaryGrid').data("culture", data[0].Culture); // TODO: include it in the json returned, like "total"
-                //    // retrieve with $('#dailySummaryGrid').data("culture");
-                //}
-            });
-            $('#daysum_startdate').kendoDatePicker();
-            $('#daysum_enddate').kendoDatePicker();
-
-            setTimeout(function () { createChart(); }, 400);
-            $(".configuration").bind("change", refresh);
-        }
-        function createChart() {
-            var dataSource = $('#daysumGrid').data("kendoGrid").dataSource;
-
-            $("#chart").kendoChart({
-                theme: $(document).data("kendoSkin") || "default",
-                title: {
-                    text: ""
-                },
-                dataSource: dataSource,
-                series: [
-                    { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks" },
-                    { type: "line", aggregate: "sum", field: "Revenue", name: "Revenue", tooltip: { format: "C" } }
-                ],
-                categoryAxis: {
-                    baseUnit: "days",
-                    field: "Date",
-                    labels: { rotation: -90 }
-                },
-                valueAxis: {
-                    labels: { format: "N0" }
-                },
-                tooltip: {
-                    visible: true,
-                    format: "N0"
                 }
-            });
-        }
-        function refresh() {
-            var chart = $("#chart").data("kendoChart"),
-                series = chart.options.series,
-                categoryAxis = chart.options.categoryAxis,
-                baseUnitInputs = $("input:radio[name=baseUnit]"),
-                aggregateInputs = $("input:radio[name=aggregate]");
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' },
+                        Impressions: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        Conversions: { type: 'number' },
+                        ConversionPct: { type: 'number' },
+                        Revenue: { type: 'number' },
+                        EPC: { type: 'number' }
+                    }
+                }
+            },
+            aggregate: [
+                { field: "Impressions", aggregate: "sum" },
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Conversions", aggregate: "sum" },
+                { field: "ConversionPct", aggregate: "agg" },
+                { field: "Revenue", aggregate: "sum" },
+                { field: "EPC", aggregate: "agg" }
+            ]
+        });
+        $('#daysumGrid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                { field: 'Date', width: 60, format: '{0:d}' },
+                { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'EPC', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
+            ],
+            filterable: true,
+            sortable: {
+                mode: 'multiple'
+            },
+            pageable: true
+            //dataBinding: function (e) {
+            //    var data = $('#dailySummaryGrid').data("kendoGrid").dataSource.data();
+            //    if (data.length > 0)
+            //        $('#dailySummaryGrid').data("culture", data[0].Culture); // TODO: include it in the json returned, like "total"
+            //    // retrieve with $('#dailySummaryGrid').data("culture");
+            //}
+        });
+        $('#daysum_startdate').kendoDatePicker();
+        $('#daysum_enddate').kendoDatePicker();
+        setTimeout(function () { createChart(); }, 400);
+        $(".configuration").bind("change", refresh);
+    }
 
-            for (var i = 0, length = series.length; i < length; i++) {
-                series[i].aggregate = aggregateInputs.filter(":checked").val();
-            };
+    function createChart() {
+        var dataSource = $('#daysumGrid').data("kendoGrid").dataSource;
 
-            categoryAxis.baseUnit = baseUnitInputs.filter(":checked").val();
+        $("#chart").kendoChart({
+            theme: $(document).data("kendoSkin") || "default",
+            title: {
+                text: ""
+            },
+            dataSource: dataSource,
+            series: [
+                { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks" },
+                { type: "line", aggregate: "sum", field: "Revenue", name: "Revenue", tooltip: { format: "C" } }
+            ],
+            categoryAxis: {
+                baseUnit: "days",
+                field: "Date",
+                labels: { rotation: -90 }
+            },
+            valueAxis: {
+                labels: { format: "N0" }
+            },
+            tooltip: {
+                visible: true,
+                format: "N0"
+            }
+        });
+    }
+    
+    function refresh() {
+        var chart = $("#chart").data("kendoChart"),
+            series = chart.options.series,
+            categoryAxis = chart.options.categoryAxis,
+            baseUnitInputs = $("input:radio[name=baseUnit]"),
+            aggregateInputs = $("input:radio[name=aggregate]");
 
-            chart.refresh();
-        }
+        for (var i = 0, length = series.length; i < length; i++) {
+            series[i].aggregate = aggregateInputs.filter(":checked").val();
+        };
+
+        categoryAxis.baseUnit = baseUnitInputs.filter(":checked").val();
+
+        chart.refresh();
+    }
     </script>
 }

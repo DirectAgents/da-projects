@@ -1,0 +1,18 @@
+﻿<div style="height: 35px;">
+    <select style="float: left; width: 110px" id="offsum_dateRangeSel" onchange="ChangeDateRange('offsum')">
+        <option value="today">Today</option>
+        <option value="yesterday">Yesterday</option>
+        <option value="wtd">Week to Date</option>
+        <option value="mtd">Month to Date</option>
+        <option value="ytd">Year to Date</option>
+        <option value="lastweek">Last Week</option>
+        <option value="lastmonth">Last Month</option>
+        <option value="custom">- custom -</option>
+    </select>
+    <span style="float: left; margin-left: 10px">Start:</span>
+    <input style="float:left; width:100px" id="offsum_startdate" name="startdate" type="text" value="@ViewBag.today" onchange="DateChanged('offsum')" />
+    <span style="float: left; margin-left: 10px">End:</span>
+    <input style="float:left; width:100px" id="offsum_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('offsum')" />
+    <a class="button" style="padding: 3px; margin-left: 10px" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum'); return false">Filter</a>
+</div>
+<div id="offsumGrid"></div>
