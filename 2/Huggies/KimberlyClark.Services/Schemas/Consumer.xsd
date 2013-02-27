@@ -1,0 +1,51 @@
+﻿<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/CoRegistrationRestService"
+           elementFormDefault="qualified"
+           targetNamespace="http://schemas.datacontract.org/2004/07/CoRegistrationRestService"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="Consumer">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Address1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Address2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="BirthDate" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="BrandID" type="xs:int" />
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ConsumerChild" nillable="true" type="tns:ArrayOfChild" />
+      <xs:element minOccurs="0" name="Country" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DMPermission" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EmailAddress" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="EmailPermission" type="xs:boolean" />
+      <xs:element minOccurs="0" name="EthnicityCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FirstTimeParentFlag" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Gender" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="HomePhone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="KCBrandsDMPermission" type="xs:boolean" />
+      <xs:element minOccurs="0" name="KCBrandsEmailpermission" type="xs:boolean" />
+      <xs:element minOccurs="0" name="LanguageCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="MobilePermission" type="xs:boolean" />
+      <xs:element minOccurs="0" name="MobilePhone" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="OCDID" type="xs:int" />
+      <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="SourceID" type="xs:int" />
+      <xs:element minOccurs="0" name="StateProvinceCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ThirdPartyDMPermission" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ThirdPartyEmailpermission" type="xs:boolean" />
+      <xs:element minOccurs="0" name="VendorID" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Consumer" nillable="true" type="tns:Consumer" />
+  <xs:complexType name="ArrayOfChild">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Child" nillable="true" type="tns:Child" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfChild" nillable="true" type="tns:ArrayOfChild" />
+  <xs:complexType name="Child">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BirthDate" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Gender" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Child" nillable="true" type="tns:Child" />
+</xs:schema>

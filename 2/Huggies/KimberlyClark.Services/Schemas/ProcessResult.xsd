@@ -1,0 +1,10 @@
+﻿<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/CoRegistrationRestService" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/CoRegistrationRestService" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ProcessResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Error" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="IsSuccess" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ProcessOutPut" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProcessResult" nillable="true" type="tns:ProcessResult" />
+</xs:schema>

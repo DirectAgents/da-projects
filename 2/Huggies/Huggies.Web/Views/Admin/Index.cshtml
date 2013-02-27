@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Admin</title>
+    <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <fieldset>
+            <legend>Leads</legend>
+            <div id="leadsGrid" />
+        </fieldset>
+    </div>
+    <script src="~/Scripts/jquery-1.8.3.min.js"></script>
+    <script src="~/Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
+    <script>
+        $(function () {
+            var url = '@Url.Action("LeadsGrid")';
+            var dataSource = new kendo.data.DataSource({
+                serverPaging: true,
+                serverSorting: true,
+                serverFiltering: true,
+                pageSize: 20,
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: url
+                    }
+                },
+                schema: {
+                    data: 'data',
+                    total: 'total',
+                    model: {
+                        id: 'Id',
+                        fields: {
+                            Email: { type: 'string' },
+                            FirstChild: { type: 'boolean' },
+                            DueDate: { type: 'date' },
+                            Timestamp: { type: 'date' },
+                            AffiliateId: { type: 'string' },
+                            IpAddress: { type: 'string' },
+                            Success: { type: 'boolean' }
+                        }
+                    }
+                }
+            });
+            $('#leadsGrid').kendoGrid({
+                dataSource: dataSource,
+                height: 400,
+                columns: [
+                    { field: 'Timestamp' },
+                    { field: 'Email' },
+                    { field: 'FirstChild' },
+                    { field: 'DueDate' },
+                    { field: 'AffiliateId' },
+                    { field: 'IpAddress' },
+                    { field: 'Success' }
+                ],
+                filterable: true,
+                sortable: {
+                    mode: 'multiple'
+                },
+                pageable: true
+            });
+        });
+    </script>
+</body>
+</html>

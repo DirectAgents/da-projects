@@ -1,0 +1,55 @@
+.none {
+	display: block;
+	font: .7em "lucida sans", verdana, sans-serif;
+	position: relative;
+	color: #333;
+	margin-bottom:0px;
+	padding: 0.5em;
+	background-color: #fff;
+	border: 1px dotted #ccc;
+}
+
+.NOTOK {
+	display: block;
+	font: .7em "lucida sans", verdana, sans-serif;
+	position: relative;
+	color: #000;
+	margin: 5px 0 1em 2px;
+	padding: 0.5em;
+	background-color: #ffdfdf;
+	border: 1px dotted #de9292;
+}
+
+.OK {
+	display: block;
+	font: 0.7em "lucida sans", verdana, sans-serif;
+	position: relative;
+	color: #003300;
+	margin-bottom:0px;
+	padding: 0.5em;
+	border: 1px dotted #de9292;
+	background-color: #CCFFAA;
+}
+
+.errorMessage {
+	display: block;
+	font: .8em "lucida sans", verdana, sans-serif;
+	position: absolute;
+	color: #000;
+	margin-top:-150px;
+	margin-left:0px;
+	padding: 0.5em;
+	background-color: #ffdfdf;
+	border: 1px dotted #de9292;
+	text-align:center;
+	width:488px;
+	
+	
+}
+
+.focus { background-color: #fefbc8; }
+
+.error {
+	background: #FF9999;
+	
+}
