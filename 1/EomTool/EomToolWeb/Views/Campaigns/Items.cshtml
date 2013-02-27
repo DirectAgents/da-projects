@@ -77,7 +77,7 @@
                 dataBound: function () {
                 },
                 edit: function(e) {
-                    e.item.animate({ height: '@(Model.ListViewMode.EditHeight)px', width: '@(Model.ListViewMode.EditWidth)px' }, 750 );
+                    e.item.animate({ width: '@(Model.ListViewMode.EditWidth)px', height: '@(Model.ListViewMode.EditHeight)px' }, 750 );
                     e.model.Edited = true;
                 },
                 selectable: "multiple"
@@ -120,6 +120,8 @@
     if (Model.Vertical != null) { filter += Model.Vertical.Name; }
     filter += "&traffictype=";
     if (Model.TrafficType != null) { filter += Model.TrafficType.Name; }
+    filter += "&mobilelp=";
+    if (Model.MobileLP != null) { filter += Model.MobileLP; }
 }
     $(document).ready(function () {
         $(document).bind("TemplateLoaded", function(e, path) { 

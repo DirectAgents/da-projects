@@ -11,6 +11,8 @@
             <dd>${PayableAction}</dd>
             <dt>Traffic Type:</dt>
             <dd>${TrafficTypes}</dd>
+            <dt>Mobile LP:</dt>
+            <dd>${MobileLP}</dd>
             <dt>Link:</dt>
             <dd><a href="${Link}" target="_blank">${Link}</a></dd>
             <dt>Payout:</dt>
@@ -52,6 +54,10 @@
             <tr>
                 <td class="fieldName">Payable Action:</td>
                 <td><input type="text" data-bind="value:PayableAction" name="PayableAction" /></td>
+            </tr>
+            <tr>
+                <td class="fieldName">Mobile LP:</td>
+                <td><input type="text" data-bind="value:MobileLP" name="MobileLP" /></td>
             </tr>
             <tr>
                 <td class="fieldName">Wiki Details:</td>
@@ -113,7 +119,7 @@
     {
         float: left;
         width: 450px;
-        height: 420px;
+        height: 450px;
         margin: 10px;
         padding: 5px;
         -moz-box-shadow: inset 0 0 20px rgba(0,0,0,0.2);

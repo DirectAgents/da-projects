@@ -125,6 +125,10 @@
     <Compile Include="Migrations\201211291655140_RevShareStuff.Designer.cs">
       <DependentUpon>201211291655140_RevShareStuff.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201302262132524_MobileLP.cs" />
+    <Compile Include="Migrations\201302262132524_MobileLP.Designer.cs">
+      <DependentUpon>201302262132524_MobileLP.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -187,6 +191,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201211291655140_RevShareStuff.resx">
       <DependentUpon>201211291655140_RevShareStuff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201302262132524_MobileLP.resx">
+      <DependentUpon>201302262132524_MobileLP.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

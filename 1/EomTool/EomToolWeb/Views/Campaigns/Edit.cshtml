@@ -25,6 +25,10 @@
     @string.Join(", ", Model.TrafficTypes.Select(t => t.Name))
 </p>
 <p>
+    @Html.LabelFor(c => c.MobileLP)
+    @Html.EditorFor(c => c.MobileLP)
+</p>
+<p>
     @Html.LabelFor(c => c.Link)
     @Html.EditorFor(c => c.Link)
 </p>
