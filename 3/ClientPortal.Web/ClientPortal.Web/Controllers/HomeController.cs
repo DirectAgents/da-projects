@@ -105,6 +105,41 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
+        public PartialViewResult CPMSummaryPartial()
+        {
+            var now = DateTime.Now;
+            var firstOfMonth = new DateTime(now.Year, now.Month, 1);
+            ViewBag.start = firstOfMonth.AddMonths(-3).ToString("MM/yyyy");
+            ViewBag.end = firstOfMonth.AddMonths(-1).ToString("MM/yyyy");
+            return PartialView("_CPMSummaryPartial");
+        }
+
+        [HttpPost]
+        public JsonResult CPMSummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        {
+            int? advertiserId = GetAdvertiserId();
+
+            List<MonthlyInfo> monthlyInfos;
+            using (var cakeContext = new CakeContext()) // TODO: DI
+            {
+                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
+
+                monthlyInfos = offerRepository
+                    .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
+                    .Where(i => i.CampaignStatusId == CampaignStatus.Verified) // TODO: filter by AccountingStatus (or combine into one row)
+                    .OrderBy(i => i.Offer).ThenBy(i => i.Year).ThenBy(i => i.Month).ToList();
+                    //.OrderBy(i => i.Period).ToList();
+            }
+            var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
+            kgrid.aggregates = new
+            {
+                Revenue = new { sum = monthlyInfos.Select(i => i.Revenue).Sum() }
+            };
+            var json = Json(kgrid);
+            return json;
+        }
+        // ---
+
         private int? GetAdvertiserId()
         {
             int? advertiserId = null;

@@ -836,6 +836,7 @@
     <Content Include="Views\Shared\_HelloPartial.cshtml" />
     <Content Include="Views\Home\_OfferSummaryPartial.cshtml" />
     <Content Include="Views\Home\_DailySummaryPartial.cshtml" />
+    <Content Include="Views\Home\_CPMSummaryPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

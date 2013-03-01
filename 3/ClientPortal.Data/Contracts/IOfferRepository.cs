@@ -9,5 +9,6 @@ namespace ClientPortal.Data.Contracts
     {
         IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end);
         IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int advertiserId);
+        IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId);
     }
 }

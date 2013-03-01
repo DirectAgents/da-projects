@@ -71,5 +71,40 @@ namespace ClientPortal.Data.Services
                              };
             return dailyInfos;
         }
+
+        // note: we only use the year and month portion of "start" and "end"
+        public IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId)
+        {
+            //TODO: make sure advertiser matches by name and offers match by name?
+
+            var summaries = cakeContext.MonthlySummaries.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(type))
+                summaries = summaries.Where(s => s.UnitType == "CPM");
+            if (start.HasValue)
+                summaries = summaries.Where(s => (s.Year > start.Value.Year) || (s.Year == start.Value.Year && s.Month >= start.Value.Month));
+            if (end.HasValue)
+                summaries = summaries.Where(s => (s.Year < end.Value.Year) || (s.Year == end.Value.Year && s.Month <= end.Value.Month));
+            if (advertiserId.HasValue)
+                summaries = summaries.Where(s => s.AdvertiserId == advertiserId);
+
+            var monthlyInfos =
+                from s in summaries
+                group s by new { s.Year, s.Month, s.AdvertiserId, s.Pid, s.CampaignName, s.RevCur, s.CostCur, s.CampaignStatusId, s.ItemAccountingStatusId }
+                    into g
+                    select new MonthlyInfo()
+                    {
+                        //Period = new DateTime(g.Key.Year, g.Key.Month, 1),
+                        Year = g.Key.Year,
+                        Month = g.Key.Month,
+                        AdvertiserId = g.Key.AdvertiserId,
+                        OfferId = g.Key.Pid,
+                        Offer = g.Key.CampaignName,
+                        Currency = g.Key.RevCur,
+                        Revenue = g.Sum(s => s.TotalRev),
+                        CampaignStatusId = g.Key.CampaignStatusId,
+                        AccountingStatusId = g.Key.ItemAccountingStatusId
+                    };
+            return monthlyInfos;
+        }
     }
 }

@@ -2,16 +2,22 @@
     var now = DateTime.Now;
     var sunday = now;
     while (sunday.DayOfWeek != DayOfWeek.Sunday) { sunday = sunday.AddDays(-1); }
+    var firstOfMonthDT = new DateTime(now.Year, now.Month, 1);
 
     var today = now.ToShortDateString();
     var yesterday = now.AddDays(-1).ToShortDateString();
-    var firstOfMonth = new DateTime(now.Year, now.Month, 1).ToShortDateString();
+    var firstOfMonth = firstOfMonthDT.ToShortDateString();
     var firstOfYear = new DateTime(now.Year, 1, 1).ToShortDateString();
-    var firstOfLastMonth = new DateTime(now.Year, now.Month, 1).AddMonths(-1).ToShortDateString();
-    var lastOfLastMonth = new DateTime(now.Year, now.Month, 1).AddDays(-1).ToShortDateString();
+    var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToShortDateString();
+    var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToShortDateString();
     var firstOfWeek = sunday.ToShortDateString();
     var firstOfLastWeek = sunday.AddDays(-7).ToShortDateString();
     var lastOfLastWeek = sunday.AddDays(-1).ToShortDateString();
+
+    var todayMY = now.ToString("MM/yyyy");
+    var lastMonthMY = firstOfMonthDT.AddMonths(-1).ToString("MM/yyyy");
+    var threeMonthsAgoMY = firstOfMonthDT.AddMonths(-3).ToString("MM/yyyy");
+    var firstOfYearMY = new DateTime(now.Year, 1, 1).ToString("MM/yyyy");
 }
 <div class="row">
     <div class="six columns toplogo">
@@ -41,16 +47,18 @@
     </div>
     <div class="ten columns portaltabs-h">
         <dl class="tabs">
-            <dd class="active"><a href="#tab1">Performance</a></dd>
+            <dd class="active"><a href="#tab1" id="tab1">Performance</a></dd>
             <dd><a href="#tab2" id="tab2">Offer Summary</a></dd>
             <dd><a href="#tab3" id="tab3">Daily Summary</a></dd>
-            <dd><a href="#tab4">Conversion Report</a></dd>
+            <dd><a href="#tab4" id="tab4">Conversion Report</a></dd>
+            <dd><a href="#tab5" id="tab5">CPM</a></dd>
         </dl>
         <ul class="tabs-content">
             <li id="tab1Tab" class="active"></li>
             <li id="tab2Tab"></li>
             <li id="tab3Tab"></li>
             <li id="tab4Tab"></li>
+            <li id="tab5Tab"></li>
         </ul>
     </div>
 </div>
@@ -78,39 +86,39 @@
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
     <script>
-        $(function () {
-            SetupTabs();
-        });
+    $(function () {
+        SetupTabs();
+    });
 
-        function DateChanged(grid) {
-            $('#' + grid + '_dateRangeSel').val('custom');
-            $('#' + grid + '_filterBtn').attr('disabled', false);
-        }
+    function DateChanged(grid) {
+        $('#' + grid + '_dateRangeSel').val('custom');
+        $('#' + grid + '_filterBtn').attr('disabled', false);
+    }
 
-        function ChangeDateRange(grid) {
-            var startId = '#' + grid + '_startdate';
-            var endId = '#' + grid + '_enddate';
-            var refresh = true;
-            var dateRange = $('#' + grid + '_dateRangeSel').val();
-            switch (dateRange) {
-                case "today":
-                    $(startId).val('@today');
-                    $(endId).val('@today');
-                    break;
-                case "yesterday":
-                    $(startId).val('@yesterday');
-                    $(endId).val('@yesterday');
-                    break;
-                case "wtd":
-                    $(startId).val('@firstOfWeek');
-                    $(endId).val('@today');
-                    break;
-                case "mtd":
-                    $(startId).val('@firstOfMonth');
-                    $(endId).val('@today');
-                    break;
-                case "ytd":
-                    $(startId).val('@firstOfYear');
+    function ChangeDateRange(grid) {
+        var startId = '#' + grid + '_startdate';
+        var endId = '#' + grid + '_enddate';
+        var refresh = true;
+        var dateRange = $('#' + grid + '_dateRangeSel').val();
+        switch (dateRange) {
+            case "today":
+                $(startId).val('@today');
+                $(endId).val('@today');
+                break;
+            case "yesterday":
+                $(startId).val('@yesterday');
+                $(endId).val('@yesterday');
+                break;
+            case "wtd":
+                $(startId).val('@firstOfWeek');
+                $(endId).val('@today');
+                break;
+            case "mtd":
+                $(startId).val('@firstOfMonth');
+                $(endId).val('@today');
+                break;
+            case "ytd":
+                $(startId).val('@firstOfYear');
                 $(endId).val('@today');
                 break;
             case "lastweek":
@@ -120,6 +128,30 @@
             case "lastmonth":
                 $(startId).val('@firstOfLastMonth');
                 $(endId).val('@lastOfLastMonth');
+                break;
+            default:
+                refresh = false;
+        }
+        if (refresh)
+            RefreshGrid(grid);
+    }
+    function ChangeDateRangeMY(grid) {
+        var startId = '#' + grid + '_startdate';
+        var endId = '#' + grid + '_enddate';
+        var refresh = true;
+        var dateRange = $('#' + grid + '_dateRangeSel').val();
+        switch (dateRange) {
+            case "prev3months":
+                $(startId).val('@threeMonthsAgoMY');
+                $(endId).val('@lastMonthMY');
+                break;
+            case "lastmonth":
+                $(startId).val('@lastMonthMY');
+                $(endId).val('@lastMonthMY');
+                break;
+            case "ytd":
+                $(startId).val('@firstOfYearMY');
+                $(endId).val('@todayMY');
                 break;
             default:
                 refresh = false;
@@ -155,6 +187,15 @@
             }).done(function (html) {
                 $("#tab3Tab").html(html);
                 SetupDailySummaryGrid();
+            });
+        });
+        $("#tab5").one("click", function () {
+            $.ajax({
+                url: '@Url.Action("CPMSummaryPartial")',
+                cache: false
+            }).done(function (html) {
+                $("#tab5Tab").html(html);
+                SetupCPMSummaryGrid();
             });
         });
     }
@@ -349,6 +390,88 @@
         categoryAxis.baseUnit = baseUnitInputs.filter(":checked").val();
 
         chart.refresh();
+    }
+
+    function SetupCPMSummaryGrid() {
+
+        var dataSource = new kendo.data.DataSource({
+//            serverPaging: true,
+//            serverSorting: true,
+            serverFiltering: true,
+//            serverAggregates: true,
+//            pageSize: 20,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("CPMSummaryGrid")',
+                    data: function () {
+                        return {
+                            startdate: $('#cpmsum_startdate').val(),
+                            enddate: $('#cpmsum_enddate').val()
+                        };
+                    }
+                }
+            },
+            //group: {
+            //    field: "Period", aggregates: [
+            //        { field: "Revenue", aggregate: "sum" }
+            //    ]
+            //},
+            schema: {
+                data: 'data',
+                total: 'total',
+//                aggregates: 'aggregates',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Period: { type: 'date' },
+                        OfferId: { type: 'number' },
+                        Offer: { type: 'string' },
+                        Revenue: { type: 'number' },
+                        AccountingStatusId: { type: 'number' }
+                    }
+                }
+            },
+            aggregate: [
+                { field: "Revenue", aggregate: "sum" }
+            ]
+        });
+
+        $('#cpmsumGrid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                {
+                    field: 'OfferId', title: 'Id', width: 90, attributes: { style: "text-align: right" }
+                },
+                {
+                    field: 'Offer',
+                    groupFooterTemplate: "<b>Group Total.....</b>",
+                    footerTemplate: "TOTAL", footerAttributes: { style: "font-weight: bold" }
+                },
+                {
+                    field: 'Period', width: 90, format: '{0:MMM yyyy}', attributes: { style: "text-align: right" },
+                },
+                {
+                    field: 'Revenue', title: 'Spend', width: 110, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" },
+                    aggregates: ["sum"], groupFooterTemplate: "<b style:'text-align:right'>#= kendo.toString(sum, 'c') #</b>",
+                    footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" }
+                },
+                {
+                    field: 'AccountingStatusId', title: 'Accounting', width: 100, attributes: { style: "text-align: center" }
+                }
+            ],
+            filterable: true,
+            sortable: {
+                mode: 'multiple'
+            },
+            groupable: true,
+//            pageable: true
+        });
+
+        $('#cpmsum_startdate').kendoDatePicker({ start: "year", depth: "year", format: "MM/yyyy" });
+        $('#cpmsum_enddate').kendoDatePicker({ start: "year", depth: "year", format: "MM/yyyy" });
     }
     </script>
 }

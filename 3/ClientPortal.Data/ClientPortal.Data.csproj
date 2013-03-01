@@ -70,6 +70,10 @@
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\MonthlySummary.cs">
+      <DependentUpon>Cake.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DTOs\MonthlyInfo.cs" />
     <Compile Include="DTOs\DailyInfo.cs" />
     <Compile Include="DTOs\OfferInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
