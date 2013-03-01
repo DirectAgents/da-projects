@@ -52,17 +52,17 @@ namespace EomToolWeb.Controllers
         }
         private IPaymentBatchRepository CreateRepository(DateTime dateTime)
         {
-            IPaymentBatchRepository repo = null;
-            try
+            var config = new EomEntitiesConfigBase()
             {
-                var config = new EomEntitiesConfigBase()
-                {
-                    CurrentEomDate = dateTime
-                };
+                CurrentEomDate = dateTime
+            };
+
+            IPaymentBatchRepository repo = null;
+            if (config.DatabaseExistsForDate(dateTime))
+            {
                 var eomEntities = new EomEntities(config);
                 repo = new PaymentBatchRepository(eomEntities);
             }
-            catch (Exception) { }
 
             return repo;
         }

@@ -45,9 +45,24 @@ namespace EomToolWeb.Infrastructure
             get
             {
                 var dateTime = CurrentEomDate;
+                if (!DatabaseExistsForDate(dateTime))
+                {   // try the previous month, in case it's the first of the month and the db hasn't been created for the month that just ended
+                    dateTime = dateTime.AddMonths(-1);
+                    CurrentEomDate = dateTime;
+                }
                 var connString = ConnectionStringByDate(dateTime);
                 return connString;
             }
+        }
+
+        public bool DatabaseExistsForDate(DateTime eomDate)
+        {
+            var eomToolConfig = EomToolWebConfigSection.GetConfigSection();
+            if (eomToolConfig.DebugMode) return true;
+
+            string query = "select top 1 connection_string from DADatabase where effective_date = @eomDate";
+            var connectionString = SqlUtility.ExecuteScalar<string>(eomToolConfig.MasterConnectionString, query, eomDate);
+            return (connectionString != null);
         }
 
         public string ConnectionStringByDate(DateTime eomDate)
