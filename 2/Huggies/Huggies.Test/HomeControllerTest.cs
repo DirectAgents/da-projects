@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 using Huggies.Web.Controllers;
 using Huggies.Web.Models;
@@ -8,7 +10,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Huggies.Test
 {
-    // Note: until I get more comfortable with the terms "mock, fake and stuf" I'm using "My" as a generic catch-all
+    // until I get more comfortable with the terms "mock, fake and stuf" I'm using "My" as a generic catch-all
+
     public class MyService : IService
     {
         public bool SendLead(ILead lead, out IProcessResult processResult)
@@ -31,73 +34,85 @@ namespace Huggies.Test
         }
     }
 
-    internal enum WaysToInvalidateLead
+    public class MySession : HttpSessionStateBase
     {
-        NotFirstChild,
-        ChildTooOld
+        private readonly IDictionary<object, object> dic = new Dictionary<object, object>();
+
+        public override object this[string name]
+        {
+            get { return dic.ContainsKey(name) ? dic[name] : null; }
+            set { dic[name] = value; }
+        }
     }
 
+    public class MyRequest : HttpRequestBase
+    {
+        public override string UserHostAddress
+        {
+            get { return "::1"; }
+        }
+    }
+
+    public class MyLead : Lead
+    {
+        public bool ValidateCalled { get; set; }
+        public bool ValidateReturns { get; set; }
+
+        public override bool Validate(ModelStateDictionary modelState)
+        {
+            ValidateCalled = true;
+            return ValidateReturns;
+        }
+    }
+
+    /// <summary>
+    /// Lead is valid or invalid
+    /// If Lead is valid
+    ///   Lead is sent or not
+    ///   If Lead is sent
+    ///      Result is success or not
+    ///      If Result is success
+    ///         model.LeadId = lead.Id;
+    ///         lead.Success = true;
+    ///         model.FirePixel = true;
+    /// </summary>
     [TestClass]
     public class HomeControllerTest
     {
         [TestMethod]
-        public void Index()
+        public void Index_when_modelstate_invalid()
         {
-            var model = GetLead();
-            var service = GetService();
-            var controller = new HomeController(service);
-            var viewResult = (ViewResult) controller.Index(model);
-            //var thankYouModel = viewResult.Model as Huggies.Web.Models.ThankYouModel;
-            //Assert.IsTrue(thankYouModel.FirePixel);
-        }
-
-        private IService GetService()
-        {
-            return new MyService();
-        }
-
-        private Lead LeadGetLead(WaysToInvalidateLead ways)
-        {
-            var lead = GetLead();
-            switch (ways)
-            {
-                case WaysToInvalidateLead.NotFirstChild:
-                    lead.FirstChild = false;
-                    break;
-                case WaysToInvalidateLead.ChildTooOld:
-                    lead.DueDate = DateTime.Now.AddMonths(5);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("ways");
-            }
-            return lead;
-        }
-
-        private Lead GetLead()
-        {
-            return new Lead
+            // Arrange
+            //
+            var inputModel = new MyLead
                 {
                     FirstName = "Jane",
                     LastName = "Doe",
-                    Email = TicksAsString() + "@x.com",
+                    Email = Guid.NewGuid() + "@x.com",
                     Ethnicity = "AA",
                     FirstChild = true,
                     Language = "FR",
                     Zip = "90210",
-                    Gender = "M",
-                    DueDate = new DateTime(2013, 4, 10)
-                };
-        }
+                    Gender = "N",
+                    DueDate = new DateTime(2013, 2, 10),
 
-        private string TicksAsString()
-        {
-            long ticks = DateTime.Now.Ticks;
-            byte[] bytes = BitConverter.GetBytes(ticks);
-            string id = Convert.ToBase64String(bytes)
-                               .Replace('+', '_')
-                               .Replace('/', '-')
-                               .TrimEnd('=');
-            return id;
+                    ValidateReturns = false // invalid lead
+                };
+            var service = new MyService();
+            var sessionState = new MySession();
+            var httpRequest = new MyRequest();
+            var modelState = new ModelStateDictionary();
+            var controller = new HomeController(service, sessionState, httpRequest, modelState);
+
+            // Act
+            //
+            var viewResult = (ViewResult) controller.Index(inputModel);
+            var outputModel = (ThankYou) viewResult.Model;
+
+            // Assert
+            //
+            Assert.IsTrue(inputModel.ValidateCalled);
+            Assert.IsFalse(outputModel.FirePixel);
         }
     }
 }

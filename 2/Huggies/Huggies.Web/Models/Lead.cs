@@ -25,7 +25,7 @@ namespace Huggies.Web.Models
         public string ValidationErrors { get; set; }
         public string Exception { get; set; }
 
-        public bool Validate(ModelStateDictionary modelState)
+        public virtual bool Validate(ModelStateDictionary modelState)
         {
             if (FirstChild == false)
             {
@@ -39,7 +39,7 @@ namespace Huggies.Web.Models
                                          Constants.ModelValidationError_child_must_be_lessthan_4_months_old_or_unborn);
             }
 
-            if (DueDate > DateTime.Today && Gender == "N")
+            if (DueDate < DateTime.Today && Gender == "N")
             {
                 modelState.AddModelError("ValidationErrors",
                                          Constants
@@ -47,6 +47,30 @@ namespace Huggies.Web.Models
             }
 
             return modelState.IsValid;
+        }
+
+        public void PopulateTestValues()
+        {
+            this.FirstName = "Jane";
+            this.LastName = "Doe";
+            this.Email = TicksAsString() + "@x.com";
+            this.Ethnicity = "AA";
+            this.FirstChild = true;
+            this.Language = "FR";
+            this.Zip = "90210";
+            this.Gender = "M";
+            this.DueDate = new DateTime(2013, 4, 10);
+        }
+
+        private string TicksAsString()
+        {
+            long ticks = DateTime.Now.Ticks;
+            byte[] bytes = BitConverter.GetBytes(ticks);
+            string id = Convert.ToBase64String(bytes)
+                               .Replace('+', '_')
+                               .Replace('/', '-')
+                               .TrimEnd('=');
+            return id;
         }
     }
 }

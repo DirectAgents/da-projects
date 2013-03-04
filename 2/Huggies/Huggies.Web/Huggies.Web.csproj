@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +54,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.DynamicData" />
@@ -172,6 +174,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\Extensions.cs" />
     <Compile Include="Migrations\201302250002478_validation_and_exception.cs" />
     <Compile Include="Migrations\201302250002478_validation_and_exception.Designer.cs">
       <DependentUpon>201302250002478_validation_and_exception.cs</DependentUpon>
@@ -200,6 +203,10 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ViewNames.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ws\IStats.cs" />
+    <Compile Include="ws\Stats.svc.cs">
+      <DependentUpon>Stats.svc</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -375,6 +382,7 @@
     <Content Include="fonts\futurashop-xlight-webfont.eot" />
     <Content Include="fonts\futurashop-xlight-webfont.ttf" />
     <Content Include="fonts\futurashop-xlight-webfont.woff" />
+    <Content Include="ws\Stats.svc" />
     <None Include="Properties\PublishProfiles\Live.pubxml" />
     <Content Include="css\errors.css" />
     <Content Include="css\style.css" />
