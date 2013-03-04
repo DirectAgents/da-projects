@@ -15,8 +15,10 @@ namespace KimberlyClark.Services.Concrete
     [XmlType(Namespace = "")]
     [XmlRoot(Namespace = "", IsNullable = true)]
 #else
-    [XmlType(Namespace = "http://schemas.datacontract.org/2004/07/CoRegistrationRestService")]
-    [XmlRoot(Namespace = "http://schemas.datacontract.org/2004/07/CoRegistrationRestService", IsNullable = true)]
+    [XmlType(Namespace = "")]
+    [XmlRoot(Namespace = "", IsNullable = true)]
+    //[XmlType(Namespace = "http://schemas.datacontract.org/2004/07/CoRegistrationRestService")]
+    //[XmlRoot(Namespace = "http://schemas.datacontract.org/2004/07/CoRegistrationRestService", IsNullable = true)]
 #endif
     public class ProcessResult : IProcessResult
     {

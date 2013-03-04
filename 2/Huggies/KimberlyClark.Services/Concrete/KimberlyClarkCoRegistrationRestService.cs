@@ -30,14 +30,15 @@ namespace KimberlyClark.Services.Concrete
             var element = new XElement("string", email);
 
 #else
-            XNamespace ns = "http://schemas.microsoft.com/2003/10/Serialization/";
-            var element = new XElement(ns + "string", email);
+            var element = new XElement("string", email);
+            //XNamespace ns = "http://schemas.microsoft.com/2003/10/Serialization/";
+            //var element = new XElement(ns + "string", email);
 #endif
 
             request.AddParameter("text/xml", element.ToString(), ParameterType.RequestBody);
 
             return Execute<bool>(request);
-        }
+        }   
 
         public IProcessResult ProcessConsumerInformation(IConsumer consumer)
         {
