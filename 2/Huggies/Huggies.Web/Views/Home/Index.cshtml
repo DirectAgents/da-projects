@@ -18,9 +18,9 @@
     <script type="application/javascript" src="~/js/cal_conf2.js"></script>
     <script type="application/javascript">
         $(document).ready(function () {
-            $('#due_date').hide();
-            $('#child_gender').hide();
-            $("#fm_duedate").attr('class', '');
+            //$('#due_date').hide();
+            //$('#child_gender').hide();
+            $("#fm_duedate").attr('class', 'duedate req');
             var currentradio = $("input[name='fm_firstchild']:checked")[0];
             $("input[name='fm_firstchild']").change(function (event) {
                 var value = $(this).val();
@@ -149,10 +149,10 @@
                                             <span class="label">
                                                 <label for="fm_firstchild">Is this your first child?</label>
                                             </span><span class="form">
-                                                       <input type="radio" name="fm_firstchild" id="fm_firstchild" value="true" />
+                                                       <input type="radio" name="fm_firstchild" id="fm_firstchild" value="true" checked="checked" />
                                                        Yes&nbsp;&nbsp;
                    
-                                                       <input type="radio" name="fm_firstchild" value="false" checked="checked" />
+                                                       <input type="radio" name="fm_firstchild" value="false" />
                                                        No </span>
                                         </div>
                                         <div id="due_date">
