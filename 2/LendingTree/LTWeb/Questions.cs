@@ -23,8 +23,10 @@ namespace LTWeb
             }
             foreach (var question in questionsList)
             {
-                question.Progress = (question.QuestionIndex * 100) / (questionsList.Count - 1);
-            }                                                         // subtract one because last two questions are SSN
+                question.Progress = (question.QuestionIndex * 75) / (questionsList.Count - 1); // subtract one because last two questions are SSN
+                if (question.Progress > 0)
+                    question.Progress += 25;
+            }
             return questionsList.ToArray();
         }
 
