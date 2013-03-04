@@ -70,6 +70,13 @@ namespace DirectAgents.Domain.Entities
         [DisplayName("EOM Notes")]
         public string EomNotes { get; set; } // e.g. EOM will be finalized in 5 days. 
 
+//        [NotMapped]
+//        [DisplayName("Mobile Allowed")]
+//        public string MobileAllowed { get { return "y"; } set { } } // on hold
+
+        [DisplayName("Mobile LP")]
+        public string MobileLP { get; set; }
+
         public bool Hidden { get; set; }
 
         public int? StatusId { get; set; }

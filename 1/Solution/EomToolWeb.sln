@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eom.Common", "..\EomTool\Eo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EomTool.Domain", "..\EomTool\EomTool.Domain\EomTool.Domain.csproj", "{F41DA2E2-D584-479A-9F24-9B2D3D33F927}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CampaignUpdater", "CampaignUpdater\CampaignUpdater.csproj", "{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,12 @@ Global
 		{F41DA2E2-D584-479A-9F24-9B2D3D33F927}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F41DA2E2-D584-479A-9F24-9B2D3D33F927}.Try1 Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F41DA2E2-D584-479A-9F24-9B2D3D33F927}.Try1 Debug|Any CPU.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Try1 Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{767B9D7F-B5CB-4898-B2A9-9E4307C352C6}.Try1 Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

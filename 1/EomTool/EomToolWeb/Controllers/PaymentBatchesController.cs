@@ -56,8 +56,14 @@ namespace EomToolWeb.Controllers
             {
                 CurrentEomDate = dateTime
             };
-            var eomEntities = new EomEntities(config);
-            var repo = new PaymentBatchRepository(eomEntities);
+
+            IPaymentBatchRepository repo = null;
+            if (config.DatabaseExistsForDate(dateTime))
+            {
+                var eomEntities = new EomEntities(config);
+                repo = new PaymentBatchRepository(eomEntities);
+            }
+
             return repo;
         }
 
@@ -97,6 +103,8 @@ namespace EomToolWeb.Controllers
                     continue;
 
                 var pbRepo = pbRepositories[accountingPeriod];
+                if (pbRepo == null) continue;
+
                 IQueryable<PaymentBatch> pbatches;
 
                 if (batchid.HasValue)
@@ -143,6 +151,8 @@ namespace EomToolWeb.Controllers
             {
                 var accountingPeriod = AccountingPeriods[i];
                 var pbRepo = pbRepositories[accountingPeriod];
+                if (pbRepo == null) continue;
+
                 var pubNotes = pbRepo.PubNotes;
                 var pubAttachments = pbRepo.PubAttachments;
 
@@ -327,7 +337,15 @@ namespace EomToolWeb.Controllers
         private SelectorViewModel SetupSelector(string acctperiod, int? acctstatus)
         {
             if (string.IsNullOrWhiteSpace(acctperiod))
-                acctperiod = AccountingPeriods.Last();
+            {
+                // get the most recent repo that exists
+                int i = AccountingPeriods.Count - 1;
+                while (pbRepositories[AccountingPeriods[i]] == null && i > 0)
+                {
+                    i--;
+                }
+                acctperiod = AccountingPeriods[i];
+            }
             var pbRepo = pbRepositories[acctperiod];
 
             var payouts = pbRepo.PublisherPayouts.Where(p => p.status_id == CampaignStatus.Verified && p.Pub_Payout > 0);

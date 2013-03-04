@@ -2,8 +2,9 @@
 
 <div id="CampaignFilters">
     <div id="CampaignFiltersInner">
-        <input id="verticals" style="width: 250px" />
-        <input id="traffictypes" style="width: 250px" />
+        <input id="verticals" style="width: 200px" />
+        <input id="traffictypes" style="width: 180px" />
+        <input id="mobilelp" style="width: 120px" />
     </div>
 </div>
 
@@ -31,6 +32,10 @@
         var traffictype = '';
         if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
 
+        dataItem = $('#mobilelp').data("kendoDropDownList").dataItem();
+        var mobilelp = '';
+        if (dataItem.value != '') mobilelp = dataItem.value;
+
         dataItem = $('#inputSearch').val();
         var search = '';
         if(dataItem != '') search = dataItem;
@@ -53,7 +58,7 @@
         else
             $('#MenuAll').removeClass("selitem");
 
-        var url = '?vertical=' + vertical + '&traffictype=' + traffictype + '&search=' + search + '&country=' + country + '&pid=';
+        var url = '?vertical=' + vertical + '&traffictype=' + traffictype + '&mobilelp=' + mobilelp + '&search=' + search + '&country=' + country + '&pid=';
         if (mode) url = url + '&mode=' + mode;
 
         if (reloadPage) {
@@ -120,6 +125,18 @@
                 transport: { read: "@Url.Content("~/api/TrafficTypes")" }
             },
             change: function() { ChangeFilter(false, true); }
+        });
+
+        //--------------------------------------
+        // MobileLP DDL
+        //--------------------------------------
+        $("#mobilelp").kendoDropDownList({
+            @if (Model.MobileLP != null) { <text>value: "@Model.MobileLP",</text> }
+            optionLabel: "Mobile LP?",
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [{text: "MobileLP: Yes", value: "yes"}, {text: "MobileLP: No", value: "no"}],
+            change: function () { ChangeFilter(false, true); }
         });
 
         //--------------------------------------

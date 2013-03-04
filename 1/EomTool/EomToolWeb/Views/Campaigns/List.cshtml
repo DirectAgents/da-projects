@@ -10,8 +10,9 @@
     }
 }
 <div>
-    <input id="verticals" style="width: 250px; margin-top: 10px" />
-    <input id="traffictypes" style="width: 250px; margin-top: 10px" />
+    <input id="verticals" style="width: 200px; margin-top: 10px" />
+    <input id="traffictypes" style="width: 180px; margin-top: 10px" />
+    <input id="mobilelp" style="width: 120px; margin-top: 10px" />
 </div>
 <h2>Campaigns List</h2>
 @if (Model.Country != null)
@@ -49,7 +50,11 @@
             var traffictype = '';
             if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
 
-            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '&traffictype=' + traffictype + '@(new HtmlString(currFilter))';
+            dataItem = $('#mobilelp').data("kendoDropDownList").dataItem();
+            var mobilelp = '';
+            if (dataItem.value != '') mobilelp = dataItem.value;
+
+            var url = '@(Url.Action("List", "Campaigns"))?vertical=' + vertical + '&traffictype=' + traffictype + '&mobilelp=' + mobilelp + '@(new HtmlString(currFilter))';
             document.location.href = url;
         }
 
@@ -96,6 +101,14 @@
                     type: "jsonp",
                     transport: { read: "@Url.Content("~/api/TrafficTypes")" }
                 },
+                change: ChangeFilter
+            });
+            $("#mobilelp").kendoDropDownList({
+                @if (Model.MobileLP != null) { <text>value: "@Model.MobileLP",</text> }
+                optionLabel: "Mobile LP?",
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: [{ text: "MobileLP: Yes", value: "yes" }, { text: "MobileLP: No", value: "no" }],
                 change: ChangeFilter
             });
             $("#divEditCampaign").dialog({

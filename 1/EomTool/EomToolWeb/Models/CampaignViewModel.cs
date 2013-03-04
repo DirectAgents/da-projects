@@ -132,6 +132,9 @@ namespace EomToolWeb.Models
 
         public string DefaultPriceFormat { get { return campaign.DefaultPriceFormat; } }
 
+//        public string MobileAllowed { get { return campaign.MobileAllowed ?? string.Empty; } }
+        public string MobileLP { get { return campaign.MobileLP ?? string.Empty; } }
+
         //TODO: Put in utility class
         private string MakeHtmlSafe(string text)
         {

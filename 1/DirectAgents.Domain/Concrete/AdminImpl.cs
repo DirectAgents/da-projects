@@ -52,23 +52,32 @@ namespace DirectAgents.Domain.Concrete
                     var cakeSummaries = cake.DailySummaries.Where(ds => ds.offer_id == pid);
                     if (!cakeSummaries.Any())
                     {
-                        Log("No cake summaries found");
+                        Log("No cake summaries found; done");
                     }
                     else
                     {
                         var existingSummaries = daDomain.DailySummaries.Where(ds => ds.Pid == pid);
-
-                        // Delete today's and yesterday's summaries (if exist) so they can be updated
-                        var yesterday = DateTime.Today.AddDays(-1);
-                        var recentSummaries = existingSummaries.Where(s => s.Date >= yesterday);
-                        if (recentSummaries.Any())
+                        if (existingSummaries.Any())
                         {
-                            Log("Deleting today's and yesterday's summaries");
-                            foreach (var summary in recentSummaries)
-                            {
-                                daDomain.DailySummaries.Remove(summary);
+                            // Try deleting today's and yesterday's summaries so they can be updated
+                            var yesterday = DateTime.Today.AddDays(-1);
+                            var recentSummaries = existingSummaries.Where(s => s.Date >= yesterday);
+                            if (!recentSummaries.Any())
+                            {   // Or... delete the most recent one if we have something to replace it with
+                                // (if the updater stopped working for more than a day, the most recent one might not have complete stats)
+                                var mostRecentExistingDate = existingSummaries.Max(es => es.Date);
+                                if (cakeSummaries.Any(cs => cs.date == mostRecentExistingDate))
+                                    recentSummaries = existingSummaries.Where(es => es.Date == mostRecentExistingDate);
                             }
-                            daDomain.SaveChanges();
+                            if (recentSummaries.Any())
+                            {
+                                Log("Deleting most recent summaries");
+                                foreach (var summary in recentSummaries)
+                                {
+                                    daDomain.DailySummaries.Remove(summary);
+                                }
+                                daDomain.SaveChanges();
+                            }
                         }
                         // See if any existing summaries remain
                         if (!existingSummaries.Any())

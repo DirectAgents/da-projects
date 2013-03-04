@@ -19,13 +19,14 @@ namespace EomToolWeb.Controllers
         }
 
         // non-Kendo
-        public ActionResult List(string searchstring, string country, string vertical, string traffictype, int? pid)
+        public ActionResult List(string searchstring, string country, string vertical, string traffictype, string mobilelp, int? pid)
         {
             if (string.IsNullOrWhiteSpace(searchstring)) searchstring = null;
             var viewModel = new CampaignsListViewModel
             {
                 Pid = pid,
-                SearchString = searchstring
+                SearchString = searchstring,
+                MobileLP = mobilelp
             };
 
             IQueryable<Campaign> campaigns;
@@ -48,7 +49,7 @@ namespace EomToolWeb.Controllers
                 if (viewModel.TrafficType == null) traffictype = null;
 
                 var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
-                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, searchstring, country, vertical, traffictype, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
+                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, searchstring, country, vertical, traffictype, mobilelp, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
 
                 if (viewModel.Country != null) // show campaigns for the specified country first, then multi-country campaigns
                     campaigns = campaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name);
@@ -66,15 +67,15 @@ namespace EomToolWeb.Controllers
                 {
                     TemplateName = "Brief",
                     ItemsPerPage = 1000,
-                    EditHeight = 750,
                     EditWidth = 1100,
+                    EditHeight = 840, // 880? if can't put two on one line
                 } :
                 new ListViewMode() // default: "List" mode
                 {
                     TemplateName = "List",
                     ItemsPerPage = 30,
-                    EditHeight = 500,
                     EditWidth = 800,
+                    EditHeight = 530,
                 };
         }
         private ListViewMode GetMode()
@@ -88,7 +89,7 @@ namespace EomToolWeb.Controllers
         }
 
         // for Kendo
-        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype, string mode)
+        public ActionResult List2(string search, string pid, string country, string vertical, string traffictype, string mobilelp, string mode)
         {
             if (!string.IsNullOrWhiteSpace(mode))
                 SetMode(mode);
@@ -122,6 +123,10 @@ namespace EomToolWeb.Controllers
             if (!string.IsNullOrWhiteSpace(traffictype))
             {
                 viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+            }
+            if (!string.IsNullOrWhiteSpace(mobilelp))
+            {
+                viewModel.MobileLP = mobilelp;
             }
             return View(viewModel);
         }
@@ -214,6 +219,8 @@ namespace EomToolWeb.Controllers
                 c.CampaignCap = campaign.CampaignCap;
                 c.ScrubPolicy = campaign.ScrubPolicy;
                 c.EomNotes = campaign.EomNotes;
+//                c.MobileAllowed = campaign.MobileAllowed;
+                c.MobileLP = campaign.MobileLP;
                 campaignRepository.SaveChanges();
             }
             var campaignViewModel = (c != null) ? new CampaignViewModel(c) : null;

@@ -1,0 +1,14 @@
+﻿<div style="height: 35px;">
+    <select style="float: left; width: 120px" id="cpmsum_dateRangeSel" onchange="ChangeDateRangeMY('cpmsum')">
+        <option value="prev3months">Prev. 3 Months</option>
+        <option value="lastmonth">Last Month</option>
+        <option value="ytd">Year to Date</option>
+        <option value="custom">- custom -</option>
+    </select>
+    <span style="float: left; margin-left: 10px">Start:</span>
+    <input style="float:left; width:100px" id="cpmsum_startdate" name="startdate" type="text" value="@ViewBag.start" onchange="DateChanged('cpmsum')" />
+    <span style="float: left; margin-left: 10px">End:</span>
+    <input style="float:left; width:100px" id="cpmsum_enddate" name="enddate" type="text" value="@ViewBag.end" onchange="DateChanged('cpmsum')" />
+    <a class="button" style="padding: 3px; margin-left: 10px" id="cpmsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('cpmsum'); return false">Filter</a>
+</div>
+<div id="cpmsumGrid"></div>
