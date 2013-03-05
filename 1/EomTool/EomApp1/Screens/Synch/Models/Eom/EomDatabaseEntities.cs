@@ -69,7 +69,7 @@ namespace EomApp1.Screens.Synch.Models.Eom
         {
             var advertiser = AdvertiserByOfferId(cakeOfferID, cakeService);
 
-            string advertiserName = advertiser.AdManagerName;
+            string advertiserName = advertiser.advertiser_name;
 
             var newAdvertiser = advertisers.FirstOrDefault(c => c.name == advertiserName);
 
