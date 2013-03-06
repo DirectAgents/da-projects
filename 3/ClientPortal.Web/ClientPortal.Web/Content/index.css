@@ -8,14 +8,10 @@
 
 .chart-wrapper {
     margin: 0 0 0 20px;
-    width: 650px;
-    height: 400px;
 }
 
     .chart-wrapper .k-chart {
         padding: 37px;
-        width: 650px;
-        height: 400px;
     }
 
 .configuration {

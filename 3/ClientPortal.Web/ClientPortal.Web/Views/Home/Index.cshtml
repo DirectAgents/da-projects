@@ -165,9 +165,14 @@
         $('#' + grid + '_filterBtn').attr('disabled', true);
     }
 
-    function FormatCurr(val, culture) {
-        kendo.culture(culture);
-        return kendo.toString(val, "c");
+    function ResizeChart(chart) {
+        var w = $('#' + chart + 'ChartSection').width() - 190;
+        $('.chart-wrapper').css('width', w);
+    }
+
+    function Resize_DailySummaryChart() {
+        ResizeChart('daysum');
+        $('#daysumChart').data('kendoChart').refresh();
     }
 
     function SetupTabs() {
@@ -186,6 +191,8 @@
                 cache: false
             }).done(function (html) {
                 $("#tab3Tab").html(html);
+                ResizeChart('daysum');
+                $(window).bind('resize', Resize_DailySummaryChart);
                 SetupDailySummaryGrid();
             });
         });
@@ -198,6 +205,11 @@
                 SetupCPMSummaryGrid();
             });
         });
+    }
+
+    function FormatCurr(val, culture) {
+        kendo.culture(culture);
+        return kendo.toString(val, "c");
     }
 
     function SetupOfferSummaryGrid() {
@@ -344,14 +356,17 @@
         });
         $('#daysum_startdate').kendoDatePicker();
         $('#daysum_enddate').kendoDatePicker();
-        setTimeout(function () { createChart(); }, 400);
-        $(".configuration").bind("change", refresh);
+        setTimeout(function () { CreateDaySumChart(); }, 400);
+        $(".configuration").bind("change", RefreshDaySumChart);
     }
 
-    function createChart() {
+    function CreateDaySumChart() {
         var dataSource = $('#daysumGrid').data("kendoGrid").dataSource;
 
-        $("#chart").kendoChart({
+        $("#daysumChart").kendoChart({
+            chartArea: {
+                height: 300
+            },
             theme: $(document).data("kendoSkin") || "default",
             title: {
                 text: ""
@@ -376,8 +391,8 @@
         });
     }
     
-    function refresh() {
-        var chart = $("#chart").data("kendoChart"),
+    function RefreshDaySumChart() {
+        var chart = $("#daysumChart").data("kendoChart"),
             series = chart.options.series,
             categoryAxis = chart.options.categoryAxis,
             baseUnitInputs = $("input:radio[name=baseUnit]"),
