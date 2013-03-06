@@ -1,8 +1,11 @@
 ﻿<#@ template language="C#" #>
 <p>Hello <#=MediaBuyerName#>,<br/>
 <br/>
-You have pending publisher report approvals for <#=TimePeriod#>.<br/>
+You have pending publisher report approvals for <#=TimePeriod#>.
+Please do your best to approving it immediately after receipt of this notice, otherwise, <font style="background-color:yellow">publishers might not be paid according to terms.</font><br/>
 <br/>
 Please click <a href="<#=UrlToOpen#>">here</a> to open them.<br/>
 <br/>
-Thank You.</p>
+Thank You,<br/>
+Eddy Gil
+</p>
