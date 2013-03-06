@@ -48,9 +48,9 @@ namespace ClientPortal.Web.Controllers
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             kgrid.aggregates = new
             {
-                Clicks = new { sum = offerInfos.Select(i => i.Clicks).Sum() },
-                Conversions = new { sum = offerInfos.Select(i => i.Conversions).Sum() },
-                Revenue = new { sum = offerInfos.Select(i => i.Revenue).Sum() }
+                Clicks = new { sum = offerInfos.Sum(i => i.Clicks) },
+                Conversions = new { sum = offerInfos.Sum(i => i.Conversions) },
+                Revenue = new { sum = offerInfos.Sum(i => i.Revenue) }
             };
             var json = Json(kgrid);
             return json;
@@ -84,11 +84,11 @@ namespace ClientPortal.Web.Controllers
                             .OrderBy(di => di.Date).ToList();
             }
 
-            int totalImpressions = dailyInfos.Select(i => i.Impressions).Sum();
-            int totalClicks = dailyInfos.Select(i => i.Clicks).Sum();
-            int totalConversions = dailyInfos.Select(i => i.Conversions).Sum();
+            int totalImpressions = dailyInfos.Sum(i => i.Impressions);
+            int totalClicks = dailyInfos.Sum(i => i.Clicks);
+            int totalConversions = dailyInfos.Sum(i => i.Conversions);
             float totalConversionPct = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
-            decimal totalRevenue = dailyInfos.Select(i => i.Revenue).Sum();
+            decimal totalRevenue = dailyInfos.Sum(i => i.Revenue);
             decimal totalEPC = (totalClicks == 0) ? 0 : Math.Round(totalRevenue / totalClicks, 2);
 
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
@@ -133,11 +133,43 @@ namespace ClientPortal.Web.Controllers
             var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
             kgrid.aggregates = new
             {
-                Revenue = new { sum = monthlyInfos.Select(i => i.Revenue).Sum() }
+                Revenue = new { sum = monthlyInfos.Sum(i => i.Revenue) }
             };
             var json = Json(kgrid);
             return json;
         }
+
+        public PartialViewResult ConversionReportPartial()
+        {
+            var now = DateTime.Now;
+            var test = new DateTime(now.Year, now.Month, 1).AddDays(-1);
+            ViewBag.today = test.ToShortDateString();
+            return PartialView("_ConversionReportPartial");
+        }
+
+        [HttpPost]
+        public JsonResult ConversionReportGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        {
+            int? advertiserId = GetAdvertiserId();
+
+            List<ConversionInfo> conversions;
+            using (var cakeContext = new CakeContext()) // TODO: DI
+            {
+                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
+
+                conversions = offerRepository
+                    .GetConversions(startdate, enddate, advertiserId)
+                    .OrderBy(c => c.Offer).ThenBy(c => c.Date).ToList();
+            }
+            var kgrid = new KendoGrid<ConversionInfo>(request, conversions);
+            kgrid.aggregates = new
+            {
+                PriceReceived = new { sum = conversions.Sum(c => c.PriceReceived) }
+            };
+            var json = Json(kgrid);
+            return json;
+        }
+
         // ---
 
         private int? GetAdvertiserId()

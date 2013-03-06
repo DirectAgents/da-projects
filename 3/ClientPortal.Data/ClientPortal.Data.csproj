@@ -64,6 +64,12 @@
     <Compile Include="Contexts\CakeAdvertiser.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\CakeConversion.cs">
+      <DependentUpon>Cake.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\CakeCurrency.cs">
+      <DependentUpon>Cake.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\CakeOffer.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
@@ -73,6 +79,7 @@
     <Compile Include="Contexts\MonthlySummary.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
+    <Compile Include="DTOs\ConversionInfo.cs" />
     <Compile Include="DTOs\MonthlyInfo.cs" />
     <Compile Include="DTOs\DailyInfo.cs" />
     <Compile Include="DTOs\OfferInfo.cs" />

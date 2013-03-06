@@ -837,6 +837,7 @@
     <Content Include="Views\Home\_OfferSummaryPartial.cshtml" />
     <Content Include="Views\Home\_DailySummaryPartial.cshtml" />
     <Content Include="Views\Home\_CPMSummaryPartial.cshtml" />
+    <Content Include="Views\Home\_ConversionReportPartial.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -6,14 +6,6 @@
     height: 32px;
 }
 
-.chart-wrapper {
-    margin: 0 0 0 20px;
-}
-
-    .chart-wrapper .k-chart {
-        padding: 37px;
-    }
-
 .configuration {
     float: right;
     margin: 0 0 0 15px;

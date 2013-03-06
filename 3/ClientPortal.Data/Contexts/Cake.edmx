@@ -8,6 +8,8 @@
         <EntityContainer Name="CakeModelStoreContainer">
           <EntitySet Name="DailySummaries" EntityType="CakeModel.Store.DailySummaries" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CakeAdvertisers" EntityType="CakeModel.Store.CakeAdvertisers" store:Type="Tables" Schema="staging" />
+          <EntitySet Name="CakeConversions" EntityType="CakeModel.Store.CakeConversions" store:Type="Tables" Schema="staging" />
+          <EntitySet Name="CakeCurrencies" EntityType="CakeModel.Store.CakeCurrencies" store:Type="Tables" Schema="staging" />
           <EntitySet Name="CakeOffers" EntityType="CakeModel.Store.CakeOffers" store:Type="Tables" Schema="staging" />
           <EntitySet Name="MonthlySummary" EntityType="CakeModel.Store.MonthlySummary" store:Type="Views" store:Schema="dbo" store:Name="MonthlySummary">
             <DefiningQuery>SELECT 
@@ -60,6 +62,36 @@
           <Property Name="AccountManager_Id" Type="int" />
           <Property Name="AccountManagerName" Type="nvarchar" MaxLength="255" />
           <Property Name="AdManagerName" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CakeConversions">
+          <Key>
+            <PropertyRef Name="Conversion_Id" />
+          </Key>
+          <Property Name="Conversion_Id" Type="int" Nullable="false" />
+          <Property Name="ConversionDate" Type="datetime" />
+          <Property Name="Affiliate_Id" Type="int" />
+          <Property Name="Offer_Id" Type="int" />
+          <Property Name="Advertiser_Id" Type="int" />
+          <Property Name="Campaign_Id" Type="int" />
+          <Property Name="Creative_Id" Type="int" />
+          <Property Name="CreativeName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Subid1" Type="nvarchar" MaxLength="255" />
+          <Property Name="ConversionType" Type="nvarchar" MaxLength="50" />
+          <Property Name="PricePaid" Type="money" />
+          <Property Name="PriceReceived" Type="money" />
+          <Property Name="IpAddress" Type="nvarchar" MaxLength="50" />
+          <Property Name="PricePaidCurrencyId" Type="int" />
+          <Property Name="PricePaidFormattedAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="PriceReceivedCurrencyId" Type="int" />
+          <Property Name="PriceReceivedFormattedAmount" Type="nvarchar" MaxLength="50" />
+          <Property Name="Deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CakeCurrencies">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nchar" Nullable="false" MaxLength="3" />
         </EntityType>
         <EntityType Name="CakeOffers">
           <Key>
@@ -129,6 +161,8 @@
           <EntitySet Name="CakeOffers" EntityType="CakeModel.CakeOffer" />
           <EntitySet Name="DailySummaries" EntityType="CakeModel.DailySummary" />
           <EntitySet Name="MonthlySummaries" EntityType="CakeModel.MonthlySummary" />
+          <EntitySet Name="CakeConversions" EntityType="CakeModel.CakeConversion" />
+          <EntitySet Name="CakeCurrencies" EntityType="CakeModel.CakeCurrency" />
         </EntityContainer>
         <EntityType Name="CakeAdvertiser">
           <Key>
@@ -218,6 +252,36 @@
           <Property Type="Int32" Name="CampaignStatusId" Nullable="false" />
           <Property Type="Int32" Name="ItemAccountingStatusId" Nullable="false" />
         </EntityType>
+        <EntityType Name="CakeConversion">
+          <Key>
+            <PropertyRef Name="Conversion_Id" />
+          </Key>
+          <Property Type="Int32" Name="Conversion_Id" Nullable="false" />
+          <Property Type="DateTime" Name="ConversionDate" Precision="3" />
+          <Property Type="Int32" Name="Affiliate_Id" />
+          <Property Type="Int32" Name="Offer_Id" />
+          <Property Type="Int32" Name="Advertiser_Id" />
+          <Property Type="Int32" Name="Campaign_Id" />
+          <Property Type="Int32" Name="Creative_Id" />
+          <Property Type="String" Name="CreativeName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Subid1" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ConversionType" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="PricePaid" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="PriceReceived" Precision="19" Scale="4" />
+          <Property Type="String" Name="IpAddress" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PricePaidCurrencyId" />
+          <Property Type="String" Name="PricePaidFormattedAmount" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PriceReceivedCurrencyId" />
+          <Property Type="String" Name="PriceReceivedFormattedAmount" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Deleted" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CakeCurrency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -301,6 +365,38 @@
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="Month" ColumnName="Month" />
                 <ScalarProperty Name="Year" ColumnName="Year" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CakeConversions">
+            <EntityTypeMapping TypeName="CakeModel.CakeConversion">
+              <MappingFragment StoreEntitySet="CakeConversions">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="PriceReceivedFormattedAmount" ColumnName="PriceReceivedFormattedAmount" />
+                <ScalarProperty Name="PriceReceivedCurrencyId" ColumnName="PriceReceivedCurrencyId" />
+                <ScalarProperty Name="PricePaidFormattedAmount" ColumnName="PricePaidFormattedAmount" />
+                <ScalarProperty Name="PricePaidCurrencyId" ColumnName="PricePaidCurrencyId" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="PriceReceived" ColumnName="PriceReceived" />
+                <ScalarProperty Name="PricePaid" ColumnName="PricePaid" />
+                <ScalarProperty Name="ConversionType" ColumnName="ConversionType" />
+                <ScalarProperty Name="Subid1" ColumnName="Subid1" />
+                <ScalarProperty Name="CreativeName" ColumnName="CreativeName" />
+                <ScalarProperty Name="Creative_Id" ColumnName="Creative_Id" />
+                <ScalarProperty Name="Campaign_Id" ColumnName="Campaign_Id" />
+                <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
+                <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
+                <ScalarProperty Name="Affiliate_Id" ColumnName="Affiliate_Id" />
+                <ScalarProperty Name="ConversionDate" ColumnName="ConversionDate" />
+                <ScalarProperty Name="Conversion_Id" ColumnName="Conversion_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CakeCurrencies">
+            <EntityTypeMapping TypeName="CakeModel.CakeCurrency">
+              <MappingFragment StoreEntitySet="CakeCurrencies">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

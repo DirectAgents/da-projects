@@ -166,7 +166,7 @@
     }
 
     function ResizeChart(chart) {
-        var w = $('#' + chart + 'ChartSection').width() - 190;
+        var w = $('#' + chart + 'ChartSection').width() - 200;
         $('.chart-wrapper').css('width', w);
     }
 
@@ -194,6 +194,15 @@
                 ResizeChart('daysum');
                 $(window).bind('resize', Resize_DailySummaryChart);
                 SetupDailySummaryGrid();
+            });
+        });
+        $("#tab4").one("click", function () {
+            $.ajax({
+                url: '@Url.Action("ConversionReportPartial")',
+                cache: false
+            }).done(function (html) {
+                $("#tab4Tab").html(html);
+                SetupConversionReportGrid();
             });
         });
         $("#tab5").one("click", function () {
@@ -365,7 +374,7 @@
 
         $("#daysumChart").kendoChart({
             chartArea: {
-                height: 300
+                height: 200
             },
             theme: $(document).data("kendoSkin") || "default",
             title: {
@@ -405,6 +414,69 @@
         categoryAxis.baseUnit = baseUnitInputs.filter(":checked").val();
 
         chart.refresh();
+    }
+
+    function SetupConversionReportGrid() {
+
+        var dataSource = new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("ConversionReportGrid")',
+                    data: function () {
+                        return {
+                            startdate: $('#conrep_startdate').val(),
+                            enddate: $('#conrep_enddate').val()
+                        };
+                    }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'ConversionId',
+                    fields: {
+                        Date: { type: 'date' },
+                        AffId: { type: 'number' },
+                        Offer: { type: 'string' },
+                        PriceReceived: { type: 'number' },
+                        TransactionId: { type: 'string' }
+                    }
+                }
+            },
+            aggregate: [
+                { field: "PriceReceived", aggregate: "sum" }
+            ]
+        });
+
+        $('#conrepGrid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                { field: 'ConversionId', title: 'Conv ID', width: 90 },
+                { field: 'Date', width: 190, format: '{0:G}' },
+                { field: 'Offer' },
+                { field: 'AffId', title: 'sub_id', width: 80 },
+                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'TransactionId', title: 'Trans ID', width: 90 }
+            ],
+            filterable: true,
+            sortable: {
+                mode: 'multiple'
+            },
+            pageable: true
+        });
+
+        $('#conrep_startdate').kendoDatePicker();
+        $('#conrep_enddate').kendoDatePicker();
     }
 
     function SetupCPMSummaryGrid() {

@@ -106,5 +106,37 @@ namespace ClientPortal.Data.Services
                     };
             return monthlyInfos;
         }
+
+        // note: we'll go until 23:59:59 on the "end" date
+        public IQueryable<ConversionInfo> GetConversions(DateTime? start, DateTime? end, int? advertiserId)
+        {
+            var conversions = cakeContext.CakeConversions.AsQueryable();
+            if (start.HasValue)
+                conversions = conversions.Where(c => c.ConversionDate >= start.Value);
+            if (end.HasValue)
+            {
+                DateTime endOfDay = new DateTime(end.Value.Year, end.Value.Month, end.Value.Day, 23, 59, 59);
+                conversions = conversions.Where(c => c.ConversionDate <= endOfDay);
+            }
+            if (advertiserId.HasValue)
+                conversions = conversions.Where(c => c.Advertiser_Id == advertiserId.Value);
+
+            var conversionInfos =
+                from c in conversions
+                join curr in cakeContext.CakeCurrencies on c.PriceReceivedCurrencyId.Value equals curr.Id
+                join offer in cakeContext.CakeOffers on c.Offer_Id.Value equals offer.Offer_Id into gj
+                from o in gj.DefaultIfEmpty() // left join to CakeOffers
+                select new ConversionInfo()
+                {
+                    ConversionId = c.Conversion_Id,
+                    Date = c.ConversionDate.Value,
+                    AffId = c.Affiliate_Id ?? 0,
+                    OfferId = c.Offer_Id ?? 0,
+                    Offer = (o == null) ? String.Empty : o.OfferName,
+                    PriceReceived = c.PriceReceived ?? 0,
+                    Currency = curr.Name
+                };
+            return conversionInfos;
+        }
     }
 }
