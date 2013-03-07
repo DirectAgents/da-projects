@@ -81,7 +81,9 @@
                 if (d.DefaultPriceFormat == "RevShare") payout = payout + d.Cost + '%';
                 else payout = payout + d.CostCurrency + d.Cost;
             }
-            return '<b>' + d.Name + '</b><br />' + d.Description + '<br />Payable Action: ' + d.PayableAction + '<br />Traffic Type: ' + d.TrafficTypes + '<br />Link: <a href="' + d.Link + '">' + d.Link + '</a><br />Payout:' + payout + '<br />';
+            var mobilelpText = '';
+            if (d.MobileLP.toLowerCase().indexOf("yes") > -1) mobilelpText = '<br/>Mobile LP: ' + d.MobileLP;
+            return '<b>' + d.Name + '</b><br/>' + d.Description + '<br/>Payable Action: ' + d.PayableAction + '<br/>Traffic Type: ' + d.TrafficTypes + mobilelpText + '<br/>Link: <a href="' + d.Link + '">' + d.Link + '</a><br/>Payout:' + payout + '<br/>';
         });
         if (selected.length > 0)
             afterSelectedText = "Campaign text copied";

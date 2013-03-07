@@ -49,7 +49,9 @@ namespace EomToolWeb.Controllers
                 if (viewModel.TrafficType == null) traffictype = null;
 
                 var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
-                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, searchstring, country, vertical, traffictype, mobilelp, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
+                bool? mobilelpBool = (mobilelp == null) ? (bool?)null : (mobilelp.ToLower() == "yes");
+
+                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, searchstring, country, vertical, traffictype, mobilelpBool, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
 
                 if (viewModel.Country != null) // show campaigns for the specified country first, then multi-country campaigns
                     campaigns = campaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name);
