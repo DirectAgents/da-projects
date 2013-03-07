@@ -289,6 +289,32 @@
         });
         $('#offsum_startdate').kendoDatePicker();
         $('#offsum_enddate').kendoDatePicker();
+        setTimeout(function () { CreateOffSumChart(); }, 400);
+    }
+    function CreateOffSumChart() {
+        var dataSource = $('#offsumGrid').data("kendoGrid").dataSource;
+
+        $("#offsumChart").kendoChart({
+            chartArea: {
+                height: 200
+            },
+            theme: $(document).data("kendoSkin") || "default",
+            title: {
+                text: ""
+            },
+            dataSource: dataSource,
+            series: [
+                { field: "Conversions", name: "Conversions" }
+            ],
+            categoryAxis: {
+                field: "OfferId",
+                labels: { template: "#= value #" }
+            },
+            tooltip: {
+                visible: true,
+                format: "N0"
+            }
+        });
     }
     function OffSumDetailInit(e) {
         var readData = function () {
@@ -397,7 +423,6 @@
         setTimeout(function () { CreateDaySumChart(); }, 400);
         $(".configuration").bind("change", RefreshDaySumChart);
     }
-
     function CreateDaySumChart() {
         var dataSource = $('#daysumGrid').data("kendoGrid").dataSource;
 
@@ -428,7 +453,6 @@
             }
         });
     }
-    
     function RefreshDaySumChart() {
         var chart = $("#daysumChart").data("kendoChart"),
             series = chart.options.series,
