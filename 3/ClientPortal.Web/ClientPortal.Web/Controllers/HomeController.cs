@@ -24,7 +24,9 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult OfferSummaryPartial()
         {
-            ViewBag.today = DateTime.Now.ToShortDateString();
+            var test = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+            ViewBag.today = test.ToShortDateString();
+//            ViewBag.today = DateTime.Now.ToShortDateString();
             return PartialView("_OfferSummaryPartial");
         }
 
@@ -141,14 +143,14 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult ConversionReportPartial()
         {
-            var now = DateTime.Now;
-            var test = new DateTime(now.Year, now.Month, 1).AddDays(-1);
+            var test = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
             ViewBag.today = test.ToShortDateString();
+            //ViewBag.today = DateTime.Now.ToShortDateString();
             return PartialView("_ConversionReportPartial");
         }
 
         [HttpPost]
-        public JsonResult ConversionReportGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        public JsonResult ConversionReportGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
         {
             int? advertiserId = GetAdvertiserId();
 
@@ -157,9 +159,10 @@ namespace ClientPortal.Web.Controllers
             {
                 var offerRepository = new OfferRepository(cakeContext); // TODO: DI
 
-                conversions = offerRepository
-                    .GetConversions(startdate, enddate, advertiserId)
-                    .OrderBy(c => c.Offer).ThenBy(c => c.Date).ToList();
+                var conv = offerRepository.GetConversions(startdate, enddate, advertiserId);
+                if (offerid.HasValue)
+                    conv = conv.Where(c => c.OfferId == offerid.Value);
+                conversions = conv.OrderBy(c => c.Offer).ThenBy(c => c.Date).ToList();
             }
             var kgrid = new KendoGrid<ConversionInfo>(request, conversions);
             kgrid.aggregates = new
