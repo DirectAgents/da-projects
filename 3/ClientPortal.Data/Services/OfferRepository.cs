@@ -52,10 +52,14 @@ namespace ClientPortal.Data.Services
             return offerInfos;
         }
 
-        public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int advertiserId)
+        public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
-            string advId = advertiserId.ToString();
-            var offers = cakeContext.CakeOffers.Where(o => o.Advertiser_Id == advId);
+            var offers = cakeContext.CakeOffers.AsQueryable();
+            if (advertiserId.HasValue)
+            {
+                var advId = advertiserId.Value.ToString();
+                offers = offers.Where(o => o.Advertiser_Id == advId);
+            }
             var offerIds = offers.Select(o => o.Offer_Id).ToList();
 
             string currency = null; // Assume all offers for the advertiser have the same currency

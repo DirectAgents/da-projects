@@ -43,15 +43,16 @@ namespace ClientPortal.Web.Controllers
             int? advertiserId = GetAdvertiserId();
 
             var offerInfos = offerRepo.GetOfferInfos(startdate, enddate, advertiserId);
-            //.OrderByDescending(oi => oi.Revenue).ToList();
-
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
-            kgrid.aggregates = new
+            if (offerInfos.Any())
             {
-                Clicks = new { sum = offerInfos.Sum(i => i.Clicks) },
-                Conversions = new { sum = offerInfos.Sum(i => i.Conversions) },
-                Revenue = new { sum = offerInfos.Sum(i => i.Revenue) }
-            };
+                kgrid.aggregates = new
+                {
+                    Clicks = new { sum = offerInfos.Sum(i => i.Clicks) },
+                    Conversions = new { sum = offerInfos.Sum(i => i.Conversions) },
+                    Revenue = new { sum = offerInfos.Sum(i => i.Revenue) }
+                };
+            }
             var json = Json(kgrid);
             return json;
         }
@@ -72,29 +73,27 @@ namespace ClientPortal.Web.Controllers
             if (!enddate.HasValue) enddate = now;
 
             int? advertiserId = GetAdvertiserId();
-            if (advertiserId == null) return null;
-
-            var dailyInfos = offerRepo
-                .GetDailyInfos(startdate, enddate, advertiserId.Value)
-                .OrderBy(di => di.Date).ToList();
-
-            int totalImpressions = dailyInfos.Sum(i => i.Impressions);
-            int totalClicks = dailyInfos.Sum(i => i.Clicks);
-            int totalConversions = dailyInfos.Sum(i => i.Conversions);
-            float totalConversionPct = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
-            decimal totalRevenue = dailyInfos.Sum(i => i.Revenue);
-            decimal totalEPC = (totalClicks == 0) ? 0 : Math.Round(totalRevenue / totalClicks, 2);
-
+            var dailyInfos = offerRepo.GetDailyInfos(startdate, enddate, advertiserId);
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
-            kgrid.aggregates = new
+
+            if (dailyInfos.Any())
             {
-                Impressions = new { sum = totalImpressions },
-                Clicks = new { sum = totalClicks },
-                Conversions = new { sum = totalConversions },
-                ConversionPct = new { agg = totalConversionPct },
-                Revenue = new { sum = totalRevenue },
-                EPC = new { agg = totalEPC }
-            };
+                int totalImpressions = dailyInfos.Sum(i => i.Impressions);
+                int totalClicks = dailyInfos.Sum(i => i.Clicks);
+                int totalConversions = dailyInfos.Sum(i => i.Conversions);
+                float totalConversionPct = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
+                decimal totalRevenue = dailyInfos.Sum(i => i.Revenue);
+                decimal totalEPC = (totalClicks == 0) ? 0 : Math.Round(totalRevenue / totalClicks, 2);
+                kgrid.aggregates = new
+                {
+                    Impressions = new { sum = totalImpressions },
+                    Clicks = new { sum = totalClicks },
+                    Conversions = new { sum = totalConversions },
+                    ConversionPct = new { agg = totalConversionPct },
+                    Revenue = new { sum = totalRevenue },
+                    EPC = new { agg = totalEPC }
+                };
+            }
             var json = Json(kgrid);
             return json;
         }
@@ -115,15 +114,16 @@ namespace ClientPortal.Web.Controllers
 
             var monthlyInfos = offerRepo
                 .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
-                .Where(i => i.CampaignStatusId == CampaignStatus.Verified) // TODO: filter by AccountingStatus (or combine into one row)
-                .OrderBy(i => i.Offer).ThenBy(i => i.Year).ThenBy(i => i.Month).ToList();
-                //.OrderBy(i => i.Period).ToList();
+                .Where(i => i.CampaignStatusId == CampaignStatus.Verified); // TODO: filter by AccountingStatus (or combine into one row)
 
             var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
-            kgrid.aggregates = new
+            if (monthlyInfos.Any())
             {
-                Revenue = new { sum = monthlyInfos.Sum(i => i.Revenue) }
-            };
+                kgrid.aggregates = new
+                {
+                    Revenue = new { sum = monthlyInfos.Sum(i => i.Revenue) }
+                };
+            }
             var json = Json(kgrid);
             return json;
         }
@@ -141,16 +141,18 @@ namespace ClientPortal.Web.Controllers
         {
             int? advertiserId = GetAdvertiserId();
 
-            var conv = offerRepo.GetConversions(startdate, enddate, advertiserId);
+            var conversions = offerRepo.GetConversions(startdate, enddate, advertiserId);
             if (offerid.HasValue)
-                conv = conv.Where(c => c.OfferId == offerid.Value);
-            var conversions = conv.OrderBy(c => c.Offer).ThenBy(c => c.Date).ToList();
+                conversions = conversions.Where(c => c.OfferId == offerid.Value);
 
             var kgrid = new KendoGrid<ConversionInfo>(request, conversions);
-            kgrid.aggregates = new
+            if (conversions.Any())
             {
-                PriceReceived = new { sum = conversions.Sum(c => c.PriceReceived) }
-            };
+                kgrid.aggregates = new
+                {
+                    PriceReceived = new { sum = conversions.Sum(c => c.PriceReceived) }
+                };
+            }
             var json = Json(kgrid);
             return json;
         }

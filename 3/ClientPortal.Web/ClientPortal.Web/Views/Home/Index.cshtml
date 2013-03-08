@@ -88,6 +88,7 @@
     <script>
     $(function () {
         SetupTabs();
+        $(window).bind('resize', WindowResize);
     });
 
     function DateChanged(grid) {
@@ -165,36 +166,55 @@
         $('#' + grid + '_filterBtn').attr('disabled', true);
     }
 
-    function ResizeChart(chart) {
-        var w = $('#' + chart + 'ChartSection').width() - 200;
-        $('.chart-wrapper').css('width', w);
+    function WindowResize() {
+        ResizeChart('offsum', true);
+        ResizeChart('daysum', true);
     }
 
-    function Resize_DailySummaryChart() {
-        ResizeChart('daysum');
-        $('#daysumChart').data('kendoChart').refresh();
+    function ResizeChart(chart, refresh) {
+        var offset = 0;
+        if (chart == 'daysum') offset = 200;
+
+        if ($('#' + chart + 'ChartSection').length > 0)
+        {
+            var w = $('#' + chart + 'ChartSection').width();
+            if (w > 0)
+            {
+                $('#' + chart + 'ChartSection .chart-wrapper').css('width', w - offset);
+                if (refresh)
+                    $('#' + chart + 'Chart').data('kendoChart').refresh();
+            }
+        }
     }
 
     function SetupTabs() {
-        $("#tab2").one("click", function () {
-            $.ajax({
-                url: '@Url.Action("OfferSummaryPartial")',
-                cache: false
-            }).done(function (html) {
-                $("#tab2Tab").html(html);
-                SetupOfferSummaryGrid();
-            });
+        $("#tab2").click(function () {
+            if ($('#offsumChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("OfferSummaryPartial")',
+                    cache: false
+                }).done(function (html) {
+                    $("#tab2Tab").html(html);
+                    ResizeChart('offsum', false);
+                    SetupOfferSummaryGrid();
+                });
+            } else {
+                setTimeout(function () { ResizeChart('offsum', true); }, 100);
+            }
         });
-        $("#tab3").one("click", function () {
-            $.ajax({
-                url: '@Url.Action("DailySummaryPartial")',
-                cache: false
-            }).done(function (html) {
-                $("#tab3Tab").html(html);
-                ResizeChart('daysum');
-                $(window).bind('resize', Resize_DailySummaryChart);
-                SetupDailySummaryGrid();
-            });
+        $("#tab3").click(function () {
+            if ($('#daysumChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("DailySummaryPartial")',
+                    cache: false
+                }).done(function (html) {
+                    $("#tab3Tab").html(html);
+                    ResizeChart('daysum', false);
+                    SetupDailySummaryGrid();
+                });
+            } else {
+                setTimeout(function () { ResizeChart('daysum', true); }, 100);
+            }
         });
         $("#tab4").one("click", function () {
             $.ajax({
@@ -381,6 +401,7 @@
                     }
                 }
             },
+            sort: { field: "Date", dir: "asc" },
             aggregate: [
                 { field: "Impressions", aggregate: "sum" },
                 { field: "Clicks", aggregate: "sum" },
@@ -500,6 +521,10 @@
                     }
                 }
             },
+            sort: [
+                { field: "Offer", dir: "asc" },
+                { field: "Date", dir: "asc" }
+            ],
             aggregate: [
                 { field: "PriceReceived", aggregate: "sum" }
             ]
@@ -577,6 +602,10 @@
                     }
                 }
             },
+            sort: [
+                { field: "Offer", dir: "asc" },
+                { field: "Period", dir: "asc" }
+            ],
             aggregate: [
                 { field: "Revenue", aggregate: "sum" }
             ]
