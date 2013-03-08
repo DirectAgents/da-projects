@@ -20,7 +20,7 @@ namespace ClientPortal.Data.Services
             return cakeContext.CakeOffers;
         }
 
-        public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end)
+        public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
             var dailySummaries = cakeContext.DailySummaries.AsQueryable();
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
@@ -28,7 +28,13 @@ namespace ClientPortal.Data.Services
 
             var summaryGroups = dailySummaries.GroupBy(s => s.offer_id);
 
-            var offerInfos = from offer in cakeContext.CakeOffers
+            var offers = cakeContext.CakeOffers.AsQueryable();
+            if (advertiserId.HasValue)
+            {
+                var advId = advertiserId.Value.ToString();
+                offers = offers.Where(o => o.Advertiser_Id == advId);
+            }
+            var offerInfos = from offer in offers
                              join sumGroup in summaryGroups on offer.Offer_Id equals sumGroup.Key
 //                             join summaryGroup in summaryGroups on offer.Offer_Id equals summaryGroup.Key into gj
 //                             from sumGroup in gj.DefaultIfEmpty() // used to left join to DailySummaries

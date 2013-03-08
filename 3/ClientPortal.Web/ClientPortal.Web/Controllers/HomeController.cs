@@ -15,6 +15,13 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private IOfferRepository offerRepo;
+
+        public HomeController(IOfferRepository offerRepository)
+        {
+            this.offerRepo = offerRepository;
+        }
+
         public ActionResult Index()
         {
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
@@ -31,22 +38,13 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult OfferSummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        public JsonResult OfferSummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
-            Func<OfferInfo, bool> filter = (oi => true);
             int? advertiserId = GetAdvertiserId();
-            if (advertiserId.HasValue) filter = (oi => oi.AdvertiserId == advertiserId.Value.ToString());
 
-            List<OfferInfo> offerInfos;
-            using (var cakeContext = new CakeContext()) // TODO: DI
-            {
-                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
+            var offerInfos = offerRepo.GetOfferInfos(startdate, enddate, advertiserId);
+            //.OrderByDescending(oi => oi.Revenue).ToList();
 
-                offerInfos = offerRepository
-                            .GetOfferInfos(startdate, enddate)
-                            .Where(filter)
-                            .OrderByDescending(oi => oi.Revenue).ToList();
-            }
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             kgrid.aggregates = new
             {
@@ -67,7 +65,7 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult DailySummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        public JsonResult DailySummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
             var now = DateTime.Now;
             if (!startdate.HasValue) startdate = new DateTime(now.Year, now.Month, 1);
@@ -76,15 +74,9 @@ namespace ClientPortal.Web.Controllers
             int? advertiserId = GetAdvertiserId();
             if (advertiserId == null) return null;
 
-            List<DailyInfo> dailyInfos;
-            using (var cakeContext = new CakeContext()) // TODO: DI
-            {
-                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
-
-                dailyInfos = offerRepository
-                            .GetDailyInfos(startdate, enddate, advertiserId.Value)
-                            .OrderBy(di => di.Date).ToList();
-            }
+            var dailyInfos = offerRepo
+                .GetDailyInfos(startdate, enddate, advertiserId.Value)
+                .OrderBy(di => di.Date).ToList();
 
             int totalImpressions = dailyInfos.Sum(i => i.Impressions);
             int totalClicks = dailyInfos.Sum(i => i.Clicks);
@@ -117,21 +109,16 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult CPMSummaryGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        public JsonResult CPMSummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
             int? advertiserId = GetAdvertiserId();
 
-            List<MonthlyInfo> monthlyInfos;
-            using (var cakeContext = new CakeContext()) // TODO: DI
-            {
-                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
+            var monthlyInfos = offerRepo
+                .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
+                .Where(i => i.CampaignStatusId == CampaignStatus.Verified) // TODO: filter by AccountingStatus (or combine into one row)
+                .OrderBy(i => i.Offer).ThenBy(i => i.Year).ThenBy(i => i.Month).ToList();
+                //.OrderBy(i => i.Period).ToList();
 
-                monthlyInfos = offerRepository
-                    .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
-                    .Where(i => i.CampaignStatusId == CampaignStatus.Verified) // TODO: filter by AccountingStatus (or combine into one row)
-                    .OrderBy(i => i.Offer).ThenBy(i => i.Year).ThenBy(i => i.Month).ToList();
-                    //.OrderBy(i => i.Period).ToList();
-            }
             var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
             kgrid.aggregates = new
             {
@@ -150,20 +137,15 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult ConversionReportGrid(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
+        public JsonResult ConversionReportData(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
         {
             int? advertiserId = GetAdvertiserId();
 
-            List<ConversionInfo> conversions;
-            using (var cakeContext = new CakeContext()) // TODO: DI
-            {
-                var offerRepository = new OfferRepository(cakeContext); // TODO: DI
+            var conv = offerRepo.GetConversions(startdate, enddate, advertiserId);
+            if (offerid.HasValue)
+                conv = conv.Where(c => c.OfferId == offerid.Value);
+            var conversions = conv.OrderBy(c => c.Offer).ThenBy(c => c.Date).ToList();
 
-                var conv = offerRepository.GetConversions(startdate, enddate, advertiserId);
-                if (offerid.HasValue)
-                    conv = conv.Where(c => c.OfferId == offerid.Value);
-                conversions = conv.OrderBy(c => c.Offer).ThenBy(c => c.Date).ToList();
-            }
             var kgrid = new KendoGrid<ConversionInfo>(request, conversions);
             kgrid.aggregates = new
             {

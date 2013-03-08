@@ -232,7 +232,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("OfferSummaryGrid")',
+                    url: '@Url.Action("OfferSummaryData")',
                     data: function () {
                         return {
                             startdate: $('#offsum_startdate').val(),
@@ -257,6 +257,7 @@
                     }
                 }
             },
+            sort: { field: "Revenue", dir: "desc" },
             aggregate: [
                 { field: "Clicks", aggregate: "sum" },
                 { field: "Conversions", aggregate: "sum" },
@@ -354,7 +355,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("DailySummaryGrid")',
+                    url: '@Url.Action("DailySummaryData")',
                     data: function () {
                         return {
                             startdate: $('#daysum_startdate').val(),
@@ -480,7 +481,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("ConversionReportGrid")',
+                    url: '@Url.Action("ConversionReportData")',
                     data: readData
                 }
             },
@@ -547,7 +548,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("CPMSummaryGrid")',
+                    url: '@Url.Action("CPMSummaryData")',
                     data: function () {
                         return {
                             startdate: $('#cpmsum_startdate').val(),
