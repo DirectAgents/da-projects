@@ -87,9 +87,19 @@
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
     <script>
     $(function () {
+        LoadFileUploads();
         SetupTabs();
         $(window).bind('resize', WindowResize);
     });
+
+    function LoadFileUploads() {
+        $.ajax({
+            url: '@Url.Action("Index", "Files")',
+            cache: false
+        }).done(function (html) {
+            $("#tab1Tab").html(html);
+        });
+    }
 
     function DateChanged(grid) {
         $('#' + grid + '_dateRangeSel').val('custom');
@@ -424,7 +434,7 @@
                 { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p1}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'EPC', title: 'Per Click', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
             ],
@@ -598,7 +608,8 @@
                         OfferId: { type: 'number' },
                         Offer: { type: 'string' },
                         Revenue: { type: 'number' },
-                        AccountingStatusId: { type: 'number' }
+                        AccountingStatusId: { type: 'number' },
+                        AccountingStatusName: { type: 'string' }
                     }
                 }
             },
@@ -636,7 +647,7 @@
                     footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" }
                 },
                 {
-                    field: 'AccountingStatusId', title: 'Accounting', width: 100, attributes: { style: "text-align: center" }
+                    field: 'AccountingStatusName', title: 'Accounting', width: 100, attributes: { style: "text-align: center" }
                 }
             ],
             filterable: true,

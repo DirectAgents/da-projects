@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Web.Security;
 
@@ -16,6 +17,7 @@ namespace ClientPortal.Web.Models
         }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<FileUpload> FileUploads { get; set; }
     }
 
     [Table("UserProfile")]
@@ -25,6 +27,18 @@ namespace ClientPortal.Web.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string UserName { get; set; }
+        public int? CakeAdvertiserId { get; set; }
+    }
+
+    [Table("FileUpload")]
+    public class FileUpload
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public DateTime UploadDate { get; set; }
+        public string Filename { get; set; }
+        public string Text { get; set; }
         public int? CakeAdvertiserId { get; set; }
     }
 

@@ -1,11 +1,8 @@
-﻿using ClientPortal.Data.Contexts;
-using ClientPortal.Data.Contracts;
+﻿using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
-using ClientPortal.Data.Services;
 using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebMatrix.WebData;
@@ -159,7 +156,7 @@ namespace ClientPortal.Web.Controllers
 
         // ---
 
-        private int? GetAdvertiserId()
+        public static int? GetAdvertiserId()
         {
             int? advertiserId = null;
 

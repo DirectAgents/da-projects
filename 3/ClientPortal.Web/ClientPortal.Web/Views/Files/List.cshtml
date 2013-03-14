@@ -1,0 +1,11 @@
+﻿@model IEnumerable<ClientPortal.Web.Models.FileUploadInfo>
+
+<table>
+@foreach (var file in Model)
+{
+    <tr>
+        <td>@file.UploadDate</td>
+        <td>@file.Filename</td>
+    </tr>
+}
+</table>
