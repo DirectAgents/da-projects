@@ -476,17 +476,19 @@
             },
             dataSource: dataSource,
             series: [
-                { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks" },
-                { type: "line", aggregate: "sum", field: "Revenue", name: "Spend", tooltip: { format: "C" } }
+                { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks", axis: "clicks" },
+                { type: "line", aggregate: "sum", field: "Revenue", name: "Spend", axis: "spend", tooltip: { format: "C" } }
             ],
             categoryAxis: {
                 baseUnit: "days",
                 field: "Date",
-                labels: { rotation: -90 }
+                labels: { rotation: -90 },
+                axisCrossingValue: [0, 1000]
             },
-            valueAxis: {
-                labels: { format: "N0" }
-            },
+            valueAxis: [
+                { name: "clicks", labels: { format: "N0" } },
+                { name: "spend", labels: { format: "C" } }
+            ],
             tooltip: {
                 visible: true,
                 format: "N0"
