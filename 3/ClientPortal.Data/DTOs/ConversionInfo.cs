@@ -18,5 +18,6 @@ namespace ClientPortal.Data.DTOs
         public string Culture { get; set; }
 
         public string TransactionId { get; set; }
+        public bool? Positive { get; set; }
     }
 }

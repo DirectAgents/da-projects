@@ -15,10 +15,15 @@ namespace ClientPortal.Data.Services
             this.cakeContext = cakeContext;
         }
 
-        public IQueryable<CakeOffer> GetAll()
+        public void SaveChanges()
         {
-            return cakeContext.CakeOffers;
+            cakeContext.SaveChanges();
         }
+
+        //public IQueryable<CakeOffer> GetAll()
+        //{
+        //    return cakeContext.CakeOffers;
+        //}
 
         public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
@@ -118,7 +123,7 @@ namespace ClientPortal.Data.Services
         }
 
         // note: we'll go until 23:59:59 on the "end" date
-        public IQueryable<ConversionInfo> GetConversions(DateTime? start, DateTime? end, int? advertiserId)
+        public IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
             var conversions = cakeContext.CakeConversions.AsQueryable();
             if (start.HasValue)
@@ -144,9 +149,16 @@ namespace ClientPortal.Data.Services
                     OfferId = c.Offer_Id ?? 0,
                     Offer = (o == null) ? String.Empty : o.OfferName,
                     PriceReceived = c.PriceReceived ?? 0,
-                    Currency = curr.Name
+                    Currency = curr.Name,
+                    TransactionId = c.Transaction_Id,
+                    Positive = c.Positive
                 };
             return conversionInfos;
+        }
+
+        public IQueryable<CakeConversion> Conversions
+        {
+            get { return cakeContext.CakeConversions; }
         }
     }
 }

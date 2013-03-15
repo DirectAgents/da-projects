@@ -525,9 +525,11 @@
                     fields: {
                         Date: { type: 'date' },
                         AffId: { type: 'number' },
+                        OfferId: { type: 'number' },
                         Offer: { type: 'string' },
                         PriceReceived: { type: 'number' },
-                        TransactionId: { type: 'string' }
+                        TransactionId: { type: 'string' },
+                        Positive: { type: 'boolean' }
                     }
                 }
             },
@@ -556,10 +558,12 @@
             columns: [
                 { field: 'ConversionId', title: 'Conv ID', width: 90 },
                 { field: 'Date', width: 190, format: '{0:G}' },
+                { field: 'OfferId', width: 80 },
                 { field: 'Offer' },
                 { field: 'AffId', title: 'sub_id', width: 80 },
                 { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'TransactionId', title: 'Trans ID', width: 90 }
+                { field: 'Positive', width: 80 },
+                { field: 'TransactionId', title: 'Trans ID', width: 170 }
             ],
             filterable: true,
             sortable: {

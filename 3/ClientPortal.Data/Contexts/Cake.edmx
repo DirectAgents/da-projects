@@ -85,6 +85,8 @@
           <Property Name="PriceReceivedCurrencyId" Type="int" />
           <Property Name="PriceReceivedFormattedAmount" Type="nvarchar" MaxLength="50" />
           <Property Name="Deleted" Type="bit" Nullable="false" />
+          <Property Name="Positive" Type="bit" />
+          <Property Name="Transaction_Id" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CakeCurrencies">
           <Key>
@@ -274,6 +276,8 @@
           <Property Type="Int32" Name="PriceReceivedCurrencyId" />
           <Property Type="String" Name="PriceReceivedFormattedAmount" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="Deleted" Nullable="false" />
+          <Property Type="Boolean" Name="Positive" />
+          <Property Type="String" Name="Transaction_Id" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CakeCurrency">
           <Key>
@@ -371,6 +375,8 @@
           <EntitySetMapping Name="CakeConversions">
             <EntityTypeMapping TypeName="CakeModel.CakeConversion">
               <MappingFragment StoreEntitySet="CakeConversions">
+                <ScalarProperty Name="Transaction_Id" ColumnName="Transaction_Id" />
+                <ScalarProperty Name="Positive" ColumnName="Positive" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="PriceReceivedFormattedAmount" ColumnName="PriceReceivedFormattedAmount" />
                 <ScalarProperty Name="PriceReceivedCurrencyId" ColumnName="PriceReceivedCurrencyId" />

@@ -32,5 +32,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> PriceReceivedCurrencyId { get; set; }
         public string PriceReceivedFormattedAmount { get; set; }
         public bool Deleted { get; set; }
+        public Nullable<bool> Positive { get; set; }
+        public string Transaction_Id { get; set; }
     }
 }

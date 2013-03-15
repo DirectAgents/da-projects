@@ -138,7 +138,7 @@ namespace ClientPortal.Web.Controllers
         {
             int? advertiserId = GetAdvertiserId();
 
-            var conversions = offerRepo.GetConversions(startdate, enddate, advertiserId);
+            var conversions = offerRepo.GetConversionInfos(startdate, enddate, advertiserId);
             if (offerid.HasValue)
                 conversions = conversions.Where(c => c.OfferId == offerid.Value);
 
