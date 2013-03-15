@@ -173,12 +173,15 @@
 
     function RefreshGrid(grid) {
         $('#' + grid + 'Grid').data('kendoGrid').dataSource.read();
+        if ($('#' + grid + 'Chart').length > 0)
+            $('#' + grid + 'Chart').data('kendoChart').dataSource.read();
         $('#' + grid + '_filterBtn').attr('disabled', true);
     }
 
     function WindowResize() {
         ResizeChart('offsum', true);
         ResizeChart('daysum', true);
+        ResizeChart('conrep', true);
     }
 
     function ResizeChart(chart, refresh) {
@@ -226,14 +229,19 @@
                 setTimeout(function () { ResizeChart('daysum', true); }, 100);
             }
         });
-        $("#tab4").one("click", function () {
-            $.ajax({
-                url: '@Url.Action("ConversionReportPartial")',
-                cache: false
-            }).done(function (html) {
-                $("#tab4Tab").html(html);
-                SetupConversionReportGrid();
-            });
+        $("#tab4").click(function () {
+            if ($('#conrepChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("ConversionReportPartial")',
+                    cache: false
+                }).done(function (html) {
+                    $("#tab4Tab").html(html);
+                    ResizeChart('conrep', false);
+                    SetupConversionReportGrid();
+                });
+            } else {
+                setTimeout(function () { ResizeChart('conrep', true); }, 100);
+            }
         });
         $("#tab5").one("click", function () {
             $.ajax({
@@ -562,7 +570,7 @@
                 { field: 'Offer' },
                 { field: 'AffId', title: 'sub_id', width: 80 },
                 { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Positive', width: 80 },
+                { field: 'Positive', title: 'Sale?', width: 80 },
                 { field: 'TransactionId', title: 'Trans ID', width: 170 }
             ],
             filterable: true,
@@ -574,6 +582,80 @@
 
         $('#conrep_startdate').kendoDatePicker();
         $('#conrep_enddate').kendoDatePicker();
+        setTimeout(function () { CreateConversionReportChart(); }, 400);
+    }
+
+    function CreateConversionReportChart() {
+        var readData = function () {
+            return {
+                startdate: $('#conrep_startdate').val(),
+                enddate: $('#conrep_enddate').val()
+            };
+        }
+        var dataSource = CreateConversionSummaryDataSource(readData);
+
+        $("#conrepChart").kendoChart({
+            chartArea: {
+                height: 200
+            },
+            theme: $(document).data("kendoSkin") || "default",
+            title: {
+                text: ""
+            },
+            dataSource: dataSource,
+            series: [
+                { field: "Count", name: "Conversions" },
+                { field: "PositiveCount", name: "Sales" }
+            ],
+            categoryAxis: {
+                field: "OfferId",
+                labels: { template: "#= value #" }
+            },
+            tooltip: {
+                visible: true,
+                format: "N0"
+            }
+        });
+    }
+
+    function CreateConversionSummaryDataSource(readData) {
+        return new kendo.data.DataSource({
+//            serverPaging: true,
+//            serverSorting: true,
+            serverFiltering: true,
+//            serverAggregates: true,
+//            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("ConversionSummaryData")',
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+//                aggregates: 'aggregates',
+                model: {
+                    id: 'OfferId',
+                    fields: {
+                        OfferName: { type: 'string' },
+                        Count: { type: 'number' },
+                        PositiveCount: { type: 'number' },
+                        Revenue: { type: 'number' },
+                        TransactionId: { type: 'string' },
+                        Positive: { type: 'boolean' }
+                    }
+                }
+            },
+            sort: [
+                { field: "Count", dir: "desc" }
+            ],
+//            aggregate: [
+//                { field: "PriceReceived", aggregate: "sum" }
+//            ]
+        });
     }
 
     function CreateCPMSummaryDataSource() {

@@ -15,4 +15,9 @@
     <input style="float:left; width:100px" id="conrep_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('conrep')" />
     <a class="button" style="padding: 3px; margin-left: 10px" id="conrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('conrep'); return false">Filter</a>
 </div>
+<div id="conrepChartSection" class="k-content">
+    <div class="chart-wrapper">
+        <div id="conrepChart"></div>
+    </div>
+</div>
 <div id="conrepGrid"></div>

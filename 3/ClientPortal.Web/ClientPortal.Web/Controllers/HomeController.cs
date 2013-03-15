@@ -137,19 +137,29 @@ namespace ClientPortal.Web.Controllers
         public JsonResult ConversionReportData(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
         {
             int? advertiserId = GetAdvertiserId();
+            var conversionInfos = offerRepo.GetConversionInfos(startdate, enddate, advertiserId, offerid);
 
-            var conversions = offerRepo.GetConversionInfos(startdate, enddate, advertiserId);
-            if (offerid.HasValue)
-                conversions = conversions.Where(c => c.OfferId == offerid.Value);
-
-            var kgrid = new KendoGrid<ConversionInfo>(request, conversions);
-            if (conversions.Any())
+            var kgrid = new KendoGrid<ConversionInfo>(request, conversionInfos);
+            if (conversionInfos.Any())
             {
                 kgrid.aggregates = new
                 {
-                    PriceReceived = new { sum = conversions.Sum(c => c.PriceReceived) }
+                    PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) }
                 };
             }
+            var json = Json(kgrid);
+            return json;
+        }
+
+        [HttpPost]
+        public JsonResult ConversionSummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
+        {
+            int? advertiserId = GetAdvertiserId();
+            var conversionSummaries = offerRepo.GetConversionSummaries(startdate, enddate, advertiserId, offerid);
+
+            var kgrid = new KendoGrid<ConversionSummary>(request, conversionSummaries);
+            // todo: aggregates?
+
             var json = Json(kgrid);
             return json;
         }

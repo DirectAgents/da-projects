@@ -20,11 +20,6 @@ namespace ClientPortal.Data.Services
             cakeContext.SaveChanges();
         }
 
-        //public IQueryable<CakeOffer> GetAll()
-        //{
-        //    return cakeContext.CakeOffers;
-        //}
-
         public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
             var dailySummaries = cakeContext.DailySummaries.AsQueryable();
@@ -123,18 +118,9 @@ namespace ClientPortal.Data.Services
         }
 
         // note: we'll go until 23:59:59 on the "end" date
-        public IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId)
+        public IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
-            var conversions = cakeContext.CakeConversions.AsQueryable();
-            if (start.HasValue)
-                conversions = conversions.Where(c => c.ConversionDate >= start.Value);
-            if (end.HasValue)
-            {
-                DateTime endOfDay = new DateTime(end.Value.Year, end.Value.Month, end.Value.Day, 23, 59, 59);
-                conversions = conversions.Where(c => c.ConversionDate <= endOfDay);
-            }
-            if (advertiserId.HasValue)
-                conversions = conversions.Where(c => c.Advertiser_Id == advertiserId.Value);
+            var conversions = GetConversions(start, end, advertiserId, offerId);
 
             var conversionInfos =
                 from c in conversions
@@ -154,6 +140,57 @@ namespace ClientPortal.Data.Services
                     Positive = c.Positive
                 };
             return conversionInfos;
+        }
+
+        // note: we'll go until 23:59:59 on the "end" date
+        public IQueryable<ConversionSummary> GetConversionSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        {
+            var conversions = GetConversions(start, end, advertiserId, offerId);
+            var conversionGroups = conversions.GroupBy(c => c.Offer_Id);
+
+            var offers = cakeContext.CakeOffers.AsQueryable();
+            if (advertiserId.HasValue)
+            {
+                var advId = advertiserId.Value.ToString();
+                offers = offers.Where(o => o.Advertiser_Id == advId);
+            }
+            if (offerId.HasValue)
+                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+
+            var conversionSummaries =
+                from offer in offers
+                join conversionGroup in conversionGroups on offer.Offer_Id equals conversionGroup.Key into gj
+                from convGroup in gj.DefaultIfEmpty() // used to left join to conversionGroups
+                select new ConversionSummary()
+                {
+                    AdvertiserId = offer.Advertiser_Id,
+                    OfferId = offer.Offer_Id,
+                    OfferName = offer.OfferName,
+                    Format = offer.DefaultPriceFormat,
+                    Currency = offer.Currency,
+                    Count = convGroup.Count(),
+                    PositiveCount = (convGroup.Count() == 0) ? 0 : convGroup.Count(g => g.Positive == true),
+                    Revenue = (convGroup.Count() == 0) ? 0 : convGroup.Sum(g => g.PriceReceived ?? 0)
+                };
+            return conversionSummaries;
+        }
+
+        public IQueryable<CakeConversion> GetConversions(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        {
+            var conversions = cakeContext.CakeConversions.AsQueryable();
+            if (start.HasValue)
+                conversions = conversions.Where(c => c.ConversionDate >= start.Value);
+            if (end.HasValue)
+            {
+                DateTime endOfDay = new DateTime(end.Value.Year, end.Value.Month, end.Value.Day, 23, 59, 59);
+                conversions = conversions.Where(c => c.ConversionDate <= endOfDay);
+            }
+            if (advertiserId.HasValue)
+                conversions = conversions.Where(c => c.Advertiser_Id == advertiserId.Value);
+            if (offerId.HasValue)
+                conversions = conversions.Where(c => c.Offer_Id == offerId);
+
+            return conversions;
         }
 
         public IQueryable<CakeConversion> Conversions

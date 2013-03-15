@@ -80,6 +80,7 @@
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
     <Compile Include="DTOs\ConversionInfo.cs" />
+    <Compile Include="DTOs\ConversionSummary.cs" />
     <Compile Include="DTOs\MonthlyInfo.cs" />
     <Compile Include="DTOs\DailyInfo.cs" />
     <Compile Include="DTOs\OfferInfo.cs" />
