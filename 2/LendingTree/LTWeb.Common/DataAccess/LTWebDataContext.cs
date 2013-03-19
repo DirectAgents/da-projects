@@ -10,21 +10,19 @@ namespace LTWeb.DataAccess
 
         public DbSet<AdminSetting> AdminSettings { get; set; }
 
+        public DbSet<LeadPost> LeadPosts { get; set; }
+
         public LTWebDataContext()
         {
-//#if(DEBUG)
-//            var initializer = new DropCreateDatabaseIfModelChanges<LTWebDataContext>();
-//            Database.SetInitializer(initializer);
-//#endif
-        }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            // todo: do things with modelBuilder like:
-            //      modelBuilder.Entity<Bid>()
-            //          .HasRequired(x => x.Auction)
-            //          .WithMany()
-            //          .WillCascadeOnDelete(false);
+            //var initializer = new MyDBInitializer();
+            //Database.SetInitializer(initializer);
         }
     }
+
+    //public class MyDBInitializer : CreateDatabaseIfNotExists<LTWebDataContext>
+    //{
+    //    protected override void Seed(LTWebDataContext db)
+    //    {
+    //    }
+    //}
 }

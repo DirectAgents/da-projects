@@ -97,7 +97,6 @@ namespace LTWeb
             return !Equals(left, right);
         }
 
-
         public static class KeyGenerator
         {
             public static string Generate()

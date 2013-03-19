@@ -1,0 +1,52 @@
+﻿@model IEnumerable<System.Xml.Linq.XElement>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Lead</title>
+</head>
+<body>
+    <form method="POST" action="~/api/LeadService">
+        <fieldset>
+            <legend>Refi Application</legend>
+            @foreach (var q in @Model)
+            {
+                <div>
+                    @{
+                string key = q.Attribute("key").Value;
+                string answerType = q.Attribute("answertype").Value;
+                    }
+                    @key
+                    @if (answerType == "dropdown")
+                    {
+                        <select name="@key">
+                            @foreach (var node in q.Elements())
+                            {
+                                @Html.Raw(node.ToString())
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <input type="text" name="@key"/>
+                    }
+                </div>
+            }
+            <input type="hidden" name="AffiliateSiteID" value="0" />
+            <input type="hidden" name="VisitorIPAddress" value="::1" />
+            <input type="hidden" name="VisitorURL" value="http://localhost" />
+            <input type="hidden" name="Test" value="true" />
+            <input type="hidden" name="SourceID" value="External" />
+            <input type="hidden" name="Username" value="Partner" />
+            <div>Password
+                <input type="password" name="Password" value="" /></div>
+            <p>
+                <input type="submit" value="Create" />
+            </p>
+        </fieldset>
+    </form>
+</body>
+</html>

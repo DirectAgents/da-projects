@@ -20,7 +20,6 @@ namespace LTWeb
 
         public string IPAddress { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public int IsError { get; set; }
 
         [NotMapped]

@@ -10,7 +10,7 @@ namespace LTWeb.Service
     {
         LTRequest _request;
         LTRequest _response;
-        ServiceConfig _config;
+        readonly ServiceConfig _config;
 
         // TODO: make sure this isn't getting called on every web request.  The reason I'm wondering
         //       is because I didn't think an object could deserialize without a default consructor...

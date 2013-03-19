@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTWeb.Common", "LTWeb.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTWeb.Service", "LTWeb.Service\LTWeb.Service.csproj", "{0852445A-3124-4223-B755-7812B59E39FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LTWeb.Test", "LTWeb.Test\LTWeb.Test.csproj", "{9C0D8DB7-CE6A-4410-BA39-0D20D602069F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{0852445A-3124-4223-B755-7812B59E39FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0852445A-3124-4223-B755-7812B59E39FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0852445A-3124-4223-B755-7812B59E39FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C0D8DB7-CE6A-4410-BA39-0D20D602069F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C0D8DB7-CE6A-4410-BA39-0D20D602069F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C0D8DB7-CE6A-4410-BA39-0D20D602069F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C0D8DB7-CE6A-4410-BA39-0D20D602069F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

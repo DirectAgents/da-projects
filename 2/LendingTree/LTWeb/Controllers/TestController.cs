@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 
 namespace LTWeb.Controllers
 {
@@ -42,5 +41,27 @@ namespace LTWeb.Controllers
             return RedirectToAction("Show", "Questions", new { test = true });
         }
 
+        public ActionResult LeadService()
+        {
+            string path = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/questions.xml");
+            var questions = XDocument.Load(path)
+                                        .Descendants("question")
+                                        .Distinct(new QuestionComparer())
+                                        .Where(c => c.Attribute("key").Value != "Complete");
+            return View(questions);
+        }
+
+        class QuestionComparer : IEqualityComparer<XElement>
+        {
+            public bool Equals(XElement x, XElement y)
+            {
+                return x.Attribute("key").Value == y.Attribute("key").Value;
+            }
+
+            public int GetHashCode(XElement obj)
+            {
+                return obj.Attribute("key").Value.GetHashCode();
+            }
+        }
     }
 }

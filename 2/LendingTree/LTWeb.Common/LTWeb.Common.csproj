@@ -55,7 +55,17 @@
     <Compile Include="Entities\Annotations\UniqueAttribute.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Lead.cs" />
+    <Compile Include="Entities\LeadPost.cs" />
     <Compile Include="Entities\ServiceConfig.cs" />
+    <Compile Include="Migrations\201303080022463_InitialCreate.cs" />
+    <Compile Include="Migrations\201303080022463_InitialCreate.Designer.cs">
+      <DependentUpon>201303080022463_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201303081919294_m1.cs" />
+    <Compile Include="Migrations\201303081919294_m1.Designer.cs">
+      <DependentUpon>201303081919294_m1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\LTRequest.cs" />
     <Compile Include="Utilities\SessionUtility.cs" />
@@ -68,6 +78,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="connectionsconfig.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201303080022463_InitialCreate.resx">
+      <DependentUpon>201303080022463_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201303081919294_m1.resx">
+      <DependentUpon>201303081919294_m1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
