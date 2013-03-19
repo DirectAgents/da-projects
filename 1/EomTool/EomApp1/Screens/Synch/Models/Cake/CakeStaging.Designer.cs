@@ -8,15 +8,15 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
-
 namespace EomApp1.Screens.Synch.Models.Cake
 {
     #region Contexts
@@ -98,6 +98,7 @@ namespace EomApp1.Screens.Synch.Models.Cake
         private ObjectSet<CakeConversion> _CakeConversions;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
@@ -117,11 +118,11 @@ namespace EomApp1.Screens.Synch.Models.Cake
         }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
@@ -148,6 +149,7 @@ namespace EomApp1.Screens.Synch.Models.Cake
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -584,8 +586,57 @@ namespace EomApp1.Screens.Synch.Models.Cake
         private global::System.Boolean _Deleted;
         partial void OnDeletedChanging(global::System.Boolean value);
         partial void OnDeletedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Boolean> Positive
+        {
+            get
+            {
+                return _Positive;
+            }
+            set
+            {
+                OnPositiveChanging(value);
+                ReportPropertyChanging("Positive");
+                _Positive = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Positive");
+                OnPositiveChanged();
+            }
+        }
+        private Nullable<global::System.Boolean> _Positive;
+        partial void OnPositiveChanging(Nullable<global::System.Boolean> value);
+        partial void OnPositiveChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Transaction_Id
+        {
+            get
+            {
+                return _Transaction_Id;
+            }
+            set
+            {
+                OnTransaction_IdChanging(value);
+                ReportPropertyChanging("Transaction_Id");
+                _Transaction_Id = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Transaction_Id");
+                OnTransaction_IdChanged();
+            }
+        }
+        private global::System.String _Transaction_Id;
+        partial void OnTransaction_IdChanging(global::System.String value);
+        partial void OnTransaction_IdChanged();
 
         #endregion
+
     
     }
     
@@ -615,6 +666,7 @@ namespace EomApp1.Screens.Synch.Models.Cake
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -909,9 +961,11 @@ namespace EomApp1.Screens.Synch.Models.Cake
         partial void OnReceivedChanged();
 
         #endregion
+
     
     }
 
     #endregion
+
     
 }

@@ -11,16 +11,10 @@
     <input style="float:left; width:100px" id="daysum_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('daysum')" />
     <a class="button" style="padding: 3px; margin-left: 10px" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum'); return false">Filter</a>
 </div>
-<div id="daysumGrid"></div>
-<div id="example" class="k-content">
+<div id="daysumChartSection" class="k-content">
     <div class="configuration k-widget k-header" style="width: 170px; float: right">
         <span class="configHead">Base date unit</span>
         <ul class="options">
-            <li>
-                <input id="baseUnitAuto" name="baseUnit"
-                    type="radio" value="" autocomplete="off" />
-                <label for="baseUnitAuto">Automatic</label>
-            </li>
             <li>
                 <input id="baseUnitYears" name="baseUnit"
                     type="radio" value="years" autocomplete="off" />
@@ -42,36 +36,9 @@
                 <label for="baseUnitDays">Days</label>
             </li>
         </ul>
-        <span class="configHead">Aggregate function</span>
-        <ul class="options">
-            <li>
-                <input id="aggregateMax" name="aggregate"
-                    type="radio" value="max" autocomplete="off" />
-                <label for="aggregateMax">Max</label>
-            </li>
-            <li>
-                <input id="aggregateMin" name="aggregate"
-                    type="radio" value="min" autocomplete="off" />
-                <label for="aggregateMin">Min</label>
-            </li>
-            <li>
-                <input id="aggregateSum" name="aggregate"
-                    type="radio" value="sum" checked="checked" autocomplete="off" />
-                <label for="aggregateSum">Sum</label>
-            </li>
-            <li>
-                <input id="aggregateAvg" name="aggregate"
-                    type="radio" value="avg" autocomplete="off" />
-                <label for="aggregateAvg">Avg</label>
-            </li>
-            <li>
-                <input id="aggregateCount" name="aggregate"
-                    type="radio" value="count" autocomplete="off" />
-                <label for="aggregateCount">Count</label>
-            </li>
-        </ul>
     </div>
     <div class="chart-wrapper">
-        <div id="chart"></div>
+        <div id="daysumChart"></div>
     </div>
 </div>
+<div id="daysumGrid"></div>

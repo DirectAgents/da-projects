@@ -15,4 +15,9 @@
     <input style="float:left; width:100px" id="offsum_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('offsum')" />
     <a class="button" style="padding: 3px; margin-left: 10px" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum'); return false">Filter</a>
 </div>
+<div id="offsumChartSection" class="k-content">
+    <div class="chart-wrapper">
+        <div id="offsumChart"></div>
+    </div>
+</div>
 <div id="offsumGrid"></div>

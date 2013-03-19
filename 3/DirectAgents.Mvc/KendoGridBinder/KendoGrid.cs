@@ -15,7 +15,9 @@ namespace DirectAgents.Mvc.KendoGridBinder
             var sorting = GetSorting(request);
             var tempQuery = query.Where(filtering).OrderBy(sorting);
             total = tempQuery.Count();
-            data = tempQuery.Skip(request.Skip).Take(request.Take);
+            data = tempQuery.Skip(request.Skip);
+            if (request.Take > 0)
+                data = data.Take(request.Take);
         }
 
         public KendoGrid(KendoGridRequest request, IEnumerable<T> list)

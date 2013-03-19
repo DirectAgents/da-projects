@@ -9,7 +9,7 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
         IQueryable<Campaign> Campaigns { get; }
-        IQueryable<Campaign> CampaignsFiltered(string[] excludeInName, string search, string countrycode, string vertical, string traffictype, string mobilelp, bool excludeHidden, bool excludeInactive);
+        IQueryable<Campaign> CampaignsFiltered(string[] excludeInName, string search, string countrycode, string vertical, string traffictype, bool? mobilelp, bool excludeHidden, bool excludeInactive);
 
         IQueryable<Country> Countries { get; }
         IQueryable<Country> CountriesWithActiveCampaigns { get; }

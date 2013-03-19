@@ -51,7 +51,8 @@ namespace EomToolWeb.Controllers
                     settings.ExcludeCPM = false;
 
                 var excludeStrings = settings.ExcludeStrings().ToArray();
-                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, search, country, vertical, traffictype, mobilelp, settings.ExcludeHidden, settings.ExcludeInactive);
+                bool? mobilelpBool = (mobilelp == null) ? (bool?)null : (mobilelp.ToLower() == "yes");
+                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, search, country, vertical, traffictype, mobilelpBool, settings.ExcludeHidden, settings.ExcludeInactive);
 
                 var isValidCountry = campaignRepository.Countries.Where(c => c.CountryCode == country).Any();
 

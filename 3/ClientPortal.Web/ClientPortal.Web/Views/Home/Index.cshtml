@@ -87,8 +87,19 @@
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
     <script>
     $(function () {
+        LoadFileUploads();
         SetupTabs();
+        $(window).bind('resize', WindowResize);
     });
+
+    function LoadFileUploads() {
+        $.ajax({
+            url: '@Url.Action("Index", "Files")',
+            cache: false
+        }).done(function (html) {
+            $("#tab1Tab").html(html);
+        });
+    }
 
     function DateChanged(grid) {
         $('#' + grid + '_dateRangeSel').val('custom');
@@ -162,32 +173,75 @@
 
     function RefreshGrid(grid) {
         $('#' + grid + 'Grid').data('kendoGrid').dataSource.read();
+        if ($('#' + grid + 'Chart').length > 0)
+            $('#' + grid + 'Chart').data('kendoChart').dataSource.read();
         $('#' + grid + '_filterBtn').attr('disabled', true);
     }
 
-    function FormatCurr(val, culture) {
-        kendo.culture(culture);
-        return kendo.toString(val, "c");
+    function WindowResize() {
+        ResizeChart('offsum', true);
+        ResizeChart('daysum', true);
+        ResizeChart('conrep', true);
+    }
+
+    function ResizeChart(chart, refresh) {
+        var offset = 0;
+        if (chart == 'daysum') offset = 200;
+
+        if ($('#' + chart + 'ChartSection').length > 0)
+        {
+            var w = $('#' + chart + 'ChartSection').width();
+            if (w > 0)
+            {
+                $('#' + chart + 'ChartSection .chart-wrapper').css('width', w - offset);
+                if (refresh)
+                    $('#' + chart + 'Chart').data('kendoChart').refresh();
+            }
+        }
     }
 
     function SetupTabs() {
-        $("#tab2").one("click", function () {
-            $.ajax({
-                url: '@Url.Action("OfferSummaryPartial")',
-                cache: false
-            }).done(function (html) {
-                $("#tab2Tab").html(html);
-                SetupOfferSummaryGrid();
-            });
+        $("#tab2").click(function () {
+            if ($('#offsumChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("OfferSummaryPartial")',
+                    cache: false
+                }).done(function (html) {
+                    $("#tab2Tab").html(html);
+                    ResizeChart('offsum', false);
+                    SetupOfferSummaryGrid();
+                });
+            } else {
+                setTimeout(function () { ResizeChart('offsum', true); }, 100);
+            }
         });
-        $("#tab3").one("click", function () {
-            $.ajax({
-                url: '@Url.Action("DailySummaryPartial")',
-                cache: false
-            }).done(function (html) {
-                $("#tab3Tab").html(html);
-                SetupDailySummaryGrid();
-            });
+        $("#tab3").click(function () {
+            if ($('#daysumChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("DailySummaryPartial")',
+                    cache: false
+                }).done(function (html) {
+                    $("#tab3Tab").html(html);
+                    ResizeChart('daysum', false);
+                    SetupDailySummaryGrid();
+                });
+            } else {
+                setTimeout(function () { ResizeChart('daysum', true); }, 100);
+            }
+        });
+        $("#tab4").click(function () {
+            if ($('#conrepChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("ConversionReportPartial")',
+                    cache: false
+                }).done(function (html) {
+                    $("#tab4Tab").html(html);
+                    ResizeChart('conrep', false);
+                    SetupConversionReportGrid();
+                });
+            } else {
+                setTimeout(function () { ResizeChart('conrep', true); }, 100);
+            }
         });
         $("#tab5").one("click", function () {
             $.ajax({
@@ -200,9 +254,13 @@
         });
     }
 
-    function SetupOfferSummaryGrid() {
-            
-        var dataSource = new kendo.data.DataSource({
+    function FormatCurr(val, culture) {
+        kendo.culture(culture);
+        return kendo.toString(val, "c");
+    }
+
+    function CreateOfferSummaryDataSource() {
+        return new kendo.data.DataSource({
             serverPaging: true,
             serverSorting: true,
             serverFiltering: true,
@@ -212,7 +270,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("OfferSummaryGrid")',
+                    url: '@Url.Action("OfferSummaryData")',
                     data: function () {
                         return {
                             startdate: $('#offsum_startdate').val(),
@@ -234,17 +292,20 @@
                         Clicks: { type: 'number' },
                         Conversions: { type: 'number' },
                         Revenue: { type: 'number' },
-                        //HireDate: { type: 'date' },
-                        //Active: { type: 'boolean' }
                     }
                 }
             },
+            sort: { field: "Revenue", dir: "desc" },
             aggregate: [
                 { field: "Clicks", aggregate: "sum" },
                 { field: "Conversions", aggregate: "sum" },
                 { field: "Revenue", aggregate: "sum" }
             ]
         });
+    }
+    function SetupOfferSummaryGrid() {
+
+        var dataSource = CreateOfferSummaryDataSource();
 
         $('#offsumGrid').kendoGrid({
             dataSource: dataSource,
@@ -256,24 +317,73 @@
                 { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
                 { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                //{ field: 'HireDate', title: 'Hire Date', format: "{0:MM/dd/yyyy}" },
-                //{ field: 'Active' }
+                { field: 'Revenue', title: 'Total', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             ],
             filterable: true,
             sortable: {
                 mode: 'multiple'
             },
-            pageable: true
+            pageable: true,
+            detailInit: OffSumDetailInit
         });
-
         $('#offsum_startdate').kendoDatePicker();
         $('#offsum_enddate').kendoDatePicker();
+        setTimeout(function () { CreateOffSumChart(); }, 400);
+    }
+    function CreateOffSumChart() {
+        var dataSource = $('#offsumGrid').data("kendoGrid").dataSource;
+
+        $("#offsumChart").kendoChart({
+            chartArea: {
+                height: 200
+            },
+            theme: $(document).data("kendoSkin") || "default",
+            title: {
+                text: ""
+            },
+            dataSource: dataSource,
+            series: [
+                { field: "Conversions", name: "Conversions" }
+            ],
+            categoryAxis: {
+                field: "OfferId",
+                labels: { template: "#= value #" }
+            },
+            tooltip: {
+                visible: true,
+                format: "N0"
+            }
+        });
+    }
+    function OffSumDetailInit(e) {
+        var readData = function () {
+            return {
+                startdate: $('#offsum_startdate').val(),
+                enddate: $('#offsum_enddate').val(),
+                offerid: e.data.OfferId
+            };
+        }
+        var dataSource = CreateConversionReportDataSource(readData);
+
+        $("<div/>").appendTo(e.detailCell).kendoGrid({
+            dataSource: dataSource,
+            columns: [
+                { field: 'ConversionId', title: 'Conv ID', width: 90 },
+                { field: 'Date', width: 190, format: '{0:G}' },
+                { field: 'AffId', title: 'sub_id', width: 80 },
+                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'TransactionId', title: 'Trans ID' }
+            ],
+            sortable: {
+                mode: 'multiple'
+            },
+            pageable: true,
+            scrollable: false
+        });
     }
 
-    function SetupDailySummaryGrid() {
-            
-        var dataSource = new kendo.data.DataSource({
+    function CreateDailySummaryDataSource() {
+        return new kendo.data.DataSource({
             serverPaging: true,
             serverSorting: true,
             serverFiltering: true,
@@ -283,7 +393,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("DailySummaryGrid")',
+                    url: '@Url.Action("DailySummaryData")',
                     data: function () {
                         return {
                             startdate: $('#daysum_startdate').val(),
@@ -309,6 +419,7 @@
                     }
                 }
             },
+            sort: { field: "Date", dir: "asc" },
             aggregate: [
                 { field: "Impressions", aggregate: "sum" },
                 { field: "Clicks", aggregate: "sum" },
@@ -318,6 +429,11 @@
                 { field: "EPC", aggregate: "agg" }
             ]
         });
+    }
+    function SetupDailySummaryGrid() {
+
+        var dataSource = CreateDailySummaryDataSource();
+
         $('#daysumGrid').kendoGrid({
             dataSource: dataSource,
             height: 400,
@@ -326,9 +442,9 @@
                 { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Revenue', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'EPC', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
+                { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p1}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'EPC', title: 'Per Click', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
             ],
             filterable: true,
             sortable: {
@@ -344,40 +460,43 @@
         });
         $('#daysum_startdate').kendoDatePicker();
         $('#daysum_enddate').kendoDatePicker();
-        setTimeout(function () { createChart(); }, 400);
-        $(".configuration").bind("change", refresh);
+        setTimeout(function () { CreateDaySumChart(); }, 400);
+        $(".configuration").bind("change", RefreshDaySumChart);
     }
-
-    function createChart() {
+    function CreateDaySumChart() {
         var dataSource = $('#daysumGrid').data("kendoGrid").dataSource;
 
-        $("#chart").kendoChart({
+        $("#daysumChart").kendoChart({
+            chartArea: {
+                height: 200
+            },
             theme: $(document).data("kendoSkin") || "default",
             title: {
                 text: ""
             },
             dataSource: dataSource,
             series: [
-                { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks" },
-                { type: "line", aggregate: "sum", field: "Revenue", name: "Revenue", tooltip: { format: "C" } }
+                { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks", axis: "clicks" },
+                { type: "line", aggregate: "sum", field: "Revenue", name: "Spend", axis: "spend", tooltip: { format: "C" } }
             ],
             categoryAxis: {
                 baseUnit: "days",
                 field: "Date",
-                labels: { rotation: -90 }
+                labels: { rotation: -90 },
+                axisCrossingValue: [0, 1000]
             },
-            valueAxis: {
-                labels: { format: "N0" }
-            },
+            valueAxis: [
+                { name: "clicks", labels: { format: "N0" } },
+                { name: "spend", labels: { format: "C" } }
+            ],
             tooltip: {
                 visible: true,
                 format: "N0"
             }
         });
     }
-    
-    function refresh() {
-        var chart = $("#chart").data("kendoChart"),
+    function RefreshDaySumChart() {
+        var chart = $("#daysumChart").data("kendoChart"),
             series = chart.options.series,
             categoryAxis = chart.options.categoryAxis,
             baseUnitInputs = $("input:radio[name=baseUnit]"),
@@ -392,9 +511,157 @@
         chart.refresh();
     }
 
-    function SetupCPMSummaryGrid() {
+    function CreateConversionReportDataSource(readData) {
+        return new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("ConversionReportData")',
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'ConversionId',
+                    fields: {
+                        Date: { type: 'date' },
+                        AffId: { type: 'number' },
+                        OfferId: { type: 'number' },
+                        Offer: { type: 'string' },
+                        PriceReceived: { type: 'number' },
+                        TransactionId: { type: 'string' },
+                        Positive: { type: 'boolean' }
+                    }
+                }
+            },
+            sort: [
+                { field: "Offer", dir: "asc" },
+                { field: "Date", dir: "asc" }
+            ],
+            aggregate: [
+                { field: "PriceReceived", aggregate: "sum" }
+            ]
+        });
+    }
+    function SetupConversionReportGrid() {
 
-        var dataSource = new kendo.data.DataSource({
+        var readData = function () {
+            return {
+                startdate: $('#conrep_startdate').val(),
+                enddate: $('#conrep_enddate').val()
+            };
+        }
+        var dataSource = CreateConversionReportDataSource(readData);
+
+        $('#conrepGrid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                { field: 'ConversionId', title: 'Conv ID', width: 90 },
+                { field: 'Date', width: 190, format: '{0:G}' },
+                { field: 'OfferId', width: 80 },
+                { field: 'Offer' },
+                { field: 'AffId', title: 'sub_id', width: 80 },
+                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Positive', title: 'Sale?', width: 80 },
+                { field: 'TransactionId', title: 'Trans ID', width: 170 }
+            ],
+            filterable: true,
+            sortable: {
+                mode: 'multiple'
+            },
+            pageable: true
+        });
+
+        $('#conrep_startdate').kendoDatePicker();
+        $('#conrep_enddate').kendoDatePicker();
+        setTimeout(function () { CreateConversionReportChart(); }, 400);
+    }
+
+    function CreateConversionReportChart() {
+        var readData = function () {
+            return {
+                startdate: $('#conrep_startdate').val(),
+                enddate: $('#conrep_enddate').val()
+            };
+        }
+        var dataSource = CreateConversionSummaryDataSource(readData);
+
+        $("#conrepChart").kendoChart({
+            chartArea: {
+                height: 200
+            },
+            theme: $(document).data("kendoSkin") || "default",
+            title: {
+                text: ""
+            },
+            dataSource: dataSource,
+            series: [
+                { field: "Count", name: "Conversions" },
+                { field: "PositiveCount", name: "Sales" }
+            ],
+            categoryAxis: {
+                field: "OfferId",
+                labels: { template: "#= value #" }
+            },
+            tooltip: {
+                visible: true,
+                format: "N0"
+            }
+        });
+    }
+
+    function CreateConversionSummaryDataSource(readData) {
+        return new kendo.data.DataSource({
+//            serverPaging: true,
+//            serverSorting: true,
+            serverFiltering: true,
+//            serverAggregates: true,
+//            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("ConversionSummaryData")',
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+//                aggregates: 'aggregates',
+                model: {
+                    id: 'OfferId',
+                    fields: {
+                        OfferName: { type: 'string' },
+                        Count: { type: 'number' },
+                        PositiveCount: { type: 'number' },
+                        Revenue: { type: 'number' },
+                        TransactionId: { type: 'string' },
+                        Positive: { type: 'boolean' }
+                    }
+                }
+            },
+            sort: [
+                { field: "Count", dir: "desc" }
+            ],
+//            aggregate: [
+//                { field: "PriceReceived", aggregate: "sum" }
+//            ]
+        });
+    }
+
+    function CreateCPMSummaryDataSource() {
+        return new kendo.data.DataSource({
 //            serverPaging: true,
 //            serverSorting: true,
             serverFiltering: true,
@@ -404,7 +671,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("CPMSummaryGrid")',
+                    url: '@Url.Action("CPMSummaryData")',
                     data: function () {
                         return {
                             startdate: $('#cpmsum_startdate').val(),
@@ -429,14 +696,23 @@
                         OfferId: { type: 'number' },
                         Offer: { type: 'string' },
                         Revenue: { type: 'number' },
-                        AccountingStatusId: { type: 'number' }
+                        AccountingStatusId: { type: 'number' },
+                        AccountingStatusName: { type: 'string' }
                     }
                 }
             },
+            sort: [
+                { field: "Offer", dir: "asc" },
+                { field: "Period", dir: "asc" }
+            ],
             aggregate: [
                 { field: "Revenue", aggregate: "sum" }
             ]
         });
+    }
+    function SetupCPMSummaryGrid() {
+
+        var dataSource = CreateCPMSummaryDataSource();
 
         $('#cpmsumGrid').kendoGrid({
             dataSource: dataSource,
@@ -459,7 +735,7 @@
                     footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" }
                 },
                 {
-                    field: 'AccountingStatusId', title: 'Accounting', width: 100, attributes: { style: "text-align: center" }
+                    field: 'AccountingStatusName', title: 'Accounting', width: 100, attributes: { style: "text-align: center" }
                 }
             ],
             filterable: true,

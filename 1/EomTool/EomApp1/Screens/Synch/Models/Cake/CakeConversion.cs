@@ -25,6 +25,7 @@ namespace EomApp1.Screens.Synch.Models.Cake
             this.PriceReceivedFormattedAmount = source.received.formatted_amount;
             //this.PriceReceivedCurrencyId = Eom.Currency.ByCakeCurrencyId(source.received.currency_id);
             this.PriceReceivedCurrencyId = source.received.currency_id;
+            this.Transaction_Id = source.transaction_id;
         }
     }
 }

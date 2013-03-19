@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ClientPortal.Web.Models.FileUploadInfo>
+
+<h3>Files</h3>
+
+<div id="divFileList">
+    @Html.Partial("List")
+</div>
+
+<form method="post" action="@Url.Action("Upload")" enctype="multipart/form-data">
+    <div>
+        <input id="fileUpload" name="file" type="file" />
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $("#fileUpload").kendoUpload({
+            async: {
+                saveUrl: "@Url.Action("Upload")",
+                autoUpload: false
+            },
+            localization: {
+                select: "Upload&nbsp;file...",
+                uploadSelectedFiles: "Upload"
+            },
+            multiple: false,
+            complete: onUploadComplete
+        });
+    });
+
+    function onUploadComplete() {
+        $.ajax({
+            url: '@Url.Action("List", "Files")',
+            cache: false
+        }).done(function (html) {
+            $("#divFileList").html(html);
+        });
+    }
+</script>

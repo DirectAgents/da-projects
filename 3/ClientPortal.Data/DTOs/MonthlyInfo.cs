@@ -18,8 +18,13 @@ namespace ClientPortal.Data.DTOs
         public string Offer { get; set; }
         //public string UnitType { get; set; }
         //public int TotalUnits { get; set; }
+
         public int CampaignStatusId { get; set; }
         public int AccountingStatusId { get; set; }
+        public string AccountingStatusName
+        {
+            get { return AccountingStatus.IdToName(this.AccountingStatusId); }
+        }
 
         public decimal Revenue { get; set; }
         public string Currency
@@ -31,9 +36,39 @@ namespace ClientPortal.Data.DTOs
 
     public partial class CampaignStatus
     {
-        public static int Default = 1;
-        public static int Finalized = 2;
-        public static int Active = 3;
-        public static int Verified = 4;
+        public const int Default = 1;
+        public const int Finalized = 2;
+        public const int Active = 3;
+        public const int Verified = 4;
+    }
+    public partial class AccountingStatus
+    {
+        public const int Default = 1;
+        public const int PaymentDue = 2;
+        public const int DoNotPay = 3;
+        public const int CheckCut = 4;
+        public const int CheckSignedAndPaid = 5;
+        public const int Approved = 6;
+        public const int Hold = 7;
+        public const int Verified = 8;
+
+        public static string IdToName(int accountingStatusId)
+        {
+            switch (accountingStatusId)
+            {
+                case Default:
+                    return "Unverified";
+                case CheckSignedAndPaid:
+                    return "Paid";
+                case Approved:
+                    return "Approved";
+                case Verified:
+                    return "Verified";
+                case Hold:
+                    return "Held";
+                default:
+                    return String.Empty;
+            }
+        }
     }
 }
