@@ -39,28 +39,41 @@
 <div class="row">
     <div class="two columns portaltabs-v">
         <dl class="vertical tabs">
-            <dd><a href="#vertical1">My Account</a></dd>
-            <dd class="active"><a href="#vertical2">Reports</a></dd>
-            <dd><a href="#vertical3">Notifications</a></dd>
-            <dd><a href="#vertical4">Contacts</a></dd>
+            <dd class="active"><a href="#vertical1">Dashboard</a></dd>
+            <dd><a href="#vertical2">Reports</a></dd>
+            <dd><a href="#vertical3">My Account</a></dd>
+            <dd><a href="#vertical4">Notifications</a></dd>
+            <dd><a href="#vertical5">Contacts</a></dd>
         </dl>
     </div>
-    <div class="ten columns portaltabs-h">
-        <dl class="tabs">
-            <dd class="active"><a href="#tab1" id="tab1">Performance</a></dd>
-            <dd><a href="#tab2" id="tab2">Offer Summary</a></dd>
-            <dd><a href="#tab3" id="tab3">Daily Summary</a></dd>
-            <dd><a href="#tab4" id="tab4">Conversion Report</a></dd>
-            <dd><a href="#tab5" id="tab5">CPM</a></dd>
-        </dl>
-        <ul class="tabs-content">
-            <li id="tab1Tab" class="active"></li>
-            <li id="tab2Tab"></li>
-            <li id="tab3Tab"></li>
-            <li id="tab4Tab"></li>
-            <li id="tab5Tab"></li>
-        </ul>
-    </div>
+    <ul class="tabs-content">
+        <li id="vertical1Tab" class="active">
+            Dashboard
+        </li>
+        <li id="vertical2Tab">
+            <div class="ten columns portaltabs-h">
+                <dl class="tabs">
+                    <dd class="active"><a href="#tab1" id="tab1">Performance</a></dd>
+                    <dd><a href="#tab2" id="tab2">Offer Summary</a></dd>
+                    <dd><a href="#tab3" id="tab3">Daily Summary</a></dd>
+                    <dd><a href="#tab4" id="tab4">Conversion Report</a></dd>
+                    <dd><a href="#tab5" id="tab5">CPM</a></dd>
+                </dl>
+                <ul class="tabs-content">
+                    <li id="tab1Tab" class="active"></li>
+                    <li id="tab2Tab"></li>
+                    <li id="tab3Tab"></li>
+                    <li id="tab4Tab"></li>
+                    <li id="tab5Tab"></li>
+                </ul>
+            </div>
+        </li>
+        <li id="vertical3Tab">
+            <div id="divMyAccount" class="ten columns"></div>
+        </li>
+        <li id="vertical4Tab">4</li>
+        <li id="vertical5Tab">5</li>
+    </ul>
 </div>
 <footer class="row">
     <div class="twelve columns">
@@ -97,7 +110,7 @@
             url: '@Url.Action("Index", "Files")',
             cache: false
         }).done(function (html) {
-            $("#tab1Tab").html(html);
+            $("#divMyAccount").html(html);
         });
     }
 
