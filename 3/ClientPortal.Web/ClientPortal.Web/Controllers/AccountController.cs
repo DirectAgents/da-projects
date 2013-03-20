@@ -8,13 +8,13 @@ using System.Web.Security;
 using DotNetOpenAuth.AspNet;
 using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
-using ClientPortal.Web.Filters;
+//using ClientPortal.Web.Filters;
 using ClientPortal.Web.Models;
 
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
-    [InitializeSimpleMembership]
+    //[InitializeSimpleMembership]
     public class AccountController : Controller
     {
         //

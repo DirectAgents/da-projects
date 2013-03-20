@@ -28,6 +28,8 @@ namespace ClientPortal.Web.Models
         public int UserId { get; set; }
         public string UserName { get; set; }
         public int? CakeAdvertiserId { get; set; }
+        public int? QuickBooksCompanyId { get; set; }
+        public int? QuickBooksAdvertiserId { get; set; }
     }
 
     [Table("FileUpload")]
