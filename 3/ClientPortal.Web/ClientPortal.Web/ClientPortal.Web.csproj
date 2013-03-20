@@ -186,6 +186,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -857,10 +858,10 @@
     <Content Include="Views\Shared\_Portal.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_HelloPartial.cshtml" />
-    <Content Include="Views\Home\_OfferSummaryPartial.cshtml" />
-    <Content Include="Views\Home\_DailySummaryPartial.cshtml" />
-    <Content Include="Views\Home\_CPMSummaryPartial.cshtml" />
-    <Content Include="Views\Home\_ConversionReportPartial.cshtml" />
+    <Content Include="Views\Reports\_OfferSummaryPartial.cshtml" />
+    <Content Include="Views\Reports\_DailySummaryPartial.cshtml" />
+    <Content Include="Views\Reports\_CPMSummaryPartial.cshtml" />
+    <Content Include="Views\Reports\_ConversionReportPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

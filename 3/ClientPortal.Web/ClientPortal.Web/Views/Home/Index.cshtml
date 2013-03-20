@@ -217,7 +217,7 @@
         $("#tab2").click(function () {
             if ($('#offsumChart').length == 0) {
                 $.ajax({
-                    url: '@Url.Action("OfferSummaryPartial")',
+                    url: '@Url.Action("OfferSummaryPartial", "Reports")',
                     cache: false
                 }).done(function (html) {
                     $("#tab2Tab").html(html);
@@ -231,7 +231,7 @@
         $("#tab3").click(function () {
             if ($('#daysumChart').length == 0) {
                 $.ajax({
-                    url: '@Url.Action("DailySummaryPartial")',
+                    url: '@Url.Action("DailySummaryPartial", "Reports")',
                     cache: false
                 }).done(function (html) {
                     $("#tab3Tab").html(html);
@@ -245,7 +245,7 @@
         $("#tab4").click(function () {
             if ($('#conrepChart').length == 0) {
                 $.ajax({
-                    url: '@Url.Action("ConversionReportPartial")',
+                    url: '@Url.Action("ConversionReportPartial", "Reports")',
                     cache: false
                 }).done(function (html) {
                     $("#tab4Tab").html(html);
@@ -258,7 +258,7 @@
         });
         $("#tab5").one("click", function () {
             $.ajax({
-                url: '@Url.Action("CPMSummaryPartial")',
+                url: '@Url.Action("CPMSummaryPartial", "Reports")',
                 cache: false
             }).done(function (html) {
                 $("#tab5Tab").html(html);
@@ -283,7 +283,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("OfferSummaryData")',
+                    url: '@Url.Action("OfferSummaryData", "Reports")',
                     data: function () {
                         return {
                             startdate: $('#offsum_startdate').val(),
@@ -406,7 +406,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("DailySummaryData")',
+                    url: '@Url.Action("DailySummaryData", "Reports")',
                     data: function () {
                         return {
                             startdate: $('#daysum_startdate').val(),
@@ -535,7 +535,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("ConversionReportData")',
+                    url: '@Url.Action("ConversionReportData", "Reports")',
                     data: readData
                 }
             },
@@ -644,7 +644,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("ConversionSummaryData")',
+                    url: '@Url.Action("ConversionSummaryData", "Reports")',
                     data: readData
                 }
             },
@@ -684,7 +684,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("CPMSummaryData")',
+                    url: '@Url.Action("CPMSummaryData", "Reports")',
                     data: function () {
                         return {
                             startdate: $('#cpmsum_startdate').val(),
