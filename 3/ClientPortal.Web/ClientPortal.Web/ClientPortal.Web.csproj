@@ -192,6 +192,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\DashboardModel.cs" />
     <Compile Include="Models\FileUploadInfo.cs" />
     <Compile Include="Models\ScooterRow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -862,6 +863,7 @@
     <Content Include="Views\Reports\_DailySummaryPartial.cshtml" />
     <Content Include="Views\Reports\_CPMSummaryPartial.cshtml" />
     <Content Include="Views\Reports\_ConversionReportPartial.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

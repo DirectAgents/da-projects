@@ -20,6 +20,28 @@ namespace ClientPortal.Data.Services
             cakeContext.SaveChanges();
         }
 
+        public AdvertiserSummary GetAdvertiserSummary(DateTime? start, DateTime? end, int advertiserId)
+        {
+            var dailySummaries = cakeContext.DailySummaries.AsQueryable();
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
+
+            var advId = advertiserId.ToString();
+            var offers = cakeContext.CakeOffers.Where(o => o.Advertiser_Id == advId);
+
+            dailySummaries = from ds in dailySummaries
+                             join o in offers on ds.offer_id equals o.Offer_Id
+                             select ds;
+
+            AdvertiserSummary ai = new AdvertiserSummary() {
+                AdvertiserId = advertiserId,
+                Clicks = dailySummaries.Sum(ds => ds.clicks),
+                Conversions = dailySummaries.Sum(ds => ds.conversions),
+                Revenue = dailySummaries.Sum(ds => ds.revenue)
+            };
+            return ai;
+        }
+
         public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
             var dailySummaries = cakeContext.DailySummaries.AsQueryable();

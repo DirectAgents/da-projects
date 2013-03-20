@@ -79,6 +79,7 @@
     <Compile Include="Contexts\MonthlySummary.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
+    <Compile Include="DTOs\AdvertiserSummary.cs" />
     <Compile Include="DTOs\ConversionInfo.cs" />
     <Compile Include="DTOs\ConversionSummary.cs" />
     <Compile Include="DTOs\MonthlyInfo.cs" />

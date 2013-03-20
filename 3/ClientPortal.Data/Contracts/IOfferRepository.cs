@@ -9,6 +9,7 @@ namespace ClientPortal.Data.Contracts
     {
         void SaveChanges();
 
+        AdvertiserSummary GetAdvertiserSummary(DateTime? start, DateTime? end, int advertiserId);
         IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId);

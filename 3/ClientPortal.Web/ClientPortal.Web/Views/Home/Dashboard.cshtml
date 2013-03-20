@@ -1,0 +1,47 @@
+﻿@model ClientPortal.Web.Models.DashboardModel
+@{
+    var x = 0;
+}
+
+<h2>Dashboard</h2>
+
+<div class="panel six columns">
+<table>
+    <tr>
+        <th></th>
+        <th>Clicks</th>
+        <th>Leads</th>
+        <th>Spend</th>
+    </tr>
+    <tr>
+        <td>Month-to-Date</td>
+        <td>@String.Format("{0:n0}", Model.SummaryMTD.Clicks)</td>
+        <td>@String.Format("{0:n0}", Model.SummaryMTD.Conversions)</td>
+        <td>@String.Format("{0:c}", Model.SummaryMTD.Revenue)</td>
+    </tr>
+    <tr>
+        <td>Last-Month-to-Date</td>
+        <td>@String.Format("{0:n0}", Model.SummaryLMTD.Clicks)</td>
+        <td>@String.Format("{0:n0}", Model.SummaryLMTD.Conversions)</td>
+        <td>@String.Format("{0:c}", Model.SummaryLMTD.Revenue)</td>
+    </tr>
+    <tr>
+        <td>Last-Month-Total</td>
+        <td>@String.Format("{0:n0}", Model.SummaryLM.Clicks)</td>
+        <td>@String.Format("{0:n0}", Model.SummaryLM.Conversions)</td>
+        <td>@String.Format("{0:c}", Model.SummaryLM.Revenue)</td>
+    </tr>
+</table>
+</div>
+
+<div class="panel six columns">
+    <table>
+        <tr>
+            <td>
+    Direct Agents<br />
+    info 1<br />
+    info 2
+            </td>
+        </tr>
+    </table>
+</div>

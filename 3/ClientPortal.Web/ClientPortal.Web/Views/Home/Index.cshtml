@@ -48,7 +48,7 @@
     </div>
     <ul class="tabs-content">
         <li id="vertical1Tab" class="active">
-            Dashboard
+            <div id="divDashboard" class="ten columns"></div>
         </li>
         <li id="vertical2Tab">
             <div class="ten columns portaltabs-h">
@@ -100,11 +100,20 @@
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
     <script>
     $(function () {
-        LoadFileUploads();
+        LoadDashboard();
+        LoadFileUploads(); //todo: defer this
         SetupTabs();
         $(window).bind('resize', WindowResize);
     });
 
+    function LoadDashboard() {
+        $.ajax({
+            url: '@Url.Action("Dashboard")',
+            cache: false
+        }).done(function (html) {
+            $("#divDashboard").html(html);
+        });
+    }
     function LoadFileUploads() {
         $.ajax({
             url: '@Url.Action("Index", "Files")',
