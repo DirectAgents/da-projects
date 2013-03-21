@@ -39,11 +39,11 @@
 <div class="row">
     <div class="two columns portaltabs-v">
         <dl class="vertical tabs">
-            <dd class="active"><a href="#vertical1">Dashboard</a></dd>
-            <dd><a href="#vertical2" id="vertical2">Reports</a></dd>
-            <dd><a href="#vertical3" id="vertical3">My Account</a></dd>
-            <dd><a href="#vertical4" id="vertical4">Notifications</a></dd>
-            <dd><a href="#vertical5" id="vertical5">Contacts</a></dd>
+            <dd class="active"><a href="#vertical1" id="vertNav_Dashboard">Dashboard</a></dd>
+            <dd><a href="#vertical2" id="vertNav_Reports">Reports</a></dd>
+            <dd><a href="#vertical3" id="vertNav_MyAccount">My Account</a></dd>
+            <dd><a href="#vertical4" id="vertNav_Notifications">Notifications</a></dd>
+            <dd><a href="#vertical5" id="vertNav_Contacts">Contacts</a></dd>
         </dl>
     </div>
     <ul class="tabs-content">
@@ -53,35 +53,31 @@
         <li id="vertical2Tab">
             <div class="ten columns portaltabs-h">
                 <dl class="tabs">
-                    <dd class="active"><a href="#tab1" id="tab1">Performance</a></dd>
-                    <dd><a href="#tab2" id="tab2">Offer Summary</a></dd>
-                    <dd><a href="#tab3" id="tab3">Daily Summary</a></dd>
-                    <dd><a href="#tab4" id="tab4">Conversion Report</a></dd>
-                    <dd><a href="#tab5" id="tab5">CPM</a></dd>
+                    <dd class="active"><a href="#repPerformance" id="repNav_Performance">Performance</a></dd>
+                    <dd><a href="#repOffSum" id="repNav_OffSum">Offer Summary</a></dd>
+                    <dd><a href="#repDaySum" id="repNav_DaySum">Daily Summary</a></dd>
+                    <dd><a href="#repConversions" id="repNav_Conversions">Conversion Report</a></dd>
+                    <dd><a href="#repCPM" id="repNav_CPM">CPM</a></dd>
                 </dl>
                 <ul class="tabs-content">
-                    <li id="tab1Tab" class="active"></li>
-                    <li id="tab2Tab"></li>
-                    <li id="tab3Tab"></li>
-                    <li id="tab4Tab"></li>
-                    <li id="tab5Tab"></li>
+                    <li id="repPerformanceTab" class="active"></li>
+                    <li id="repOffSumTab"></li>
+                    <li id="repDaySumTab"></li>
+                    <li id="repConversionsTab"></li>
+                    <li id="repCPMTab"></li>
                 </ul>
             </div>
         </li>
         <li id="vertical3Tab">
-            <div class="ten columns">
-                <div class="row">
-                    <div class="twelve columns">
-                        <div id="divMyAccount">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="twelve columns">
-                        <div id="divGoals">
-                        </div>
-                    </div>
-                </div>
+            <div class="ten columns portaltabs-h">
+                <dl class="tabs">
+                    <dd class="active"><a href="#goals" id="navGoals">Goals</a></dd>
+                    <dd><a href="#files" id="navFiles">Files</a></dd>
+                </dl>
+                <ul class="tabs-content">
+                    <li id="goalsTab" class="active"><div id="divGoals"></div></li>
+                    <li id="filesTab"><div id="divFiles"></div></li>
+                </ul>
             </div>
         </li>
         <li id="vertical4Tab">4</li>
@@ -114,7 +110,6 @@
     <script>
         $(function () {
             LoadDashboard();
-            LoadFileUploads(); //todo: defer this
             SetupTabs();
             $(window).bind('resize', WindowResize);
         });
@@ -125,14 +120,6 @@
                 cache: false
             }).done(function (html) {
                 $("#divDashboard").html(html);
-            });
-        }
-        function LoadFileUploads() {
-            $.ajax({
-                url: '@Url.Action("Index", "Files")',
-                cache: false
-            }).done(function (html) {
-                $("#divMyAccount").html(html);
             });
         }
 
@@ -236,7 +223,7 @@
     function SetupTabs() {
         
         @* My Account *@
-        $("#vertical3").one("click", function () {
+        $("#vertNav_MyAccount").one("click", function () {
             $.ajax({
                 url: '@Url.Action("Index", "Goals")',
                 cache: false
@@ -244,14 +231,23 @@
                 $("#divGoals").html(html);
             });
         });
-        
-        $("#tab2").click(function () {
+        $("#navFiles").one("click", function () {
+            $.ajax({
+                url: '@Url.Action("Index", "Files")',
+                cache: false
+            }).done(function (html) {
+                $("#divFiles").html(html);
+            });
+        });
+
+        @* Reports *@
+        $("#repNav_OffSum").click(function () {
             if ($('#offsumChart').length == 0) {
                 $.ajax({
                     url: '@Url.Action("OfferSummaryPartial", "Reports")',
                     cache: false
                 }).done(function (html) {
-                    $("#tab2Tab").html(html);
+                    $("#repOffSumTab").html(html);
                     ResizeChart('offsum', false);
                     SetupOfferSummaryGrid();
                 });
@@ -259,13 +255,13 @@
                 setTimeout(function () { ResizeChart('offsum', true); }, 100);
             }
         });
-        $("#tab3").click(function () {
+        $("#repNav_DaySum").click(function () {
             if ($('#daysumChart').length == 0) {
                 $.ajax({
                     url: '@Url.Action("DailySummaryPartial", "Reports")',
                     cache: false
                 }).done(function (html) {
-                    $("#tab3Tab").html(html);
+                    $("#repDaySumTab").html(html);
                     ResizeChart('daysum', false);
                     SetupDailySummaryGrid();
                 });
@@ -273,13 +269,13 @@
                 setTimeout(function () { ResizeChart('daysum', true); }, 100);
             }
         });
-        $("#tab4").click(function () {
+        $("#repNav_Conversions").click(function () {
             if ($('#conrepChart').length == 0) {
                 $.ajax({
                     url: '@Url.Action("ConversionReportPartial", "Reports")',
                     cache: false
                 }).done(function (html) {
-                    $("#tab4Tab").html(html);
+                    $("#repConversionsTab").html(html);
                     ResizeChart('conrep', false);
                     SetupConversionReportGrid();
                 });
@@ -287,16 +283,16 @@
                 setTimeout(function () { ResizeChart('conrep', true); }, 100);
             }
         });
-        $("#tab5").one("click", function () {
+        $("#repNav_CPM").one("click", function () {
             $.ajax({
                 url: '@Url.Action("CPMSummaryPartial", "Reports")',
                 cache: false
             }).done(function (html) {
-                $("#tab5Tab").html(html);
+                $("#repCPMTab").html(html);
                 SetupCPMSummaryGrid();
             });
         });
-            }
+    }
 
             function FormatCurr(val, culture) {
                 kendo.culture(culture);

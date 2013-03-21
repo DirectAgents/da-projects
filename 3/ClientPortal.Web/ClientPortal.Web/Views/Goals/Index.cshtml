@@ -8,10 +8,11 @@
 }
 
 <div id="addGoal">
-    @Ajax.ActionLink("Add Rule", "Add", "Goals",
+    @Ajax.ActionLink("Add Goal", "Add", "Goals",
                      new AjaxOptions
                          {
-                             InsertionMode = InsertionMode.InsertBefore, UpdateTargetId = "addGoal", HttpMethod = "GET",
+                             InsertionMode = InsertionMode.Replace, UpdateTargetId = "windowGoal", HttpMethod = "GET",
+                             OnBegin = "BeginAddGoal",
                              OnSuccess = "EnableValidation('#addGoalWrapper')"
                          })
 </div>
@@ -21,4 +22,21 @@
     function EnableValidation(selector) {
         $.validator.unobtrusive.parse($(selector));
     }
+
+    function BeginAddGoal() {
+        var win = $('#windowGoal').data("kendoWindow");
+        win.setOptions({ width: 600, height: 500 });
+        win.center();
+        win.open();
+    }
+
+    $(function () {
+        $('#windowGoal').kendoWindow({
+            title: "Goal",
+            visible: false,
+            modal: true
+        });
+    });
 </script>
+
+<div id="windowGoal"></div>
