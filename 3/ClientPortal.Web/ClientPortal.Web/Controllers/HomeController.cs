@@ -1,6 +1,8 @@
 ﻿using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebMatrix.WebData;
@@ -35,15 +37,16 @@ namespace ClientPortal.Web.Controllers
             var oneMonthAgo = new DateTime(firstOfLastMonth.Year, firstOfLastMonth.Month, (now.Day < lastOfLastMonth.Day) ? now.Day : lastOfLastMonth.Day);
             // will be the last day of last month if today's "day" is greater than the number of days in last month
 
-            var summaryMTD = offerRepo.GetAdvertiserSummary(firstOfMonth, now, advertiserId.Value);
-            var summaryLMTD = offerRepo.GetAdvertiserSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value);
-            var summaryLM = offerRepo.GetAdvertiserSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value);
+            var summaryMTD = offerRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value);
+            summaryMTD.Name = "Month-to-Date";
+            var summaryLMTD = offerRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value);
+            summaryLMTD.Name = "Last Month-to-Date";
+            var summaryLM = offerRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value);
+            summaryLM.Name = "Last Month Total";
 
             var model = new DashboardModel
             {
-                SummaryMTD = summaryMTD,
-                SummaryLMTD = summaryLMTD,
-                SummaryLM = summaryLM
+                DateRangeSummaries = new List<DateRangeSummary> { summaryMTD, summaryLMTD, summaryLM }
             };
             return PartialView(model);
         }

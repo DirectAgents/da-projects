@@ -1,7 +1,4 @@
 ﻿@model ClientPortal.Web.Models.DashboardModel
-@{
-    var x = 0;
-}
 
 <h2>Dashboard</h2>
 
@@ -13,24 +10,15 @@
         <th>Leads</th>
         <th>Spend</th>
     </tr>
+@foreach (var summary in Model.DateRangeSummaries)
+{
     <tr>
-        <td>Month-to-Date</td>
-        <td>@String.Format("{0:n0}", Model.SummaryMTD.Clicks)</td>
-        <td>@String.Format("{0:n0}", Model.SummaryMTD.Conversions)</td>
-        <td>@String.Format("{0:c}", Model.SummaryMTD.Revenue)</td>
+        <td>@summary.Name</td>
+        <td>@String.Format("{0:n0}", summary.Clicks)</td>
+        <td>@String.Format("{0:n0}", summary.Conversions)</td>
+        <td>@summary.RevenueFormatted</td>
     </tr>
-    <tr>
-        <td>Last-Month-to-Date</td>
-        <td>@String.Format("{0:n0}", Model.SummaryLMTD.Clicks)</td>
-        <td>@String.Format("{0:n0}", Model.SummaryLMTD.Conversions)</td>
-        <td>@String.Format("{0:c}", Model.SummaryLMTD.Revenue)</td>
-    </tr>
-    <tr>
-        <td>Last-Month-Total</td>
-        <td>@String.Format("{0:n0}", Model.SummaryLM.Clicks)</td>
-        <td>@String.Format("{0:n0}", Model.SummaryLM.Conversions)</td>
-        <td>@String.Format("{0:c}", Model.SummaryLM.Revenue)</td>
-    </tr>
+}
 </table>
 </div>
 
