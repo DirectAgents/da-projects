@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ClientPortal.Web.Models.GoalVM>
+
+<h3>Goals</h3>
+
+@foreach (var goal in Model)
+{
+    @Html.Partial("Item", goal)
+}
+
+<div id="addGoal">
+    @Ajax.ActionLink("Add Rule", "Add", "Goals",
+                     new AjaxOptions
+                         {
+                             InsertionMode = InsertionMode.InsertBefore, UpdateTargetId = "addGoal", HttpMethod = "GET",
+                             OnSuccess = "EnableValidation('#addGoalWrapper')"
+                         })
+</div>
+
+<script>
+    //TODO: move this to common script if used again
+    function EnableValidation(selector) {
+        $.validator.unobtrusive.parse($(selector));
+    }
+</script>

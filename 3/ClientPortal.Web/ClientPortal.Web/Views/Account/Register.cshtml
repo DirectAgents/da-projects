@@ -8,7 +8,7 @@
     <h2>Create a new account.</h2>
 </hgroup>
 
-@using (Html.BeginForm()) {
+@*@using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary()
 
@@ -34,7 +34,7 @@
         </ol>
         <input type="submit" value="Register" />
     </fieldset>
-}
+}*@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

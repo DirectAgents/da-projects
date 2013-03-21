@@ -1,0 +1,56 @@
+﻿@model ClientPortal.Web.Models.GoalVM
+
+<div id="addGoalWrapper">
+    @using (Ajax.BeginForm(new AjaxOptions {HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "addGoalWrapper"}))
+    {
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <legend>New Goal</legend>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Type)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Type)
+                @Html.ValidationMessageFor(model => model.Type)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Offer)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Offer)
+                @Html.ValidationMessageFor(model => model.Offer)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Metric)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Metric)
+                @Html.ValidationMessageFor(model => model.Metric)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Target)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Target)
+                @Html.ValidationMessageFor(model => model.Target)
+            </div>
+
+            <p>
+                <input type="submit" value="Create" />
+            </p>
+        </fieldset>
+    }
+</div>
