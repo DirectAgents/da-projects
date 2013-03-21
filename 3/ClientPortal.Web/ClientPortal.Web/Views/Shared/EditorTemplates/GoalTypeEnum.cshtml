@@ -1,0 +1,7 @@
+﻿@model ClientPortal.Web.Models.GoalTypeEnum
+
+<select id="GoalType" name="GoalType">
+    @foreach (ClientPortal.Web.Models.GoalTypeEnum value in Enum.GetValues(typeof(ClientPortal.Web.Models.GoalTypeEnum))) {
+        <option value="@value" @(Model == value ? "selected=\"selected\"" : "")>@value</option>
+    }
+</select>

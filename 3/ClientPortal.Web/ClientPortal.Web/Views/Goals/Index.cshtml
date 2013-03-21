@@ -1,8 +1,8 @@
-﻿@model IEnumerable<ClientPortal.Web.Models.GoalVM>
+﻿@model ClientPortal.Web.Models.GoalsModel
 
 <h3>Goals</h3>
 
-@foreach (var goal in Model)
+@foreach (var goal in Model.Goals)
 {
     @Html.Partial("Item", goal)
 }

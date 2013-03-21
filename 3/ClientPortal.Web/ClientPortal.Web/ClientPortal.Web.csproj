@@ -195,6 +195,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\DashboardModel.cs" />
     <Compile Include="Models\FileUploadInfo.cs" />
+    <Compile Include="Models\GoalsModel.cs" />
     <Compile Include="Models\GoalVM.cs" />
     <Compile Include="Models\ScooterRow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -870,6 +871,8 @@
     <Content Include="Views\Reports\_CPMSummaryPartial.cshtml" />
     <Content Include="Views\Reports\_ConversionReportPartial.cshtml" />
     <Content Include="Views\Home\Dashboard.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\GoalTypeEnum.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MetricTypeEnum.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -887,6 +890,7 @@
       <Name>DirectAgents.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
