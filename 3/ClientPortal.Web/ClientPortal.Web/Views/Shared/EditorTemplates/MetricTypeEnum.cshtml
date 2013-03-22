@@ -1,7 +1,0 @@
-﻿@model ClientPortal.Web.Models.MetricTypeEnum
-
-<select id="MetricType" name="MetricType">
-    @foreach (ClientPortal.Web.Models.MetricTypeEnum value in Enum.GetValues(typeof(ClientPortal.Web.Models.MetricTypeEnum))) {
-        <option value="@value" @(Model == value ? "selected=\"selected\"" : "")>@value</option>
-    }
-</select>

@@ -20,7 +20,7 @@
                 @Html.LabelFor(model => model.Type)
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.Type)
+                @Html.DropDownListFor(model => model.TypeId, new SelectList(Enum.GetValues(typeof(ClientPortal.Web.Models.GoalTypeEnum))))
                 @Html.ValidationMessageFor(model => model.Type)
             </div>
 
@@ -36,7 +36,7 @@
                 @Html.LabelFor(model => model.Metric)
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.Metric)
+                @Html.DropDownListFor(model => model.MetricId, new SelectList(Enum.GetValues(typeof(ClientPortal.Web.Models.MetricEnum))))
                 @Html.ValidationMessageFor(model => model.Metric)
             </div>
 
