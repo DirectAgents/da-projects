@@ -858,6 +858,7 @@
     <Content Include="Views\Goals\Index.cshtml" />
     <Content Include="Views\Goals\Add.cshtml" />
     <Content Include="Views\Goals\Item.cshtml" />
+    <Content Include="Views\Goals\List.cshtml" />
     <None Include="Views\Home\Index.cshtml.exclude" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
@@ -872,7 +873,6 @@
     <Content Include="Views\Reports\_ConversionReportPartial.cshtml" />
     <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GoalTypeEnum.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\MetricTypeEnum.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

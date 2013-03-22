@@ -1,0 +1,19 @@
+﻿@model IEnumerable<ClientPortal.Web.Models.GoalVM>
+
+<table>
+<thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Offer</th>
+        <th>Metric</th>
+        <th>Target</th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var goal in Model)
+{
+    @Html.Partial("Item", goal)
+}
+</tbody>
+</table>

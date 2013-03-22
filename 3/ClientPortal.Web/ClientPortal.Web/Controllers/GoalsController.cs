@@ -1,83 +1,74 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
 {
     public class GoalsController : Controller
     {
+        private IOfferRepository offerRepo;
+
+        public GoalsController(IOfferRepository offerRepository)
+        {
+            this.offerRepo = offerRepository;
+        }
+
         public ActionResult Index()
         {
-            var goalTypes = GetGoalTypes();
-            var metrics = GetMetrics();
-
-            var goals = new List<GoalVM>
-            {
-                new GoalVM
-                {
-                    Name = "goal name 1",
-                    Type = goalTypes[1],
-                    TypeId = goalTypes[1].Id,
-                    Offer = "offer name 1",
-                    Metric = metrics[0],
-                    MetricId = metrics[0].Id,
-                    Target = 50
-                },
-                new GoalVM
-                {
-                    Name = "goal name 2",
-                    Type = goalTypes[0],
-                    TypeId = goalTypes[0].Id,
-                    Offer = "offer name 2",
-                    Metric = metrics[1],
-                    MetricId = metrics[1].Id,
-                    Target = 1000
-                },
-            };
-
+            var goals = GetGoals();
             var model = new GoalsModel()
             {
                 Goals = goals
             };
-
             return PartialView(model);
+        }
+
+        public ActionResult List()
+        {
+            var goals = GetGoals();
+            return PartialView(goals);
         }
 
         public ActionResult Add()
         {
-            var defaultGoal = new GoalVM
-            {
-                TypeId = GoalTypeEnum.Percent,
-                MetricId = MetricEnum.Revenue
-            };
-
+            var defaultGoal = new GoalVM();
             return PartialView(defaultGoal);
         }
 
         [HttpPost]
-        public ActionResult Add(GoalVM goalVM)
+        public ActionResult Add(Goal goal)
         {
+            var advId = HomeController.GetAdvertiserId();
+            if (advId.HasValue)
+            {
+                goal.AdvertiserId = advId.Value;
+                SaveGoal(goal);
+            }
+            var goalVM = new GoalVM(goal);
             return PartialView("Item", goalVM);
         }
 
+        // --- repository-type methods ---
 
-        private List<GoalTypeVM> GetGoalTypes()
+        private List<GoalVM> GetGoals()
         {
-            var goalTypes = new List<GoalTypeVM> {
-                new GoalTypeVM() { Id = GoalTypeEnum.Absolute, Name = "Absolute" },
-                new GoalTypeVM() { Id = GoalTypeEnum.Percent, Name = "Percent" }
-            };
-            return goalTypes;
+            using (var usersContext = new UsersContext())
+            {
+                var goals = usersContext.Goals.ToList();
+                var goalVMs = goals.Select(g => new GoalVM(g)).ToList();
+                return goalVMs;
+            }
         }
 
-        private List<MetricVM> GetMetrics()
+        private void SaveGoal(Goal goal)
         {
-            var metrics = new List<MetricVM> {
-                new MetricVM() { Id = MetricEnum.Conversions, Name = "Conversions" },
-                new MetricVM() { Id = MetricEnum.Revenue, Name = "Revenue"}
-            };
-            return metrics;
+            using (var usersContext = new UsersContext())
+            {
+                usersContext.Goals.Add(goal);
+                usersContext.SaveChanges();
+            }
         }
-
     }
 }

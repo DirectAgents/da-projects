@@ -18,6 +18,7 @@ namespace ClientPortal.Web.Models
 
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<FileUpload> FileUploads { get; set; }
+        public DbSet<Goal> Goals { get; set; }
     }
 
     [Table("UserProfile")]
@@ -42,6 +43,24 @@ namespace ClientPortal.Web.Models
         public string Filename { get; set; }
         public string Text { get; set; }
         public int? CakeAdvertiserId { get; set; }
+    }
+
+    public enum GoalTypeEnum { Absolute = 1, Percent };
+    public enum MetricEnum { Conversions = 1, Revenue };
+
+    [Table("Goal")]
+    public class Goal
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public GoalTypeEnum TypeId { get; set; }
+        public MetricEnum MetricId { get; set; }
+        public decimal Target { get; set; }
+
+        public int AdvertiserId { get; set; }
+        public int? OfferId { get; set; }
     }
 
     public class RegisterExternalLoginModel

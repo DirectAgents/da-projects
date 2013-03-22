@@ -40,6 +40,15 @@ namespace ClientPortal.Web
         {
             WebSecurity.InitializeDatabaseConnection("DefaultConnection",
                                                      "UserProfile", "UserId", "UserName", autoCreateTables: true);
+
+            WebSecurity.CreateUserAndAccount("aaron", "123456");
+            WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278 });
+            WebSecurity.CreateUserAndAccount("accuquote", "123456", new { CakeAdvertiserId = 28 });
+            WebSecurity.CreateUserAndAccount("amazon", "123456", new { CakeAdvertiserId = 435 });
+            WebSecurity.CreateUserAndAccount("affinitas", "123456", new { CakeAdvertiserId = 298 });
+            WebSecurity.CreateUserAndAccount("digital", "123456", new { CakeAdvertiserId = 67 });
+            WebSecurity.CreateUserAndAccount("guthy", "123456", new { CakeAdvertiserId = 457 });
+            WebSecurity.CreateUserAndAccount("scooter", "123456", new { CakeAdvertiserId = 294 });
         }
     }
 }

@@ -7,32 +7,31 @@ namespace ClientPortal.Web.Models
         [Required]
         public string Name { get; set; }
 
-        public GoalTypeVM Type { get; set; }
+        [Display(Name="Type")]
         public GoalTypeEnum TypeId { get; set; }
 
         [Required]
         public string Offer { get; set; }
 
-        public MetricVM Metric { get; set; }
+        [Display(Name="Metric")]
         public MetricEnum MetricId { get; set; }
 
         [Required]
         public decimal Target { get; set; }
+
+        public GoalVM(Goal goal)
+        {
+            this.Name = goal.Name;
+            this.TypeId = goal.TypeId;
+            this.Offer = goal.OfferId != null ? goal.OfferId.ToString() : "";
+            this.MetricId = goal.MetricId;
+            this.Target = goal.Target;
+        }
+
+        public GoalVM()
+        { // defaults
+            this.TypeId = GoalTypeEnum.Absolute;
+            this.MetricId = MetricEnum.Conversions;
+        }
     }
-
-    public enum GoalTypeEnum { Absolute = 1, Percent };
-    public enum MetricEnum { Conversions = 1, Revenue };
-
-    public class GoalTypeVM
-    {
-        public GoalTypeEnum Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class MetricVM
-    {
-        public MetricEnum Id { get; set; }
-        public string Name { get; set; }
-    }
-
 }

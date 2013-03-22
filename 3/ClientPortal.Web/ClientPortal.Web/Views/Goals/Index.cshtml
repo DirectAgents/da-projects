@@ -2,12 +2,11 @@
 
 <h3>Goals</h3>
 
-@foreach (var goal in Model.Goals)
-{
-    @Html.Partial("Item", goal)
-}
+<div id="divGoalsList">
+@Html.Partial("List", Model.Goals)
+</div>
 
-<div id="addGoal">
+<div id="divActions">
     @Ajax.ActionLink("Add Goal", "Add", "Goals",
                      new AjaxOptions
                          {
@@ -15,6 +14,7 @@
                              OnBegin = "BeginAddGoal",
                              OnSuccess = "EnableValidation('#addGoalWrapper')"
                          })
+    | <a href="#" onclick="RefreshGoalsList(); return false">Refresh</a>
 </div>
 
 <script>
@@ -23,11 +23,21 @@
         $.validator.unobtrusive.parse($(selector));
     }
 
+    function RefreshGoalsList() {
+        var url = '@Url.Action("List")';
+        $('#divGoalsList').load(url);
+    }
+
     function BeginAddGoal() {
         var win = $('#windowGoal').data("kendoWindow");
         win.setOptions({ width: 600, height: 500 });
         win.center();
         win.open();
+    }
+
+    function AddGoalSuccess() {
+        RefreshGoalsList();
+        $('#windowGoal').data("kendoWindow").close();
     }
 
     $(function () {

@@ -1,7 +1,7 @@
 ﻿@model ClientPortal.Web.Models.GoalVM
 
 <div id="addGoalWrapper">
-    @using (Ajax.BeginForm(new AjaxOptions {HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "addGoalWrapper"}))
+    @using (Ajax.BeginForm(new AjaxOptions {HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "addGoalWrapper", OnSuccess = "AddGoalSuccess"}))
     {
         @Html.ValidationSummary(true)
 
@@ -17,11 +17,11 @@
             </div>
 
             <div class="editor-label">
-                @Html.LabelFor(model => model.Type)
+                @Html.LabelFor(model => model.TypeId)
             </div>
             <div class="editor-field">
                 @Html.DropDownListFor(model => model.TypeId, new SelectList(Enum.GetValues(typeof(ClientPortal.Web.Models.GoalTypeEnum))))
-                @Html.ValidationMessageFor(model => model.Type)
+                @Html.ValidationMessageFor(model => model.TypeId)
             </div>
 
             <div class="editor-label">
@@ -33,11 +33,11 @@
             </div>
 
             <div class="editor-label">
-                @Html.LabelFor(model => model.Metric)
+                @Html.LabelFor(model => model.MetricId)
             </div>
             <div class="editor-field">
                 @Html.DropDownListFor(model => model.MetricId, new SelectList(Enum.GetValues(typeof(ClientPortal.Web.Models.MetricEnum))))
-                @Html.ValidationMessageFor(model => model.Metric)
+                @Html.ValidationMessageFor(model => model.MetricId)
             </div>
 
             <div class="editor-label">
