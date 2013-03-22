@@ -20,14 +20,24 @@ namespace ClientPortal.Data.Services
             cakeContext.SaveChanges();
         }
 
+        public IQueryable<CakeOffer> CakeOffers(int? advertiserId)
+        {
+            var offers = cakeContext.CakeOffers.AsQueryable();
+            if (advertiserId.HasValue)
+            {
+                var advId = advertiserId.Value.ToString();
+                offers = offers.Where(o => o.Advertiser_Id == advId);
+            }
+            return offers;
+        }
+
         public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId)
         {
             var dailySummaries = cakeContext.DailySummaries.AsQueryable();
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
             if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
 
-            var advId = advertiserId.ToString();
-            var offers = cakeContext.CakeOffers.Where(o => o.Advertiser_Id == advId);
+            var offers = CakeOffers(advertiserId);
 
             string currency = null; // Assume all offers for the advertiser have the same currency
             if (offers.Count() > 0) currency = offers.First().Currency;
@@ -54,12 +64,7 @@ namespace ClientPortal.Data.Services
 
             var summaryGroups = dailySummaries.GroupBy(s => s.offer_id);
 
-            var offers = cakeContext.CakeOffers.AsQueryable();
-            if (advertiserId.HasValue)
-            {
-                var advId = advertiserId.Value.ToString();
-                offers = offers.Where(o => o.Advertiser_Id == advId);
-            }
+            var offers = CakeOffers(advertiserId);
             var offerInfos = from offer in offers
                              join sumGroup in summaryGroups on offer.Offer_Id equals sumGroup.Key
 //                             join summaryGroup in summaryGroups on offer.Offer_Id equals summaryGroup.Key into gj
@@ -80,12 +85,7 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
-            var offers = cakeContext.CakeOffers.AsQueryable();
-            if (advertiserId.HasValue)
-            {
-                var advId = advertiserId.Value.ToString();
-                offers = offers.Where(o => o.Advertiser_Id == advId);
-            }
+            var offers = CakeOffers(advertiserId);
             var offerIds = offers.Select(o => o.Offer_Id).ToList();
 
             string currency = null; // Assume all offers for the advertiser have the same currency
@@ -174,12 +174,8 @@ namespace ClientPortal.Data.Services
             var conversions = GetConversions(start, end, advertiserId, offerId);
             var conversionGroups = conversions.GroupBy(c => c.Offer_Id);
 
-            var offers = cakeContext.CakeOffers.AsQueryable();
-            if (advertiserId.HasValue)
-            {
-                var advId = advertiserId.Value.ToString();
-                offers = offers.Where(o => o.Advertiser_Id == advId);
-            }
+            var offers = CakeOffers(advertiserId);
+
             if (offerId.HasValue)
                 offers = offers.Where(o => o.Offer_Id == offerId.Value);
 

@@ -1,4 +1,7 @@
 ﻿@model ClientPortal.Web.Models.GoalVM
+@{
+    List<ClientPortal.Data.Contexts.CakeOffer> offers = ViewBag.Offers;
+}
 
 <div id="addGoalWrapper">
     @using (Ajax.BeginForm(new AjaxOptions {HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "addGoalWrapper", OnSuccess = "AddGoalSuccess"}))
@@ -25,11 +28,11 @@
             </div>
 
             <div class="editor-label">
-                @Html.LabelFor(model => model.Offer)
+                @Html.LabelFor(model => model.OfferId)
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.Offer)
-                @Html.ValidationMessageFor(model => model.Offer)
+                @Html.DropDownListFor(model => model.OfferId, new SelectList(offers, "Offer_Id", "OfferName"))
+                @Html.ValidationMessageFor(model => model.OfferId)
             </div>
 
             <div class="editor-label">
