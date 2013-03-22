@@ -40,6 +40,18 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Add()
         {
+            var defaultGoal = new GoalVM();
+            return DoEdit(defaultGoal);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var goalVM = GetGoal(id);
+            return DoEdit(goalVM);
+        }
+
+        private ActionResult DoEdit(GoalVM goalVM)
+        {
             var advId = HomeController.GetAdvertiserId();
 
             List<CakeOffer> offers = new List<CakeOffer>();
@@ -48,12 +60,11 @@ namespace ClientPortal.Web.Controllers
 
             ViewBag.Offers = offers;
 
-            var defaultGoal = new GoalVM();
-            return PartialView(defaultGoal);
+            return PartialView("Edit", goalVM);
         }
 
         [HttpPost]
-        public ActionResult Add(Goal goal)
+        public ActionResult Save(Goal goal)
         {
             var advId = HomeController.GetAdvertiserId();
             if (advId.HasValue)
@@ -83,11 +94,30 @@ namespace ClientPortal.Web.Controllers
             return goalVMs.ToList();
         }
 
+        private GoalVM GetGoal(int id)
+        {
+            using (var usersContext = new UsersContext())
+            {
+                var goal = usersContext.Goals.Where(g => g.Id == id).FirstOrDefault();
+                if (goal == null)
+                    return null;
+                else
+                    return new GoalVM(goal, null);
+            }
+        }
+
         private void SaveGoal(Goal goal)
         {
             using (var usersContext = new UsersContext())
             {
-                usersContext.Goals.Add(goal);
+                if (goal.Id < 0)
+                    usersContext.Goals.Add(goal);
+                else
+                {
+                    var existingGoal = usersContext.Goals.FirstOrDefault(g => g.Id == goal.Id);
+                    if (existingGoal != null)
+                        TryUpdateModel(existingGoal);
+                }
                 usersContext.SaveChanges();
             }
         }

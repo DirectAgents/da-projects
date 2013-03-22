@@ -1,6 +1,7 @@
 ﻿@model ClientPortal.Web.Models.GoalVM
 
 <tr>
+    <td><a href="#" onclick="EditGoal(@Model.Id); return false">Edit</a></td>
     <td>@Model.Name</td>
     <td>@Model.TypeId</td>
     <td>@Model.OfferName</td>

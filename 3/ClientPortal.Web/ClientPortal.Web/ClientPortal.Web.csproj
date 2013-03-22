@@ -856,9 +856,9 @@
     <Content Include="Views\Files\Index.cshtml" />
     <Content Include="Views\Files\List.cshtml" />
     <Content Include="Views\Goals\Index.cshtml" />
-    <Content Include="Views\Goals\Add.cshtml" />
     <Content Include="Views\Goals\Item.cshtml" />
     <Content Include="Views\Goals\List.cshtml" />
+    <Content Include="Views\Goals\Edit.cshtml" />
     <None Include="Views\Home\Index.cshtml.exclude" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />

@@ -3,13 +3,14 @@
     List<ClientPortal.Data.Contexts.CakeOffer> offers = ViewBag.Offers;
 }
 
-<div id="addGoalWrapper">
-    @using (Ajax.BeginForm(new AjaxOptions {HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "addGoalWrapper", OnSuccess = "AddGoalSuccess"}))
+<div id="editGoalWrapper">
+    @using (Ajax.BeginForm(new AjaxOptions {Url = Url.Action("Save"), HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "editGoalWrapper", OnSuccess = "EditGoalSuccess"}))
     {
+        @Html.HiddenFor(model => model.Id)
         @Html.ValidationSummary(true)
 
         <fieldset>
-            <legend>New Goal</legend>
+            <legend>Goal</legend>
 
             <div class="editor-label">
                 @Html.LabelFor(model => model.Name)
@@ -52,7 +53,7 @@
             </div>
 
             <p>
-                <input type="submit" value="Create" />
+                <input type="submit" value="Save" />
             </p>
         </fieldset>
     }

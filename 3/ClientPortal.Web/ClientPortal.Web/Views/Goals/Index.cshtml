@@ -11,8 +11,8 @@
                      new AjaxOptions
                          {
                              InsertionMode = InsertionMode.Replace, UpdateTargetId = "windowGoal", HttpMethod = "GET",
-                             OnBegin = "BeginAddGoal",
-                             OnSuccess = "EnableValidation('#addGoalWrapper')"
+                             OnBegin = "BeginEditGoal",
+                             OnSuccess = "EnableValidation('#editGoalWrapper')"
                          })
     | <a href="#" onclick="RefreshGoalsList(); return false">Refresh</a>
 </div>
@@ -28,14 +28,23 @@
         $('#divGoalsList').load(url);
     }
 
-    function BeginAddGoal() {
+    function EditGoal(id) {
+        BeginEditGoal();
+        var url = '@Url.Action("Edit")';
+        $.get(url, { id: id }, function (data) {
+            $('#windowGoal').html(data);
+            EnableValidation('#editGoalWrapper');
+        });
+    }
+
+    function BeginEditGoal() {
         var win = $('#windowGoal').data("kendoWindow");
         win.setOptions({ width: 600, height: 500 });
         win.center();
         win.open();
     }
 
-    function AddGoalSuccess() {
+    function EditGoalSuccess() {
         RefreshGoalsList();
         $('#windowGoal').data("kendoWindow").close();
     }

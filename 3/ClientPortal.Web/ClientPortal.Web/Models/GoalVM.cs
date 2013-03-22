@@ -4,6 +4,8 @@ namespace ClientPortal.Web.Models
 {
     public class GoalVM
     {
+        public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
 
@@ -22,6 +24,7 @@ namespace ClientPortal.Web.Models
 
         public GoalVM(Goal goal, string offerName)
         {
+            this.Id = goal.Id;
             this.Name = goal.Name;
             this.TypeId = goal.TypeId;
             this.OfferId = goal.OfferId;
@@ -32,6 +35,7 @@ namespace ClientPortal.Web.Models
 
         public GoalVM()
         { // defaults
+            this.Id = -1;
             this.TypeId = GoalTypeEnum.Absolute;
             this.MetricId = MetricEnum.Conversions;
         }
