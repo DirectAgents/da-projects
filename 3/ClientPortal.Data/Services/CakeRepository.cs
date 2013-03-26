@@ -31,7 +31,7 @@ namespace ClientPortal.Data.Services
             return offers;
         }
 
-        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId)
+        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId, int? offerId)
         {
             var dailySummaries = cakeContext.DailySummaries.AsQueryable();
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
@@ -39,15 +39,22 @@ namespace ClientPortal.Data.Services
 
             var offers = Offers(advertiserId);
 
+            if (offerId.HasValue)
+            {
+                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+                dailySummaries = dailySummaries.Where(ds => ds.offer_id == offerId.Value);
+            }
+            else
+            {
+                dailySummaries = from ds in dailySummaries
+                                 join o in offers on ds.offer_id equals o.Offer_Id
+                                 select ds;
+            }
             string currency = null; // Assume all offers for the advertiser have the same currency
             if (offers.Count() > 0) currency = offers.First().Currency;
 
-            dailySummaries = from ds in dailySummaries
-                             join o in offers on ds.offer_id equals o.Offer_Id
-                             select ds;
-
-            DateRangeSummary ai = new DateRangeSummary() {
-                AdvertiserId = advertiserId,
+            DateRangeSummary ai = new DateRangeSummary()
+            {
                 Clicks = dailySummaries.Sum(ds => ds.clicks),
                 Conversions = dailySummaries.Sum(ds => ds.conversions),
                 Revenue = dailySummaries.Sum(ds => ds.revenue),

@@ -10,7 +10,7 @@ namespace ClientPortal.Data.Contracts
         void SaveChanges();
 
         IQueryable<CakeOffer> Offers(int? advertiserId);
-        DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId);
+        DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId, int? offerId);
         IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId);

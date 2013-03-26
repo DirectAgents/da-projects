@@ -46,7 +46,7 @@ namespace ClientPortal.Web.Models
     }
 
     public enum GoalTypeEnum { Absolute = 1, Percent };
-    public enum MetricEnum { Conversions = 1, Revenue };
+    public enum MetricEnum { Clicks = 1, Leads, Spend };
 
     [Table("Goal")]
     public class Goal

@@ -1,0 +1,42 @@
+﻿@model ClientPortal.Web.Models.OfferGoalSummary
+@{
+    var goal = Model.Goals[0];
+}
+
+@goal.MetricId: @String.Format("{0:n0}", goal.Target)
+
+<div class="chart-wrapper">
+    <div id="goalChart"></div>
+</div>
+
+<script>
+    function createChart() {
+        $("#goalChart").kendoChart({
+            title: {
+                text: "Goal"
+            },
+            legend: {
+                visible: false
+            },
+            seriesDefaults: {
+                type: "column"
+            },
+            series: [{
+                name: "Clicks",
+                data: [0,0]
+            }],
+            valueAxis: {
+                line: {
+                    visible: false
+                }
+            },
+            categoryAxis: {
+                categories: ["Last Month", "This Month", "Goal"]
+            }
+        });
+    }
+
+    $(function () {
+        createChart();
+    });
+</script>

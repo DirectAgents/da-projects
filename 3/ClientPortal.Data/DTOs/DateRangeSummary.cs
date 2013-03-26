@@ -6,7 +6,6 @@ namespace ClientPortal.Data.DTOs
     public class DateRangeSummary
     {
         public string Name { get; set; }
-        public int AdvertiserId { get; set; }
 
         public int Clicks { get; set; }
         public int Conversions { get; set; }

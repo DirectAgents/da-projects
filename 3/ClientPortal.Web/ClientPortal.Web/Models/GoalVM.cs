@@ -37,7 +37,7 @@ namespace ClientPortal.Web.Models
         { // defaults
             this.Id = -1;
             this.TypeId = GoalTypeEnum.Absolute;
-            this.MetricId = MetricEnum.Conversions;
+            this.MetricId = MetricEnum.Leads;
         }
     }
 }

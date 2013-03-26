@@ -221,6 +221,10 @@
     }
 
     function SetupTabs() {
+        @* Dashboard *@
+        $("#vertNav_Dashboard").click(function () {
+            LoadDashboard();
+        });
         
         @* My Account *@
         $("#vertNav_MyAccount").one("click", function () {

@@ -37,16 +37,42 @@ namespace ClientPortal.Web.Controllers
             var oneMonthAgo = new DateTime(firstOfLastMonth.Year, firstOfLastMonth.Month, (now.Day < lastOfLastMonth.Day) ? now.Day : lastOfLastMonth.Day);
             // will be the last day of last month if today's "day" is greater than the number of days in last month
 
-            var summaryMTD = cakeRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value);
+            var summaryMTD = cakeRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value, null);
             summaryMTD.Name = "Month-to-Date";
-            var summaryLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value);
+            var summaryLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value, null);
             summaryLMTD.Name = "Last Month-to-Date";
-            var summaryLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value);
+            var summaryLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value, null);
             summaryLM.Name = "Last Month Total";
+
+            var offers = cakeRepo.Offers(advertiserId);
+
+            // Get Goals
+            var goals = AccountRepository.GetGoals(advertiserId.Value, cakeRepo);
+            var offerIds = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct();
+            List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
+            foreach (var offerId in offerIds)
+            {
+                var offsumMTD = cakeRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value, offerId);
+                offsumMTD.Name = "Month-to-Date";
+                var offsumLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value, offerId);
+                offsumLMTD.Name = "Last Month-to-Date";
+                var offsumLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value, offerId);
+                offsumLM.Name = "Last Month Total";
+
+                var offer = offers.Where(o => o.Offer_Id == offerId).FirstOrDefault();
+                var offerGoalSummary = new OfferGoalSummary()
+                {
+                    Offer = offer,
+                    Goals = goals.Where(g => g.OfferId == offerId).ToList(),
+                    DateRangeSummaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM }
+                };
+                offerGoalSummaries.Add(offerGoalSummary);
+            }
 
             var model = new DashboardModel
             {
-                DateRangeSummaries = new List<DateRangeSummary> { summaryMTD, summaryLMTD, summaryLM }
+                AdvertiserSummaries = new List<DateRangeSummary> { summaryMTD, summaryLMTD, summaryLM },
+                OfferGoalSummaries = offerGoalSummaries
             };
             return PartialView(model);
         }

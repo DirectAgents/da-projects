@@ -2,34 +2,74 @@
 
 <h2>Dashboard</h2>
 
-<div class="panel five columns">
-<table>
-    <tr>
-        <th></th>
-        <th>Clicks</th>
-        <th>Leads</th>
-        <th>Spend</th>
-    </tr>
-@foreach (var summary in Model.DateRangeSummaries)
-{
-    <tr>
-        <td>@summary.Name</td>
-        <td>@String.Format("{0:n0}", summary.Clicks)</td>
-        <td>@String.Format("{0:n0}", summary.Conversions)</td>
-        <td>@summary.RevenueFormatted</td>
-    </tr>
-}
-</table>
+<div class="row">
+    <div class="panel six columns">
+        <h4>Summary</h4>
+        <table>
+            <tr>
+                <th></th>
+                <th>Clicks</th>
+                <th>Leads</th>
+                <th>Spend</th>
+            </tr>
+        @foreach (var summary in Model.AdvertiserSummaries)
+        {
+            <tr>
+                <td>@summary.Name</td>
+                <td>@String.Format("{0:n0}", summary.Clicks)</td>
+                <td>@String.Format("{0:n0}", summary.Conversions)</td>
+                <td>@summary.RevenueFormatted</td>
+            </tr>
+        }
+        </table>
+    </div>
+
+    <div class="panel five columns">
+        <table>
+            <tr>
+                <td>
+        Direct Agents<br />
+        info 1<br />
+        info 2
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
-<div class="panel five columns">
-    <table>
-        <tr>
-            <td>
-    Direct Agents<br />
-    info 1<br />
-    info 2
-            </td>
-        </tr>
-    </table>
+<div class="row">
+    <div class="panel six columns">
+        <h4>Offers / Goals</h4>
+    @foreach (var offersum in Model.OfferGoalSummaries)
+    {
+        <b>@offersum.Offer.OfferName</b><br />
+        foreach (var goal in offersum.Goals)
+        {
+            <text>Goal: [@goal.MetricId: @String.Format("{0:n0}", goal.Target)@(goal.TypeId == ClientPortal.Web.Models.GoalTypeEnum.Percent ? "%" : "")]</text><br />
+        }
+        <table>
+            <tr>
+                <th></th>
+                <th>Clicks</th>
+                <th>Leads</th>
+                <th>Spend</th>
+            </tr>
+        @foreach (var rangesum in offersum.DateRangeSummaries)
+        {
+            <tr>
+                <td>@rangesum.Name</td>
+                <td>@String.Format("{0:n0}", rangesum.Clicks)</td>
+                <td>@String.Format("{0:n0}", rangesum.Conversions)</td>
+                <td>@rangesum.RevenueFormatted</td>
+            </tr>
+        }
+        </table>
+    }
+    </div>
+    <div class="panel five columns">
+    @if (Model.OfferGoalSummaries.Count > 0)
+    {
+        @Html.Partial("GoalVis", Model.OfferGoalSummaries[0])
+    }
+    </div>
 </div>

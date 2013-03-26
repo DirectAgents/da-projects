@@ -22,7 +22,7 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = GetGoals(advId.Value);
+            var goals = AccountRepository.GetGoals(advId.Value, cakeRepo);
             var model = new GoalsModel()
             {
                 Goals = goals
@@ -35,7 +35,7 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = GetGoals(advId.Value);
+            var goals = AccountRepository.GetGoals(advId.Value, cakeRepo);
             return PartialView(goals);
         }
 
@@ -47,7 +47,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            var goalVM = GetGoal(id);
+            var goalVM = AccountRepository.GetGoal(id);
             return DoEdit(goalVM);
         }
 
@@ -81,39 +81,11 @@ namespace ClientPortal.Web.Controllers
         public ActionResult Delete(int id)
         {
             var advId = HomeController.GetAdvertiserId();
-            DeleteGoal(id, advId);
+            AccountRepository.DeleteGoal(id, advId);
             return null;
         }
 
         // --- repository-type methods ---
-
-        private List<GoalVM> GetGoals(int advertiserId)
-        {
-            List<Goal> goals;
-            using (var usersContext = new UsersContext())
-            {
-                goals = usersContext.Goals.Where(g => g.AdvertiserId == advertiserId).ToList();
-            }
-            var offers = cakeRepo.Offers(advertiserId).ToList();
-
-            var goalVMs = from g in goals
-                          join o in offers on g.OfferId equals o.Offer_Id // todo: left join?
-                          select new GoalVM(g, o.OfferName);
-
-            return goalVMs.ToList();
-        }
-
-        private GoalVM GetGoal(int id)
-        {
-            using (var usersContext = new UsersContext())
-            {
-                var goal = usersContext.Goals.Where(g => g.Id == id).FirstOrDefault();
-                if (goal == null)
-                    return null;
-                else
-                    return new GoalVM(goal, null);
-            }
-        }
 
         private void SaveGoal(Goal goal)
         {
@@ -131,22 +103,5 @@ namespace ClientPortal.Web.Controllers
             }
         }
 
-        // returns whether goal was deleted successfully
-        // if an advertiserId is passed in, the goal will only be deleted if its advertiserId matches
-        private bool DeleteGoal(int id, int? advertiserId)
-        {
-            bool deleted = false;
-            using (var usersContext = new UsersContext())
-            {
-                var goal = usersContext.Goals.Where(g => g.Id == id).FirstOrDefault();
-                if (goal != null && (advertiserId == null || goal.AdvertiserId == advertiserId.Value))
-                {
-                    usersContext.Goals.Remove(goal);
-                    usersContext.SaveChanges();
-                    deleted = true;
-                }
-            }
-            return deleted;
-        }
     }
 }

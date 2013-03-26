@@ -193,6 +193,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\AccountRepository.cs" />
     <Compile Include="Models\DashboardModel.cs" />
     <Compile Include="Models\FileUploadInfo.cs" />
     <Compile Include="Models\GoalsModel.cs" />
