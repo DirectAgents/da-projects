@@ -187,6 +187,7 @@
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\GoalsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -198,6 +199,7 @@
     <Compile Include="Models\FileUploadInfo.cs" />
     <Compile Include="Models\GoalsModel.cs" />
     <Compile Include="Models\GoalVM.cs" />
+    <Compile Include="Models\QuickBooksModels.cs" />
     <Compile Include="Models\ScooterRow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -876,6 +878,7 @@
     <Content Include="Views\Reports\_ConversionReportPartial.cshtml" />
     <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GoalTypeEnum.cshtml" />
+    <Content Include="Views\Invoices\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
