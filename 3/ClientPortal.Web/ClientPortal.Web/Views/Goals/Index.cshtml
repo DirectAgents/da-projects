@@ -44,9 +44,18 @@
         win.open();
     }
 
-    function EditGoalSuccess() {
+    function RefreshGoalsAndCloseWindow() {
         RefreshGoalsList();
         $('#windowGoal').data("kendoWindow").close();
+    }
+
+    function DeleteGoal(id, doConfirm) {
+        if (doConfirm && !confirm("Are you sure you want to delete this goal?"))
+            return;
+        var url = '@Url.Action("Delete")';
+        $.post(url, { id: id }, function (data) {
+            RefreshGoalsAndCloseWindow();
+        });
     }
 
     $(function () {

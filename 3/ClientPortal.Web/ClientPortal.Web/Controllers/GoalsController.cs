@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
 {
+    [Authorize]
     public class GoalsController : Controller
     {
         private ICakeRepository cakeRepo;
@@ -76,6 +77,14 @@ namespace ClientPortal.Web.Controllers
             return PartialView("Item", goalVM);
         }
 
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            var advId = HomeController.GetAdvertiserId();
+            DeleteGoal(id, advId);
+            return null;
+        }
+
         // --- repository-type methods ---
 
         private List<GoalVM> GetGoals(int advertiserId)
@@ -120,6 +129,24 @@ namespace ClientPortal.Web.Controllers
                 }
                 usersContext.SaveChanges();
             }
+        }
+
+        // returns whether goal was deleted successfully
+        // if an advertiserId is passed in, the goal will only be deleted if its advertiserId matches
+        private bool DeleteGoal(int id, int? advertiserId)
+        {
+            bool deleted = false;
+            using (var usersContext = new UsersContext())
+            {
+                var goal = usersContext.Goals.Where(g => g.Id == id).FirstOrDefault();
+                if (goal != null && (advertiserId == null || goal.AdvertiserId == advertiserId.Value))
+                {
+                    usersContext.Goals.Remove(goal);
+                    usersContext.SaveChanges();
+                    deleted = true;
+                }
+            }
+            return deleted;
         }
     }
 }

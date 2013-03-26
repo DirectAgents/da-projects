@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
 {
+    [Authorize]
     public class FilesController : Controller
     {
         private ICakeRepository cakeRepo;
