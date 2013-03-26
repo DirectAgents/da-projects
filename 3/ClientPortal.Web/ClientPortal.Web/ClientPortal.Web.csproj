@@ -864,6 +864,9 @@
     <Content Include="Views\Goals\Item.cshtml" />
     <Content Include="Views\Goals\List.cshtml" />
     <Content Include="Views\Goals\Edit.cshtml" />
+    <Content Include="Views\Home\GoalVis.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <None Include="Views\Home\Index.cshtml.exclude" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />

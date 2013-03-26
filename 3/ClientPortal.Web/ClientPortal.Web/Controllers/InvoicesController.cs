@@ -21,7 +21,7 @@ namespace ClientPortal.Web.Controllers
         private List<InvoiceModel> GetInvoices()
         {
             var result = new List<InvoiceModel>();
-            string conStr = @"data source=.;initial catalog=QB_Import_Intl;User Id=sa;Password=sp0ngbOb;";
+            string conStr = @"data source=biz2\da;initial catalog=QB_Import_Intl;User Id=sa;Password=sp0ngbOb;";
             string customerRefListID = "80000103-1285963347";
             string query = "select * from InvoiceLines where [CustomerRefListID]=@1";
             using (var con = new SqlConnection(conStr))
