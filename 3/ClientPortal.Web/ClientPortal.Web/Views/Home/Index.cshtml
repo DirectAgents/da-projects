@@ -73,10 +73,12 @@
                 <dl class="tabs">
                     <dd class="active"><a href="#goals" id="navGoals">Goals</a></dd>
                     <dd><a href="#files" id="navFiles">Files</a></dd>
+                    <dd><a href="#invoices" id="navInvoices">Invoices</a></dd>
                 </dl>
                 <ul class="tabs-content">
                     <li id="goalsTab" class="active"><div id="divGoals"></div></li>
                     <li id="filesTab"><div id="divFiles"></div></li>
+                    <li id="invoicesTab"><div id="divInvoices"></div></li>
                 </ul>
             </div>
         </li>
@@ -239,6 +241,15 @@
                 $("#divFiles").html(html);
             });
         });
+        $("#navInvoices").click(function () {
+            $.ajax({
+                url: '@Url.Action("Index", "Invoices")',
+                cache: false
+            }).done(function (html) {
+                $("#divInvoices").html(html);
+            });
+        });
+
 
         @* Reports *@
         $("#repNav_OffSum").click(function () {
