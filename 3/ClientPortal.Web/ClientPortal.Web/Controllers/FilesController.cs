@@ -12,11 +12,11 @@ namespace ClientPortal.Web.Controllers
 {
     public class FilesController : Controller
     {
-        private IOfferRepository offerRepo;
+        private ICakeRepository cakeRepo;
 
-        public FilesController(IOfferRepository offerRepository)
+        public FilesController(ICakeRepository cakeRepository)
         {
-            this.offerRepo = offerRepository;
+            this.cakeRepo = cakeRepository;
         }
 
         public ActionResult Index()
@@ -95,7 +95,7 @@ namespace ClientPortal.Web.Controllers
                 var csv = new CsvReader(reader);
                 csvRows = csv.GetRecords<ScooterRow>().ToList();
             }
-            var conversions = offerRepo.Conversions.Where(c => c.Advertiser_Id == advId
+            var conversions = cakeRepo.Conversions.Where(c => c.Advertiser_Id == advId
                 && c.ConversionDate >= start && c.ConversionDate < endBefore).ToList();
             var qry = from conv in conversions
                       from csvRow in csvRows
@@ -105,7 +105,7 @@ namespace ClientPortal.Web.Controllers
             //{
             //    item.Conversion.Positive = (item.FTNSO1 == 1);
             //}
-            //offerRepo.SaveChanges();
+            //cakeRepo.SaveChanges();
 
             return null;
         }

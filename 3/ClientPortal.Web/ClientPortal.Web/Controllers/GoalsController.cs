@@ -9,11 +9,11 @@ namespace ClientPortal.Web.Controllers
 {
     public class GoalsController : Controller
     {
-        private IOfferRepository offerRepo;
+        private ICakeRepository cakeRepo;
 
-        public GoalsController(IOfferRepository offerRepository)
+        public GoalsController(ICakeRepository cakeRepository)
         {
-            this.offerRepo = offerRepository;
+            this.cakeRepo = cakeRepository;
         }
 
         public ActionResult Index()
@@ -56,7 +56,7 @@ namespace ClientPortal.Web.Controllers
 
             List<CakeOffer> offers = new List<CakeOffer>();
             if (advId.HasValue)
-                offers = offerRepo.CakeOffers(advId).ToList();
+                offers = cakeRepo.Offers(advId).ToList();
 
             ViewBag.Offers = offers;
 
@@ -85,7 +85,7 @@ namespace ClientPortal.Web.Controllers
             {
                 goals = usersContext.Goals.Where(g => g.AdvertiserId == advertiserId).ToList();
             }
-            var offers = offerRepo.CakeOffers(advertiserId).ToList();
+            var offers = cakeRepo.Offers(advertiserId).ToList();
 
             var goalVMs = from g in goals
                           join o in offers on g.OfferId equals o.Offer_Id // todo: left join?

@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace ClientPortal.Data.Services
 {
-    public class OfferRepository : IOfferRepository
+    public class CakeRepository : ICakeRepository
     {
         CakeContext cakeContext;
 
-        public OfferRepository(CakeContext cakeContext)
+        public CakeRepository(CakeContext cakeContext)
         {
             this.cakeContext = cakeContext;
         }
@@ -20,7 +20,7 @@ namespace ClientPortal.Data.Services
             cakeContext.SaveChanges();
         }
 
-        public IQueryable<CakeOffer> CakeOffers(int? advertiserId)
+        public IQueryable<CakeOffer> Offers(int? advertiserId)
         {
             var offers = cakeContext.CakeOffers.AsQueryable();
             if (advertiserId.HasValue)
@@ -37,7 +37,7 @@ namespace ClientPortal.Data.Services
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
             if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
 
-            var offers = CakeOffers(advertiserId);
+            var offers = Offers(advertiserId);
 
             string currency = null; // Assume all offers for the advertiser have the same currency
             if (offers.Count() > 0) currency = offers.First().Currency;
@@ -64,7 +64,7 @@ namespace ClientPortal.Data.Services
 
             var summaryGroups = dailySummaries.GroupBy(s => s.offer_id);
 
-            var offers = CakeOffers(advertiserId);
+            var offers = Offers(advertiserId);
             var offerInfos = from offer in offers
                              join sumGroup in summaryGroups on offer.Offer_Id equals sumGroup.Key
 //                             join summaryGroup in summaryGroups on offer.Offer_Id equals summaryGroup.Key into gj
@@ -85,7 +85,7 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
-            var offers = CakeOffers(advertiserId);
+            var offers = Offers(advertiserId);
             var offerIds = offers.Select(o => o.Offer_Id).ToList();
 
             string currency = null; // Assume all offers for the advertiser have the same currency
@@ -174,7 +174,7 @@ namespace ClientPortal.Data.Services
             var conversions = GetConversions(start, end, advertiserId, offerId);
             var conversionGroups = conversions.GroupBy(c => c.Offer_Id);
 
-            var offers = CakeOffers(advertiserId);
+            var offers = Offers(advertiserId);
 
             if (offerId.HasValue)
                 offers = offers.Where(o => o.Offer_Id == offerId.Value);

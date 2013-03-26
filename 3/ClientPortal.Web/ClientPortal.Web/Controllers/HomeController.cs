@@ -12,11 +12,11 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private IOfferRepository offerRepo;
+        private ICakeRepository cakeRepo;
 
-        public HomeController(IOfferRepository offerRepository)
+        public HomeController(ICakeRepository cakeRepository)
         {
-            this.offerRepo = offerRepository;
+            this.cakeRepo = cakeRepository;
         }
 
         public ActionResult Index()
@@ -37,11 +37,11 @@ namespace ClientPortal.Web.Controllers
             var oneMonthAgo = new DateTime(firstOfLastMonth.Year, firstOfLastMonth.Month, (now.Day < lastOfLastMonth.Day) ? now.Day : lastOfLastMonth.Day);
             // will be the last day of last month if today's "day" is greater than the number of days in last month
 
-            var summaryMTD = offerRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value);
+            var summaryMTD = cakeRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value);
             summaryMTD.Name = "Month-to-Date";
-            var summaryLMTD = offerRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value);
+            var summaryLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value);
             summaryLMTD.Name = "Last Month-to-Date";
-            var summaryLM = offerRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value);
+            var summaryLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value);
             summaryLM.Name = "Last Month Total";
 
             var model = new DashboardModel

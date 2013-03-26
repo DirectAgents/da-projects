@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace ClientPortal.Data.Contracts
 {
-    public interface IOfferRepository
+    public interface ICakeRepository
     {
         void SaveChanges();
 
-        IQueryable<CakeOffer> CakeOffers(int? advertiserId);
+        IQueryable<CakeOffer> Offers(int? advertiserId);
         DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId);
         IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId);

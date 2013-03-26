@@ -10,11 +10,11 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class ReportsController : Controller
     {
-        private IOfferRepository offerRepo;
+        private ICakeRepository cakeRepo;
 
-        public ReportsController(IOfferRepository offerRepository)
+        public ReportsController(ICakeRepository cakeRepository)
         {
-            this.offerRepo = offerRepository;
+            this.cakeRepo = cakeRepository;
         }
 
         public PartialViewResult OfferSummaryPartial()
@@ -30,7 +30,7 @@ namespace ClientPortal.Web.Controllers
         {
             int? advertiserId = HomeController.GetAdvertiserId();
 
-            var offerInfos = offerRepo.GetOfferInfos(startdate, enddate, advertiserId);
+            var offerInfos = cakeRepo.GetOfferInfos(startdate, enddate, advertiserId);
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             if (offerInfos.Any())
             {
@@ -61,7 +61,7 @@ namespace ClientPortal.Web.Controllers
             if (!enddate.HasValue) enddate = now;
 
             int? advertiserId = HomeController.GetAdvertiserId();
-            var dailyInfos = offerRepo.GetDailyInfos(startdate, enddate, advertiserId);
+            var dailyInfos = cakeRepo.GetDailyInfos(startdate, enddate, advertiserId);
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
 
             if (dailyInfos.Any())
@@ -98,7 +98,7 @@ namespace ClientPortal.Web.Controllers
         public JsonResult ConversionReportData(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
         {
             int? advertiserId = HomeController.GetAdvertiserId();
-            var conversionInfos = offerRepo.GetConversionInfos(startdate, enddate, advertiserId, offerid);
+            var conversionInfos = cakeRepo.GetConversionInfos(startdate, enddate, advertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionInfo>(request, conversionInfos);
             if (conversionInfos.Any())
@@ -116,7 +116,7 @@ namespace ClientPortal.Web.Controllers
         public JsonResult ConversionSummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
         {
             int? advertiserId = HomeController.GetAdvertiserId();
-            var conversionSummaries = offerRepo.GetConversionSummaries(startdate, enddate, advertiserId, offerid);
+            var conversionSummaries = cakeRepo.GetConversionSummaries(startdate, enddate, advertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionSummary>(request, conversionSummaries);
             // todo: aggregates?
@@ -139,7 +139,7 @@ namespace ClientPortal.Web.Controllers
         {
             int? advertiserId = HomeController.GetAdvertiserId();
 
-            var monthlyInfos = offerRepo
+            var monthlyInfos = cakeRepo
                 .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
                 .Where(i => i.CampaignStatusId == CampaignStatus.Verified); // TODO: filter by AccountingStatus (or combine into one row)
 
