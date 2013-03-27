@@ -37,6 +37,9 @@
     </div>
 </div>
 
+@{
+    string firstCreateChartCall = null;
+}
 <div class="row">
     <div class="panel six columns">
         <h4>Offers / Goals</h4>
@@ -52,9 +55,11 @@
             var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
             var goalString = "Goal: [" + goal.MetricId + ": " + goal.TargetFormattedBasedOn(offersum.SummaryLM) + "]";
             var heading = offersum.Offer.OfferName.Replace("'", "");
+            var createChartCall = "CreateChart('" +goal.MetricId+ "', [" +dataLastMonth+ ", " +dataThisMonth+ ", " +dataGoal+ "], '" +valueFormat+ "', '" +goal.Culture+ "', '" +goalString+ "', '" +heading+ "')";
+            if (firstCreateChartCall == null) { firstCreateChartCall = createChartCall; }
 
             @goalString
-            <a href="#" onclick="CreateChart('@goal.MetricId', [@dataLastMonth, @dataThisMonth, @dataGoal], '@valueFormat', '@goal.Culture', '@goalString', '@heading'); return false">chart</a>
+            <a href="#" onclick="@createChartCall; return false">chart</a>
             <br />
         }
         <table>
@@ -83,3 +88,9 @@
     }
     </div>
 </div>
+
+<script>
+    $(function () {
+        @Html.Raw(firstCreateChartCall);
+    });
+</script>

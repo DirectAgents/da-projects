@@ -1,11 +1,4 @@
 ﻿@model ClientPortal.Web.Models.OfferGoalSummary
-@{
-    var goal = Model.Goals[0];
-    var dataGoal = goal.TargetBasedOn(Model.SummaryLM);
-    var dataLastMonth = goal.ValueFor(Model.SummaryLM);
-    var dataThisMonth = goal.ValueFor(Model.SummaryMTD);
-    var goalString = "Goal: [" + goal.MetricId + ": " + goal.TargetFormattedBasedOn(Model.SummaryLM) + "]";
-}
 
 <div id="goalChartHeading"></div>
 
@@ -43,14 +36,4 @@
             }
         });
     }
-
-    $(function () {
-        var metric = "@goal.MetricId";
-        var values = [@dataLastMonth, @dataThisMonth, @dataGoal];
-        var valueFormat = "@(goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0")";
-        var culture = "@Model.Culture"; // e.g. "de-DE";
-        var goalString = "@goalString";
-        var heading = "@Model.Offer.OfferName.Replace("'", "")";
-        CreateChart(metric, values, valueFormat, culture, goalString, heading);
-    });
 </script>
