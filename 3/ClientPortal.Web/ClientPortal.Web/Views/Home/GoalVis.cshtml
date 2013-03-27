@@ -1,35 +1,25 @@
 ﻿@model ClientPortal.Web.Models.OfferGoalSummary
 @{
     var goal = Model.Goals[0];
-    int dataLastMonth = 0, dataThisMonth = 0, dataGoal = (int)goal.Target;
-    switch (goal.MetricId) {
-        case ClientPortal.Web.Models.MetricEnum.Clicks:
-            dataLastMonth = Model.SummaryLM.Clicks;
-            dataThisMonth = Model.SummaryMTD.Clicks;
-            break;
-        case ClientPortal.Web.Models.MetricEnum.Leads:
-            dataLastMonth = Model.SummaryLM.Conversions;
-            dataThisMonth = Model.SummaryMTD.Conversions;
-            break;
-        case ClientPortal.Web.Models.MetricEnum.Spend:
-            dataLastMonth = (int)Model.SummaryLM.Revenue;
-            dataThisMonth = (int)Model.SummaryMTD.Revenue;
-            break;
-    }
+    var dataGoal = goal.TargetBasedOn(Model.SummaryLM);
+    var dataLastMonth = goal.ValueFor(Model.SummaryLM);
+    var dataThisMonth = goal.ValueFor(Model.SummaryMTD);
+    var goalString = "Goal: [" + goal.MetricId + ": " + goal.TargetFormattedBasedOn(Model.SummaryLM) + "]";
 }
 
-@goal.MetricId: @goal.TargetFormatted
+<div id="goalChartHeading"></div>
 
 <div class="chart-wrapper">
     <div id="goalChart"></div>
 </div>
 
 <script>
-    function CreateChart(metric, values, valueFormat, culture) {
+    function CreateChart(metric, values, valueFormat, culture, goalString, heading) {
+        $('#goalChartHeading').html(heading);
         kendo.culture(culture);
         $("#goalChart").kendoChart({
             title: {
-                text: "Goal"
+                text: goalString
             },
             legend: {
                 visible: false
@@ -59,6 +49,8 @@
         var values = [@dataLastMonth, @dataThisMonth, @dataGoal];
         var valueFormat = "@(goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0")";
         var culture = "@Model.Culture"; // e.g. "de-DE";
-        CreateChart(metric, values, valueFormat, culture);
+        var goalString = "@goalString";
+        var heading = "@Model.Offer.OfferName.Replace("'", "")";
+        CreateChart(metric, values, valueFormat, culture, goalString, heading);
     });
 </script>

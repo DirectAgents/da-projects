@@ -29,16 +29,9 @@ namespace ClientPortal.Web.Models
         {
             get {
                 if (TypeId == GoalTypeEnum.Absolute)
-                {
-                    if (MetricId == MetricEnum.Spend)
-                        return String.Format(new CultureInfo(Culture), "{0:c}", Target);
-                    else
-                        return String.Format("{0:n0}", Target);
-                }
+                    return FormatSomeTarget(Target);
                 else // Percent
-                {
                     return String.Format("{0:n1}", Target) + "%";
-                }
             }
         }
 
@@ -65,6 +58,52 @@ namespace ClientPortal.Web.Models
             this.Id = -1;
             this.TypeId = GoalTypeEnum.Absolute;
             this.MetricId = MetricEnum.Leads;
+        }
+
+        // e.g. "1,000", "$1,000", "10.5% (1,105)", "10.5% ($1,105)"
+        public string TargetFormattedBasedOn(DateRangeSummary rangeSummary)
+        {
+            if (TypeId == GoalTypeEnum.Absolute)
+                return TargetFormatted;
+            else // Percent
+                return TargetFormatted + " (" + FormatSomeTarget(TargetBasedOn(rangeSummary)) + ")";
+        }
+
+        public decimal TargetBasedOn(DateRangeSummary rangeSummary)
+        {
+            if (TypeId == GoalTypeEnum.Absolute)
+                return Target;
+            else
+            { // for Percent goal...
+                var baseVal = ValueFor(rangeSummary);
+                var multiplier = 1 + (Target / 100);
+                return baseVal * multiplier;
+            }
+        }
+
+        public decimal ValueFor(DateRangeSummary rangeSummary)
+        {
+            switch (MetricId)
+            {
+                case MetricEnum.Clicks:
+                    return rangeSummary.Clicks;
+                case MetricEnum.Leads:
+                    return rangeSummary.Conversions;
+                case MetricEnum.Spend:
+                    return rangeSummary.Revenue;
+                default:
+                    return 0;
+            }
+        }
+
+        // --- helper methods ---
+
+        private string FormatSomeTarget(decimal someTarget) // ...based on this goal's metric
+        {
+            if (MetricId == MetricEnum.Spend)
+                return String.Format(new CultureInfo(Culture), "{0:c}", someTarget);
+            else
+                return String.Format("{0:n0}", someTarget);
         }
     }
 }

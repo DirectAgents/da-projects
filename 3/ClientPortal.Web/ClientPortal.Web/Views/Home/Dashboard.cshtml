@@ -43,9 +43,19 @@
     @foreach (var offersum in Model.OfferGoalSummaries)
     {
         <b>@offersum.Offer.OfferName</b><br />
-        foreach (var goal in offersum.Goals)
+        for (var i=0; i < offersum.Goals.Count; i++)
         {
-            <text>Goal: [@goal.MetricId: @goal.TargetFormatted]</text><br />
+            var goal = offersum.Goals[i];
+            var dataGoal = goal.TargetBasedOn(offersum.SummaryLM);
+            var dataLastMonth = goal.ValueFor(offersum.SummaryLM);
+            var dataThisMonth = goal.ValueFor(offersum.SummaryMTD);
+            var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
+            var goalString = "Goal: [" + goal.MetricId + ": " + goal.TargetFormattedBasedOn(offersum.SummaryLM) + "]";
+            var heading = offersum.Offer.OfferName.Replace("'", "");
+
+            @goalString
+            <a href="#" onclick="CreateChart('@goal.MetricId', [@dataLastMonth, @dataThisMonth, @dataGoal], '@valueFormat', '@goal.Culture', '@goalString', '@heading'); return false">chart</a>
+            <br />
         }
         <table>
             <tr>
