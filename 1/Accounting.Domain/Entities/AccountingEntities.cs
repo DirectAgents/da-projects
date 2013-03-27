@@ -488,6 +488,7 @@ namespace Accounting.Domain.Entities
         [MaxLength(110)]
         public string FQTxnLinkKey { get; set; }
     }
+
     public partial class InvoiceLinkedTxn
     {
         [Key, Column(Order = 0)]

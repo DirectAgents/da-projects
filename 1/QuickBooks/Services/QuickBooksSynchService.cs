@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-//using System.Data.Entity.Design.PluralizationServices;
 using System.Data.Entity.Migrations;
 using System.Data.Odbc;
 using System.Globalization;
@@ -15,7 +14,6 @@ namespace QuickBooks.Services
     public class QuickBooksSynchService
     {
         string qodbcConnectionString = @"DSN=QuickBooks Data;SERVER=QODBC;OptimizerDBFolder=%UserProfile%\QODBC Driver for QuickBooks\Optimizer;OptimizerAllowDirtyReads=N;SyncFromOtherTables=Y;IAppReadOnly=Y";
-//        PluralizationService pluralizationService = PluralizationService.CreateService(CultureInfo.CurrentCulture);
         readonly int companyID;
 
         public QuickBooksSynchService(string companyName)
