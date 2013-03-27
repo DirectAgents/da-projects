@@ -42,7 +42,7 @@ namespace ClientPortal.Web.Controllers
             var summaryLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value, null);
             summaryLMTD.Name = "Last Month-to-Date";
             var summaryLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value, null);
-            summaryLM.Name = "Last Month Total";
+            summaryLM.Name = "Last Month-Total";
 
             var offers = cakeRepo.Offers(advertiserId);
 
@@ -57,7 +57,7 @@ namespace ClientPortal.Web.Controllers
                 var offsumLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value, offerId);
                 offsumLMTD.Name = "Last Month-to-Date";
                 var offsumLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value, offerId);
-                offsumLM.Name = "Last Month Total";
+                offsumLM.Name = "Last Month-Total";
 
                 var offer = offers.Where(o => o.Offer_Id == offerId).FirstOrDefault();
                 var offerGoalSummary = new OfferGoalSummary()
