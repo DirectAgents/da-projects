@@ -1,16 +1,32 @@
 ﻿@model ClientPortal.Web.Models.OfferGoalSummary
 @{
     var goal = Model.Goals[0];
+    int dataLastMonth = 0, dataThisMonth = 0, dataGoal = (int)goal.Target;
+    switch (goal.MetricId) {
+        case ClientPortal.Web.Models.MetricEnum.Clicks:
+            dataLastMonth = Model.SummaryLM.Clicks;
+            dataThisMonth = Model.SummaryMTD.Clicks;
+            break;
+        case ClientPortal.Web.Models.MetricEnum.Leads:
+            dataLastMonth = Model.SummaryLM.Conversions;
+            dataThisMonth = Model.SummaryMTD.Conversions;
+            break;
+        case ClientPortal.Web.Models.MetricEnum.Spend:
+            dataLastMonth = (int)Model.SummaryLM.Revenue;
+            dataThisMonth = (int)Model.SummaryMTD.Revenue;
+            break;
+    }
 }
 
-@goal.MetricId: @String.Format("{0:n0}", goal.Target)
+@goal.MetricId: @goal.TargetFormatted
 
 <div class="chart-wrapper">
     <div id="goalChart"></div>
 </div>
 
 <script>
-    function createChart() {
+    function CreateChart(metric, values, valueFormat, culture) {
+        kendo.culture(culture);
         $("#goalChart").kendoChart({
             title: {
                 text: "Goal"
@@ -22,21 +38,27 @@
                 type: "column"
             },
             series: [{
-                name: "Clicks",
-                data: [0,0]
+                name: metric,
+                data: values
             }],
             valueAxis: {
-                line: {
-                    visible: false
-                }
+                labels: { format: valueFormat }
             },
             categoryAxis: {
-                categories: ["Last Month", "This Month", "Goal"]
+                categories: ["Last Month", "This Month to-date", "Goal"]
+            },
+            tooltip: {
+                visible: true,
+                format: valueFormat
             }
         });
     }
 
     $(function () {
-        createChart();
+        var metric = "@goal.MetricId";
+        var values = [@dataLastMonth, @dataThisMonth, @dataGoal];
+        var valueFormat = "@(goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0")";
+        var culture = "@Model.Culture"; // e.g. "de-DE";
+        CreateChart(metric, values, valueFormat, culture);
     });
 </script>

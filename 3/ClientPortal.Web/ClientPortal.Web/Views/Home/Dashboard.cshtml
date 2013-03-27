@@ -45,7 +45,7 @@
         <b>@offersum.Offer.OfferName</b><br />
         foreach (var goal in offersum.Goals)
         {
-            <text>Goal: [@goal.MetricId: @String.Format("{0:n0}", goal.Target)@(goal.TypeId == ClientPortal.Web.Models.GoalTypeEnum.Percent ? "%" : "")]</text><br />
+            <text>Goal: [@goal.MetricId: @goal.TargetFormatted]</text><br />
         }
         <table>
             <tr>

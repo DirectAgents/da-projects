@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ClientPortal.Data.DTOs;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace ClientPortal.Web.Models
 {
@@ -22,7 +25,30 @@ namespace ClientPortal.Web.Models
         [Required]
         public decimal Target { get; set; }
 
-        public GoalVM(Goal goal, string offerName)
+        public string TargetFormatted
+        {
+            get {
+                if (TypeId == GoalTypeEnum.Absolute)
+                {
+                    if (MetricId == MetricEnum.Spend)
+                        return String.Format(new CultureInfo(Culture), "{0:c}", Target);
+                    else
+                        return String.Format("{0:n0}", Target);
+                }
+                else // Percent
+                {
+                    return String.Format("{0:n1}", Target) + "%";
+                }
+            }
+        }
+
+        public string Currency
+        {
+            set { Culture = OfferInfo.CurrencyToCulture(value); }
+        }
+        public string Culture { get; set; }
+
+        public GoalVM(Goal goal, string offerName, string currency)
         {
             this.Id = goal.Id;
             this.Name = goal.Name;
@@ -31,6 +57,7 @@ namespace ClientPortal.Web.Models
             this.OfferName = offerName;
             this.MetricId = goal.MetricId;
             this.Target = goal.Target;
+            this.Currency = currency;
         }
 
         public GoalVM()

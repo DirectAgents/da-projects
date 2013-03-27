@@ -19,7 +19,7 @@ namespace ClientPortal.Web.Models
 
             var goalVMs = from g in goals
                           join o in offers on g.OfferId equals o.Offer_Id // todo: left join?
-                          select new GoalVM(g, o.OfferName);
+                          select new GoalVM(g, o.OfferName, o.Currency);
 
             return goalVMs.ToList();
         }
@@ -32,7 +32,7 @@ namespace ClientPortal.Web.Models
                 if (goal == null)
                     return null;
                 else
-                    return new GoalVM(goal, null);
+                    return new GoalVM(goal, null, null);
             }
         }
 

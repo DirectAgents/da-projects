@@ -73,7 +73,7 @@ namespace ClientPortal.Web.Controllers
                 goal.AdvertiserId = advId.Value;
                 SaveGoal(goal);
             }
-            var goalVM = new GoalVM(goal, null);
+            var goalVM = new GoalVM(goal, null, null);
             return PartialView("Item", goalVM);
         }
 
