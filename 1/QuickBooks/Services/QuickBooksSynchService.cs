@@ -46,17 +46,17 @@ namespace QuickBooks.Services
                 var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    var t = new T();
+                    var extracted = new T();
 
                     // Set half of the primary key
-                    typeof(Customer).GetProperty("CompanyId").SetValue(t, this.companyID, null);
+                    typeof(Customer).GetProperty("CompanyId").SetValue(extracted, this.companyID, null);
 
                     // Initialize all DateTime fields
                     foreach (var datePI in from p in typeof(Customer).GetProperties()
                                            where p.PropertyType == typeof(DateTime)
                                            select p)
                     {
-                        datePI.SetValue(t, new DateTime(1900, 1, 1), null);
+                        datePI.SetValue(extracted, new DateTime(1900, 1, 1), null);
                     }
 
                     // Auto-map the fields
@@ -66,11 +66,11 @@ namespace QuickBooks.Services
                         object colValue = reader[colName];
                         if ((colValue != DBNull.Value) && (colValue != null))
                         {
-                            typeof(Customer).GetProperty(colName).SetValue(t, colValue, null);
+                            typeof(Customer).GetProperty(colName).SetValue(extracted, colValue, null);
                         }
                     }
 
-                    yield return t;
+                    yield return extracted;
                 }
             }
         }
