@@ -62,13 +62,14 @@ namespace ClientPortal.Data.Services
                                  select ds;
             }
             string currency = null; // Assume all offers for the advertiser have the same currency
-            if (offers.Count() > 0) currency = offers.First().Currency;
+            if (offers.Any()) currency = offers.First().Currency;
 
+            var any = dailySummaries.Any();
             DateRangeSummary ai = new DateRangeSummary()
             {
-                Clicks = dailySummaries.Sum(ds => ds.clicks),
-                Conversions = dailySummaries.Sum(ds => ds.conversions),
-                Revenue = dailySummaries.Sum(ds => ds.revenue),
+                Clicks = any ? dailySummaries.Sum(ds => ds.clicks) : 0,
+                Conversions = any ? dailySummaries.Sum(ds => ds.conversions) : 0,
+                Revenue = any ? dailySummaries.Sum(ds => ds.revenue) : 0,
                 Currency = currency
             };
             return ai;

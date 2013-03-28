@@ -203,9 +203,13 @@
     }
 
     function RefreshGrid(grid) {
-        $('#' + grid + 'Grid').data('kendoGrid').dataSource.read();
-        if ($('#' + grid + 'Chart').length > 0)
-            $('#' + grid + 'Chart').data('kendoChart').dataSource.read();
+        var gridDataSource = $('#' + grid + 'Grid').data('kendoGrid').dataSource;
+        gridDataSource.read();
+        if ($('#' + grid + 'Chart').length > 0) {
+            var chartDataSource = $('#' + grid + 'Chart').data('kendoChart').dataSource;
+            if (chartDataSource !== gridDataSource)
+                chartDataSource.read();
+        }
         $('#' + grid + '_filterBtn').attr('disabled', true);
     }
 
@@ -217,7 +221,7 @@
 
     function ResizeChart(chart, refresh) {
         var offset = 0;
-        if (chart == 'daysum') offset = 210;
+        if (chart == 'daysum') offset = 225;
 
         if ($('#' + chart + 'ChartSection').length > 0) {
             var w = $('#' + chart + 'ChartSection').width();
@@ -380,6 +384,7 @@
 
                 $('#offsumGrid').kendoGrid({
                     dataSource: dataSource,
+                    autoBind: false,
                     height: 400,
                     columns: [
                         { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
@@ -387,7 +392,7 @@
                         { field: 'Format', width: 80 },
                         { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
                         { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                        { field: 'Conversions', title: 'Leads', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                         { field: 'Revenue', title: 'Total', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                     ],
                     filterable: true,
@@ -399,12 +404,13 @@
                 });
                 $('#offsum_startdate').kendoDatePicker();
                 $('#offsum_enddate').kendoDatePicker();
-                setTimeout(function () { CreateOffSumChart(); }, 400);
+                CreateOffSumChart(dataSource);
+                dataSource.read();
             }
-            function CreateOffSumChart() {
-                var dataSource = $('#offsumGrid').data("kendoGrid").dataSource;
-
+            function CreateOffSumChart(dataSource) {
                 $("#offsumChart").kendoChart({
+                    dataSource: dataSource,
+                    autoBind: false,
                     chartArea: {
                         height: 200
                     },
@@ -412,9 +418,8 @@
                     title: {
                         text: ""
                     },
-                    dataSource: dataSource,
                     series: [
-                        { field: "Conversions", name: "Conversions" }
+                        { field: "Conversions", name: "Leads" }
                     ],
                     categoryAxis: {
                         field: "OfferId",
@@ -512,7 +517,7 @@
                         { field: 'Date', width: 60, format: '{0:d}' },
                         { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                         { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'Conversions', title: 'Conv.', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                        { field: 'Conversions', title: 'Leads', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                         { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p1}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                         { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                         { field: 'EPC', title: 'Per Click', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
