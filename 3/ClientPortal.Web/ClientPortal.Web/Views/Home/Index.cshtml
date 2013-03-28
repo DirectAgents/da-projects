@@ -464,7 +464,7 @@
                     serverSorting: true,
                     serverFiltering: true,
                     serverAggregates: true,
-                    pageSize: 62,
+                    pageSize: 100,
                     transport: {
                         read: {
                             type: 'post',
@@ -512,6 +512,7 @@
 
                 $('#daysumGrid').kendoGrid({
                     dataSource: dataSource,
+                    autoBind: false,
                     height: 400,
                     columns: [
                         { field: 'Date', width: 60, format: '{0:d}' },
@@ -522,10 +523,8 @@
                         { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                         { field: 'EPC', title: 'Per Click', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
                     ],
-                    filterable: true,
-                    sortable: {
-                        mode: 'multiple'
-                    },
+                    filterable: false,
+                    sortable: false,
                     pageable: true
                     //dataBinding: function (e) {
                     //    var data = $('#dailySummaryGrid').data("kendoGrid").dataSource.data();
@@ -536,13 +535,14 @@
                 });
                 $('#daysum_startdate').kendoDatePicker();
                 $('#daysum_enddate').kendoDatePicker();
-                setTimeout(function () { CreateDaySumChart(); }, 400);
+                CreateDaySumChart(dataSource);
+                dataSource.read();
                 $(".configuration").bind("change", RefreshDaySumChart);
             }
-            function CreateDaySumChart() {
-                var dataSource = $('#daysumGrid').data("kendoGrid").dataSource;
-
+            function CreateDaySumChart(dataSource) {
                 $("#daysumChart").kendoChart({
+                    dataSource: dataSource,
+                    autoBind: false,
                     chartArea: {
                         height: 200
                     },
@@ -550,7 +550,6 @@
                     title: {
                         text: ""
                     },
-                    dataSource: dataSource,
                     series: [
                         { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks", axis: "clicks" },
                         { type: "line", aggregate: "sum", field: "Revenue", name: "Spend", axis: "spend", tooltip: { format: "C" } }

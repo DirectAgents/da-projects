@@ -41,6 +41,12 @@ namespace ClientPortal.Web.Controllers
             if (advertiserId == null) return null;
 
             var now = DateTime.Now;
+
+            var firstOfWeek = new DateTime(now.Year, now.Month, now.Day);
+            while (firstOfWeek.DayOfWeek != DayOfWeek.Sunday)
+            {
+                firstOfWeek = firstOfWeek.AddDays(-1);
+            }
             var firstOfMonth = new DateTime(now.Year, now.Month, 1);
             var firstOfLastMonth = firstOfMonth.AddMonths(-1);
             var lastOfLastMonth = firstOfMonth.AddDays(-1);
@@ -48,6 +54,8 @@ namespace ClientPortal.Web.Controllers
             var oneMonthAgo = new DateTime(firstOfLastMonth.Year, firstOfLastMonth.Month, (now.Day < lastOfLastMonth.Day) ? now.Day : lastOfLastMonth.Day);
             // will be the last day of last month if today's "day" is greater than the number of days in last month
 
+            var summaryWTD = cakeRepo.GetDateRangeSummary(firstOfWeek, now, advertiserId.Value, null);
+            summaryWTD.Name = "Week-to-Date";
             var summaryMTD = cakeRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value, null);
             summaryMTD.Name = "Month-to-Date";
             var summaryLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value, null);
@@ -82,7 +90,7 @@ namespace ClientPortal.Web.Controllers
 
             var model = new DashboardModel
             {
-                AdvertiserSummaries = new List<DateRangeSummary> { summaryMTD, summaryLMTD, summaryLM },
+                AdvertiserSummaries = new List<DateRangeSummary> { summaryWTD, summaryMTD, summaryLMTD, summaryLM },
                 OfferGoalSummaries = offerGoalSummaries
             };
             return PartialView(model);
