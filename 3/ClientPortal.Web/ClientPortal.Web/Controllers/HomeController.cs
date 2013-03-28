@@ -1,4 +1,5 @@
-﻿using ClientPortal.Data.Contracts;
+﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using System;
@@ -21,12 +22,22 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var model = new IndexModel()
+            {
+                Advertiser = GetAdvertiser()
+            };
+            return View(model);
+        }
+
+        public ActionResult Contact()
+        {
+            var model = GetAdvertiser();
+            return PartialView(model);
         }
 
         public PartialViewResult Dashboard()
         {
-            int? advertiserId = HomeController.GetAdvertiserId();
+            int? advertiserId = GetAdvertiserId();
             if (advertiserId == null) return null;
 
             var now = DateTime.Now;
@@ -77,6 +88,15 @@ namespace ClientPortal.Web.Controllers
             return PartialView(model);
         }
 
+        public CakeAdvertiser GetAdvertiser()
+        {
+            int? advId = GetAdvertiserId();
+            if (advId.HasValue)
+                return cakeRepo.Advertiser(advId.Value);
+            else
+                return null;
+        }
+
         public static int? GetAdvertiserId()
         {
             int? advertiserId = null;
@@ -95,20 +115,6 @@ namespace ClientPortal.Web.Controllers
         }
 
         // ---
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your app description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
 
         public ActionResult Foundation()
         {

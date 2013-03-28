@@ -9,6 +9,8 @@ namespace ClientPortal.Data.Contracts
     {
         void SaveChanges();
 
+        IQueryable<CakeAdvertiser> Advertisers { get; }
+        CakeAdvertiser Advertiser(int advertiserId);
         IQueryable<CakeOffer> Offers(int? advertiserId);
         DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId, int? offerId);
         IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId);

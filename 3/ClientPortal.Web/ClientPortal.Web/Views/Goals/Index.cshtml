@@ -25,13 +25,15 @@
 
     function RefreshGoalsList() {
         var url = '@Url.Action("List")';
-        $('#divGoalsList').load(url);
+        $.ajax({ url: url, cache: false }).done(function (data) {
+            $('#divGoalsList').html(data);
+        });
     }
 
     function EditGoal(id) {
         BeginEditGoal();
         var url = '@Url.Action("Edit")';
-        $.get(url, { id: id }, function (data) {
+        $.ajax({ url: url, data: { id: id }, cache: false }).done(function(data) {
             $('#windowGoal').html(data);
             EnableValidation('#editGoalWrapper');
         });
@@ -53,7 +55,7 @@
         if (doConfirm && !confirm("Are you sure you want to delete this goal?"))
             return;
         var url = '@Url.Action("Delete")';
-        $.post(url, { id: id }, function (data) {
+        $.ajax({ url: url, data: { id: id }, type: 'post', cache: false }).done(function(data) {
             RefreshGoalsAndCloseWindow();
         });
     }

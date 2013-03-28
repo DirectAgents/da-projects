@@ -20,6 +20,17 @@ namespace ClientPortal.Data.Services
             cakeContext.SaveChanges();
         }
 
+        public IQueryable<CakeAdvertiser> Advertisers
+        {
+            get { return cakeContext.CakeAdvertisers; }
+        }
+
+        public CakeAdvertiser Advertiser(int advertiserId)
+        {
+            var advertiser = cakeContext.CakeAdvertisers.Where(a => a.Advertiser_Id == advertiserId).FirstOrDefault();
+            return advertiser;
+        }
+
         public IQueryable<CakeOffer> Offers(int? advertiserId)
         {
             var offers = cakeContext.CakeOffers.AsQueryable();

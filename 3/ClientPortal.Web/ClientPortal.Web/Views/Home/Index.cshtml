@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ClientPortal.Web.Models.IndexModel
+
+@{
     var now = DateTime.Now;
     var sunday = now;
     while (sunday.DayOfWeek != DayOfWeek.Sunday) { sunday = sunday.AddDays(-1); }
@@ -43,8 +45,12 @@
             <dd><a href="#vertical2" id="vertNav_Reports">Reports</a></dd>
             <dd><a href="#vertical3" id="vertNav_MyAccount">My Account</a></dd>
             <dd><a href="#vertical4" id="vertNav_Notifications">Notifications</a></dd>
-            <dd><a href="#vertical5" id="vertNav_Contacts">Contacts</a></dd>
         </dl>
+        <div>
+            <h5>Account Manager</h5>
+            @(Model.Advertiser != null ? Model.Advertiser.AccountManagerName : "")
+            <br />email...
+        </div>
     </div>
     <ul class="tabs-content">
         <li id="vertical1Tab" class="active">
@@ -74,16 +80,17 @@
                     <dd class="active"><a href="#goals" id="navGoals">Goals</a></dd>
                     <dd><a href="#files" id="navFiles">Files</a></dd>
                     <dd><a href="#invoices" id="navInvoices">Invoices</a></dd>
+                    <dd><a href="#contact" id="navContact">Contact</a></dd>
                 </dl>
                 <ul class="tabs-content">
                     <li id="goalsTab" class="active"><div id="divGoals"></div></li>
                     <li id="filesTab"><div id="divFiles"></div></li>
                     <li id="invoicesTab"><div id="divInvoices"></div></li>
+                    <li id="contactTab"><div id="divContact"></div></li>
                 </ul>
             </div>
         </li>
-        <li id="vertical4Tab">4</li>
-        <li id="vertical5Tab">5</li>
+        <li id="vertical4Tab"><h3>Notifications</h3></li>
     </ul>
 </div>
 <footer class="row">
@@ -251,6 +258,15 @@
                 cache: false
             }).done(function (html) {
                 $("#divInvoices").html(html);
+            });
+        });
+        $("#navContact").one("click", function () {
+            $("#divContact").html('Loading...');
+            $.ajax({
+                url: '@Url.Action("Contact", "Home")',
+                cache: false
+            }).done(function (html) {
+                $("#divContact").html(html);
             });
         });
 
