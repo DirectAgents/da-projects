@@ -27,7 +27,17 @@
             }
             </table>
         </div>
+    </div>
 
+    <div class="six columns panel">
+        @Html.Partial("PerformanceVis")
+    </div>
+</div>
+@{
+    var createPerfChartCall = "CreatePerformanceChart([" + Model.SummaryLM.Conversions + "," + Model.SummaryMTD.Conversions + "], 'N0', '" + Model.Culture + "', 'Performance This Month vs. Prior: Leads', 220)";
+}
+<div class="row">
+    <div class="six columns">
         <div class="panel">
             <h4>Offers / Goals</h4>
         @foreach (var offersum in Model.OfferGoalSummaries)
@@ -43,7 +53,7 @@
                 var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
                 var goalString = "Goal: [" + goal.MetricId + ": " + goal.TargetFormattedBasedOn(offersum.SummaryLM) + "]";
                 var heading = offersum.Offer.OfferName.Replace("'", "");
-                var createChartCall = "CreateChart('" +goal.MetricId+ "', [" +dataLastMonthToDate+ "," +dataLastMonthTotal+ "," +dataThisMonthToDate+ "," +dataGoal+ "], '" +valueFormat+ "', '" +goal.Culture+ "', '" +goalString+ "', '" +heading+ "')";
+                var createChartCall = "CreateGoalChart('" +goal.MetricId+ "', [" +dataLastMonthToDate+ "," +dataLastMonthTotal+ "," +dataThisMonthToDate+ "," +dataGoal+ "], '" +valueFormat+ "', '" +goal.Culture+ "', '" +goalString+ "', '" +heading+ "')";
                 if (firstCreateChartCall == null) { firstCreateChartCall = createChartCall; }
 
                 @goalString
@@ -74,7 +84,7 @@
     <div class="panel six columns">
     @if (Model.OfferGoalSummaries.Count > 0)
     {
-        @Html.Partial("GoalVis", Model.OfferGoalSummaries[0])
+        @Html.Partial("GoalVis")
     }
     </div>
 </div>
@@ -82,5 +92,6 @@
 <script>
     $(function () {
         @Html.Raw(firstCreateChartCall);
+        @Html.Raw(createPerfChartCall);
     });
 </script>

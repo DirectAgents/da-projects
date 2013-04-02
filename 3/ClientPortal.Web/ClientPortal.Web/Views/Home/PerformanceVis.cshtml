@@ -1,16 +1,16 @@
-﻿<div id="goalChartHeading"></div>
-
-<div class="chart-wrapper">
-    <div id="goalChart"></div>
+﻿<div class="chart-wrapper">
+    <div id="perfChart"></div>
 </div>
 
 <script>
-    function CreateGoalChart(metric, values, valueFormat, culture, goalString, heading) {
-        $('#goalChartHeading').html(heading);
+    function CreatePerformanceChart(values, valueFormat, culture, title, height) {
         kendo.culture(culture);
-        $("#goalChart").kendoChart({
+        $("#perfChart").kendoChart({
+            chartArea: {
+                height: height
+            },
             title: {
-                text: goalString
+                text: title
             },
             legend: {
                 visible: false
@@ -19,14 +19,13 @@
                 type: "column"
             },
             series: [{
-                name: metric,
                 data: values
             }],
             valueAxis: {
                 labels: { format: valueFormat }
             },
             categoryAxis: {
-                categories: ["Last Month-to-Date", "Last Month-Total", "This Month-to-Date", "Goal"]
+                categories: ["Last Month", "MTD"]
             },
             tooltip: {
                 visible: true,

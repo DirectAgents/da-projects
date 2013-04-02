@@ -9,6 +9,11 @@ namespace ClientPortal.Web.Models
         public List<DateRangeSummary> AdvertiserSummaries { get; set; }
         public List<OfferGoalSummary> OfferGoalSummaries { get; set; }
 
+        public DateRangeSummary SummaryWTD { get { return (AdvertiserSummaries.Count >= 1) ? AdvertiserSummaries[0] : null; } }
+        public DateRangeSummary SummaryMTD { get { return (AdvertiserSummaries.Count >= 2) ? AdvertiserSummaries[1] : null; } }
+        public DateRangeSummary SummaryLMTD { get { return (AdvertiserSummaries.Count >= 3) ? AdvertiserSummaries[2] : null; } }
+        public DateRangeSummary SummaryLM { get { return (AdvertiserSummaries.Count >= 4) ? AdvertiserSummaries[3] : null; } }
+
         public string Culture { get { return (AdvertiserSummaries.Count > 0) ? AdvertiserSummaries[0].Culture : null; } }
     }
 
