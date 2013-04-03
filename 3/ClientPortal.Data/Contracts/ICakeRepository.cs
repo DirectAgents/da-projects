@@ -12,7 +12,9 @@ namespace ClientPortal.Data.Contracts
         IQueryable<CakeAdvertiser> Advertisers { get; }
         CakeAdvertiser Advertiser(int advertiserId);
         IQueryable<CakeOffer> Offers(int? advertiserId);
+        IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int advertiserId, int? offerId, out string currency);
         DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId, int? offerId);
+        IQueryable<MonthlyInfo> GetMonthlyInfosFromDaily(DateTime? start, DateTime? end, int advertiserId, int? offerId);
         IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId);

@@ -6,6 +6,7 @@
 
     var today = now.ToShortDateString();
     var firstOfMonth = firstOfMonthDT.ToShortDateString();
+    var firstOfYear = new DateTime(now.Year, 1, 1).ToShortDateString();
     var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToShortDateString();
     var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToShortDateString();
 }
@@ -50,9 +51,19 @@
         </div>
     </div>
     <div class="six columns panel">
-        <b>Budget Spent Month to Date</b>
-        <div class="chart-wrapper">
-            <div id="spendMultiBarChart"></div>
+        <div id="divSpendMultiBarMTD">
+            <b>Budget Spent Month to Date</b>
+            <a href="#" onclick="ShowSpendYTD(); return false">Switch to YTD</a>
+            <div class="chart-wrapper">
+                <div id="weeklySpendBarChart"></div>
+            </div>
+        </div>
+        <div id="divSpendMultiBarYTD" style="display:none">
+            <b>Budget Spent Year to Date</b>
+            <a href="#" onclick="ShowSpendMTD(); return false">Switch to MTD</a>
+            <div class="chart-wrapper">
+                <div id="monthlySpendBarChart"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -119,7 +130,20 @@
         var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfMonth', '@today');
 //        var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
-        CreateSpendMultiBarChart('spendMultiBarChart', spendDS, 200);
+        CreateWeeklySpendBarChart('weeklySpendBarChart', spendDS, 200);
         spendDS.read();
+
+        var monthlySpendDS = CreateMonthlySpendDataSource('@Url.Action("MonthlySummaryData", "Reports")', '@firstOfYear', '@today');
+        CreateMonthlySpendBarChart('monthlySpendBarChart', monthlySpendDS, 200);
+        monthlySpendDS.read();
     });
+
+    function ShowSpendMTD() {
+        $('#divSpendMultiBarYTD').hide();
+        $('#divSpendMultiBarMTD').show();
+    }
+    function ShowSpendYTD() {
+        $('#divSpendMultiBarMTD').hide();
+        $('#divSpendMultiBarYTD').show();
+    }
 </script>

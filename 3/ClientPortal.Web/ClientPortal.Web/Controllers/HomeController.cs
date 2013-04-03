@@ -50,6 +50,7 @@ namespace ClientPortal.Web.Controllers
             var firstOfMonth = new DateTime(now.Year, now.Month, 1);
             var firstOfLastMonth = firstOfMonth.AddMonths(-1);
             var lastOfLastMonth = firstOfMonth.AddDays(-1);
+            var firstOfYear = new DateTime(now.Year, 1, 1);
 
             var oneMonthAgo = new DateTime(firstOfLastMonth.Year, firstOfLastMonth.Month, (now.Day < lastOfLastMonth.Day) ? now.Day : lastOfLastMonth.Day);
             // will be the last day of last month if today's "day" is greater than the number of days in last month
@@ -62,6 +63,8 @@ namespace ClientPortal.Web.Controllers
             summaryLMTD.Name = "Last Month-to-Date";
             var summaryLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value, null);
             summaryLM.Name = "Last Month-Total";
+//            var summaryYTD = cakeRepo.GetDateRangeSummary(firstOfYear, now, advertiserId.Value, null);
+//            summaryYTD.Name = "Year-to-Date";
 
             var offers = cakeRepo.Offers(advertiserId);
 
