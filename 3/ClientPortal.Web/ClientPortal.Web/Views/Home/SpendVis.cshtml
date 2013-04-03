@@ -1,6 +1,9 @@
 ﻿<div class="chart-wrapper">
     <div id="spendChart"></div>
 </div>
+<div class="chart-wrapper">
+    <div id="spendLineChart"></div>
+</div>
 
 <script>
     function CreateSpendChart(values, valueFormat, culture, catName, height) {
@@ -27,6 +30,74 @@
             tooltip: {
                 visible: true,
                 format: valueFormat
+            }
+        });
+    }
+
+    function CreateSpendDataSource(url, startdate, enddate)
+    {
+        return new kendo.data.DataSource({
+            pageSize: 62,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: url,
+                    data: { startdate: startdate, enddate: enddate }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' },
+                        Impressions: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        Conversions: { type: 'number' },
+                        ConversionPct: { type: 'number' },
+                        Revenue: { type: 'number' },
+                        EPC: { type: 'number' }
+                    }
+                }
+            },
+            sort: { field: "Date", dir: "asc" }
+        });
+    }
+    function CreateSpendLineChart(dataSource, title, height)
+    {
+        $("#spendLineChart").kendoChart({
+            dataSource: dataSource,
+            chartArea: {
+                height: height
+            },
+            series: [
+                {
+                    type: "line",
+                    field: "Revenue",
+                    name: "Daily Spend",
+                    axis: "spend"
+                }
+            ],
+            categoryAxis: {
+                baseUnit: "days",
+                field: "Date",
+                labels: { rotation: -90 }
+            },
+            valueAxis: [
+                {
+                    name: "spend",
+                    labels: { format: "C" },
+                    title: { text: title }
+                }
+            ],
+            legend: {
+                visible: false
+            },
+            tooltip: {
+                visible: true,
+                format: "C"
             }
         });
     }

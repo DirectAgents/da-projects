@@ -1,6 +1,13 @@
 ﻿@model ClientPortal.Web.Models.DashboardModel
 @{
     string firstCreateChartCall = null;
+    var now = DateTime.Now;
+    var firstOfMonthDT = new DateTime(now.Year, now.Month, 1);
+
+    var today = now.ToShortDateString();
+    var firstOfMonth = firstOfMonthDT.ToShortDateString();
+    var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToShortDateString();
+    var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToShortDateString();
 }
 
 <h3>Dashboard</h3>
@@ -100,13 +107,13 @@
     </div>
 </div>
 
-@{
-    var createPerfChartCall = "CreatePerformanceChart([" + Model.SummaryLM.Conversions + "," + Model.SummaryMTD.Conversions + "], 'N0', '" + Model.Culture + "', 180)";
-}
 <script>
     $(function () {
         @Html.Raw(firstCreateChartCall);
-        @Html.Raw(createPerfChartCall);
+        CreatePerformanceChart([@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180)
         CreateSpendChart([@Model.SummaryMTD.Revenue], 'C0', '@Model.Culture', 'MTD Spend', 75);
+        var spendDS = CreateSpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfMonth', '@today');
+//        var spendDS = CreateSpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
+        CreateSpendLineChart(spendDS, 'Daily Spend', 125);
     });
 </script>
