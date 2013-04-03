@@ -883,6 +883,7 @@
     <Content Include="Views\Shared\EditorTemplates\GoalTypeEnum.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
     <Content Include="Views\Home\PerformanceVis.cshtml" />
+    <Content Include="Views\Home\SpendVis.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -8,13 +8,13 @@
 <div class="row">
     <div class="six columns">
         <div class="panel">
-            <h4>Summary</h4>
+            <b>Summary Report</b>
             <table>
                 <tr>
                     <th></th>
                     <th>Clicks</th>
                     <th>Leads</th>
-                    <th>Spend</th>
+                    <th>&nbsp;Spend</th>
                 </tr>
             @foreach (var summary in Model.AdvertiserSummaries)
             {
@@ -30,12 +30,23 @@
     </div>
 
     <div class="six columns panel">
+        <b>Performance This Month vs. Prior: Leads</b>
         @Html.Partial("PerformanceVis")
     </div>
 </div>
-@{
-    var createPerfChartCall = "CreatePerformanceChart([" + Model.SummaryLM.Conversions + "," + Model.SummaryMTD.Conversions + "], 'N0', '" + Model.Culture + "', 'Performance This Month vs. Prior: Leads', 220)";
-}
+
+<div class="row">
+    <div class="six columns">
+        <div class="panel">
+            <b>Budget</b>
+            @Html.Partial("SpendVis")
+        </div>
+    </div>
+    <div class="six columns panel">
+        <b>Budget Spent</b>
+    </div>
+</div>
+
 <div class="row">
     <div class="six columns">
         <div class="panel">
@@ -89,9 +100,13 @@
     </div>
 </div>
 
+@{
+    var createPerfChartCall = "CreatePerformanceChart([" + Model.SummaryLM.Conversions + "," + Model.SummaryMTD.Conversions + "], 'N0', '" + Model.Culture + "', 180)";
+}
 <script>
     $(function () {
         @Html.Raw(firstCreateChartCall);
         @Html.Raw(createPerfChartCall);
+        CreateSpendChart([@Model.SummaryMTD.Revenue], 'C0', '@Model.Culture', 'MTD Spend', 75);
     });
 </script>

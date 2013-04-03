@@ -572,14 +572,8 @@
             }
             function RefreshDaySumChart() {
                 var chart = $("#daysumChart").data("kendoChart"),
-                    series = chart.options.series,
                     categoryAxis = chart.options.categoryAxis,
-                    baseUnitInputs = $("input:radio[name=baseUnit]"),
-                    aggregateInputs = $("input:radio[name=aggregate]");
-
-                for (var i = 0, length = series.length; i < length; i++) {
-                    series[i].aggregate = aggregateInputs.filter(":checked").val();
-                };
+                    baseUnitInputs = $("input:radio[name=baseUnit]");
 
                 categoryAxis.baseUnit = baseUnitInputs.filter(":checked").val();
 

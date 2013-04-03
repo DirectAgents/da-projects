@@ -1,11 +1,11 @@
 ﻿<div class="chart-wrapper">
-    <div id="perfChart"></div>
+    <div id="spendChart"></div>
 </div>
 
 <script>
-    function CreatePerformanceChart(values, valueFormat, culture, height) {
+    function CreateSpendChart(values, valueFormat, culture, catName, height) {
         kendo.culture(culture);
-        $("#perfChart").kendoChart({
+        $("#spendChart").kendoChart({
             chartArea: {
                 height: height
             },
@@ -13,7 +13,7 @@
                 visible: false
             },
             seriesDefaults: {
-                type: "column"
+                type: "bar"
             },
             series: [{
                 data: values
@@ -22,7 +22,7 @@
                 labels: { format: valueFormat }
             },
             categoryAxis: {
-                categories: ["Last Month", "MTD"]
+                categories: [catName]
             },
             tooltip: {
                 visible: true,
