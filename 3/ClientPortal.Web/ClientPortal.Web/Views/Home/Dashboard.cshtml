@@ -50,7 +50,10 @@
         </div>
     </div>
     <div class="six columns panel">
-        <b>Budget Spent</b>
+        <b>Budget Spent Month to Date</b>
+        <div class="chart-wrapper">
+            <div id="spendMultiBarChart"></div>
+        </div>
     </div>
 </div>
 
@@ -112,8 +115,11 @@
         @Html.Raw(firstCreateChartCall);
         CreatePerformanceChart([@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180)
         CreateSpendChart([@Model.SummaryMTD.Revenue], 'C0', '@Model.Culture', 'MTD Spend', 75);
-        var spendDS = CreateSpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfMonth', '@today');
-//        var spendDS = CreateSpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
+
+        var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfMonth', '@today');
+//        var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
+        CreateSpendMultiBarChart('spendMultiBarChart', spendDS, 200);
+        spendDS.read();
     });
 </script>

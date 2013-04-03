@@ -34,7 +34,7 @@
         });
     }
 
-    function CreateSpendDataSource(url, startdate, enddate)
+    function CreateDailySpendDataSource(url, startdate, enddate)
     {
         return new kendo.data.DataSource({
             pageSize: 62,
@@ -69,6 +69,7 @@
     {
         $("#spendLineChart").kendoChart({
             dataSource: dataSource,
+            autoBind: false,
             chartArea: {
                 height: height
             },
@@ -90,6 +91,43 @@
                     name: "spend",
                     labels: { format: "C" },
                     title: { text: title }
+                }
+            ],
+            legend: {
+                visible: false
+            },
+            tooltip: {
+                visible: true,
+                format: "C"
+            }
+        });
+    }
+    function CreateSpendMultiBarChart(divId, dataSource, height)
+    {
+        $("#" + divId).kendoChart({
+            dataSource: dataSource,
+            autoBind: false,
+            chartArea: {
+                height: height
+            },
+            series: [
+                {
+                    type: "column",
+                    aggregate: "sum",
+                    field: "Revenue",
+                    name: "Daily Spend",
+                    axis: "spend"
+                }
+            ],
+            categoryAxis: {
+                baseUnit: "weeks",
+                field: "Date",
+                title: { text: "Week of..." }
+            },
+            valueAxis: [
+                {
+                    name: "spend",
+                    labels: { format: "C" }
                 }
             ],
             legend: {
