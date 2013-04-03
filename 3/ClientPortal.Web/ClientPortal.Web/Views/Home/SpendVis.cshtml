@@ -102,7 +102,7 @@
             }
         });
     }
-    function CreateSpendMultiBarChart(divId, dataSource, height)
+    function CreateWeeklySpendBarChart(divId, dataSource, height)
     {
         $("#" + divId).kendoChart({
             dataSource: dataSource,
@@ -115,7 +115,6 @@
                     type: "column",
                     aggregate: "sum",
                     field: "Revenue",
-                    name: "Daily Spend",
                     axis: "spend"
                 }
             ],
@@ -123,6 +122,67 @@
                 baseUnit: "weeks",
                 field: "Date",
                 title: { text: "Week of..." }
+            },
+            valueAxis: [
+                {
+                    name: "spend",
+                    labels: { format: "C" }
+                }
+            ],
+            legend: {
+                visible: false
+            },
+            tooltip: {
+                visible: true,
+                format: "C"
+            }
+        });
+    }
+
+    function CreateMonthlySpendDataSource(url, startdate, enddate) {
+        return new kendo.data.DataSource({
+            pageSize: 24,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: url,
+                    data: { startdate: startdate, enddate: enddate }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Year: { type: 'number' },
+                        Month: { type: 'number' },
+                        Period: { type: 'date' },
+                        Revenue: { type: 'number' },
+                    }
+                }
+            },
+            sort: { field: "Period", dir: "asc" }
+        });
+    }
+
+    function CreateMonthlySpendBarChart(divId, dataSource, height) {
+        $("#" + divId).kendoChart({
+            dataSource: dataSource,
+            autoBind: false,
+            chartArea: {
+                height: height
+            },
+            series: [
+                {
+                    type: "column",
+                    field: "Revenue",
+                    axis: "spend"
+                }
+            ],
+            categoryAxis: {
+                field: "Period"
             },
             valueAxis: [
                 {

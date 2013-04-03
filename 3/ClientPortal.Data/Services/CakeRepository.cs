@@ -42,7 +42,7 @@ namespace ClientPortal.Data.Services
             return offers;
         }
 
-        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId, int? offerId)
+        public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int advertiserId, int? offerId, out string currency)
         {
             var dailySummaries = cakeContext.DailySummaries.AsQueryable();
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
@@ -61,8 +61,16 @@ namespace ClientPortal.Data.Services
                                  join o in offers on ds.offer_id equals o.Offer_Id
                                  select ds;
             }
-            string currency = null; // Assume all offers for the advertiser have the same currency
+            currency = null; // Assume all offers for the advertiser have the same currency
             if (offers.Any()) currency = offers.First().Currency;
+
+            return dailySummaries;
+        }
+
+        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId, int? offerId)
+        {
+            string currency;
+            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
 
             var any = dailySummaries.Any();
             DateRangeSummary ai = new DateRangeSummary()
@@ -73,6 +81,25 @@ namespace ClientPortal.Data.Services
                 Currency = currency
             };
             return ai;
+        }
+
+        public IQueryable<MonthlyInfo> GetMonthlyInfosFromDaily(DateTime? start, DateTime? end, int advertiserId, int? offerId)
+        {
+            string currency;
+            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
+
+            var m = from ds in dailySummaries
+                    group ds by new { ds.date.Year, ds.date.Month } into g
+                    select new MonthlyInfo()
+                    {
+                        Year = g.Key.Year,
+                        Month = g.Key.Month,
+                        AdvertiserId = advertiserId,
+                        OfferId = offerId.HasValue ? offerId.Value : -1,
+                        Revenue = g.Sum(ds => ds.revenue),
+                        Currency = currency
+                    };
+            return m;
         }
 
         public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId)

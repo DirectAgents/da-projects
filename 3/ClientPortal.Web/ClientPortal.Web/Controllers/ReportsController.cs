@@ -86,6 +86,31 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
+        [HttpPost]
+        public JsonResult MonthlySummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        {
+            var now = DateTime.Now;
+            if (!startdate.HasValue) startdate = new DateTime(now.Year, now.Month, 1);
+            if (!enddate.HasValue) enddate = now;
+
+            int? advertiserId = HomeController.GetAdvertiserId();
+            if (advertiserId == null) return null;
+
+            var monthlyInfos = cakeRepo.GetMonthlyInfosFromDaily(startdate, enddate, advertiserId.Value, null);
+            var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
+
+            if (monthlyInfos.Any())
+            {
+                decimal totalRevenue = monthlyInfos.Sum(i => i.Revenue);
+                kgrid.aggregates = new
+                {
+                    Revenue = new { sum = totalRevenue }
+                };
+            }
+            var json = Json(kgrid);
+            return json;
+        }
+
         public PartialViewResult ConversionReportPartial()
         {
             var test = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
