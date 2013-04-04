@@ -42,3 +42,126 @@
     </div>
 </div>
 <div id="daysumGrid"></div>
+
+<script>
+    function CreateDailySummaryDataSource() {
+        return new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 100,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("DailySummaryData", "Reports")',
+                    data: function () {
+                        return {
+                            startdate: $('#daysum_startdate').val(),
+                            enddate: $('#daysum_enddate').val()
+                        };
+                    }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' },
+                        Impressions: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        Conversions: { type: 'number' },
+                        ConversionPct: { type: 'number' },
+                        Revenue: { type: 'number' },
+                        EPC: { type: 'number' }
+                    }
+                }
+            },
+            sort: { field: "Date", dir: "asc" },
+            aggregate: [
+                { field: "Impressions", aggregate: "sum" },
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Conversions", aggregate: "sum" },
+                { field: "ConversionPct", aggregate: "agg" },
+                { field: "Revenue", aggregate: "sum" },
+                { field: "EPC", aggregate: "agg" }
+            ]
+        });
+    }
+
+    function SetupDailySummaryGrid() {
+
+        var dataSource = CreateDailySummaryDataSource();
+
+        $('#daysumGrid').kendoGrid({
+            dataSource: dataSource,
+            autoBind: false,
+            height: 400,
+            columns: [
+                { field: 'Date', width: 60, format: '{0:d}' },
+                { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Conversions', title: 'Leads', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p1}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'EPC', title: 'Per Click', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
+            ],
+            filterable: false,
+            sortable: false,
+            pageable: true
+        });
+        $('#daysum_startdate').kendoDatePicker();
+        $('#daysum_enddate').kendoDatePicker();
+        CreateDaySumChart(dataSource);
+        dataSource.read();
+        $(".configuration").bind("change", RefreshDaySumChart);
+    }
+
+    function CreateDaySumChart(dataSource) {
+        $("#daysumChart").kendoChart({
+            dataSource: dataSource,
+            autoBind: false,
+            chartArea: {
+                height: 200
+            },
+            theme: $(document).data("kendoSkin") || "default",
+            series: [
+                { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks", axis: "clicks" },
+                { type: "line", aggregate: "sum", field: "Revenue", name: "Spend", axis: "spend", tooltip: { format: "C" } }
+            ],
+            categoryAxis: {
+                baseUnit: "days",
+                field: "Date",
+                labels: { rotation: -90 },
+                axisCrossingValue: [0, 1000]
+            },
+            valueAxis: [
+                { name: "clicks", labels: { format: "N0", step: 2 }, title: { text: "Clicks" } },
+                { name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" } }
+            ],
+            tooltip: {
+                visible: true,
+                format: "N0"
+            },
+            legend: {
+                position: "custom",
+                offsetX: 90,
+                offsetY: 0
+            }
+        });
+    }
+
+    function RefreshDaySumChart() {
+        var chart = $("#daysumChart").data("kendoChart"),
+            categoryAxis = chart.options.categoryAxis,
+            baseUnitInputs = $("input:radio[name=baseUnit]");
+
+        categoryAxis.baseUnit = baseUnitInputs.filter(":checked").val();
+
+        chart.refresh();
+    }
+</script>

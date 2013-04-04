@@ -37,7 +37,7 @@
         </div>
     </div>
 
-    <div class="six columns panel">
+    <div class="six columns panel" id="perfChartOuter">
         <b>Performance This Month vs. Prior: Leads</b>
         @Html.Partial("PerformanceVis")
     </div>
@@ -45,20 +45,20 @@
 
 <div class="row">
     <div class="six columns">
-        <div class="panel">
+        <div class="panel" id="spendChartOuter">
             <b>Budget</b>
             @Html.Partial("SpendVis")
         </div>
     </div>
     <div class="six columns panel">
-        <div id="divSpendMultiBarMTD">
+        <div id="weeklySpendBarChartOuter">
             <b>Budget Spent Month to Date</b>
             <a href="#" onclick="ShowSpendYTD(); return false">Switch to YTD</a>
             <div class="chart-wrapper">
                 <div id="weeklySpendBarChart"></div>
             </div>
         </div>
-        <div id="divSpendMultiBarYTD" style="display:none">
+        <div id="monthlySpendBarChartOuter" style="display:none">
             <b>Budget Spent Year to Date</b>
             <a href="#" onclick="ShowSpendMTD(); return false">Switch to MTD</a>
             <div class="chart-wrapper">
@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <div class="panel six columns">
+    <div class="panel six columns" id="goalChartOuter">
     @if (Model.OfferGoalSummaries.Count > 0)
     {
         @Html.Partial("GoalVis")
@@ -138,12 +138,36 @@
         monthlySpendDS.read();
     });
 
+    function ResizeDashboardCharts() {
+        ResizeDashboardChart('perf', true);
+        ResizeDashboardChart('spend', true);
+        ResizeDashboardChart('weeklySpendBar', true);
+        ResizeDashboardChart('monthlySpendBar', true);
+        ResizeDashboardChart('goal', true);
+    }
+
+    function ResizeDashboardChart(chart, refresh) {
+        if ($('#' + chart + 'ChartOuter').length > 0) {
+            var w = $('#' + chart + 'ChartOuter').width();
+            if (w > 0) {
+                $('#' + chart + 'ChartOuter .chart-wrapper').css('width', w);
+                if (refresh) {
+                    $('#' + chart + 'Chart').data('kendoChart').refresh();
+                    if (chart == 'spend')
+                        $('#' + chart + 'LineChart').data('kendoChart').refresh();
+                }
+            }
+        }
+    }
+
     function ShowSpendMTD() {
-        $('#divSpendMultiBarYTD').hide();
-        $('#divSpendMultiBarMTD').show();
+        $('#monthlySpendBarChartOuter').hide();
+        $('#weeklySpendBarChartOuter').show();
+        ResizeDashboardChart('weeklySpendBar', true);
     }
     function ShowSpendYTD() {
-        $('#divSpendMultiBarMTD').hide();
-        $('#divSpendMultiBarYTD').show();
+        $('#weeklySpendBarChartOuter').hide();
+        $('#monthlySpendBarChartOuter').show();
+        ResizeDashboardChart('monthlySpendBar', true);
     }
 </script>

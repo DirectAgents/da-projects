@@ -48,8 +48,11 @@
         </dl>
         <div>
             <h5>Account Manager</h5>
+            <div style="float: left; width: 65px; padding: 5px; padding-top: 0px; padding-left: 10px;">
+                <img style="border: 2px solid #000;" width="65" src="~/Images/avatar.png">
+            </div>
             @(Model.Advertiser != null ? Model.Advertiser.AccountManagerName : "")
-            <br />email...
+            <br /><a href="mailto:jennifer@directagents.com">jennifer@directagents.com</a>
         </div>
     </div>
     <ul class="tabs-content">
@@ -214,6 +217,7 @@
     }
 
     function WindowResize() {
+        ResizeDashboardCharts();
         ResizeChart('offsum', true);
         ResizeChart('daysum', true);
         ResizeChart('conrep', true);
@@ -313,6 +317,7 @@
                     $("#repConversionsTab").html(html);
                     ResizeChart('conrep', false);
                     SetupConversionReportGrid();
+                    SetupConversionReportChart();
                 });
             } else {
                 setTimeout(function () { ResizeChart('conrep', true); }, 100);
@@ -329,494 +334,52 @@
         });
     }
 
-            function FormatCurr(val, culture) {
-                kendo.culture(culture);
-                return kendo.toString(val, "c");
-            }
+    function FormatCurr(val, culture) {
+        kendo.culture(culture);
+        return kendo.toString(val, "c");
+    }
 
-            function CreateOfferSummaryDataSource() {
-                return new kendo.data.DataSource({
-                    serverPaging: true,
-                    serverSorting: true,
-                    serverFiltering: true,
-                    serverAggregates: true,
-                    pageSize: 20,
-                    transport: {
-                        read: {
-                            type: 'post',
-                            dataType: 'json',
-                            url: '@Url.Action("OfferSummaryData", "Reports")',
-                            data: function () {
-                                return {
-                                    startdate: $('#offsum_startdate').val(),
-                                    enddate: $('#offsum_enddate').val()
-                                };
-                            }
-                        }
-                    },
-                    schema: {
-                        data: 'data',
-                        total: 'total',
-                        aggregates: 'aggregates',
-                        model: {
-                            id: 'OfferId',
-                            fields: {
-                                Name: { type: 'string' },
-                                Format: { type: 'string' },
-                                Price: { type: 'number' },
-                                Clicks: { type: 'number' },
-                                Conversions: { type: 'number' },
-                                Revenue: { type: 'number' },
-                            }
-                        }
-                    },
-                    sort: { field: "Revenue", dir: "desc" },
-                    aggregate: [
-                        { field: "Clicks", aggregate: "sum" },
-                        { field: "Conversions", aggregate: "sum" },
-                        { field: "Revenue", aggregate: "sum" }
-                    ]
-                });
-            }
-            function SetupOfferSummaryGrid() {
-
-                var dataSource = CreateOfferSummaryDataSource();
-
-                $('#offsumGrid').kendoGrid({
-                    dataSource: dataSource,
-                    autoBind: false,
-                    height: 400,
-                    columns: [
-                        { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
-                        { field: 'Name', title: 'Offer' },
-                        { field: 'Format', width: 80 },
-                        { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
-                        { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'Conversions', title: 'Leads', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'Revenue', title: 'Total', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                    ],
-                    filterable: true,
-                    sortable: {
-                        mode: 'multiple'
-                    },
-                    pageable: true,
-                    detailInit: OffSumDetailInit
-                });
-                $('#offsum_startdate').kendoDatePicker();
-                $('#offsum_enddate').kendoDatePicker();
-                CreateOffSumChart(dataSource);
-                dataSource.read();
-            }
-            function CreateOffSumChart(dataSource) {
-                $("#offsumChart").kendoChart({
-                    dataSource: dataSource,
-                    autoBind: false,
-                    chartArea: {
-                        height: 200
-                    },
-                    theme: $(document).data("kendoSkin") || "default",
-                    title: {
-                        text: ""
-                    },
-                    series: [
-                        { field: "Conversions", name: "Leads" }
-                    ],
-                    categoryAxis: {
-                        field: "OfferId",
-                        labels: { template: "#= value #" }
-                    },
-                    tooltip: {
-                        visible: true,
-                        format: "N0"
-                    }
-                });
-            }
-            function OffSumDetailInit(e) {
-                var readData = function () {
-                    return {
-                        startdate: $('#offsum_startdate').val(),
-                        enddate: $('#offsum_enddate').val(),
-                        offerid: e.data.OfferId
-                    };
-                }
-                var dataSource = CreateConversionReportDataSource(readData);
-
-                $("<div/>").appendTo(e.detailCell).kendoGrid({
-                    dataSource: dataSource,
-                    columns: [
-                        { field: 'ConversionId', title: 'Conv ID', width: 90 },
-                        { field: 'Date', width: 190, format: '{0:G}' },
-                        { field: 'AffId', title: 'sub_id', width: 80 },
-                        { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'TransactionId', title: 'Trans ID' }
-                    ],
-                    sortable: {
-                        mode: 'multiple'
-                    },
-                    pageable: true,
-                    scrollable: false
-                });
-            }
-
-            function CreateDailySummaryDataSource() {
-                return new kendo.data.DataSource({
-                    serverPaging: true,
-                    serverSorting: true,
-                    serverFiltering: true,
-                    serverAggregates: true,
-                    pageSize: 100,
-                    transport: {
-                        read: {
-                            type: 'post',
-                            dataType: 'json',
-                            url: '@Url.Action("DailySummaryData", "Reports")',
-                            data: function () {
-                                return {
-                                    startdate: $('#daysum_startdate').val(),
-                                    enddate: $('#daysum_enddate').val()
-                                };
-                            }
-                        }
-                    },
-                    schema: {
-                        data: 'data',
-                        total: 'total',
-                        aggregates: 'aggregates',
-                        model: {
-                            id: 'Id',
-                            fields: {
-                                Date: { type: 'date' },
-                                Impressions: { type: 'number' },
-                                Clicks: { type: 'number' },
-                                Conversions: { type: 'number' },
-                                ConversionPct: { type: 'number' },
-                                Revenue: { type: 'number' },
-                                EPC: { type: 'number' }
-                            }
-                        }
-                    },
-                    sort: { field: "Date", dir: "asc" },
-                    aggregate: [
-                        { field: "Impressions", aggregate: "sum" },
-                        { field: "Clicks", aggregate: "sum" },
-                        { field: "Conversions", aggregate: "sum" },
-                        { field: "ConversionPct", aggregate: "agg" },
-                        { field: "Revenue", aggregate: "sum" },
-                        { field: "EPC", aggregate: "agg" }
-                    ]
-                });
-            }
-            function SetupDailySummaryGrid() {
-
-                var dataSource = CreateDailySummaryDataSource();
-
-                $('#daysumGrid').kendoGrid({
-                    dataSource: dataSource,
-                    autoBind: false,
-                    height: 400,
-                    columns: [
-                        { field: 'Date', width: 60, format: '{0:d}' },
-                        { field: 'Impressions', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'Conversions', title: 'Leads', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'ConversionPct', title: 'Conv Pct', width: 90, format: '{0:p1}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'EPC', title: 'Per Click', width: 90, template: '#= FormatCurr(EPC, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
-                    ],
-                    filterable: false,
-                    sortable: false,
-                    pageable: true
-                    //dataBinding: function (e) {
-                    //    var data = $('#dailySummaryGrid').data("kendoGrid").dataSource.data();
-                    //    if (data.length > 0)
-                    //        $('#dailySummaryGrid').data("culture", data[0].Culture); // TODO: include it in the json returned, like "total"
-                    //    // retrieve with $('#dailySummaryGrid').data("culture");
-                    //}
-                });
-                $('#daysum_startdate').kendoDatePicker();
-                $('#daysum_enddate').kendoDatePicker();
-                CreateDaySumChart(dataSource);
-                dataSource.read();
-                $(".configuration").bind("change", RefreshDaySumChart);
-            }
-            function CreateDaySumChart(dataSource) {
-                $("#daysumChart").kendoChart({
-                    dataSource: dataSource,
-                    autoBind: false,
-                    chartArea: {
-                        height: 200
-                    },
-                    theme: $(document).data("kendoSkin") || "default",
-                    title: {
-                        text: ""
-                    },
-                    series: [
-                        { type: "line", aggregate: "sum", field: "Clicks", name: "Clicks", axis: "clicks" },
-                        { type: "line", aggregate: "sum", field: "Revenue", name: "Spend", axis: "spend", tooltip: { format: "C" } }
-                    ],
-                    categoryAxis: {
-                        baseUnit: "days",
-                        field: "Date",
-                        labels: { rotation: -90 },
-                        axisCrossingValue: [0, 1000]
-                    },
-                    valueAxis: [
-                        { name: "clicks", labels: { format: "N0" } },
-                        { name: "spend", labels: { format: "C" } }
-                    ],
-                    tooltip: {
-                        visible: true,
-                        format: "N0"
-                    }
-                });
-            }
-            function RefreshDaySumChart() {
-                var chart = $("#daysumChart").data("kendoChart"),
-                    categoryAxis = chart.options.categoryAxis,
-                    baseUnitInputs = $("input:radio[name=baseUnit]");
-
-                categoryAxis.baseUnit = baseUnitInputs.filter(":checked").val();
-
-                chart.refresh();
-            }
-
-            function CreateConversionReportDataSource(readData) {
-                return new kendo.data.DataSource({
-                    serverPaging: true,
-                    serverSorting: true,
-                    serverFiltering: true,
-                    serverAggregates: true,
-                    pageSize: 50,
-                    transport: {
-                        read: {
-                            type: 'post',
-                            dataType: 'json',
-                            url: '@Url.Action("ConversionReportData", "Reports")',
-                            data: readData
-                        }
-                    },
-                    schema: {
-                        data: 'data',
-                        total: 'total',
-                        aggregates: 'aggregates',
-                        model: {
-                            id: 'ConversionId',
-                            fields: {
-                                Date: { type: 'date' },
-                                AffId: { type: 'number' },
-                                OfferId: { type: 'number' },
-                                Offer: { type: 'string' },
-                                PriceReceived: { type: 'number' },
-                                TransactionId: { type: 'string' },
-                                Positive: { type: 'boolean' }
-                            }
-                        }
-                    },
-                    sort: [
-                        { field: "Offer", dir: "asc" },
-                        { field: "Date", dir: "asc" }
-                    ],
-                    aggregate: [
-                        { field: "PriceReceived", aggregate: "sum" }
-                    ]
-                });
-            }
-            function SetupConversionReportGrid() {
-
-                var readData = function () {
-                    return {
-                        startdate: $('#conrep_startdate').val(),
-                        enddate: $('#conrep_enddate').val()
-                    };
-                }
-                var dataSource = CreateConversionReportDataSource(readData);
-
-                $('#conrepGrid').kendoGrid({
-                    dataSource: dataSource,
-                    height: 400,
-                    columns: [
-                        { field: 'ConversionId', title: 'Conv ID', width: 90 },
-                        { field: 'Date', width: 190, format: '{0:G}' },
-                        { field: 'OfferId', width: 80 },
-                        { field: 'Offer' },
-                        { field: 'AffId', title: 'sub_id', width: 80 },
-                        { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                        { field: 'Positive', title: 'Sale?', width: 80 },
-                        { field: 'TransactionId', title: 'Trans ID', width: 170 }
-                    ],
-                    filterable: true,
-                    sortable: {
-                        mode: 'multiple'
-                    },
-                    pageable: true
-                });
-
-                $('#conrep_startdate').kendoDatePicker();
-                $('#conrep_enddate').kendoDatePicker();
-                setTimeout(function () { CreateConversionReportChart(); }, 400);
-            }
-
-            function CreateConversionReportChart() {
-                var readData = function () {
-                    return {
-                        startdate: $('#conrep_startdate').val(),
-                        enddate: $('#conrep_enddate').val()
-                    };
-                }
-                var dataSource = CreateConversionSummaryDataSource(readData);
-
-                $("#conrepChart").kendoChart({
-                    chartArea: {
-                        height: 200
-                    },
-                    theme: $(document).data("kendoSkin") || "default",
-                    title: {
-                        text: ""
-                    },
-                    dataSource: dataSource,
-                    series: [
-                        { field: "Count", name: "Conversions" },
-                        { field: "PositiveCount", name: "Sales" }
-                    ],
-                    categoryAxis: {
-                        field: "OfferId",
-                        labels: { template: "#= value #" }
-                    },
-                    tooltip: {
-                        visible: true,
-                        format: "N0"
-                    }
-                });
-            }
-
-            function CreateConversionSummaryDataSource(readData) {
-                return new kendo.data.DataSource({
-                    //            serverPaging: true,
-                    //            serverSorting: true,
-                    serverFiltering: true,
-                    //            serverAggregates: true,
-                    //            pageSize: 50,
-                    transport: {
-                        read: {
-                            type: 'post',
-                            dataType: 'json',
-                            url: '@Url.Action("ConversionSummaryData", "Reports")',
-                            data: readData
-                        }
-                    },
-                    schema: {
-                        data: 'data',
-                        total: 'total',
-                        //                aggregates: 'aggregates',
-                        model: {
-                            id: 'OfferId',
-                            fields: {
-                                OfferName: { type: 'string' },
-                                Count: { type: 'number' },
-                                PositiveCount: { type: 'number' },
-                                Revenue: { type: 'number' },
-                                TransactionId: { type: 'string' },
-                                Positive: { type: 'boolean' }
-                            }
-                        }
-                    },
-                    sort: [
-                        { field: "Count", dir: "desc" }
-                    ],
-                    //            aggregate: [
-                    //                { field: "PriceReceived", aggregate: "sum" }
-                    //            ]
-                });
-            }
-
-            function CreateCPMSummaryDataSource() {
-                return new kendo.data.DataSource({
-                    //            serverPaging: true,
-                    //            serverSorting: true,
-                    serverFiltering: true,
-                    //            serverAggregates: true,
-                    //            pageSize: 20,
-                    transport: {
-                        read: {
-                            type: 'post',
-                            dataType: 'json',
-                            url: '@Url.Action("CPMSummaryData", "Reports")',
-                    data: function () {
-                        return {
-                            startdate: $('#cpmsum_startdate').val(),
-                            enddate: $('#cpmsum_enddate').val()
-                        };
-                    }
+    @* used by both the Offer Summary and Conversion Report tabs: *@
+    function CreateConversionReportDataSource(readData) {
+        return new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("ConversionReportData", "Reports")',
+                    data: readData
                 }
             },
-            //group: {
-            //    field: "Period", aggregates: [
-            //        { field: "Revenue", aggregate: "sum" }
-            //    ]
-            //},
             schema: {
                 data: 'data',
                 total: 'total',
-                //                aggregates: 'aggregates',
+                aggregates: 'aggregates',
                 model: {
-                    id: 'Id',
+                    id: 'ConversionId',
                     fields: {
-                        Period: { type: 'date' },
+                        Date: { type: 'date' },
+                        AffId: { type: 'number' },
                         OfferId: { type: 'number' },
                         Offer: { type: 'string' },
-                        Revenue: { type: 'number' },
-                        AccountingStatusId: { type: 'number' },
-                        AccountingStatusName: { type: 'string' }
+                        PriceReceived: { type: 'number' },
+                        TransactionId: { type: 'string' },
+                        Positive: { type: 'boolean' }
                     }
                 }
             },
             sort: [
                 { field: "Offer", dir: "asc" },
-                { field: "Period", dir: "asc" }
+                { field: "Date", dir: "asc" }
             ],
             aggregate: [
-                { field: "Revenue", aggregate: "sum" }
+                { field: "PriceReceived", aggregate: "sum" }
             ]
         });
-    }
-    function SetupCPMSummaryGrid() {
-
-        var dataSource = CreateCPMSummaryDataSource();
-
-        $('#cpmsumGrid').kendoGrid({
-            dataSource: dataSource,
-            height: 400,
-            columns: [
-                {
-                    field: 'OfferId', title: 'Id', width: 90, attributes: { style: "text-align: right" }
-                },
-                {
-                    field: 'Offer',
-                    groupFooterTemplate: "<b>Group Total.....</b>",
-                    footerTemplate: "TOTAL", footerAttributes: { style: "font-weight: bold" }
-                },
-                {
-                    field: 'Period', width: 90, format: '{0:MMM yyyy}', attributes: { style: "text-align: right" },
-                },
-                {
-                    field: 'Revenue', title: 'Spend', width: 110, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" },
-                    aggregates: ["sum"], groupFooterTemplate: "<b style:'text-align:right'>#= kendo.toString(sum, 'c') #</b>",
-                    footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" }
-                },
-                {
-                    field: 'AccountingStatusName', title: 'Accounting', width: 100, attributes: { style: "text-align: center" }
-                }
-            ],
-            filterable: true,
-            sortable: {
-                mode: 'multiple'
-            },
-            groupable: true,
-            //            pageable: true
-        });
-
-        $('#cpmsum_startdate').kendoDatePicker({ start: "year", depth: "year", format: "MM/yyyy" });
-        $('#cpmsum_enddate').kendoDatePicker({ start: "year", depth: "year", format: "MM/yyyy" });
     }
     </script>
 }

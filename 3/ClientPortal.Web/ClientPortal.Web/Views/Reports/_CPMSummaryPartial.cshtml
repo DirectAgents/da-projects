@@ -12,3 +12,85 @@
     <a class="button" style="padding: 3px; margin-left: 10px" id="cpmsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('cpmsum'); return false">Filter</a>
 </div>
 <div id="cpmsumGrid"></div>
+
+<script>
+    function CreateCPMSummaryDataSource() {
+        return new kendo.data.DataSource({
+            serverFiltering: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("CPMSummaryData", "Reports")',
+                    data: function () {
+                        return {
+                            startdate: $('#cpmsum_startdate').val(),
+                            enddate: $('#cpmsum_enddate').val()
+                        };
+                    }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Period: { type: 'date' },
+                        OfferId: { type: 'number' },
+                        Offer: { type: 'string' },
+                        Revenue: { type: 'number' },
+                        AccountingStatusId: { type: 'number' },
+                        AccountingStatusName: { type: 'string' }
+                    }
+                }
+            },
+            sort: [
+                { field: "Offer", dir: "asc" },
+                { field: "Period", dir: "asc" }
+            ],
+            aggregate: [
+                { field: "Revenue", aggregate: "sum" }
+            ]
+        });
+    }
+
+    function SetupCPMSummaryGrid(url) {
+
+        var dataSource = CreateCPMSummaryDataSource(url);
+
+        $('#cpmsumGrid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                {
+                    field: 'OfferId', title: 'Id', width: 90, attributes: { style: "text-align: right" }
+                },
+                {
+                    field: 'Offer',
+                    groupFooterTemplate: "<b>Group Total.....</b>",
+                    footerTemplate: "TOTAL", footerAttributes: { style: "font-weight: bold" }
+                },
+                {
+                    field: 'Period', width: 90, format: '{0:MMM yyyy}', attributes: { style: "text-align: right" },
+                },
+                {
+                    field: 'Revenue', title: 'Spend', width: 110, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" },
+                    aggregates: ["sum"], groupFooterTemplate: "<b style:'text-align:right'>#= kendo.toString(sum, 'c') #</b>",
+                    footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" }
+                },
+                {
+                    field: 'AccountingStatusName', title: 'Accounting', width: 100, attributes: { style: "text-align: center" }
+                }
+            ],
+            filterable: true,
+            sortable: {
+                mode: 'multiple'
+            },
+            groupable: true,
+        });
+
+        $('#cpmsum_startdate').kendoDatePicker({ start: "year", depth: "year", format: "MM/yyyy" });
+        $('#cpmsum_enddate').kendoDatePicker({ start: "year", depth: "year", format: "MM/yyyy" });
+    }
+</script>

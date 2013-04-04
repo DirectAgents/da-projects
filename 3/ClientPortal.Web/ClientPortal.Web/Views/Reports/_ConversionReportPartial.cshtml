@@ -21,3 +21,106 @@
     </div>
 </div>
 <div id="conrepGrid"></div>
+<script>
+    function SetupConversionReportGrid() {
+
+        var readData = function () {
+            return {
+                startdate: $('#conrep_startdate').val(),
+                enddate: $('#conrep_enddate').val()
+            };
+        }
+        var dataSource = CreateConversionReportDataSource(readData);
+
+        $('#conrepGrid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                { field: 'ConversionId', title: 'Conv ID', width: 90 },
+                { field: 'Date', width: 190, format: '{0:G}' },
+                { field: 'OfferId', width: 80 },
+                { field: 'Offer' },
+                { field: 'AffId', title: 'sub_id', width: 80 },
+                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Positive', title: 'Sale?', width: 80 },
+                { field: 'TransactionId', title: 'Trans ID', width: 170 }
+            ],
+            filterable: true,
+            sortable: {
+                mode: 'multiple'
+            },
+            pageable: true
+        });
+
+        $('#conrep_startdate').kendoDatePicker();
+        $('#conrep_enddate').kendoDatePicker();
+    }
+
+    function SetupConversionReportChart() {
+        var readData = function () {
+            return {
+                startdate: $('#conrep_startdate').val(),
+                enddate: $('#conrep_enddate').val()
+            };
+        }
+        var dataSource = CreateConversionSummaryDataSource(readData);
+
+        $("#conrepChart").kendoChart({
+            chartArea: {
+                height: 200
+            },
+            theme: $(document).data("kendoSkin") || "default",
+            title: {
+                text: ""
+            },
+            dataSource: dataSource,
+            series: [
+                { field: "Count", name: "Conversions" },
+                { field: "PositiveCount", name: "Sales" }
+            ],
+            valueAxis: {
+                labels: { step: 2 }
+            },
+            categoryAxis: {
+                field: "OfferId",
+                labels: { template: "#= value #" }
+            },
+            tooltip: {
+                visible: true,
+                format: "N0"
+            }
+        });
+    }
+
+    function CreateConversionSummaryDataSource(readData) {
+        return new kendo.data.DataSource({
+            serverFiltering: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("ConversionSummaryData", "Reports")',
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                model: {
+                    id: 'OfferId',
+                    fields: {
+                        OfferName: { type: 'string' },
+                        Count: { type: 'number' },
+                        PositiveCount: { type: 'number' },
+                        Revenue: { type: 'number' },
+                        TransactionId: { type: 'string' },
+                        Positive: { type: 'boolean' }
+                    }
+                }
+            },
+            sort: [
+                { field: "Count", dir: "desc" }
+            ]
+        });
+    }
+</script>
