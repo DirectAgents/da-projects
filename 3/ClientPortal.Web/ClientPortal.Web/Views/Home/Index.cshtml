@@ -49,7 +49,7 @@
         <div>
             <h5>Account Manager</h5>
             @(Model.Advertiser != null ? Model.Advertiser.AccountManagerName : "")
-            <br />email...
+            <br /><a href="mailto:abc@directagents.com">abc@directagents.com</a>
         </div>
     </div>
     <ul class="tabs-content">
@@ -214,6 +214,7 @@
     }
 
     function WindowResize() {
+        ResizeDashboardCharts();
         ResizeChart('offsum', true);
         ResizeChart('daysum', true);
         ResizeChart('conrep', true);
