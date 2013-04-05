@@ -4,11 +4,11 @@
     var now = DateTime.Now;
     var firstOfMonthDT = new DateTime(now.Year, now.Month, 1);
 
-    var today = now.ToShortDateString();
-    var firstOfMonth = firstOfMonthDT.ToShortDateString();
-    var firstOfYear = new DateTime(now.Year, 1, 1).ToShortDateString();
-    var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToShortDateString();
-    var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToShortDateString();
+    var today = now.ToString("d", Model.CultureInfo);
+    var firstOfMonth = firstOfMonthDT.ToString("d", Model.CultureInfo);
+    var firstOfYear = new DateTime(now.Year, 1, 1).ToString("d", Model.CultureInfo);
+    var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
+    var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
 }
 
 <div class="row">

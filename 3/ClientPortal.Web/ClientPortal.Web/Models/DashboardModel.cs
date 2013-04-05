@@ -1,6 +1,7 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.DTOs;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ClientPortal.Web.Models
 {
@@ -15,6 +16,7 @@ namespace ClientPortal.Web.Models
         public DateRangeSummary SummaryLM { get { return (AdvertiserSummaries.Count >= 4) ? AdvertiserSummaries[3] : null; } }
 
         public string Culture { get { return (AdvertiserSummaries.Count > 0) ? AdvertiserSummaries[0].Culture : null; } }
+        public CultureInfo CultureInfo { get { return string.IsNullOrWhiteSpace(Culture) ? CultureInfo.InvariantCulture : CultureInfo.CreateSpecificCulture(Culture); } }
     }
 
     public class OfferGoalSummary
