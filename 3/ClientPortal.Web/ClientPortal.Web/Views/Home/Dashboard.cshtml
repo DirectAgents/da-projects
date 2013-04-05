@@ -11,8 +11,6 @@
     var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToShortDateString();
 }
 
-<h3>Dashboard</h3>
-
 <div class="row">
     <div class="six columns">
         <div class="panel">
@@ -24,15 +22,15 @@
                     <th>Leads</th>
                     <th>&nbsp;Spend</th>
                 </tr>
-            @foreach (var summary in Model.AdvertiserSummaries)
-            {
-                <tr>
-                    <td>@summary.Name</td>
-                    <td>@String.Format("{0:n0}", summary.Clicks)</td>
-                    <td>@String.Format("{0:n0}", summary.Conversions)</td>
-                    <td>@summary.RevenueFormatted</td>
-                </tr>
-            }
+                @foreach (var summary in Model.AdvertiserSummaries)
+                {
+                    <tr>
+                        <td>@summary.Name</td>
+                        <td>@String.Format("{0:n0}", summary.Clicks)</td>
+                        <td>@String.Format("{0:n0}", summary.Conversions)</td>
+                        <td>@summary.RevenueFormatted</td>
+                    </tr>
+                }
             </table>
         </div>
     </div>
@@ -58,7 +56,7 @@
                 <div id="weeklySpendBarChart"></div>
             </div>
         </div>
-        <div id="monthlySpendBarChartOuter" style="display:none">
+        <div id="monthlySpendBarChartOuter" style="display: none">
             <b>Budget Spent Year to Date</b>
             <a href="#" onclick="ShowSpendMTD(); return false">Switch to MTD</a>
             <div class="chart-wrapper">
@@ -72,52 +70,61 @@
     <div class="six columns">
         <div class="panel">
             <h4>Offers / Goals</h4>
-        @foreach (var offersum in Model.OfferGoalSummaries)
-        {
-            <b>@offersum.Offer.OfferName</b><br />
-            for (var i=0; i < offersum.Goals.Count; i++)
+            @foreach (var offersum in Model.OfferGoalSummaries)
             {
-                var goal = offersum.Goals[i];
-                var dataLastMonthToDate = goal.ValueFor(offersum.SummaryLMTD);
-                var dataLastMonthTotal = goal.ValueFor(offersum.SummaryLM);
-                var dataThisMonthToDate = goal.ValueFor(offersum.SummaryMTD);
-                var dataGoal = goal.TargetBasedOn(offersum.SummaryLM);
-                var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
-                var goalString = "Goal: [" + goal.MetricId + ": " + goal.TargetFormattedBasedOn(offersum.SummaryLM) + "]";
-                var heading = offersum.Offer.OfferName.Replace("'", "");
-                var createChartCall = "CreateGoalChart('" +goal.MetricId+ "', [" +dataLastMonthToDate+ "," +dataLastMonthTotal+ "," +dataThisMonthToDate+ "," +dataGoal+ "], '" +valueFormat+ "', '" +goal.Culture+ "', '" +goalString+ "', '" +heading+ "')";
-                if (firstCreateChartCall == null) { firstCreateChartCall = createChartCall; }
+                <b>@offersum.Offer.OfferName</b><br />
+                for (var i = 0; i < offersum.Goals.Count; i++)
+                {
+                    var goal = offersum.Goals[i];
+                    var dataLastMonthToDate = goal.ValueFor(offersum.SummaryLMTD);
+                    var dataLastMonthTotal = goal.ValueFor(offersum.SummaryLM);
+                    var dataThisMonthToDate = goal.ValueFor(offersum.SummaryMTD);
+                    var dataGoal = goal.TargetBasedOn(offersum.SummaryLM);
+                    var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
+                    var goalString = "Goal: [" + goal.MetricId + ": " + goal.TargetFormattedBasedOn(offersum.SummaryLM) + "]";
+                    var heading = offersum.Offer.OfferName.Replace("'", "");
+                    var createChartCall = "CreateGoalChart('" + goal.MetricId + "', [" + dataLastMonthToDate + "," + dataLastMonthTotal + "," + dataThisMonthToDate + "," + dataGoal + "], '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "', '" + heading + "')";
+                    if (firstCreateChartCall == null) { firstCreateChartCall = createChartCall; }
 
                 @goalString
                 <a href="#" onclick="@createChartCall; return false">chart</a>
                 <br />
+                }
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>Clicks</th>
+                        <th>Leads</th>
+                        <th>Spend</th>
+                    </tr>
+                    @foreach (var rangesum in offersum.DateRangeSummaries)
+                    {
+                        <tr>
+                            <td>@rangesum.Name</td>
+                            <td>@String.Format("{0:n0}", rangesum.Clicks)</td>
+                            <td>@String.Format("{0:n0}", rangesum.Conversions)</td>
+                            <td>@rangesum.RevenueFormatted</td>
+                        </tr>
+                    }
+                </table>
             }
-            <table>
-                <tr>
-                    <th></th>
-                    <th>Clicks</th>
-                    <th>Leads</th>
-                    <th>Spend</th>
-                </tr>
-            @foreach (var rangesum in offersum.DateRangeSummaries)
-            {
-                <tr>
-                    <td>@rangesum.Name</td>
-                    <td>@String.Format("{0:n0}", rangesum.Clicks)</td>
-                    <td>@String.Format("{0:n0}", rangesum.Conversions)</td>
-                    <td>@rangesum.RevenueFormatted</td>
-                </tr>
-            }
-            </table>
-        }
         </div>
     </div>
 
     <div class="panel six columns" id="goalChartOuter">
-    @if (Model.OfferGoalSummaries.Count > 0)
-    {
-        @Html.Partial("GoalVis")
-    }
+        @if (Model.OfferGoalSummaries.Count > 0)
+        {
+            @Html.Partial("GoalVis")
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="six columns">
+        <div class="panel" id="heatMapOuter">
+            <b>Conversions by State</b>
+            @Html.Partial("_HeatMap")
+        </div>
     </div>
 </div>
 
@@ -128,7 +135,7 @@
         CreateSpendChart([@Model.SummaryMTD.Revenue], 'C0', '@Model.Culture', 'MTD Spend', 75);
 
         var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfMonth', '@today');
-//        var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
+        //        var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
         CreateWeeklySpendBarChart('weeklySpendBarChart', spendDS, 200);
         spendDS.read();

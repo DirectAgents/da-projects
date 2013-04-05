@@ -4,6 +4,9 @@ using DirectAgents.Mvc.KendoGridBinder;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using CakeMarketing;
+using System.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -178,6 +181,48 @@ namespace ClientPortal.Web.Controllers
             }
             var json = Json(kgrid);
             return json;
+        }
+
+        public PartialViewResult HeatMap()
+        {
+            return PartialView("_HeatMap");
+        }
+
+        public JsonResult HeatMapData()
+        {
+            var fromDate = new DateTime(2013, 4, 1);
+            var toDate = new DateTime(2013, 4, 5);
+            int advertiserId = HomeController.GetAdvertiserId() ?? 0;
+            var json = new JsonResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            using (var db = new CakeExtracterContext())
+            {
+                var clicks = db.Clicks.Where(c => c.advertiser.advertiser_id == advertiserId);
+                var conversions = db.Conversions.Where(
+                                        c => c.advertiser.advertiser_id == advertiserId &&
+                                             c.conversion_date >= fromDate &&
+                                             c.conversion_date < toDate);
+                var query = from a in clicks
+                            from b in conversions
+                            where a.click_id == b.click_id
+                            select new
+                            {
+                                Region = a.region.region_code,
+                                Conversions = 1
+                            };
+                var results = new List<object[]>();
+                results.Insert(0, new[] { "State", "Conversions" });
+                var group = query.GroupBy(c => c.Region);
+                foreach (var grouping in group)
+                {
+                    results.Add(new object[]
+                    { 
+                        "US-" + grouping.Key.ToUpper(), 
+                        grouping.Sum(c => c.Conversions) 
+                    });
+                }
+                json.Data = results;
+                return json;
+            }
         }
     }
 }

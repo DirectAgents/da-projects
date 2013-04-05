@@ -1,0 +1,11 @@
+﻿<div id="divHeatMap"></div>
+
+<script type='text/javascript'>
+    function drawHeatMap() {
+        $.get('@Url.Action("HeatMapData", "Reports")', function (result) {
+            var data = google.visualization.arrayToDataTable(result);
+            var chart = new google.visualization.GeoChart(document.getElementById('divHeatMap'));
+            chart.draw(data, { width: 556, height: 347, region: 'US', resolution: 'provinces' });
+        });
+    };
+</script>

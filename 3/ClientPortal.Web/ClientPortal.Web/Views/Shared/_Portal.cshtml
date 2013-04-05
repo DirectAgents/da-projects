@@ -31,6 +31,10 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/foundation")
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load('visualization', '1', { 'packages': ['geochart'] });
+    </script>
 
     @*Use the Scripts section to define page specific scripts*@
     @RenderSection("scripts", required: false)

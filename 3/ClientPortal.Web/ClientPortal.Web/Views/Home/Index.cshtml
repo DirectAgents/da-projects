@@ -52,12 +52,21 @@
                 <img style="border: 2px solid #000;" width="65" src="~/Images/avatar.png">
             </div>
             @(Model.Advertiser != null ? Model.Advertiser.AccountManagerName : "")
-            <br /><a href="mailto:jennifer@directagents.com">jennifer@directagents.com</a>
+            <br />
+            <a href="mailto:jennifer@directagents.com">jennifer@directagents.com</a>
         </div>
     </div>
     <ul class="tabs-content">
         <li id="vertical1Tab" class="active">
-            <div id="divDashboard" class="ten columns"></div>
+            <div class="ten columns portaltabs-h">
+                <dl class="tabs">
+                    <dd class="active"><a href="#dashboard">Dashboard</a></dd>
+                </dl>
+                <ul class="tabs-content">
+                    <li id="dashboardTab" class="active">
+                    </li>
+                </ul>
+            </div>
         </li>
         <li id="vertical2Tab">
             <div class="ten columns portaltabs-h">
@@ -86,14 +95,24 @@
                     <dd><a href="#contact" id="navContact">Contact</a></dd>
                 </dl>
                 <ul class="tabs-content">
-                    <li id="goalsTab" class="active"><div id="divGoals"></div></li>
-                    <li id="filesTab"><div id="divFiles"></div></li>
-                    <li id="invoicesTab"><div id="divInvoices"></div></li>
-                    <li id="contactTab"><div id="divContact"></div></li>
+                    <li id="goalsTab" class="active">
+                        <div id="divGoals"></div>
+                    </li>
+                    <li id="filesTab">
+                        <div id="divFiles"></div>
+                    </li>
+                    <li id="invoicesTab">
+                        <div id="divInvoices"></div>
+                    </li>
+                    <li id="contactTab">
+                        <div id="divContact"></div>
+                    </li>
                 </ul>
             </div>
         </li>
-        <li id="vertical4Tab"><h3>Notifications</h3></li>
+        <li id="vertical4Tab">
+            <h3>Notifications</h3>
+        </li>
     </ul>
 </div>
 <footer class="row">
@@ -131,7 +150,10 @@
                 url: '@Url.Action("Dashboard")',
                 cache: false
             }).done(function (html) {
-                $("#divDashboard").html(html);
+                $("#dashboardTab").html(html);
+
+                // Heat map
+                drawHeatMap();
             });
         }
 
@@ -156,10 +178,10 @@
                     break;
                 case "wtd":
                     $(startId).val('@firstOfWeek');
-                $(endId).val('@today');
-                break;
-            case "mtd":
-                $(startId).val('@firstOfMonth');
+                    $(endId).val('@today');
+                    break;
+                case "mtd":
+                    $(startId).val('@firstOfMonth');
                 $(endId).val('@today');
                 break;
             case "ytd":
@@ -242,13 +264,13 @@
         $("#vertNav_Dashboard").click(function () {
             LoadDashboard();
         });
-        
+
         @* My Account *@
         $("#vertNav_MyAccount").one("click", function () {
             $.ajax({
                 url: '@Url.Action("Index", "Goals")',
                 cache: false
-            }).done(function(html) {
+            }).done(function (html) {
                 $("#divGoals").html(html);
             });
         });
@@ -268,10 +290,10 @@
                 $("#divInvoices").html(html);
             });
         });
-        $("#navContact").one("click", function () {
-            $("#divContact").html('Loading...');
-            $.ajax({
-                url: '@Url.Action("Contact", "Home")',
+            $("#navContact").one("click", function () {
+                $("#divContact").html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("Contact", "Home")',
                 cache: false
             }).done(function (html) {
                 $("#divContact").html(html);
@@ -332,26 +354,26 @@
                 SetupCPMSummaryGrid();
             });
         });
-    }
+            }
 
-    function FormatCurr(val, culture) {
-        kendo.culture(culture);
-        return kendo.toString(val, "c");
-    }
+            function FormatCurr(val, culture) {
+                kendo.culture(culture);
+                return kendo.toString(val, "c");
+            }
 
     @* used by both the Offer Summary and Conversion Report tabs: *@
-    function CreateConversionReportDataSource(readData) {
-        return new kendo.data.DataSource({
-            serverPaging: true,
-            serverSorting: true,
-            serverFiltering: true,
-            serverAggregates: true,
-            pageSize: 50,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: '@Url.Action("ConversionReportData", "Reports")',
+        function CreateConversionReportDataSource(readData) {
+            return new kendo.data.DataSource({
+                serverPaging: true,
+                serverSorting: true,
+                serverFiltering: true,
+                serverAggregates: true,
+                pageSize: 50,
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("ConversionReportData", "Reports")',
                     data: readData
                 }
             },
