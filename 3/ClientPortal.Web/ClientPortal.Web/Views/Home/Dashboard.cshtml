@@ -71,7 +71,7 @@
     <div class="row">
         <div class="six columns">
             <div class="panel">
-                <b>@offersum.Offer.OfferName</b><br />
+                <b>Offer: @offersum.Offer.OfferName</b><br />
                 @for (var i = 0; i < offersum.Goals.Count; i++)
                 {
                     var goal = offersum.Goals[i];
@@ -80,12 +80,12 @@
                     var dataThisMonthToDate = goal.ValueFor(offersum.SummaryMTD);
                     var dataGoal = goal.TargetBasedOn(offersum.SummaryLM);
                     var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
-                    var goalString = "Goal: " + goal.TargetFormattedBasedOn(offersum.SummaryLM);
+                    var goalString = goal.TargetFormattedBasedOn(offersum.SummaryLM);
                     //var heading = offersum.Offer.OfferName.Replace("'", "");
                     var createGoalChartCall = "CreateGoalChart('" + offersum.Offer.Offer_Id + "', '" + goal.MetricId + "', [" + dataLastMonthToDate + "," + dataLastMonthTotal + "," + dataThisMonthToDate + "," + dataGoal + "], '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "')";
                     if (i == 0) { firstCreateGoalChartCalls.Add(createGoalChartCall); }
 
-                    @goalString
+                    @("Custom Goal: " + goalString)
                     <a href="#" onclick="@createGoalChartCall; return false">(show)</a>
                     <br />
                 }
@@ -109,7 +109,7 @@
             </div>
         </div>
 
-        <div class="panel six columns" id="goalChartOuter@(offersum.Offer.Offer_Id)">
+        <div class="panel six columns" id="goal@(offersum.Offer.Offer_Id)ChartOuter">
             @Html.Partial("GoalVis", offersum.Offer.Offer_Id.ToString())
         </div>
     </div>
@@ -148,7 +148,10 @@
         ResizeDashboardChart('spend', true);
         ResizeDashboardChart('weeklySpendBar', true);
         ResizeDashboardChart('monthlySpendBar', true);
-        ResizeDashboardChart('goal', true); // TODO: resize ALL goal charts
+        @foreach (var offersum in Model.OfferGoalSummaries)
+        {
+            <text>ResizeDashboardChart('goal@(offersum.Offer.Offer_Id)', true);</text>
+        }
     }
 
     function ResizeDashboardChart(chart, refresh) {
@@ -176,10 +179,10 @@
         ResizeDashboardChart('monthlySpendBar', true);
     }
 
-    function CreateGoalChart(id, metric, values, valueFormat, culture, heading) {
-        $('#goalChartHeading' + id).html('<b>' + heading + '</b>');
+    function CreateGoalChart(offerid, metric, values, valueFormat, culture, heading) {
+        $('#goal' + offerid + 'ChartHeading').html('<b>' + heading + '</b>');
         kendo.culture(culture);
-        $('#goalChart' + id).kendoChart({
+        $('#goal' + offerid + 'Chart').kendoChart({
             chartArea: {
                 height: 186
             },
