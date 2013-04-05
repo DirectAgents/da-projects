@@ -1,6 +1,6 @@
 ﻿@model ClientPortal.Web.Models.DashboardModel
 @{
-    string firstCreateChartCall = null;
+    List<string> firstCreateGoalChartCalls = new List<string>();
     var now = DateTime.Now;
     var firstOfMonthDT = new DateTime(now.Year, now.Month, 1);
 
@@ -66,14 +66,13 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="six columns">
-        <div class="panel">
-            <h4>Offers / Goals</h4>
-            @foreach (var offersum in Model.OfferGoalSummaries)
-            {
+@foreach (var offersum in Model.OfferGoalSummaries)
+{
+    <div class="row">
+        <div class="six columns">
+            <div class="panel">
                 <b>@offersum.Offer.OfferName</b><br />
-                for (var i = 0; i < offersum.Goals.Count; i++)
+                @for (var i = 0; i < offersum.Goals.Count; i++)
                 {
                     var goal = offersum.Goals[i];
                     var dataLastMonthToDate = goal.ValueFor(offersum.SummaryLMTD);
@@ -81,14 +80,14 @@
                     var dataThisMonthToDate = goal.ValueFor(offersum.SummaryMTD);
                     var dataGoal = goal.TargetBasedOn(offersum.SummaryLM);
                     var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
-                    var goalString = "Goal: [" + goal.MetricId + ": " + goal.TargetFormattedBasedOn(offersum.SummaryLM) + "]";
-                    var heading = offersum.Offer.OfferName.Replace("'", "");
-                    var createChartCall = "CreateGoalChart('" + goal.MetricId + "', [" + dataLastMonthToDate + "," + dataLastMonthTotal + "," + dataThisMonthToDate + "," + dataGoal + "], '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "', '" + heading + "')";
-                    if (firstCreateChartCall == null) { firstCreateChartCall = createChartCall; }
+                    var goalString = "Goal: " + goal.TargetFormattedBasedOn(offersum.SummaryLM);
+                    //var heading = offersum.Offer.OfferName.Replace("'", "");
+                    var createGoalChartCall = "CreateGoalChart('" + offersum.Offer.Offer_Id + "', '" + goal.MetricId + "', [" + dataLastMonthToDate + "," + dataLastMonthTotal + "," + dataThisMonthToDate + "," + dataGoal + "], '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "')";
+                    if (i == 0) { firstCreateGoalChartCalls.Add(createGoalChartCall); }
 
-                @goalString
-                <a href="#" onclick="@createChartCall; return false">chart</a>
-                <br />
+                    @goalString
+                    <a href="#" onclick="@createGoalChartCall; return false">(show)</a>
+                    <br />
                 }
                 <table>
                     <tr>
@@ -107,17 +106,14 @@
                         </tr>
                     }
                 </table>
-            }
+            </div>
+        </div>
+
+        <div class="panel six columns" id="goalChartOuter@(offersum.Offer.Offer_Id)">
+            @Html.Partial("GoalVis", offersum.Offer.Offer_Id.ToString())
         </div>
     </div>
-
-    <div class="panel six columns" id="goalChartOuter">
-        @if (Model.OfferGoalSummaries.Count > 0)
-        {
-            @Html.Partial("GoalVis")
-        }
-    </div>
-</div>
+}
 
 <div class="row">
     <div class="six columns">
@@ -130,12 +126,14 @@
 
 <script>
     $(function () {
-        @Html.Raw(firstCreateChartCall);
+        @foreach (var call in firstCreateGoalChartCalls) {
+            <text>@Html.Raw(call);</text>
+        }
         CreatePerformanceChart([@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180)
         CreateSpendChart([@Model.SummaryMTD.Revenue], 'C0', '@Model.Culture', 'MTD Spend', 75);
 
         var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfMonth', '@today');
-        //        var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
+        //var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
         CreateWeeklySpendBarChart('weeklySpendBarChart', spendDS, 200);
         spendDS.read();
@@ -150,7 +148,7 @@
         ResizeDashboardChart('spend', true);
         ResizeDashboardChart('weeklySpendBar', true);
         ResizeDashboardChart('monthlySpendBar', true);
-        ResizeDashboardChart('goal', true);
+        ResizeDashboardChart('goal', true); // TODO: resize ALL goal charts
     }
 
     function ResizeDashboardChart(chart, refresh) {
@@ -176,5 +174,36 @@
         $('#weeklySpendBarChartOuter').hide();
         $('#monthlySpendBarChartOuter').show();
         ResizeDashboardChart('monthlySpendBar', true);
+    }
+
+    function CreateGoalChart(id, metric, values, valueFormat, culture, heading) {
+        $('#goalChartHeading' + id).html('<b>' + heading + '</b>');
+        kendo.culture(culture);
+        $('#goalChart' + id).kendoChart({
+            chartArea: {
+                height: 186
+            },
+            legend: {
+                visible: false
+            },
+            seriesDefaults: {
+                type: "column"
+            },
+            series: [{
+                name: metric,
+                data: values
+            }],
+            valueAxis: {
+                labels: { format: valueFormat, step: 2 },
+                title: { text: metric }
+            },
+            categoryAxis: {
+                categories: ["Last Month-to-Date", "Last Month-Total", "This Month-to-Date", "Goal"]
+            },
+            tooltip: {
+                visible: true,
+                format: valueFormat
+            }
+        });
     }
 </script>

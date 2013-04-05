@@ -1,37 +1,7 @@
-﻿<div id="goalChartHeading"></div>
+﻿@model string
+
+<div id="goalChartHeading@(Model)"></div>
 
 <div class="chart-wrapper">
-    <div id="goalChart"></div>
+     <div id="goalChart@(Model)"></div>
 </div>
-
-<script>
-    function CreateGoalChart(metric, values, valueFormat, culture, goalString, heading) {
-        $('#goalChartHeading').html(heading);
-        kendo.culture(culture);
-        $("#goalChart").kendoChart({
-            title: {
-                text: goalString
-            },
-            legend: {
-                visible: false
-            },
-            seriesDefaults: {
-                type: "column"
-            },
-            series: [{
-                name: metric,
-                data: values
-            }],
-            valueAxis: {
-                labels: { format: valueFormat }
-            },
-            categoryAxis: {
-                categories: ["Last Month-to-Date", "Last Month-Total", "This Month-to-Date", "Goal"]
-            },
-            tooltip: {
-                visible: true,
-                format: valueFormat
-            }
-        });
-    }
-</script>

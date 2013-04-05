@@ -60,13 +60,13 @@ namespace ClientPortal.Web.Models
             this.MetricId = MetricEnum.Leads;
         }
 
-        // e.g. "1,000", "$1,000", "10.5% (1,105)", "10.5% ($1,105)"
+        // e.g. "Reach 1,000 Leads", "Reach $1,000 Spend", "Increase Leads 10.5% (to 1,105)", "Increase Spend 10.5% (to $1,105)"
         public string TargetFormattedBasedOn(DateRangeSummary rangeSummary)
         {
             if (TypeId == GoalTypeEnum.Absolute)
-                return TargetFormatted;
+                return "Reach " + TargetFormatted + " " + this.MetricId;
             else // Percent
-                return TargetFormatted + " (" + FormatSomeTarget(TargetBasedOn(rangeSummary)) + ")";
+                return "Increase " + this.MetricId + " " + TargetFormatted + " (to " + FormatSomeTarget(TargetBasedOn(rangeSummary)) + ")";
         }
 
         public decimal TargetBasedOn(DateRangeSummary rangeSummary)

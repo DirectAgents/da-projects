@@ -387,6 +387,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="humans.txt" />
+    <Content Include="Images\avatar.png" />
     <Content Include="Images\logo1.png" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\foundation\app.js" />
