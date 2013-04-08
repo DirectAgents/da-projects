@@ -4,6 +4,7 @@ using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using WebMatrix.WebData;
@@ -22,9 +23,13 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Index()
         {
+            var userProfile = GetUserProfile();
+            CakeAdvertiser advertiser = userProfile.CakeAdvertiserId.HasValue ? cakeRepo.Advertiser(userProfile.CakeAdvertiserId.Value) : null;
+
             var model = new IndexModel()
             {
-                Advertiser = GetAdvertiser()
+                CultureInfo = userProfile.CultureInfo,
+                Advertiser = advertiser
             };
             return View(model);
         }
@@ -112,17 +117,26 @@ namespace ClientPortal.Web.Controllers
         {
             int? advertiserId = null;
 
+            var userProfile = GetUserProfile();
+            if (userProfile != null)
+                advertiserId = userProfile.CakeAdvertiserId;
+
+            return advertiserId;
+        }
+
+        public static UserProfile GetUserProfile()
+        {
+            UserProfile userProfile = null;
+
             if (WebSecurity.Initialized)
             {
                 var userID = WebSecurity.CurrentUserId;
                 using (var usersContext = new UsersContext())
                 {
-                    var userProfile = usersContext.UserProfiles.FirstOrDefault(c => c.UserId == userID);
-                    if (userProfile != null)
-                        advertiserId = userProfile.CakeAdvertiserId;
+                    userProfile = usersContext.UserProfiles.FirstOrDefault(c => c.UserId == userID);
                 }
             }
-            return advertiserId;
+            return userProfile;
         }
 
         // ---

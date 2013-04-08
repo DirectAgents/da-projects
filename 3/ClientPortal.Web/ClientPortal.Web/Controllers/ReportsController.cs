@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using CakeMarketing;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -22,18 +23,25 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult OfferSummaryPartial()
         {
-            var test = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
-            ViewBag.today = test.ToShortDateString();
-            //            ViewBag.today = DateTime.Now.ToShortDateString();
+            var userProfile = HomeController.GetUserProfile();
+
+            //var today = DateTime.Now;
+            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+            ViewBag.today = today.ToString("d", userProfile.CultureInfo);
             return PartialView("_OfferSummaryPartial");
         }
 
         [HttpPost]
-        public JsonResult OfferSummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        public JsonResult OfferSummaryData(KendoGridRequest request, string startdate, string enddate)
         {
-            int? advertiserId = HomeController.GetAdvertiserId();
+            var userProfile = HomeController.GetUserProfile();
+            DateTime? start, end;
+            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+                return Json(new { });
 
-            var offerInfos = cakeRepo.GetOfferInfos(startdate, enddate, advertiserId);
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            var offerInfos = cakeRepo.GetOfferInfos(start, end, userProfile.CakeAdvertiserId);
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             if (offerInfos.Any())
             {
@@ -50,21 +58,25 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult DailySummaryPartial()
         {
+            var userProfile = HomeController.GetUserProfile();
+
             var now = DateTime.Now;
-            ViewBag.firstOfMonth = new DateTime(now.Year, now.Month, 1).ToShortDateString(); ;
-            ViewBag.today = DateTime.Now.ToShortDateString();
+            ViewBag.firstOfMonth = new DateTime(now.Year, now.Month, 1).ToString("d", userProfile.CultureInfo);
+            ViewBag.today = DateTime.Now.ToString("d", userProfile.CultureInfo);
             return PartialView("_DailySummaryPartial");
         }
 
         [HttpPost]
-        public JsonResult DailySummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        public JsonResult DailySummaryData(KendoGridRequest request, string startdate, string enddate)
         {
-            var now = DateTime.Now;
-            if (!startdate.HasValue) startdate = new DateTime(now.Year, now.Month, 1);
-            if (!enddate.HasValue) enddate = now;
+            var userProfile = HomeController.GetUserProfile();
+            DateTime? start, end;
+            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+                return Json(new { });
 
-            int? advertiserId = HomeController.GetAdvertiserId();
-            var dailyInfos = cakeRepo.GetDailyInfos(startdate, enddate, advertiserId);
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            var dailyInfos = cakeRepo.GetDailyInfos(start, end, userProfile.CakeAdvertiserId);
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
 
             if (dailyInfos.Any())
@@ -90,16 +102,16 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult MonthlySummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
+        public JsonResult MonthlySummaryData(KendoGridRequest request, string startdate, string enddate)
         {
-            var now = DateTime.Now;
-            if (!startdate.HasValue) startdate = new DateTime(now.Year, now.Month, 1);
-            if (!enddate.HasValue) enddate = now;
+            var userProfile = HomeController.GetUserProfile();
+            DateTime? start, end;
+            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+                return Json(new { });
 
-            int? advertiserId = HomeController.GetAdvertiserId();
-            if (advertiserId == null) return null;
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, 1, 1);
 
-            var monthlyInfos = cakeRepo.GetMonthlyInfosFromDaily(startdate, enddate, advertiserId.Value, null);
+            var monthlyInfos = cakeRepo.GetMonthlyInfosFromDaily(start, end, userProfile.CakeAdvertiserId.Value, null);
             var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
 
             if (monthlyInfos.Any())
@@ -116,17 +128,25 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult ConversionReportPartial()
         {
-            var test = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
-            ViewBag.today = test.ToShortDateString();
-            //ViewBag.today = DateTime.Now.ToShortDateString();
+            var userProfile = HomeController.GetUserProfile();
+
+            //var today = DateTime.Now;
+            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+            ViewBag.today = today.ToString("d", userProfile.CultureInfo);
             return PartialView("_ConversionReportPartial");
         }
 
         [HttpPost]
-        public JsonResult ConversionReportData(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
+        public JsonResult ConversionReportData(KendoGridRequest request, string startdate, string enddate, int? offerid)
         {
-            int? advertiserId = HomeController.GetAdvertiserId();
-            var conversionInfos = cakeRepo.GetConversionInfos(startdate, enddate, advertiserId, offerid);
+            var userProfile = HomeController.GetUserProfile();
+            DateTime? start, end;
+            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+                return Json(new { });
+
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            var conversionInfos = cakeRepo.GetConversionInfos(start, end, userProfile.CakeAdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionInfo>(request, conversionInfos);
             if (conversionInfos.Any())
@@ -141,10 +161,16 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult ConversionSummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate, int? offerid)
+        public JsonResult ConversionSummaryData(KendoGridRequest request, string startdate, string enddate, int? offerid)
         {
-            int? advertiserId = HomeController.GetAdvertiserId();
-            var conversionSummaries = cakeRepo.GetConversionSummaries(startdate, enddate, advertiserId, offerid);
+            var userProfile = HomeController.GetUserProfile();
+            DateTime? start, end;
+            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+                return Json(new { });
+
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            var conversionSummaries = cakeRepo.GetConversionSummaries(start, end, userProfile.CakeAdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionSummary>(request, conversionSummaries);
             // todo: aggregates?
@@ -223,6 +249,30 @@ namespace ClientPortal.Web.Controllers
                 json.Data = results;
                 return json;
             }
+        }
+
+        // --- helper methods ---
+
+        // returns true iff parsed; a null or whitespace dateString qualifies as parsed, resulting in the out parameter being null
+        public static bool ParseDate(string dateString, CultureInfo cultureInfo, out DateTime? date)
+        {
+            date = null;
+            if (String.IsNullOrWhiteSpace(dateString)) return true;
+
+            DateTime parseDate;
+            bool parsed = DateTime.TryParse(dateString, cultureInfo, DateTimeStyles.None, out parseDate);
+            if (parsed)
+                date = parseDate;
+
+            return parsed;
+        }
+
+        // returns false if either of the dates couldn't be parsed
+        public static bool ParseDates(string startdate, string enddate, CultureInfo cultureInfo, out DateTime? start, out DateTime? end)
+        {
+            bool startParsed = ParseDate(startdate, cultureInfo, out start);
+            bool endParsed = ParseDate(enddate, cultureInfo, out end);
+            return (startParsed && endParsed);
         }
     }
 }

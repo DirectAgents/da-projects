@@ -31,6 +31,13 @@ namespace ClientPortal.Web.Models
         public int? CakeAdvertiserId { get; set; }
         public int? QuickBooksCompanyId { get; set; }
         public int? QuickBooksAdvertiserId { get; set; }
+        public string Culture { get; set; }
+
+        [NotMapped]
+        public CultureInfo CultureInfo
+        {
+            get { return String.IsNullOrWhiteSpace(Culture) ? CultureInfo.InvariantCulture : CultureInfo.CreateSpecificCulture(Culture); }
+        }
     }
 
     [Table("FileUpload")]

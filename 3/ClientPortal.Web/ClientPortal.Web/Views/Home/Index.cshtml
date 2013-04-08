@@ -6,15 +6,15 @@
     while (sunday.DayOfWeek != DayOfWeek.Sunday) { sunday = sunday.AddDays(-1); }
     var firstOfMonthDT = new DateTime(now.Year, now.Month, 1);
 
-    var today = now.ToShortDateString();
-    var yesterday = now.AddDays(-1).ToShortDateString();
-    var firstOfMonth = firstOfMonthDT.ToShortDateString();
-    var firstOfYear = new DateTime(now.Year, 1, 1).ToShortDateString();
-    var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToShortDateString();
-    var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToShortDateString();
-    var firstOfWeek = sunday.ToShortDateString();
-    var firstOfLastWeek = sunday.AddDays(-7).ToShortDateString();
-    var lastOfLastWeek = sunday.AddDays(-1).ToShortDateString();
+    var today = now.ToString("d", Model.CultureInfo);
+    var yesterday = now.AddDays(-1).ToString("d", Model.CultureInfo);
+    var firstOfMonth = firstOfMonthDT.ToString("d", Model.CultureInfo);
+    var firstOfYear = new DateTime(now.Year, 1, 1).ToString("d", Model.CultureInfo);
+    var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
+    var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
+    var firstOfWeek = sunday.ToString("d", Model.CultureInfo);
+    var firstOfLastWeek = sunday.AddDays(-7).ToString("d", Model.CultureInfo);
+    var lastOfLastWeek = sunday.AddDays(-1).ToString("d", Model.CultureInfo);
 
     var todayMY = now.ToString("MM/yyyy");
     var lastMonthMY = firstOfMonthDT.AddMonths(-1).ToString("MM/yyyy");

@@ -42,14 +42,14 @@ namespace ClientPortal.Web
             WebSecurity.InitializeDatabaseConnection("DefaultConnection",
                                                      "UserProfile", "UserId", "UserName", autoCreateTables: true);
 
-            WebSecurity.CreateUserAndAccount("aaron", "123456");
-            WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278 });
-            WebSecurity.CreateUserAndAccount("accuquote", "123456", new { CakeAdvertiserId = 28 });
-            WebSecurity.CreateUserAndAccount("amazon", "123456", new { CakeAdvertiserId = 435 });
-            WebSecurity.CreateUserAndAccount("affinitas", "123456", new { CakeAdvertiserId = 298 });
-            WebSecurity.CreateUserAndAccount("digital", "123456", new { CakeAdvertiserId = 67 });
-            WebSecurity.CreateUserAndAccount("guthy", "123456", new { CakeAdvertiserId = 457 });
-            WebSecurity.CreateUserAndAccount("scooter", "123456", new { CakeAdvertiserId = 294 });
+            WebSecurity.CreateUserAndAccount("aaron", "123456", new { Culture = "en-US" });
+            WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278, Culture = "en-US" });
+            WebSecurity.CreateUserAndAccount("accuquote", "123456", new { CakeAdvertiserId = 28, Culture = "en-US" });
+            WebSecurity.CreateUserAndAccount("amazon", "123456", new { CakeAdvertiserId = 435, Culture = "en-US" });
+            WebSecurity.CreateUserAndAccount("affinitas", "123456", new { CakeAdvertiserId = 298, Culture = "de-DE" });
+            WebSecurity.CreateUserAndAccount("digital", "123456", new { CakeAdvertiserId = 67, Culture = "de-DE" });
+            WebSecurity.CreateUserAndAccount("guthy", "123456", new { CakeAdvertiserId = 457, Culture = "en-US" });
+            WebSecurity.CreateUserAndAccount("scooter", "123456", new { CakeAdvertiserId = 294, Culture = "en-US" });
 
             List<Goal> goals = new List<Goal> {
                 new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = MetricEnum.Leads, Target = 2000, TypeId = GoalTypeEnum.Absolute, Name = "new form leads" },
