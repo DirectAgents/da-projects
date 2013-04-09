@@ -1,18 +1,15 @@
-﻿using ClientPortal.Web.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using ClientPortal.Web.Models;
 
 namespace ClientPortal.Web.Controllers
 {
+    [Authorize]
     public class InvoicesController : Controller
     {
-        //
-        // GET: /Invoices/
-
         public ActionResult Index()
         {
             return PartialView(GetInvoices());

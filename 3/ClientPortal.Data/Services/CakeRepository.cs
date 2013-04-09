@@ -1,8 +1,8 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using System;
+using System.Linq;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
-using System;
-using System.Linq;
 
 namespace ClientPortal.Data.Services
 {

@@ -5,7 +5,7 @@
         $.get('@Url.Action("HeatMapData", "Reports")', function (result) {
             var data = google.visualization.arrayToDataTable(result);
             var chart = new google.visualization.GeoChart(document.getElementById('divHeatMap'));
-            chart.draw(data, { width: 556, height: 347, region: 'US', resolution: 'provinces' });
+            chart.draw(data, { width: 361, height: 180, region: 'US', resolution: 'provinces' });
         });
     };
 </script>

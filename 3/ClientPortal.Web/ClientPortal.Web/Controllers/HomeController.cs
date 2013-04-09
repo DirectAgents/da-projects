@@ -1,12 +1,11 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web.Mvc;
 using WebMatrix.WebData;
 
 namespace ClientPortal.Web.Controllers

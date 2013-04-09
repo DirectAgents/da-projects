@@ -1,13 +1,12 @@
-﻿using ClientPortal.Data.Contracts;
-using ClientPortal.Data.DTOs;
-using DirectAgents.Mvc.KendoGridBinder;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using CakeMarketing;
-using System.Data.SqlClient;
-using System.Collections.Generic;
-using System.Globalization;
+using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs;
+using DirectAgents.Mvc.KendoGridBinder;
 
 namespace ClientPortal.Web.Controllers
 {

@@ -21,6 +21,10 @@
     var threeMonthsAgoMY = firstOfMonthDT.AddMonths(-3).ToString("MM/yyyy");
     var firstOfYearMY = new DateTime(now.Year, 1, 1).ToString("MM/yyyy");
 }
+
+@*<!--+---------+
+      | Top Bar |
+      +---------+-->*@
 <div class="row">
     <div class="six columns toplogo">
         <img src="~/Images/logo1.png" />
@@ -34,18 +38,41 @@
         </div>
     </div>
 </div>
+<!-- /TopBar -->
+
+@*<!--+--------------------------------------+
+      | Gray Band/HTabs Background/Container | 
+      +--------------------------------------+-->*@
 <div class="row">
     <div class="twelve columns grayband">
     </div>
 </div>
-<div class="row">
+<!-- /GrayBandForHTabs -->
+
+@*<!--+--------------+
+      | Main Content |
+      +--------------+-->*@
+<div class="row" id="main">
+
+    @*<!--+---------+
+          | Sidebar |
+          +---------+-->*@
     <div class="two columns portaltabs-v">
+
+        @*<!--+---------------+
+              | Veritcal Tabs |
+              +---------------+-->*@
         <dl class="vertical tabs">
             <dd class="active"><a href="#vertical1" id="vertNav_Dashboard">Dashboard</a></dd>
             <dd><a href="#vertical2" id="vertNav_Reports">Reports</a></dd>
-            <dd><a href="#vertical3" id="vertNav_MyAccount">My Account</a></dd>
+            <dd><a href="#vertical3" data-bind="click: loadMyAccount">My Account</a></dd>
             <dd><a href="#vertical4" id="vertNav_Notifications">Notifications</a></dd>
         </dl>
+        <!-- /VTabs -->
+
+        @*<!--+----------+
+              | Contacts |
+              +----------+-->*@
         <div>
             <h5>Account Manager</h5>
             <div style="float: left; width: 65px; padding: 5px; padding-top: 0px; padding-left: 10px;">
@@ -55,38 +82,71 @@
             <br />
             <a href="mailto:jennifer@directagents.com">jennifer@directagents.com</a>
         </div>
+        <!-- /Contacts -->
+
     </div>
+    <!-- /Sidebar -->
+
+    @*<!--+---------------+
+          | VTabs Content |
+          +---------------+-->*@
     <ul class="tabs-content">
+
+        @*<!--+-----------
+              | Dashboard VTab
+              +------------->*@
         <li id="vertical1Tab" class="active">
             <div class="ten columns portaltabs-h">
                 <dl class="tabs">
                     <dd class="active"><a href="#dashboard">Dashboard</a></dd>
                 </dl>
                 <ul class="tabs-content">
-                    <li id="dashboardTab" class="active">
-                    </li>
+                    <li id="dashboardTab" class="active"></li>
                 </ul>
             </div>
         </li>
+        <!-- /DashboardVTabContent   -->
+
+        @*<!--+----------
+              | Reports VTab
+              +------------>*@
         <li id="vertical2Tab">
             <div class="ten columns portaltabs-h">
+
+                @*<!--+----------------+
+                      | Reports HTabs |
+                      +----------------+-->*@
                 <dl class="tabs">
-                    <dd class="active"><a href="#repPerformance" id="repNav_Performance">Performance</a></dd>
-                    <dd><a href="#repOffSum" id="repNav_OffSum">Offer Summary</a></dd>
+                    <dd class="active"><a href="#repOffSum" id="repNav_OffSum">Offer Summary</a></dd>
                     <dd><a href="#repDaySum" id="repNav_DaySum">Daily Summary</a></dd>
                     <dd><a href="#repConversions" id="repNav_Conversions">Conversion Report</a></dd>
                     <dd><a href="#repCPM" id="repNav_CPM">CPM</a></dd>
                 </dl>
+                <!-- /ReportsHTabs  -->
+
+                @*<!--+------------------------+
+                      | Reports HTabs Content |
+                      +------------------------+-->*@
                 <ul class="tabs-content">
-                    <li id="repPerformanceTab" class="active"></li>
                     <li id="repOffSumTab"></li>
                     <li id="repDaySumTab"></li>
                     <li id="repConversionsTab"></li>
                     <li id="repCPMTab"></li>
                 </ul>
+                <!-- /ReportsContent  -->
+
             </div>
         </li>
+        <!-- /Reports   -->
+
+        @*<!--+------------
+              | My Account VTab
+              +-------------->*@
         <li id="vertical3Tab">
+
+            @*<!--+-----------------+
+                  | My Account Tabs |
+                  +-----------------+-->*@
             <div class="ten columns portaltabs-h">
                 <dl class="tabs">
                     <dd class="active"><a href="#goals" id="navGoals">Goals</a></dd>
@@ -94,6 +154,12 @@
                     <dd><a href="#invoices" id="navInvoices">Invoices</a></dd>
                     <dd><a href="#contact" id="navContact">Contact</a></dd>
                 </dl>
+                <!-- /MyAccountTabs  -->
+
+
+                @*<!--+-------------------------+
+                      | My Account Tabs Content |
+                      +-------------------------+-->*@
                 <ul class="tabs-content">
                     <li id="goalsTab" class="active">
                         <div id="divGoals"></div>
@@ -108,13 +174,29 @@
                         <div id="divContact"></div>
                     </li>
                 </ul>
+                <!-- /MyAccountContent  -->
+
             </div>
         </li>
+        <!-- /MyAccount   -->
+
+        @*<!--+--------------
+              | Notifications VTab
+              +-------------- -->*@
         <li id="vertical4Tab">
             <h3>Notifications</h3>
         </li>
+        <!-- /Notifications  -->
+
     </ul>
+    <!-- /VTabs -->
+
 </div>
+<!-- /MainContent -->
+
+@*<!--+---------------------+
+      | Footer / Bottom Bar |
+      +---------------------+-->*@
 <footer class="row">
     <div class="twelve columns">
         <div class="row">
@@ -126,6 +208,7 @@
         </div>
     </div>
 </footer>
+<!-- /BottomBar  -->
 
 @section head {
     <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
@@ -139,11 +222,35 @@
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
     <script>
+
+        // ready function
         $(function () {
             LoadDashboard();
             SetupTabs();
             $(window).bind('resize', WindowResize);
         });
+
+        function WindowResize() {
+            ResizeDashboardCharts();
+            ResizeChart('offsum', true);
+            ResizeChart('daysum', true);
+            ResizeChart('conrep', true);
+        }
+
+        // Resize a chart, optionally refreshing it.
+        function ResizeChart(chart, refresh) {
+            var offset = 0;
+            if (chart == 'daysum') offset = 225;
+
+            if ($('#' + chart + 'ChartSection').length > 0) {
+                var w = $('#' + chart + 'ChartSection').width();
+                if (w > 0) {
+                    $('#' + chart + 'ChartSection .chart-wrapper').css('width', w - offset);
+                    if (refresh)
+                        $('#' + chart + 'Chart').data('kendoChart').refresh();
+                }
+            }
+        }
 
         function LoadDashboard() {
             $.ajax({
@@ -151,17 +258,130 @@
                 cache: false
             }).done(function (html) {
                 $("#dashboardTab").html(html);
-
-                // Heat map
                 drawHeatMap();
             });
         }
 
+        // Setup kendo view model with click behaviors for tabs..
+        var viewModel = kendo.observable({
+            loadMyAccount: function () {
+                $.ajax({
+                    url: '@Url.Action("Index", "Goals")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divGoals").html(html);
+                });
+            }
+        });
+        kendo.bind($("#main"), viewModel);
+
+        // Setup event handlers so that AJAX content loads on demand as tabs are clicked.
+        function SetupTabs() {
+
+            // Dashboard
+            $("#vertNav_Dashboard").click(function () {
+                LoadDashboard();
+            });
+
+            // Files
+            $("#navFiles").one("click", function () {
+                $.ajax({
+                    url: '@Url.Action("Index", "Files")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divFiles").html(html);
+                });
+            });
+
+            // Invoices
+            $("#navInvoices").click(function () {
+                $.ajax({
+                    url: '@Url.Action("Index", "Invoices")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divInvoices").html(html);
+                });
+            });
+
+            // Contacts
+            $("#navContact").one("click", function () {
+                    $("#divContact").html('Loading...');
+                    $.ajax({
+                        url: '@Url.Action("Contact", "Home")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divContact").html(html);
+                });
+            });
+
+            // Offer Summary
+                $("#repNav_OffSum").click(function () {
+                    if ($('#offsumChart').length == 0) {
+                        $.ajax({
+                            url: '@Url.Action("OfferSummaryPartial", "Reports")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#repOffSumTab").html(html);
+                        ResizeChart('offsum', false);
+                        SetupOfferSummaryGrid();
+                    });
+                } else {
+                    setTimeout(function () { ResizeChart('offsum', true); }, 100);
+                }
+            });
+
+            // Daily Summary
+            $("#repNav_DaySum").click(function () {
+                if ($('#daysumChart').length == 0) {
+                    $.ajax({
+                        url: '@Url.Action("DailySummaryPartial", "Reports")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#repDaySumTab").html(html);
+                        ResizeChart('daysum', false);
+                        SetupDailySummaryGrid();
+                    });
+                } else {
+                    setTimeout(function () { ResizeChart('daysum', true); }, 100);
+                }
+            });
+
+            // Conversions
+            $("#repNav_Conversions").click(function () {
+                if ($('#conrepChart').length == 0) {
+                    $.ajax({
+                        url: '@Url.Action("ConversionReportPartial", "Reports")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#repConversionsTab").html(html);
+                        ResizeChart('conrep', false);
+                        SetupConversionReportGrid();
+                        SetupConversionReportChart();
+                    });
+                } else {
+                    setTimeout(function () { ResizeChart('conrep', true); }, 100);
+                }
+            });
+
+            // CPM
+            $("#repNav_CPM").one("click", function () {
+                $.ajax({
+                    url: '@Url.Action("CPMSummaryPartial", "Reports")',
+                    cache: false
+                }).done(function (html) {
+                    $("#repCPMTab").html(html);
+                    SetupCPMSummaryGrid();
+                });
+            });
+        }
+
+        //
         function DateChanged(grid) {
             $('#' + grid + '_dateRangeSel').val('custom');
             $('#' + grid + '_filterBtn').attr('disabled', false);
         }
 
+        //
         function ChangeDateRange(grid) {
             var startId = '#' + grid + '_startdate';
             var endId = '#' + grid + '_enddate';
@@ -182,186 +402,72 @@
                     break;
                 case "mtd":
                     $(startId).val('@firstOfMonth');
-                $(endId).val('@today');
-                break;
-            case "ytd":
-                $(startId).val('@firstOfYear');
-                $(endId).val('@today');
-                break;
-            case "lastweek":
-                $(startId).val('@firstOfLastWeek');
-                $(endId).val('@lastOfLastWeek');
-                break;
-            case "lastmonth":
-                $(startId).val('@firstOfLastMonth');
-                $(endId).val('@lastOfLastMonth');
-                break;
-            default:
-                refresh = false;
+                    $(endId).val('@today');
+                    break;
+                case "ytd":
+                    $(startId).val('@firstOfYear');
+                    $(endId).val('@today');
+                    break;
+                case "lastweek":
+                    $(startId).val('@firstOfLastWeek');
+                    $(endId).val('@lastOfLastWeek');
+                    break;
+                case "lastmonth":
+                    $(startId).val('@firstOfLastMonth');
+                    $(endId).val('@lastOfLastMonth');
+                    break;
+                default:
+                    refresh = false;
+            }
+            if (refresh)
+                RefreshGrid(grid);
         }
-        if (refresh)
-            RefreshGrid(grid);
-    }
-    function ChangeDateRangeMY(grid) {
-        var startId = '#' + grid + '_startdate';
-        var endId = '#' + grid + '_enddate';
-        var refresh = true;
-        var dateRange = $('#' + grid + '_dateRangeSel').val();
-        switch (dateRange) {
-            case "prev3months":
-                $(startId).val('@threeMonthsAgoMY');
-                $(endId).val('@lastMonthMY');
-                break;
-            case "lastmonth":
-                $(startId).val('@lastMonthMY');
-                $(endId).val('@lastMonthMY');
-                break;
-            case "ytd":
-                $(startId).val('@firstOfYearMY');
-                $(endId).val('@todayMY');
-                break;
-            default:
-                refresh = false;
+
+        //
+        function ChangeDateRangeMY(grid) {
+            var startId = '#' + grid + '_startdate';
+            var endId = '#' + grid + '_enddate';
+            var refresh = true;
+            var dateRange = $('#' + grid + '_dateRangeSel').val();
+            switch (dateRange) {
+                case "prev3months":
+                    $(startId).val('@threeMonthsAgoMY');
+                    $(endId).val('@lastMonthMY');
+                    break;
+                case "lastmonth":
+                    $(startId).val('@lastMonthMY');
+                    $(endId).val('@lastMonthMY');
+                    break;
+                case "ytd":
+                    $(startId).val('@firstOfYearMY');
+                    $(endId).val('@todayMY');
+                    break;
+                default:
+                    refresh = false;
+            }
+            if (refresh)
+                RefreshGrid(grid);
         }
-        if (refresh)
-            RefreshGrid(grid);
-    }
 
-    function RefreshGrid(grid) {
-        var gridDataSource = $('#' + grid + 'Grid').data('kendoGrid').dataSource;
-        gridDataSource.read();
-        if ($('#' + grid + 'Chart').length > 0) {
-            var chartDataSource = $('#' + grid + 'Chart').data('kendoChart').dataSource;
-            if (chartDataSource !== gridDataSource)
-                chartDataSource.read();
+        //
+        function RefreshGrid(grid) {
+            var gridDataSource = $('#' + grid + 'Grid').data('kendoGrid').dataSource;
+            gridDataSource.read();
+            if ($('#' + grid + 'Chart').length > 0) {
+                var chartDataSource = $('#' + grid + 'Chart').data('kendoChart').dataSource;
+                if (chartDataSource !== gridDataSource)
+                    chartDataSource.read();
+            }
+            $('#' + grid + '_filterBtn').attr('disabled', true);
         }
-        $('#' + grid + '_filterBtn').attr('disabled', true);
-    }
 
-    function WindowResize() {
-        ResizeDashboardCharts();
-        ResizeChart('offsum', true);
-        ResizeChart('daysum', true);
-        ResizeChart('conrep', true);
-    }
-
-    function ResizeChart(chart, refresh) {
-        var offset = 0;
-        if (chart == 'daysum') offset = 225;
-
-        if ($('#' + chart + 'ChartSection').length > 0) {
-            var w = $('#' + chart + 'ChartSection').width();
-            if (w > 0) {
-                $('#' + chart + 'ChartSection .chart-wrapper').css('width', w - offset);
-                if (refresh)
-                    $('#' + chart + 'Chart').data('kendoChart').refresh();
-            }
+        // Returns val as a culture formatted string.
+        function FormatCurr(val, culture) {
+            kendo.culture(culture);
+            return kendo.toString(val, "c");
         }
-    }
 
-    function SetupTabs() {
-        @* Dashboard *@
-        $("#vertNav_Dashboard").click(function () {
-            LoadDashboard();
-        });
-
-        @* My Account *@
-        $("#vertNav_MyAccount").one("click", function () {
-            $.ajax({
-                url: '@Url.Action("Index", "Goals")',
-                cache: false
-            }).done(function (html) {
-                $("#divGoals").html(html);
-            });
-        });
-        $("#navFiles").one("click", function () {
-            $.ajax({
-                url: '@Url.Action("Index", "Files")',
-                cache: false
-            }).done(function (html) {
-                $("#divFiles").html(html);
-            });
-        });
-        $("#navInvoices").click(function () {
-            $.ajax({
-                url: '@Url.Action("Index", "Invoices")',
-                cache: false
-            }).done(function (html) {
-                $("#divInvoices").html(html);
-            });
-        });
-            $("#navContact").one("click", function () {
-                $("#divContact").html('Loading...');
-                $.ajax({
-                    url: '@Url.Action("Contact", "Home")',
-                cache: false
-            }).done(function (html) {
-                $("#divContact").html(html);
-            });
-        });
-
-
-        @* Reports *@
-        $("#repNav_OffSum").click(function () {
-            if ($('#offsumChart').length == 0) {
-                $.ajax({
-                    url: '@Url.Action("OfferSummaryPartial", "Reports")',
-                    cache: false
-                }).done(function (html) {
-                    $("#repOffSumTab").html(html);
-                    ResizeChart('offsum', false);
-                    SetupOfferSummaryGrid();
-                });
-            } else {
-                setTimeout(function () { ResizeChart('offsum', true); }, 100);
-            }
-        });
-        $("#repNav_DaySum").click(function () {
-            if ($('#daysumChart').length == 0) {
-                $.ajax({
-                    url: '@Url.Action("DailySummaryPartial", "Reports")',
-                    cache: false
-                }).done(function (html) {
-                    $("#repDaySumTab").html(html);
-                    ResizeChart('daysum', false);
-                    SetupDailySummaryGrid();
-                });
-            } else {
-                setTimeout(function () { ResizeChart('daysum', true); }, 100);
-            }
-        });
-        $("#repNav_Conversions").click(function () {
-            if ($('#conrepChart').length == 0) {
-                $.ajax({
-                    url: '@Url.Action("ConversionReportPartial", "Reports")',
-                    cache: false
-                }).done(function (html) {
-                    $("#repConversionsTab").html(html);
-                    ResizeChart('conrep', false);
-                    SetupConversionReportGrid();
-                    SetupConversionReportChart();
-                });
-            } else {
-                setTimeout(function () { ResizeChart('conrep', true); }, 100);
-            }
-        });
-        $("#repNav_CPM").one("click", function () {
-            $.ajax({
-                url: '@Url.Action("CPMSummaryPartial", "Reports")',
-                cache: false
-            }).done(function (html) {
-                $("#repCPMTab").html(html);
-                SetupCPMSummaryGrid();
-            });
-        });
-            }
-
-            function FormatCurr(val, culture) {
-                kendo.culture(culture);
-                return kendo.toString(val, "c");
-            }
-
-    @* used by both the Offer Summary and Conversion Report tabs: *@
+        // DataSource used by both the Offer Summary and Conversion Report tabs
         function CreateConversionReportDataSource(readData) {
             return new kendo.data.DataSource({
                 serverPaging: true,
@@ -374,34 +480,34 @@
                         type: 'post',
                         dataType: 'json',
                         url: '@Url.Action("ConversionReportData", "Reports")',
-                    data: readData
-                }
-            },
-            schema: {
-                data: 'data',
-                total: 'total',
-                aggregates: 'aggregates',
-                model: {
-                    id: 'ConversionId',
-                    fields: {
-                        Date: { type: 'date' },
-                        AffId: { type: 'number' },
-                        OfferId: { type: 'number' },
-                        Offer: { type: 'string' },
-                        PriceReceived: { type: 'number' },
-                        TransactionId: { type: 'string' },
-                        Positive: { type: 'boolean' }
+                        data: readData
                     }
-                }
-            },
-            sort: [
-                { field: "Offer", dir: "asc" },
-                { field: "Date", dir: "asc" }
-            ],
-            aggregate: [
-                { field: "PriceReceived", aggregate: "sum" }
-            ]
-        });
-    }
+                },
+                schema: {
+                    data: 'data',
+                    total: 'total',
+                    aggregates: 'aggregates',
+                    model: {
+                        id: 'ConversionId',
+                        fields: {
+                            Date: { type: 'date' },
+                            AffId: { type: 'number' },
+                            OfferId: { type: 'number' },
+                            Offer: { type: 'string' },
+                            PriceReceived: { type: 'number' },
+                            TransactionId: { type: 'string' },
+                            Positive: { type: 'boolean' }
+                        }
+                    }
+                },
+                sort: [
+                    { field: "Offer", dir: "asc" },
+                    { field: "Date", dir: "asc" }
+                ],
+                aggregate: [
+                    { field: "PriceReceived", aggregate: "sum" }
+                ]
+            });
+        }
     </script>
 }

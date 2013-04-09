@@ -11,11 +11,14 @@
     var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
 }
 
+<!-- Row 1 -->
 <div class="row">
-    <div class="six columns">
+
+    <!-- Column 1 -->
+    <div class="four columns">
         <div class="panel">
             <b>Summary Report</b>
-            <table>
+            <table style="width: 100%">
                 <tr>
                     <th></th>
                     <th>Clicks</th>
@@ -35,19 +38,36 @@
         </div>
     </div>
 
-    <div class="six columns panel" id="perfChartOuter">
-        <b>Performance This Month vs. Prior: Leads</b>
-        @Html.Partial("PerformanceVis")
+    <!-- Column 2 -->
+    <div class="four columns">
+        <div class="panel" id="perfChartOuter">
+            <b>Performance This Month vs. Prior: Leads</b>
+            @Html.Partial("PerformanceVis")
+        </div>
     </div>
+
+    <!-- Column 3 -->
+    <div class="four columns">
+        <div class="panel" id="heatMapOuter">
+            <b>Conversions by State</b>
+            @Html.Partial("_HeatMap")
+        </div>
+    </div>
+
 </div>
 
+<!-- Row 2 -->
 <div class="row">
+
+    <!-- Column 1 -->
     <div class="six columns">
         <div class="panel" id="spendChartOuter">
             <b>Budget</b>
             @Html.Partial("SpendVis")
         </div>
     </div>
+
+    <!-- Column 2 -->
     <div class="six columns panel">
         <div id="weeklySpendBarChartOuter">
             <b>Budget Spent Month to Date</b>
@@ -66,9 +86,12 @@
     </div>
 </div>
 
+<!-- Row 3 -->
 @foreach (var offersum in Model.OfferGoalSummaries)
 {
     <div class="row">
+
+        <!-- Left -->
         <div class="six columns">
             <div class="panel">
                 <b>Offer: @offersum.Offer.OfferName</b><br />
@@ -109,24 +132,18 @@
             </div>
         </div>
 
+        <!-- Right -->
         <div class="panel six columns" id="goal@(offersum.Offer.Offer_Id)ChartOuter">
             @Html.Partial("GoalVis", offersum.Offer.Offer_Id.ToString())
         </div>
+
     </div>
 }
 
-<div class="row">
-    <div class="six columns">
-        <div class="panel" id="heatMapOuter">
-            <b>Conversions by State</b>
-            @Html.Partial("_HeatMap")
-        </div>
-    </div>
-</div>
-
 <script>
     $(function () {
-        @foreach (var call in firstCreateGoalChartCalls) {
+        @foreach (var call in firstCreateGoalChartCalls)
+        {
             <text>@Html.Raw(call);</text>
         }
         CreatePerformanceChart([@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180)

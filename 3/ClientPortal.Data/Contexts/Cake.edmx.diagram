@@ -10,7 +10,7 @@
         <EntityTypeShape EntityType="CakeModel.DailySummary" Width="1.5" PointX="5.125" PointY="0.75" />
         <EntityTypeShape EntityType="CakeModel.MonthlySummary" Width="1.75" PointX="7.125" PointY="0.75" />
         <EntityTypeShape EntityType="CakeModel.CakeConversion" Width="2.125" PointX="9.25" PointY="0.75" />
-        <EntityTypeShape EntityType="CakeModel.CakeCurrency" Width="1.5" PointX="9.25" PointY="4.875" />
+        <EntityTypeShape EntityType="CakeModel.CakeCurrency" Width="1.5" PointX="11.875" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

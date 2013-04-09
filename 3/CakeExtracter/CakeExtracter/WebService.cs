@@ -1,12 +1,5 @@
 ﻿namespace CakeMarketing
 {
-    using System;
-    using System.Web.Services;
-    using System.Diagnostics;
-    using System.Web.Services.Protocols;
-    using System.Xml.Serialization;
-    using System.ComponentModel;
-
     [System.CodeDom.Compiler.GeneratedCodeAttribute("SharpDevelop", "4.3.1.9430-406354be")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

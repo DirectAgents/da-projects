@@ -1,5 +1,4 @@
-﻿using ClientPortal.Data.Contexts;
-using System;
+﻿using System;
 
 namespace ClientPortal.Data.DTOs
 {
