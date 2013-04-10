@@ -34,7 +34,7 @@
         });
     }
 
-    function CreateDailySpendDataSource(url, startdate, enddate)
+    function CreateDailySpendDataSource(url)
     {
         return new kendo.data.DataSource({
             pageSize: 62,
@@ -43,7 +43,12 @@
                     type: 'post',
                     dataType: 'json',
                     url: url,
-                    data: { startdate: startdate, enddate: enddate }
+                    data: function () {
+                        return {
+                            startdate: $('#dash_startdate').val(),
+                            enddate: $('#dash_enddate').val()
+                        };
+                    }
                 }
             },
             schema: {

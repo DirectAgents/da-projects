@@ -7,8 +7,10 @@
     var today = now.ToString("d", Model.CultureInfo);
     var firstOfMonth = firstOfMonthDT.ToString("d", Model.CultureInfo);
     var firstOfYear = new DateTime(now.Year, 1, 1).ToString("d", Model.CultureInfo);
-    var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
-    var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
+    //var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
+    //var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
+    var start = Model.Start == null ? "" : Model.Start.Value.ToString("d", Model.CultureInfo);
+    var end = Model.End == null ? "" : Model.End.Value.ToString("d", Model.CultureInfo);
 }
 
 <!-- Row 1 -->
@@ -55,6 +57,18 @@
     </div>
 
 </div>
+
+<select style="float: left; width: 110px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
+    <option value="mtd">Month to Date</option>
+    <option value="ytd">Year to Date</option>
+    <option value="custom">- custom -</option>
+</select>
+<span style="float: left; margin-left: 10px">Start:</span>
+<input style="float:left; width:100px" id="dash_startdate" name="startdate" type="text" value="@start" onchange="DashboardDateChanged()" />
+<span style="float: left; margin-left: 10px">End:</span>
+<input style="float:left; width:100px" id="dash_enddate" name="enddate" type="text" value="@end" onchange="DashboardDateChanged()" />
+<a class="button" style="padding: 3px; margin-left: 10px" id="dash_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshDashboardRange(); return false">Refresh</a>
+<br style="clear:both" />
 
 <!-- Row 2 -->
 <div class="row">
@@ -142,15 +156,15 @@
 
 <script>
     $(function () {
-        @foreach (var call in firstCreateGoalChartCalls)
-        {
-            <text>@Html.Raw(call);</text>
-        }
+        kendo.culture('@Model.Culture');
+        $('#dash_dateRangeSel').val('@Model.DateRangeType');
+        $('#dash_startdate').kendoDatePicker();
+        $('#dash_enddate').kendoDatePicker();
+
         CreatePerformanceChart([@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180)
         CreateSpendChart([@Model.SummaryMTD.Revenue], 'C0', '@Model.Culture', 'MTD Spend', 75);
 
-        var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfMonth', '@today');
-        //var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")', '@firstOfLastMonth', '@lastOfLastMonth');
+        var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
         CreateWeeklySpendBarChart('weeklySpendBarChart', spendDS, 200);
         spendDS.read();
@@ -158,7 +172,44 @@
         var monthlySpendDS = CreateMonthlySpendDataSource('@Url.Action("MonthlySummaryData", "Reports")', '@firstOfYear', '@today');
         CreateMonthlySpendBarChart('monthlySpendBarChart', monthlySpendDS, 200);
         monthlySpendDS.read();
+
+        @foreach (var call in firstCreateGoalChartCalls)
+        {
+            <text>@Html.Raw(call);</text>
+        }
     });
+
+    function RefreshDashboardRange() {
+        $('#dash_filterBtn').attr('disabled', true);
+        $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
+        $('#spendLineChart').data('kendoChart').dataSource.read();
+    }
+
+    function DashboardDateChanged() {
+        $('#dash_dateRangeSel').val('custom');
+        $('#dash_filterBtn').attr('disabled', false);
+    }
+    function ChangeDashboardDateRange() {
+        var startId = '#dash_startdate';
+        var endId = '#dash_enddate';
+        var refresh = true;
+        var dateRange = $('#dash_dateRangeSel').val();
+        switch (dateRange) {
+            case "mtd":
+                $(startId).val('@firstOfMonth');
+                $(endId).val('@today');
+                break;
+            case "ytd":
+                $(startId).val('@firstOfYear');
+                $(endId).val('@today');
+                break;
+            default:
+                refresh = false;
+        }
+        if (refresh) {
+            RefreshDashboardRange();
+        }
+    }
 
     function ResizeDashboardCharts() {
         ResizeDashboardChart('perf', true);

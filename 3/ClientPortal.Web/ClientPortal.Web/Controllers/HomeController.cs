@@ -39,6 +39,51 @@ namespace ClientPortal.Web.Controllers
             return PartialView(model);
         }
 
+        public ActionResult SetDashboardDateRange(string type, string startdate, string enddate)
+        {
+            var userProfile = GetUserProfile();
+            Session["DashboardDateRangeType"] = type;
+
+            DateTime? start, end;
+            if (ReportsController.ParseDate(startdate, userProfile.CultureInfo, out start))
+                Session["DashboardStart"] = start;
+            if (ReportsController.ParseDate(enddate, userProfile.CultureInfo, out end))
+                Session["DashboardEnd"] = end;
+
+            return null;
+        }
+        private string GetDashboardDateRangeType()
+        {
+            return (string)Session["DashboardDateRangeType"] ?? "mtd";
+        }
+
+        private DateTime? GetDashboardDateRangeStart()
+        {
+            DateTime now = DateTime.Now;
+            string type = GetDashboardDateRangeType();
+            switch (type) {
+                case "ytd":
+                    return new DateTime(now.Year, 1, 1);
+                case "mtd":
+                    return new DateTime(now.Year, now.Month, 1);
+                default:
+                    return (DateTime?)Session["DashboardStart"];
+            }
+        }
+        private DateTime? GetDashboardDateRangeEnd()
+        {
+            DateTime now = DateTime.Now;
+            string type = GetDashboardDateRangeType();
+            switch (type)
+            {
+                case "ytd":
+                case "mtd":
+                    return new DateTime(now.Year, now.Month, now.Day);
+                default:
+                    return (DateTime?)Session["DashboardEnd"];
+            }
+        }
+
         public PartialViewResult Dashboard()
         {
             int? advertiserId = GetAdvertiserId();
@@ -98,7 +143,10 @@ namespace ClientPortal.Web.Controllers
             var model = new DashboardModel
             {
                 AdvertiserSummaries = new List<DateRangeSummary> { summaryWTD, summaryMTD, summaryLMTD, summaryLM },
-                OfferGoalSummaries = offerGoalSummaries
+                OfferGoalSummaries = offerGoalSummaries,
+                DateRangeType = GetDashboardDateRangeType(),
+                Start = GetDashboardDateRangeStart(),
+                End = GetDashboardDateRangeEnd()
             };
             return PartialView(model);
         }
