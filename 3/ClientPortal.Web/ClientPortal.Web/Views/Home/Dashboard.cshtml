@@ -13,6 +13,23 @@
     var end = Model.End == null ? "" : Model.End.Value.ToString("d", Model.CultureInfo);
 }
 
+<!-- Timeframe -->
+<div class="row">
+    <div class="twelve columns" style="top: -35px; height: 15px">
+        <span style="float: left; margin-right: 5px">Timeframe:</span>
+        <select style="float: left; width: 110px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
+            <option value="mtd">Month to Date</option>
+            <option value="ytd">Year to Date</option>
+            <option value="custom">- custom -</option>
+        </select>
+        <span style="float: left; margin-left: 10px">Start:</span>
+        <input style="float:left; width:100px" id="dash_startdate" name="startdate" type="text" value="@start" onchange="DashboardDateChanged()" />
+        <span style="float: left; margin-left: 10px">End:</span>
+        <input style="float:left; width:100px" id="dash_enddate" name="enddate" type="text" value="@end" onchange="DashboardDateChanged()" />
+        <a class="button" style="padding: 3px; margin-left: 10px" id="dash_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshDashboardRange(); return false">Refresh</a>
+    </div>
+</div>
+
 <!-- Row 1 -->
 <div class="row">
 
@@ -43,7 +60,7 @@
     <!-- Column 2 -->
     <div class="four columns">
         <div class="panel" id="perfChartOuter">
-            <b>Performance This Month vs. Prior: Leads</b>
+            <b>Performance</b>
             @Html.Partial("PerformanceVis")
         </div>
     </div>
@@ -57,20 +74,6 @@
     </div>
 
 </div>
-
-<!-- Timeframe -->
-<span style="float: left">Timeframe:</span>
-<select style="float: left; width: 110px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
-    <option value="mtd">Month to Date</option>
-    <option value="ytd">Year to Date</option>
-    <option value="custom">- custom -</option>
-</select>
-<span style="float: left; margin-left: 10px">Start:</span>
-<input style="float:left; width:100px" id="dash_startdate" name="startdate" type="text" value="@start" onchange="DashboardDateChanged()" />
-<span style="float: left; margin-left: 10px">End:</span>
-<input style="float:left; width:100px" id="dash_enddate" name="enddate" type="text" value="@end" onchange="DashboardDateChanged()" />
-<a class="button" style="padding: 3px; margin-left: 10px" id="dash_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshDashboardRange(); return false">Refresh</a>
-<br style="clear:both" />
 
 <!-- Row 2 -->
 <div class="row">
@@ -163,7 +166,8 @@
         $('#dash_startdate').kendoDatePicker();
         $('#dash_enddate').kendoDatePicker();
 
-        CreatePerformanceChart([@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180)
+        //CreatePerformanceChart(['Last Month', 'MTD'], [@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180);
+        CreatePerformanceChart([''], [0], 'N0', '@Model.Culture', 180);
         CreateSpendChart(0, 'C0', '@Model.Culture', 'Spend', 75);
 
         var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")');
@@ -172,6 +176,10 @@
         spendDS.read();
         spendDS.bind('change', function () {
             var aggs = this.aggregates();
+            if ($('#dash_dateRangeSel').val() == 'mtd')
+                UpdatePerformanceChartValues(['Last Month', 'MTD'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum]);
+            else
+                UpdatePerformanceChartValues([$('#dash_startdate').val() +' - '+ $('#dash_enddate').val()], [aggs.Conversions.sum]);
             UpdateSpendChartValue(aggs.Revenue.sum);
             UpdateSpendLineChart();
         });

@@ -10,7 +10,8 @@
         kendo.culture(culture);
         $("#spendChart").kendoChart({
             chartArea: {
-                height: height
+                height: height,
+                margin: { left: 58 }
             },
             legend: {
                 visible: false
@@ -73,6 +74,7 @@
             },
             sort: { field: "Date", dir: "asc" },
             aggregate: [
+                { field: "Conversions", aggregate: "sum" },
                 { field: "Revenue", aggregate: "sum" }
             ]
         });
@@ -83,15 +85,17 @@
             dataSource: dataSource,
             autoBind: false,
             chartArea: {
-                height: height
+                height: height,
+                margin: { right: 28 }
             },
             series: [
                 {
                     type: "line",
                     field: "Revenue",
                     name: "Daily Spend",
-                    axis: "spend"
-                }
+                    axis: "spend",
+                    markers: { visible: false }
+    }
             ],
             categoryAxis: {
                 baseUnit: "days",
@@ -117,13 +121,19 @@
     }
     function UpdateSpendLineChart() {
         var chart = $('#spendLineChart').data('kendoChart');
-        var spark = false;
-        if (chart.dataSource.total() > 62)
-            spark = true;
+
+        var total = chart.dataSource.total();
+        chart.options.categoryAxis.labels.step = Math.ceil(total / 31);
+
+        var spark = (total > 62);
         if (spark) {
-            chart.options.categoryAxis.labels.visible = false;
+            chart.options.valueAxis.majorGridLines.visible = false;
+            chart.options.categoryAxis.majorGridLines.visible = false;
+            chart.options.series[0].markers.visible = false;
         } else {
-            chart.options.categoryAxis.labels.visible = true;
+            chart.options.valueAxis.majorGridLines.visible = true;
+            chart.options.categoryAxis.majorGridLines.visible = true;
+            chart.options.series[0].markers.visible = true;
         }
         chart.redraw();
     }

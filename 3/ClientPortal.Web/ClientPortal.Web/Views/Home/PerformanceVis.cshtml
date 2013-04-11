@@ -3,7 +3,7 @@
 </div>
 
 <script>
-    function CreatePerformanceChart(values, valueFormat, culture, height) {
+    function CreatePerformanceChart(categories, values, valueFormat, culture, height) {
         kendo.culture(culture);
         $("#perfChart").kendoChart({
             chartArea: {
@@ -19,15 +19,23 @@
                 data: values
             }],
             valueAxis: {
-                labels: { format: valueFormat, step: 2 }
+                labels: { format: valueFormat, step: 2 },
+                title: { text: "Leads" }
             },
             categoryAxis: {
-                categories: ["Last Month", "MTD"]
+                categories: categories
             },
             tooltip: {
                 visible: true,
                 format: valueFormat
             }
         });
+    }
+
+    function UpdatePerformanceChartValues(categories, values) {
+        var chart = $('#perfChart').data('kendoChart');
+        chart.options.categoryAxis.categories = categories;
+        chart.options.series[0].data = values;
+        chart.redraw();
     }
 </script>
