@@ -6,7 +6,7 @@
 </div>
 
 <script>
-    function CreateSpendChart(values, valueFormat, culture, catName, height) {
+    function CreateSpendChart(value, valueFormat, culture, catName, height) {
         kendo.culture(culture);
         $("#spendChart").kendoChart({
             chartArea: {
@@ -19,7 +19,7 @@
                 type: "bar"
             },
             series: [{
-                data: values
+                data: [value]
             }],
             valueAxis: {
                 labels: { format: valueFormat, step: 2 }
@@ -33,11 +33,15 @@
             }
         });
     }
+    function UpdateSpendChartValue(value) {
+        var chart = $('#spendChart').data('kendoChart');
+        chart.options.series[0].data = [value];
+        chart.redraw();
+    }
 
     function CreateDailySpendDataSource(url)
     {
         return new kendo.data.DataSource({
-            pageSize: 62,
             transport: {
                 read: {
                     type: 'post',
@@ -67,7 +71,10 @@
                     }
                 }
             },
-            sort: { field: "Date", dir: "asc" }
+            sort: { field: "Date", dir: "asc" },
+            aggregate: [
+                { field: "Revenue", aggregate: "sum" }
+            ]
         });
     }
     function CreateSpendLineChart(dataSource, title, height)
@@ -103,10 +110,24 @@
             },
             tooltip: {
                 visible: true,
-                format: "C"
+                format: "C",
+                template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:C}',value) #"
             }
         });
     }
+    function UpdateSpendLineChart() {
+        var chart = $('#spendLineChart').data('kendoChart');
+        var spark = false;
+        if (chart.dataSource.total() > 62)
+            spark = true;
+        if (spark) {
+            chart.options.categoryAxis.labels.visible = false;
+        } else {
+            chart.options.categoryAxis.labels.visible = true;
+        }
+        chart.redraw();
+    }
+
     function CreateWeeklySpendBarChart(divId, dataSource, height)
     {
         $("#" + divId).kendoChart({
@@ -143,6 +164,18 @@
             }
         });
     }
+    function SetSpendBarChartBaseUnit(divId, baseUnit) {
+        var chart = $('#' + divId).data('kendoChart');
+        var catAxis = chart.options.categoryAxis;
+        catAxis.baseUnit = baseUnit;
+        if (baseUnit == 'weeks') {
+            catAxis.title.text = "Week of...";
+            catAxis.title.visible = true;
+        } else {
+            catAxis.title.visible = false;
+        }
+        chart.redraw();
+    }
 
     function CreateMonthlySpendDataSource(url, startdate, enddate) {
         return new kendo.data.DataSource({
@@ -152,7 +185,12 @@
                     type: 'post',
                     dataType: 'json',
                     url: url,
-                    data: { startdate: startdate, enddate: enddate }
+                    data: function () {
+                        return {
+                            startdate: $('#dash_startdate').val(),
+                            enddate: $('#dash_enddate').val()
+                        };
+                    }
                 }
             },
             schema: {

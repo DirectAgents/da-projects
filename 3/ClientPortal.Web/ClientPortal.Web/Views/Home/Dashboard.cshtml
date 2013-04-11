@@ -58,6 +58,8 @@
 
 </div>
 
+<!-- Timeframe -->
+<span style="float: left">Timeframe:</span>
 <select style="float: left; width: 110px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
     <option value="mtd">Month to Date</option>
     <option value="ytd">Year to Date</option>
@@ -84,15 +86,15 @@
     <!-- Column 2 -->
     <div class="six columns panel">
         <div id="weeklySpendBarChartOuter">
-            <b>Budget Spent Month to Date</b>
-            <a href="#" onclick="ShowSpendYTD(); return false">Switch to YTD</a>
+            <b>Budget Spent Weekly</b>
+            <a href="#" onclick="ShowSpendMonthly(); return false">Switch to Monthly</a>
             <div class="chart-wrapper">
                 <div id="weeklySpendBarChart"></div>
             </div>
         </div>
         <div id="monthlySpendBarChartOuter" style="display: none">
-            <b>Budget Spent Year to Date</b>
-            <a href="#" onclick="ShowSpendMTD(); return false">Switch to MTD</a>
+            <b>Budget Spent Monthly</b>
+            <a href="#" onclick="ShowSpendWeekly(); return false">Switch to Weekly</a>
             <div class="chart-wrapper">
                 <div id="monthlySpendBarChart"></div>
             </div>
@@ -162,12 +164,17 @@
         $('#dash_enddate').kendoDatePicker();
 
         CreatePerformanceChart([@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180)
-        CreateSpendChart([@Model.SummaryMTD.Revenue], 'C0', '@Model.Culture', 'MTD Spend', 75);
+        CreateSpendChart(0, 'C0', '@Model.Culture', 'Spend', 75);
 
         var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
         CreateWeeklySpendBarChart('weeklySpendBarChart', spendDS, 200);
         spendDS.read();
+        spendDS.bind('change', function () {
+            var aggs = this.aggregates();
+            UpdateSpendChartValue(aggs.Revenue.sum);
+            UpdateSpendLineChart();
+        });
 
         var monthlySpendDS = CreateMonthlySpendDataSource('@Url.Action("MonthlySummaryData", "Reports")', '@firstOfYear', '@today');
         CreateMonthlySpendBarChart('monthlySpendBarChart', monthlySpendDS, 200);
@@ -180,14 +187,13 @@
     });
 
     function RefreshDashboardRange() {
-        $('#dash_filterBtn').attr('disabled', true);
         $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
         $('#spendLineChart').data('kendoChart').dataSource.read();
+        $('#monthlySpendBarChart').data('kendoChart').dataSource.read();
     }
 
     function DashboardDateChanged() {
         $('#dash_dateRangeSel').val('custom');
-        $('#dash_filterBtn').attr('disabled', false);
     }
     function ChangeDashboardDateRange() {
         var startId = '#dash_startdate';
@@ -236,12 +242,13 @@
         }
     }
 
-    function ShowSpendMTD() {
+    function ShowSpendWeekly() {
         $('#monthlySpendBarChartOuter').hide();
         $('#weeklySpendBarChartOuter').show();
         ResizeDashboardChart('weeklySpendBar', true);
     }
-    function ShowSpendYTD() {
+    function ShowSpendMonthly() {
+        //SetSpendBarChartBaseUnit('weeklySpendBarChart', 'months');
         $('#weeklySpendBarChartOuter').hide();
         $('#monthlySpendBarChartOuter').show();
         ResizeDashboardChart('monthlySpendBar', true);
