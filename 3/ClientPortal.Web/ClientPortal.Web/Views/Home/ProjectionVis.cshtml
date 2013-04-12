@@ -1,5 +1,5 @@
 ﻿<div class="chart-wrapper">
-    <div id="projectionChart"></div>
+    <div id="projChart"></div>
 </div>
 
 <script>
@@ -34,12 +34,18 @@
                     }
                 }
             },
-            sort: { field: "Date", dir: "asc" }
+            sort: { field: "Date", dir: "asc" },
+            aggregate: [
+                { field: "Date", aggregate: "max" },
+                { field: "Clicks", aggregate: "max" },
+                { field: "Conversions", aggregate: "max" },
+                { field: "Revenue", aggregate: "max" }
+        ]
         });
     }
 
     function CreateProjectionChart(dataSource, height) {
-        $("#projectionChart").kendoChart({
+        $("#projChart").kendoChart({
             dataSource: dataSource,
             autoBind: false,
             chartArea: {
@@ -56,8 +62,7 @@
             categoryAxis: {
                 baseUnit: "days",
                 field: "Date",
-                labels: { rotation: -90 },
-                //max: new Date(2013,3,8)
+                labels: { rotation: -90 }
             },
             valueAxis: [
                 {
@@ -78,18 +83,18 @@
     }
 
     function UpdateProjectionChart() {
-        var chart = $('#projectionChart').data('kendoChart');
+        var chart = $('#projChart').data('kendoChart');
 
         var total = chart.dataSource.total();
         chart.options.categoryAxis.labels.step = Math.ceil(total / 31);
 
         var spark = (total > 62);
         if (spark) {
-            chart.options.valueAxis.majorGridLines.visible = false;
+            //chart.options.valueAxis.majorGridLines.visible = false;
             chart.options.categoryAxis.majorGridLines.visible = false;
             //chart.options.series[0].markers.visible = false;
         } else {
-            chart.options.valueAxis.majorGridLines.visible = true;
+            //chart.options.valueAxis.majorGridLines.visible = true;
             chart.options.categoryAxis.majorGridLines.visible = true;
             //chart.options.series[0].markers.visible = true;
         }

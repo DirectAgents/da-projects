@@ -30,20 +30,11 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="six columns">
-        <div class="panel" id="projChartOuter">
-            <b>Projection</b>
-            @Html.Partial("ProjectionVis")
-        </div>
-    </div>
-</div>
-
 <!-- Row 1 -->
 <div class="row">
 
     <!-- Column 1 -->
-    <div class="four columns">
+    <div class="six columns">
         <div class="panel">
             <b>Summary Report</b>
             <table style="width: 100%">
@@ -67,16 +58,30 @@
     </div>
 
     <!-- Column 2 -->
-    <div class="four columns">
-        <div class="panel" id="perfChartOuter">
+    <div class="six columns panel">
+        <div id="perfChartOuter">
             <b>Performance</b>
             @Html.Partial("PerformanceVis")
         </div>
     </div>
 
-    <!-- Column 3 -->
-    <div class="four columns">
-        <div class="panel" id="heatMapOuter">
+</div>
+
+<!-- Row 2 -->
+<div class="row">
+
+    <!-- Column 1 -->
+    <div class="six columns">
+        <div class="panel" id="projChartOuter">
+            <span><b>Projection</b></span>
+            <span id="projNote" style="float: right"></span>
+            @Html.Partial("ProjectionVis")
+        </div>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="six columns panel">
+        <div id="heatMapOuter">
             <b>Conversions by State</b>
             @Html.Partial("_HeatMap")
         </div>
@@ -84,7 +89,7 @@
 
 </div>
 
-<!-- Row 2 -->
+<!-- Row 3 -->
 <div class="row">
 
     <!-- Column 1 -->
@@ -114,7 +119,7 @@
     </div>
 </div>
 
-<!-- Row 3 -->
+<!-- Goal Rows -->
 @foreach (var offersum in Model.OfferGoalSummaries)
 {
     <div class="row">
@@ -179,9 +184,12 @@
         CreateSpendChart(0, 'C0', '@Model.Culture', 'Spend', 75);
 
         var projDS = CreateProjectionDataSource('@Html.Raw(Url.Action("DailySummaryData", "Reports", new { cumulative = true, projection = true }))');
-        CreateProjectionChart(projDS, 125);
+        CreateProjectionChart(projDS, 180);
         projDS.read();
         projDS.bind('change', function () {
+            var aggs = this.aggregates();
+            var projNote = kendo.toString(aggs.Conversions.max, 'n0') + ' Leads by ' + aggs.Date.max.toLocaleDateString();
+            $('#projNote').html(projNote);
             UpdateProjectionChart();
         });
 
@@ -220,7 +228,7 @@
         $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
         $('#spendLineChart').data('kendoChart').dataSource.read();
         $('#monthlySpendBarChart').data('kendoChart').dataSource.read();
-        $('#projectionChart').data('kendoChart').dataSource.read();
+        $('#projChart').data('kendoChart').dataSource.read();
     }
 
     function DashboardDateChanged() {

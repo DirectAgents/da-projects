@@ -84,23 +84,40 @@ namespace ClientPortal.Web.Controllers
 
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
 
-            if (!cumulative && dailyInfos.Any())
+            if (dailyInfos.Any())
             {
-                int totalImpressions = dailyInfos.Sum(i => i.Impressions);
-                int totalClicks = dailyInfos.Sum(i => i.Clicks);
-                int totalConversions = dailyInfos.Sum(i => i.Conversions);
-                float totalConversionPct = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
-                decimal totalRevenue = dailyInfos.Sum(i => i.Revenue);
-                decimal totalEPC = (totalClicks == 0) ? 0 : Math.Round(totalRevenue / totalClicks, 2);
-                kgrid.aggregates = new
+                if (cumulative)
                 {
-                    Impressions = new { sum = totalImpressions },
-                    Clicks = new { sum = totalClicks },
-                    Conversions = new { sum = totalConversions },
-                    ConversionPct = new { agg = totalConversionPct },
-                    Revenue = new { sum = totalRevenue },
-                    EPC = new { agg = totalEPC }
-                };
+                    DateTime maxDate = dailyInfos.Max(i => i.Date);
+                    int maxClicks = dailyInfos.Max(i => i.Clicks);
+                    int maxConversions = dailyInfos.Max(i => i.Conversions);
+                    decimal maxRevenue = dailyInfos.Max(i => i.Revenue);
+                    kgrid.aggregates = new
+                    {
+                        Date = new { max = maxDate },
+                        Clicks = new { max = maxClicks },
+                        Conversions = new { max = maxConversions },
+                        Revenue = new { max = maxRevenue }
+                    };
+                }
+                else
+                {
+                    int totalImpressions = dailyInfos.Sum(i => i.Impressions);
+                    int totalClicks = dailyInfos.Sum(i => i.Clicks);
+                    int totalConversions = dailyInfos.Sum(i => i.Conversions);
+                    float totalConversionPct = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
+                    decimal totalRevenue = dailyInfos.Sum(i => i.Revenue);
+                    decimal totalEPC = (totalClicks == 0) ? 0 : Math.Round(totalRevenue / totalClicks, 2);
+                    kgrid.aggregates = new
+                    {
+                        Impressions = new { sum = totalImpressions },
+                        Clicks = new { sum = totalClicks },
+                        Conversions = new { sum = totalConversions },
+                        ConversionPct = new { agg = totalConversionPct },
+                        Revenue = new { sum = totalRevenue },
+                        EPC = new { agg = totalEPC }
+                    };
+                }
             }
             var json = Json(kgrid);
             return json;
