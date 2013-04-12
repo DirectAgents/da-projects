@@ -66,7 +66,7 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult DailySummaryData(KendoGridRequest request, string startdate, string enddate)
+        public JsonResult DailySummaryData(KendoGridRequest request, string startdate, string enddate, bool cumulative = false, bool projection = false)
         {
             var userProfile = HomeController.GetUserProfile();
             DateTime? start, end;
@@ -76,9 +76,15 @@ namespace ClientPortal.Web.Controllers
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             var dailyInfos = cakeRepo.GetDailyInfos(start, end, userProfile.CakeAdvertiserId);
+
+            if (cumulative)
+                dailyInfos = cakeRepo.MakeCumulative(dailyInfos);
+            if (projection)
+                dailyInfos = cakeRepo.AddProjection(dailyInfos);
+
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
 
-            if (dailyInfos.Any())
+            if (!cumulative && dailyInfos.Any())
             {
                 int totalImpressions = dailyInfos.Sum(i => i.Impressions);
                 int totalClicks = dailyInfos.Sum(i => i.Clicks);

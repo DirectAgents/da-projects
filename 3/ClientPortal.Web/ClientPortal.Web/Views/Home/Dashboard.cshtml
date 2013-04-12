@@ -30,6 +30,15 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="six columns">
+        <div class="panel" id="projChartOuter">
+            <b>Projection</b>
+            @Html.Partial("ProjectionVis")
+        </div>
+    </div>
+</div>
+
 <!-- Row 1 -->
 <div class="row">
 
@@ -166,9 +175,15 @@
         $('#dash_startdate').kendoDatePicker();
         $('#dash_enddate').kendoDatePicker();
 
-        //CreatePerformanceChart(['Last Month', 'MTD'], [@Model.SummaryLM.Conversions, @Model.SummaryMTD.Conversions], 'N0', '@Model.Culture', 180);
         CreatePerformanceChart([''], [0], 'N0', '@Model.Culture', 180);
         CreateSpendChart(0, 'C0', '@Model.Culture', 'Spend', 75);
+
+        var projDS = CreateProjectionDataSource('@Html.Raw(Url.Action("DailySummaryData", "Reports", new { cumulative = true, projection = true }))');
+        CreateProjectionChart(projDS, 125);
+        projDS.read();
+        projDS.bind('change', function () {
+            UpdateProjectionChart();
+        });
 
         var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
@@ -177,7 +192,7 @@
         spendDS.bind('change', function () {
             var aggs = this.aggregates();
             if ($('#dash_dateRangeSel').val() == 'mtd')
-                UpdatePerformanceChartValues(['Last Month', 'MTD'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum]);
+                UpdatePerformanceChartValues(['Last Month', 'MTD', 'Projection'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum, Projection(aggs.Conversions.sum)]);
             else
                 UpdatePerformanceChartValues([$('#dash_startdate').val() +' - '+ $('#dash_enddate').val()], [aggs.Conversions.sum]);
             UpdateSpendChartValue(aggs.Revenue.sum);
@@ -194,10 +209,18 @@
         }
     });
 
+    function Projection(value) {
+        var date = new Date();
+        var numDays = date.getDate(); // # days gone by
+        var daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        return daysInMonth * value / numDays;
+    }
+
     function RefreshDashboardRange() {
         $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
         $('#spendLineChart').data('kendoChart').dataSource.read();
         $('#monthlySpendBarChart').data('kendoChart').dataSource.read();
+        $('#projectionChart').data('kendoChart').dataSource.read();
     }
 
     function DashboardDateChanged() {
@@ -226,6 +249,7 @@
     }
 
     function ResizeDashboardCharts() {
+        ResizeDashboardChart('proj', true);
         ResizeDashboardChart('perf', true);
         ResizeDashboardChart('spend', true);
         ResizeDashboardChart('weeklySpendBar', true);

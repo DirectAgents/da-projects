@@ -1,0 +1,99 @@
+﻿<div class="chart-wrapper">
+    <div id="projectionChart"></div>
+</div>
+
+<script>
+    function CreateProjectionDataSource(url) {
+        return new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: url,
+                    data: function () {
+                        return {
+                            startdate: $('#dash_startdate').val(),
+                            enddate: $('#dash_enddate').val()
+                        };
+                    }
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        Date: { type: 'date' },
+                        Impressions: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        Conversions: { type: 'number' },
+                        ConversionPct: { type: 'number' },
+                        Revenue: { type: 'number' },
+                        EPC: { type: 'number' }
+                    }
+                }
+            },
+            sort: { field: "Date", dir: "asc" }
+        });
+    }
+
+    function CreateProjectionChart(dataSource, height) {
+        $("#projectionChart").kendoChart({
+            dataSource: dataSource,
+            autoBind: false,
+            chartArea: {
+                height: height
+            },
+            series: [
+                {
+                    type: "line",
+                    field: "Conversions",
+                    axis: "leads",
+                    markers: { visible: true }
+                }
+            ],
+            categoryAxis: {
+                baseUnit: "days",
+                field: "Date",
+                labels: { rotation: -90 },
+                //max: new Date(2013,3,8)
+            },
+            valueAxis: [
+                {
+                    name: "leads",
+                    labels: { format: "N0", step: 2 },
+                    title: { text: "Total Leads" }
+                }
+            ],
+            legend: {
+                visible: false
+            },
+            tooltip: {
+                visible: true,
+                format: "C",
+                template: "#= kendo.format('{0:d}',category) #: #= kendo.format('{0:N0}',value) #"
+            }
+        });
+    }
+
+    function UpdateProjectionChart() {
+        var chart = $('#projectionChart').data('kendoChart');
+
+        var total = chart.dataSource.total();
+        chart.options.categoryAxis.labels.step = Math.ceil(total / 31);
+
+        var spark = (total > 62);
+        if (spark) {
+            chart.options.valueAxis.majorGridLines.visible = false;
+            chart.options.categoryAxis.majorGridLines.visible = false;
+            //chart.options.series[0].markers.visible = false;
+        } else {
+            chart.options.valueAxis.majorGridLines.visible = true;
+            chart.options.categoryAxis.majorGridLines.visible = true;
+            //chart.options.series[0].markers.visible = true;
+        }
+        chart.redraw();
+    }
+    @* ? same as UpdateSpendLineChart() ? *@
+</script>

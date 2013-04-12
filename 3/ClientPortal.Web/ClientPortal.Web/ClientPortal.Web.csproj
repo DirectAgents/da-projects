@@ -884,6 +884,7 @@
     <Content Include="Views\Home\PerformanceVis.cshtml" />
     <Content Include="Views\Home\SpendVis.cshtml" />
     <Content Include="Views\Shared\_HeatMap.cshtml" />
+    <Content Include="Views\Home\ProjectionVis.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
