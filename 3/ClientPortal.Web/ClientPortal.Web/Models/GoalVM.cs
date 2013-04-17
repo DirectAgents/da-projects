@@ -41,6 +41,8 @@ namespace ClientPortal.Web.Models
         }
         public string Culture { get; set; }
 
+        public string CreateGoalChartCall { get; set; }
+
         public GoalVM(Goal goal, string offerName, string currency)
         {
             this.Id = goal.Id;
