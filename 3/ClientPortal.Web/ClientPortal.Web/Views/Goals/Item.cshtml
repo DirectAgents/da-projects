@@ -1,7 +1,10 @@
 ﻿@model ClientPortal.Web.Models.GoalVM
 
 <tr>
-    <td><a href="#" onclick="EditGoal(@Model.Id); return false">Edit</a></td>
+    <td>
+        <a href="#" onclick="EditGoal(@Model.Id); return false">Edit</a> |
+        <a href="#" onclick="DeleteGoal(@Model.Id, true); return false">Delete</a>
+    </td>
     <td>@Model.Name</td>
     <td>@Model.OfferName</td>
     <td>@Model.MetricId</td>

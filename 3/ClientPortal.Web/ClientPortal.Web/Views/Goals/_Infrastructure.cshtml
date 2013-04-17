@@ -1,0 +1,43 @@
+﻿<div id="windowGoal"></div>
+
+<script>
+    function SetupGoalWindow() {
+        $('#windowGoal').kendoWindow({
+            title: "Goal",
+            visible: false,
+            modal: true
+        });
+    }
+
+    function BeginEditGoal() {
+        var win = $('#windowGoal').data("kendoWindow");
+        win.setOptions({ width: 600, height: 500 });
+        win.center();
+        win.open();
+    }
+
+    function EditGoal(id) {
+        BeginEditGoal();
+        var url = '@Url.Action("Edit", "Goals")';
+        $.ajax({ url: url, data: { id: id }, cache: false }).done(function (data) {
+            $('#windowGoal').html(data);
+            EnableGoalValidation();
+        });
+    }
+
+    function EnableGoalValidation() {
+        $.validator.unobtrusive.parse('#editGoalWrapper');
+    }
+
+    function RefreshGoalsAndCloseWindow() {
+        if ($('#divGoalsList').length > 0)
+            RefreshGoalsList();
+        //else
+        //    alert('update dashboard');
+        CloseGoalWindow();
+    }
+
+    function CloseGoalWindow() {
+        $('#windowGoal').data("kendoWindow").close();
+    }
+</script>

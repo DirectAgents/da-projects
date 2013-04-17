@@ -204,6 +204,8 @@
 </footer>
 <!-- /BottomBar  -->
 
+@Html.Partial("~/Views/Goals/_Infrastructure.cshtml")
+
 @section head {
     <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
     <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
@@ -221,6 +223,7 @@
         $(function () {
             LoadDashboard();
             SetupTabs();
+            SetupGoalWindow();
             $(window).bind('resize', WindowResize);
         });
 

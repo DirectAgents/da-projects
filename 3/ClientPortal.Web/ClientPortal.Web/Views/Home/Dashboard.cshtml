@@ -141,8 +141,11 @@
                     var createGoalChartCall = "CreateGoalChart('" + offersum.Offer.Offer_Id + "', '" + goal.MetricId + "', [" + dataLastMonthToDate + "," + dataLastMonthTotal + "," + dataThisMonthToDate + "," + dataGoal + "], '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "')";
                     if (i == 0) { firstCreateGoalChartCalls.Add(createGoalChartCall); }
 
-                    @("Custom Goal: " + goalString)
-                    <a href="#" onclick="@createGoalChartCall; return false">(show)</a>
+                    <text>Custom Goal: </text>
+                    <span style="color: darkblue">@goalString</span>
+                    <a href="#" onclick="@createGoalChartCall; return false">show</a>
+                    <text>|</text>
+                    <a href="#" onclick="EditGoal(@goal.Id); return false">edit</a>
                     <br />
                 }
                 <table>
