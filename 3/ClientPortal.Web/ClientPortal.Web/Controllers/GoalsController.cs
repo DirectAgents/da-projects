@@ -22,7 +22,7 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = AccountRepository.GetGoals(advId.Value, cakeRepo);
+            var goals = AccountRepository.GetGoals(advId.Value, null, cakeRepo);
             var model = new GoalsModel()
             {
                 Goals = goals
@@ -35,7 +35,7 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = AccountRepository.GetGoals(advId.Value, cakeRepo);
+            var goals = AccountRepository.GetGoals(advId.Value, null, cakeRepo);
             return PartialView(goals);
         }
 

@@ -42,8 +42,17 @@ namespace ClientPortal.Data.Services
             }
             return offers;
         }
+        public IQueryable<CakeOffer> Offers(string advertiserId)
+        {
+            var offers = cakeContext.CakeOffers.AsQueryable();
+            if (!String.IsNullOrWhiteSpace(advertiserId))
+            {
+                offers = offers.Where(o => o.Advertiser_Id == advertiserId);
+            }
+            return offers;
+        }
 
-        public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int advertiserId, int? offerId, out string currency)
+        public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, string advertiserId, int? offerId, out string currency)
         {
             var dailySummaries = cakeContext.DailySummaries.AsQueryable();
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
@@ -68,7 +77,7 @@ namespace ClientPortal.Data.Services
             return dailySummaries;
         }
 
-        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int advertiserId, int? offerId)
+        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, string advertiserId, int? offerId)
         {
             string currency;
             var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
@@ -87,7 +96,7 @@ namespace ClientPortal.Data.Services
         public IQueryable<MonthlyInfo> GetMonthlyInfosFromDaily(DateTime? start, DateTime? end, int advertiserId, int? offerId)
         {
             string currency;
-            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
+            var dailySummaries = GetDailySummaries(start, end, advertiserId.ToString(), offerId, out currency);
 
             var m = from ds in dailySummaries
                     group ds by new { ds.date.Year, ds.date.Month } into g

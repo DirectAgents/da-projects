@@ -32,8 +32,13 @@
     function RefreshGoalsAndCloseWindow() {
         if ($('#divGoalsList').length > 0)
             RefreshGoalsList();
-        //else
-        //    alert('update dashboard');
+        else {
+            var offerId = $('#windowGoal').find('#OfferId').val();
+            var url = '@Url.Action("OfferGoalsRow", "Home")';
+            $.ajax({ url: url, data: { offerid: offerId }, cache: false }).done(function (data) {
+                $('#offergoals' + offerId).html(data);
+            });
+        }
         CloseGoalWindow();
     }
 

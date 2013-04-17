@@ -4,6 +4,8 @@
     bool isNewGoal = Model.Id < 0;
 }
 
+@Html.HiddenFor(model => model.OfferId)
+
 <div id="editGoalWrapper">
     @using (Ajax.BeginForm(new AjaxOptions { Url = Url.Action("Save"), HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "editGoalWrapper", OnSuccess = "RefreshGoalsAndCloseWindow" }))
     {
