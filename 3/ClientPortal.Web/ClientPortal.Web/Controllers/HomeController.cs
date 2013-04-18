@@ -107,7 +107,7 @@ namespace ClientPortal.Web.Controllers
 
             // Get Goals
             var goals = AccountRepository.GetGoals(advertiserId.Value, null, cakeRepo);
-            var offerIdsFromGoals = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct();
+            var offerIdsFromGoals = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
             List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
             foreach (var offerId in offerIdsFromGoals)
             {

@@ -124,7 +124,7 @@
     foreach (var offersum in Model.OfferGoalSummaries)
     {
         <div id="offergoals@(offersum.Offer.Offer_Id)" class="row">
-            @Html.Partial("OfferGoalsRow", offersum);
+            @Html.Partial("OfferGoalsRow", offersum)
         </div>
         if (offersum.Goals.Count > 0) {
             firstCreateGoalChartCalls.Add(offersum.Goals[0].CreateGoalChartCall);

@@ -30,7 +30,7 @@
     }
 
     function RefreshGoalsAndCloseWindow() {
-        if ($('#divGoalsList').length > 0)
+        if ($('#divGoalsList:visible').length > 0)
             RefreshGoalsList();
         else {
             var offerId = $('#windowGoal').find('#OfferId').val();
@@ -38,6 +38,11 @@
             $.ajax({ url: url, data: { offerid: offerId }, cache: false }).done(function (data) {
                 $('#offergoals' + offerId).html(data);
             });
+            var oldOfferId = $('#windowGoal').find('#OldOfferId').val();
+            if (oldOfferId != offerId)
+                $.ajax({ url: url, data: { offerid: oldOfferId }, cache: false }).done(function (data) {
+                    $('#offergoals' + oldOfferId).html(data);
+                });
         }
         CloseGoalWindow();
     }
