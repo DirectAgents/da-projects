@@ -56,18 +56,32 @@ namespace ClientPortal.Web.Models
     public enum MetricEnum { Clicks = 1, Leads, Spend };
 
     [Table("Goal")]
-    public class Goal
+    public class Goal : IValidatableObject
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public int AdvertiserId { get; set; }
+        public int? OfferId { get; set; }
+
         public string Name { get; set; }
         public GoalTypeEnum TypeId { get; set; }
         public MetricEnum MetricId { get; set; }
         public decimal Target { get; set; }
 
-        public int AdvertiserId { get; set; }
-        public int? OfferId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
+        // todo: share this code with GoalVM (currently duplicated)
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!StartDate.HasValue && EndDate.HasValue)
+                yield return new ValidationResult("Must provide a Start Date.", new[] { "StartDate" });
+            if (StartDate.HasValue && !EndDate.HasValue)
+                yield return new ValidationResult("Must provide an End Date.", new[] { "EndDate" });
+            if (StartDate.HasValue && EndDate.HasValue && StartDate >= EndDate)
+                yield return new ValidationResult("Start Date must be before End Date.", new[] { "StartDate" });
+        }
     }
 
     public class RegisterExternalLoginModel

@@ -21,25 +21,34 @@
         var url = '@Url.Action("Edit", "Goals")';
         $.ajax({ url: url, data: { id: id }, cache: false }).done(function (data) {
             $('#windowGoal').html(data);
-            EnableGoalValidation();
+            EditGoalLoaded();
         });
     }
 
-    function EnableGoalValidation() {
-        $.validator.unobtrusive.parse('#editGoalWrapper');
+    function EditGoalLoaded() {
+        $('#goal_StartDate').kendoDatePicker();
+        $('#goal_EndDate').kendoDatePicker();
+        $.validator.unobtrusive.parse('#editGoalWrapper'); @* enable validation *@
     }
 
-    function RefreshGoalsAndCloseWindow() {
+    function EditGoalSuccess(result) {
+        if (result.success) {
+            RefreshGoalsAndCloseWindow(result.OfferId);
+        } else { @* validation error *@
+            EditGoalLoaded();
+        }
+    }
+
+    function RefreshGoalsAndCloseWindow(newOfferId) {
         if ($('#divGoalsList:visible').length > 0)
             RefreshGoalsList();
-        else {
-            var offerId = $('#windowGoal').find('#OfferId').val();
+        else { @* update dashboard *@
             var url = '@Url.Action("OfferGoalsRow", "Home")';
-            $.ajax({ url: url, data: { offerid: offerId }, cache: false }).done(function (data) {
-                $('#offergoals' + offerId).html(data);
+            $.ajax({ url: url, data: { offerid: newOfferId }, cache: false }).done(function (data) {
+                $('#offergoals' + newOfferId).html(data);
             });
             var oldOfferId = $('#windowGoal').find('#OldOfferId').val();
-            if (oldOfferId != offerId)
+            if (oldOfferId != newOfferId)
                 $.ajax({ url: url, data: { offerid: oldOfferId }, cache: false }).done(function (data) {
                     $('#offergoals' + oldOfferId).html(data);
                 });

@@ -12,7 +12,7 @@
                          {
                              InsertionMode = InsertionMode.Replace, UpdateTargetId = "windowGoal", HttpMethod = "GET",
                              OnBegin = "BeginEditGoal",
-                             OnSuccess = "EnableGoalValidation"
+                             OnSuccess = "EditGoalLoaded"
                          })
     | <a href="#" onclick="RefreshGoalsList(); return false">Refresh</a>
 </div>

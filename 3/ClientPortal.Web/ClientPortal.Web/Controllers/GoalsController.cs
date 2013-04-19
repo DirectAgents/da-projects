@@ -67,17 +67,21 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public ActionResult Save(Goal goal)
         {
-            var advId = HomeController.GetAdvertiserId();
-            if (advId.HasValue)
+            if (ModelState.IsValid)
             {
-                goal.AdvertiserId = advId.Value;
-                SaveGoal(goal);
+                var advId = HomeController.GetAdvertiserId();
+                if (advId.HasValue)
+                {
+                    goal.AdvertiserId = advId.Value;
+                    SaveGoal(goal);
+                }
+                return Json(new { success = true, OfferId = goal.OfferId });
             }
-            return Content("<input type='hidden' id='OfferId' value='" + goal.OfferId + "'>");
-
-            //if not success...?
-            //var goalVM = new GoalVM(goal, null, null);
-            //return PartialView("Item", goalVM);
+            else
+            {
+                var goalVM = new GoalVM(goal, null, null);
+                return DoEdit(goalVM);
+            }
         }
 
         [HttpPost]

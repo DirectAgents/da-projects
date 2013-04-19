@@ -7,7 +7,7 @@
 @Html.HiddenFor(model => model.OfferId, new { id = "OldOfferId" })
 
 <div id="editGoalWrapper">
-    @using (Ajax.BeginForm(new AjaxOptions { Url = Url.Action("Save"), HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "editGoalWrapper", OnSuccess = "RefreshGoalsAndCloseWindow" }))
+    @using (Ajax.BeginForm(new AjaxOptions { Url = Url.Action("Save"), HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "editGoalWrapper", OnSuccess = "EditGoalSuccess" }))
     {
         @Html.HiddenFor(model => model.Id)
         @Html.ValidationSummary(true)
@@ -55,12 +55,42 @@
                 @Html.ValidationMessageFor(model => model.Target)
             </div>
 
-            <div style="float:left">
-                <input type="submit" value="Save" />
+            <div class="editor-label">
+                @Html.Label("Timeframe")
             </div>
-            <div style="float:right">
-                <input type="button" value="Cancel" onclick="CloseGoalWindow()" />
+            <div class="editor-field" style="margin-bottom:5px">
+                @Html.RadioButton("timeframeType", "monthly", Model.IsMonthly, new { onclick = "ToggleCustomDateRangeDiv(false)" }) Monthly
+                @Html.RadioButton("timeframeType", "custom", !Model.IsMonthly, new { onclick = "ToggleCustomDateRangeDiv(true)" }) Custom Date Range
+            </div>
+            @{ string customDateRangeVisibility = Model.ShowCustomDateRange ? "" : "display:none;"; }
+            <div class="editor-field" id="divCustomDateRange" style="@customDateRangeVisibility">
+                <div style="float:left">
+                    Start Date: @Html.TextBoxFor(model => model.StartDate, new { id = "goal_StartDate" })
+                    @Html.ValidationMessageFor(model => model.StartDate, null, new { style = "margin-top:0px" })
+                </div>
+                <div style="float:left; margin-left:5px">
+                    End Date: @Html.TextBoxFor(model => model.EndDate, new { id = "goal_EndDate" })
+                    @Html.ValidationMessageFor(model => model.EndDate, null, new { style = "margin-top:0px" })
+                </div>
             </div>
         </fieldset>
+
+        <div style="float:left">
+            <input type="submit" value="Save" />
+        </div>
+        <div style="float:right">
+            <input type="button" value="Cancel" onclick="CloseGoalWindow()" />
+        </div>
     }
 </div>
+<script>
+    function ToggleCustomDateRangeDiv(show) {
+        if (show) {
+            $('#divCustomDateRange').show();
+        } else {
+            $('#divCustomDateRange').hide();
+            $('#goal_StartDate').val("");
+            $('#goal_EndDate').val("");
+        }
+    }
+</script>

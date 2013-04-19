@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace ClientPortal.Web.Models
 {
-    public class GoalVM
+    public class GoalVM : IValidatableObject
     {
         public int Id { get; set; }
 
@@ -41,6 +41,21 @@ namespace ClientPortal.Web.Models
         }
         public string Culture { get; set; }
 
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
+
+        public bool IsMonthly
+        {
+            get { return (!StartDate.HasValue && !EndDate.HasValue); }
+        }
+
+        // ? possibly have this return true iff there are validation errors on the dates ?
+        public bool ShowCustomDateRange
+        {
+            get { return (StartDate.HasValue || EndDate.HasValue); }
+        }
+
         public string CreateGoalChartCall { get; set; }
 
         public GoalVM(Goal goal, string offerName, string currency)
@@ -53,6 +68,8 @@ namespace ClientPortal.Web.Models
             this.MetricId = goal.MetricId;
             this.Target = goal.Target;
             this.Currency = currency;
+            this.StartDate = goal.StartDate;
+            this.EndDate = goal.EndDate;
         }
 
         public GoalVM()
@@ -60,6 +77,17 @@ namespace ClientPortal.Web.Models
             this.Id = -1;
             this.TypeId = GoalTypeEnum.Absolute;
             this.MetricId = MetricEnum.Leads;
+        }
+
+        // todo: share this code with Goal entity (currently duplicated)
+        public System.Collections.Generic.IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!StartDate.HasValue && EndDate.HasValue)
+                yield return new ValidationResult("Must provide a Start Date.", new[] { "StartDate" });
+            if (StartDate.HasValue && !EndDate.HasValue)
+                yield return new ValidationResult("Must provide an End Date.", new[] { "EndDate" });
+            if (StartDate.HasValue && EndDate.HasValue && StartDate >= EndDate)
+                yield return new ValidationResult("Start Date must be before End Date.", new[] { "StartDate" });
         }
 
         // e.g. "Reach 1,000 Leads", "Reach $1,000 Spend", "Increase Leads 10.5% (to 1,105)", "Increase Spend 10.5% (to $1,105)"
