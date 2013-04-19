@@ -23,6 +23,8 @@
 <div id="offsumGrid"></div>
 
 <script>
+    var offerSummaryDataUrl = '@Url.Action("OfferSummaryData", "Reports")';
+
     function CreateOfferSummaryDataSource() {
         return new kendo.data.DataSource({
             serverPaging: true,
@@ -34,7 +36,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("OfferSummaryData", "Reports")',
+                    url: offerSummaryDataUrl,
                     data: function () {
                         return {
                             startdate: $('#offsum_startdate').val(),

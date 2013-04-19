@@ -158,6 +158,18 @@ namespace ClientPortal.Web.Controllers
             return PartialView("_ConversionReportPartial");
         }
 
+
+        public PartialViewResult AffiliateReportPartial()
+        {
+            var userProfile = HomeController.GetUserProfile();
+
+            //var today = DateTime.Now;
+            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+            ViewBag.today = today.ToString("d", userProfile.CultureInfo);
+            return PartialView("_AffiliateReportPartial");
+        }
+
+
         [HttpPost]
         public JsonResult ConversionReportData(KendoGridRequest request, string startdate, string enddate, int? offerid)
         {
@@ -176,6 +188,31 @@ namespace ClientPortal.Web.Controllers
                 kgrid.aggregates = new
                 {
                     PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) }
+                };
+            }
+            var json = Json(kgrid);
+            return json;
+        }
+
+        [HttpPost]
+        public JsonResult AffiliateReportData(KendoGridRequest request, string startdate, string enddate, int? offerid)
+        {
+            var userProfile = HomeController.GetUserProfile();
+            DateTime? start, end;
+            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+                return Json(new { });
+
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            var conversionInfos = cakeRepo.GetAffiliateInfos(start, end, userProfile.CakeAdvertiserId, offerid);
+
+            var kgrid = new KendoGrid<AffiliateSummary>(request, conversionInfos);
+            if (conversionInfos.Any())
+            {
+                kgrid.aggregates = new
+                {
+                    PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) },
+                    Count = new { sum = conversionInfos.Sum(c => c.Count) }
                 };
             }
             var json = Json(kgrid);

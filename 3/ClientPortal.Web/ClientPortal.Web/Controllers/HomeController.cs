@@ -28,7 +28,7 @@ namespace ClientPortal.Web.Controllers
             var model = new IndexModel()
             {
                 CultureInfo = userProfile.CultureInfo,
-                Advertiser = advertiser
+                Advertiser = advertiser,
             };
             return View(model);
         }
@@ -106,12 +106,16 @@ namespace ClientPortal.Web.Controllers
 
             var summaryWTD = cakeRepo.GetDateRangeSummary(firstOfWeek, now, advertiserId.Value, null);
             summaryWTD.Name = "Week-to-Date";
+            summaryWTD.Link = "javascript: jumpToOffSumRep('wtd')";
             var summaryMTD = cakeRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value, null);
             summaryMTD.Name = "Month-to-Date";
+            summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
             var summaryLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value, null);
             summaryLMTD.Name = "Last Month-to-Date";
+            summaryLMTD.Link = "javascript: jumpToOffSumRep('lmtd')";
             var summaryLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value, null);
             summaryLM.Name = "Last Month-Total";
+            summaryLM.Link = "javascript: jumpToOffSumRep('lmt')";
 //            var summaryYTD = cakeRepo.GetDateRangeSummary(firstOfYear, now, advertiserId.Value, null);
 //            summaryYTD.Name = "Year-to-Date";
 

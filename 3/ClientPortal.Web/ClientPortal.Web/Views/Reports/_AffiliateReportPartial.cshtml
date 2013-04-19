@@ -1,0 +1,96 @@
+﻿<div style="height: 35px;">
+    <select style="float: left; width: 110px" id="affrep_dateRangeSel" onchange="ChangeDateRange('affrep')">
+        <option value="today">Today</option>
+        <option value="yesterday">Yesterday</option>
+        <option value="wtd">Week to Date</option>
+        <option value="mtd">Month to Date</option>
+        <option value="ytd">Year to Date</option>
+        <option value="lastweek">Last Week</option>
+        <option value="lastmonth">Last Month</option>
+        <option value="custom">- custom -</option>
+    </select>
+    <span style="float: left; margin-left: 10px">Start:</span>
+    <input style="float:left; width:100px" id="affrep_startdate" name="startdate" type="text" value="@ViewBag.today" onchange="DateChanged('affrep')" />
+    <span style="float: left; margin-left: 10px">End:</span>
+    <input style="float:left; width:100px" id="affrep_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('affrep')" />
+    <a class="button" style="padding: 3px; margin-left: 10px" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
+</div>
+<div id="affrepGrid"></div>
+<script>
+    function SetupAffiliateReportGrid() {
+
+        var readData = function () {
+            return {
+                startdate: $('#affrep_startdate').val(),
+                enddate: $('#affrep_enddate').val()
+            };
+        }
+
+        var dataSource = CreateAffiliateReportDataSource(readData);
+
+        $('#affrepGrid').kendoGrid({
+            dataSource: dataSource,
+            height: 400,
+            columns: [
+                { field: 'AffId', title: 'sub_id', width: 80, template: '<a href="">#: AffId#</a>' },
+                { field: 'OfferId', width: 80 },
+                { field: 'Offer' },
+                { field: 'Count', title: 'Leads', width: 100, footerTemplate: "#= sum #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                {
+                    field: 'PriceReceived',
+                    title: 'Price',
+                    width: 100,
+                    template: '#= FormatCurr(PriceReceived, Culture) #',
+                    attributes: { style: "text-align: right" },
+                    footerTemplate: "#= kendo.toString(sum, 'c') #",
+                    footerAttributes: { style: "font-weight: bold; text-align: right" }
+                },
+            ],
+            filterable: true,
+            sortable: {
+                mode: 'multiple'
+            },
+            pageable: true
+        });
+
+        $('#affrep_startdate').kendoDatePicker();
+        $('#affrep_enddate').kendoDatePicker();
+    }
+
+    function CreateAffiliateReportDataSource(readData) {
+        return new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("AffiliateReportData", "Reports")',
+                        data: readData
+                    }
+                },
+                schema: {
+                    data: 'data',
+                    total: 'total',
+                    aggregates: 'aggregates',
+                    model: {
+                        id: 'AffId',
+                        fields: {
+                            AffId: { type: 'number' },
+                            OfferId: { type: 'number' },
+                            Offer: { type: 'string' },
+                            PriceReceived: { type: 'number' },
+                            Count: { type: 'number' }
+                        }
+                    }
+                },
+                aggregate: [
+                    { field: "PriceReceived", aggregate: "sum" },
+                    { field: "Count", aggregate: "sum" }
+                ]
+            });
+        }
+</script>
