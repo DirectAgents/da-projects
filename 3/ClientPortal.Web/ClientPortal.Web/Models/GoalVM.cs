@@ -1,4 +1,5 @@
 ﻿using ClientPortal.Data.DTOs;
+using ClientPortal.Web.Controllers;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -9,17 +10,19 @@ namespace ClientPortal.Web.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        public string Name { get; set; }
-
-        [Display(Name="Type")]
-        public GoalTypeEnum TypeId { get; set; }
+        public int AdvertiserId { get; set; }
 
         [Display(Name="Offer")]
         public int? OfferId { get; set; }
         public string OfferName { get; set; }
 
-        [Display(Name="Metric")]
+        [Required]
+        public string Name { get; set; }
+
+        [Display(Name = "Type")]
+        public GoalTypeEnum TypeId { get; set; }
+
+        [Display(Name = "Metric")]
         public MetricEnum MetricId { get; set; }
 
         [Required]
@@ -35,41 +38,44 @@ namespace ClientPortal.Web.Models
             }
         }
 
-        public string Currency
-        {
-            set { Culture = OfferInfo.CurrencyToCulture(value); }
-        }
+        //public string Currency
+        //{
+        //    set { Culture = OfferInfo.CurrencyToCulture(value); }
+        //}
         public string Culture { get; set; }
+        public CultureInfo CultureInfo { get { return string.IsNullOrWhiteSpace(Culture) ? CultureInfo.InvariantCulture : CultureInfo.CreateSpecificCulture(Culture); } }
 
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
 
         public bool IsMonthly
         {
-            get { return (!StartDate.HasValue && !EndDate.HasValue); }
+            get { return (String.IsNullOrEmpty(StartDate) && String.IsNullOrEmpty(EndDate)); }
         }
 
         // ? possibly have this return true iff there are validation errors on the dates ?
         public bool ShowCustomDateRange
         {
-            get { return (StartDate.HasValue || EndDate.HasValue); }
+            get { return (!String.IsNullOrWhiteSpace(StartDate) || !String.IsNullOrWhiteSpace(EndDate)); }
         }
 
         public string CreateGoalChartCall { get; set; }
 
-        public GoalVM(Goal goal, string offerName, string currency)
+        public GoalVM(Goal goal, string offerName, string culture)
         {
             this.Id = goal.Id;
-            this.Name = goal.Name;
-            this.TypeId = goal.TypeId;
+            this.AdvertiserId = goal.AdvertiserId;
             this.OfferId = goal.OfferId;
             this.OfferName = offerName;
+            this.Name = goal.Name;
+            this.TypeId = goal.TypeId;
             this.MetricId = goal.MetricId;
             this.Target = goal.Target;
-            this.Currency = currency;
-            this.StartDate = goal.StartDate;
-            this.EndDate = goal.EndDate;
+            this.Culture = culture;
+            if (goal.StartDate.HasValue)
+                this.StartDate = goal.StartDate.Value.ToString("d", CultureInfo);
+            if (goal.EndDate.HasValue)
+                this.EndDate = goal.EndDate.Value.ToString("d", CultureInfo);
         }
 
         public GoalVM()
@@ -79,15 +85,38 @@ namespace ClientPortal.Web.Models
             this.MetricId = MetricEnum.Leads;
         }
 
+        public void SetGoalEntityProperties(Goal goal)
+        {
+            goal.AdvertiserId = this.AdvertiserId;
+            goal.OfferId = this.OfferId;
+            goal.Name = this.Name;
+            goal.TypeId = this.TypeId;
+            goal.MetricId = this.MetricId;
+            goal.Target = this.Target;
+
+            goal.StartDate = ReportsController.ParseDate(StartDate, CultureInfo);
+            goal.EndDate = ReportsController.ParseDate(EndDate, CultureInfo);
+        }
+
         // todo: share this code with Goal entity (currently duplicated)
         public System.Collections.Generic.IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (!StartDate.HasValue && EndDate.HasValue)
-                yield return new ValidationResult("Must provide a Start Date.", new[] { "StartDate" });
-            if (StartDate.HasValue && !EndDate.HasValue)
+            DateTime? startDate, endDate;
+            bool startDateParsed = ReportsController.ParseDate(StartDate, CultureInfo, out startDate);
+            bool endDateParsed = ReportsController.ParseDate(EndDate, CultureInfo, out endDate);
+
+            if (!startDateParsed)
+                yield return new ValidationResult("Not a valid date.", new[] { "StartDate" });
+            else if (startDate.HasValue && endDateParsed && !endDate.HasValue)
                 yield return new ValidationResult("Must provide an End Date.", new[] { "EndDate" });
-            if (StartDate.HasValue && EndDate.HasValue && StartDate >= EndDate)
-                yield return new ValidationResult("Start Date must be before End Date.", new[] { "StartDate" });
+
+            if (!endDateParsed)
+                yield return new ValidationResult("Not a valid date.", new[] { "EndDate" });
+            else if (endDate.HasValue && startDateParsed && !startDate.HasValue)
+                yield return new ValidationResult("Must provide a Start Date.", new[] { "StartDate" });
+
+            if (startDateParsed && startDate.HasValue && endDateParsed && endDate.HasValue && !(startDate.Value < endDate.Value))
+                yield return new ValidationResult("End Date must be after Start Date.", new[] { "EndDate" });
         }
 
         // e.g. "Reach 1,000 Leads", "Reach $1,000 Spend", "Increase Leads 10.5% (to 1,105)", "Increase Spend 10.5% (to $1,105)"

@@ -10,6 +10,7 @@
     @using (Ajax.BeginForm(new AjaxOptions { Url = Url.Action("Save"), HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "editGoalWrapper", OnSuccess = "EditGoalSuccess" }))
     {
         @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.Culture)
         @Html.ValidationSummary(true)
 
         <fieldset>

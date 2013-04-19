@@ -1,4 +1,5 @@
 ﻿using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +22,12 @@ namespace ClientPortal.Web.Models
 
             var goalVMs = from g in goals
                           join o in offers.ToList() on g.OfferId equals o.Offer_Id // todo: left join?
-                          select new GoalVM(g, o.OfferName, o.Currency);
+                          select new GoalVM(g, o.OfferName, OfferInfo.CurrencyToCulture(o.Currency));
 
             return goalVMs.ToList();
         }
 
-        public static GoalVM GetGoal(int id)
+        public static GoalVM GetGoal(int id, string culture)
         {
             using (var usersContext = new UsersContext())
             {
@@ -34,7 +35,7 @@ namespace ClientPortal.Web.Models
                 if (goal == null)
                     return null;
                 else
-                    return new GoalVM(goal, null, null);
+                    return new GoalVM(goal, null, culture);
             }
         }
 
