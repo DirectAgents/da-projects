@@ -61,13 +61,16 @@ namespace ClientPortal.Web.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public int AdvertiserId { get; set; }
+        public int? OfferId { get; set; }
+
         public string Name { get; set; }
         public GoalTypeEnum TypeId { get; set; }
         public MetricEnum MetricId { get; set; }
         public decimal Target { get; set; }
 
-        public int AdvertiserId { get; set; }
-        public int? OfferId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 
     public class RegisterExternalLoginModel

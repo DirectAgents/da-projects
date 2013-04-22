@@ -88,59 +88,35 @@ namespace ClientPortal.Web.Controllers
         {
             int? advertiserId = GetAdvertiserId();
             if (advertiserId == null) return null;
+            string advId = advertiserId.ToString();
 
-            var now = DateTime.Now;
+            var dates = new Dates();
 
-            var firstOfWeek = new DateTime(now.Year, now.Month, now.Day);
-            while (firstOfWeek.DayOfWeek != DayOfWeek.Sunday)
-            {
-                firstOfWeek = firstOfWeek.AddDays(-1);
-            }
-            var firstOfMonth = new DateTime(now.Year, now.Month, 1);
-            var firstOfLastMonth = firstOfMonth.AddMonths(-1);
-            var lastOfLastMonth = firstOfMonth.AddDays(-1);
-            var firstOfYear = new DateTime(now.Year, 1, 1);
-
-            var oneMonthAgo = new DateTime(firstOfLastMonth.Year, firstOfLastMonth.Month, (now.Day < lastOfLastMonth.Day) ? now.Day : lastOfLastMonth.Day);
-            // will be the last day of last month if today's "day" is greater than the number of days in last month
-
-            var summaryWTD = cakeRepo.GetDateRangeSummary(firstOfWeek, now, advertiserId.Value, null);
+            var summaryWTD = cakeRepo.GetDateRangeSummary(dates.FirstOfWeek, dates.Now, advId, null);
             summaryWTD.Name = "Week-to-Date";
             summaryWTD.Link = "javascript: jumpToOffSumRep('wtd')";
-            var summaryMTD = cakeRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value, null);
+            var summaryMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null);
             summaryMTD.Name = "Month-to-Date";
             summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
-            var summaryLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value, null);
+            var summaryLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null);
             summaryLMTD.Name = "Last Month-to-Date";
             summaryLMTD.Link = "javascript: jumpToOffSumRep('lmtd')";
-            var summaryLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value, null);
+            var summaryLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, null);
             summaryLM.Name = "Last Month-Total";
             summaryLM.Link = "javascript: jumpToOffSumRep('lmt')";
 //            var summaryYTD = cakeRepo.GetDateRangeSummary(firstOfYear, now, advertiserId.Value, null);
 //            summaryYTD.Name = "Year-to-Date";
 
-            var offers = cakeRepo.Offers(advertiserId);
+            var offers = cakeRepo.Offers(advId);
 
             // Get Goals
-            var goals = AccountRepository.GetGoals(advertiserId.Value, cakeRepo);
-            var offerIds = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct();
+            var goals = AccountRepository.GetGoals(advertiserId.Value, null, cakeRepo);
+            var offerIdsFromGoals = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
             List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
-            foreach (var offerId in offerIds)
+            foreach (var offerId in offerIdsFromGoals)
             {
-                var offsumMTD = cakeRepo.GetDateRangeSummary(firstOfMonth, now, advertiserId.Value, offerId);
-                offsumMTD.Name = "Month-to-Date";
-                var offsumLMTD = cakeRepo.GetDateRangeSummary(firstOfLastMonth, oneMonthAgo, advertiserId.Value, offerId);
-                offsumLMTD.Name = "Last Month-to-Date";
-                var offsumLM = cakeRepo.GetDateRangeSummary(firstOfLastMonth, lastOfLastMonth, advertiserId.Value, offerId);
-                offsumLM.Name = "Last Month-Total";
-
                 var offer = offers.Where(o => o.Offer_Id == offerId).FirstOrDefault();
-                var offerGoalSummary = new OfferGoalSummary()
-                {
-                    Offer = offer,
-                    Goals = goals.Where(g => g.OfferId == offerId).ToList(),
-                    DateRangeSummaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM }
-                };
+                var offerGoalSummary = CreateOfferGoalSummary(offer, goals.Where(g => g.OfferId == offer.Offer_Id).ToList(), dates);
                 offerGoalSummaries.Add(offerGoalSummary);
             }
 
@@ -153,6 +129,38 @@ namespace ClientPortal.Web.Controllers
                 End = GetDashboardDateRangeEnd()
             };
             return PartialView(model);
+        }
+
+        public PartialViewResult OfferGoalsRow(int offerId)
+        {
+            int? advertiserId = GetAdvertiserId();
+            if (advertiserId == null) return null;
+
+            var offer = cakeRepo.Offers(advertiserId).Where(o => o.Offer_Id == offerId).FirstOrDefault();
+            var goals = AccountRepository.GetGoals(advertiserId.Value, offerId, cakeRepo);
+            var dates = new Dates();
+            var offerGoalSummary = CreateOfferGoalSummary(offer, goals, dates);
+
+            ViewBag.IncludeCreateGoalChartCall = true;
+            return PartialView(offerGoalSummary);
+        }
+
+        public OfferGoalSummary CreateOfferGoalSummary(CakeOffer offer, List<GoalVM> goals, Dates dates)
+        {
+            var offsumMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, offer.Advertiser_Id, offer.Offer_Id);
+            offsumMTD.Name = "Month-to-Date";
+            var offsumLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, offer.Advertiser_Id, offer.Offer_Id);
+            offsumLMTD.Name = "Last Month-to-Date";
+            var offsumLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, offer.Advertiser_Id, offer.Offer_Id);
+            offsumLM.Name = "Last Month-Total";
+
+            var offerGoalSummary = new OfferGoalSummary()
+            {
+                Offer = offer,
+                Goals = goals,
+                DateRangeSummaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM }
+            };
+            return offerGoalSummary;
         }
 
         public CakeAdvertiser GetAdvertiser()
@@ -195,6 +203,35 @@ namespace ClientPortal.Web.Controllers
         public ActionResult Foundation()
         {
             return View();
+        }
+    }
+
+    public class Dates
+    {
+        public DateTime Now { get; set; }
+        public DateTime FirstOfWeek { get; set; }
+        public DateTime FirstOfMonth { get; set; }
+        public DateTime FirstOfLastMonth { get; set; }
+        public DateTime LastOfLastMonth { get; set; }
+        public DateTime FirstOfYear { get; set; }
+
+        public DateTime OneMonthAgo { get; set; }
+        // will be the last day of last month if today's "day" is greater than the number of days in last month
+
+        public Dates()
+        {
+            Now = DateTime.Now;
+
+            FirstOfWeek = new DateTime(Now.Year, Now.Month, Now.Day);
+            while (FirstOfWeek.DayOfWeek != DayOfWeek.Sunday)
+            {
+                FirstOfWeek = FirstOfWeek.AddDays(-1);
+            }
+            FirstOfMonth = new DateTime(Now.Year, Now.Month, 1);
+            FirstOfLastMonth = FirstOfMonth.AddMonths(-1);
+            LastOfLastMonth = FirstOfMonth.AddDays(-1);
+            FirstOfYear = new DateTime(Now.Year, 1, 1);
+            OneMonthAgo = new DateTime(FirstOfLastMonth.Year, FirstOfLastMonth.Month, (Now.Day < LastOfLastMonth.Day) ? Now.Day : LastOfLastMonth.Day);
         }
     }
 }

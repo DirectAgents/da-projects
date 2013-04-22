@@ -1,0 +1,59 @@
+﻿@model ClientPortal.Web.Models.OfferGoalSummary
+@{
+    bool includeCreateGoalChartCall = (ViewBag.IncludeCreateGoalChartCall != null);
+}
+
+<!-- Left -->
+<div class="six columns">
+    <div class="panel">
+        <b>Offer: @Model.Offer.OfferName</b><br />
+        @for (var i = 0; i < Model.Goals.Count; i++)
+        {
+            var goal = Model.Goals[i];
+            var dataLastMonthToDate = goal.ValueFor(Model.SummaryLMTD);
+            var dataLastMonthTotal = goal.ValueFor(Model.SummaryLM);
+            var dataThisMonthToDate = goal.ValueFor(Model.SummaryMTD);
+            var dataGoal = goal.TargetBasedOn(Model.SummaryLM);
+            var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
+            var goalString = goal.TargetFormattedBasedOn(Model.SummaryLM);
+            //var heading = Model.Offer.OfferName.Replace("'", "");
+            goal.CreateGoalChartCall = "CreateGoalChart('" + Model.Offer.Offer_Id + "', '" + goal.MetricId + "', [" + dataLastMonthToDate + "," + dataLastMonthTotal + "," + dataThisMonthToDate + "," + dataGoal + "], '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "');";
+
+            <text>Custom Goal: </text>
+            <span style="color: darkblue">@goalString</span>
+            <a href="#" onclick="@goal.CreateGoalChartCall; return false">show</a>
+            <text>|</text>
+            <a href="#" onclick="EditGoal(@goal.Id); return false">edit</a>
+            <br />
+        }
+        <table>
+            <tr>
+                <th></th>
+                <th>Clicks</th>
+                <th>Leads</th>
+                <th>Spend</th>
+            </tr>
+            @foreach (var rangesum in Model.DateRangeSummaries)
+            {
+                <tr>
+                    <td>@rangesum.Name</td>
+                    <td>@String.Format("{0:n0}", rangesum.Clicks)</td>
+                    <td>@String.Format("{0:n0}", rangesum.Conversions)</td>
+                    <td>@rangesum.RevenueFormatted</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<!-- Right -->
+<div class="panel six columns" id="goal@(Model.Offer.Offer_Id)ChartOuter">
+    @Html.Partial("GoalVis", Model.Offer.Offer_Id.ToString())
+</div>
+
+@if (includeCreateGoalChartCall && Model.Goals.Count > 0)
+{
+<script>
+    @Html.Raw(Model.Goals[0].CreateGoalChartCall)
+</script>
+}

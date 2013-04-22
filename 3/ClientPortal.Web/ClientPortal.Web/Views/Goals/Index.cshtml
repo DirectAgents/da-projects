@@ -12,17 +12,12 @@
                          {
                              InsertionMode = InsertionMode.Replace, UpdateTargetId = "windowGoal", HttpMethod = "GET",
                              OnBegin = "BeginEditGoal",
-                             OnSuccess = "EnableValidation('#editGoalWrapper')"
+                             OnSuccess = "EditGoalLoaded"
                          })
     | <a href="#" onclick="RefreshGoalsList(); return false">Refresh</a>
 </div>
 
 <script>
-    //TODO: move this to common script if used again
-    function EnableValidation(selector) {
-        $.validator.unobtrusive.parse($(selector));
-    }
-
     function RefreshGoalsList() {
         var url = '@Url.Action("List")';
         $.ajax({ url: url, cache: false }).done(function (data) {
@@ -30,43 +25,12 @@
         });
     }
 
-    function EditGoal(id) {
-        BeginEditGoal();
-        var url = '@Url.Action("Edit")';
-        $.ajax({ url: url, data: { id: id }, cache: false }).done(function(data) {
-            $('#windowGoal').html(data);
-            EnableValidation('#editGoalWrapper');
-        });
-    }
-
-    function BeginEditGoal() {
-        var win = $('#windowGoal').data("kendoWindow");
-        win.setOptions({ width: 600, height: 500 });
-        win.center();
-        win.open();
-    }
-
-    function RefreshGoalsAndCloseWindow() {
-        RefreshGoalsList();
-        $('#windowGoal').data("kendoWindow").close();
-    }
-
     function DeleteGoal(id, doConfirm) {
         if (doConfirm && !confirm("Are you sure you want to delete this goal?"))
             return;
         var url = '@Url.Action("Delete")';
-        $.ajax({ url: url, data: { id: id }, type: 'post', cache: false }).done(function(data) {
+        $.ajax({ url: url, data: { id: id }, type: 'post', cache: false }).done(function (data) {
             RefreshGoalsAndCloseWindow();
         });
     }
-
-    $(function () {
-        $('#windowGoal').kendoWindow({
-            title: "Goal",
-            visible: false,
-            modal: true
-        });
-    });
 </script>
-
-<div id="windowGoal"></div>

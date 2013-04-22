@@ -1,4 +1,5 @@
 ﻿using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,23 +9,25 @@ namespace ClientPortal.Web.Models
 {
     public class AccountRepository
     {
-        public static List<GoalVM> GetGoals(int advertiserId, ICakeRepository cakeRepo)
+        public static List<GoalVM> GetGoals(int advertiserId, int? offerId, ICakeRepository cakeRepo)
         {
             List<Goal> goals;
             using (var usersContext = new UsersContext())
             {
                 goals = usersContext.Goals.Where(g => g.AdvertiserId == advertiserId).ToList();
             }
-            var offers = cakeRepo.Offers(advertiserId).ToList();
+            var offers = cakeRepo.Offers(advertiserId);
+            if (offerId.HasValue)
+                offers = offers.Where(o => o.Offer_Id == offerId.Value);
 
             var goalVMs = from g in goals
-                          join o in offers on g.OfferId equals o.Offer_Id // todo: left join?
-                          select new GoalVM(g, o.OfferName, o.Currency);
+                          join o in offers.ToList() on g.OfferId equals o.Offer_Id // todo: left join?
+                          select new GoalVM(g, o.OfferName, OfferInfo.CurrencyToCulture(o.Currency));
 
             return goalVMs.ToList();
         }
 
-        public static GoalVM GetGoal(int id)
+        public static GoalVM GetGoal(int id, string culture)
         {
             using (var usersContext = new UsersContext())
             {
@@ -32,7 +35,7 @@ namespace ClientPortal.Web.Models
                 if (goal == null)
                     return null;
                 else
-                    return new GoalVM(goal, null, null);
+                    return new GoalVM(goal, null, culture);
             }
         }
 

@@ -1,0 +1,62 @@
+﻿<div id="windowGoal"></div>
+
+<script>
+    function SetupGoalWindow() {
+        $('#windowGoal').kendoWindow({
+            title: "Goal",
+            visible: false,
+            modal: true
+        });
+    }
+
+    function BeginEditGoal() {
+        var win = $('#windowGoal').data("kendoWindow");
+        win.setOptions({ width: 600, height: 500 });
+        win.center();
+        win.open();
+    }
+
+    function EditGoal(id) {
+        BeginEditGoal();
+        var url = '@Url.Action("Edit", "Goals")';
+        $.ajax({ url: url, data: { id: id }, cache: false }).done(function (data) {
+            $('#windowGoal').html(data);
+            EditGoalLoaded();
+        });
+    }
+
+    function EditGoalLoaded() {
+        $('#goal_StartDate').kendoDatePicker();
+        $('#goal_EndDate').kendoDatePicker();
+        $.validator.unobtrusive.parse('#editGoalWrapper'); @* enable validation *@
+    }
+
+    function EditGoalSuccess(result) {
+        if (result.success) {
+            RefreshGoalsAndCloseWindow(result.OfferId);
+        } else { @* validation error *@
+            EditGoalLoaded();
+        }
+    }
+
+    function RefreshGoalsAndCloseWindow(newOfferId) {
+        if ($('#divGoalsList:visible').length > 0)
+            RefreshGoalsList();
+        else { @* update dashboard *@
+            var url = '@Url.Action("OfferGoalsRow", "Home")';
+            $.ajax({ url: url, data: { offerid: newOfferId }, cache: false }).done(function (data) {
+                $('#offergoals' + newOfferId).html(data);
+            });
+            var oldOfferId = $('#windowGoal').find('#OldOfferId').val();
+            if (oldOfferId != newOfferId)
+                $.ajax({ url: url, data: { offerid: oldOfferId }, cache: false }).done(function (data) {
+                    $('#offergoals' + oldOfferId).html(data);
+                });
+        }
+        CloseGoalWindow();
+    }
+
+    function CloseGoalWindow() {
+        $('#windowGoal').data("kendoWindow").close();
+    }
+</script>

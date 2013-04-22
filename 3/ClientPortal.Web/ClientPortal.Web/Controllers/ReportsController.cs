@@ -312,6 +312,13 @@ namespace ClientPortal.Web.Controllers
 
         // --- helper methods ---
 
+        public static DateTime? ParseDate(string dateString, CultureInfo cultureInfo)
+        {
+            DateTime? date;
+            ParseDate(dateString, cultureInfo, out date);
+            return date;
+        }
+
         // returns true iff parsed; a null or whitespace dateString qualifies as parsed, resulting in the out parameter being null
         public static bool ParseDate(string dateString, CultureInfo cultureInfo, out DateTime? date)
         {

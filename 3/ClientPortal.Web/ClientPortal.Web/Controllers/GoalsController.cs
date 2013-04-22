@@ -22,7 +22,7 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = AccountRepository.GetGoals(advId.Value, cakeRepo);
+            var goals = AccountRepository.GetGoals(advId.Value, null, cakeRepo);
             var model = new GoalsModel()
             {
                 Goals = goals
@@ -35,7 +35,7 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = AccountRepository.GetGoals(advId.Value, cakeRepo);
+            var goals = AccountRepository.GetGoals(advId.Value, null, cakeRepo);
             return PartialView(goals);
         }
 
@@ -47,7 +47,8 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            var goalVM = AccountRepository.GetGoal(id);
+            var userProfile = HomeController.GetUserProfile();
+            var goalVM = AccountRepository.GetGoal(id, userProfile.Culture);
             return DoEdit(goalVM);
         }
 
@@ -65,16 +66,23 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(Goal goal)
+        public ActionResult Save(GoalVM goal)
         {
-            var advId = HomeController.GetAdvertiserId();
-            if (advId.HasValue)
+            var userProfile = HomeController.GetUserProfile();
+            if (ModelState.IsValid)
             {
-                goal.AdvertiserId = advId.Value;
-                SaveGoal(goal);
+                var advId = userProfile.CakeAdvertiserId;
+                if (advId.HasValue)
+                {
+                    goal.AdvertiserId = advId.Value;
+                    SaveGoal(goal);
+                }
+                return Json(new { success = true, OfferId = goal.OfferId });
             }
-            var goalVM = new GoalVM(goal, null, null);
-            return PartialView("Item", goalVM);
+            else
+            {
+                return DoEdit(goal);
+            }
         }
 
         [HttpPost]
@@ -87,17 +95,21 @@ namespace ClientPortal.Web.Controllers
 
         // --- repository-type methods ---
 
-        private void SaveGoal(Goal goal)
+        private void SaveGoal(GoalVM goalVM)
         {
             using (var usersContext = new UsersContext())
             {
-                if (goal.Id < 0)
+                if (goalVM.Id < 0)
+                {
+                    Goal goal = new Goal();
+                    goalVM.SetGoalEntityProperties(goal);
                     usersContext.Goals.Add(goal);
+                }
                 else
                 {
-                    var existingGoal = usersContext.Goals.FirstOrDefault(g => g.Id == goal.Id);
+                    var existingGoal = usersContext.Goals.FirstOrDefault(g => g.Id == goalVM.Id);
                     if (existingGoal != null)
-                        TryUpdateModel(existingGoal);
+                        goalVM.SetGoalEntityProperties(existingGoal);
                 }
                 usersContext.SaveChanges();
             }
