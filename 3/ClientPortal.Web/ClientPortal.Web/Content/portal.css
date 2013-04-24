@@ -1,4 +1,19 @@
-﻿#windowGoal select {
+﻿.summarytable {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.summarytable th {
+    padding-left: 10px;
+    padding-right: 10px;
+    border: solid 1px;
+}
+
+.summarytable td {
+    border: solid 1px;
+}
+
+#windowGoal select {
     margin: 0 0 12px 0;
 }
 

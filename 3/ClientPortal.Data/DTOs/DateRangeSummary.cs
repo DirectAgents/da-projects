@@ -7,9 +7,9 @@ namespace ClientPortal.Data.DTOs
     {
         public string Name { get; set; }
 
-        public int Clicks { get; set; }
-        public int Conversions { get; set; }
-        public decimal Revenue { get; set; }
+        public int? Clicks { get; set; }
+        public int? Conversions { get; set; }
+        public decimal? Revenue { get; set; }
 
         public string RevenueFormatted
         {

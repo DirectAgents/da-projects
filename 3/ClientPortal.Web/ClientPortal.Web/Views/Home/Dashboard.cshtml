@@ -34,7 +34,7 @@
     <div class="six columns">
         <div class="panel">
             <b>Summary Report</b>
-            <table style="width: 100%">
+            <table class="summarytable" style="width: 100%">
                 <tr>
                     <th></th>
                     <th>Clicks</th>
@@ -202,7 +202,6 @@
     }
 
     function ResizeDashboardCharts() {
-        debugger;
         ResizeDashboardChart('proj', true);
         ResizeDashboardChart('perf', true);
         ResizeDashboardChart('spend', true);
@@ -241,7 +240,7 @@
     }
 
     function CreateMonthlyGoalChart(values, chartid, metric, valueFormat, culture, heading) {
-        var categories = ['Last Month-to-Date', 'Last Month-Total', 'This Month-to-Date', 'Goal'];
+        var categories = ['Last Month-to-Date','Last Month-Total','This Month-to-Date','Goal'];
         CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading);
     }
     function CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading) {

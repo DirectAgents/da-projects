@@ -41,9 +41,13 @@ namespace ClientPortal.Web.Models
         public List<GoalVM> Goals { get; set; }
         public List<DateRangeSummary> DateRangeSummaries { get; set; }
 
+        // for Monthly goal
         public DateRangeSummary SummaryMTD { get { return (DateRangeSummaries.Count >= 1) ? DateRangeSummaries[0] : null; } }
         public DateRangeSummary SummaryLMTD { get { return (DateRangeSummaries.Count >= 2) ? DateRangeSummaries[1] : null; } }
         public DateRangeSummary SummaryLM { get { return (DateRangeSummaries.Count >= 3) ? DateRangeSummaries[2] : null; } }
+
+        // for Custom goal
+        public DateRangeSummary SummaryCustom { get { return (DateRangeSummaries.Count >= 1) ? DateRangeSummaries[0] : null; } }
 
         public string Culture { get { return (DateRangeSummaries.Count > 0) ? DateRangeSummaries[0].Culture : null; } }
     }

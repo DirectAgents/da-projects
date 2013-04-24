@@ -5,7 +5,7 @@
 
 <!-- Left -->
 <div class="six columns">
-    <div class="panel">
+    <div class="panel" style="height: 250px">
         <b>Offer: @Model.Offer.OfferName</b><br />
         @for (var i = 0; i < Model.Goals.Count; i++)
         {
@@ -24,7 +24,8 @@
             }
             else
             {
-                funcPrefix = "CreateGoalChart(['Goal'], [" + dataGoal + "]";
+                var dataTimeframe = goal.ValueFor(Model.SummaryCustom);
+                funcPrefix = "CreateGoalChart(['" + goal.TimeframeFormatted() + "','Goal'], [" + dataTimeframe + "," + dataGoal + "]";
             }
             goal.CreateGoalChartCall = funcPrefix + ", '" + Model.Id + "', '" + goal.MetricId + "', '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "');";
 
@@ -35,7 +36,7 @@
             <a href="#" onclick="EditGoal(@goal.Id); return false">edit</a>
             <br />
         }
-        <table>
+        <table class="summarytable">
             <tr>
                 <th></th>
                 <th>Clicks</th>

@@ -169,8 +169,14 @@ namespace ClientPortal.Web.Controllers
                 }
                 if (customGoals.Any())
                 {
-                    var offerGoalSummary = CreateOfferGoalSummary(offer, customGoals, dates);
-                    offerGoalSummaries.Add(offerGoalSummary);
+                    foreach (var goalGroup1 in customGoals.GroupBy(g => g.StartDateParsed))
+                    {
+                        foreach (var goalGroup2 in goalGroup1.GroupBy(g => g.EndDateParsed))
+                        {
+                            var offerGoalSummary = CreateOfferGoalSummary(offer, goalGroup2.ToList(), dates);
+                            offerGoalSummaries.Add(offerGoalSummary);
+                        }
+                    }
                 }
             }
             return offerGoalSummaries;
@@ -178,18 +184,46 @@ namespace ClientPortal.Web.Controllers
 
         public OfferGoalSummary CreateOfferGoalSummary(CakeOffer offer, List<GoalVM> goals, Dates dates)
         {
-            var offsumMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, offer.Advertiser_Id, offer.Offer_Id);
-            offsumMTD.Name = "Month-to-Date";
-            var offsumLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, offer.Advertiser_Id, offer.Offer_Id);
-            offsumLMTD.Name = "Last Month-to-Date";
-            var offsumLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, offer.Advertiser_Id, offer.Offer_Id);
-            offsumLM.Name = "Last Month-Total";
+            List<DateRangeSummary> summaries;
+            if (!goals.Any() || goals[0].IsMonthly) // assume all goals are the same type
+            {
+                var offsumMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, offer.Advertiser_Id, offer.Offer_Id);
+                offsumMTD.Name = "Month-to-Date";
+                var offsumLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, offer.Advertiser_Id, offer.Offer_Id);
+                offsumLMTD.Name = "Last Month-to-Date";
+                var offsumLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, offer.Advertiser_Id, offer.Offer_Id);
+                offsumLM.Name = "Last Month-Total";
+                summaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM };
+            }
+            else
+            {
+                var goal0 = goals[0];
+                var sumActual = cakeRepo.GetDateRangeSummary(goal0.StartDateParsed.Value, goal0.EndDateParsed.Value, offer.Advertiser_Id, offer.Offer_Id);
+                sumActual.Name = goal0.TimeframeFormatted();
+                var sumGoal = new DateRangeSummary() { Name = "Goal", Culture = goal0.Culture };
+                foreach (var goal in goals)
+                {
+                    switch (goal.MetricId)
+                    {
+                        case MetricEnum.Clicks:
+                            sumGoal.Clicks = (int)goal.Target;
+                            break;
+                        case MetricEnum.Leads:
+                            sumGoal.Conversions = (int)goal.Target;
+                            break;
+                        case MetricEnum.Spend:
+                            sumGoal.Revenue = goal.Target;
+                            break;
+                    }
+                }
+                summaries = new List<DateRangeSummary> { sumActual, sumGoal };
+            }
 
             var offerGoalSummary = new OfferGoalSummary()
             {
                 Offer = offer,
                 Goals = goals,
-                DateRangeSummaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM }
+                DateRangeSummaries = summaries
             };
             return offerGoalSummary;
         }
