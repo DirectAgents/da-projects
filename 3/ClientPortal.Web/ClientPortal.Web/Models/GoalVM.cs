@@ -115,8 +115,13 @@ namespace ClientPortal.Web.Models
             else if (endDate.HasValue && startDateParsed && !startDate.HasValue)
                 yield return new ValidationResult("Must provide a Start Date.", new[] { "StartDate" });
 
-            if (startDateParsed && startDate.HasValue && endDateParsed && endDate.HasValue && !(startDate.Value < endDate.Value))
-                yield return new ValidationResult("End Date must be after Start Date.", new[] { "EndDate" });
+            if (startDateParsed && startDate.HasValue && endDateParsed && endDate.HasValue)
+            {
+                if (!(startDate.Value < endDate.Value))
+                    yield return new ValidationResult("End Date must be after Start Date.", new[] { "EndDate" });
+                else if (TypeId == GoalTypeEnum.Percent)
+                    yield return new ValidationResult("Only absolute goals are supported with custom date ranges.", new[] { "TypeId" });
+            }
         }
 
         // e.g. "Reach 1,000 Leads", "Reach $1,000 Spend", "Increase Leads 10.5% (to 1,105)", "Increase Spend 10.5% (to $1,105)"

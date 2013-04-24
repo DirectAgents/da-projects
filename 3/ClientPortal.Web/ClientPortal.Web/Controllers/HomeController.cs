@@ -103,18 +103,7 @@ namespace ClientPortal.Web.Controllers
 //            var summaryYTD = cakeRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
 //            summaryYTD.Name = "Year-to-Date";
 
-            var offers = cakeRepo.Offers(advId);
-
-            // Get Goals
-            var goals = AccountRepository.GetGoals(advertiserId.Value, null, cakeRepo);
-            var offerIdsFromGoals = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
-            List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
-            foreach (var offerId in offerIdsFromGoals)
-            {
-                var offer = offers.Where(o => o.Offer_Id == offerId).FirstOrDefault();
-                var offerGoalSummary = CreateOfferGoalSummary(offer, goals.Where(g => g.OfferId == offer.Offer_Id).ToList(), dates);
-                offerGoalSummaries.Add(offerGoalSummary);
-            }
+            var offerGoalSummaries = CreateOfferGoalSummaries(advertiserId.Value, dates);
 
             var model = new DashboardModel
             {
@@ -127,6 +116,18 @@ namespace ClientPortal.Web.Controllers
             return PartialView(model);
         }
 
+        public PartialViewResult DashboardGoals()
+        {
+            int? advertiserId = GetAdvertiserId();
+            if (advertiserId == null) return null;
+
+            var dates = new Dates();
+            var offerGoalSummaries = CreateOfferGoalSummaries(advertiserId.Value, dates);
+
+            ViewBag.CreateGoalCharts = true;
+            return PartialView(offerGoalSummaries);
+        }
+
         public PartialViewResult OfferGoalsRow(int offerId)
         {
             int? advertiserId = GetAdvertiserId();
@@ -137,8 +138,23 @@ namespace ClientPortal.Web.Controllers
             var dates = new Dates();
             var offerGoalSummary = CreateOfferGoalSummary(offer, goals, dates);
 
-            ViewBag.IncludeCreateGoalChartCall = true;
+            ViewBag.CreateGoalChart = true;
             return PartialView(offerGoalSummary);
+        }
+
+        public List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates)
+        {
+            var offers = cakeRepo.Offers(advId);
+            var goals = AccountRepository.GetGoals(advId, null, cakeRepo);
+            var offerIdsFromGoals = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
+            List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
+            foreach (var offerId in offerIdsFromGoals)
+            {
+                var offer = offers.Where(o => o.Offer_Id == offerId).FirstOrDefault();
+                var offerGoalSummary = CreateOfferGoalSummary(offer, goals.Where(g => g.OfferId == offer.Offer_Id).ToList(), dates);
+                offerGoalSummaries.Add(offerGoalSummary);
+            }
+            return offerGoalSummaries;
         }
 
         public OfferGoalSummary CreateOfferGoalSummary(CakeOffer offer, List<GoalVM> goals, Dates dates)

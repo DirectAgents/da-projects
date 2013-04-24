@@ -10,4 +10,5 @@
     <td>@Model.MetricId</td>
     <td>@Model.TypeId</td>
     <td>@Model.TargetFormatted</td>
+    <td>@(Model.IsMonthly ? "Monthly" : Model.StartDate + " - " + Model.EndDate)</td>
 </tr>

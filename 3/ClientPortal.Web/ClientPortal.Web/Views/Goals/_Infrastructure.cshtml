@@ -43,15 +43,18 @@
         if ($('#divGoalsList:visible').length > 0)
             RefreshGoalsList();
         else { @* update dashboard *@
-            var url = '@Url.Action("OfferGoalsRow", "Home")';
-            $.ajax({ url: url, data: { offerid: newOfferId }, cache: false }).done(function (data) {
-                $('#offergoals' + newOfferId).html(data);
-            });
             var oldOfferId = $('#windowGoal').find('#OldOfferId').val();
-            if (oldOfferId != newOfferId)
-                $.ajax({ url: url, data: { offerid: oldOfferId }, cache: false }).done(function (data) {
-                    $('#offergoals' + oldOfferId).html(data);
+            if (oldOfferId == newOfferId) { @* update one goal row *@
+                var url = '@Url.Action("OfferGoalsRow", "Home")';
+                $.ajax({ url: url, data: { offerid: newOfferId }, cache: false }).done(function (data) {
+                    $('#offergoals' + newOfferId).html(data);
                 });
+            } else { @* update all goals *@
+                var url = '@Url.Action("DashboardGoals", "Home")';
+                $.ajax({ url: url, cache: false }).done(function (data) {
+                    $('#dashboardGoals').html(data);
+                });
+            }
         }
         CloseGoalWindow();
     }

@@ -8,8 +8,6 @@
     var firstOfYear = new DateTime(now.Year, 1, 1).ToString("d", Model.CultureInfo);
     //var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
     //var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
-    var start = Model.Start == null ? "" : Model.Start.Value.ToString("d", Model.CultureInfo);
-    var end = Model.End == null ? "" : Model.End.Value.ToString("d", Model.CultureInfo);
 }
 
 <!-- Timeframe -->
@@ -22,9 +20,9 @@
             <option value="custom">- custom -</option>
         </select>
         <span style="float: left; margin-left: 10px">Start:</span>
-        <input style="float:left; width:100px" id="dash_startdate" name="startdate" type="text" value="@start" onchange="DashboardDateChanged()" />
+        <input style="float:left; width:100px" id="dash_startdate" name="startdate" type="text" value="@Html.FormatDate(Model.Start, Model.CultureInfo)" onchange="DashboardDateChanged()" />
         <span style="float: left; margin-left: 10px">End:</span>
-        <input style="float:left; width:100px" id="dash_enddate" name="enddate" type="text" value="@end" onchange="DashboardDateChanged()" />
+        <input style="float:left; width:100px" id="dash_enddate" name="enddate" type="text" value="@Html.FormatDate(Model.End, Model.CultureInfo)" onchange="DashboardDateChanged()" />
         <a class="button" style="padding: 3px; margin-left: 10px" id="dash_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshDashboardRange(); return false">Refresh</a>
     </div>
 </div>
@@ -119,18 +117,9 @@
 </div>
 
 <!-- Goal Rows -->
-@{
-    List<string> firstCreateGoalChartCalls = new List<string>();
-    foreach (var offersum in Model.OfferGoalSummaries)
-    {
-        <div id="offergoals@(offersum.Offer.Offer_Id)" class="row">
-            @Html.Partial("OfferGoalsRow", offersum)
-        </div>
-        if (offersum.Goals.Count > 0) {
-            firstCreateGoalChartCalls.Add(offersum.Goals[0].CreateGoalChartCall);
-        }
-    }
-}
+<div id="dashboardGoals">
+    @Html.Partial("DashboardGoals", Model.OfferGoalSummaries)
+</div>
 
 <script>
     $(function () {
@@ -170,10 +159,7 @@
         CreateMonthlySpendBarChart('monthlySpendBarChart', monthlySpendDS, 200);
         monthlySpendDS.read();
 
-        @foreach (var call in firstCreateGoalChartCalls)
-        {
-            <text>@Html.Raw(call)</text>
-        }
+        CreateGoalCharts(); @* //defined in DashboardGoals *@
     });
 
     function Projection(value) {
@@ -253,7 +239,11 @@
         ResizeDashboardChart('monthlySpendBar', true);
     }
 
-    function CreateGoalChart(offerid, metric, values, valueFormat, culture, heading) {
+    function CreateMonthlyGoalChart(values, offerid, metric, valueFormat, culture, heading) {
+        var categories = ['Last Month-to-Date', 'Last Month-Total', 'This Month-to-Date', 'Goal'];
+        CreateGoalChart(categories, values, offerid, metric, valueFormat, culture, heading);
+    }
+    function CreateGoalChart(categories, values, offerid, metric, valueFormat, culture, heading) {
         $('#goal' + offerid + 'ChartHeading').html('<b>' + heading + '</b>');
         kendo.culture(culture);
         $('#goal' + offerid + 'Chart').kendoChart({
@@ -275,7 +265,7 @@
                 title: { text: metric }
             },
             categoryAxis: {
-                categories: ["Last Month-to-Date", "Last Month-Total", "This Month-to-Date", "Goal"]
+                categories: categories
             },
             tooltip: {
                 visible: true,
