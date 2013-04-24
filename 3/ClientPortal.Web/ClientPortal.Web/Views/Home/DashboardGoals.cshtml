@@ -5,13 +5,13 @@
 
 @{
     List<string> firstCreateGoalChartCalls = new List<string>();
-    foreach (var offersum in Model)
+    foreach (var offerGoalSummary in Model)
     {
-        <div id="offergoals@(offersum.Offer.Offer_Id)" class="row">
-            @Html.Partial("OfferGoalsRow", offersum)
+        <div id="offergoals@(offerGoalSummary.Id)" class="row">
+            @Html.Partial("OfferGoalsRow", offerGoalSummary)
         </div>
-        if (offersum.Goals.Count > 0) {
-            firstCreateGoalChartCalls.Add(offersum.Goals[0].CreateGoalChartCall);
+        if (offerGoalSummary.Goals.Count > 0) {
+            firstCreateGoalChartCalls.Add(offerGoalSummary.Goals[0].CreateGoalChartCall);
         }
     }
 }

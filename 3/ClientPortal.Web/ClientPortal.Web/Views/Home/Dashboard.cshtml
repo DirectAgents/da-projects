@@ -202,6 +202,7 @@
     }
 
     function ResizeDashboardCharts() {
+        debugger;
         ResizeDashboardChart('proj', true);
         ResizeDashboardChart('perf', true);
         ResizeDashboardChart('spend', true);
@@ -239,14 +240,14 @@
         ResizeDashboardChart('monthlySpendBar', true);
     }
 
-    function CreateMonthlyGoalChart(values, offerid, metric, valueFormat, culture, heading) {
+    function CreateMonthlyGoalChart(values, chartid, metric, valueFormat, culture, heading) {
         var categories = ['Last Month-to-Date', 'Last Month-Total', 'This Month-to-Date', 'Goal'];
-        CreateGoalChart(categories, values, offerid, metric, valueFormat, culture, heading);
+        CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading);
     }
-    function CreateGoalChart(categories, values, offerid, metric, valueFormat, culture, heading) {
-        $('#goal' + offerid + 'ChartHeading').html('<b>' + heading + '</b>');
+    function CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading) {
+        $('#goal' + chartid + 'ChartHeading').html('<b>' + heading + '</b>');
         kendo.culture(culture);
-        $('#goal' + offerid + 'Chart').kendoChart({
+        $('#goal' + chartid + 'Chart').kendoChart({
             chartArea: {
                 height: 186
             },

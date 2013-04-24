@@ -26,9 +26,9 @@
             {
                 funcPrefix = "CreateGoalChart(['Goal'], [" + dataGoal + "]";
             }
-            goal.CreateGoalChartCall = funcPrefix + ", '" + Model.Offer.Offer_Id + "', '" + goal.MetricId + "', '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "');";
+            goal.CreateGoalChartCall = funcPrefix + ", '" + Model.Id + "', '" + goal.MetricId + "', '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "');";
 
-            <text>Custom Goal: </text>
+            <text>@(@goal.IsMonthly ? "Monthly" : "Custom") Goal: </text>
             <span style="color: darkblue">@goalString</span>
             <a href="#" onclick="@goal.CreateGoalChartCall; return false">show</a>
             <text>|</text>
@@ -57,10 +57,10 @@
 
 <!-- Right -->
 <div class="panel six columns" id="goal@(Model.Offer.Offer_Id)ChartOuter">
-    <div id="goal@(Model.Offer.Offer_Id)ChartHeading"></div>
+    <div id="goal@(Model.Id)ChartHeading"></div>
 
     <div class="chart-wrapper">
-         <div id="goal@(Model.Offer.Offer_Id)Chart"></div>
+         <div id="goal@(Model.Id)Chart"></div>
     </div>
 </div>
 

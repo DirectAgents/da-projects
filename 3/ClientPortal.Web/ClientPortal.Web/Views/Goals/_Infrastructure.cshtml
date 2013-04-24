@@ -33,21 +33,23 @@
 
     function EditGoalSuccess(result) {
         if (result.success) {
-            RefreshGoalsAndCloseWindow(result.OfferId);
+            RefreshGoalsAndCloseWindow(result.OfferId, result.GoalId);
         } else { @* validation error *@
             EditGoalLoaded();
         }
     }
 
-    function RefreshGoalsAndCloseWindow(newOfferId) {
+    function RefreshGoalsAndCloseWindow(newOfferId, goalId) {
+        debugger;
         if ($('#divGoalsList:visible').length > 0)
             RefreshGoalsList();
         else { @* update dashboard *@
-            var oldOfferId = $('#windowGoal').find('#OldOfferId').val();
-            if (oldOfferId == newOfferId) { @* update one goal row *@
+            var newOfferGoalId = newOfferId + '_' + goalId;
+            var oldOfferGoalId = $('#windowGoal').find('#OldOfferGoalId').val();
+            if (oldOfferGoalId == newOfferGoalId && $('#offergoals' + newOfferGoalId).length > 0) { @* update one goal row *@
                 var url = '@Url.Action("OfferGoalsRow", "Home")';
-                $.ajax({ url: url, data: { offerid: newOfferId }, cache: false }).done(function (data) {
-                    $('#offergoals' + newOfferId).html(data);
+                $.ajax({ url: url, data: { offerid: newOfferId, goalid: goalId }, cache: false }).done(function (data) {
+                    $('#offergoals' + newOfferGoalId).html(data);
                 });
             } else { @* update all goals *@
                 var url = '@Url.Action("DashboardGoals", "Home")';

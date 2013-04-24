@@ -128,13 +128,22 @@ namespace ClientPortal.Web.Controllers
             return PartialView(offerGoalSummaries);
         }
 
-        public PartialViewResult OfferGoalsRow(int offerId)
+        public PartialViewResult OfferGoalsRow(int offerId, int? goalId)
         {
             int? advertiserId = GetAdvertiserId();
             if (advertiserId == null) return null;
 
             var offer = cakeRepo.Offers(advertiserId).Where(o => o.Offer_Id == offerId).FirstOrDefault();
-            var goals = AccountRepository.GetGoals(advertiserId.Value, offerId, cakeRepo);
+            List<GoalVM> goals;
+            if (goalId.HasValue)
+            {
+                var goal = AccountRepository.GetGoal(goalId.Value, OfferInfo.CurrencyToCulture(offer.Currency));
+                goals = new List<GoalVM> { goal };
+            }
+            else
+            {
+                goals = AccountRepository.GetGoals(advertiserId.Value, offerId, false, cakeRepo);
+            }
             var dates = new Dates();
             var offerGoalSummary = CreateOfferGoalSummary(offer, goals, dates);
 
@@ -145,14 +154,24 @@ namespace ClientPortal.Web.Controllers
         public List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates)
         {
             var offers = cakeRepo.Offers(advId);
-            var goals = AccountRepository.GetGoals(advId, null, cakeRepo);
+            var goals = AccountRepository.GetGoals(advId, null, false, cakeRepo);
             var offerIdsFromGoals = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
             List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
             foreach (var offerId in offerIdsFromGoals)
             {
                 var offer = offers.Where(o => o.Offer_Id == offerId).FirstOrDefault();
-                var offerGoalSummary = CreateOfferGoalSummary(offer, goals.Where(g => g.OfferId == offer.Offer_Id).ToList(), dates);
-                offerGoalSummaries.Add(offerGoalSummary);
+                var monthlyGoals = goals.Where(g => g.OfferId == offer.Offer_Id && g.IsMonthly).ToList();
+                var customGoals = goals.Where(g => g.OfferId == offer.Offer_Id && !g.IsMonthly).ToList();
+                if (monthlyGoals.Any())
+                {
+                    var offerGoalSummary = CreateOfferGoalSummary(offer, monthlyGoals, dates);
+                    offerGoalSummaries.Add(offerGoalSummary);
+                }
+                if (customGoals.Any())
+                {
+                    var offerGoalSummary = CreateOfferGoalSummary(offer, customGoals, dates);
+                    offerGoalSummaries.Add(offerGoalSummary);
+                }
             }
             return offerGoalSummaries;
         }

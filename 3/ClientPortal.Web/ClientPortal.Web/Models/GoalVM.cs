@@ -10,6 +10,11 @@ namespace ClientPortal.Web.Models
     {
         public int Id { get; set; }
 
+        public string OfferGoalId
+        {
+            get { return (OfferId.HasValue ? OfferId.Value.ToString() : "") + "_" + Id; }
+        }
+
         public int AdvertiserId { get; set; }
 
         [Display(Name="Offer")]
@@ -128,9 +133,16 @@ namespace ClientPortal.Web.Models
         public string TargetFormattedBasedOn(DateRangeSummary rangeSummary)
         {
             if (TypeId == GoalTypeEnum.Absolute)
-                return "Reach " + TargetFormatted + " " + this.MetricId;
+                return "Reach " + TargetFormatted + " " + this.MetricId + TimeframeFormatted(true);
             else // Percent
                 return "Increase " + this.MetricId + " " + TargetFormatted + " (to " + FormatSomeTarget(TargetBasedOn(rangeSummary)) + ")";
+        }
+        public string TimeframeFormatted(bool includeSpace)
+        {
+            if (IsMonthly) return "";
+
+            string prefix = (includeSpace ? " (" : "(");
+            return prefix + StartDate + " - " + EndDate + ")";
         }
 
         public decimal TargetBasedOn(DateRangeSummary rangeSummary)

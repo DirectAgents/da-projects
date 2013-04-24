@@ -22,7 +22,7 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = AccountRepository.GetGoals(advId.Value, null, cakeRepo);
+            var goals = AccountRepository.GetGoals(advId.Value, null, false, cakeRepo);
             var model = new GoalsModel()
             {
                 Goals = goals
@@ -35,7 +35,7 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = AccountRepository.GetGoals(advId.Value, null, cakeRepo);
+            var goals = AccountRepository.GetGoals(advId.Value, null, false, cakeRepo);
             return PartialView(goals);
         }
 
@@ -77,7 +77,7 @@ namespace ClientPortal.Web.Controllers
                     goal.AdvertiserId = advId.Value;
                     SaveGoal(goal);
                 }
-                return Json(new { success = true, OfferId = goal.OfferId });
+                return Json(new { success = true, OfferId = goal.OfferId, GoalId = goal.Id });
             }
             else
             {

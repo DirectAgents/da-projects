@@ -3,6 +3,7 @@ using ClientPortal.Data.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 namespace ClientPortal.Web.Models
 {
@@ -26,6 +27,16 @@ namespace ClientPortal.Web.Models
 
     public class OfferGoalSummary
     {
+        public string Id
+        {
+            get {
+                StringBuilder id = new StringBuilder(Offer.Offer_Id.ToString());
+                foreach (var goal in Goals)
+                    id.Append("_" + goal.Id);
+                return id.ToString();
+            }
+        }
+
         public CakeOffer Offer { get; set; }
         public List<GoalVM> Goals { get; set; }
         public List<DateRangeSummary> DateRangeSummaries { get; set; }
