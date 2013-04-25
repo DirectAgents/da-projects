@@ -128,7 +128,7 @@
         $('#dash_startdate').kendoDatePicker();
         $('#dash_enddate').kendoDatePicker();
 
-        CreatePerformanceChart([''], [0], 'N0', '@Model.Culture', 180);
+        CreatePerformanceChart([''], [0], 'N0', '@Model.Culture', 173);
         CreateSpendChart(0, 'C0', '@Model.Culture', 'Spend', 75);
 
         var projDS = CreateProjectionDataSource('@Html.Raw(Url.Action("DailySummaryData", "Reports", new { cumulative = true, projection = true }))');
@@ -209,7 +209,7 @@
         ResizeDashboardChart('monthlySpendBar', true);
         @foreach (var offersum in Model.OfferGoalSummaries)
         {
-            <text>ResizeDashboardChart('goal@(offersum.Offer.Offer_Id)', true);</text>
+            <text>ResizeDashboardChart('goal@(offersum.Id)', true);</text>
         }
     }
 
@@ -239,12 +239,12 @@
         ResizeDashboardChart('monthlySpendBar', true);
     }
 
-    function CreateMonthlyGoalChart(values, chartid, metric, valueFormat, culture, heading) {
-        var categories = ['Last Month-to-Date','Last Month-Total','This Month-to-Date','Goal'];
-        CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading);
+    function CreateMonthlyGoalChart(values, chartid, metric, valueFormat, culture, heading, subheading) {
+        var categories = ['Last MTD','Last Month','MTD','Goal'];
+        CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading, subheading);
     }
-    function CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading) {
-        $('#goal' + chartid + 'ChartHeading').html('<b>' + heading + '</b>');
+    function CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading, subheading) {
+        $('#goal' + chartid + 'ChartHeading').html('<b>' + heading + '</b> ' + subheading);
         kendo.culture(culture);
         $('#goal' + chartid + 'Chart').kendoChart({
             chartArea: {

@@ -99,7 +99,7 @@ namespace ClientPortal.Web.Controllers
             var summaryLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null);
             summaryLMTD.Name = "Last Month-to-Date";
             var summaryLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, null);
-            summaryLM.Name = "Last Month-Total";
+            summaryLM.Name = "Last Month (Total)";
 //            var summaryYTD = cakeRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
 //            summaryYTD.Name = "Year-to-Date";
 
@@ -192,14 +192,14 @@ namespace ClientPortal.Web.Controllers
                 var offsumLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, offer.Advertiser_Id, offer.Offer_Id);
                 offsumLMTD.Name = "Last Month-to-Date";
                 var offsumLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, offer.Advertiser_Id, offer.Offer_Id);
-                offsumLM.Name = "Last Month-Total";
+                offsumLM.Name = "Last Month (Total)";
                 summaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM };
             }
             else
             {
                 var goal0 = goals[0];
                 var sumActual = cakeRepo.GetDateRangeSummary(goal0.StartDateParsed.Value, goal0.EndDateParsed.Value, offer.Advertiser_Id, offer.Offer_Id);
-                sumActual.Name = goal0.TimeframeFormatted();
+                sumActual.Name = (dates.Now.Date > goal0.EndDateParsed) ? "Results" : "Results to-Date";
                 var sumGoal = new DateRangeSummary() { Name = "Goal", Culture = goal0.Culture };
                 foreach (var goal in goals)
                 {

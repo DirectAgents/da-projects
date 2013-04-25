@@ -1,19 +1,37 @@
 ﻿@model ClientPortal.Web.Models.OfferGoalSummary
 @{
     bool createGoalChart = ViewBag.CreateGoalChart ?? false;
+    int numGoals = Model.Goals.Count;
+
+    var today = DateTime.Now.Date;
+    string timeframeFormatted = "";
+    bool isMonthly = true;
+    if (numGoals > 0) {
+        var goal0 = Model.Goals[0];
+        timeframeFormatted = goal0.TimeframeFormatted();
+        isMonthly = goal0.IsMonthly;
+    }
 }
 
 <!-- Left -->
 <div class="six columns">
-    <div class="panel" style="height: 250px">
-        <b>Offer: @Model.Offer.OfferName</b><br />
-        @for (var i = 0; i < Model.Goals.Count; i++)
+    <div class="panel" style="min-height: 250px">
+        <span class="offergoalsheader">
+            <b>Offer: @Model.Offer.OfferName</b>
+            @if (!isMonthly)
+            {
+                <br /><i>Timeframe: @timeframeFormatted</i>
+            }
+        </span>
+        <table class="goaltexttable">
+        @for (var i = 0; i < numGoals; i++)
         {
             var goal = Model.Goals[i];
             var dataGoal = goal.TargetBasedOn(Model.SummaryLM);
             var valueFormat = (goal.MetricId == ClientPortal.Web.Models.MetricEnum.Spend ? "C" : "N0");
             var goalString = goal.TargetFormattedBasedOn(Model.SummaryLM);
             //var heading = Model.Offer.OfferName.Replace("'", "");
+            var subheading = goal.TimeframeFormatted(false, true);
             string funcPrefix;
             if (goal.IsMonthly)
             {
@@ -25,20 +43,27 @@
             else
             {
                 var dataTimeframe = goal.ValueFor(Model.SummaryCustom);
-                funcPrefix = "CreateGoalChart(['" + goal.TimeframeFormatted() + "','Goal'], [" + dataTimeframe + "," + dataGoal + "]";
+                funcPrefix = "CreateGoalChart(['" + Model.SummaryCustom.Name + "','Goal'], [" + dataTimeframe + "," + dataGoal + "]";
             }
-            goal.CreateGoalChartCall = funcPrefix + ", '" + Model.Id + "', '" + goal.MetricId + "', '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "');";
+            goal.CreateGoalChartCall = funcPrefix + ", '" + Model.Id + "', '" + goal.MetricId + "', '" + valueFormat + "', '" + goal.Culture + "', '" + goalString + "', '" + subheading + "');";
 
-            <text>@(@goal.IsMonthly ? "Monthly" : "Custom") Goal: </text>
-            <span style="color: darkblue">@goalString</span>
-            <a href="#" onclick="@goal.CreateGoalChartCall; return false">show</a>
-            <text>|</text>
-            <a href="#" onclick="EditGoal(@goal.Id); return false">edit</a>
-            <br />
+            <tr>
+                <td class="tdfirst">@(@goal.IsMonthly ? "Monthly" : "Custom") Goal: </td>
+                <td style="color: darkblue">@goalString</td>
+                <td>
+                    @if (numGoals > 1)
+                    {
+                        <a href="#" onclick="@goal.CreateGoalChartCall; return false">show</a>
+                        <text>|</text>
+                    }
+                    <a href="#" onclick="EditGoal(@goal.Id); return false">edit</a>
+                </td>
+            </tr>
         }
+        </table>
         <table class="summarytable">
             <tr>
-                <th></th>
+                <th style="width: 50%"></th>
                 <th>Clicks</th>
                 <th>Leads</th>
                 <th>Spend</th>
@@ -57,7 +82,7 @@
 </div>
 
 <!-- Right -->
-<div class="panel six columns" id="goal@(Model.Offer.Offer_Id)ChartOuter">
+<div class="panel six columns" id="goal@(Model.Id)ChartOuter">
     <div id="goal@(Model.Id)ChartHeading"></div>
 
     <div class="chart-wrapper">
@@ -66,7 +91,7 @@
 </div>
 
 <script>
-@if (createGoalChart && Model.Goals.Count > 0)
+@if (createGoalChart && numGoals > 0)
 {
     @Html.Raw(Model.Goals[0].CreateGoalChartCall)
 }

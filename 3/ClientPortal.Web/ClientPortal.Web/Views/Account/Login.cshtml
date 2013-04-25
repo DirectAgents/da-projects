@@ -27,6 +27,13 @@
         </div>
     </div>
     <div class="row">
+        <div class="two columns"></div>
+        <div class="ten columns">
+            @Html.CheckBoxFor(m => m.RememberMe, new { style = "float: left" })
+            @Html.LabelFor(m => m.RememberMe, new { style = "margin: 3px" })
+        </div>
+    </div>
+    <div class="row">
         <div class="two columns centered">
             <input type="submit" class="button" value="Log in" />
         </div>

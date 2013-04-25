@@ -48,6 +48,7 @@ namespace ClientPortal.Web.Models
 
         // for Custom goal
         public DateRangeSummary SummaryCustom { get { return (DateRangeSummaries.Count >= 1) ? DateRangeSummaries[0] : null; } }
+        public DateRangeSummary SummaryGoal { get { return (DateRangeSummaries.Count >= 2) ? DateRangeSummaries[1] : null; } }
 
         public string Culture { get { return (DateRangeSummaries.Count > 0) ? DateRangeSummaries[0].Culture : null; } }
     }

@@ -1,16 +1,39 @@
 ﻿.summarytable {
+    width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
 }
-
 .summarytable th {
     padding-left: 10px;
     padding-right: 10px;
-    border: solid 1px;
+}
+.summarytable th, .summarytable td {
+    border: 1px solid;
+    border-color: lightgray;
+}
+.summarytable th {
+    text-align: center;
+}
+.summarytable td {
+    text-align: right;
 }
 
-.summarytable td {
-    border: solid 1px;
+.offergoalsheader {
+    margin: 2px;
+}
+.goaltexttable {
+    background: inherit;
+    margin: 0px;
+    border: 0px;
+}
+.goaltexttable tbody tr:nth-child(even) {
+    background: inherit;
+}
+.goaltexttable td {
+    padding: 0px 2px;
+}
+.goaltexttable .tdfirst {
+    padding-left: 0px;
 }
 
 #windowGoal select {
