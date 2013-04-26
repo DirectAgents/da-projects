@@ -1,4 +1,15 @@
-﻿.summarytable {
+﻿.paddedlabel {
+    margin-left: 5px;
+}
+.paddedbutton {
+    padding: 3px;
+    margin-left: 5px;
+}
+.k-datepicker {
+    width: 110px;
+}
+
+.summarytable {
     width: 100%;
     border-spacing: 0;
     border-collapse: collapse;

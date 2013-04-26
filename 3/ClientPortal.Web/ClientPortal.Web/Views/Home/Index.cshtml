@@ -374,7 +374,7 @@
 
         //
         function DateChanged(grid) {
-            $('#' + grid + '_dateRangeSel').val('custom');
+            $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
             $('#' + grid + '_filterBtn').attr('disabled', false);
         }
 

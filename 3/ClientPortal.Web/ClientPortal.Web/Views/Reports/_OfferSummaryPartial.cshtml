@@ -1,5 +1,5 @@
 ﻿<div style="height: 35px;">
-    <select style="float: left; width: 110px" id="offsum_dateRangeSel" onchange="ChangeDateRange('offsum')">
+    <select style="width: 140px" id="offsum_dateRangeSel" onchange="ChangeDateRange('offsum')">
         <option value="today">Today</option>
         <option value="yesterday">Yesterday</option>
         <option value="wtd">Week to Date</option>
@@ -9,11 +9,11 @@
         <option value="lastmonth">Last Month</option>
         <option value="custom">- custom -</option>
     </select>
-    <span style="float: left; margin-left: 10px">Start:</span>
-    <input style="float:left; width:100px" id="offsum_startdate" name="startdate" type="text" value="@ViewBag.today" onchange="DateChanged('offsum')" />
-    <span style="float: left; margin-left: 10px">End:</span>
-    <input style="float:left; width:100px" id="offsum_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('offsum')" />
-    <a class="button" style="padding: 3px; margin-left: 10px" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum'); return false">Filter</a>
+    <span class="paddedlabel">Start:</span>
+    <input id="offsum_startdate" name="startdate" type="text" value="@ViewBag.today" onchange="DateChanged('offsum')" />
+    <span class="paddedlabel">End:</span>
+    <input id="offsum_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('offsum')" />
+    <a class="button paddedbutton" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum'); return false">Filter</a>
 </div>
 <div id="offsumChartSection" class="k-content">
     <div class="chart-wrapper">
@@ -69,6 +69,9 @@
     }
 
     function SetupOfferSummaryGrid() {
+        $('#offsum_dateRangeSel').kendoDropDownList();
+        $('#offsum_startdate').kendoDatePicker({ footer: ' ' });
+        $('#offsum_enddate').kendoDatePicker({ footer: ' ' });
 
         var dataSource = CreateOfferSummaryDataSource();
 
@@ -92,8 +95,6 @@
             pageable: true,
             detailInit: OffSumDetailInit
         });
-        $('#offsum_startdate').kendoDatePicker();
-        $('#offsum_enddate').kendoDatePicker();
         CreateOffSumChart(dataSource);
         dataSource.read();
     }
