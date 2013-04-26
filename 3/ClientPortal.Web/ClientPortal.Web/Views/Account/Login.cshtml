@@ -1,41 +1,43 @@
 ﻿@model ClientPortal.Web.Models.LoginModel
 
-<br />
-<br />
-<br />
-<br />
-<br />
+@section head {
+    <style>
+        body {
+            background-color: rgb(47,141,231);
+        }
+    </style>
+}
 
+<div class="logindiv" style="width: 300px; margin: 100px auto auto auto; text-align: center; border: 10px solid rgb(107,172,236); background-color: white">
+    <div style="background-color: rgb(243,243,243); height: 45px; padding-top: 10px">
+        <h4 style="margin-top: 0">Log in to Client Portal</h4>
+    </div>
 @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-    <div class="row">
-        <div class="two columns">
-            @Html.LabelFor(m => m.UserName, new { @class = "right inline" })
-        </div>
-        <div class="ten columns">
-            @Html.TextBoxFor(m => m.UserName, new { @class = "eight" })
-        </div>
-    </div>
-    <div class="row">
-        <div class="two columns">
-            @Html.LabelFor(m => m.Password, new { @class = "right inline" })
-        </div>
-        <div class="ten columns">
-            @Html.PasswordFor(m => m.Password, new { @class = "eight" })
-        </div>
-    </div>
-    <div class="row">
-        <div class="two columns"></div>
-        <div class="ten columns">
-            @Html.CheckBoxFor(m => m.RememberMe, new { style = "float: left" })
-            @Html.LabelFor(m => m.RememberMe, new { style = "margin: 3px" })
-        </div>
-    </div>
-    <div class="row">
-        <div class="two columns centered">
-            <input type="submit" class="button" value="Log in" />
-        </div>
+
+    <fieldset style="margin: 0px">
+        <legend>Log in Form</legend>
+        <ul>
+            <li>
+                @Html.LabelFor(m => m.UserName)
+                @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessageFor(m => m.UserName)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </li>
+            <li>
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+            </li>
+        </ul>
+    </fieldset>
+    <div style="background-color: rgb(243,243,243); padding: 10px">
+        <input type="submit" class="button" value="LOG IN" style="width: 200px" />
     </div>
 }
+</div>

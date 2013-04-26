@@ -104,7 +104,7 @@ namespace ClientPortal.Web.Models
     public class LoginModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [Display(Name = "Username")]
         public string UserName { get; set; }
 
         [Required]
@@ -112,7 +112,7 @@ namespace ClientPortal.Web.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Keep me logged in")]
         public bool RememberMe { get; set; }
     }
 
