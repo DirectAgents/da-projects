@@ -10,11 +10,12 @@ namespace CakeMarketing
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<conversion>().HasKey(c => c.conversion_id);
+            modelBuilder.Entity<click>().HasKey(c => c.click_id);
         }
     }
 
-    public partial class click
-    {
-        public int Id { get; set; }
-    }
+    //public partial class click
+    //{
+    //    public int Id { get; set; }
+    //}
 }

@@ -1,40 +1,83 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 using CakeMarketing;
 
 namespace CakeExtracter
 {
     class Program
     {
+        static string apiKey = "FCjdYAcwQE";
+        static string baseDir = @"C:\Aaron\cake_api_results\";
+
         public static void Main(string[] args)
         {
-            if (args.Length != 4)
+            if (args.Length < 4)
             {
                 Console.WriteLine("Usage: CakeExtracter <advertiser-id> <from-date> <to-date> <clicks|conversions|both>");
                 return;
             }
+
             int advertiserId = int.Parse(args[0]);
             var fromDate = DateTime.Parse(args[1]);
             var toDate = DateTime.Parse(args[2]);
             var operation = args[3];
-            if (operation == "clicks")
+
+            Parallel.For(0, (toDate - fromDate).Days, i =>
             {
-            }
-            else if (operation == "conversions")
-            {
-            }
-            else if (operation == "both")
-            {
-            }
+                var date = fromDate.AddDays(i);
+                               
+                string completedFile = baseDir + "complete_" + date.ToString("MM_dd_yyyy");
+                if(File.Exists(completedFile))
+                    return;
+
+                bool doClicks = operation == "clicks" || operation == "both";
+                bool doConversions = operation == "conversions" || operation == "both";
+                if (doClicks)
+                {
+                    var clicks = ExtractClicks(advertiserId, date);
+                    LoadClicks(clicks);
+                }
+                if (doConversions)
+                {
+                    var conversions = ExtractConversions(advertiserId, date);
+                    LoadConversions(conversions);
+                }
+
+                File.WriteAllText(completedFile, "done");
+            });
+
             Console.Write("Press any key to continue . . . ");
             Console.ReadKey(true);
         }
 
-        static string apiKey = "FCjdYAcwQE";
+        private static conversion_report_response ExtractConversions(int advertiserId, DateTime startDate)
+        {
+            var result = ExtractConversionsFromFile(advertiserId, startDate) ?? ExtractConversionsFromCake(advertiserId, startDate);
+            return result;
+        }
 
-        public static void ExtractConversions(int advertiserId, DateTime startDate)
+        private static conversion_report_response ExtractConversionsFromFile(int advertiserId, DateTime startDate)
+        {
+            string fileName = string.Format(baseDir + "conversions_{0}_{1}.txt", advertiserId, startDate.ToString("MM_dd_yyyy"));
+
+            if (!File.Exists(fileName))
+                return null;
+
+            Console.WriteLine("Extracting conversions from file: {0}..", fileName);
+
+            var serializer = new XmlSerializer(typeof(conversion_report_response));
+            var reader = new StreamReader(fileName);
+            var result = (conversion_report_response)serializer.Deserialize(reader);
+
+            return result;
+        }
+
+        private static conversion_report_response ExtractConversionsFromCake(int advertiserId, DateTime startDate)
         {
             Console.WriteLine("Extracting conversions for advertiser {0} on {1}..", advertiserId, startDate);
-            var reports = new reports();
+  
             var endDate = startDate.AddDays(1);
             int affiliateId = 0;
             int offerId = 0;
@@ -45,14 +88,19 @@ namespace CakeExtracter
             int rowLimit = 0;
             ConversionsSortFields sortFields = ConversionsSortFields.conversion_date;
             bool isDescending = false;
-            var result = reports.Conversions(apiKey, startDate, endDate, affiliateId,
-                                             advertiserId, offerId, campaignId, creativeId,
-                                             includeTests, startAtRow, rowLimit,
-                                             sortFields, isDescending);
-            Console.WriteLine("row count = {0}", result.row_count);
+
+            var reports = new reports();
+            var result = reports.Conversions(apiKey, startDate, endDate, affiliateId, advertiserId, offerId, campaignId, creativeId, includeTests, startAtRow, rowLimit, sortFields, isDescending);
+            
+            return result;
+        }
+
+        private static void LoadConversions(conversion_report_response conversionsResponse)
+        {
+            Console.WriteLine("row count = {0}", conversionsResponse.row_count);
             using (var db = new CakeExtracterContext())
             {
-                foreach (var item in result.conversions)
+                foreach (var item in conversionsResponse.conversions)
                 {
                     db.Conversions.Add(item);
                 }
@@ -61,9 +109,32 @@ namespace CakeExtracter
             }
         }
 
-        public static void ExtractClicks(int advertiserId, DateTime startDate)
+        private static click_report_response ExtractClicks(int advertiserId, DateTime startDate)
+        {
+            var result = ExtractClicksFromFile(advertiserId, startDate) ?? ExtractClicksFromCake(advertiserId, startDate);
+            return result;
+        }
+
+        private static click_report_response ExtractClicksFromFile(int advertiserId, DateTime startDate)
+        {
+            string fileName = string.Format(baseDir + "clicks_{0}_{1}.txt", advertiserId, startDate.ToString("MM_dd_yyyy"));
+
+            if (!File.Exists(fileName))
+                return null;
+
+            Console.WriteLine("Extracting clicks from file: {0}..", fileName);
+
+            var serializer = new XmlSerializer(typeof(click_report_response));
+            var reader = new StreamReader(fileName);
+            var result = (click_report_response)serializer.Deserialize(reader);
+
+            return result;
+        }
+
+        private static click_report_response ExtractClicksFromCake(int advertiserId, DateTime startDate)
         {
             Console.WriteLine("Extracting clicks for advertiser {0} on {1}..", advertiserId, startDate);
+
             var reports = new reports();
             var endDate = startDate.AddDays(1);
             int affiliateId = 0;
@@ -73,8 +144,14 @@ namespace CakeExtracter
             bool includeTests = false;
             int startAtRow = 0;
             int rowLimit = 0;
-            var result = reports.Clicks(apiKey, startDate, endDate, affiliateId, advertiserId, offerId,
-                                        campaignId, creativeId, includeTests, startAtRow, rowLimit);
+
+            var result = reports.Clicks(apiKey, startDate, endDate, affiliateId, advertiserId, offerId, campaignId, creativeId, includeTests, startAtRow, rowLimit);
+
+            return result;
+        }
+
+        private static void LoadClicks(click_report_response result)
+        {
             Console.WriteLine("row count = {0}", result.row_count);
             using (var db = new CakeExtracterContext())
             {

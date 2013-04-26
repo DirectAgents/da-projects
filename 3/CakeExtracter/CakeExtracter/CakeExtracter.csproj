@@ -38,6 +38,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Prefer32Bit>True</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>CakeExtracter.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -3,4 +3,7 @@
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>278 1/1/2013 1/2/2013 clicks</StartArguments>
+  </PropertyGroup>
 </Project>

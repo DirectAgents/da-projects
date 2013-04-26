@@ -202,6 +202,11 @@
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://cakemarketing.com/api/5/")]
     public partial class conversion
     {
+        public conversion()
+        {
+            disposition = new disposition { approved = false, contact = string.Empty, disposition_date = null, disposition_name = string.Empty };
+        }
+
 
         /// <remarks/>
         public string conversion_id { get; set; }
@@ -243,31 +248,31 @@
         public creative creative { get; set; }
 
         /// <remarks/>
-        public string sub_id_1;
+        public string sub_id_1 { get; set; }
 
         /// <remarks/>
-        public string sub_id_2;
+        public string sub_id_2 { get; set; }
 
         /// <remarks/>
-        public string sub_id_3;
+        public string sub_id_3 { get; set; }
 
         /// <remarks/>
-        public string sub_id_4;
+        public string sub_id_4 { get; set; }
 
         /// <remarks/>
-        public string sub_id_5;
+        public string sub_id_5 { get; set; }
 
         /// <remarks/>
         public string conversion_type { get; set; }
 
         /// <remarks/>
-        public payment paid;
+        public payment paid { get; set; }
 
         /// <remarks/>
-        public payment received;
+        public payment received { get; set; }
 
         /// <remarks/>
-        public byte step_reached;
+        public byte step_reached { get; set; }
 
         /// <remarks/>
         public bool pixel_dropped { get; set; }
@@ -306,7 +311,7 @@
         public string click_user_agent { get; set; }
 
         /// <remarks/>
-        public disposition disposition;
+        public disposition disposition { get; set; }
 
         /// <remarks/>
         public string note { get; set; }
@@ -325,7 +330,7 @@
         public int affiliate_id { get; set; }
 
         /// <remarks/>
-        public string affiliate_name;
+        public string affiliate_name { get; set; }
     }
 
     /// <remarks/>
@@ -338,16 +343,21 @@
     {
 
         /// <remarks/>
-        public byte browser_id { get; set; }
+        /// 
+        public int browser_id { get; set; }
 
         /// <remarks/>
         public string browser_name { get; set; }
 
         /// <remarks/>
-        public version browser_version { get; set; }
+        public version browser_version;
+        public int browser_version_version_id { get { return browser_version.version_id; } }
+        public string browser_version_version_name { get { return browser_version.version_name; } }
 
         /// <remarks/>
-        public version browser_version_minor { get; set; }
+        public version browser_version_minor;
+        public int browser_version_minor_version_id { get { return browser_version_minor.version_id; } }
+        public string browser_version_minor_version_name { get { return browser_version_minor.version_name; } }
     }
 
     /// <remarks/>
@@ -375,17 +385,17 @@
     public partial class operating_system
     {
 
-        /// <remarks/>
-        public byte operating_system_id { get; set; }
+        public int operating_system_id;
 
-        /// <remarks/>
         public string operating_system_name { get; set; }
 
-        /// <remarks/>
-        public version operating_system_version { get; set; }
+        public version operating_system_version;
+        public int operating_system_version_version_id { get { return operating_system_version.version_id; } }
+        public string operating_system_version_version_name { get { return operating_system_version.version_name; } }
 
-        /// <remarks/>
-        public version operating_system_version_minor { get; set; }
+        public version operating_system_version_minor;
+        public int operating_system_version_minor_version_id { get { return operating_system_version_minor.version_id; } }
+        public string operating_system_version_minor_version_name { get { return operating_system_version_minor.version_name; } }
     }
 
     /// <remarks/>
@@ -470,7 +480,6 @@
         public string country_name { get; set; }
     }
 
-    /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("SharpDevelop", "4.3.1.9430-406354be")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -478,92 +487,86 @@
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://cakemarketing.com/api/5/")]
     public partial class click
     {
+        public click()
+        {
+            device = new device { device_id = 0, device_name = string.Empty };
+            language = new language { language_abbr = string.Empty, language_id = 0, language_name = string.Empty };
+            operating_system = new operating_system
+            {
+                operating_system_id = 0,
+                operating_system_name = string.Empty,
+                operating_system_version = new version { version_id = 0, version_name = "" }
+            };
+            browser = new browser
+            {
+                browser_id = 0,
+                browser_name = string.Empty,
+                browser_version = new version { version_id = 0, version_name = "" },
+                browser_version_minor = new version { version_id = 0, version_name = "" }
+            };
+            region = new region { region_code = string.Empty, region_name = string.Empty };
+            isp = new isp { isp_id = 0, isp_name = string.Empty };
+            country = new country { country_code = string.Empty, country_name = string.Empty };
+        }
 
-        /// <remarks/>
+        [System.ComponentModel.DataAnnotations.KeyAttribute()]
+        [System.ComponentModel.DataAnnotations.Schema.DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None)]
         public int click_id { get; set; }
 
-        /// <remarks/>
         public int visitor_id { get; set; }
 
-        /// <remarks/>
         public int request_session_id { get; set; }
 
-        /// <remarks/>
         public System.DateTime click_date { get; set; }
 
-        /// <remarks/>
         public affiliate affiliate { get; set; }
 
-        /// <remarks/>
         public advertiser advertiser { get; set; }
 
-        /// <remarks/>
         public offer offer { get; set; }
 
-        /// <remarks/>
         public int campaign_id { get; set; }
 
-        /// <remarks/>
         public creative creative { get; set; }
 
-        /// <remarks/>
-        public string sub_id_1;
+        public string sub_id_1 { get; set; }
 
-        /// <remarks/>
-        public string sub_id_2;
+        public string sub_id_2 { get; set; }
 
-        /// <remarks/>
-        public string sub_id_3;
+        public string sub_id_3 { get; set; }
 
-        /// <remarks/>
-        public string sub_id_4;
+        public string sub_id_4 { get; set; }
 
-        /// <remarks/>
-        public string sub_id_5;
+        public string sub_id_5 { get; set; }
 
-        /// <remarks/>
         public string ip_address { get; set; }
 
-        /// <remarks/>
         public string user_agent { get; set; }
 
-        /// <remarks/>
         public string referrer_url { get; set; }
 
-        /// <remarks/>
         public string request_url { get; set; }
 
-        /// <remarks/>
         public string redirect_url { get; set; }
 
-        /// <remarks/>
-        public country country;
+        public country country { get; set; }
 
-        /// <remarks/>
         public region region { get; set; }
 
-        /// <remarks/>
-        public language language;
+        public language language { get; set; }
+        
+        public isp isp { get; set; }
 
-        /// <remarks/>
-        public isp isp;
+        public device device { get; set; }
 
-        /// <remarks/>
-        public device device;
+        public operating_system operating_system { get; set; }
 
-        /// <remarks/>
-        public operating_system operating_system;
+        public browser browser { get; set; }
 
-        /// <remarks/>
-        public browser browser;
-
-        /// <remarks/>
         public string disposition { get; set; }
 
-        /// <remarks/>
         public string paid_action { get; set; }
 
-        /// <remarks/>
         public int total_clicks { get; set; }
     }
 
@@ -580,7 +583,7 @@
         public int advertiser_id { get; set; }
 
         /// <remarks/>
-        public string advertiser_name;
+        public string advertiser_name { get; set; }
     }
 
     /// <remarks/>
@@ -596,7 +599,7 @@
         public int offer_id { get; set; }
 
         /// <remarks/>
-        public string offer_name;
+        public string offer_name { get; set; }
     }
 
     /// <remarks/>
@@ -612,7 +615,7 @@
         public int creative_id { get; set; }
 
         /// <remarks/>
-        public string creative_name;
+        public string creative_name { get; set; }
     }
 
     /// <remarks/>
@@ -634,7 +637,7 @@
         public string contact { get; set; }
 
         /// <remarks/>
-        public System.DateTime disposition_date { get; set; }
+        public System.DateTime? disposition_date { get; set; }
     }
 
     /// <remarks/>
@@ -647,13 +650,13 @@
     {
 
         /// <remarks/>
-        public byte currency_id;
+        public byte currency_id { get; set; }
 
         /// <remarks/>
-        public decimal amount;
+        public decimal amount { get; set; }
 
         /// <remarks/>
-        public string formatted_amount;
+        public string formatted_amount { get; set; }
     }
 
     /// <remarks/>
