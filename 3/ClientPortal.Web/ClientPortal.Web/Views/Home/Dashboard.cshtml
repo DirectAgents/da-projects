@@ -73,6 +73,7 @@
             <span><b>Projection</b></span>
             <span id="projNote" style="float: right"></span>
             @Html.Partial("ProjectionVis")
+            <span style="float: right">*Based on average # of leads per day</span>
         </div>
     </div>
 
@@ -136,7 +137,7 @@
         projDS.read();
         projDS.bind('change', function () {
             var aggs = this.aggregates();
-            var projNote = kendo.toString(aggs.Conversions.max, 'n0') + ' Leads by ' + aggs.Date.max.toLocaleDateString();
+            var projNote = kendo.toString(aggs.Conversions.max, 'n0') + ' Leads projected by ' + aggs.Date.max.toLocaleDateString() + '*';
             $('#projNote').html(projNote);
             UpdateProjectionChart();
         });
@@ -151,8 +152,9 @@
                 UpdatePerformanceChartValues(['Last Month', 'MTD', 'Projection'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum, Projection(aggs.Conversions.sum)]);
             else
                 UpdatePerformanceChartValues([$('#dash_startdate').val() +' - '+ $('#dash_enddate').val()], [aggs.Conversions.sum]);
-            UpdateSpendChartValue(aggs.Revenue.sum);
+            UpdateSpendChart(aggs.Revenue.sum);
             UpdateSpendLineChart();
+            UpdateWeeklySpendBarChart('weeklySpendBarChart');
         });
 
         var monthlySpendDS = CreateMonthlySpendDataSource('@Url.Action("MonthlySummaryData", "Reports")', '@firstOfYear', '@today');
