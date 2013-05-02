@@ -83,10 +83,10 @@
                 { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
                 { field: 'Name', title: 'Offer' },
                 { field: 'Format', width: 80 },
-                { field: 'Price', width: 70, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
-                { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Conversions', title: 'Leads', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Revenue', title: 'Total', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Price', width: 65, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
+                { field: 'Clicks', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Conversions', title: 'Leads', width: 67, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Revenue', title: 'Spend', width: 90, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             ],
             filterable: true,
             sortable: {
@@ -108,21 +108,26 @@
             },
             theme: $(document).data("kendoSkin") || "default",
             series: [
-                { field: "Conversions", name: "Leads" }
+                @* { field: "Clicks", name: "Clicks", axis: "clicksleads", tooltip: { template: "Clicks: #= kendo.format('{0:N0}',value) #" } }, *@
+                { field: "Conversions", name: "Leads", axis: "clicksleads", tooltip: { template: "Leads: #= kendo.format('{0:N0}',value) #" } },
+                { field: "Revenue", name: "Spend", axis: "spend", tooltip: { template: "Spend: #= kendo.format('{0:C}',value) #" } }
             ],
             categoryAxis: {
                 field: "OfferId",
-                labels: { template: "#= value #" }
+                labels: { template: "#= value #" },
+                axisCrossingValue: [0, 1000]
             },
-            valueAxis: {
-                labels: { step: 2 }
-            },
+            valueAxis: [
+                { name: "clicksleads", labels: { format: "N0", step: 2 }, title: { text: "Leads" } },
+                { name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" }}
+            ],
             tooltip: {
-                visible: true,
-                format: "N0"
+                visible: true
             },
             legend: {
-                position: "left"
+                position: "custom",
+                offsetX: 90,
+                offsetY: 0
             }
         });
     }

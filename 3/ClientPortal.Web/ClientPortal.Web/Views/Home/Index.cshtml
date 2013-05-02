@@ -60,7 +60,7 @@
     <div class="two columns portaltabs-v">
 
         @*<!--+---------------+
-              | Veritcal Tabs |
+              | Vertical Tabs |
               +---------------+-->*@
         <dl class="vertical tabs">
             <dd class="active"><a href="#vertical1" id="vertNav_Dashboard">Dashboard</a></dd>
@@ -122,7 +122,9 @@
                       | Reports HTabs Content |
                       +------------------------+-->*@
                 <ul class="tabs-content">
-                    <li id="repOffSumTab"></li>
+                    <li id="repOffSumTab" class="active">
+                        <div id="offsumNotLoaded"></div>
+                    </li>
                     <li id="repDaySumTab"></li>
                     <li id="repConversionsTab"></li>
                     <li id="repCPMTab"></li>
@@ -272,6 +274,21 @@
         });
         kendo.bind($("#main"), viewModel);
 
+        function OffSumClick() {
+            if ($('#offsumChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("OfferSummaryPartial", "Reports")',
+                    cache: false
+                }).done(function (html) {
+                    $("#repOffSumTab").html(html);
+                    ResizeChart('offsum', false);
+                    SetupOfferSummaryGrid();
+                });
+            } else {
+                setTimeout(function () { ResizeChart('offsum', true); }, 100);
+            }
+        }
+
         // Setup event handlers so that AJAX content loads on demand as tabs are clicked.
         function SetupTabs() {
 
@@ -280,51 +297,15 @@
                 LoadDashboard();
             });
 
-            // Files
-            $("#navFiles").one("click", function () {
-                $.ajax({
-                    url: '@Url.Action("Index", "Files")',
-                    cache: false
-                }).done(function (html) {
-                    $("#divFiles").html(html);
-                });
-            });
-
-            // Invoices
-            $("#navInvoices").click(function () {
-                $.ajax({
-                    url: '@Url.Action("Index", "Invoices")',
-                    cache: false
-                }).done(function (html) {
-                    $("#divInvoices").html(html);
-                });
-            });
-
-            // Contacts
-            $("#navContact").one("click", function () {
-                    $("#divContact").html('Loading...');
-                    $.ajax({
-                        url: '@Url.Action("Contact", "Home")',
-                    cache: false
-                }).done(function (html) {
-                    $("#divContact").html(html);
-                });
+            // Reports
+            $("#vertNav_Reports").click(function () {
+                if ($('#offsumNotLoaded').length > 0)
+                    OffSumClick();
             });
 
             // Offer Summary
-                $("#repNav_OffSum").click(function () {
-                    if ($('#offsumChart').length == 0) {
-                        $.ajax({
-                            url: '@Url.Action("OfferSummaryPartial", "Reports")',
-                        cache: false
-                    }).done(function (html) {
-                        $("#repOffSumTab").html(html);
-                        ResizeChart('offsum', false);
-                        SetupOfferSummaryGrid();
-                    });
-                } else {
-                    setTimeout(function () { ResizeChart('offsum', true); }, 100);
-                }
+            $("#repNav_OffSum").click(function () {
+                OffSumClick();
             });
 
             // Daily Summary
@@ -369,6 +350,37 @@
                     $("#repCPMTab").html(html);
                     SetupCPMSummaryGrid();
                 });
+            });
+
+            // Files
+            $("#navFiles").one("click", function () {
+                $.ajax({
+                    url: '@Url.Action("Index", "Files")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divFiles").html(html);
+                });
+            });
+
+            // Invoices
+            $("#navInvoices").click(function () {
+                $.ajax({
+                    url: '@Url.Action("Index", "Invoices")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divInvoices").html(html);
+                });
+            });
+
+            // Contacts
+                $("#navContact").one("click", function () {
+                    $("#divContact").html('Loading...');
+                    $.ajax({
+                        url: '@Url.Action("Contact", "Home")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#divContact").html(html);
+                    });
             });
         }
 
