@@ -44,7 +44,7 @@
                 @foreach (var summary in Model.AdvertiserSummaries)
                 {
                     <tr>
-                        <td>@summary.Name</td>
+                        <td><a href="@summary.Link">@summary.Name</a></td>
                         <td>@String.Format("{0:n0}", summary.Clicks)</td>
                         <td>@String.Format("{0:n0}", summary.Conversions)</td>
                         <td>@summary.RevenueFormatted</td>

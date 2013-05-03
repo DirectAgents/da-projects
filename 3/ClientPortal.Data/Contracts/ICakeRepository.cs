@@ -24,6 +24,7 @@ namespace ClientPortal.Data.Contracts
 
         IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+        IQueryable<AffiliateSummary> GetAffiliateInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
         IQueryable<ConversionSummary> GetConversionSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
         IQueryable<CakeConversion> GetConversions(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
         IQueryable<CakeConversion> Conversions { get; }

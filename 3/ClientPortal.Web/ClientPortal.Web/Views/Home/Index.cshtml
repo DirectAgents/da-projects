@@ -108,18 +108,19 @@
             <div class="ten columns portaltabs-h">
 
                 @*<!--+----------------+
-                      | Reports HTabs |
+                      | Reports HTabs  |
                       +----------------+-->*@
                 <dl class="tabs">
                     <dd class="active"><a href="#repOffSum" id="repNav_OffSum">Offer Summary</a></dd>
                     <dd><a href="#repDaySum" id="repNav_DaySum">Daily Summary</a></dd>
                     <dd><a href="#repConversions" id="repNav_Conversions">Conversion Report</a></dd>
                     <dd><a href="#repCPM" id="repNav_CPM">CPM</a></dd>
+                    <dd><a href="#repAff" id="repNav_Aff">Affiliates</a></dd>
                 </dl>
                 <!-- /ReportsHTabs  -->
 
                 @*<!--+------------------------+
-                      | Reports HTabs Content |
+                      | Reports HTabs Content  |
                       +------------------------+-->*@
                 <ul class="tabs-content">
                     <li id="repOffSumTab" class="active">
@@ -128,6 +129,7 @@
                     <li id="repDaySumTab"></li>
                     <li id="repConversionsTab"></li>
                     <li id="repCPMTab"></li>
+                    <li id="repAffTab"></li>
                 </ul>
                 <!-- /ReportsContent  -->
 
@@ -229,6 +231,11 @@
             $(window).bind('resize', WindowResize);
         });
 
+        function jumpToOffSumRep(timeFrame) {
+            $('#vertNav_Reports').trigger('click');
+            $('#repNav_OffSum').trigger('click');
+        }
+
         function WindowResize() {
             ResizeDashboardCharts();
             ResizeChart('offsum', true);
@@ -261,19 +268,6 @@
             });
         }
 
-        // Setup kendo view model with click behaviors for tabs..
-        var viewModel = kendo.observable({
-            loadMyAccount: function () {
-                $.ajax({
-                    url: '@Url.Action("Index", "Goals")',
-                    cache: false
-                }).done(function (html) {
-                    $("#divGoals").html(html);
-                });
-            }
-        });
-        kendo.bind($("#main"), viewModel);
-
         function OffSumClick() {
             if ($('#offsumChart').length == 0) {
                 $.ajax({
@@ -289,6 +283,19 @@
             }
         }
 
+        // Setup kendo view model with click behaviors for tabs..
+        var viewModel = kendo.observable({
+            loadMyAccount: function () {
+                $.ajax({
+                    url: '@Url.Action("Index", "Goals")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divGoals").html(html);
+                });
+            }
+        });
+        kendo.bind($("#main"), viewModel);
+
         // Setup event handlers so that AJAX content loads on demand as tabs are clicked.
         function SetupTabs() {
 
@@ -297,15 +304,51 @@
                 LoadDashboard();
             });
 
-            // Reports
-            $("#vertNav_Reports").click(function () {
-                if ($('#offsumNotLoaded').length > 0)
-                    OffSumClick();
+            // Files
+            $("#navFiles").one("click", function () {
+                $.ajax({
+                    url: '@Url.Action("Index", "Files")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divFiles").html(html);
+                });
+            });
+
+            // Invoices
+            $("#navInvoices").click(function () {
+                $.ajax({
+                    url: '@Url.Action("Index", "Invoices")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divInvoices").html(html);
+                });
+            });
+
+            // Contacts
+            $("#navContact").one("click", function () {
+                $("#divContact").html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("Contact", "Home")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divContact").html(html);
+                });
             });
 
             // Offer Summary
             $("#repNav_OffSum").click(function () {
-                OffSumClick();
+                if ($('#offsumChart').length == 0) {
+                    $.ajax({
+                        url: '@Url.Action("OfferSummaryPartial", "Reports")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#repOffSumTab").html(html);
+                        ResizeChart('offsum', false);
+                        SetupOfferSummaryGrid();
+                    });
+                } else {
+                    setTimeout(function () { ResizeChart('offsum', true); }, 100);
+                }
             });
 
             // Daily Summary
@@ -341,6 +384,17 @@
                 }
             });
 
+            // Reports
+            $("#vertNav_Reports").click(function () {
+                if ($('#offsumNotLoaded').length > 0)
+                    OffSumClick();
+            });
+
+            // Offer Summary
+            $("#repNav_OffSum").click(function () {
+                OffSumClick();
+            });
+
             // CPM
             $("#repNav_CPM").one("click", function () {
                 $.ajax({
@@ -352,31 +406,22 @@
                 });
             });
 
-            // Files
-            $("#navFiles").one("click", function () {
+            // Affilaites
+            $("#repNav_Aff").click(function () {
                 $.ajax({
-                    url: '@Url.Action("Index", "Files")',
+                    url: '@Url.Action("AffiliateReportPartial", "Reports")',
                     cache: false
                 }).done(function (html) {
-                    $("#divFiles").html(html);
-                });
-            });
-
-            // Invoices
-            $("#navInvoices").click(function () {
-                $.ajax({
-                    url: '@Url.Action("Index", "Invoices")',
-                    cache: false
-                }).done(function (html) {
-                    $("#divInvoices").html(html);
+                    $("#repAffTab").html(html);
+                    SetupAffiliateReportGrid();
                 });
             });
 
             // Contacts
-                $("#navContact").one("click", function () {
-                    $("#divContact").html('Loading...');
-                    $.ajax({
-                        url: '@Url.Action("Contact", "Home")',
+            $("#navContact").one("click", function () {
+                $("#divContact").html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("Contact", "Home")',
                         cache: false
                     }).done(function (html) {
                         $("#divContact").html(html);

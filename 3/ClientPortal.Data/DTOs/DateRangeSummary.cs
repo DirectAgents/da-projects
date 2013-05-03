@@ -21,5 +21,7 @@ namespace ClientPortal.Data.DTOs
             set { Culture = OfferInfo.CurrencyToCulture(value); }
         }
         public string Culture { get; set; }
+
+        public string Link { get; set; }
     }
 }

@@ -275,6 +275,39 @@ namespace ClientPortal.Data.Services
             return conversionInfos;
         }
 
+        public IQueryable<AffiliateSummary> GetAffiliateInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        {
+            var conversions = GetConversions(start, end, advertiserId, offerId);
+
+            var affiliateInfos =
+                from conv in conversions
+                from curr in cakeContext.CakeCurrencies
+                from offer in cakeContext.CakeOffers 
+                where (conv.PriceReceivedCurrencyId.Value == curr.Id) && (conv.Offer_Id.Value == offer.Offer_Id)
+                select new
+                {
+                    AffId = conv.Affiliate_Id ?? 0,
+                    OfferId = conv.Offer_Id ?? 0,
+                    Offer = (offer == null) ? String.Empty : offer.OfferName,
+                    PriceReceived = conv.PriceReceived ?? 0,
+                    Currency = curr.Name,
+                };
+
+            // Doing group in memory because generated query was not optimal.. (TODO: see if Kevin knows how to improve this?)
+            var groupedConversionInfos = affiliateInfos.AsEnumerable().GroupBy(
+                    c => new { c.AffId, c.OfferId, c.Offer, c.Currency },
+                    (key, group) => new AffiliateSummary()
+                    {
+                        AffId = key.AffId,
+                        OfferId = key.OfferId,
+                        Offer = key.Offer,
+                        PriceReceived = group.Sum(c => c.PriceReceived),
+                        Count = group.Count(c => true)
+                    });
+
+            return groupedConversionInfos.AsQueryable();
+        }
+
         // note: we'll go until 23:59:59 on the "end" date
         public IQueryable<ConversionSummary> GetConversionSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
