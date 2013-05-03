@@ -97,9 +97,9 @@ namespace ClientPortal.Web.Controllers
             var summaryMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null);
             summaryMTD.Name = "Month-to-Date";
             var summaryLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null);
-            summaryLMTD.Name = "Last Month-to-Date";
+            summaryLMTD.Name = "Last MTD";
             var summaryLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, null);
-            summaryLM.Name = "Last Month (Total)";
+            summaryLM.Name = "Last Month";
 //            var summaryYTD = cakeRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
 //            summaryYTD.Name = "Year-to-Date";
 
@@ -190,9 +190,9 @@ namespace ClientPortal.Web.Controllers
                 var offsumMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, offer.Advertiser_Id, offer.Offer_Id);
                 offsumMTD.Name = "Month-to-Date";
                 var offsumLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, offer.Advertiser_Id, offer.Offer_Id);
-                offsumLMTD.Name = "Last Month-to-Date";
+                offsumLMTD.Name = "Last MTD";
                 var offsumLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, offer.Advertiser_Id, offer.Offer_Id);
-                offsumLM.Name = "Last Month (Total)";
+                offsumLM.Name = "Last Month";
                 summaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM };
             }
             else

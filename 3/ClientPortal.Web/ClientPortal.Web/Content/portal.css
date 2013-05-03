@@ -1,8 +1,11 @@
 ﻿.logindiv form {
     margin: 0;
 }
-fieldset ul {
+fieldset ul, .validation-summary-errors ul {
     list-style: none;
+}
+.validation-summary-errors {
+    color: red;
 }
 fieldset legend {
     display: none;

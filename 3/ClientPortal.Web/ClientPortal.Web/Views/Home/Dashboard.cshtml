@@ -32,7 +32,7 @@
 
     <!-- Column 1 -->
     <div class="six columns">
-        <div class="panel">
+        <div class="panel" id="panelSumRep">
             <b>Summary Report</b>
             <table class="summarytable" style="width: 100%">
                 <tr>
@@ -55,7 +55,7 @@
     </div>
 
     <!-- Column 2 -->
-    <div class="six columns panel">
+    <div class="six columns panel" id="panelPerfChart">
         <div id="perfChartOuter">
             <b>Performance</b>
             @Html.Partial("PerformanceVis")
@@ -162,6 +162,7 @@
         monthlySpendDS.read();
 
         CreateGoalCharts(); @* //defined in DashboardGoals *@
+        ResizeDashboardPanelHeights();
     });
 
     function Projection(value) {
@@ -213,6 +214,7 @@
         {
             <text>ResizeDashboardChart('goal@(offersum.Id)', true);</text>
         }
+        ResizeDashboardPanelHeights();
     }
 
     function ResizeDashboardChart(chart, refresh) {
@@ -226,6 +228,27 @@
                         $('#' + chart + 'LineChart').data('kendoChart').refresh();
                 }
             }
+        }
+    }
+
+    function ResizeDashboardPanelHeights() {
+        ResizePanelHeights('panelSumRep', 'panelPerfChart');
+        @foreach (var offersum in Model.OfferGoalSummaries)
+        {
+            <text>ResizeOfferGoalsRow('@(offersum.Id)');</text>
+        }
+    }
+
+    function ResizeOfferGoalsRow(offersumId) {
+        ResizePanelHeights('goal' + offersumId + 'SumPanel', 'goal' + offersumId + 'ChartOuter');
+    }
+    function ResizePanelHeights(panel1Id, panel2Id) {
+        var panel1Height = $('#' + panel1Id).height();
+        var panel2Height = $('#' + panel2Id).height();
+        if (panel1Height > panel2Height) {
+            $('#' + panel2Id).height(panel1Height);
+        } else if (panel2Height > panel1Height) {
+            $('#' + panel2Id).height('auto');
         }
     }
 
