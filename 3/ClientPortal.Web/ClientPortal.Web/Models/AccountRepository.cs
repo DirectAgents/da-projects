@@ -9,7 +9,7 @@ namespace ClientPortal.Web.Models
 {
     public class AccountRepository
     {
-        public static List<GoalVM> GetGoals(int advertiserId, int? offerId, ICakeRepository cakeRepo)
+        public static List<GoalVM> GetGoals(int advertiserId, int? offerId, bool monthlyOnly, ICakeRepository cakeRepo)
         {
             List<Goal> goals;
             using (var usersContext = new UsersContext())
@@ -23,6 +23,9 @@ namespace ClientPortal.Web.Models
             var goalVMs = from g in goals
                           join o in offers.ToList() on g.OfferId equals o.Offer_Id // todo: left join?
                           select new GoalVM(g, o.OfferName, OfferInfo.CurrencyToCulture(o.Currency));
+
+            if (monthlyOnly)
+                goalVMs = goalVMs.Where(g => g.IsMonthly);
 
             return goalVMs.ToList();
         }

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ClientPortal.Web.Models.OfferGoalSummary>
+@{
+    bool createGoalCharts = ViewBag.CreateGoalCharts ?? false;
+}
+
+@{
+    List<string> firstCreateGoalChartCalls = new List<string>();
+    foreach (var offerGoalSummary in Model)
+    {
+        <div id="offergoals@(offerGoalSummary.Id)" class="row">
+            @Html.Partial("OfferGoalsRow", offerGoalSummary)
+        </div>
+        if (offerGoalSummary.Goals.Count > 0) {
+            firstCreateGoalChartCalls.Add(offerGoalSummary.Goals[0].CreateGoalChartCall);
+        }
+    }
+}
+
+<script>
+    function CreateGoalCharts() {
+        @foreach (var call in firstCreateGoalChartCalls)
+        {
+            <text>@Html.Raw(call)</text>
+        }
+    }
+
+@if (createGoalCharts)
+{
+    <text>CreateGoalCharts();</text>
+}
+</script>

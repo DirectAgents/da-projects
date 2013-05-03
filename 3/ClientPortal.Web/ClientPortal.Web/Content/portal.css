@@ -1,4 +1,57 @@
-﻿.row {
+﻿.paddedlabel {
+    margin-left: 5px;
+}
+.paddedbutton {
+    padding: 3px;
+    margin-left: 5px;
+}
+.k-datepicker {
+    width: 110px;
+}
+
+.summarytable {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.summarytable th {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.summarytable th, .summarytable td {
+    border: 1px solid;
+    border-color: lightgray;
+}
+.summarytable th {
+    text-align: center;
+}
+.summarytable td {
+    text-align: right;
+}
+
+.offergoalsheader {
+    margin: 2px;
+}
+.goaltexttable {
+    background: inherit;
+    margin: 0px;
+    border: 0px;
+}
+.goaltexttable tbody tr:nth-child(even) {
+    background: inherit;
+}
+.goaltexttable td {
+    padding: 0px 2px;
+}
+.goaltexttable .tdfirst {
+    padding-left: 0px;
+}
+
+#windowGoal select {
+    margin: 0 0 12px 0;
+}
+
+.row {
     width: 100%;
 }
 

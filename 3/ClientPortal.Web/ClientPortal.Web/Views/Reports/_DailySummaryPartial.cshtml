@@ -1,15 +1,15 @@
 ﻿<div style="height: 35px">
-    <select style="float: left; width: 110px" id="daysum_dateRangeSel" onchange="ChangeDateRange('daysum')">
+    <select style="width: 140px" id="daysum_dateRangeSel" onchange="ChangeDateRange('daysum')">
         <option value="mtd">Month to Date</option>
         <option value="ytd">Year to Date</option>
         <option value="lastmonth">Last Month</option>
         <option value="custom">- custom -</option>
     </select>
-    <span style="float: left; margin-left: 10px">Start:</span>
-    <input style="float:left; width:100px" id="daysum_startdate" name="startdate" type="text" value="@ViewBag.firstOfMonth" onchange="DateChanged('daysum')" />
-    <span style="float: left; margin-left: 10px">End:</span>
-    <input style="float:left; width:100px" id="daysum_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('daysum')" />
-    <a class="button" style="padding: 3px; margin-left: 10px" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum'); return false">Filter</a>
+    <span class="paddedlabel">Start:</span>
+    <input id="daysum_startdate" name="startdate" type="text" value="@ViewBag.firstOfMonth" onchange="DateChanged('daysum')" />
+    <span class="paddedlabel">End:</span>
+    <input id="daysum_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('daysum')" />
+    <a class="button paddedbutton" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum'); return false">Filter</a>
 </div>
 <div id="daysumChartSection" class="k-content">
     <div class="configuration k-widget k-header" style="width: 170px; float: right">
@@ -94,6 +94,9 @@
     }
 
     function SetupDailySummaryGrid() {
+        $('#daysum_dateRangeSel').kendoDropDownList();
+        $('#daysum_startdate').kendoDatePicker({ footer: ' ' });
+        $('#daysum_enddate').kendoDatePicker({ footer: ' ' });
 
         var dataSource = CreateDailySummaryDataSource();
 
@@ -114,8 +117,6 @@
             sortable: false,
             pageable: true
         });
-        $('#daysum_startdate').kendoDatePicker();
-        $('#daysum_enddate').kendoDatePicker();
         CreateDaySumChart(dataSource);
         dataSource.read();
         $(".configuration").bind("change", RefreshDaySumChart);

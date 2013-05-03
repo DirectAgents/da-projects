@@ -390,11 +390,11 @@
                 });  
             }
 
-            //
-            function DateChanged(grid) {
-                $('#' + grid + '_dateRangeSel').val('custom');
-                $('#' + grid + '_filterBtn').attr('disabled', false);
-            }
+        //
+        function DateChanged(grid) {
+            $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
+            $('#' + grid + '_filterBtn').attr('disabled', false);
+        }
 
             //
             function ChangeDateRange(grid) {

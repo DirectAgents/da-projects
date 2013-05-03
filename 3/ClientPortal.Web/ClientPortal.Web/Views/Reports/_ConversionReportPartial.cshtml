@@ -1,5 +1,5 @@
 ﻿<div style="height: 35px;">
-    <select style="float: left; width: 110px" id="conrep_dateRangeSel" onchange="ChangeDateRange('conrep')">
+    <select style="width: 140px" id="conrep_dateRangeSel" onchange="ChangeDateRange('conrep')">
         <option value="today">Today</option>
         <option value="yesterday">Yesterday</option>
         <option value="wtd">Week to Date</option>
@@ -9,11 +9,11 @@
         <option value="lastmonth">Last Month</option>
         <option value="custom">- custom -</option>
     </select>
-    <span style="float: left; margin-left: 10px">Start:</span>
-    <input style="float:left; width:100px" id="conrep_startdate" name="startdate" type="text" value="@ViewBag.today" onchange="DateChanged('conrep')" />
-    <span style="float: left; margin-left: 10px">End:</span>
-    <input style="float:left; width:100px" id="conrep_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('conrep')" />
-    <a class="button" style="padding: 3px; margin-left: 10px" id="conrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('conrep'); return false">Filter</a>
+    <span class="paddedlabel">Start:</span>
+    <input id="conrep_startdate" name="startdate" type="text" value="@ViewBag.today" onchange="DateChanged('conrep')" />
+    <span class="paddedlabel">End:</span>
+    <input id="conrep_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('conrep')" />
+    <a class="button paddedbutton" id="conrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('conrep'); return false">Filter</a>
 </div>
 <div id="conrepChartSection" class="k-content">
     <div class="chart-wrapper">
@@ -23,6 +23,9 @@
 <div id="conrepGrid"></div>
 <script>
     function SetupConversionReportGrid() {
+        $('#conrep_dateRangeSel').kendoDropDownList();
+        $('#conrep_startdate').kendoDatePicker({ footer: ' ' });
+        $('#conrep_enddate').kendoDatePicker({ footer: ' ' });
 
         var readData = function () {
             return {
@@ -51,9 +54,6 @@
             },
             pageable: true
         });
-
-        $('#conrep_startdate').kendoDatePicker();
-        $('#conrep_enddate').kendoDatePicker();
     }
 
     function SetupConversionReportChart() {

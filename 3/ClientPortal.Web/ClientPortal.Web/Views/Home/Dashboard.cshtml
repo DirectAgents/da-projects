@@ -8,24 +8,22 @@
     var firstOfYear = new DateTime(now.Year, 1, 1).ToString("d", Model.CultureInfo);
     //var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
     //var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
-    var start = Model.Start == null ? "" : Model.Start.Value.ToString("d", Model.CultureInfo);
-    var end = Model.End == null ? "" : Model.End.Value.ToString("d", Model.CultureInfo);
 }
 
 <!-- Timeframe -->
 <div class="row">
     <div class="twelve columns" style="top: -35px; height: 15px">
-        <span style="float: left; margin-right: 5px">Timeframe:</span>
-        <select style="float: left; width: 110px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
+        <span>Timeframe:</span>
+        <select style="width: 125px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
             <option value="mtd">Month to Date</option>
             <option value="ytd">Year to Date</option>
             <option value="custom">- custom -</option>
         </select>
-        <span style="float: left; margin-left: 10px">Start:</span>
-        <input style="float:left; width:100px" id="dash_startdate" name="startdate" type="text" value="@start" onchange="DashboardDateChanged()" />
-        <span style="float: left; margin-left: 10px">End:</span>
-        <input style="float:left; width:100px" id="dash_enddate" name="enddate" type="text" value="@end" onchange="DashboardDateChanged()" />
-        <a class="button" style="padding: 3px; margin-left: 10px" id="dash_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshDashboardRange(); return false">Refresh</a>
+        <span class="paddedlabel">Start:</span>
+        <input id="dash_startdate" name="startdate" type="text" value="@Html.FormatDate(Model.Start, Model.CultureInfo)" onchange="DashboardDateChanged()" />
+        <span class="paddedlabel">End:</span>
+        <input id="dash_enddate" name="enddate" type="text" value="@Html.FormatDate(Model.End, Model.CultureInfo)" onchange="DashboardDateChanged()" />
+        <a class="button paddedbutton" id="dash_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshDashboardRange(); return false">Refresh</a>
     </div>
 </div>
 
@@ -36,7 +34,7 @@
     <div class="six columns">
         <div class="panel">
             <b>Summary Report</b>
-            <table style="width: 100%">
+            <table class="summarytable" style="width: 100%">
                 <tr>
                     <th></th>
                     <th>Clicks</th>
@@ -119,27 +117,18 @@
 </div>
 
 <!-- Goal Rows -->
-@{
-    List<string> firstCreateGoalChartCalls = new List<string>();
-    foreach (var offersum in Model.OfferGoalSummaries)
-    {
-        <div id="offergoals@(offersum.Offer.Offer_Id)" class="row">
-            @Html.Partial("OfferGoalsRow", offersum)
-        </div>
-        if (offersum.Goals.Count > 0) {
-            firstCreateGoalChartCalls.Add(offersum.Goals[0].CreateGoalChartCall);
-        }
-    }
-}
+<div id="dashboardGoals">
+    @Html.Partial("DashboardGoals", Model.OfferGoalSummaries)
+</div>
 
 <script>
     $(function () {
         kendo.culture('@Model.Culture');
-        $('#dash_dateRangeSel').val('@Model.DateRangeType');
-        $('#dash_startdate').kendoDatePicker();
-        $('#dash_enddate').kendoDatePicker();
+        $('#dash_dateRangeSel').kendoDropDownList({ value: '@Model.DateRangeType' });
+        $('#dash_startdate').kendoDatePicker({ footer: ' ' });
+        $('#dash_enddate').kendoDatePicker({ footer: ' ' });
 
-        CreatePerformanceChart([''], [0], 'N0', '@Model.Culture', 180);
+        CreatePerformanceChart([''], [0], 'N0', '@Model.Culture', 173);
         CreateSpendChart(0, 'C0', '@Model.Culture', 'Spend', 75);
 
         var projDS = CreateProjectionDataSource('@Html.Raw(Url.Action("DailySummaryData", "Reports", new { cumulative = true, projection = true }))');
@@ -170,10 +159,7 @@
         CreateMonthlySpendBarChart('monthlySpendBarChart', monthlySpendDS, 200);
         monthlySpendDS.read();
 
-        @foreach (var call in firstCreateGoalChartCalls)
-        {
-            <text>@Html.Raw(call)</text>
-        }
+        CreateGoalCharts(); @* //defined in DashboardGoals *@
     });
 
     function Projection(value) {
@@ -191,7 +177,7 @@
     }
 
     function DashboardDateChanged() {
-        $('#dash_dateRangeSel').val('custom');
+        $('#dash_dateRangeSel').data('kendoDropDownList').value('custom');
     }
     function ChangeDashboardDateRange() {
         var startId = '#dash_startdate';
@@ -223,7 +209,7 @@
         ResizeDashboardChart('monthlySpendBar', true);
         @foreach (var offersum in Model.OfferGoalSummaries)
         {
-            <text>ResizeDashboardChart('goal@(offersum.Offer.Offer_Id)', true);</text>
+            <text>ResizeDashboardChart('goal@(offersum.Id)', true);</text>
         }
     }
 
@@ -253,10 +239,14 @@
         ResizeDashboardChart('monthlySpendBar', true);
     }
 
-    function CreateGoalChart(offerid, metric, values, valueFormat, culture, heading) {
-        $('#goal' + offerid + 'ChartHeading').html('<b>' + heading + '</b>');
+    function CreateMonthlyGoalChart(values, chartid, metric, valueFormat, culture, heading, subheading) {
+        var categories = ['Last MTD','Last Month','MTD','Goal'];
+        CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading, subheading);
+    }
+    function CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading, subheading) {
+        $('#goal' + chartid + 'ChartHeading').html('<b>' + heading + '</b> ' + subheading);
         kendo.culture(culture);
-        $('#goal' + offerid + 'Chart').kendoChart({
+        $('#goal' + chartid + 'Chart').kendoChart({
             chartArea: {
                 height: 186
             },
@@ -275,7 +265,7 @@
                 title: { text: metric }
             },
             categoryAxis: {
-                categories: ["Last Month-to-Date", "Last Month-Total", "This Month-to-Date", "Goal"]
+                categories: categories
             },
             tooltip: {
                 visible: true,

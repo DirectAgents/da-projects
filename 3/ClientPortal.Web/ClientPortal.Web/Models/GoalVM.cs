@@ -10,6 +10,11 @@ namespace ClientPortal.Web.Models
     {
         public int Id { get; set; }
 
+        public string OfferGoalId
+        {
+            get { return (OfferId.HasValue ? OfferId.Value.ToString() : "") + "_" + Id; }
+        }
+
         public int AdvertiserId { get; set; }
 
         [Display(Name="Offer")]
@@ -77,6 +82,14 @@ namespace ClientPortal.Web.Models
             if (goal.EndDate.HasValue)
                 this.EndDate = goal.EndDate.Value.ToString("d", CultureInfo);
         }
+        public DateTime? StartDateParsed
+        {
+            get { return ReportsController.ParseDate(StartDate, CultureInfo); }
+        }
+        public DateTime? EndDateParsed
+        {
+            get { return ReportsController.ParseDate(EndDate, CultureInfo); }
+        }
 
         public GoalVM()
         { // defaults
@@ -94,8 +107,8 @@ namespace ClientPortal.Web.Models
             goal.MetricId = this.MetricId;
             goal.Target = this.Target;
 
-            goal.StartDate = ReportsController.ParseDate(StartDate, CultureInfo);
-            goal.EndDate = ReportsController.ParseDate(EndDate, CultureInfo);
+            goal.StartDate = StartDateParsed;
+            goal.EndDate = EndDateParsed;
         }
 
         // todo: share this code with Goal entity (currently duplicated)
@@ -115,17 +128,30 @@ namespace ClientPortal.Web.Models
             else if (endDate.HasValue && startDateParsed && !startDate.HasValue)
                 yield return new ValidationResult("Must provide a Start Date.", new[] { "StartDate" });
 
-            if (startDateParsed && startDate.HasValue && endDateParsed && endDate.HasValue && !(startDate.Value < endDate.Value))
-                yield return new ValidationResult("End Date must be after Start Date.", new[] { "EndDate" });
+            if (startDateParsed && startDate.HasValue && endDateParsed && endDate.HasValue)
+            {
+                if (!(startDate.Value < endDate.Value))
+                    yield return new ValidationResult("End Date must be after Start Date.", new[] { "EndDate" });
+                else if (TypeId == GoalTypeEnum.Percent)
+                    yield return new ValidationResult("Only absolute goals are supported with custom date ranges.", new[] { "TypeId" });
+            }
         }
 
         // e.g. "Reach 1,000 Leads", "Reach $1,000 Spend", "Increase Leads 10.5% (to 1,105)", "Increase Spend 10.5% (to $1,105)"
-        public string TargetFormattedBasedOn(DateRangeSummary rangeSummary)
+        public string TargetFormattedBasedOn(DateRangeSummary rangeSummary, bool includeTimeframe = false)
         {
             if (TypeId == GoalTypeEnum.Absolute)
-                return "Reach " + TargetFormatted + " " + this.MetricId;
+                return "Reach " + TargetFormatted + " " + this.MetricId + (includeTimeframe ? TimeframeFormatted(true, true) : "");
             else // Percent
                 return "Increase " + this.MetricId + " " + TargetFormatted + " (to " + FormatSomeTarget(TargetBasedOn(rangeSummary)) + ")";
+        }
+
+        public string TimeframeFormatted(bool includeLeadingSpace = false, bool includeParentheses = false)
+        {
+            if (IsMonthly) return "";
+
+            string prefix = (includeLeadingSpace ? " " : "") + (includeParentheses ? "(" : "");
+            return prefix + StartDate + " - " + EndDate + (includeParentheses ? ")" : "");
         }
 
         public decimal TargetBasedOn(DateRangeSummary rangeSummary)
@@ -145,11 +171,11 @@ namespace ClientPortal.Web.Models
             switch (MetricId)
             {
                 case MetricEnum.Clicks:
-                    return rangeSummary.Clicks;
+                    return rangeSummary.Clicks.Value;
                 case MetricEnum.Leads:
-                    return rangeSummary.Conversions;
+                    return rangeSummary.Conversions.Value;
                 case MetricEnum.Spend:
-                    return rangeSummary.Revenue;
+                    return rangeSummary.Revenue.Value;
                 default:
                     return 0;
             }

@@ -192,6 +192,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HtmlHelpers\FormatHelpers.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AccountRepository.cs" />
     <Compile Include="Models\DashboardModel.cs" />
@@ -864,9 +865,6 @@
     <Content Include="Views\Goals\Item.cshtml" />
     <Content Include="Views\Goals\List.cshtml" />
     <Content Include="Views\Goals\Edit.cshtml" />
-    <Content Include="Views\Home\GoalVis.cshtml">
-      <SubType>Code</SubType>
-    </Content>
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
@@ -888,6 +886,7 @@
     <Content Include="Views\Reports\_AffiliateReportPartial.cshtml" />
     <Content Include="Views\Goals\_Infrastructure.cshtml" />
     <Content Include="Views\Home\OfferGoalsRow.cshtml" />
+    <Content Include="Views\Home\DashboardGoals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
