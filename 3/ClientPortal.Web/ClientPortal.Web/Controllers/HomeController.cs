@@ -14,10 +14,12 @@ namespace ClientPortal.Web.Controllers
     public class HomeController : Controller
     {
         private ICakeRepository cakeRepo;
+        private IClientPortalRepository cpRepo;
 
-        public HomeController(ICakeRepository cakeRepository)
+        public HomeController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
             this.cakeRepo = cakeRepository;
+            this.cpRepo = cpRepository;
         }
 
         public ActionResult Index()
@@ -92,19 +94,19 @@ namespace ClientPortal.Web.Controllers
 
             var dates = new Dates();
 
-            var summaryWTD = cakeRepo.GetDateRangeSummary(dates.FirstOfWeek, dates.Now, advId, null);
+            var summaryWTD = cpRepo.GetDateRangeSummary(dates.FirstOfWeek, dates.Now, advId, null);
             summaryWTD.Name = "Week-to-Date";
             summaryWTD.Link = "javascript: jumpToOffSumRep('wtd')";
-            var summaryMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null);
+            var summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null);
             summaryMTD.Name = "Month-to-Date";
             summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
-            var summaryLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null);
+            var summaryLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null);
             summaryLMTD.Name = "Last MTD";
             summaryLMTD.Link = "javascript: jumpToOffSumRep('lmtd')";
-            var summaryLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, null);
+            var summaryLM = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, null);
             summaryLM.Name = "Last Month";
             summaryLM.Link = "javascript: jumpToOffSumRep('lmt')";
-//            var summaryYTD = cakeRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
+//            var summaryYTD = cpRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
 //            summaryYTD.Name = "Year-to-Date";
 
             var offerGoalSummaries = CreateOfferGoalSummaries(advertiserId.Value, dates);
@@ -191,18 +193,18 @@ namespace ClientPortal.Web.Controllers
             List<DateRangeSummary> summaries;
             if (!goals.Any() || goals[0].IsMonthly) // assume all goals are the same type
             {
-                var offsumMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, offer.Advertiser_Id, offer.Offer_Id);
+                var offsumMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, offer.Advertiser_Id, offer.Offer_Id);
                 offsumMTD.Name = "Month-to-Date";
-                var offsumLMTD = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, offer.Advertiser_Id, offer.Offer_Id);
+                var offsumLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, offer.Advertiser_Id, offer.Offer_Id);
                 offsumLMTD.Name = "Last MTD";
-                var offsumLM = cakeRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, offer.Advertiser_Id, offer.Offer_Id);
+                var offsumLM = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, offer.Advertiser_Id, offer.Offer_Id);
                 offsumLM.Name = "Last Month";
                 summaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM };
             }
             else
             {
                 var goal0 = goals[0];
-                var sumActual = cakeRepo.GetDateRangeSummary(goal0.StartDateParsed.Value, goal0.EndDateParsed.Value, offer.Advertiser_Id, offer.Offer_Id);
+                var sumActual = cpRepo.GetDateRangeSummary(goal0.StartDateParsed.Value, goal0.EndDateParsed.Value, offer.Advertiser_Id, offer.Offer_Id);
                 sumActual.Name = (dates.Now.Date > goal0.EndDateParsed) ? "Results" : "Results to-Date";
                 var sumGoal = new DateRangeSummary() { Name = "Goal", Culture = goal0.Culture };
                 foreach (var goal in goals)

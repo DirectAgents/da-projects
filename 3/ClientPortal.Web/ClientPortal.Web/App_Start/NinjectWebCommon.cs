@@ -56,6 +56,7 @@ namespace ClientPortal.Web.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<ICakeRepository>().To<CakeRepository>();
+            kernel.Bind<IClientPortalRepository>().To<ClientPortalRepository>();
         }        
     }
 }

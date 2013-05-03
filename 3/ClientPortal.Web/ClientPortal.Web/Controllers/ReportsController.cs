@@ -14,10 +14,12 @@ namespace ClientPortal.Web.Controllers
     public class ReportsController : Controller
     {
         private ICakeRepository cakeRepo;
+        private IClientPortalRepository cpRepo;
 
-        public ReportsController(ICakeRepository cakeRepository)
+        public ReportsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
             this.cakeRepo = cakeRepository;
+            this.cpRepo = cpRepository;
         }
 
         public PartialViewResult OfferSummaryPartial()
@@ -180,7 +182,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var conversionInfos = cakeRepo.GetConversionInfos(start, end, userProfile.CakeAdvertiserId, offerid);
+            var conversionInfos = cpRepo.GetConversionInfos(start, end, userProfile.CakeAdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionInfo>(request, conversionInfos);
             if (conversionInfos.Any())

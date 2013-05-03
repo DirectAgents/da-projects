@@ -73,12 +73,34 @@
     <Compile Include="Contexts\CakeOffer.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\Click.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\ClientPortal.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientPortal.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\ClientPortal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\ClientPortal.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientPortal.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\Conversion.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\MonthlySummary.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contracts\IClientPortalRepository.cs" />
     <Compile Include="DTOs\AffiliateSummary.cs" />
     <Compile Include="DTOs\DateRangeSummary.cs" />
     <Compile Include="DTOs\ConversionInfo.cs" />
@@ -89,6 +111,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Contracts\ICakeRepository.cs" />
     <Compile Include="Services\CakeRepository.cs" />
+    <Compile Include="Services\ClientPortalRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -108,6 +131,23 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Cake.edmx</DependentUpon>
       <LastGenOutput>Cake.cs</LastGenOutput>
+    </None>
+    <EntityDeploy Include="Contexts\ClientPortal.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ClientPortal.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Contexts\ClientPortal.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClientPortal.edmx</DependentUpon>
+      <LastGenOutput>ClientPortal.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Contexts\ClientPortal.edmx.diagram">
+      <DependentUpon>ClientPortal.edmx</DependentUpon>
+    </None>
+    <None Include="Contexts\ClientPortal.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClientPortal.edmx</DependentUpon>
+      <LastGenOutput>ClientPortal.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
