@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Globalization;
-using System.Web.Security;
 
 namespace ClientPortal.Web.Models
 {
@@ -19,6 +16,8 @@ namespace ClientPortal.Web.Models
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<FileUpload> FileUploads { get; set; }
         public DbSet<Goal> Goals { get; set; }
+        public DbSet<Cake.conversion> Conversions { get; set; }
+        public DbSet<Cake.click> Clicks { get; set; }
     }
 
     [Table("UserProfile")]

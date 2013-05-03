@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using CakeMarketing;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
+using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
 
 namespace ClientPortal.Web.Controllers
@@ -279,7 +279,7 @@ namespace ClientPortal.Web.Controllers
             var toDate = new DateTime(2013, 4, 5);
             int advertiserId = HomeController.GetAdvertiserId() ?? 0;
             var json = new JsonResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            using (var db = new CakeExtracterContext())
+            using (var db = new UsersContext())
             {
                 var clicks = db.Clicks.Where(c => c.advertiser.advertiser_id == advertiserId);
                 var conversions = db.Conversions.Where(

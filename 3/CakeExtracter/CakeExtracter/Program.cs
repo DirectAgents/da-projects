@@ -1,15 +1,29 @@
 ﻿using System;
+using System.Configuration;
+using System.Data.Entity;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using CakeMarketing;
+using ClientPortal.Web.Models;
+using ClientPortal.Web.Models.Cake;
+using System.Linq;
+using System.Data;
 
 namespace CakeExtracter
 {
     class Program
     {
-        static string apiKey = "FCjdYAcwQE";
-        static string baseDir = @"C:\Aaron\cake_api_results\";
+        static string apiKey = ConfigurationManager.AppSettings["CakeApiKey"];
+        static string baseDir = ConfigurationManager.AppSettings["CacheDirectory"];
+        static bool useCache = bool.Parse(ConfigurationManager.AppSettings["UseCache"]);
+
+        static Program()
+        {
+            if (useCache && !Directory.Exists(baseDir))
+            {
+                Directory.CreateDirectory(baseDir);
+            }
+        }
 
         public static void Main(string[] args)
         {
@@ -19,7 +33,7 @@ namespace CakeExtracter
                 return;
             }
 
-            int advertiserId = int.Parse(args[0]);
+            var advertiserId = int.Parse(args[0]);
             var fromDate = DateTime.Parse(args[1]);
             var toDate = DateTime.Parse(args[2]);
             var operation = args[3];
@@ -27,10 +41,10 @@ namespace CakeExtracter
             Parallel.For(0, (toDate - fromDate).Days, i =>
             {
                 var date = fromDate.AddDays(i);
-                               
-                string completedFile = baseDir + "complete_" + date.ToString("MM_dd_yyyy");
-                if(File.Exists(completedFile))
-                    return;
+
+                //string completedFile = baseDir + "complete_" + date.ToString("MM_dd_yyyy");
+                //if (File.Exists(completedFile))
+                //    return;
 
                 bool doClicks = operation == "clicks" || operation == "both";
                 bool doConversions = operation == "conversions" || operation == "both";
@@ -45,10 +59,10 @@ namespace CakeExtracter
                     LoadConversions(conversions);
                 }
 
-                File.WriteAllText(completedFile, "done");
+                //File.WriteAllText(completedFile, "done");
             });
 
-            Console.Write("Press any key to continue . . . ");
+            Console.Write("Press a key . . . ");
             Console.ReadKey(true);
         }
 
@@ -77,7 +91,7 @@ namespace CakeExtracter
         private static conversion_report_response ExtractConversionsFromCake(int advertiserId, DateTime startDate)
         {
             Console.WriteLine("Extracting conversions for advertiser {0} on {1}..", advertiserId, startDate);
-  
+
             var endDate = startDate.AddDays(1);
             int affiliateId = 0;
             int offerId = 0;
@@ -91,19 +105,21 @@ namespace CakeExtracter
 
             var reports = new reports();
             var result = reports.Conversions(apiKey, startDate, endDate, affiliateId, advertiserId, offerId, campaignId, creativeId, includeTests, startAtRow, rowLimit, sortFields, isDescending);
-            
+
             return result;
         }
 
         private static void LoadConversions(conversion_report_response conversionsResponse)
         {
-            Console.WriteLine("row count = {0}", conversionsResponse.row_count);
-            using (var db = new CakeExtracterContext())
+            Console.WriteLine("loading {0} conversions..", conversionsResponse.row_count);
+
+            using (var db = new UsersContext())
             {
                 foreach (var item in conversionsResponse.conversions)
                 {
                     db.Conversions.Add(item);
                 }
+
                 Console.WriteLine("saving..");
                 db.SaveChanges();
             }
@@ -152,13 +168,15 @@ namespace CakeExtracter
 
         private static void LoadClicks(click_report_response result)
         {
-            Console.WriteLine("row count = {0}", result.row_count);
-            using (var db = new CakeExtracterContext())
+            Console.WriteLine("loading {0} clicks..", result.row_count);
+
+            using (var db = new UsersContext())
             {
                 foreach (var item in result.clicks)
                 {
                     db.Clicks.Add(item);
                 }
+
                 Console.WriteLine("saving..");
                 db.SaveChanges();
             }

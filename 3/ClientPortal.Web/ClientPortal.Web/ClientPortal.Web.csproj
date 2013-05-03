@@ -195,6 +195,9 @@
     <Compile Include="HtmlHelpers\FormatHelpers.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AccountRepository.cs" />
+    <Compile Include="Models\CakeModels.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Models\DashboardModel.cs" />
     <Compile Include="Models\FileUploadInfo.cs" />
     <Compile Include="Models\GoalsModel.cs" />
@@ -895,10 +898,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
-      <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
-      <Name>CakeExtracter</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
