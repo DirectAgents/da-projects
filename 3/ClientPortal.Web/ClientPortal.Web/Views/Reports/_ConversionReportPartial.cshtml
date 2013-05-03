@@ -39,14 +39,14 @@
             dataSource: dataSource,
             height: 400,
             columns: [
-                { field: 'ConversionId', title: 'Conv ID', width: 90 },
-                { field: 'Date', width: 190, format: '{0:G}' },
-                { field: 'OfferId', width: 80 },
+                { field: 'ConversionId', title: 'ConvID', width: 75 },
+                { field: 'Date', width: 160, format: '{0:G}' },
+                { field: 'OfferId', title: 'OffID', width: 60 },
                 { field: 'Offer' },
-                { field: 'AffId', title: 'sub_id', width: 80 },
-                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Positive', title: 'Sale?', width: 80 },
-                { field: 'TransactionId', title: 'Trans ID', width: 170 }
+                { field: 'AffId', title: 'subid', width: 62 },
+                { field: 'PriceReceived', title: 'Price', width: 70, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Positive', title: 'Sale', width: 57 },
+                { field: 'TransactionId', title: 'TransID', width: 80 }
             ],
             filterable: true,
             sortable: {
@@ -116,11 +116,22 @@
                         TransactionId: { type: 'string' },
                         Positive: { type: 'boolean' }
                     }
-                }
+                },
+                parse: parseConvSum
             },
             sort: [
                 { field: "Count", dir: "desc" }
             ]
         });
+    }
+
+    function parseConvSum(items) {
+        var item, result = { data: [] };
+        for (var i = 0; i < items.data.length; i++) {
+            item = items.data[i];
+            if (item.Count !== 0 || item.PositiveCount !== 0)
+                result.data.push(item);
+        }
+        return result;
     }
 </script>

@@ -1,4 +1,17 @@
-﻿.paddedlabel {
+﻿.logindiv form {
+    margin: 0;
+}
+fieldset ul {
+    list-style: none;
+}
+fieldset legend {
+    display: none;
+}
+label.checkbox {
+    display: inline;
+}
+
+.paddedlabel {
     margin-left: 5px;
 }
 .paddedbutton {

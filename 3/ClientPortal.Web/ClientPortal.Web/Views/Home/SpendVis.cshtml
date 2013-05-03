@@ -34,9 +34,14 @@
             }
         });
     }
-    function UpdateSpendChartValue(value) {
+    function UpdateSpendChart(value) {
         var chart = $('#spendChart').data('kendoChart');
         chart.options.series[0].data = [value];
+
+        var step = 2;
+        if (value >= 800000) step = 3;
+        chart.options.valueAxis.labels.step = step;
+
         chart.redraw();
     }
 
@@ -135,6 +140,13 @@
             chart.options.categoryAxis.majorGridLines.visible = true;
             chart.options.series[0].markers.visible = true;
         }
+        chart.redraw();
+    }
+
+    function UpdateWeeklySpendBarChart(divId) {
+        var chart = $('#' + divId).data('kendoChart');
+        var total = chart.dataSource.total();
+        chart.options.categoryAxis.labels.step = Math.ceil(total / 77);
         chart.redraw();
     }
 
