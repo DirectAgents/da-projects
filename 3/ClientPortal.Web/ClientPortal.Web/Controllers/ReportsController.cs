@@ -26,9 +26,10 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
 
-            //var today = DateTime.Now;
-            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+            var today = DateTime.Now;
+            var firstOfMonth = new DateTime(today.Year, today.Month, 1);
             ViewBag.today = today.ToString("d", userProfile.CultureInfo);
+            ViewBag.firstOfMonth = firstOfMonth.ToString("d", userProfile.CultureInfo);
             return PartialView("_OfferSummaryPartial");
         }
 
@@ -154,8 +155,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
 
-            //var today = DateTime.Now;
-            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+            var today = DateTime.Now;
             ViewBag.today = today.ToString("d", userProfile.CultureInfo);
             return PartialView("_ConversionReportPartial");
         }
@@ -164,8 +164,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
 
-            //var today = DateTime.Now;
-            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+            var today = DateTime.Now;
             ViewBag.today = today.ToString("d", userProfile.CultureInfo);
             return PartialView("_AffiliateReportPartial");
         }
