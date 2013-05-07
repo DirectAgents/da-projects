@@ -42,7 +42,7 @@ label.checkbox {
     text-align: center;
 }
 .summarytable td {
-    text-align: right;
+    text-align: center;
 }
 
 .offergoalsheader {
@@ -136,4 +136,9 @@ footer.row {
 
 .tabs.vertical {
     border-top: 1px solid #e6e6e6;
+}
+
+#divTopStates .k-grid-content
+{
+    overflow-y: auto;
 }

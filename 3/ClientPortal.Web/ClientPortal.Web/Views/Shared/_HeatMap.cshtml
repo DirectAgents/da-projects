@@ -3,9 +3,40 @@
 <script type='text/javascript'>
     function drawHeatMap() {
         $.get('@Url.Action("HeatMapData", "Reports")', function (result) {
+
+            // display US map
             var data = google.visualization.arrayToDataTable(result);
             var chart = new google.visualization.GeoChart(document.getElementById('divHeatMap'));
             chart.draw(data, { width: 361, height: 180, region: 'US', resolution: 'provinces' });
+
+            // results come back sorted so take last N and reverse to get top N
+            var N = 5;
+            var topStatesArr = result.slice(Math.max(result.length - N, 1)).reverse();
+            var topStates = [];
+            $(topStatesArr).each(function (index, element) {
+                topStates.push({ State: element[0], Conversions: element[1] });
+            });
+
+            // display top N
+            $("#divTopStates").kendoGrid({
+                dataSource: { data: topStates },
+                sortable: false,
+                columns: [{ field: "State", width: 75 }, { field: "Conversions", width: 50 }],
+                rowTemplate: kendo.template($("#topStatesRowTemplate").html()),
+            });
+
+            // set the top N label
+            $("#topNStatesNumLabel").html(N);
+
+            // hide the grid header
+            $("#divTopStates div.k-grid-header").css("display", "none");
         });
     };
+</script>
+
+<script id="topStatesRowTemplate" type="text/x-kendo-tmpl">
+    <tr class="k-alt">
+	    <td>#: State #</td>
+    	<td>#: Conversions #</td>
+    </tr>
 </script>

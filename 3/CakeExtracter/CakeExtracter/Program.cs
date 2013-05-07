@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.Entity;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using ClientPortal.Web.Models;
 using ClientPortal.Web.Models.Cake;
-using System.Linq;
-using System.Data;
 
 namespace CakeExtracter
 {
@@ -42,10 +39,6 @@ namespace CakeExtracter
             {
                 var date = fromDate.AddDays(i);
 
-                //string completedFile = baseDir + "complete_" + date.ToString("MM_dd_yyyy");
-                //if (File.Exists(completedFile))
-                //    return;
-
                 bool doClicks = operation == "clicks" || operation == "both";
                 bool doConversions = operation == "conversions" || operation == "both";
                 if (doClicks)
@@ -58,8 +51,6 @@ namespace CakeExtracter
                     var conversions = ExtractConversions(advertiserId, date);
                     LoadConversions(conversions);
                 }
-
-                //File.WriteAllText(completedFile, "done");
             });
 
             Console.Write("Press a key . . . ");

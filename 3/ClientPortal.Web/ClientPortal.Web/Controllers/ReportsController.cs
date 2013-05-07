@@ -160,7 +160,6 @@ namespace ClientPortal.Web.Controllers
             return PartialView("_ConversionReportPartial");
         }
 
-
         public PartialViewResult AffiliateReportPartial()
         {
             var userProfile = HomeController.GetUserProfile();
@@ -170,7 +169,6 @@ namespace ClientPortal.Web.Controllers
             ViewBag.today = today.ToString("d", userProfile.CultureInfo);
             return PartialView("_AffiliateReportPartial");
         }
-
 
         [HttpPost]
         public JsonResult ConversionReportData(KendoGridRequest request, string startdate, string enddate, int? offerid)
@@ -297,7 +295,6 @@ namespace ClientPortal.Web.Controllers
                                 Conversions = 1
                             };
                 var results = new List<object[]>();
-                results.Insert(0, new[] { "State", "Conversions" });
                 var group = query.GroupBy(c => c.Region);
                 foreach (var grouping in group)
                 {
@@ -307,8 +304,20 @@ namespace ClientPortal.Web.Controllers
                         grouping.Sum(c => c.Conversions) 
                     });
                 }
+                results.Sort(new Comparer());
+                results.Insert(0, new[] { "State", "Conversions" });
                 json.Data = results;
                 return json;
+            }
+        }
+
+        private class Comparer : IComparer<object[]>
+        {
+            public int Compare(object[] x, object[] y)
+            {
+                int a = (int)x[1];
+                int b = (int)y[1];
+                return (a < b) ? -1 : (a == b) ? 0 : 1;
             }
         }
 

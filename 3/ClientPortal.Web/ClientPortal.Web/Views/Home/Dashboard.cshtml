@@ -79,9 +79,19 @@
 
     <!-- Column 2 -->
     <div class="six columns panel">
-        <div id="heatMapOuter">
-            <b>Conversions by State</b>
-            @Html.Partial("_HeatMap")
+        <div class="row">
+            <div class="six columns">
+                <div id="heatMapOuter">
+                    <b>Conversions by State</b>
+                    @Html.Partial("_HeatMap")
+                </div>
+            </div>
+            <div class="six columns">
+                <div id="topStatesOuter">
+                    <b>Top <span id="topNStatesNumLabel" /> States</b>
+                    <div id="divTopStates"></div>
+                </div>
+            </div>
         </div>
     </div>
 
