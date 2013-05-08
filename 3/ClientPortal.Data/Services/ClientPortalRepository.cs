@@ -22,13 +22,19 @@ namespace ClientPortal.Data.Services
             var clicks = GetClicks(start, end, advId, offerId);
             var conversions = GetConversions(start, end, advId, offerId);
 
+            var convRev =
+                from c in conversions
+                join conv_rev in context.ConversionRevenues on c.conversion_id equals conv_rev.conversion_id
+                select conv_rev;
+
             var anyConv = conversions.Any();
             DateRangeSummary summary = new DateRangeSummary()
             {
                 Clicks = clicks.Count(),
                 Conversions = anyConv ? conversions.Count() : 0,
                 Revenue = anyConv ? conversions.Sum(c => c.received_amount) : 0,
-                Currency = null // TODO: determine this... need Offers in ClientPortalContext
+                Currency = null, // TODO: determine this... need Offers in ClientPortalContext
+                ConvRev = convRev.Any() ? convRev.Sum(cr => cr.revenue) : 0
             };
             return summary;
         }

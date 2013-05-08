@@ -26,10 +26,15 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
 
-            //var today = DateTime.Now;
-            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
-            ViewBag.today = today.ToString("d", userProfile.CultureInfo);
-            return PartialView("_OfferSummaryPartial");
+            var today = DateTime.Now;
+            var model = new ReportModel()
+            {
+                StartDate = today.ToString("d", userProfile.CultureInfo),
+                EndDate = today.ToString("d", userProfile.CultureInfo),
+                ShowConvRev = userProfile.ShowConversionRevenue,
+                ConvRevName = userProfile.ConversionRevenueName
+            };
+            return PartialView("_OfferSummaryPartial", model);
         }
 
         [HttpPost]
@@ -62,9 +67,12 @@ namespace ClientPortal.Web.Controllers
             var userProfile = HomeController.GetUserProfile();
 
             var now = DateTime.Now;
-            ViewBag.firstOfMonth = new DateTime(now.Year, now.Month, 1).ToString("d", userProfile.CultureInfo);
-            ViewBag.today = DateTime.Now.ToString("d", userProfile.CultureInfo);
-            return PartialView("_DailySummaryPartial");
+            var model = new ReportModel()
+            {
+                StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userProfile.CultureInfo),
+                EndDate = now.ToString("d", userProfile.CultureInfo)
+            };
+            return PartialView("_DailySummaryPartial", model);
         }
 
         [HttpPost]
@@ -154,10 +162,15 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
 
-            //var today = DateTime.Now;
-            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
-            ViewBag.today = today.ToString("d", userProfile.CultureInfo);
-            return PartialView("_ConversionReportPartial");
+            var today = DateTime.Now;
+            var model = new ReportModel()
+            {
+                StartDate = today.ToString("d", userProfile.CultureInfo),
+                EndDate = today.ToString("d", userProfile.CultureInfo),
+                ShowConvRev = userProfile.ShowConversionRevenue,
+                ConvRevName = userProfile.ConversionRevenueName
+            };
+            return PartialView("_ConversionReportPartial", model);
         }
 
         public PartialViewResult AffiliateReportPartial()
