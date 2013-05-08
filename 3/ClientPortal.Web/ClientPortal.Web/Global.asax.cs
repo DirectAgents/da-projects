@@ -38,18 +38,19 @@ namespace ClientPortal.Web
             WebSecurity.InitializeDatabaseConnection("DefaultConnection",
                                                      "UserProfile", "UserId", "UserName", autoCreateTables: true);
 
-            WebSecurity.CreateUserAndAccount("aaron", "123456", new { Culture = "en-US" });
-            WebSecurity.CreateUserAndAccount("accuquote", "123456", new { CakeAdvertiserId = 28, Culture = "en-US" });
-            WebSecurity.CreateUserAndAccount("amazon", "123456", new { CakeAdvertiserId = 435, Culture = "en-US" });
-            WebSecurity.CreateUserAndAccount("affinitas", "123456", new { CakeAdvertiserId = 298, Culture = "de-DE" });
-            WebSecurity.CreateUserAndAccount("digital", "123456", new { CakeAdvertiserId = 67, Culture = "de-DE" });
-            WebSecurity.CreateUserAndAccount("guthy", "123456", new { CakeAdvertiserId = 457, Culture = "en-US" });
-            WebSecurity.CreateUserAndAccount("scooter", "123456", new { CakeAdvertiserId = 294, Culture = "en-US" });
+            WebSecurity.CreateUserAndAccount("aaron", "123456", new { Culture = "en-US", ShowConversionRevenue = false });
+            WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278, Culture = "en-US", ShowConversionRevenue = true, ConversionRevenueName = "ConvRev" });
+            WebSecurity.CreateUserAndAccount("accuquote", "123456", new { CakeAdvertiserId = 28, Culture = "en-US", ShowConversionRevenue = false });
+            WebSecurity.CreateUserAndAccount("amazon", "123456", new { CakeAdvertiserId = 435, Culture = "en-US", ShowConversionRevenue = false });
+            WebSecurity.CreateUserAndAccount("affinitas", "123456", new { CakeAdvertiserId = 298, Culture = "de-DE", ShowConversionRevenue = false });
+            WebSecurity.CreateUserAndAccount("digital", "123456", new { CakeAdvertiserId = 67, Culture = "de-DE", ShowConversionRevenue = false });
+            WebSecurity.CreateUserAndAccount("guthy", "123456", new { CakeAdvertiserId = 457, Culture = "en-US", ShowConversionRevenue = false });
+            WebSecurity.CreateUserAndAccount("scooter", "123456", new { CakeAdvertiserId = 294, Culture = "en-US", ShowConversionRevenue = false });
 
             // Beta customers
             WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278, Culture = "en-US" });
-            WebSecurity.CreateUserAndAccount("gr", "123456", new { CakeAdvertiserId = 167, Culture = "en-US" });
-            WebSecurity.CreateUserAndAccount("bas", "123456", new { CakeAdvertiserId = 455, Culture = "en-US" });
+            WebSecurity.CreateUserAndAccount("gr", "123456", new { CakeAdvertiserId = 167, Culture = "en-US" }); // guthy renker
+            WebSecurity.CreateUserAndAccount("bas", "123456", new { CakeAdvertiserId = 455, Culture = "en-US" }); // bryant and stratten
 
             List<Goal> goals = new List<Goal> {
                 new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = MetricEnum.Leads, Target = 2000, TypeId = GoalTypeEnum.Absolute, Name = "new form leads" },

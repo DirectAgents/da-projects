@@ -22,13 +22,19 @@ namespace ClientPortal.Data.Services
             var clicks = GetClicks(start, end, advId, offerId);
             var conversions = GetConversions(start, end, advId, offerId);
 
+            var convRev =
+                from c in conversions
+                join conv_rev in context.ConversionRevenues on c.conversion_id equals conv_rev.conversion_id
+                select conv_rev;
+
             var anyConv = conversions.Any();
             DateRangeSummary summary = new DateRangeSummary()
             {
                 Clicks = clicks.Count(),
                 Conversions = anyConv ? conversions.Count() : 0,
                 Revenue = anyConv ? conversions.Sum(c => c.received_amount) : 0,
-                Currency = null // TODO: determine this... need Offers in ClientPortalContext
+                Currency = null, // TODO: determine this... need Offers in ClientPortalContext
+                ConvRev = convRev.Any() ? convRev.Sum(cr => cr.revenue) : 0
             };
             return summary;
         }
@@ -39,6 +45,8 @@ namespace ClientPortal.Data.Services
 
             var conversionInfos =
                 from c in conversions
+                join conv_rev in context.ConversionRevenues on c.conversion_id equals conv_rev.conversion_id into gj
+                from cr in gj.DefaultIfEmpty() // left join to ConversionRevenue
 //                join curr in cakeContext.CakeCurrencies on c.PriceReceivedCurrencyId.Value equals curr.Id
 //                join offer in cakeContext.CakeOffers on c.Offer_Id.Value equals offer.Offer_Id into gj
 //                from o in gj.DefaultIfEmpty() // left join to CakeOffers
@@ -54,7 +62,8 @@ namespace ClientPortal.Data.Services
                     Currency = null,
 //                    Currency = curr.Name,
                     TransactionId = c.transaction_id,
-//                    Positive = c.Positive
+//                    Positive = c.Positive,
+                    ConvRev = (cr == null) ? 0 : cr.revenue
                 };
             return conversionInfos;
         }

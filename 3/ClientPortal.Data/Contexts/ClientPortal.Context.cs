@@ -27,5 +27,6 @@ namespace ClientPortal.Data.Contexts
     
         public DbSet<Click> Clicks { get; set; }
         public DbSet<Conversion> Conversions { get; set; }
+        public DbSet<ConversionRevenue> ConversionRevenues { get; set; }
     }
 }

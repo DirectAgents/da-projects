@@ -1,4 +1,6 @@
-﻿<div style="height: 35px">
+﻿@model ClientPortal.Web.Models.ReportModel
+
+<div style="height: 35px">
     <select style="width: 140px" id="daysum_dateRangeSel" onchange="ChangeDateRange('daysum')">
         <option value="mtd">Month to Date</option>
         <option value="ytd">Year to Date</option>
@@ -6,9 +8,9 @@
         <option value="custom">- custom -</option>
     </select>
     <span class="paddedlabel">Start:</span>
-    <input id="daysum_startdate" name="startdate" type="text" value="@ViewBag.firstOfMonth" onchange="DateChanged('daysum')" />
+    <input id="daysum_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('daysum')" />
     <span class="paddedlabel">End:</span>
-    <input id="daysum_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('daysum')" />
+    <input id="daysum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('daysum')" />
     <a class="button paddedbutton" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum'); return false">Filter</a>
 </div>
 <div id="daysumChartSection" class="k-content">

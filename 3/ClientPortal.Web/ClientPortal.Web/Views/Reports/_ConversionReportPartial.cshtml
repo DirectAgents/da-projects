@@ -1,4 +1,6 @@
-﻿<div style="height: 35px;">
+﻿@model ClientPortal.Web.Models.ReportModel
+
+<div style="height: 35px;">
     <select style="width: 140px" id="conrep_dateRangeSel" onchange="ChangeDateRange('conrep')">
         <option value="today">Today</option>
         <option value="yesterday">Yesterday</option>
@@ -10,9 +12,9 @@
         <option value="custom">- custom -</option>
     </select>
     <span class="paddedlabel">Start:</span>
-    <input id="conrep_startdate" name="startdate" type="text" value="@ViewBag.today" onchange="DateChanged('conrep')" />
+    <input id="conrep_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('conrep')" />
     <span class="paddedlabel">End:</span>
-    <input id="conrep_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('conrep')" />
+    <input id="conrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('conrep')" />
     <a class="button paddedbutton" id="conrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('conrep'); return false">Filter</a>
 </div>
 <div id="conrepChartSection" class="k-content">
@@ -44,9 +46,11 @@
                 { field: 'OfferId', title: 'OffID', width: 60 },
                 { field: 'Offer' },
                 { field: 'AffId', title: 'subid', width: 62 },
-                { field: 'PriceReceived', title: 'Price', width: 85, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Positive', title: 'Sale', width: 57 },
-                { field: 'TransactionId', title: 'TransID', width: 290 }
+                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+@if (Model.ShowConvRev) {
+          <text>{ field: 'ConvRev', title: '@Model.ConvRevName', width: 100, template: '#= FormatCurr(ConvRev, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
+}
+                { field: 'TransactionId', title: 'TransID', width: 290 },
             ],
             filterable: true,
             sortable: {

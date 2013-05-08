@@ -24,5 +24,7 @@ namespace ClientPortal.Data.DTOs
 
         public string TransactionId { get; set; }
         public bool? Positive { get; set; }
+
+        public decimal ConvRev { get; set; }
     }
 }

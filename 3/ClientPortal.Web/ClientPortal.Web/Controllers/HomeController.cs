@@ -88,9 +88,10 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult Dashboard()
         {
-            int? advertiserId = GetAdvertiserId();
-            if (advertiserId == null) return null;
-            string advId = advertiserId.ToString();
+            var userProfile = GetUserProfile();
+            if (userProfile == null || userProfile.CakeAdvertiserId == null)
+                return null;
+            string advId = userProfile.CakeAdvertiserId.ToString();
 
             var dates = new Dates();
 
@@ -109,7 +110,7 @@ namespace ClientPortal.Web.Controllers
 //            var summaryYTD = cpRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
 //            summaryYTD.Name = "Year-to-Date";
 
-            var offerGoalSummaries = CreateOfferGoalSummaries(advertiserId.Value, dates);
+            var offerGoalSummaries = CreateOfferGoalSummaries(userProfile.CakeAdvertiserId.Value, dates);
 
             var model = new DashboardModel
             {
@@ -117,7 +118,9 @@ namespace ClientPortal.Web.Controllers
                 OfferGoalSummaries = offerGoalSummaries,
                 DateRangeType = GetDashboardDateRangeType(),
                 Start = GetDashboardDateRangeStart(),
-                End = GetDashboardDateRangeEnd()
+                End = GetDashboardDateRangeEnd(),
+                ShowConvRev = userProfile.ShowConversionRevenue,
+                ConvRevName = userProfile.ConversionRevenueName
             };
             return PartialView(model);
         }

@@ -18,6 +18,7 @@ namespace ClientPortal.Web.Models
         public DbSet<Goal> Goals { get; set; }
         public DbSet<Cake.conversion> Conversions { get; set; }
         public DbSet<Cake.click> Clicks { get; set; }
+        public DbSet<ConversionRevenue> ConversionRevenue { get; set; }
     }
 
     [Table("UserProfile")]
@@ -31,6 +32,8 @@ namespace ClientPortal.Web.Models
         public int? QuickBooksCompanyId { get; set; }
         public int? QuickBooksAdvertiserId { get; set; }
         public string Culture { get; set; }
+        public bool ShowConversionRevenue { get; set; }
+        public string ConversionRevenueName { get; set; }
 
         [NotMapped]
         public CultureInfo CultureInfo
@@ -71,6 +74,15 @@ namespace ClientPortal.Web.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
     }
+
+    [Table("ConversionRevenue")]
+    public class ConversionRevenue
+    {
+        [Key]
+        public string conversion_id { get; set; }
+        public decimal revenue { get; set; }
+    }
+
 
     public class RegisterExternalLoginModel
     {
