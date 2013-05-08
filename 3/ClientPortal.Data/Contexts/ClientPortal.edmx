@@ -4,10 +4,11 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ClientPortalModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ClientPortalModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="ClientPortalModelStoreContainer">
           <EntitySet Name="Click" EntityType="ClientPortalModel.Store.Click" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ConversionRevenue" EntityType="ClientPortalModel.Store.ConversionRevenue" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
         <EntityType Name="Click">
           <Key>
@@ -105,14 +106,21 @@
           <Property Name="disposition_disposition_date" Type="datetime" />
           <Property Name="note" Type="nvarchar(max)" />
         </EntityType>
-      </Schema>
-    </edmx:StorageModels>
+        <EntityType Name="ConversionRevenue">
+          <Key>
+            <PropertyRef Name="conversion_id" />
+          </Key>
+          <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="revenue" Type="decimal" Nullable="false" Scale="2" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ClientPortalModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ClientPortalContext" p1:LazyLoadingEnabled="true">
           <EntitySet Name="Clicks" EntityType="ClientPortalModel.Click" />
           <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
+          <EntitySet Name="ConversionRevenues" EntityType="ClientPortalModel.ConversionRevenue" />
         </EntityContainer>
         <EntityType Name="Click">
           <Key>
@@ -209,6 +217,13 @@
           <Property Name="disposition_contact" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
           <Property Name="disposition_date" Type="DateTime" Precision="3" />
           <Property Name="note" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="ConversionRevenue">
+          <Key>
+            <PropertyRef Name="conversion_id" />
+          </Key>
+          <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="revenue" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -311,6 +326,14 @@
                 <ScalarProperty Name="disposition_contact" ColumnName="disposition_contact" />
                 <ScalarProperty Name="disposition_date" ColumnName="disposition_disposition_date" />
                 <ScalarProperty Name="note" ColumnName="note" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConversionRevenues">
+            <EntityTypeMapping TypeName="ClientPortalModel.ConversionRevenue">
+              <MappingFragment StoreEntitySet="ConversionRevenue">
+                <ScalarProperty Name="revenue" ColumnName="revenue" />
+                <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

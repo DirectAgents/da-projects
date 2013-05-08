@@ -550,7 +550,8 @@
                             Offer: { type: 'string' },
                             PriceReceived: { type: 'number' },
                             TransactionId: { type: 'string' },
-                            Positive: { type: 'boolean' }
+                            Positive: { type: 'boolean' },
+                            ConvRev: { type: 'number' }
                         }
                     }
                 },
@@ -559,7 +560,8 @@
                     { field: "Date", dir: "asc" }
                 ],
                 aggregate: [
-                    { field: "PriceReceived", aggregate: "sum" }
+                    { field: "PriceReceived", aggregate: "sum" },
+                    { field: "ConvRev", aggregate: "sum" }
                 ]
             });
         }

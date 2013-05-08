@@ -187,7 +187,8 @@ namespace ClientPortal.Web.Controllers
             {
                 kgrid.aggregates = new
                 {
-                    PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) }
+                    PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) },
+                    ConvRev = new { sum = conversionInfos.Sum(c => c.ConvRev) }
                 };
             }
             var json = Json(kgrid);

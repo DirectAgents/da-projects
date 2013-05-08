@@ -44,9 +44,9 @@
                 { field: 'OfferId', title: 'OffID', width: 60 },
                 { field: 'Offer' },
                 { field: 'AffId', title: 'subid', width: 62 },
-                { field: 'PriceReceived', title: 'Price', width: 85, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Positive', title: 'Sale', width: 57 },
-                { field: 'TransactionId', title: 'TransID', width: 290 }
+                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'ConvRev', title: 'Rev', width: 100, template: '#= FormatCurr(ConvRev, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'TransactionId', title: 'TransID', width: 290 },
             ],
             filterable: true,
             sortable: {
