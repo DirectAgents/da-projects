@@ -129,5 +129,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
+      <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
+      <Name>ClientPortal.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,6 +7,7 @@ using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using WebMatrix.WebData;
+using StackExchange.Profiling;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -24,15 +25,19 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Index()
         {
-            var userProfile = GetUserProfile();
-            CakeAdvertiser advertiser = userProfile.CakeAdvertiserId.HasValue ? cakeRepo.Advertiser(userProfile.CakeAdvertiserId.Value) : null;
-
-            var model = new IndexModel()
+            var profiler = MiniProfiler.Current;
+            using (profiler.Step("Index"))
             {
-                CultureInfo = userProfile.CultureInfo,
-                Advertiser = advertiser,
-            };
-            return View(model);
+                var userProfile = GetUserProfile();
+                CakeAdvertiser advertiser = userProfile.CakeAdvertiserId.HasValue ? cakeRepo.Advertiser(userProfile.CakeAdvertiserId.Value) : null;
+
+                var model = new IndexModel()
+                {
+                    CultureInfo = userProfile.CultureInfo,
+                    Advertiser = advertiser,
+                };
+                return View(model);
+            }
         }
 
         public ActionResult Contact()
@@ -63,7 +68,8 @@ namespace ClientPortal.Web.Controllers
         {
             DateTime now = DateTime.Now;
             string type = GetDashboardDateRangeType();
-            switch (type) {
+            switch (type)
+            {
                 case "ytd":
                     return new DateTime(now.Year, 1, 1);
                 case "mtd":
@@ -88,41 +94,69 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult Dashboard()
         {
-            var userProfile = GetUserProfile();
-            if (userProfile == null || userProfile.CakeAdvertiserId == null)
-                return null;
-            string advId = userProfile.CakeAdvertiserId.ToString();
-
-            var dates = new Dates();
-
-            var summaryWTD = cpRepo.GetDateRangeSummary(dates.FirstOfWeek, dates.Now, advId, null);
-            summaryWTD.Name = "Week-to-Date";
-            summaryWTD.Link = "javascript: jumpToOffSumRep('wtd')";
-            var summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null);
-            summaryMTD.Name = "Month-to-Date";
-            summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
-            var summaryLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null);
-            summaryLMTD.Name = "Last MTD";
-            summaryLMTD.Link = "javascript: jumpToOffSumRep('lmtd')";
-            var summaryLM = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, null);
-            summaryLM.Name = "Last Month";
-            summaryLM.Link = "javascript: jumpToOffSumRep('lmt')";
-//            var summaryYTD = cpRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
-//            summaryYTD.Name = "Year-to-Date";
-
-            var offerGoalSummaries = CreateOfferGoalSummaries(userProfile.CakeAdvertiserId.Value, dates);
-
-            var model = new DashboardModel
+            var profiler = MiniProfiler.Current;
+            using (profiler.Step("Dashboard"))
             {
-                AdvertiserSummaries = new List<DateRangeSummary> { summaryWTD, summaryMTD, summaryLMTD, summaryLM },
-                OfferGoalSummaries = offerGoalSummaries,
-                DateRangeType = GetDashboardDateRangeType(),
-                Start = GetDashboardDateRangeStart(),
-                End = GetDashboardDateRangeEnd(),
-                ShowConvRev = userProfile.ShowConversionRevenue,
-                ConvRevName = userProfile.ConversionRevenueName
-            };
-            return PartialView(model);
+                var userProfile = GetUserProfile();
+                if (userProfile == null || userProfile.CakeAdvertiserId == null)
+                    return null;
+                string advId = userProfile.CakeAdvertiserId.ToString();
+
+                var dates = new Dates();
+
+                DateRangeSummary summaryWTD = null;
+                DateRangeSummary summaryMTD = null;
+                DateRangeSummary summaryLMTD = null;
+                DateRangeSummary summaryLM = null;
+
+                using (profiler.Step("summaryWTD"))
+                {
+                    summaryWTD = cpRepo.GetDateRangeSummary(dates.FirstOfWeek, dates.Now, advId, null);
+                    summaryWTD.Name = "Week-to-Date";
+                    summaryWTD.Link = "javascript: jumpToOffSumRep('wtd')";
+                }
+
+                using (profiler.Step("summaryMTD"))
+                {
+                    summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null);
+                    summaryMTD.Name = "Month-to-Date";
+                    summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
+                }
+
+                using (profiler.Step("summaryLMTD"))
+                {
+                    summaryLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null);
+                    summaryLMTD.Name = "Last MTD";
+                    summaryLMTD.Link = "javascript: jumpToOffSumRep('lmtd')";
+                }
+
+                using (profiler.Step("summaryLM"))
+                {
+                    summaryLM = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, null);
+                    summaryLM.Name = "Last Month";
+                    summaryLM.Link = "javascript: jumpToOffSumRep('lmt')";
+                }
+                //            var summaryYTD = cpRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
+                //            summaryYTD.Name = "Year-to-Date";
+
+                List<OfferGoalSummary> offerGoalSummaries;
+                using (profiler.Step("offerGoalSummaries"))
+                {
+                    offerGoalSummaries = CreateOfferGoalSummaries(userProfile.CakeAdvertiserId.Value, dates); 
+                }
+
+                var model = new DashboardModel
+                {
+                    AdvertiserSummaries = new List<DateRangeSummary> { summaryWTD, summaryMTD, summaryLMTD, summaryLM },
+                    OfferGoalSummaries = offerGoalSummaries,
+                    DateRangeType = GetDashboardDateRangeType(),
+                    Start = GetDashboardDateRangeStart(),
+                    End = GetDashboardDateRangeEnd(),
+                    ShowConvRev = userProfile.ShowConversionRevenue,
+                    ConvRevName = userProfile.ConversionRevenueName
+                };
+                return PartialView(model);
+            }
         }
 
         public PartialViewResult DashboardGoals()

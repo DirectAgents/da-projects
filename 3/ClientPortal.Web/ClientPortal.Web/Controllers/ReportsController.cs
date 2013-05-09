@@ -291,8 +291,8 @@ namespace ClientPortal.Web.Controllers
 
         public JsonResult HeatMapData()
         {
-            var fromDate = new DateTime(2013, 4, 1);
-            var toDate = new DateTime(2013, 4, 5);
+            var fromDate = new DateTime(2013, 5, 1);
+            var toDate = new DateTime(2013, 5, 30);
             int advertiserId = HomeController.GetAdvertiserId() ?? 0;
             var json = new JsonResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             using (var db = new UsersContext())

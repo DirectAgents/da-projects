@@ -52,9 +52,56 @@ namespace CakeExtracter
 
         static class Scheduler
         {
+            class Synch
+            {
+                public Synch(int advertiserId, int intervalMinutes, int offsetDays)
+                {
+                    AdvertiserId = advertiserId;
+                    IntervalMinutes = intervalMinutes;
+                    OffsetDays = offsetDays;
+                    Last = DateTime.MinValue;
+                }
+
+                public void Run()
+                {
+                    var now = DateTime.Now;
+                    var today = now.Date;
+                    var tommorow = today.AddDays(1);
+
+                    Console.WriteLine("Running synch for advertiser {0} at {1}..", AdvertiserId, now);
+
+                    Last = now;
+
+                    Syncher.Run(
+                        new string[]
+                        {
+                            AdvertiserId.ToString(),
+                            today.AddDays(OffsetDays).ToShortDateString(),
+                            tommorow.AddDays(OffsetDays).ToShortDateString(),
+                            "both"
+                        }
+                    );
+                }
+
+                public DateTime Last { get; set; }
+                public DateTime Next { get { return Last.AddMinutes(IntervalMinutes); } }
+                public int IntervalMinutes { get; set; }
+                public int AdvertiserId { get; set; }
+                public int OffsetDays { get; set; }
+            }
+
+            static List<Synch> synchs = new List<Synch>()
+            {
+                new Synch(278, 60, 0),
+                new Synch(278, 240, -1),
+
+                new Synch(455, 60, 0),
+                new Synch(455, 240, -1),
+            };
+
             public static void Run()
             {
-                ticker = new Timer(TimerMethod, null, 1000, 1000);
+                ticker = new Timer(TimerMethod, null, 1000, 60000); // wake up every minute
 
                 Console.WriteLine("Press ENTER to stop the scheduler..");
                 Console.ReadLine();
@@ -62,9 +109,43 @@ namespace CakeExtracter
 
             private static Timer ticker;
 
+            private static object locker = new object();
+            private static bool inUse = false;
+
             public static void TimerMethod(object state)
             {
-                Console.Write(".");
+                lock (locker)
+                {
+                    if (inUse) 
+                        return;
+                }
+
+                try
+                {
+                    lock (locker)
+                    {
+                        inUse = true;
+                    }
+
+                    var now = DateTime.Now;
+                    var pastDue = synchs.Where(c => c.Next < now);
+
+                    if (pastDue.Any())
+                    {
+                        pastDue.First().Run();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nothing to synch at {0}.", DateTime.Now.ToString());
+                    }
+                }
+                finally
+                {
+                    lock (locker)
+                    {
+                        inUse = false;                        
+                    }
+                }
             }
         }
 
@@ -125,9 +206,17 @@ namespace CakeExtracter
                 {
                     string deleteSql = "delete from Conversion where advertiser_advertiser_id = {0} and conversion_date between {1} and {2}";
                     int rowCount = db.Database.ExecuteSqlCommand(deleteSql, advertiserId, date, date.AddDays(1));
-
                     Console.WriteLine("deleted {0} conversions", rowCount);
                 }
+
+                #region TEMP - will move away from Cake database
+                using (var db = new ClientPortal.Data.Contexts.CakeContext())
+                {
+                    string deleteSql = "delete from staging.CakeConversions where Advertiser_Id = {0} and ConversionDate between {1} and {2}";
+                    int rowCount = db.Database.ExecuteSqlCommand(deleteSql, advertiserId, date, date.AddDays(1));
+                    Console.WriteLine("[TEMP Cake] deleted {0} conversions", rowCount);
+                } 
+                #endregion
             }
 
             private static conversion_report_response ExtractConversions(int advertiserId, DateTime startDate)
@@ -192,6 +281,51 @@ namespace CakeExtracter
                         db.SaveChanges();
                     }
                 }
+
+                #region TEMP - will remove Cake database
+                count = 0;
+
+                using (var db = new ClientPortal.Data.Contexts.CakeContext())
+                {
+                    foreach (var set in conversionsResponse.conversions.InSetsOf(2000))
+                    {
+                        count += set.Count;
+
+                        Console.WriteLine("[TEMP Cake] saving {0}/{1} conversions..", count, total);
+
+                        foreach (var item in set)
+                        {
+                            var conversion = new ClientPortal.Data.Contexts.CakeConversion
+                            {
+                                Conversion_Id = int.Parse(item.conversion_id),
+                                ConversionDate = item.conversion_date,
+                                Affiliate_Id = item.affiliate.affiliate_id,
+                                Offer_Id = item.offer.offer_id,
+                                Advertiser_Id = item.advertiser.advertiser_id,
+                                Campaign_Id = item.campaign_id,
+                                Creative_Id = item.creative.creative_id,
+                                CreativeName = item.creative.creative_name,
+                                Subid1 = item.sub_id_1,
+                                ConversionType = item.conversion_type,
+                                PricePaid = item.paid.amount,
+                                PriceReceived = item.received.amount,
+                                IpAddress = item.conversion_ip_address,
+                                PricePaidCurrencyId = item.paid.currency_id,
+                                PricePaidFormattedAmount = item.paid.formatted_amount,
+                                PriceReceivedCurrencyId = item.received.currency_id,
+                                PriceReceivedFormattedAmount = item.received.formatted_amount,
+                                Deleted = false,
+                                Positive = true,
+                                Transaction_Id = item.transaction_id,
+                            };
+
+                            db.CakeConversions.Add(conversion);
+                        }
+
+                        db.SaveChanges();
+                    }
+                } 
+                #endregion
             }
 
             //
