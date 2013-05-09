@@ -46,6 +46,12 @@
       <HintPath>..\packages\DynamicQuery.1.0\lib\35\Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MiniProfiler">
+      <HintPath>..\packages\MiniProfiler.2.1.0\lib\net40\MiniProfiler.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniProfiler.EntityFramework">
+      <HintPath>..\packages\MiniProfiler.EF.2.1.0\lib\net40\MiniProfiler.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
@@ -211,6 +217,10 @@
   <ItemGroup>
     <Content Include="App_Data\manual-migration-02142013-userProfiles.sql" />
     <Content Include="App_Data\manual-migration-03142013-fileUploads.sql" />
+    <Content Include="App_Readme\blackbird_example.html" />
+    <Content Include="Content\blackbird.css" />
+    <Content Include="Content\blackbird_icons.png" />
+    <Content Include="Content\blackbird_panel.png" />
     <Content Include="Content\foundation\app.css" />
     <Content Include="Content\foundation\foundation.css" />
     <Content Include="Content\foundation\foundation.mvc.css" />
@@ -394,6 +404,7 @@
     <Content Include="Images\avatar.png" />
     <Content Include="Images\logo1.png" />
     <Content Include="robots.txt" />
+    <Content Include="Scripts\blackbird.js" />
     <Content Include="Scripts\foundation\app.js" />
     <Content Include="Scripts\foundation\foundation.min.js" />
     <Content Include="Scripts\foundation\jquery.foundation.accordion.js" />

@@ -27,6 +27,7 @@ namespace ClientPortal.Web.Controllers
             var userProfile = HomeController.GetUserProfile();
 
             var today = DateTime.Now;
+
             var model = new ReportModel()
             {
                 StartDate = today.ToString("d", userProfile.CultureInfo),
@@ -163,6 +164,7 @@ namespace ClientPortal.Web.Controllers
             var userProfile = HomeController.GetUserProfile();
 
             var today = DateTime.Now;
+
             var model = new ReportModel()
             {
                 StartDate = today.ToString("d", userProfile.CultureInfo),
@@ -170,6 +172,7 @@ namespace ClientPortal.Web.Controllers
                 ShowConvRev = userProfile.ShowConversionRevenue,
                 ConvRevName = userProfile.ConversionRevenueName
             };
+	    
             return PartialView("_ConversionReportPartial", model);
         }
 
@@ -177,8 +180,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
 
-            //var today = DateTime.Now;
-            var today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddDays(-1);
+            var today = DateTime.Now;
             ViewBag.today = today.ToString("d", userProfile.CultureInfo);
             return PartialView("_AffiliateReportPartial");
         }
@@ -289,8 +291,8 @@ namespace ClientPortal.Web.Controllers
 
         public JsonResult HeatMapData()
         {
-            var fromDate = new DateTime(2013, 4, 1);
-            var toDate = new DateTime(2013, 4, 5);
+            var fromDate = new DateTime(2013, 5, 1);
+            var toDate = new DateTime(2013, 5, 30);
             int advertiserId = HomeController.GetAdvertiserId() ?? 0;
             var json = new JsonResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             using (var db = new UsersContext())

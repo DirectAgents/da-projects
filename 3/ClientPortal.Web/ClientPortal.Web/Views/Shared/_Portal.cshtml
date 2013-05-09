@@ -1,4 +1,5 @@
-﻿@{
+﻿@using StackExchange.Profiling;
+@{
     var title = String.IsNullOrWhiteSpace(ViewBag.Title) ? "" : ViewBag.Title + " - ";
 }
 <!DOCTYPE html>
@@ -19,6 +20,21 @@
     @RenderSection("head", required: false)
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/portal.css" rel="stylesheet" />
+    @if (ClientPortal.Web.MvcApplication.UseBlackbird)
+    {
+        <script src="~/Scripts/blackbird.js"></script>
+        <link href="~/Content/blackbird.css" rel="stylesheet" />
+    }
+    else
+    {
+        <script type="text/javascript">
+            var log = {
+                toggle: function () { }, move: function () { }, resize: function () { },
+                clear: function () { }, debug: function () { }, info: function () { },
+                warn: function () { }, error: function () { }, profile: function () { }
+            };
+        </script>
+    }
 </head>
 <body>
     @RenderBody()
@@ -30,5 +46,9 @@
         google.load('visualization', '1', { 'packages': ['geochart'] });
     </script>
     @RenderSection("scripts", required: false)
+    @MiniProfiler.RenderIncludes()
+    <script type="text/javascript">
+        log.info("/body");
+    </script>
 </body>
 </html>
