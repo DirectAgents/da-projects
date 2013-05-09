@@ -114,7 +114,9 @@
                     <dd class="active"><a href="#repOffSum" id="repNav_OffSum">Offer Summary</a></dd>
                     <dd><a href="#repDaySum" id="repNav_DaySum">Daily Summary</a></dd>
                     <dd><a href="#repConversions" id="repNav_Conversions">Conversion Report</a></dd>
-                    <dd><a href="#repCPM" id="repNav_CPM">CPM</a></dd>
+                    @if (Model.ShowCPMRep) {
+                        <dd><a href="#repCPM" id="repNav_CPM">CPM</a></dd>
+                    }
                     <dd><a href="#repAff" id="repNav_Aff">Affiliates</a></dd>
                 </dl>
                 <!-- /ReportsHTabs  -->
@@ -128,7 +130,9 @@
                     </li>
                     <li id="repDaySumTab"></li>
                     <li id="repConversionsTab"></li>
-                    <li id="repCPMTab"></li>
+                    @if (Model.ShowCPMRep) {
+                        <li id="repCPMTab"></li>
+                    }
                     <li id="repAffTab"></li>
                 </ul>
                 <!-- /ReportsContent  -->
@@ -396,6 +400,8 @@
             });
 
             // CPM
+            @if (Model.ShowCPMRep) {
+            <text>
             $("#repNav_CPM").one("click", function () {
                 $.ajax({
                     url: '@Url.Action("CPMSummaryPartial", "Reports")',
@@ -405,6 +411,8 @@
                     SetupCPMSummaryGrid();
                 });
             });
+            </text>
+            }
 
             // Affilaites
             $("#repNav_Aff").click(function () {

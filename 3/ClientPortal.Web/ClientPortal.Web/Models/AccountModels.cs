@@ -34,6 +34,7 @@ namespace ClientPortal.Web.Models
         public string Culture { get; set; }
         public bool ShowConversionRevenue { get; set; }
         public string ConversionRevenueName { get; set; }
+        public bool ShowCPMRep { get; set; }
 
         [NotMapped]
         public CultureInfo CultureInfo

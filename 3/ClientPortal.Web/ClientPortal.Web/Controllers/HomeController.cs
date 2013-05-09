@@ -31,6 +31,7 @@ namespace ClientPortal.Web.Controllers
             {
                 CultureInfo = userProfile.CultureInfo,
                 Advertiser = advertiser,
+                ShowCPMRep = userProfile.ShowCPMRep
             };
             return View(model);
         }
