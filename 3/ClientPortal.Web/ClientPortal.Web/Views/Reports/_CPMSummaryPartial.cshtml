@@ -1,4 +1,6 @@
-﻿<div style="height: 35px;">
+﻿@model ClientPortal.Web.Models.ReportModel
+
+<div style="height: 35px;">
     <select style="width: 140px" id="cpmsum_dateRangeSel" onchange="ChangeDateRangeMY('cpmsum')">
         <option value="prev3months">Prev. 3 Months</option>
         <option value="lastmonth">Last Month</option>
@@ -6,9 +8,9 @@
         <option value="custom">- custom -</option>
     </select>
     <span class="paddedlabel">Start:</span>
-    <input id="cpmsum_startdate" name="startdate" type="text" value="@ViewBag.start" onchange="DateChanged('cpmsum')" />
+    <input id="cpmsum_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('cpmsum')" />
     <span class="paddedlabel">End:</span>
-    <input id="cpmsum_enddate" name="enddate" type="text" value="@ViewBag.end" onchange="DateChanged('cpmsum')" />
+    <input id="cpmsum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('cpmsum')" />
     <a class="button paddedbutton" id="cpmsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('cpmsum'); return false">Filter</a>
 </div>
 <div id="cpmsumGrid"></div>

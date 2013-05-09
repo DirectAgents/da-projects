@@ -1,4 +1,6 @@
-﻿<div style="height: 35px;">
+﻿@model ClientPortal.Web.Models.ReportModel
+
+<div style="height: 35px;">
     <select style="float: left; width: 110px" id="affrep_dateRangeSel" onchange="ChangeDateRange('affrep')">
         <option value="today">Today</option>
         <option value="yesterday">Yesterday</option>
@@ -10,9 +12,9 @@
         <option value="custom">- custom -</option>
     </select>
     <span style="float: left; margin-left: 10px">Start:</span>
-    <input style="float:left; width:100px" id="affrep_startdate" name="startdate" type="text" value="@ViewBag.today" onchange="DateChanged('affrep')" />
+    <input style="float:left; width:100px" id="affrep_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('affrep')" />
     <span style="float: left; margin-left: 10px">End:</span>
-    <input style="float:left; width:100px" id="affrep_enddate" name="enddate" type="text" value="@ViewBag.today" onchange="DateChanged('affrep')" />
+    <input style="float:left; width:100px" id="affrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('affrep')" />
     <a class="button" style="padding: 3px; margin-left: 10px" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
 </div>
 <div id="affrepGrid"></div>

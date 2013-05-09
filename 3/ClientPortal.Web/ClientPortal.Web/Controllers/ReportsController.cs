@@ -26,12 +26,11 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
 
-            var today = DateTime.Now;
-
+            var now = DateTime.Now;
             var model = new ReportModel()
             {
-                StartDate = today.ToString("d", userProfile.CultureInfo),
-                EndDate = today.ToString("d", userProfile.CultureInfo),
+                StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userProfile.CultureInfo),
+                EndDate = now.ToString("d", userProfile.CultureInfo),
                 ShowConvRev = userProfile.ShowConversionRevenue,
                 ConvRevName = userProfile.ConversionRevenueName
             };
@@ -163,26 +162,16 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
 
-            var today = DateTime.Now;
-
+            var now = DateTime.Now;
             var model = new ReportModel()
             {
-                StartDate = today.ToString("d", userProfile.CultureInfo),
-                EndDate = today.ToString("d", userProfile.CultureInfo),
+                StartDate = now.ToString("d", userProfile.CultureInfo),
+                EndDate = now.ToString("d", userProfile.CultureInfo),
                 ShowConvRev = userProfile.ShowConversionRevenue,
                 ConvRevName = userProfile.ConversionRevenueName
             };
 	    
             return PartialView("_ConversionReportPartial", model);
-        }
-
-        public PartialViewResult AffiliateReportPartial()
-        {
-            var userProfile = HomeController.GetUserProfile();
-
-            var today = DateTime.Now;
-            ViewBag.today = today.ToString("d", userProfile.CultureInfo);
-            return PartialView("_AffiliateReportPartial");
         }
 
         [HttpPost]
@@ -204,31 +193,6 @@ namespace ClientPortal.Web.Controllers
                 {
                     PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) },
                     ConvRev = new { sum = conversionInfos.Sum(c => c.ConvRev) }
-                };
-            }
-            var json = Json(kgrid);
-            return json;
-        }
-
-        [HttpPost]
-        public JsonResult AffiliateReportData(KendoGridRequest request, string startdate, string enddate, int? offerid)
-        {
-            var userProfile = HomeController.GetUserProfile();
-            DateTime? start, end;
-            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
-                return Json(new { });
-
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-
-            var conversionInfos = cakeRepo.GetAffiliateInfos(start, end, userProfile.CakeAdvertiserId, offerid);
-
-            var kgrid = new KendoGrid<AffiliateSummary>(request, conversionInfos);
-            if (conversionInfos.Any())
-            {
-                kgrid.aggregates = new
-                {
-                    PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) },
-                    Count = new { sum = conversionInfos.Sum(c => c.Count) }
                 };
             }
             var json = Json(kgrid);
@@ -258,9 +222,12 @@ namespace ClientPortal.Web.Controllers
         {
             var now = DateTime.Now;
             var firstOfMonth = new DateTime(now.Year, now.Month, 1);
-            ViewBag.start = firstOfMonth.AddMonths(-3).ToString("MM/yyyy");
-            ViewBag.end = firstOfMonth.AddMonths(-1).ToString("MM/yyyy");
-            return PartialView("_CPMSummaryPartial");
+            var model = new ReportModel()
+            {
+                StartDate = firstOfMonth.AddMonths(-3).ToString("MM/yyyy"),
+                EndDate = firstOfMonth.AddMonths(-1).ToString("MM/yyyy")
+            };
+            return PartialView("_CPMSummaryPartial", model);
         }
 
         [HttpPost]
@@ -278,6 +245,44 @@ namespace ClientPortal.Web.Controllers
                 kgrid.aggregates = new
                 {
                     Revenue = new { sum = monthlyInfos.Sum(i => i.Revenue) }
+                };
+            }
+            var json = Json(kgrid);
+            return json;
+        }
+
+        public PartialViewResult AffiliateReportPartial()
+        {
+            var userProfile = HomeController.GetUserProfile();
+
+            var now = DateTime.Now;
+            var model = new ReportModel()
+            {
+                StartDate = now.ToString("d", userProfile.CultureInfo),
+                EndDate = now.ToString("d", userProfile.CultureInfo)
+            };
+            return PartialView("_AffiliateReportPartial", model);
+        }
+
+        [HttpPost]
+        public JsonResult AffiliateReportData(KendoGridRequest request, string startdate, string enddate, int? offerid)
+        {
+            var userProfile = HomeController.GetUserProfile();
+            DateTime? start, end;
+            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+                return Json(new { });
+
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            var conversionInfos = cakeRepo.GetAffiliateInfos(start, end, userProfile.CakeAdvertiserId, offerid);
+
+            var kgrid = new KendoGrid<AffiliateSummary>(request, conversionInfos);
+            if (conversionInfos.Any())
+            {
+                kgrid.aggregates = new
+                {
+                    PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) },
+                    Count = new { sum = conversionInfos.Sum(c => c.Count) }
                 };
             }
             var json = Json(kgrid);
