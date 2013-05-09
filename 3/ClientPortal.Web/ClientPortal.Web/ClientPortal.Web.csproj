@@ -208,10 +208,10 @@
     <Compile Include="Models\FileUploadInfo.cs" />
     <Compile Include="Models\GoalsModel.cs" />
     <Compile Include="Models\GoalVM.cs" />
+    <Compile Include="Models\ImportModels.cs" />
     <Compile Include="Models\IndexModel.cs" />
     <Compile Include="Models\QuickBooksModels.cs" />
     <Compile Include="Models\ReportModel.cs" />
-    <Compile Include="Models\ScooterRow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

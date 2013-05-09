@@ -6,7 +6,18 @@
     <tr>
         <td>@file.UploadDate</td>
         <td>@file.Filename</td>
-@*        <td>@Html.ActionLink("process", "Process", new { Id = file.Id })</td>*@
+        <td>@Ajax.ActionLink("process", "Process", new { Id = file.Id }, new AjaxOptions { OnBegin = "ProcessBegin", OnSuccess = "ProcessSuccess" })</td>
     </tr>
 }
 </table>
+<div id="filesMessage" style="margin: 0px 0px 18px 5px"></div>
+
+<script>
+    function ProcessBegin() {
+        $('#filesMessage').html('Processing...');
+    }
+
+    function ProcessSuccess() {
+        $('#filesMessage').html('File processed.');
+    }
+</script>

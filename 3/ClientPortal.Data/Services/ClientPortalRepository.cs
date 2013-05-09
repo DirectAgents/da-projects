@@ -15,6 +15,21 @@ namespace ClientPortal.Data.Services
             this.context = clientPortalContext;
         }
 
+        public void SaveChanges()
+        {
+            this.context.SaveChanges();
+        }
+
+        public void AddConvRev(ConversionRevenue entity)
+        {
+            context.ConversionRevenues.Add(entity);
+        }
+
+        public IQueryable<ConversionRevenue> ConversionRevenues
+        {
+            get { return context.ConversionRevenues; }
+        }
+
         public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, string advertiserId, int? offerId)
         {
             int? advId = ParseInt(advertiserId);
@@ -105,7 +120,6 @@ namespace ClientPortal.Data.Services
 
             return conversions;
         }
-
 
         public static int? ParseInt(string stringVal)
         {

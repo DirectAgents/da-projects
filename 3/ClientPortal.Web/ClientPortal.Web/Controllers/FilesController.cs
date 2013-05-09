@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
 using CsvHelper;
+using System.Globalization;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -14,10 +15,12 @@ namespace ClientPortal.Web.Controllers
     public class FilesController : Controller
     {
         private ICakeRepository cakeRepo;
+        private IClientPortalRepository cpRepo;
 
-        public FilesController(ICakeRepository cakeRepository)
+        public FilesController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
             this.cakeRepo = cakeRepository;
+            this.cpRepo = cpRepository;
         }
 
         public ActionResult Index()
@@ -80,6 +83,15 @@ namespace ClientPortal.Web.Controllers
         public ActionResult Process(int id)
         {
             var advId = HomeController.GetAdvertiserId();
+            if (advId == 278)
+                ProcessTree(id);
+
+            return null;
+        }
+
+        public ActionResult ProcessScooter(int id)
+        {
+            var advId = HomeController.GetAdvertiserId();
 
             //int advId = 294, offerId = 1604; // scooter store
             var start = new DateTime(2013, 2, 1);
@@ -107,6 +119,52 @@ namespace ClientPortal.Web.Controllers
             //    item.Conversion.Positive = (item.FTNSO1 == 1);
             //}
             //cakeRepo.SaveChanges();
+
+            return null;
+        }
+
+        public ActionResult ProcessTree(int? id)
+        {
+            var advId = HomeController.GetAdvertiserId();
+
+            //var start = new DateTime(2013, 5, 1);
+            var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            List<TreeRow> csvRows;
+            using (var usersContext = new UsersContext())
+            {
+                var fileUploads = usersContext.FileUploads.Where(f => f.CakeAdvertiserId == advId);
+                if (id.HasValue)
+                    fileUploads = fileUploads.Where(f => f.Id == id.Value);
+
+                var fileUpload = fileUploads.FirstOrDefault();
+                if (fileUpload == null)
+                    return null;
+
+                var reader = new StringReader(fileUpload.Text);
+                var csv = new CsvReader(reader);
+                csvRows = csv.GetRecords<TreeRow>().ToList();
+            }
+            var conversions = cpRepo.GetConversions(start, null, advId, null).ToList();
+            var qry = from conv in conversions
+                      from csvRow in csvRows
+                      where conv.transaction_id == csvRow.QFormUID.ToLower()
+                      select new { Conversion = conv, CPA = csvRow.CPA };
+
+            var convRevs = cpRepo.ConversionRevenues;
+            foreach (var item in qry)
+            {
+                if (!convRevs.Any(c => c.conversion_id == item.Conversion.conversion_id))
+                {
+                    var entity = new ClientPortal.Data.Contexts.ConversionRevenue()
+                    {
+                        conversion_id = item.Conversion.conversion_id,
+                        revenue = Decimal.Parse(item.CPA, NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, new CultureInfo("en-US"))
+                    };
+                    cpRepo.AddConvRev(entity);
+                }
+            }
+            cpRepo.SaveChanges();
 
             return null;
         }

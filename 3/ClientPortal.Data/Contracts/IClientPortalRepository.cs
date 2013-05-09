@@ -7,6 +7,10 @@ namespace ClientPortal.Data.Contracts
 {
     public interface IClientPortalRepository
     {
+        void SaveChanges();
+        void AddConvRev(ConversionRevenue entity);
+        IQueryable<ConversionRevenue> ConversionRevenues { get; }
+
         DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, string advertiserId, int? offerId);
 
         IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
