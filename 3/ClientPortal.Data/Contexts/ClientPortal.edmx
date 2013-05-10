@@ -8,7 +8,7 @@
         <EntityContainer Name="ClientPortalModelStoreContainer">
           <EntitySet Name="Click" EntityType="ClientPortalModel.Store.Click" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ConversionRevenue" EntityType="ClientPortalModel.Store.ConversionRevenue" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
         <EntityType Name="Click">
           <Key>
@@ -106,12 +106,12 @@
           <Property Name="disposition_disposition_date" Type="datetime" />
           <Property Name="note" Type="nvarchar(max)" />
         </EntityType>
-        <EntityType Name="ConversionRevenue">
+        <EntityType Name="ConversionData">
           <Key>
             <PropertyRef Name="conversion_id" />
           </Key>
           <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
-          <Property Name="revenue" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="value0" Type="decimal" Nullable="false" Scale="2" />
         </EntityType>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -120,7 +120,7 @@
         <EntityContainer Name="ClientPortalContext" p1:LazyLoadingEnabled="true">
           <EntitySet Name="Clicks" EntityType="ClientPortalModel.Click" />
           <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
-          <EntitySet Name="ConversionRevenues" EntityType="ClientPortalModel.ConversionRevenue" />
+          <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
         </EntityContainer>
         <EntityType Name="Click">
           <Key>
@@ -218,12 +218,12 @@
           <Property Name="disposition_date" Type="DateTime" Precision="3" />
           <Property Name="note" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
         </EntityType>
-        <EntityType Name="ConversionRevenue">
+        <EntityType Name="ConversionData">
           <Key>
             <PropertyRef Name="conversion_id" />
           </Key>
           <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Type="Decimal" Name="revenue" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="value0" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -329,10 +329,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ConversionRevenues">
-            <EntityTypeMapping TypeName="ClientPortalModel.ConversionRevenue">
-              <MappingFragment StoreEntitySet="ConversionRevenue">
-                <ScalarProperty Name="revenue" ColumnName="revenue" />
+          <EntitySetMapping Name="ConversionDatas">
+            <EntityTypeMapping TypeName="ClientPortalModel.ConversionData">
+              <MappingFragment StoreEntitySet="ConversionData">
+                <ScalarProperty Name="value0" ColumnName="value0" />
                 <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
               </MappingFragment>
             </EntityTypeMapping>

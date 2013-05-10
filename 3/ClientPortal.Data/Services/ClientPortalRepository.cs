@@ -20,27 +20,22 @@ namespace ClientPortal.Data.Services
             this.context.SaveChanges();
         }
 
-        public void AddConvRev(ConversionRevenue entity)
+        public void AddConversionData(ConversionData entity)
         {
-            context.ConversionRevenues.Add(entity);
+            context.ConversionDatas.Add(entity);
         }
 
-        public IQueryable<ConversionRevenue> ConversionRevenues
+        public IQueryable<ConversionData> ConversionData
         {
-            get { return context.ConversionRevenues; }
+            get { return context.ConversionDatas; }
         }
 
-        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, string advertiserId, int? offerId)
+        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, string advertiserId, int? offerId, bool includeConversionData)
         {
             int? advId = ParseInt(advertiserId);
 
             var clicks = GetClicks(start, end, advId, offerId);
             var conversions = GetConversions(start, end, advId, offerId);
-
-            var convRev =
-                from c in conversions
-                join conv_rev in context.ConversionRevenues on c.conversion_id equals conv_rev.conversion_id
-                select conv_rev;
 
             var anyConv = conversions.Any();
             DateRangeSummary summary = new DateRangeSummary()
@@ -48,9 +43,17 @@ namespace ClientPortal.Data.Services
                 Clicks = clicks.Count(),
                 Conversions = anyConv ? conversions.Count() : 0,
                 Revenue = anyConv ? conversions.Sum(c => c.received_amount) : 0,
-                Currency = null, // TODO: determine this... need Offers in ClientPortalContext
-                ConvRev = convRev.Any() ? convRev.Sum(cr => cr.revenue) : 0
+                Currency = null // TODO: determine this... need Offers in ClientPortalContext
             };
+            if (includeConversionData)
+            {
+                var conv_datas =
+                    from c in conversions
+                    join conv_data in context.ConversionDatas on c.conversion_id equals conv_data.conversion_id
+                    select conv_data;
+
+                summary.ConVal = conv_datas.Any() ? conv_datas.Sum(c => c.value0) : 0;
+            }
             return summary;
         }
 
@@ -60,8 +63,8 @@ namespace ClientPortal.Data.Services
 
             var conversionInfos =
                 from c in conversions
-                join conv_rev in context.ConversionRevenues on c.conversion_id equals conv_rev.conversion_id into gj
-                from cr in gj.DefaultIfEmpty() // left join to ConversionRevenue
+                join conv_data in context.ConversionDatas on c.conversion_id equals conv_data.conversion_id into gj
+                from cd in gj.DefaultIfEmpty() // left join to ConversionData
 //                join curr in cakeContext.CakeCurrencies on c.PriceReceivedCurrencyId.Value equals curr.Id
 //                join offer in cakeContext.CakeOffers on c.Offer_Id.Value equals offer.Offer_Id into gj
 //                from o in gj.DefaultIfEmpty() // left join to CakeOffers
@@ -78,7 +81,7 @@ namespace ClientPortal.Data.Services
 //                    Currency = curr.Name,
                     TransactionId = c.transaction_id,
 //                    Positive = c.Positive,
-                    ConvRev = (cr == null) ? 0 : cr.revenue
+                    ConVal = (cd == null) ? 0 : cd.value0
                 };
             return conversionInfos;
         }

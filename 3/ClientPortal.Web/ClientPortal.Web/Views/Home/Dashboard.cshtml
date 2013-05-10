@@ -40,8 +40,8 @@
                     <th>Clicks</th>
                     <th>Leads</th>
                     <th>Spend</th>
-                    @if (Model.ShowConvRev) {
-                        <th>@Model.ConvRevName</th>
+                    @if (Model.ShowConVal) {
+                        <th>@Model.ConValName</th>
                     }
                 </tr>
                 @foreach (var summary in Model.AdvertiserSummaries)
@@ -51,8 +51,8 @@
                         <td>@String.Format("{0:n0}", summary.Clicks)</td>
                         <td>@String.Format("{0:n0}", summary.Conversions)</td>
                         <td>@summary.RevenueFormatted</td>
-                        @if (Model.ShowConvRev) {
-                            <td>@summary.ConvRevFormatted</td>
+                        @if (Model.ShowConVal) {
+                            <td>@summary.ConValFormatted(Model.ConValIsNum ? "n0" : "c")</td>
                         }
                     </tr>
                 }

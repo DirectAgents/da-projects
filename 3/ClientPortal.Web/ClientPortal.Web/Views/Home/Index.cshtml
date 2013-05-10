@@ -559,7 +559,7 @@
                             PriceReceived: { type: 'number' },
                             TransactionId: { type: 'string' },
                             Positive: { type: 'boolean' },
-                            ConvRev: { type: 'number' }
+                            ConVal: { type: 'number' }
                         }
                     }
                 },
@@ -569,7 +569,7 @@
                 ],
                 aggregate: [
                     { field: "PriceReceived", aggregate: "sum" },
-                    { field: "ConvRev", aggregate: "sum" }
+                    { field: "ConVal", aggregate: "sum" }
                 ]
             });
         }

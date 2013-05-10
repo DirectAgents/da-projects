@@ -11,15 +11,15 @@ namespace ClientPortal.Data.DTOs
         public int? Conversions { get; set; }
 
         public decimal? Revenue { get; set; }
-        public decimal? ConvRev { get; set; }
+        public decimal? ConVal { get; set; }
 
         public string RevenueFormatted
         {
             get { return String.Format(new CultureInfo(Culture), "{0:c}", Revenue); }
         }
-        public string ConvRevFormatted
+        public string ConValFormatted(string format = "c")
         {
-            get { return String.Format(new CultureInfo(Culture), "{0:c}", ConvRev); }
+            return String.Format(new CultureInfo(Culture), "{0:" + format +"}", ConVal);
         }
 
         public string Currency

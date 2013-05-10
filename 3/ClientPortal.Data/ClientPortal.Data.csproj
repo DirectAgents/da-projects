@@ -94,7 +94,7 @@
     <Compile Include="Contexts\Conversion.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contexts\ConversionRevenue.cs">
+    <Compile Include="Contexts\ConversionData.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\DailySummary.cs">

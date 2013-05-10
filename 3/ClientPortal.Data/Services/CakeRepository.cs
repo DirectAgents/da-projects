@@ -275,7 +275,7 @@ namespace ClientPortal.Data.Services
             return conversionInfos;
         }
 
-        public IQueryable<AffiliateSummary> GetAffiliateInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        public IQueryable<AffiliateSummary> GetAffiliateSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
             var conversions = GetConversions(start, end, advertiserId, offerId);
 

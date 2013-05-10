@@ -2,6 +2,7 @@
 
 namespace ClientPortal.Data.DTOs
 {
+    // Used to summarize conversions over a period of time
     public class ConversionSummary
     {
         public string AdvertiserId { get; set; }

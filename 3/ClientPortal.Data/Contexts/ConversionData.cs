@@ -12,9 +12,9 @@ namespace ClientPortal.Data.Contexts
     using System;
     using System.Collections.Generic;
     
-    public partial class ConversionRevenue
+    public partial class ConversionData
     {
         public string conversion_id { get; set; }
-        public decimal revenue { get; set; }
+        public decimal value0 { get; set; }
     }
 }

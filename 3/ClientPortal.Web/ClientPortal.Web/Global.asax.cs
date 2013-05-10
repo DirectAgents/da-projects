@@ -78,9 +78,13 @@ namespace ClientPortal.Web
             WebSecurity.InitializeDatabaseConnection("DefaultConnection",
                                                      "UserProfile", "UserId", "UserName", autoCreateTables: true);
 
+            // For testing
+            WebSecurity.CreateUserAndAccount("affinitas", "123456", new { CakeAdvertiserId = 298, Culture = "de-DE", ShowCPMRep = false, ShowConversionData = true, ConversionValueName = "ValTest", ConversionValueIsNumber = false });
+            WebSecurity.CreateUserAndAccount("guthy", "123456", new { CakeAdvertiserId = 457, Culture = "en-US", ShowCPMRep = true, ShowConversionData = false, ConversionValueIsNumber = false });
+
             // Beta customers
-            WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278, Culture = "en-US", ShowConversionRevenue = false }); // lending tree
-            WebSecurity.CreateUserAndAccount("bas", "123456", new { CakeAdvertiserId = 455, Culture = "en-US", ShowConversionRevenue = false }); // bryant and stratten
+            WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278, Culture = "en-US", ShowCPMRep = false, ShowConversionData = true, ConversionValueIsNumber = true }); // lending tree
+            WebSecurity.CreateUserAndAccount("bas", "123456", new { CakeAdvertiserId = 455, Culture = "en-US", ShowCPMRep = false, ShowConversionData = false, ConversionValueIsNumber = false }); // bryant and stratten
 
             List<Goal> goals = new List<Goal> {
 

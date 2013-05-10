@@ -7,7 +7,7 @@
       <Diagram DiagramId="99e99fb864104972af0fae305d39025c" Name="Diagram1">
         <EntityTypeShape EntityType="ClientPortalModel.Click" Width="2.75" PointX="0.5" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ClientPortalModel.Conversion" Width="2.125" PointX="3.625" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ClientPortalModel.ConversionRevenue" Width="1.875" PointX="5.875" PointY="0.5" />
+        <EntityTypeShape EntityType="ClientPortalModel.ConversionData" Width="1.75" PointX="6" PointY="0.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

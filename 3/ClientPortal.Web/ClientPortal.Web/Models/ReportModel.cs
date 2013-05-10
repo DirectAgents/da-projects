@@ -10,7 +10,8 @@ namespace ClientPortal.Web.Models
         public string StartDate { get; set; }
         public string EndDate { get; set; }
 
-        public bool ShowConvRev { get; set; }
-        public string ConvRevName { get; set; }
+        public bool ShowConVal { get; set; }
+        public string ConValName { get; set; }
+        public bool ConValIsNum { get; set; }
     }
 }

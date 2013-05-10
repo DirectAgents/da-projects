@@ -31,8 +31,9 @@ namespace ClientPortal.Web.Controllers
             {
                 StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userProfile.CultureInfo),
                 EndDate = now.ToString("d", userProfile.CultureInfo),
-                ShowConvRev = userProfile.ShowConversionRevenue,
-                ConvRevName = userProfile.ConversionRevenueName
+                ShowConVal = userProfile.ShowConversionData,
+                ConValName = userProfile.ConversionValueName,
+                ConValIsNum = userProfile.ConversionValueIsNumber
             };
             return PartialView("_OfferSummaryPartial", model);
         }
@@ -167,8 +168,9 @@ namespace ClientPortal.Web.Controllers
             {
                 StartDate = now.ToString("d", userProfile.CultureInfo),
                 EndDate = now.ToString("d", userProfile.CultureInfo),
-                ShowConvRev = userProfile.ShowConversionRevenue,
-                ConvRevName = userProfile.ConversionRevenueName
+                ShowConVal = userProfile.ShowConversionData,
+                ConValName = userProfile.ConversionValueName,
+                ConValIsNum = userProfile.ConversionValueIsNumber
             };
 	    
             return PartialView("_ConversionReportPartial", model);
@@ -192,7 +194,7 @@ namespace ClientPortal.Web.Controllers
                 kgrid.aggregates = new
                 {
                     PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) },
-                    ConvRev = new { sum = conversionInfos.Sum(c => c.ConvRev) }
+                    ConVal = new { sum = conversionInfos.Sum(c => c.ConVal) }
                 };
             }
             var json = Json(kgrid);
@@ -274,15 +276,15 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var conversionInfos = cakeRepo.GetAffiliateInfos(start, end, userProfile.CakeAdvertiserId, offerid);
+            var affiliateSummaries = cakeRepo.GetAffiliateSummaries(start, end, userProfile.CakeAdvertiserId, offerid);
 
-            var kgrid = new KendoGrid<AffiliateSummary>(request, conversionInfos);
-            if (conversionInfos.Any())
+            var kgrid = new KendoGrid<AffiliateSummary>(request, affiliateSummaries);
+            if (affiliateSummaries.Any())
             {
                 kgrid.aggregates = new
                 {
-                    PriceReceived = new { sum = conversionInfos.Sum(c => c.PriceReceived) },
-                    Count = new { sum = conversionInfos.Sum(c => c.Count) }
+                    PriceReceived = new { sum = affiliateSummaries.Sum(c => c.PriceReceived) },
+                    Count = new { sum = affiliateSummaries.Sum(c => c.Count) }
                 };
             }
             var json = Json(kgrid);

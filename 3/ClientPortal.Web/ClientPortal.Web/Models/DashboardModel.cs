@@ -24,8 +24,9 @@ namespace ClientPortal.Web.Models
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
 
-        public bool ShowConvRev { get; set; }
-        public string ConvRevName { get; set; }
+        public bool ShowConVal { get; set; }
+        public string ConValName { get; set; }
+        public bool ConValIsNum { get; set; }
     }
 
     public class OfferGoalSummary

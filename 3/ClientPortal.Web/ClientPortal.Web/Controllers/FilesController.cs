@@ -151,17 +151,17 @@ namespace ClientPortal.Web.Controllers
                       where conv.transaction_id == csvRow.QFormUID.ToLower()
                       select new { Conversion = conv, CPA = csvRow.CPA };
 
-            var convRevs = cpRepo.ConversionRevenues;
+            var conversionData = cpRepo.ConversionData;
             foreach (var item in qry)
             {
-                if (!convRevs.Any(c => c.conversion_id == item.Conversion.conversion_id))
+                if (!conversionData.Any(c => c.conversion_id == item.Conversion.conversion_id))
                 {
-                    var entity = new ClientPortal.Data.Contexts.ConversionRevenue()
+                    var entity = new ClientPortal.Data.Contexts.ConversionData()
                     {
                         conversion_id = item.Conversion.conversion_id,
-                        revenue = Decimal.Parse(item.CPA, NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, new CultureInfo("en-US"))
+                        value0 = Decimal.Parse(item.CPA, NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, new CultureInfo("en-US"))
                     };
-                    cpRepo.AddConvRev(entity);
+                    cpRepo.AddConversionData(entity);
                 }
             }
             cpRepo.SaveChanges();
