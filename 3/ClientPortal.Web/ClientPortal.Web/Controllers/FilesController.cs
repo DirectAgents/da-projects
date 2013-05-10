@@ -156,10 +156,11 @@ namespace ClientPortal.Web.Controllers
             {
                 if (!conversionData.Any(c => c.conversion_id == item.Conversion.conversion_id))
                 {
+                    var cpa = Decimal.Parse(item.CPA, NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, new CultureInfo("en-US"));
                     var entity = new ClientPortal.Data.Contexts.ConversionData()
                     {
                         conversion_id = item.Conversion.conversion_id,
-                        value0 = Decimal.Parse(item.CPA, NumberStyles.AllowCurrencySymbol | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands, new CultureInfo("en-US"))
+                        value0 = (cpa >= 40) ? 1 : 0
                     };
                     cpRepo.AddConversionData(entity);
                 }

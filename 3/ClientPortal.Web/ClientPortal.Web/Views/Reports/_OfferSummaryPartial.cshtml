@@ -90,7 +90,7 @@
                 { field: 'Price', width: 65, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
                 { field: 'Clicks', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Conversions', title: 'Leads', width: 67, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Revenue', title: 'Spend', width: 90, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             ],
             filterable: true,
             sortable: {
@@ -143,27 +143,74 @@
                 offerid: e.data.OfferId
             };
         }
-        var dataSource = CreateConversionReportDataSource(readData);
+        var dataSource = CreateOfferAffiliateReportDataSource(readData);
 
         $("<div/>").appendTo(e.detailCell).kendoGrid({
             dataSource: dataSource,
             columns: [
-                { field: 'ConversionId', title: 'Conv ID', width: 75 },
-                { field: 'Date', width: 190, format: '{0:G}' },
-                { field: 'AffId', title: 'sub_id', width: 62 },
-                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-@if (Model.ShowConVal) {
-    var templ = Model.ConValIsNum ? "kendo.toString(ConVal, 'n0')" : "FormatCurr(ConVal, Culture)";
-    var footerTempl = Model.ConValIsNum ? "kendo.toString(sum, 'n0')" : "kendo.toString(sum, 'c')";
-          <text>{ field: 'ConVal', title: '@Model.ConValName', width: 100, template: "#= @Html.Raw(templ) #", attributes: { style: "text-align: right" }, footerTemplate: "#= @Html.Raw(footerTempl) #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
-}
-                { field: 'TransactionId', title: 'Trans ID' }
+                { field: 'AffId', title: 'sub_id', width: 80 },
+                {
+                    field: 'Count',
+                    title: 'Leads',
+                    width: 100,
+                    attributes: { style: "text-align: right" },
+                    headerAttributes: { style: "text-align: right" },
+                    footerTemplate: "#= sum #",
+                    footerAttributes: { style: "font-weight: bold; text-align: right" }
+                },
+                {
+                    field: 'PriceReceived',
+                    title: 'Price',
+                    width: 100,
+                    template: '#= FormatCurr(PriceReceived, Culture) #',
+                    attributes: { style: "text-align: right" },
+                    footerTemplate: "#= kendo.toString(sum, 'c') #",
+                    footerAttributes: { style: "font-weight: bold; text-align: right" }
+                },
             ],
             sortable: {
                 mode: 'multiple'
             },
             pageable: true,
             scrollable: false
+        });
+    }
+
+    function CreateOfferAffiliateReportDataSource(readData) {
+        return new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("AffiliateReportData", "Reports")',
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'AffId',
+                    fields: {
+                        AffId: { type: 'number' },
+                        PriceReceived: { type: 'number' },
+                        Count: { type: 'number' }
+                    }
+                }
+            },
+            sort: [
+                { field: "AffId", dir: "asc" }
+            ],
+            aggregate: [
+                { field: "PriceReceived", aggregate: "sum" },
+                { field: "Count", aggregate: "sum" }
+            ]
         });
     }
 </script>

@@ -71,28 +71,32 @@
                     type: 'post',
                     dataType: 'json',
                     url: '@Url.Action("AffiliateReportData", "Reports")',
-                        data: readData
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'AffId',
+                    fields: {
+                        AffId: { type: 'number' },
+                        OfferId: { type: 'number' },
+                        Offer: { type: 'string' },
+                        PriceReceived: { type: 'number' },
+                        Count: { type: 'number' }
                     }
-                },
-                schema: {
-                    data: 'data',
-                    total: 'total',
-                    aggregates: 'aggregates',
-                    model: {
-                        id: 'AffId',
-                        fields: {
-                            AffId: { type: 'number' },
-                            OfferId: { type: 'number' },
-                            Offer: { type: 'string' },
-                            PriceReceived: { type: 'number' },
-                            Count: { type: 'number' }
-                        }
-                    }
-                },
-                aggregate: [
-                    { field: "PriceReceived", aggregate: "sum" },
-                    { field: "Count", aggregate: "sum" }
-                ]
-            });
+                }
+            },
+            sort: [
+                { field: "AffId", dir: "asc" },
+                { field: "OfferId", dir: "asc" }
+            ],
+            aggregate: [
+                { field: "PriceReceived", aggregate: "sum" },
+                { field: "Count", aggregate: "sum" }
+            ]
+        });
         }
 </script>
