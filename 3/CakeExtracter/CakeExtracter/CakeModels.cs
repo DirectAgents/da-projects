@@ -17,6 +17,26 @@ namespace ClientPortal.Web.Models.Cake
             this.Url = "https://login.directagents.com/api/5/reports.asmx";
         }
 
+        protected override System.Xml.XmlReader GetReaderForMessage(SoapClientMessage message, int bufferSize)
+        {
+            return base.GetReaderForMessage(message, bufferSize);
+        }
+
+        protected override System.Net.WebRequest GetWebRequest(Uri uri)
+        {
+            return base.GetWebRequest(uri);
+        }
+
+        protected override System.Net.WebResponse GetWebResponse(System.Net.WebRequest request)
+        {
+            return base.GetWebResponse(request);
+        }
+
+        protected override System.Xml.XmlWriter GetWriterForMessage(SoapClientMessage message, int bufferSize)
+        {
+            return base.GetWriterForMessage(message, bufferSize);
+        }
+
         [SoapDocumentMethod("http://cakemarketing.com/api/5/Conversions", 
             RequestNamespace = "http://cakemarketing.com/api/5/", 
             ResponseNamespace = "http://cakemarketing.com/api/5/", 
