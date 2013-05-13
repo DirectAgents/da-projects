@@ -1,15 +1,15 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Services;
 using System.Web.Services.Description;
 using System.Web.Services.Protocols;
 using System.Xml.Serialization;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClientPortal.Web.Models.Cake
 {
-    [WebServiceBindingAttribute(Name = "reportsSoap", Namespace = "http://cakemarketing.com/api/5/")]
-    [XmlIncludeAttribute(typeof(base_response))]
+    [WebServiceBinding(Name = "reportsSoap", Namespace = "http://cakemarketing.com/api/5/")]
+    [XmlInclude(typeof(base_response))]
     public partial class reports : SoapHttpClientProtocol
     {
         public reports()
@@ -17,7 +17,12 @@ namespace ClientPortal.Web.Models.Cake
             this.Url = "https://login.directagents.com/api/5/reports.asmx";
         }
 
-        [SoapDocumentMethodAttribute("http://cakemarketing.com/api/5/Conversions", RequestNamespace = "http://cakemarketing.com/api/5/", ResponseNamespace = "http://cakemarketing.com/api/5/", Use = SoapBindingUse.Literal, ParameterStyle = SoapParameterStyle.Wrapped)]
+        [SoapDocumentMethod("http://cakemarketing.com/api/5/Conversions", 
+            RequestNamespace = "http://cakemarketing.com/api/5/", 
+            ResponseNamespace = "http://cakemarketing.com/api/5/", 
+            Use = SoapBindingUse.Literal, 
+            ParameterStyle = SoapParameterStyle.Wrapped)
+        ]
         public conversion_report_response Conversions(
                                                 string api_key,
                                                 System.DateTime start_date,
@@ -50,7 +55,12 @@ namespace ClientPortal.Web.Models.Cake
             return ((conversion_report_response)(results[0]));
         }
 
-        [SoapDocumentMethodAttribute("http://cakemarketing.com/api/5/ConversionChanges", RequestNamespace = "http://cakemarketing.com/api/5/", ResponseNamespace = "http://cakemarketing.com/api/5/", Use = SoapBindingUse.Literal, ParameterStyle = SoapParameterStyle.Wrapped)]
+        [SoapDocumentMethod("http://cakemarketing.com/api/5/ConversionChanges", 
+            RequestNamespace = "http://cakemarketing.com/api/5/", 
+            ResponseNamespace = "http://cakemarketing.com/api/5/", 
+            Use = SoapBindingUse.Literal, 
+            ParameterStyle = SoapParameterStyle.Wrapped)
+        ]
         public conversion_report_response ConversionChanges(
                                                 string api_key,
                                                 System.DateTime changes_since,
@@ -83,7 +93,12 @@ namespace ClientPortal.Web.Models.Cake
             return ((conversion_report_response)(results[0]));
         }
 
-        [SoapDocumentMethodAttribute("http://cakemarketing.com/api/5/Clicks", RequestNamespace = "http://cakemarketing.com/api/5/", ResponseNamespace = "http://cakemarketing.com/api/5/", Use = SoapBindingUse.Literal, ParameterStyle = SoapParameterStyle.Wrapped)]
+        [SoapDocumentMethod("http://cakemarketing.com/api/5/Clicks", 
+            RequestNamespace = "http://cakemarketing.com/api/5/", 
+            ResponseNamespace = "http://cakemarketing.com/api/5/", 
+            Use = SoapBindingUse.Literal, 
+            ParameterStyle = SoapParameterStyle.Wrapped)
+        ]
         public click_report_response Clicks(
                                         string api_key,
                                         System.DateTime start_date,
@@ -113,8 +128,8 @@ namespace ClientPortal.Web.Models.Cake
         }
     }
 
-    [SerializableAttribute()]
-    [XmlTypeAttribute(Namespace = "http://cakemarketing.com/api/5/")]
+    [Serializable]
+    [XmlType(Namespace = "http://cakemarketing.com/api/5/")]
     public enum ConversionsSortFields
     {
         conversion_id,
@@ -126,14 +141,14 @@ namespace ClientPortal.Web.Models.Cake
         last_updated,
     }
 
-    [SerializableAttribute()]
-    [XmlTypeAttribute(Namespace = "http://cakemarketing.com/api/5/")]
+    [Serializable]
+    [XmlType(Namespace = "http://cakemarketing.com/api/5/")]
     public partial class conversion_report_response : get_response
     {
         public conversion[] conversions;
     }
 
-    [SerializableAttribute()]
+    [Serializable]
     [XmlType(Namespace = "http://cakemarketing.com/api/5/")]
     [Table("Conversion")]
     public partial class conversion
@@ -157,15 +172,15 @@ namespace ClientPortal.Web.Models.Cake
         public int request_session_id { get; set; }
 
         [XmlElement(IsNullable = true)]
-        public Nullable<int> click_id { get; set; }
+        public int? click_id { get; set; }
 
         public DateTime conversion_date { get; set; }
 
         [XmlElement(IsNullable = true)]
-        public Nullable<DateTime> last_updated { get; set; }
+        public DateTime? last_updated { get; set; }
 
         [XmlElement(IsNullable = true)]
-        public Nullable<DateTime> click_date { get; set; }
+        public DateTime? click_date { get; set; }
 
         public affiliate affiliate { get; set; }
 
@@ -224,8 +239,8 @@ namespace ClientPortal.Web.Models.Cake
         public string note { get; set; }
     }
 
-    [SerializableAttribute()]
-    [XmlTypeAttribute(Namespace = "API:id_name_store")]
+    [Serializable]
+    [XmlType(Namespace = "API:id_name_store")]
     public partial class affiliate
     {
         public int affiliate_id { get; set; }
@@ -234,7 +249,7 @@ namespace ClientPortal.Web.Models.Cake
     }
 
     [Serializable]
-    [XmlTypeAttribute(Namespace = "http://cakemarketing.com/api/5/")]
+    [XmlType(Namespace = "http://cakemarketing.com/api/5/")]
     public partial class browser
     {
         public int browser_id { get; set; }
