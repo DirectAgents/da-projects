@@ -2,50 +2,75 @@
 
 @section head {
     <style>
-        body {
+        body
+        {
             background-color: rgb(47,141,231);
+        }
+
+        .dalogo2
+        {
+            width: 10%;
+        }
+
+        .logindiv
+        {
+            display: none;
+            width: 300px;
+            margin: 100px auto auto auto;
+            text-align: center;
+            border: 10px solid rgb(107,172,236);
+            background-color: white;
+        }
+
+        .loginfieldset
+        {
+            margin: 0px;
         }
     </style>
 }
 
-<div class="logindiv" style="width: 300px; margin: 100px auto auto auto; text-align: center; border: 10px solid rgb(107,172,236); background-color: white">
-    <div style="background-color: rgb(243,243,243); height: 45px; padding-top: 10px">
-        <h4 style="margin-top: 0">Log in to DirectEdge</h4>
+<div class="logindiv">
+    <div style="background-color: rgb(243,243,243); padding-top: 10px">
     </div>
-@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
 
-    <fieldset style="margin: 0px">
-        <legend>Log in Form</legend>
-        <ul>
-            <li>
-                @Html.LabelFor(m => m.UserName)
-                @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password)
-                @Html.ValidationMessageFor(m => m.Password)
-            </li>
-            <li>
-                @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-            </li>
-        </ul>
-    </fieldset>
-    <div style="background-color: rgb(243,243,243); padding: 10px">
-        <input type="submit" class="button" value="LOG IN" style="width: 200px" />
-    </div>
-}
+        <fieldset class="loginfieldset">
+            <legend>Log in Form</legend>
+            <ul>
+                <li>
+                    @Html.LabelFor(m => m.UserName)
+                    @Html.TextBoxFor(m => m.UserName)
+                    @Html.ValidationMessageFor(m => m.UserName)
+                </li>
+                <li>
+                    @Html.LabelFor(m => m.Password)
+                    @Html.PasswordFor(m => m.Password)
+                    @Html.ValidationMessageFor(m => m.Password)
+                </li>
+                <li>
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                    @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                </li>
+            </ul>
+        </fieldset>
+        <div style="background-color: rgb(243,243,243); padding: 10px">
+            <input type="submit" class="button" value="LOG IN" style="width: 200px" />
+        </div>
+        <div style="position: relative; left: 0px; top: 0px;">
+            <img class="dalogo2" src="~/Images/da.jpeg" />
+        </div>
+    }
 </div>
 
 @section scripts {
-<script>
-    $(function() {
-        $('#UserName').focus();
-    });
-</script>
+    <script>
+        $(function () {
+            //$('.logindiv').slideDown();
+            $('.logindiv').fadeIn();
+            $('#UserName').focus();
+        });
+    </script>
 }
