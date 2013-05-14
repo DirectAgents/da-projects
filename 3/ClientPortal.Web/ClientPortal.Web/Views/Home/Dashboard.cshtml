@@ -6,8 +6,8 @@
     var today = now.ToString("d", Model.CultureInfo);
     var firstOfMonth = firstOfMonthDT.ToString("d", Model.CultureInfo);
     var firstOfYear = new DateTime(now.Year, 1, 1).ToString("d", Model.CultureInfo);
-    //var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
-    //var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
+            //var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
+            //var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
 }
 
 <!-- Timeframe -->
@@ -40,7 +40,8 @@
                     <th>Clicks</th>
                     <th>Leads</th>
                     <th>Spend</th>
-                    @if (Model.ShowConVal) {
+                    @if (Model.ShowConVal)
+                    {
                         <th>@Model.ConValName</th>
                     }
                 </tr>
@@ -51,7 +52,8 @@
                         <td>@String.Format("{0:n0}", summary.Clicks)</td>
                         <td>@String.Format("{0:n0}", summary.Conversions)</td>
                         <td>@summary.RevenueFormatted</td>
-                        @if (Model.ShowConVal) {
+                        @if (Model.ShowConVal)
+                        {
                             <td>@summary.ConValFormatted(Model.ConValIsNum ? "n0" : "c")</td>
                         }
                     </tr>
@@ -94,7 +96,7 @@
             </div>
             <div class="six columns">
                 <div id="topStatesOuter">
-                    <b>Top <span id="topNStatesNumLabel" /> States</b>
+                    <b>Top <span id="topNStatesNumLabel" />States</b>
                     <div id="divTopStates"></div>
                 </div>
             </div>
@@ -115,8 +117,24 @@
     </div>
 
     <!-- Column 2 -->
+
     <div class="six columns panel">
-        <div id="weeklySpendBarChartOuter">
+        <div class="row">
+            <div class="six columns">
+                <div id="clicksByDeviceOuter">
+                    <b>Mobile Clicks</b>
+                    @Html.Partial("_ClicksByDevice")
+                </div>
+            </div>
+            <div class="six columns">
+                <div id="clicksByDeviceChartOuter">
+                    <b>Top Devices</b>
+                    <div id="divClicksByDeviceChart"></div>
+                </div>
+            </div>
+        </div>
+
+        @*<div id="weeklySpendBarChartOuter">
             <b>Budget Spent Weekly</b>
             <a href="#" onclick="ShowSpendMonthly(); return false">Switch to Monthly</a>
             <div class="chart-wrapper">
@@ -129,9 +147,17 @@
             <div class="chart-wrapper">
                 <div id="monthlySpendBarChart"></div>
             </div>
-        </div>
+        </div>*@
+
     </div>
 </div>
+
+<!-- clicks by device (todo: properly position in the dash) -->
+@*<div class="row">
+    <div class="six columns panel">
+        
+    </div>
+</div>*@
 
 <!-- Goal Rows -->
 <div id="dashboardGoals">
@@ -167,7 +193,7 @@
             if ($('#dash_dateRangeSel').val() == 'mtd')
                 UpdatePerformanceChartValues(['Last Month', 'MTD', 'Projection'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum, Projection(aggs.Conversions.sum)]);
             else
-                UpdatePerformanceChartValues([$('#dash_startdate').val() +' - '+ $('#dash_enddate').val()], [aggs.Conversions.sum]);
+                UpdatePerformanceChartValues([$('#dash_startdate').val() + ' - ' + $('#dash_enddate').val()], [aggs.Conversions.sum]);
             UpdateSpendChart(aggs.Revenue.sum);
             UpdateSpendLineChart();
             UpdateWeeklySpendBarChart('weeklySpendBarChart');
@@ -281,7 +307,7 @@
     }
 
     function CreateMonthlyGoalChart(values, chartid, metric, valueFormat, culture, heading, subheading) {
-        var categories = ['Last MTD','Last Month','MTD','Goal'];
+        var categories = ['Last MTD', 'Last Month', 'MTD', 'Goal'];
         CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading, subheading);
     }
     function CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading, subheading) {

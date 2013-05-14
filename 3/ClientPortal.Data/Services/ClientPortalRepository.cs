@@ -1,8 +1,9 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
-using System;
-using System.Linq;
 
 namespace ClientPortal.Data.Services
 {
@@ -65,9 +66,9 @@ namespace ClientPortal.Data.Services
                 from c in conversions
                 join conv_data in context.ConversionDatas on c.conversion_id equals conv_data.conversion_id into gj
                 from cd in gj.DefaultIfEmpty() // left join to ConversionData
-//                join curr in cakeContext.CakeCurrencies on c.PriceReceivedCurrencyId.Value equals curr.Id
-//                join offer in cakeContext.CakeOffers on c.Offer_Id.Value equals offer.Offer_Id into gj
-//                from o in gj.DefaultIfEmpty() // left join to CakeOffers
+                //                join curr in cakeContext.CakeCurrencies on c.PriceReceivedCurrencyId.Value equals curr.Id
+                //                join offer in cakeContext.CakeOffers on c.Offer_Id.Value equals offer.Offer_Id into gj
+                //                from o in gj.DefaultIfEmpty() // left join to CakeOffers
                 select new ConversionInfo()
                 {
                     ConversionIdString = c.conversion_id,
@@ -75,12 +76,12 @@ namespace ClientPortal.Data.Services
                     AffId = c.affiliate_id,
                     OfferId = c.offer_id,
                     Offer = String.Empty,
-//                    Offer = (o == null) ? String.Empty : o.OfferName,
+                    //                    Offer = (o == null) ? String.Empty : o.OfferName,
                     PriceReceived = c.received_amount,
                     Currency = null,
-//                    Currency = curr.Name,
+                    //                    Currency = curr.Name,
                     TransactionId = c.transaction_id,
-//                    Positive = c.Positive,
+                    //                    Positive = c.Positive,
                     ConVal = (cd == null) ? 0 : cd.value0
                 };
             return conversionInfos;
@@ -131,6 +132,26 @@ namespace ClientPortal.Data.Services
                 return intVal;
             else
                 return null;
+        }
+
+        public IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        {
+            var query = (
+                from click in GetClicks(start, end, advertiserId, offerId)
+                group click by click.device_name into g
+                orderby g.Count() descending
+                select new
+                {
+                    Device = g.Key,
+                    Count = g.Count()
+                })
+                // we return IEnumerable (as opposed to IQueryable) bec. AsEnumerable() is called
+                .AsEnumerable().Select(c => new DeviceClicks 
+                {
+                    DeviceName = string.IsNullOrWhiteSpace(c.Device) ? "Other" : c.Device,
+                    ClickCount = c.Count
+                });
+            return query;
         }
     }
 }

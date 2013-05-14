@@ -81,7 +81,9 @@ footer.row {
 
 .row div.grayband {
     background-color: #F3F3F3;
-    height: 70px;
+    height: 43px;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
 }
 
 .row div.portaltabs-h {
@@ -89,11 +91,11 @@ footer.row {
 }
 
 .row div.portaltabs-v {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
     .row div.portaltabs-v dl {
-        margin-top: 20px;
+        margin-top: 14px;
     }
 
 .row div.topinfo {

@@ -402,6 +402,7 @@
     <Content Include="Global.asax" />
     <Content Include="humans.txt" />
     <Content Include="Images\avatar.png" />
+    <Content Include="Images\logo1a.png" />
     <Content Include="Images\da.jpeg" />
     <Content Include="Images\logo1.png" />
     <Content Include="robots.txt" />
@@ -903,6 +904,7 @@
     <Content Include="Views\Goals\_Infrastructure.cshtml" />
     <Content Include="Views\Home\OfferGoalsRow.cshtml" />
     <Content Include="Views\Home\DashboardGoals.cshtml" />
+    <Content Include="Views\Shared\_ClicksByDevice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

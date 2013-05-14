@@ -27,7 +27,7 @@
       +---------+-->*@
 <div class="row">
     <div class="six columns toplogo">
-        <img src="~/Images/logo1.png" />
+        <img src="~/Images/logo1a.png" />
     </div>
     <div class="three columns topinfo">
         @Html.Partial("_HelloPartial")
@@ -269,6 +269,7 @@
             }).done(function (html) {
                 $("#dashboardTab").html(html);
                 drawHeatMap();
+                fillClicksByDevice();
             });
         }
 

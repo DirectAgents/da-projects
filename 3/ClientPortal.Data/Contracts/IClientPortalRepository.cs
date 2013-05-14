@@ -1,7 +1,8 @@
-﻿using ClientPortal.Data.Contexts;
-using ClientPortal.Data.DTOs;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ClientPortal.Data.Contexts;
+using ClientPortal.Data.DTOs;
 
 namespace ClientPortal.Data.Contracts
 {
@@ -17,5 +18,7 @@ namespace ClientPortal.Data.Contracts
 
         IQueryable<Click> GetClicks(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
         IQueryable<Conversion> GetConversions(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+
+        IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
     }
 }

@@ -172,7 +172,7 @@ namespace ClientPortal.Web.Controllers
                 ConValName = userProfile.ConversionValueName,
                 ConValIsNum = userProfile.ConversionValueIsNumber
             };
-	    
+
             return PartialView("_ConversionReportPartial", model);
         }
 
@@ -342,6 +342,41 @@ namespace ClientPortal.Web.Controllers
                 int b = (int)y[1];
                 return (a < b) ? -1 : (a == b) ? 0 : 1;
             }
+        }
+
+        public JsonResult MobileDevicesData(DateTime? startDate, DateTime? endDate, int take)
+        {
+            var clicksByDevice = this.cpRepo.GetClicksByDeviceName(
+                                                    start: startDate,
+                                                    end: endDate ?? startDate,
+                                                    advertiserId: HomeController.GetAdvertiserId(),
+                                                    offerId: null);
+
+            var data = clicksByDevice.Where(c => c.DeviceName != "Other");
+
+            decimal totalClicks = data.Sum(c => c.ClickCount);
+
+            var chartData = data.Take(take).Select(c => new 
+            {
+                category = TruncateDeviceNameForChartLegendLabel(c.DeviceName), 
+                value = c.ClickCount / totalClicks 
+            });
+
+            var json = new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = new
+                {
+                    data = data,
+                    chart = chartData
+                }
+            };
+            return json;
+        }
+
+        private string TruncateDeviceNameForChartLegendLabel(string deviceName)
+        {
+            return deviceName.Length > 20 ? deviceName.Substring(0, 20) + ".." : deviceName;
         }
 
         // --- helper methods ---

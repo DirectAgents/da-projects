@@ -1,0 +1,68 @@
+﻿@model ClientPortal.Web.Models.DashboardModel
+
+<style type="text/css">
+    #divClicksByDevice.k-grid td
+    {
+        line-height: 1.3em;
+    }
+</style>
+
+<div id="divClicksByDevice"></div>
+
+<script type='text/javascript'>
+    function fillClicksByDevice() {
+
+        // Common width of both the grid and the pie chart
+        var widgetHeight = 198;
+
+        var url = '@Url.Action("MobileDevicesData", "Reports")' + '?startDate=' + @Model.Start.Value.ToShortDateString() + '&endDate=' + @Model.End.Value.ToShortDateString() + '&take=5';
+        $.get(url, function (result) {
+
+            // Grid of click counts by device name
+            $("#divClicksByDevice").kendoGrid({
+                dataSource: { data: result.data },
+                sortable: true,
+                columns: [
+                    { field: "DeviceName", width: 75, title: "Device Name" },
+                    { field: "ClickCount", width: 20, title: "Clicks" }
+                ],
+                rowTemplate: kendo.template($("#clicksByDeviceRowTemplate").html()),
+                height: widgetHeight,
+                scrollable: true
+            });
+
+            // Pie chart of top devices expressed as percentage of total mobile clicks
+            $("#divClicksByDeviceChart").kendoChart({
+                chartArea: {
+                    height: widgetHeight,
+                    margin: 1
+                },
+                legend: {
+                    position: "right"
+                },
+                seriesDefaults: {
+                    labels: {
+                        visible: false,
+                    }
+                },
+                seriesColors: ["#004990", "#da7633", "#8a7967", "#8b0f04", "#ead766", "#676200", "78496a"],
+                series: [{
+                    type: "pie",
+                    data: result.chart
+                }],
+                tooltip: {
+                    visible: true,
+                    template: "#= category # - #= kendo.format('{0:P}', percentage)#"
+                },
+            });
+
+        });
+    };
+</script>
+
+<script id="clicksByDeviceRowTemplate" type="text/x-kendo-tmpl">
+    <tr class="k-alt">
+	    <td>#: DeviceName #</td>
+    	<td>#: ClickCount #</td>
+    </tr>
+</script>
