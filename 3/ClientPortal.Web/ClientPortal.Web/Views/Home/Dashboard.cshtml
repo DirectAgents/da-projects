@@ -27,6 +27,16 @@
     </div>
 </div>
 
+@helper PercentChange(double? pctChg) {
+    if (pctChg.HasValue) {
+        <br />
+        <span style="white-space: nowrap">
+            @if (pctChg != 0) {<img src="~/Images/arrow_@(pctChg > 0 ? "up" : "down").jpg" />}
+            @(Math.Abs(pctChg.Value))%
+        </span>
+    }
+}
+
 <!-- Row 1 -->
 <div class="row">
 
@@ -39,6 +49,7 @@
                     <th></th>
                     <th>Clicks</th>
                     <th>Leads</th>
+                    <th>Rate</th>
                     <th>Spend</th>
                     @if (Model.ShowConVal)
                     {
@@ -48,13 +59,14 @@
                 @foreach (var summary in Model.AdvertiserSummaries)
                 {
                     <tr>
-                        <td><a href="@summary.Link">@summary.Name</a></td>
-                        <td>@String.Format("{0:n0}", summary.Clicks)</td>
-                        <td>@String.Format("{0:n0}", summary.Conversions)</td>
-                        <td>@summary.RevenueFormatted</td>
+                        <td style="vertical-align: middle"><a href="@summary.Link">@summary.Name</a></td>
+                        <td>@String.Format("{0:n0}", summary.Clicks)@PercentChange(summary.PctChg_Clicks)</td>
+                        <td>@String.Format("{0:n0}", summary.Conversions)@PercentChange(summary.PctChg_Conversions)</td>
+                        <td>@summary.ConversionRate</td>
+                        <td>@summary.RevenueFormatted@PercentChange(summary.PctChg_Revenue)</td>
                         @if (Model.ShowConVal)
                         {
-                            <td>@summary.ConValFormatted(Model.ConValIsNum ? "n0" : "c")</td>
+                            <td>@summary.ConValFormatted(Model.ConValIsNum ? "n0" : "c")@PercentChange(summary.PctChg_ConVal)</td>
                         }
                     </tr>
                 }
@@ -133,22 +145,6 @@
                 </div>
             </div>
         </div>
-
-        @*<div id="weeklySpendBarChartOuter">
-            <b>Budget Spent Weekly</b>
-            <a href="#" onclick="ShowSpendMonthly(); return false">Switch to Monthly</a>
-            <div class="chart-wrapper">
-                <div id="weeklySpendBarChart"></div>
-            </div>
-        </div>
-        <div id="monthlySpendBarChartOuter" style="display: none">
-            <b>Budget Spent Monthly</b>
-            <a href="#" onclick="ShowSpendWeekly(); return false">Switch to Weekly</a>
-            <div class="chart-wrapper">
-                <div id="monthlySpendBarChart"></div>
-            </div>
-        </div>*@
-
     </div>
 </div>
 
@@ -186,7 +182,6 @@
 
         var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
-        CreateWeeklySpendBarChart('weeklySpendBarChart', spendDS, 200);
         spendDS.read();
         spendDS.bind('change', function () {
             var aggs = this.aggregates();
@@ -196,12 +191,7 @@
                 UpdatePerformanceChartValues([$('#dash_startdate').val() + ' - ' + $('#dash_enddate').val()], [aggs.Conversions.sum]);
             UpdateSpendChart(aggs.Revenue.sum);
             UpdateSpendLineChart();
-            UpdateWeeklySpendBarChart('weeklySpendBarChart');
         });
-
-        var monthlySpendDS = CreateMonthlySpendDataSource('@Url.Action("MonthlySummaryData", "Reports")', '@firstOfYear', '@today');
-        CreateMonthlySpendBarChart('monthlySpendBarChart', monthlySpendDS, 200);
-        monthlySpendDS.read();
 
         CreateGoalCharts(); @* //defined in DashboardGoals *@
         ResizeDashboardPanelHeights();
@@ -217,7 +207,6 @@
     function RefreshDashboardRange() {
         $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
         $('#spendLineChart').data('kendoChart').dataSource.read();
-        $('#monthlySpendBarChart').data('kendoChart').dataSource.read();
         $('#projChart').data('kendoChart').dataSource.read();
     }
 
@@ -250,8 +239,6 @@
         ResizeDashboardChart('proj', true);
         ResizeDashboardChart('perf', true);
         ResizeDashboardChart('spend', true);
-        ResizeDashboardChart('weeklySpendBar', true);
-        ResizeDashboardChart('monthlySpendBar', true);
         @foreach (var offersum in Model.OfferGoalSummaries)
         {
             <text>ResizeDashboardChart('goal@(offersum.Id)', true);</text>
@@ -292,18 +279,6 @@
         } else if (panel2Height > panel1Height) {
             $('#' + panel2Id).height('auto');
         }
-    }
-
-    function ShowSpendWeekly() {
-        $('#monthlySpendBarChartOuter').hide();
-        $('#weeklySpendBarChartOuter').show();
-        ResizeDashboardChart('weeklySpendBar', true);
-    }
-    function ShowSpendMonthly() {
-        //SetSpendBarChartBaseUnit('weeklySpendBarChart', 'months');
-        $('#weeklySpendBarChartOuter').hide();
-        $('#monthlySpendBarChartOuter').show();
-        ResizeDashboardChart('monthlySpendBar', true);
     }
 
     function CreateMonthlyGoalChart(values, chartid, metric, valueFormat, culture, heading, subheading) {

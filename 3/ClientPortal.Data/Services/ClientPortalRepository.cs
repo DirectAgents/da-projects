@@ -153,5 +153,32 @@ namespace ClientPortal.Data.Services
                 });
             return query;
         }
+
+        #region Goals
+        public IQueryable<Goal> GetGoals(int advertiserId)
+        {
+            var goals = context.Goals.Where(g => g.AdvertiserId == advertiserId);
+            return goals;
+        }
+
+        public Goal GetGoal(int id)
+        {
+            var goal = context.Goals.Where(g => g.Id == id).FirstOrDefault();
+            return goal;
+        }
+
+        public bool DeleteGoal(int id, int? advertiserId)
+        {
+            bool deleted = false;
+            var goal = context.Goals.Where(g => g.Id == id).FirstOrDefault();
+            if (goal != null && (advertiserId == null || goal.AdvertiserId == advertiserId.Value))
+            {
+                context.Goals.Remove(goal);
+                context.SaveChanges();
+                deleted = true;
+            }
+            return deleted;
+        }
+        #endregion
     }
 }

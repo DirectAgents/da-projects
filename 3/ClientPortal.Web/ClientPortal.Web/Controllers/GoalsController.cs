@@ -11,10 +11,12 @@ namespace ClientPortal.Web.Controllers
     public class GoalsController : Controller
     {
         private ICakeRepository cakeRepo;
+        private IClientPortalRepository cpRepo;
 
-        public GoalsController(ICakeRepository cakeRepository)
+        public GoalsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
             this.cakeRepo = cakeRepository;
+            this.cpRepo = cpRepository;
         }
 
         public ActionResult Index()
@@ -22,10 +24,12 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = AccountRepository.GetGoals(advId.Value, null, false, cakeRepo);
+            var goals = cpRepo.GetGoals(advId.Value);
+            var offers = cakeRepo.Offers(advId);
+            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
             var model = new GoalsModel()
             {
-                Goals = goals
+                Goals = goalVMs
             };
             return PartialView(model);
         }
@@ -35,8 +39,10 @@ namespace ClientPortal.Web.Controllers
             var advId = HomeController.GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = AccountRepository.GetGoals(advId.Value, null, false, cakeRepo);
-            return PartialView(goals);
+            var goals = cpRepo.GetGoals(advId.Value);
+            var offers = cakeRepo.Offers(advId);
+            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
+            return PartialView(goalVMs);
         }
 
         public ActionResult Add()
@@ -48,7 +54,8 @@ namespace ClientPortal.Web.Controllers
         public ActionResult Edit(int id)
         {
             var userProfile = HomeController.GetUserProfile();
-            var goalVM = AccountRepository.GetGoal(id, userProfile.Culture);
+            var goal = cpRepo.GetGoal(id);
+            var goalVM = new GoalVM(goal, null, userProfile.Culture);
             return DoEdit(goalVM);
         }
 
@@ -89,7 +96,7 @@ namespace ClientPortal.Web.Controllers
         public ActionResult Delete(int id)
         {
             var advId = HomeController.GetAdvertiserId();
-            AccountRepository.DeleteGoal(id, advId);
+            cpRepo.DeleteGoal(id, advId);
             return null;
         }
 
@@ -101,7 +108,7 @@ namespace ClientPortal.Web.Controllers
             {
                 if (goalVM.Id < 0)
                 {
-                    Goal goal = new Goal();
+                    var goal = new ClientPortal.Web.Models.Goal();
                     goalVM.SetGoalEntityProperties(goal);
                     usersContext.Goals.Add(goal);
                 }

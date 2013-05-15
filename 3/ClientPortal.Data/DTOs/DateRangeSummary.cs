@@ -10,6 +10,16 @@ namespace ClientPortal.Data.DTOs
         public int? Clicks { get; set; }
         public int? Conversions { get; set; }
 
+        public double? ConversionRate
+        {
+            get
+            {
+                if (Clicks == null || Conversions == null)
+                    return null;
+                return (Clicks == 0) ? 0 : Math.Round(((double)Conversions / (double)Clicks), 3);
+            }
+        }
+
         public decimal? Revenue { get; set; }
         public decimal? ConVal { get; set; }
 
@@ -29,5 +39,25 @@ namespace ClientPortal.Data.DTOs
         public string Culture { get; set; }
 
         public string Link { get; set; }
+
+        public double? PctChg_Clicks { get; set; }
+        public double? PctChg_Conversions { get; set; }
+        public double? PctChg_Revenue { get; set; }
+        public double? PctChg_ConVal { get; set; }
+
+        public static double? ComputePercentChange(int? val1, int? val2)
+        {
+            if (val1 == null || val2 == null || val1.Value == 0)
+                return null;
+            var pctChg = (double)(100 * (val2 - val1)) / (double)val1;
+            return Math.Round(pctChg, 1);
+        }
+        public static double? ComputePercentChange(decimal? val1, decimal? val2)
+        {
+            if (val1 == null || val2 == null || val1.Value == 0)
+                return null;
+            var pctChg = (double)(100 * (val2 - val1)) / (double)val1;
+            return Math.Round(pctChg, 1);
+        }
     }
 }

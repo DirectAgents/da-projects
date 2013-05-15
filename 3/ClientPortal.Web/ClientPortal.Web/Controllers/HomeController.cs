@@ -119,18 +119,22 @@ namespace ClientPortal.Web.Controllers
                     summaryWTD.Link = "javascript: jumpToOffSumRep('wtd')";
                 }
 
-                using (profiler.Step("summaryMTD"))
-                {
-                    summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null, showConversionData);
-                    summaryMTD.Name = "Month-to-Date";
-                    summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
-                }
-
                 using (profiler.Step("summaryLMTD"))
                 {
                     summaryLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null, showConversionData);
                     summaryLMTD.Name = "Last MTD";
                     summaryLMTD.Link = "javascript: jumpToOffSumRep('lmtd')";
+                }
+
+                using (profiler.Step("summaryMTD"))
+                {
+                    summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null, showConversionData);
+                    summaryMTD.Name = "Month-to-Date";
+                    summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
+                    summaryMTD.PctChg_Clicks = DateRangeSummary.ComputePercentChange(summaryLMTD.Clicks, summaryMTD.Clicks);
+                    summaryMTD.PctChg_Conversions = DateRangeSummary.ComputePercentChange(summaryLMTD.Conversions, summaryMTD.Conversions);
+                    summaryMTD.PctChg_Revenue = DateRangeSummary.ComputePercentChange(summaryLMTD.Revenue, summaryMTD.Revenue);
+                    summaryMTD.PctChg_ConVal = DateRangeSummary.ComputePercentChange(summaryLMTD.ConVal, summaryMTD.ConVal);
                 }
 
                 using (profiler.Step("summaryLM"))
@@ -183,18 +187,22 @@ namespace ClientPortal.Web.Controllers
                 return null;
 
             var offer = cakeRepo.Offers(userProfile.CakeAdvertiserId).Where(o => o.Offer_Id == offerId).FirstOrDefault();
-            List<GoalVM> goals;
+            List<GoalVM> goalVMs;
             if (goalId.HasValue)
             {
-                var goal = AccountRepository.GetGoal(goalId.Value, OfferInfo.CurrencyToCulture(offer.Currency));
-                goals = new List<GoalVM> { goal };
+                GoalVM goalVM = null;
+                var goal = cpRepo.GetGoal(goalId.Value);
+                if (goal != null)
+                    goalVM = new GoalVM(goal, null, OfferInfo.CurrencyToCulture(offer.Currency));
+                goalVMs = new List<GoalVM> { goalVM };
             }
             else
             {
-                goals = AccountRepository.GetGoals(userProfile.CakeAdvertiserId.Value, offerId, false, cakeRepo);
+                var goals = cpRepo.GetGoals(userProfile.CakeAdvertiserId.Value);
+                goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), new[] { offer }, false);
             }
             var dates = new Dates();
-            var offerGoalSummary = CreateOfferGoalSummary(offer, goals, dates, userProfile.ShowConversionData);
+            var offerGoalSummary = CreateOfferGoalSummary(offer, goalVMs, dates, userProfile.ShowConversionData);
 
             ViewBag.CreateGoalChart = true;
             return PartialView(offerGoalSummary);
@@ -203,14 +211,15 @@ namespace ClientPortal.Web.Controllers
         public List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates, bool includeConversionData)
         {
             var offers = cakeRepo.Offers(advId);
-            var goals = AccountRepository.GetGoals(advId, null, false, cakeRepo);
-            var offerIdsFromGoals = goals.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
+            var goals = cpRepo.GetGoals(advId);
+            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
+            var offerIdsFromGoals = goalVMs.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
             List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
             foreach (var offerId in offerIdsFromGoals)
             {
                 var offer = offers.Where(o => o.Offer_Id == offerId).FirstOrDefault();
-                var monthlyGoals = goals.Where(g => g.OfferId == offer.Offer_Id && g.IsMonthly).ToList();
-                var customGoals = goals.Where(g => g.OfferId == offer.Offer_Id && !g.IsMonthly).ToList();
+                var monthlyGoals = goalVMs.Where(g => g.OfferId == offer.Offer_Id && g.IsMonthly).ToList();
+                var customGoals = goalVMs.Where(g => g.OfferId == offer.Offer_Id && !g.IsMonthly).ToList();
                 if (monthlyGoals.Any())
                 {
                     var offerGoalSummary = CreateOfferGoalSummary(offer, monthlyGoals, dates, includeConversionData);

@@ -401,6 +401,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="humans.txt" />
+    <Content Include="Images\arrow_down.jpg" />
+    <Content Include="Images\arrow_up.jpg" />
     <Content Include="Images\avatar.png" />
     <Content Include="Images\logo1a.png" />
     <Content Include="Images\da.jpeg" />
