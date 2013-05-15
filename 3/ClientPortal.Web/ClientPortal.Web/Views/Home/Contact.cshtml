@@ -1,4 +1,11 @@
 ﻿@model ClientPortal.Data.Contexts.CakeAdvertiser
+@{
+    var email = "jennifer@directagents.com";
+    if (Model.Advertiser_Id == 207) {
+        email = "lyles@directagents.com";
+        Model.AccountManagerName = "Lyle Srebnick, SVP";
+    }
+}
 
 <h3>Contact</h3>
 
@@ -17,7 +24,7 @@
                     <img style="border: 2px solid #000;" width="65" src="~/Images/avatar.png">
                 </div>
                 @Model.AccountManagerName<br />
-                <a href="mailto:jennifer@directagents.com">jennifer@directagents.com</a>
+                <a href="mailto:@email">@email</a>
             </td>
         </tr>
     </table>
