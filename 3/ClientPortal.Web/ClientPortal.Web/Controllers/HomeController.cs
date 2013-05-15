@@ -119,18 +119,22 @@ namespace ClientPortal.Web.Controllers
                     summaryWTD.Link = "javascript: jumpToOffSumRep('wtd')";
                 }
 
-                using (profiler.Step("summaryMTD"))
-                {
-                    summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null, showConversionData);
-                    summaryMTD.Name = "Month-to-Date";
-                    summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
-                }
-
                 using (profiler.Step("summaryLMTD"))
                 {
                     summaryLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, null, showConversionData);
                     summaryLMTD.Name = "Last MTD";
                     summaryLMTD.Link = "javascript: jumpToOffSumRep('lmtd')";
+                }
+
+                using (profiler.Step("summaryMTD"))
+                {
+                    summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null, showConversionData);
+                    summaryMTD.Name = "Month-to-Date";
+                    summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
+                    summaryMTD.PctChg_Clicks = DateRangeSummary.ComputePercentChange(summaryLMTD.Clicks, summaryMTD.Clicks);
+                    summaryMTD.PctChg_Conversions = DateRangeSummary.ComputePercentChange(summaryLMTD.Conversions, summaryMTD.Conversions);
+                    summaryMTD.PctChg_Revenue = DateRangeSummary.ComputePercentChange(summaryLMTD.Revenue, summaryMTD.Revenue);
+                    summaryMTD.PctChg_ConVal = DateRangeSummary.ComputePercentChange(summaryLMTD.ConVal, summaryMTD.ConVal);
                 }
 
                 using (profiler.Step("summaryLM"))
