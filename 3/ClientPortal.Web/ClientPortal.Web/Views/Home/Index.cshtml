@@ -20,6 +20,15 @@
     var lastMonthMY = firstOfMonthDT.AddMonths(-1).ToString("MM/yyyy");
     var threeMonthsAgoMY = firstOfMonthDT.AddMonths(-3).ToString("MM/yyyy");
     var firstOfYearMY = new DateTime(now.Year, 1, 1).ToString("MM/yyyy");
+
+    var logo = "logo1a.png";
+    var email = "jennifer@directagents.com";
+    if (Model.Advertiser.Advertiser_Id == 207)
+    {
+        logo = "logoAHS.png";
+        email = "lyles@directagents.com";
+        Model.Advertiser.AccountManagerName = "Lyle Srebnick, SVP";
+    }
 }
 
 @*<!--+---------+
@@ -27,7 +36,7 @@
       +---------+-->*@
 <div class="row">
     <div class="six columns toplogo">
-        <img src="~/Images/logo1a.png" />
+        <img src="~/Images/@logo" />
     </div>
     <div class="three columns topinfo">
         @Html.Partial("_HelloPartial")
@@ -80,7 +89,7 @@
             </div>
             @(Model.Advertiser != null ? Model.Advertiser.AccountManagerName : "")
             <br />
-            <a href="mailto:jennifer@directagents.com">jennifer@directagents.com</a>
+            <a href="mailto:@email">@email</a>
         </div>
         <!-- /Contacts -->
 
