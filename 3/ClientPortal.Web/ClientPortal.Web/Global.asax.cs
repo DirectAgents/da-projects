@@ -9,6 +9,7 @@ using System.Web.Routing;
 using ClientPortal.Web.Models;
 using StackExchange.Profiling;
 using WebMatrix.WebData;
+using System.Data.Entity.Migrations;
 
 namespace ClientPortal.Web
 {
@@ -73,14 +74,14 @@ namespace ClientPortal.Web
             if (!WebSecurity.UserExists("sm"))
             {
                 WebSecurity.CreateUserAndAccount(
-                    "sm", 
+                    "sm",
                     "123456",
                     new
-                    { 
-                        CakeAdvertiserId = 207, 
-                        Culture = "en-US", 
-                        ShowCPMRep = false, 
-                        ShowConversionData = false, 
+                    {
+                        CakeAdvertiserId = 207,
+                        Culture = "en-US",
+                        ShowCPMRep = false,
+                        ShowConversionData = false,
                         ConversionValueIsNumber = false
                     });
             }
@@ -115,6 +116,17 @@ namespace ClientPortal.Web
                         ShowConversionData = false,
                         ConversionValueIsNumber = false
                     });
+            }
+
+            // add goals for beta users
+            using (var db = new UsersContext())
+            {
+                Goal[] goals = new[] {
+                    // sm goals
+                    new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = MetricEnum.Leads, Target = 850, TypeId = GoalTypeEnum.Absolute, Name = "reach 850 leads in month" },
+                    new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = MetricEnum.Spend, Target = 12000, TypeId = GoalTypeEnum.Absolute, Name = "spend 12000" },
+                };
+                db.Goals.AddOrUpdate(goals);
             }
         }
     }
