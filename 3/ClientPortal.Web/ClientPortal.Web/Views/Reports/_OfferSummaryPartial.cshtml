@@ -24,6 +24,16 @@
 </div>
 <div id="offsumGrid"></div>
 
+
+<style type="text/css">
+    td.k-detail-cell > div.k-grid
+    {
+        /*background-color: #f0f0f0;*/
+        border: 1px solid black;
+        width: 50%;
+    }
+</style>
+
 <script>
     var offerSummaryDataUrl = '@Url.Action("OfferSummaryData", "Reports")';
 
@@ -84,9 +94,9 @@
             autoBind: false,
             height: 400,
             columns: [
-                { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
-                { field: 'Name', title: 'Offer' },
-                { field: 'Format', width: 80 },
+                { field: 'OfferId', title: 'Id', width: 45, attributes: { style: "text-align: right" } },
+                { field: 'Name', width: 225,  title: 'Offer' },
+                { field: 'Format', width: 30 },
                 { field: 'Price', width: 65, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
                 { field: 'Clicks', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Conversions', title: 'Leads', width: 67, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
@@ -122,7 +132,7 @@
             },
             valueAxis: [
                 { name: "clicksleads", labels: { format: "N0", step: 2 }, title: { text: "Leads" } },
-                { name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" }}
+                { name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" } }
             ],
             tooltip: {
                 visible: true
@@ -172,7 +182,8 @@
                 mode: 'multiple'
             },
             pageable: true,
-            scrollable: false
+            scrollable: false,
+            attributes: { class: "thingrid" }
         });
     }
 

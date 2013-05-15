@@ -68,6 +68,54 @@ namespace ClientPortal.Web
             if (!WebSecurity.Initialized)
                 WebSecurity.InitializeDatabaseConnection("DefaultConnection",
                                                          "UserProfile", "UserId", "UserName", autoCreateTables: true);
+
+            // add service master beta account if it does not exist
+            if (!WebSecurity.UserExists("sm"))
+            {
+                WebSecurity.CreateUserAndAccount(
+                    "sm", 
+                    "123456",
+                    new
+                    { 
+                        CakeAdvertiserId = 207, 
+                        Culture = "en-US", 
+                        ShowCPMRep = false, 
+                        ShowConversionData = false, 
+                        ConversionValueIsNumber = false
+                    });
+            }
+
+            // add amazon local beta account if it does not exist
+            if (!WebSecurity.UserExists("amazon"))
+            {
+                WebSecurity.CreateUserAndAccount(
+                    "amazon",
+                    "123456",
+                    new
+                    {
+                        CakeAdvertiserId = 435,
+                        Culture = "en-US",
+                        ShowCPMRep = false,
+                        ShowConversionData = false,
+                        ConversionValueIsNumber = false
+                    });
+            }
+
+            // add itt beta account if it does not exist
+            if (!WebSecurity.UserExists("itt"))
+            {
+                WebSecurity.CreateUserAndAccount(
+                    "itt",
+                    "123456",
+                    new
+                    {
+                        CakeAdvertiserId = 250,
+                        Culture = "en-US",
+                        ShowCPMRep = false,
+                        ShowConversionData = false,
+                        ConversionValueIsNumber = false
+                    });
+            }
         }
     }
 
