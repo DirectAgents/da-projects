@@ -9,6 +9,7 @@
           <EntitySet Name="Click" EntityType="ClientPortalModel.Store.Click" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Goal" EntityType="ClientPortalModel.Store.Goal" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
         <EntityType Name="Click">
           <Key>
@@ -113,6 +114,20 @@
           <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
           <Property Name="value0" Type="decimal" Nullable="false" Scale="2" />
         </EntityType>
+        <EntityType Name="Goal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="OfferId" Type="int" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="MetricId" Type="int" Nullable="false" />
+          <Property Name="Target" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+        </EntityType>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -121,6 +136,7 @@
           <EntitySet Name="Clicks" EntityType="ClientPortalModel.Click" />
           <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
           <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
+          <EntitySet Name="Goals" EntityType="ClientPortalModel.Goal" />
         </EntityContainer>
         <EntityType Name="Click">
           <Key>
@@ -224,6 +240,20 @@
           </Key>
           <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Type="Decimal" Name="value0" Nullable="false" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="Goal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="Int32" Name="OfferId" />
+          <Property Type="String" Name="Name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="TypeId" Nullable="false" />
+          <Property Type="Int32" Name="MetricId" Nullable="false" />
+          <Property Type="Decimal" Name="Target" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="DateTime" Name="StartDate" Precision="3" />
+          <Property Type="DateTime" Name="EndDate" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -334,6 +364,21 @@
               <MappingFragment StoreEntitySet="ConversionData">
                 <ScalarProperty Name="value0" ColumnName="value0" />
                 <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Goals">
+            <EntityTypeMapping TypeName="ClientPortalModel.Goal">
+              <MappingFragment StoreEntitySet="Goal">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="Target" ColumnName="Target" />
+                <ScalarProperty Name="MetricId" ColumnName="MetricId" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

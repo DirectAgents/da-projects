@@ -66,15 +66,15 @@ namespace ClientPortal.Web.Models
 
         public string CreateGoalChartCall { get; set; }
 
-        public GoalVM(Goal goal, string offerName, string culture)
+        public GoalVM(Data.Contexts.Goal goal, string offerName, string culture)
         {
             this.Id = goal.Id;
             this.AdvertiserId = goal.AdvertiserId;
             this.OfferId = goal.OfferId;
             this.OfferName = offerName;
             this.Name = goal.Name;
-            this.TypeId = goal.TypeId;
-            this.MetricId = goal.MetricId;
+            this.TypeId = (GoalTypeEnum)goal.TypeId;
+            this.MetricId = (MetricEnum)goal.MetricId;
             this.Target = goal.Target;
             this.Culture = culture;
             if (goal.StartDate.HasValue)

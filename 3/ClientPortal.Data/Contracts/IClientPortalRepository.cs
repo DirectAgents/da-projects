@@ -20,5 +20,9 @@ namespace ClientPortal.Data.Contracts
         IQueryable<Conversion> GetConversions(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
 
         IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+
+        IQueryable<Goal> GetGoals(int advertiserId);
+        Goal GetGoal(int id);
+        bool DeleteGoal(int id, int? advertiserId);
     }
 }
