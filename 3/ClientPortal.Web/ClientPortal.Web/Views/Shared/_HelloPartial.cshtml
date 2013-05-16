@@ -1,9 +1,11 @@
-﻿@if (Request.IsAuthenticated)
+﻿@model ClientPortal.Web.Models.IndexModel
+
+@if (Request.IsAuthenticated)
 {
-    if (Model.Advertiser.Advertiser_Id == 207)
+    if (!String.IsNullOrWhiteSpace(Model.LogoImage))
     {
     <p style="text-align: center">
-        <img src="~/Images/logoAHS.png" />
+        <img src="~/Images/@Model.LogoImage" />
     </p>               
     }
     else

@@ -7,6 +7,7 @@ namespace ClientPortal.Web.Models
     {
         public CultureInfo CultureInfo { get; set; }
         public CakeAdvertiser Advertiser { get; set; }
+        public string LogoImage { get; set; }
 
         public bool ShowCPMRep { get; set; }
     }

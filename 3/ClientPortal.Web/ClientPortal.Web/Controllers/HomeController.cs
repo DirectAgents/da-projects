@@ -37,6 +37,15 @@ namespace ClientPortal.Web.Controllers
                     Advertiser = advertiser,
                     ShowCPMRep = userProfile.ShowCPMRep
                 };
+
+                //TODO: unhardcode
+                if (userProfile.CakeAdvertiserId == 207)
+                    model.LogoImage = "logoAHS.png";
+                else if (userProfile.CakeAdvertiserId == 250)
+                    model.LogoImage = "logoITT.png";
+                else if (userProfile.CakeAdvertiserId == 278)
+                    model.LogoImage = "logoLT.png";
+
                 return View(model);
             }
         }
@@ -216,11 +225,21 @@ namespace ClientPortal.Web.Controllers
             if (advertiserId != null)
             {
                 var contacts = new List<MainContact>();
-                if (advertiserId == 207)
+                if (advertiserId == 207 || advertiserId == 278) // for SM & LT
                 {
                     contacts.Add(new MainContact { name = "Lyle Srebnick", title = "SVP", email = "lyles@directagents.com" });
                 }
-                contacts.Add(new MainContact { name = "Jennifer Volkerts", title = "Account Manager", email = "jennifer@directagents.com" });                
+
+                if (advertiserId != 250)
+                {   // default AM
+                    contacts.Add(new MainContact { name = "Jennifer Volkerts", title = "Account Manager", email = "jennifer@directagents.com" });
+                }
+                else // for ITT
+                {
+                    contacts.Add(new MainContact { name = "Adam Lobelson", title = "Digital Account Executive", email = "adam@directagents.com" });
+                    contacts.Add(new MainContact { name = "Sadie Culbreth", title = "Senior Account Manager", email = "sadie@directagents.com" });
+                }
+
                 result = new JsonResult
                 {
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet,
