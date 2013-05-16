@@ -27,12 +27,12 @@
     </div>
 </div>
 
-@helper PercentChange(double? pctChg) {
-    if (pctChg.HasValue) {
+@helper ChangeVis(double? change, bool showPercent) {
+    if (change.HasValue && change != 0) {
         <br />
         <span style="white-space: nowrap">
-            @if (pctChg != 0) {<img src="~/Images/arrow_@(pctChg > 0 ? "up" : "down").jpg" />}
-            @(Math.Abs(pctChg.Value))%
+            <img src="~/Images/arrow_@(change > 0 ? "up" : "down").jpg" />
+            @(Math.Abs(change.Value) + (showPercent ? "%" : ""))
         </span>
     }
 }
@@ -60,13 +60,13 @@
                 {
                     <tr>
                         <td style="vertical-align: middle"><a href="@summary.Link">@summary.Name</a></td>
-                        <td>@String.Format("{0:n0}", summary.Clicks)@PercentChange(summary.PctChg_Clicks)</td>
-                        <td>@String.Format("{0:n0}", summary.Conversions)@PercentChange(summary.PctChg_Conversions)</td>
-                        <td>@summary.ConversionRate</td>
-                        <td>@summary.RevenueFormatted@PercentChange(summary.PctChg_Revenue)</td>
+                        <td>@String.Format("{0:n0}", summary.Clicks)@ChangeVis(summary.PctChg_Clicks, true)</td>
+                        <td>@String.Format("{0:n0}", summary.Conversions)@ChangeVis(summary.PctChg_Conversions, true)</td>
+                        <td>@String.Format("{0:n1}", summary.ConversionRate)%@ChangeVis(summary.Chg_ConversionRate, false)</td>
+                        <td>@summary.RevenueFormatted@ChangeVis(summary.PctChg_Revenue, true)</td>
                         @if (Model.ShowConVal)
                         {
-                            <td>@summary.ConValFormatted(Model.ConValIsNum ? "n0" : "c")@PercentChange(summary.PctChg_ConVal)</td>
+                            <td>@summary.ConValFormatted(Model.ConValIsNum ? "n0" : "c")@ChangeVis(summary.PctChg_ConVal, true)</td>
                         }
                     </tr>
                 }

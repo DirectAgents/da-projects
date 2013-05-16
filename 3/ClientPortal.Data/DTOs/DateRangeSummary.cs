@@ -16,7 +16,7 @@ namespace ClientPortal.Data.DTOs
             {
                 if (Clicks == null || Conversions == null)
                     return null;
-                return (Clicks == 0) ? 0 : Math.Round(((double)Conversions / (double)Clicks), 3);
+                return (Clicks == 0) ? 0 : Math.Round(((double)(100 * Conversions) / (double)Clicks), 1);
             }
         }
 
@@ -42,6 +42,7 @@ namespace ClientPortal.Data.DTOs
 
         public double? PctChg_Clicks { get; set; }
         public double? PctChg_Conversions { get; set; }
+        public double? Chg_ConversionRate { get; set; }
         public double? PctChg_Revenue { get; set; }
         public double? PctChg_ConVal { get; set; }
 
@@ -58,6 +59,12 @@ namespace ClientPortal.Data.DTOs
                 return null;
             var pctChg = (double)(100 * (val2 - val1)) / (double)val1;
             return Math.Round(pctChg, 1);
+        }
+        public static double? ComputeChange(double? val1, double? val2)
+        {
+            if (val1 == null || val2 == null)
+                return null;
+            return val2 - val1;
         }
     }
 }
