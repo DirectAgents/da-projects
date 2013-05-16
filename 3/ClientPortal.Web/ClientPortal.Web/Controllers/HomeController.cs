@@ -208,6 +208,35 @@ namespace ClientPortal.Web.Controllers
             return PartialView(offerGoalSummary);
         }
 
+        // TODO: unhardcode, move to database
+        public JsonResult MainContactsData()
+        {
+            JsonResult result = null;
+            var advertiserId = GetAdvertiserId();
+            if (advertiserId != null)
+            {
+                var contacts = new List<MainContact>();
+                if (advertiserId == 207)
+                {
+                    contacts.Add(new MainContact { name = "Lyle Srebnick", title = "SVP", email = "lyles@directagents.com" });
+                }
+                contacts.Add(new MainContact { name = "Jennifer Volkerts", title = "Account Manager", email = "jennifer@directagents.com" });                
+                result = new JsonResult
+                {
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                    Data = contacts
+                };
+            }
+            return result;
+        }
+
+        private class MainContact
+        {
+            public string name { get; set; }
+            public string title { get; set; }
+            public string email { get; set; }
+        }
+
         public List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates, bool includeConversionData)
         {
             var offers = cakeRepo.Offers(advId);

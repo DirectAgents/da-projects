@@ -908,6 +908,7 @@
     <Content Include="Views\Home\OfferGoalsRow.cshtml" />
     <Content Include="Views\Home\DashboardGoals.cshtml" />
     <Content Include="Views\Shared\_ClicksByDevice.cshtml" />
+    <Content Include="Views\Shared\_MainContacts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -126,7 +126,7 @@ namespace ClientPortal.Web
                     new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = MetricEnum.Leads, Target = 850, TypeId = GoalTypeEnum.Absolute, Name = "reach 850 leads in month" },
                     new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = MetricEnum.Spend, Target = 12000, TypeId = GoalTypeEnum.Absolute, Name = "spend 12000" },
                 };
-                db.Goals.AddOrUpdate(goals);
+                db.Goals.AddOrUpdate(c => c.Name, goals); //TODO: addOrUpdate no worky
                 db.SaveChanges();
             }
         }

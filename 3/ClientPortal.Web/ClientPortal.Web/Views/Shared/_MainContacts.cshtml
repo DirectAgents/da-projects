@@ -1,0 +1,49 @@
+﻿<style type="text/css">
+    #divMainContacts
+    {
+        padding-left: 10px;
+        /*-webkit-border-radius: 15px;
+        -moz-border-radius: 15px;
+        border-radius: 15px;
+        background-color: lightyellow;
+        border: 1px solid lightyellow;*/
+        border: none;
+    }
+
+        #divMainContacts > div
+        {
+            padding-bottom: 10px;
+        }
+</style>
+
+<div id="divMainContacts"></div>
+
+<script type="text/javascript">
+    function LoadMainContacts() {
+        var dataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: '@Url.Action("MainContactsData", "Home")',
+                    contentType: "application/json; charset=utf-8",
+                    type: "GET",
+                    dataType: "json"
+                }
+            },
+        });
+        $('#divMainContacts').kendoListView({
+            dataSource: dataSource,
+            template: kendo.template($("#mainContactTemplate").html()),
+            dataBound: function (e) {
+                $('#divMainContacts').prepend('<h5>Account Team</h5>');
+            }
+        });
+    }
+</script>
+
+<script type="text/x-kendo-tmpl" id="mainContactTemplate">
+    <div class="divMainContact">     
+        <img style="border: 2px solid ##000;" width="65" src="/Images/avatar.png" /><br /> 
+        #:name#, #:title#<br />
+        <a href="mailto:#:email#">#:email#</a><br />
+    </div>
+</script>

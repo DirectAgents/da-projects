@@ -20,28 +20,19 @@
     var lastMonthMY = firstOfMonthDT.AddMonths(-1).ToString("MM/yyyy");
     var threeMonthsAgoMY = firstOfMonthDT.AddMonths(-3).ToString("MM/yyyy");
     var firstOfYearMY = new DateTime(now.Year, 1, 1).ToString("MM/yyyy");
-
-    var logo = "logo1a.png";
-    var email = "jennifer@directagents.com";
-    if (Model.Advertiser.Advertiser_Id == 207)
-    {
-        logo = "logoAHS.png";
-        email = "lyles@directagents.com";
-        Model.Advertiser.AccountManagerName = "Lyle Srebnick, SVP";
-    }
 }
 
 @*<!--+---------+
       | Top Bar |
       +---------+-->*@
 <div class="row">
-    <div class="six columns toplogo">
-        <img src="~/Images/@logo" />
+    <div class="five columns toplogo">
+        <img src="~/Images/logo1a.png" />
     </div>
-    <div class="three columns topinfo">
+    <div class="two columns topinfo">
         @Html.Partial("_HelloPartial")
     </div>
-    <div class="three columns logout">
+    <div class="five columns logout">
         <div style="float: right">
             @Html.Partial("_LoginPartial")
         </div>
@@ -79,19 +70,7 @@
         </dl>
         <!-- /VTabs -->
 
-        @*<!--+----------+
-              | Contacts |
-              +----------+-->*@
-        <div>
-            <h5>Account Manager</h5>
-            <div style="float: left; width: 65px; padding: 5px; padding-top: 0px; padding-left: 10px;">
-                <img style="border: 2px solid #000;" width="65" src="~/Images/avatar.png">
-            </div>
-            @(Model.Advertiser != null ? Model.Advertiser.AccountManagerName : "")
-            <br />
-            <a href="mailto:@email">@email</a>
-        </div>
-        <!-- /Contacts -->
+        @Html.Partial("_MainContacts")
 
     </div>
     <!-- /Sidebar -->
@@ -123,7 +102,8 @@
                     <dd class="active"><a href="#repOffSum" id="repNav_OffSum">Offer Summary</a></dd>
                     <dd><a href="#repDaySum" id="repNav_DaySum">Daily Summary</a></dd>
                     <dd><a href="#repConversions" id="repNav_Conversions">Conversion Report</a></dd>
-                    @if (Model.ShowCPMRep) {
+                    @if (Model.ShowCPMRep)
+                    {
                         <dd><a href="#repCPM" id="repNav_CPM">CPM</a></dd>
                     }
                     <dd><a href="#repAff" id="repNav_Aff">Affiliates</a></dd>
@@ -139,7 +119,8 @@
                     </li>
                     <li id="repDaySumTab"></li>
                     <li id="repConversionsTab"></li>
-                    @if (Model.ShowCPMRep) {
+                    @if (Model.ShowCPMRep)
+                    {
                         <li id="repCPMTab"></li>
                     }
                     <li id="repAffTab"></li>
@@ -238,6 +219,7 @@
 
         // ready function
         $(function () {
+            LoadMainContacts();
             LoadDashboard();
             SetupTabs();
             SetupGoalWindow();
@@ -339,53 +321,53 @@
             });
 
             // Contacts
-            $("#navContact").one("click", function () {
-                $("#divContact").html('Loading...');
-                $.ajax({
-                    url: '@Url.Action("Contact", "Home")',
-                    cache: false
-                }).done(function (html) {
-                    $("#divContact").html(html);
+                $("#navContact").one("click", function () {
+                    $("#divContact").html('Loading...');
+                    $.ajax({
+                        url: '@Url.Action("Contact", "Home")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#divContact").html(html);
+                    });
                 });
-            });
 
             // Offer Summary
-            $("#repNav_OffSum").click(function () {
-                if ($('#offsumChart').length == 0) {
-                    $.ajax({
-                        url: '@Url.Action("OfferSummaryPartial", "Reports")',
-                        cache: false
-                    }).done(function (html) {
-                        $("#repOffSumTab").html(html);
-                        ResizeChart('offsum', false);
-                        SetupOfferSummaryGrid();
-                    });
-                } else {
-                    setTimeout(function () { ResizeChart('offsum', true); }, 100);
-                }
-            });
+                $("#repNav_OffSum").click(function () {
+                    if ($('#offsumChart').length == 0) {
+                        $.ajax({
+                            url: '@Url.Action("OfferSummaryPartial", "Reports")',
+                            cache: false
+                        }).done(function (html) {
+                            $("#repOffSumTab").html(html);
+                            ResizeChart('offsum', false);
+                            SetupOfferSummaryGrid();
+                        });
+                    } else {
+                        setTimeout(function () { ResizeChart('offsum', true); }, 100);
+                    }
+                });
 
             // Daily Summary
-            $("#repNav_DaySum").click(function () {
-                if ($('#daysumChart').length == 0) {
-                    $.ajax({
-                        url: '@Url.Action("DailySummaryPartial", "Reports")',
-                        cache: false
-                    }).done(function (html) {
-                        $("#repDaySumTab").html(html);
-                        ResizeChart('daysum', false);
-                        SetupDailySummaryGrid();
-                    });
-                } else {
-                    setTimeout(function () { ResizeChart('daysum', true); }, 100);
-                }
-            });
+                $("#repNav_DaySum").click(function () {
+                    if ($('#daysumChart').length == 0) {
+                        $.ajax({
+                            url: '@Url.Action("DailySummaryPartial", "Reports")',
+                            cache: false
+                        }).done(function (html) {
+                            $("#repDaySumTab").html(html);
+                            ResizeChart('daysum', false);
+                            SetupDailySummaryGrid();
+                        });
+                    } else {
+                        setTimeout(function () { ResizeChart('daysum', true); }, 100);
+                    }
+                });
 
             // Conversions
-            $("#repNav_Conversions").click(function () {
-                if ($('#conrepChart').length == 0) {
-                    $.ajax({
-                        url: '@Url.Action("ConversionReportPartial", "Reports")',
+                $("#repNav_Conversions").click(function () {
+                    if ($('#conrepChart').length == 0) {
+                        $.ajax({
+                            url: '@Url.Action("ConversionReportPartial", "Reports")',
                         cache: false
                     }).done(function (html) {
                         $("#repConversionsTab").html(html);
@@ -410,7 +392,8 @@
             });
 
             // CPM
-            @if (Model.ShowCPMRep) {
+            @if (Model.ShowCPMRep)
+            {
             <text>
             $("#repNav_CPM").one("click", function () {
                 $.ajax({
@@ -440,40 +423,40 @@
                 $("#divContact").html('Loading...');
                 $.ajax({
                     url: '@Url.Action("Contact", "Home")',
-                        cache: false
-                    }).done(function (html) {
-                        $("#divContact").html(html);
-                    });
+                    cache: false
+                }).done(function (html) {
+                    $("#divContact").html(html);
+                });
             });
-        }
+            }
 
-        //
-        function DateChanged(grid) {
-            $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
-            $('#' + grid + '_filterBtn').attr('disabled', false);
-        }
+            //
+            function DateChanged(grid) {
+                $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
+                $('#' + grid + '_filterBtn').attr('disabled', false);
+            }
 
-        //
-        function ChangeDateRange(grid) {
-            var startId = '#' + grid + '_startdate';
-            var endId = '#' + grid + '_enddate';
-            var refresh = true;
-            var dateRange = $('#' + grid + '_dateRangeSel').val();
-            switch (dateRange) {
-                case "today":
-                    $(startId).val('@today');
-                    $(endId).val('@today');
-                    break;
-                case "yesterday":
-                    $(startId).val('@yesterday');
-                    $(endId).val('@yesterday');
-                    break;
-                case "wtd":
-                    $(startId).val('@firstOfWeek');
-                    $(endId).val('@today');
-                    break;
-                case "mtd":
-                    $(startId).val('@firstOfMonth');
+            //
+            function ChangeDateRange(grid) {
+                var startId = '#' + grid + '_startdate';
+                var endId = '#' + grid + '_enddate';
+                var refresh = true;
+                var dateRange = $('#' + grid + '_dateRangeSel').val();
+                switch (dateRange) {
+                    case "today":
+                        $(startId).val('@today');
+                        $(endId).val('@today');
+                        break;
+                    case "yesterday":
+                        $(startId).val('@yesterday');
+                        $(endId).val('@yesterday');
+                        break;
+                    case "wtd":
+                        $(startId).val('@firstOfWeek');
+                        $(endId).val('@today');
+                        break;
+                    case "mtd":
+                        $(startId).val('@firstOfMonth');
                     $(endId).val('@today');
                     break;
                 case "ytd":
