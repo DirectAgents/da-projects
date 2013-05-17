@@ -12,7 +12,9 @@ namespace ClientPortal.Data.Contracts
         void AddConversionData(ConversionData entity);
         IQueryable<ConversionData> ConversionData { get; }
 
-        DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, string advertiserId, int? offerId, bool includeConversionData);
+        IQueryable<Offer> Offers(int? advertiserId);
+        IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency);
+        DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int? advertiserId, int? offerId, bool includeConversionData);
 
         IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
 

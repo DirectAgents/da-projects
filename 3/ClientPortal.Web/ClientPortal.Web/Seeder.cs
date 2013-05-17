@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
+using ClientPortal.Data.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,12 @@ namespace ClientPortal.Web
 {
     public class Seeder
     {
+        public static void Seed()
+        {
+            var cpRepo = new ClientPortalRepository(new ClientPortalContext());
+            Seed(cpRepo);
+        }
+
         public static void Seed(IClientPortalRepository cpRepo)
         {
             if (!cpRepo.Contacts.Any())

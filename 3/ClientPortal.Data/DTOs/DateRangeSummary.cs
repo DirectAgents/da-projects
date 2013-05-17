@@ -64,7 +64,7 @@ namespace ClientPortal.Data.DTOs
         {
             if (val1 == null || val2 == null)
                 return null;
-            return val2 - val1;
+            return Math.Round((val2.Value - val1.Value), 1);
         }
     }
 }

@@ -107,13 +107,16 @@
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\DailySummary.cs">
-      <DependentUpon>Cake.tt</DependentUpon>
+      <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\Goal.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\MonthlySummary.cs">
       <DependentUpon>Cake.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\Offer.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contracts\IClientPortalRepository.cs" />
     <Compile Include="DTOs\AffiliateSummary.cs" />

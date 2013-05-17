@@ -21,6 +21,7 @@ namespace ClientPortal.Data.Services
             this.context.SaveChanges();
         }
 
+        #region ConversionData
         public void AddConversionData(ConversionData entity)
         {
             context.ConversionDatas.Add(entity);
@@ -30,10 +31,70 @@ namespace ClientPortal.Data.Services
         {
             get { return context.ConversionDatas; }
         }
+        #endregion
 
-        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, string advertiserId, int? offerId, bool includeConversionData)
+        public IQueryable<Offer> Offers(int? advertiserId)
         {
-            int? advId = ParseInt(advertiserId);
+            return context.Offers.Where(o => o.Advertiser_Id == advertiserId);
+        }
+
+        public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency)
+        {
+            var dailySummaries = context.DailySummaries.AsQueryable();
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
+
+            var offers = Offers(advertiserId);
+
+            if (offerId.HasValue)
+            {
+                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+                dailySummaries = dailySummaries.Where(ds => ds.offer_id == offerId.Value);
+            }
+            else
+            {
+                dailySummaries = from ds in dailySummaries
+                                 join o in offers on ds.offer_id equals o.Offer_Id
+                                 select ds;
+            }
+            currency = null; // Assume all offers for the advertiser have the same currency
+            if (offers.Any()) currency = offers.First().Currency;
+
+            return dailySummaries;
+        }
+
+        public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int? advertiserId, int? offerId, bool includeConversionData)
+        {
+            // * remove this when ready! *
+            return GetDateRangeSummaryOld(start, end, advertiserId, offerId, includeConversionData);
+
+            string currency;
+            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
+
+            var any = dailySummaries.Any();
+            DateRangeSummary summary = new DateRangeSummary()
+            {
+                Clicks = any ? dailySummaries.Sum(ds => ds.clicks) : 0,
+                Conversions = any ? dailySummaries.Sum(ds => ds.conversions) : 0,
+                Revenue = any ? dailySummaries.Sum(ds => ds.revenue) : 0,
+                Currency = currency
+            };
+            if (includeConversionData)
+            {
+                var conversions = GetConversions(start, end, advertiserId, offerId);
+                var conv_datas =
+                    from c in conversions
+                    join conv_data in context.ConversionDatas on c.conversion_id equals conv_data.conversion_id
+                    select conv_data;
+
+                summary.ConVal = conv_datas.Any() ? conv_datas.Sum(c => c.value0) : 0;
+            }
+            return summary;
+        }
+
+        private DateRangeSummary GetDateRangeSummaryOld(DateTime? start, DateTime? end, int? advertiserId, int? offerId, bool includeConversionData)
+        {
+            int? advId = advertiserId;
 
             var clicks = GetClicks(start, end, advId, offerId);
             var conversions = GetConversions(start, end, advId, offerId);
@@ -175,7 +236,7 @@ namespace ClientPortal.Data.Services
 
         public Advertiser GetAdvertiser(int id)
         {
-            var advertiser = context.Advertisers.Where(a => a.AdvertiserId == id).FirstOrDefault();
+            var advertiser = context.Advertisers.Find(id);
             return advertiser;
         }
         public Contact GetContact(string search) // search by last name, for now
