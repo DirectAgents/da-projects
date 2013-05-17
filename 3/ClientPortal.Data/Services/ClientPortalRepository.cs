@@ -175,7 +175,7 @@ namespace ClientPortal.Data.Services
 
         public Advertiser GetAdvertiser(int id)
         {
-            var advertiser = context.Advertisers.Where(a => a.AdvertiserId == id).FirstOrDefault();
+            var advertiser = context.Advertisers.Find(id);
             return advertiser;
         }
         public Contact GetContact(string search) // search by last name, for now

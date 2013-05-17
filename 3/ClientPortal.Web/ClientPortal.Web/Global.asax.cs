@@ -134,6 +134,8 @@ namespace ClientPortal.Web
                 db.Goals.AddOrUpdate(c => c.Name, goals); //TODO: addOrUpdate no worky
                 db.SaveChanges();
             }
+
+            Seeder.Seed();
         }
     }
 
