@@ -416,6 +416,7 @@
     <Content Include="Images\logoAHS.png" />
     <Content Include="Images\logoITT.png" />
     <Content Include="Images\logoLT.png" />
+    <Content Include="Images\logoSelectQuote.png" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\blackbird.js" />
     <Content Include="Scripts\foundation\app.js" />

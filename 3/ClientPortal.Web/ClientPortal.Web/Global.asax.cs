@@ -75,6 +75,23 @@ namespace ClientPortal.Web
             // Configure AutoMapper
             Mapper.CreateMap<OfferInfo, OfferSummaryReportExportRow>();
 
+            // add select quote dummy account if it does not exist
+            if (!WebSecurity.UserExists("selectquote"))
+            {
+                WebSecurity.CreateUserAndAccount(
+                    "selectquote",
+                    "123456",
+                    new
+                    {
+                        CakeAdvertiserId = 580,
+                        Culture = "en-US",
+                        ShowCPMRep = false,
+                        ShowConversionData = false,
+                        ConversionValueIsNumber = false,
+                        ConversionValueName = "Signed"
+                    });
+            }
+
             // add service master beta account if it does not exist
             if (!WebSecurity.UserExists("sm"))
             {
@@ -154,14 +171,19 @@ namespace ClientPortal.Web
 
             List<Goal> goals = new List<Goal> {
 
+                // select quote goals
+                new Goal() { AdvertiserId = 530, OfferId = 30389, MetricId = MetricEnum.Leads, Target = 1000, TypeId = GoalTypeEnum.Absolute, Name = "1000 leads" },
+
                 // lending tree goals
                 new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = MetricEnum.Leads, Target = 2000, TypeId = GoalTypeEnum.Absolute, Name = "new form leads" },
                 new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = MetricEnum.Spend, Target = 100000, TypeId = GoalTypeEnum.Absolute, Name = "new form spend" },
                 new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = MetricEnum.Clicks, Target = 10.5m, TypeId = GoalTypeEnum.Percent, Name = "ssn clicks pct" },
                 new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = MetricEnum.Spend, Target = 5, TypeId = GoalTypeEnum.Percent, Name = "ssn spend pct" },
+
+                // edarling goals (remove these?)
                 new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = MetricEnum.Spend, Target = 50, TypeId = GoalTypeEnum.Absolute, Name = "tr edarling spend abs" },
                 new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = MetricEnum.Spend, Target = 10, TypeId = GoalTypeEnum.Percent, Name = "tr edarling spend pct" },
-                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = MetricEnum.Clicks, Target = 6000, TypeId = GoalTypeEnum.Absolute, Name = "tr edarling clicks" }
+                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = MetricEnum.Clicks, Target = 6000, TypeId = GoalTypeEnum.Absolute, Name = "tr edarling clicks" },
 
             };
             foreach (var goal in goals)
