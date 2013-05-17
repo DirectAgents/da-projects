@@ -6,11 +6,39 @@
     <edmx:StorageModels>
     <Schema Namespace="ClientPortalModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="ClientPortalModelStoreContainer">
+          <EntitySet Name="Advertiser" EntityType="ClientPortalModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AdvertiserContact" EntityType="ClientPortalModel.Store.AdvertiserContact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Click" EntityType="ClientPortalModel.Store.Click" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Goal" EntityType="ClientPortalModel.Store.Goal" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
+            <End Role="Contact" EntitySet="Contact" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="AdvertiserId" />
+          </Key>
+          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="AdvertiserName" Type="nvarchar(max)" />
+          <Property Name="LogoFilename" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AdvertiserContact">
+          <Key>
+            <PropertyRef Name="AdvertiserId" />
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="ContactId" Type="int" Nullable="false" />
+          <Property Name="Order" Type="int" />
+        </EntityType>
         <EntityType Name="Click">
           <Key>
             <PropertyRef Name="click_id" />
@@ -55,6 +83,16 @@
           <Property Name="disposition" Type="nvarchar(max)" />
           <Property Name="paid_action" Type="nvarchar(max)" />
           <Property Name="total_clicks" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="ContactId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="nvarchar(max)" />
+          <Property Name="LastName" Type="nvarchar(max)" />
+          <Property Name="Title" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Conversion">
           <Key>
@@ -128,6 +166,34 @@
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
         </EntityType>
+        <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AdvertiserContact" Type="ClientPortalModel.Store.AdvertiserContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="AdvertiserContact">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
+          <End Role="Contact" Type="ClientPortalModel.Store.Contact" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AdvertiserContact" Type="ClientPortalModel.Store.AdvertiserContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="AdvertiserContact">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -137,7 +203,18 @@
           <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
           <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
           <EntitySet Name="Goals" EntityType="ClientPortalModel.Goal" />
-        </EntityContainer>
+          <EntitySet Name="Advertisers" EntityType="ClientPortalModel.Advertiser" />
+          <EntitySet Name="AdvertiserContacts" EntityType="ClientPortalModel.AdvertiserContact" />
+          <EntitySet Name="Contacts" EntityType="ClientPortalModel.Contact" />
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId" Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
+            <End Role="Contact" EntitySet="Contacts" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Click">
           <Key>
             <PropertyRef Name="click_id" />
@@ -255,7 +332,65 @@
           <Property Type="DateTime" Name="StartDate" Precision="3" />
           <Property Type="DateTime" Name="EndDate" Precision="3" />
         </EntityType>
-      </Schema>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="AdvertiserId" />
+          </Key>
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="String" Name="AdvertiserName" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LogoFilename" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
+        </EntityType>
+        <EntityType Name="AdvertiserContact">
+          <Key>
+            <PropertyRef Name="AdvertiserId" />
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="Int32" Name="ContactId" Nullable="false" />
+          <Property Type="Int32" Name="Order" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="AdvertiserContact" ToRole="Advertiser" />
+          <NavigationProperty Name="Contact" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Contact_ContactId" FromRole="AdvertiserContact" ToRole="Contact" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Type="Int32" Name="ContactId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="FirstName" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastName" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Title" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Email" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="ClientPortalModel.AdvertiserContact" Role="AdvertiserContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="AdvertiserContact">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
+          <End Type="ClientPortalModel.Contact" Role="Contact" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="ClientPortalModel.AdvertiserContact" Role="AdvertiserContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="AdvertiserContact">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -382,7 +517,36 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="Advertisers">
+            <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
+              <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="LogoFilename" ColumnName="LogoFilename" />
+                <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdvertiserContacts">
+            <EntityTypeMapping TypeName="ClientPortalModel.AdvertiserContact">
+              <MappingFragment StoreEntitySet="AdvertiserContact">
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contacts">
+            <EntityTypeMapping TypeName="ClientPortalModel.Contact">
+              <MappingFragment StoreEntitySet="Contact">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

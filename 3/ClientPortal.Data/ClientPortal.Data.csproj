@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contexts\Advertiser.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\AdvertiserContact.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\Cake.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -90,6 +96,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ClientPortal.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\Contact.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\Conversion.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>

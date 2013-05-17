@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
@@ -19,8 +21,49 @@ namespace ClientPortal.Web.Models
         public DbSet<Cake.conversion> Conversions { get; set; }
         public DbSet<Cake.click> Clicks { get; set; }
         public DbSet<ConversionData> ConversionDatas { get; set; }
+/*
+        public DbSet<Advertiser> Advertisers { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Advertiser>()
+                .HasMany(x => x.Contacts)
+                .WithMany(x => x.Advertisers)
+                .Map(x =>
+                {
+                    x.ToTable("AdvertiserContact");
+                    x.MapLeftKey("AdvertiserId");
+                    x.MapRightKey("ContactId");
+                });
+        }
+*/
     }
+/*
+    [Table("Advertiser")]
+    public class Advertiser
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
+        public int AdvertiserId { get; set; }
+        public string AdvertiserName { get; set; }
+        public string LogoFilename { get; set; }
 
+        public virtual ICollection<Contact> Contacts { get; set; }
+    }
+    [Table("Contact")]
+    public class Contact
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int ContactId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Title { get; set; }
+        public string Email { get; set; }
+
+        public virtual ICollection<Advertiser> Advertisers { get; set; }
+    }
+*/
     [Table("UserProfile")]
     public class UserProfile
     {

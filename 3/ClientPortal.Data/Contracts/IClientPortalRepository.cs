@@ -21,6 +21,12 @@ namespace ClientPortal.Data.Contracts
 
         IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
 
+        IQueryable<Advertiser> Advertisers { get; }
+        IQueryable<Contact> Contacts { get; }
+        void AddAdvertiser(Advertiser entity);
+        void AddContact(Contact entity);
+        Contact GetContact(string search);
+
         IQueryable<Goal> GetGoals(int advertiserId);
         Goal GetGoal(int id);
         bool DeleteGoal(int id, int? advertiserId);

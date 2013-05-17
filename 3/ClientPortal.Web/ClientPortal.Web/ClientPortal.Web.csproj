@@ -213,6 +213,7 @@
     <Compile Include="Models\QuickBooksModels.cs" />
     <Compile Include="Models\ReportModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Seeder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\manual-migration-02142013-userProfiles.sql" />

@@ -154,6 +154,32 @@ namespace ClientPortal.Data.Services
             return query;
         }
 
+        #region Advertisers & Contacts
+        public IQueryable<Advertiser> Advertisers
+        {
+            get { return context.Advertisers; }
+        }
+        public IQueryable<Contact> Contacts
+        {
+            get { return context.Contacts; }
+        }
+
+        public void AddAdvertiser(Advertiser entity)
+        {
+            context.Advertisers.Add(entity);
+        }
+        public void AddContact(Contact entity)
+        {
+            context.Contacts.Add(entity);
+        }
+        public Contact GetContact(string search) // search by last name, for now
+        {
+            var contact = context.Contacts.Where(c => c.LastName == search).FirstOrDefault();
+            return contact;
+        }
+
+        #endregion
+
         #region Goals
         public IQueryable<Goal> GetGoals(int advertiserId)
         {

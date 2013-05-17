@@ -8,6 +8,6 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <LastUsedBuildConfiguration>Debug</LastUsedBuildConfiguration>
     <LastUsedPlatform>Any CPU</LastUsedPlatform>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAqHYsLFveQESAIV4VcBQsvwAAAAACAAAAAAAQZgAAAAEAACAAAABzhWkqazNO/zARizCO7Tto3xjCV4tAOluBOZXOCqSNzAAAAAAOgAAAAAIAACAAAADRQwXnnXqEgdpk2ir4tpQqiE2vqPIw7MiDVGCAlJGXeCAAAACX0wKb0+ECcEjUaJ0zOk1dhI0IHQgxAXpCtPFU3otdD0AAAABuorMuesnoxaGm6gdk3DjmS4sjmpCU4/H5yhZueXO2dj/vVz4r6H4GZ7WqQdj2cwoDBFop4IdSEhLC1wPpBSop</EncryptedPassword>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAbkFazNuE/kOAdq9LEe2B+AAAAAACAAAAAAADZgAAwAAAABAAAAD+vbROTXtS6MAJCB4iEoprAAAAAASAAACgAAAAEAAAAA9H2Wl3j/ZY9d7DPvvXW5UYAAAABhGRE2jnFtd9iRyJY7Sc9YhEVMYf/6DLFAAAAF1t6emgX4fk7Uu82rLmHPFTByDR</EncryptedPassword>
   </PropertyGroup>
 </Project>

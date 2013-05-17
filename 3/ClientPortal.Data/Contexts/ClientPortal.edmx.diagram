@@ -9,7 +9,12 @@
         <EntityTypeShape EntityType="ClientPortalModel.Conversion" Width="2.125" PointX="3.625" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="ClientPortalModel.ConversionData" Width="1.75" PointX="6" PointY="0.5" />
         <EntityTypeShape EntityType="ClientPortalModel.Goal" Width="1.5" PointX="9.625" PointY="1.375" />
-      </Diagram>
+        <EntityTypeShape EntityType="ClientPortalModel.Advertiser" Width="1.5" PointX="6.125" PointY="6.25" />
+        <EntityTypeShape EntityType="ClientPortalModel.AdvertiserContact" Width="1.75" PointX="8" PointY="6.25" />
+        <EntityTypeShape EntityType="ClientPortalModel.Contact" Width="1.5" PointX="10.125" PointY="6.25" />
+        <AssociationConnector Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" />
+        <AssociationConnector Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Contact_ContactId" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
