@@ -25,6 +25,7 @@ namespace ClientPortal.Data.Contracts
         IQueryable<Contact> Contacts { get; }
         void AddAdvertiser(Advertiser entity);
         void AddContact(Contact entity);
+        Advertiser GetAdvertiser(int id);
         Contact GetContact(string search);
 
         IQueryable<Goal> GetGoals(int advertiserId);

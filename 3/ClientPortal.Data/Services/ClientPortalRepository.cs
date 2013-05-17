@@ -172,6 +172,12 @@ namespace ClientPortal.Data.Services
         {
             context.Contacts.Add(entity);
         }
+
+        public Advertiser GetAdvertiser(int id)
+        {
+            var advertiser = context.Advertisers.Where(a => a.AdvertiserId == id).FirstOrDefault();
+            return advertiser;
+        }
         public Contact GetContact(string search) // search by last name, for now
         {
             var contact = context.Contacts.Where(c => c.LastName == search).FirstOrDefault();

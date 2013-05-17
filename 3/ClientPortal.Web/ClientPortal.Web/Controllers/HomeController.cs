@@ -40,31 +40,51 @@ namespace ClientPortal.Web.Controllers
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Index"))
             {
-                CakeAdvertiser advertiser = userProfile.CakeAdvertiserId.HasValue ? cakeRepo.Advertiser(userProfile.CakeAdvertiserId.Value) : null;
-
                 var model = new IndexModel()
                 {
                     CultureInfo = userProfile.CultureInfo,
-                    Advertiser = advertiser,
                     ShowCPMRep = userProfile.ShowCPMRep
                 };
 
-                //TODO: unhardcode
-                if (userProfile.CakeAdvertiserId == 207)
-                    model.LogoImage = "logoAHS.png";
-                else if (userProfile.CakeAdvertiserId == 250)
-                    model.LogoImage = "logoITT.png";
-                else if (userProfile.CakeAdvertiserId == 278)
-                    model.LogoImage = "logoLT.png";
+                if (userProfile.CakeAdvertiserId.HasValue)
+                {
+                    int advId = userProfile.CakeAdvertiserId.Value;
+                    model.Advertiser = cakeRepo.Advertiser(advId);
+
+                    var advertiser = cpRepo.GetAdvertiser(advId);
+                    if (advertiser != null)
+                        model.LogoImage = advertiser.LogoFilename;
+                }
 
                 return View(model);
             }
         }
 
+        public JsonResult MainContactsData()
+        {
+            IEnumerable<Contact> contacts = new List<Contact>();
+
+            var advertiser = GetAdvertiser();
+            if (advertiser != null)
+            {
+                contacts = advertiser.AdvertiserContacts.OrderBy(ac => ac.Order).Select(ac => ac.Contact);
+            }
+            var result = new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = contacts
+            };
+            return result;
+        }
+
         public ActionResult Contact()
         {
-            var model = GetAdvertiser();
-            return PartialView(model);
+            var advertiser = GetAdvertiser();
+            IEnumerable<Contact> contacts = new List<Contact>();
+            if (advertiser != null)
+                contacts = advertiser.AdvertiserContacts.OrderBy(ac => ac.Order).Select(ac => ac.Contact);
+
+            return PartialView(contacts);
         }
 
         public ActionResult SetDashboardDateRange(string type, string startdate, string enddate)
@@ -229,45 +249,6 @@ namespace ClientPortal.Web.Controllers
             return PartialView(offerGoalSummary);
         }
 
-        // TODO: unhardcode, move to database
-        public JsonResult MainContactsData()
-        {
-            JsonResult result = null;
-            var advertiserId = GetAdvertiserId();
-            if (advertiserId != null)
-            {
-                var contacts = new List<MainContact>();
-                if (advertiserId == 207 || advertiserId == 278) // for SM & LT
-                {
-                    contacts.Add(new MainContact { name = "Lyle Srebnick", title = "SVP", email = "lyles@directagents.com" });
-                }
-
-                if (advertiserId != 250)
-                {   // default AM
-                    contacts.Add(new MainContact { name = "Jennifer Volkerts", title = "Account Manager", email = "jennifer@directagents.com" });
-                }
-                else // for ITT
-                {
-                    contacts.Add(new MainContact { name = "Adam Lobelson", title = "Digital Account Executive", email = "adam@directagents.com" });
-                    contacts.Add(new MainContact { name = "Sadie Culbreth", title = "Senior Account Manager", email = "sadie@directagents.com" });
-                }
-
-                result = new JsonResult
-                {
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                    Data = contacts
-                };
-            }
-            return result;
-        }
-
-        private class MainContact
-        {
-            public string name { get; set; }
-            public string title { get; set; }
-            public string email { get; set; }
-        }
-
         public List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates, bool includeConversionData)
         {
             var offers = cakeRepo.Offers(advId);
@@ -346,11 +327,11 @@ namespace ClientPortal.Web.Controllers
             return offerGoalSummary;
         }
 
-        public CakeAdvertiser GetAdvertiser()
+        public Advertiser GetAdvertiser()
         {
             int? advId = GetAdvertiserId();
             if (advId.HasValue)
-                return cakeRepo.Advertiser(advId.Value);
+                return cpRepo.GetAdvertiser(advId.Value);
             else
                 return null;
         }
