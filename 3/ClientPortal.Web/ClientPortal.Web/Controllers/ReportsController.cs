@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
+using AutoMapper;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
+using CsvHelper;
 using DirectAgents.Mvc.KendoGridBinder;
 
 namespace ClientPortal.Web.Controllers
@@ -43,7 +47,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
             DateTime? start, end;
-            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -81,7 +85,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
             DateTime? start, end;
-            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -139,7 +143,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
             DateTime? start, end;
-            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, 1, 1);
@@ -181,7 +185,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
             DateTime? start, end;
-            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -206,7 +210,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
             DateTime? start, end;
-            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -271,7 +275,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userProfile = HomeController.GetUserProfile();
             DateTime? start, end;
-            if (!ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -356,10 +360,10 @@ namespace ClientPortal.Web.Controllers
 
             decimal totalClicks = data.Sum(c => c.ClickCount);
 
-            var chartData = data.Take(take).Select(c => new 
+            var chartData = data.Take(take).Select(c => new
             {
-                category = TruncateDeviceNameForChartLegendLabel(c.DeviceName), 
-                value = c.ClickCount / totalClicks 
+                category = TruncateDeviceNameForChartLegendLabel(c.DeviceName),
+                value = c.ClickCount / totalClicks
             });
 
             var json = new JsonResult
@@ -377,37 +381,6 @@ namespace ClientPortal.Web.Controllers
         private string TruncateDeviceNameForChartLegendLabel(string deviceName)
         {
             return deviceName.Length > 20 ? deviceName.Substring(0, 20) + ".." : deviceName;
-        }
-
-        // --- helper methods ---
-
-        public static DateTime? ParseDate(string dateString, CultureInfo cultureInfo)
-        {
-            DateTime? date;
-            ParseDate(dateString, cultureInfo, out date);
-            return date;
-        }
-
-        // returns true iff parsed; a null or whitespace dateString qualifies as parsed, resulting in the out parameter being null
-        public static bool ParseDate(string dateString, CultureInfo cultureInfo, out DateTime? date)
-        {
-            date = null;
-            if (String.IsNullOrWhiteSpace(dateString)) return true;
-
-            DateTime parseDate;
-            bool parsed = DateTime.TryParse(dateString, cultureInfo, DateTimeStyles.None, out parseDate);
-            if (parsed)
-                date = parseDate;
-
-            return parsed;
-        }
-
-        // returns false if either of the dates couldn't be parsed
-        public static bool ParseDates(string startdate, string enddate, CultureInfo cultureInfo, out DateTime? start, out DateTime? end)
-        {
-            bool startParsed = ParseDate(startdate, cultureInfo, out start);
-            bool endParsed = ParseDate(enddate, cultureInfo, out end);
-            return (startParsed && endParsed);
         }
     }
 }

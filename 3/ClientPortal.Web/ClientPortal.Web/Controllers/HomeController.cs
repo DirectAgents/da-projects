@@ -25,10 +25,21 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Index()
         {
+            var userProfile = GetUserProfile();
+            if (userProfile == null)
+            {
+                try
+                {
+                    WebSecurity.Logout();
+                }
+                catch
+                {
+                }
+                return RedirectToAction("Login", "Account");
+            }
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Index"))
             {
-                var userProfile = GetUserProfile();
                 CakeAdvertiser advertiser = userProfile.CakeAdvertiserId.HasValue ? cakeRepo.Advertiser(userProfile.CakeAdvertiserId.Value) : null;
 
                 var model = new IndexModel()
@@ -62,9 +73,9 @@ namespace ClientPortal.Web.Controllers
             Session["DashboardDateRangeType"] = type;
 
             DateTime? start, end;
-            if (ReportsController.ParseDate(startdate, userProfile.CultureInfo, out start))
+            if (ControllerHelpers.ParseDate(startdate, userProfile.CultureInfo, out start))
                 Session["DashboardStart"] = start;
-            if (ReportsController.ParseDate(enddate, userProfile.CultureInfo, out end))
+            if (ControllerHelpers.ParseDate(enddate, userProfile.CultureInfo, out end))
                 Session["DashboardEnd"] = end;
 
             return null;

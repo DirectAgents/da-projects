@@ -97,6 +97,12 @@ namespace CakeExtracter
 
                 new Synch(455, 60, 0),
                 new Synch(455, 240, -1),
+
+                new Synch(250, 60, 0),
+                new Synch(250, 240, -1),
+                
+                new Synch(207, 60, 0),
+                new Synch(207, 240, -1),
             };
 
             public static void Run()

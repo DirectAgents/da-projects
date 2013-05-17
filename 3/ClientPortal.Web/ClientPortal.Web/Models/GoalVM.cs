@@ -84,11 +84,11 @@ namespace ClientPortal.Web.Models
         }
         public DateTime? StartDateParsed
         {
-            get { return ReportsController.ParseDate(StartDate, CultureInfo); }
+            get { return ControllerHelpers.ParseDate(StartDate, CultureInfo); }
         }
         public DateTime? EndDateParsed
         {
-            get { return ReportsController.ParseDate(EndDate, CultureInfo); }
+            get { return ControllerHelpers.ParseDate(EndDate, CultureInfo); }
         }
 
         public GoalVM()
@@ -115,8 +115,8 @@ namespace ClientPortal.Web.Models
         public System.Collections.Generic.IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             DateTime? startDate, endDate;
-            bool startDateParsed = ReportsController.ParseDate(StartDate, CultureInfo, out startDate);
-            bool endDateParsed = ReportsController.ParseDate(EndDate, CultureInfo, out endDate);
+            bool startDateParsed = ControllerHelpers.ParseDate(StartDate, CultureInfo, out startDate);
+            bool endDateParsed = ControllerHelpers.ParseDate(EndDate, CultureInfo, out endDate);
 
             if (!startDateParsed)
                 yield return new ValidationResult("Not a valid date.", new[] { "StartDate" });
