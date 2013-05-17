@@ -32,5 +32,7 @@ namespace ClientPortal.Data.Contexts
         public DbSet<Advertiser> Advertisers { get; set; }
         public DbSet<AdvertiserContact> AdvertiserContacts { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<DailySummary> DailySummaries { get; set; }
+        public DbSet<Offer> Offers { get; set; }
     }
 }

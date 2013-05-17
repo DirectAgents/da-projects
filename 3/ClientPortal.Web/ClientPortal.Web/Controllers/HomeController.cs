@@ -142,7 +142,7 @@ namespace ClientPortal.Web.Controllers
                 if (userProfile == null || userProfile.CakeAdvertiserId == null)
                     return null;
                 
-                string advId = userProfile.CakeAdvertiserId.ToString();
+                int? advId = userProfile.CakeAdvertiserId;
                 bool showConversionData = userProfile.ShowConversionData;
 
                 var dates = new Dates();
@@ -243,7 +243,7 @@ namespace ClientPortal.Web.Controllers
                 goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), new[] { offer }, false);
             }
             var dates = new Dates();
-            var offerGoalSummary = CreateOfferGoalSummary(offer, goalVMs, dates, userProfile.ShowConversionData);
+            var offerGoalSummary = CreateOfferGoalSummary(userProfile.CakeAdvertiserId, offer, goalVMs, dates, userProfile.ShowConversionData);
 
             ViewBag.CreateGoalChart = true;
             return PartialView(offerGoalSummary);
@@ -263,7 +263,7 @@ namespace ClientPortal.Web.Controllers
                 var customGoals = goalVMs.Where(g => g.OfferId == offer.Offer_Id && !g.IsMonthly).ToList();
                 if (monthlyGoals.Any())
                 {
-                    var offerGoalSummary = CreateOfferGoalSummary(offer, monthlyGoals, dates, includeConversionData);
+                    var offerGoalSummary = CreateOfferGoalSummary(advId, offer, monthlyGoals, dates, includeConversionData);
                     offerGoalSummaries.Add(offerGoalSummary);
                 }
                 if (customGoals.Any())
@@ -272,7 +272,7 @@ namespace ClientPortal.Web.Controllers
                     {
                         foreach (var goalGroup2 in goalGroup1.GroupBy(g => g.EndDateParsed))
                         {
-                            var offerGoalSummary = CreateOfferGoalSummary(offer, goalGroup2.ToList(), dates, includeConversionData);
+                            var offerGoalSummary = CreateOfferGoalSummary(advId, offer, goalGroup2.ToList(), dates, includeConversionData);
                             offerGoalSummaries.Add(offerGoalSummary);
                         }
                     }
@@ -281,23 +281,23 @@ namespace ClientPortal.Web.Controllers
             return offerGoalSummaries;
         }
 
-        public OfferGoalSummary CreateOfferGoalSummary(CakeOffer offer, List<GoalVM> goals, Dates dates, bool includeConversionData)
+        public OfferGoalSummary CreateOfferGoalSummary(int? advId, CakeOffer offer, List<GoalVM> goals, Dates dates, bool includeConversionData)
         {
             List<DateRangeSummary> summaries;
             if (!goals.Any() || goals[0].IsMonthly) // assume all goals are the same type
             {
-                var offsumMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, offer.Advertiser_Id, offer.Offer_Id, includeConversionData);
+                var offsumMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, offer.Offer_Id, includeConversionData);
                 offsumMTD.Name = "Month-to-Date";
-                var offsumLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, offer.Advertiser_Id, offer.Offer_Id, includeConversionData);
+                var offsumLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, offer.Offer_Id, includeConversionData);
                 offsumLMTD.Name = "Last MTD";
-                var offsumLM = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, offer.Advertiser_Id, offer.Offer_Id, includeConversionData);
+                var offsumLM = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, offer.Offer_Id, includeConversionData);
                 offsumLM.Name = "Last Month";
                 summaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM };
             }
             else
             {
                 var goal0 = goals[0];
-                var sumActual = cpRepo.GetDateRangeSummary(goal0.StartDateParsed.Value, goal0.EndDateParsed.Value, offer.Advertiser_Id, offer.Offer_Id, includeConversionData);
+                var sumActual = cpRepo.GetDateRangeSummary(goal0.StartDateParsed.Value, goal0.EndDateParsed.Value, advId, offer.Offer_Id, includeConversionData);
                 sumActual.Name = (dates.Now.Date > goal0.EndDateParsed) ? "Results" : "Results to-Date";
                 var sumGoal = new DateRangeSummary() { Name = "Goal", Culture = goal0.Culture };
                 foreach (var goal in goals)

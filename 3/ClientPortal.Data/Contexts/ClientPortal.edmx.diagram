@@ -14,6 +14,8 @@
         <EntityTypeShape EntityType="ClientPortalModel.Contact" Width="1.5" PointX="10.125" PointY="6.25" />
         <AssociationConnector Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" />
         <AssociationConnector Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Contact_ContactId" />
+        <EntityTypeShape EntityType="ClientPortalModel.DailySummary" Width="1.5" PointX="8" PointY="1.875" />
+        <EntityTypeShape EntityType="ClientPortalModel.Offer" Width="1.875" PointX="6" PointY="1.875" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
