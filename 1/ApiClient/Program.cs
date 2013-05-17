@@ -19,6 +19,26 @@ namespace ApiClient
 
         static void Main(string[] args)
         {
+            try
+            {
+                DoIt(args);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: {0}, trying again..", e.Message);
+                try
+                {
+                    DoIt(args);
+                }
+                catch (Exception e2)
+                {
+                    Console.WriteLine("Exception on retry: {0}, quitting..", e2.Message);
+                }
+            }
+        }
+
+        private static void DoIt(string[] args)
+        {
             string command = args[0];
 
             if (command == "DailySummaries")

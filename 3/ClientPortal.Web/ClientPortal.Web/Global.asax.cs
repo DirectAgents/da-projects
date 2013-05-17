@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using AutoMapper;
+using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using StackExchange.Profiling;
 using WebMatrix.WebData;
-using System.Data.Entity.Migrations;
 
 namespace ClientPortal.Web
 {
@@ -69,6 +71,9 @@ namespace ClientPortal.Web
             if (!WebSecurity.Initialized)
                 WebSecurity.InitializeDatabaseConnection("DefaultConnection",
                                                          "UserProfile", "UserId", "UserName", autoCreateTables: true);
+
+            // Configure AutoMapper
+            Mapper.CreateMap<OfferInfo, OfferSummaryReportExportRow>();
 
             // add service master beta account if it does not exist
             if (!WebSecurity.UserExists("sm"))

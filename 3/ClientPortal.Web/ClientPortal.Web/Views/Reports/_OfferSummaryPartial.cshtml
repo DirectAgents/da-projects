@@ -23,7 +23,7 @@
     </div>
 </div>
 <div id="offsumGrid"></div>
-
+@Html.ActionLink("Export CSV", "OfferSummaryReport", "Export", new { startdate = Model.StartDate, enddate = Model.EndDate }, null)
 
 <style type="text/css">
     td.k-detail-cell > div.k-grid
@@ -95,7 +95,7 @@
             height: 400,
             columns: [
                 { field: 'OfferId', title: 'Id', width: 45, attributes: { style: "text-align: right" } },
-                { field: 'Name', width: 225,  title: 'Offer' },
+                { field: 'Name', width: 225, title: 'Offer' },
                 { field: 'Format', width: 30 },
                 { field: 'Price', width: 65, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
                 { field: 'Clicks', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
