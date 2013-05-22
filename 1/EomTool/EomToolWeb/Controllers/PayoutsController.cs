@@ -7,6 +7,7 @@ using EomTool.Domain.Abstract;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
 using DAgents.Common;
+using System.Text;
 
 namespace EomToolWeb.Controllers
 {
@@ -201,6 +202,34 @@ namespace EomToolWeb.Controllers
                 return Content("(held)");
             else
                 return RedirectToAction("List");
+        }
+
+        // --- Test
+
+        public ActionResult Test()
+        {
+            StringBuilder text = new StringBuilder();
+            var affIds = new List<int>();
+            var groups = securityRepository.GroupsForUser(User);
+            foreach (var g in groups)
+            {
+                text.Append("Group: " + g.WindowsIdentity + "<br>");
+            }
+
+            if (groups != null && groups.Any())
+            {
+                var mediaBuyers = groups.SelectMany(g => g.Roles).Distinct().Where(r => r.Name.StartsWith("MB: ")).Select(r => r.Name.Substring(4)).ToArray();
+                foreach (var mb in mediaBuyers)
+                {
+                    text.Append("MediaBuyer: " + mb + "<br>");
+                }
+                affIds = mainRepository.AffiliatesForMediaBuyers(mediaBuyers).Select(a => a.affid).ToList();
+                foreach (var a in affIds)
+                {
+                    text.Append("AffId: " + a + "<br>");
+                }
+            }
+            return Content(text.ToString());
         }
     }
 }
