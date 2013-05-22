@@ -73,7 +73,21 @@ namespace ClientPortal.Web
                                                          "UserProfile", "UserId", "UserName", autoCreateTables: true);
 
             // Configure AutoMapper
-            Mapper.CreateMap<OfferInfo, OfferSummaryReportExportRow>();
+            Mapper.CreateMap<OfferInfo, OfferSummaryReportExportRow>()
+                .ForMember(dest => dest.Offer, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Leads, opt => opt.MapFrom(src => src.Conversions))
+                .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Revenue));
+            Mapper.CreateMap<DailyInfo, DailySummaryReportExportRow>()
+                .ForMember(dest => dest.Leads, opt => opt.MapFrom(src => src.Conversions))
+                .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Revenue))
+                .ForMember(dest => dest.SpendPerClick, opt => opt.MapFrom(src => src.EPC));
+            Mapper.CreateMap<ConversionInfo, ConversionReportExportRow>()
+                .ForMember(dest => dest.SubId, opt => opt.MapFrom(src => src.AffId))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PriceReceived));
+            Mapper.CreateMap<AffiliateSummary, AffiliateReportExportRow>()
+                .ForMember(dest => dest.SubId, opt => opt.MapFrom(src => src.AffId))
+                .ForMember(dest => dest.Leads, opt => opt.MapFrom(src => src.Count))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PriceReceived));
 
             // add service master beta account if it does not exist
             if (!WebSecurity.UserExists("sm"))
