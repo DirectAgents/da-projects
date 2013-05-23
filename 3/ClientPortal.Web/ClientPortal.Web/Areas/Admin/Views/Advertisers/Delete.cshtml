@@ -1,0 +1,42 @@
+﻿@model ClientPortal.Data.Contexts.Advertiser
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h4>Delete</h4>
+
+<h5>Are you sure you want to delete this?</h5>
+<fieldset>
+    <legend>Advertiser</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AdvertiserId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AdvertiserId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AdvertiserName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AdvertiserName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.LogoFilename)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LogoFilename)
+    </div>
+</fieldset>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "advertisersTab" }))
+{
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
+            UpdateTargetId = "advertisersTab", HttpMethod = "Get"
+        })
+    </p>
+}

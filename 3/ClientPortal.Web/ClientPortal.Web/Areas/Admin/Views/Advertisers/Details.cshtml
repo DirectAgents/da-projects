@@ -1,0 +1,41 @@
+﻿@model ClientPortal.Data.Contexts.Advertiser
+
+@{
+    ViewBag.Title = "Details";
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "advertisersTab",
+        HttpMethod = "Get"
+    };
+}
+
+<h4>Details</h4>
+
+<fieldset>
+    <legend>Advertiser</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AdvertiserId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AdvertiserId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AdvertiserName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AdvertiserName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.LogoFilename)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LogoFilename)
+    </div>
+</fieldset>
+<p>
+    @Ajax.ActionLink("Edit", "Edit", new { id=Model.AdvertiserId }, ajaxOptions) |
+    @Ajax.ActionLink("Back to List", "Index", ajaxOptions)
+</p>
