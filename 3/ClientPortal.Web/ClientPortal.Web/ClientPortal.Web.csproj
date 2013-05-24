@@ -196,6 +196,7 @@
     <Compile Include="Areas\Admin\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContactsController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Models\ContactVM.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ExportController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
@@ -599,6 +600,7 @@
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Content\kendo\2013.1.514\images\KendoUI.ttf" />
     <Content Include="Content\kendo\2013.1.514\images\KendoUI.woff" />
+    <Content Include="Areas\Admin\Views\Advertisers\EditContacts.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -1528,7 +1530,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Filters\" />
   </ItemGroup>

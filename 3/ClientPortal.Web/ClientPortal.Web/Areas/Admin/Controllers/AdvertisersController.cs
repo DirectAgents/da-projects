@@ -86,6 +86,39 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(advertiser);
         }
 
+        public ActionResult EditContacts(int id = 0)
+        {
+            Advertiser advertiser = db.Advertisers.Find(id);
+            if (advertiser == null)
+            {
+                return HttpNotFound();
+            }
+            return View(advertiser);
+        }
+        [HttpPost]
+        public ActionResult EditContacts(int id, string contactids)
+        {
+            var contactIds = contactids.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(c => Convert.ToInt32(c));
+
+            Advertiser advertiser = db.Advertisers.Find(id);
+            advertiser.AdvertiserContacts.Clear();
+            db.SaveChanges();
+
+            int order = 1;
+            foreach (var contactId in contactIds)
+            {
+                var contact = db.Contacts.Find(contactId);
+                if (contact != null)
+                {
+                    AdvertiserContact ac = new AdvertiserContact() { Contact = contact, Order = order++ };
+                    advertiser.AdvertiserContacts.Add(ac);
+                }
+            }
+            db.SaveChanges();
+
+            return View(advertiser);
+        }
+
         //
         // GET: /Admin/Advertisers/Delete/5
 

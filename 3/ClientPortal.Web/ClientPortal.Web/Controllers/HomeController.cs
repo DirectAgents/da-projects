@@ -67,7 +67,7 @@ namespace ClientPortal.Web.Controllers
             var advertiser = GetAdvertiser();
             if (advertiser != null)
             {
-                contacts = advertiser.AdvertiserContacts.OrderBy(ac => ac.Order).Select(ac => ac.Contact);
+                contacts = advertiser.AdvertiserContacts.OrderBy(ac => ac.Order).Take(2).Select(ac => ac.Contact);
             }
             var result = new JsonResult
             {

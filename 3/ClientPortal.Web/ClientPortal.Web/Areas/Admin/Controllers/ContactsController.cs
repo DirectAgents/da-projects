@@ -6,12 +6,25 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ClientPortal.Data.Contexts;
+using ClientPortal.Web.Areas.Admin.Models;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
     public class ContactsController : Controller
     {
         private ClientPortalContext db = new ClientPortalContext();
+
+        public JsonResult NameList()
+        {
+            var contacts = db.Contacts.Select(c => new ContactVM() { ContactId = c.ContactId, Name = c.FirstName + " " + c.LastName }).ToList();
+
+            var result = new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = contacts
+            };
+            return result;
+        }
 
         //
         // GET: /Admin/Contacts/
