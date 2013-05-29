@@ -29,6 +29,46 @@
             @Html.ValidationMessageFor(model => model.AdvertiserName)
         </div>
 
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Culture)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Culture)
+            @Html.ValidationMessageFor(model => model.Culture)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ShowCPMRep)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ShowCPMRep)
+            @Html.ValidationMessageFor(model => model.ShowCPMRep)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ShowConversionData)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ShowConversionData)
+            @Html.ValidationMessageFor(model => model.ShowConversionData)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ConversionValueName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ConversionValueName)
+            @Html.ValidationMessageFor(model => model.ConversionValueName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ConversionValueIsNumber)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ConversionValueIsNumber)
+            @Html.ValidationMessageFor(model => model.ConversionValueIsNumber)
+        </div>
+
         <p>
             <input type="submit" value="Create" />
         </p>

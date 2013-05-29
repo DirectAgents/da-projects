@@ -47,6 +47,11 @@ namespace ClientPortal.Web.Models
         public int AdvertiserId { get; set; }
         public string AdvertiserName { get; set; }
         public byte[] Logo { get; set; }
+        public string Culture { get; set; }
+        public bool ShowCPMRep { get; set; }
+        public bool ShowConversionData { get; set; }
+        public string ConversionValueName { get; set; }
+        public bool ConversionValueIsNumber { get; set; }
 
         public virtual ICollection<Contact> Contacts { get; set; }
     }

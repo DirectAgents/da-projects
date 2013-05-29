@@ -31,6 +31,11 @@
           <Property Name="AdvertiserId" Type="int" Nullable="false" />
           <Property Name="AdvertiserName" Type="nvarchar(max)" />
           <Property Name="Logo" Type="varbinary(max)" />
+          <Property Name="Culture" Type="nvarchar(max)" />
+          <Property Name="ShowCPMRep" Type="bit" Nullable="false" />
+          <Property Name="ShowConversionData" Type="bit" Nullable="false" />
+          <Property Name="ConversionValueName" Type="nvarchar(max)" />
+          <Property Name="ConversionValueIsNumber" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -391,6 +396,11 @@
           <Property Type="String" Name="AdvertiserName" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
           <Property Type="Binary" Name="Logo" MaxLength="Max" FixedLength="false" />
+          <Property Type="String" Name="Culture" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="ShowCPMRep" Nullable="false" />
+          <Property Type="Boolean" Name="ShowConversionData" Nullable="false" />
+          <Property Type="String" Name="ConversionValueName" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="ConversionValueIsNumber" Nullable="false" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -618,6 +628,11 @@
           <EntitySetMapping Name="Advertisers">
             <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
               <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="ConversionValueIsNumber" ColumnName="ConversionValueIsNumber" />
+                <ScalarProperty Name="ConversionValueName" ColumnName="ConversionValueName" />
+                <ScalarProperty Name="ShowConversionData" ColumnName="ShowConversionData" />
+                <ScalarProperty Name="ShowCPMRep" ColumnName="ShowCPMRep" />
+                <ScalarProperty Name="Culture" ColumnName="Culture" />
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />

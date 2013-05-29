@@ -15,6 +15,13 @@
     <legend>Advertiser</legend>
 
     <div class="display-label">
+         @Html.DisplayNameFor(model => model.Logo)
+    </div>
+    <div class="display-field">
+        <img src="@Url.Action("Logo", new { id = Model.AdvertiserId })" />
+    </div>
+
+    <div class="display-label">
          @Html.DisplayNameFor(model => model.AdvertiserId)
     </div>
     <div class="display-field">
@@ -29,10 +36,38 @@
     </div>
 
     <div class="display-label">
-         @Html.DisplayNameFor(model => model.Logo)
+         @Html.DisplayNameFor(model => model.Culture)
     </div>
     <div class="display-field">
-        <img src="@Url.Action("Logo", new { id = Model.AdvertiserId })" />
+        @Html.DisplayFor(model => model.Culture)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ShowCPMRep)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ShowCPMRep)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ShowConversionData)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ShowConversionData)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ConversionValueName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ConversionValueName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ConversionValueIsNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ConversionValueIsNumber)
     </div>
 </fieldset>
 <p>

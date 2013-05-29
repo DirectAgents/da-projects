@@ -81,7 +81,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(advertiser).State = EntityState.Modified;
+                var entry = db.Entry(advertiser);
+                entry.State = EntityState.Modified;
+                entry.Property(x => x.Logo).IsModified = false;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

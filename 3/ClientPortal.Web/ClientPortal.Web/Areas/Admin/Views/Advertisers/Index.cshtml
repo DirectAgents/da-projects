@@ -14,15 +14,14 @@
 </p>
 <table>
     <tr>
-        <th>
-            Id
-        </th>
-        <th>
-            Name
-        </th>
-        <th>
-            Logo?
-        </th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Logo?</th>
+        <th>Culture</th>
+        <th>ShowCPM?</th>
+        <th>ConVal</th>
+        <th>Show?</th>
+        <th>IsNum?</th>
         <th></th>
     </tr>
 
@@ -36,6 +35,21 @@
         </td>
         <td>
             @(item.Logo == null ? "no" : "yes")
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Culture)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShowCPMRep)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ConversionValueName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShowConversionData)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ConversionValueIsNumber)
         </td>
         <td>
             @Ajax.ActionLink("Edit", "Edit", new { id=item.AdvertiserId }, ajaxOptions) |
