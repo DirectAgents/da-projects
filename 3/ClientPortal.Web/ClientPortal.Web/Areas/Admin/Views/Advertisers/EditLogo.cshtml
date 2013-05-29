@@ -1,0 +1,52 @@
+﻿@model ClientPortal.Data.Contexts.Advertiser
+
+@{
+    ViewBag.Title = "Edit Logo";
+}
+
+<h4>Edit Logo</h4>
+
+@if (Model.Logo != null)
+{
+    <text>Current Logo:</text><br/>
+    <img src="@Url.Action("Logo", new { id = Model.AdvertiserId })" />
+}
+
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "advertisersTab" }))
+{
+    <input id="logoUpload" name="logo" type="file" />
+}
+
+<div>
+    @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
+        UpdateTargetId = "advertisersTab", HttpMethod = "Get"
+    })
+</div>
+
+<script>
+    $(function () {
+        $("#logoUpload").kendoUpload({
+            async: {
+                saveUrl: "@Url.Action("UploadLogo")",
+                autoUpload: false
+            },
+            upload: function(e) {
+                e.data = { id: @Model.AdvertiserId };
+            },
+            localization: {
+                uploadSelectedFiles: "Upload"
+            },
+            multiple: false,
+            complete: onUploadComplete
+        });
+    });
+
+    function onUploadComplete() {
+        $.ajax({
+            url: '@Url.Action("EditLogo")',
+            cache: false
+        }).done(function (html) {
+            $("#advertisersTab").html(html);
+        });
+    }
+</script>

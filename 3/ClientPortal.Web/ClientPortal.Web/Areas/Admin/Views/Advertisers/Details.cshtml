@@ -29,10 +29,10 @@
     </div>
 
     <div class="display-label">
-         @Html.DisplayNameFor(model => model.LogoFilename)
+         @Html.DisplayNameFor(model => model.Logo)
     </div>
     <div class="display-field">
-        @Html.DisplayFor(model => model.LogoFilename)
+        <img src="@Url.Action("Logo", new { id = Model.AdvertiserId })" />
     </div>
 </fieldset>
 <p>

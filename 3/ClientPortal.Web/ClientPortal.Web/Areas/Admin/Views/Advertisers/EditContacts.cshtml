@@ -4,14 +4,33 @@
     ViewBag.Title = "Edit Contacts";
 }
 
-<h4>Edit Contacts</h4>
+<h4>Edit Advertiser Contacts</h4>
 
 @using (Ajax.BeginForm("EditContacts", null, new AjaxOptions { UpdateTargetId = "advertisersTab" }, new { onsubmit = "SetContactsHidden()" }))
 {
     <input type="hidden" id="contactids" name="contactids" />
-    <select id="selectContacts" multiple="multiple" data-placeholder="Select contacts...">
-    </select>
-    <input type="submit" value="Save" />
+    <fieldset>
+        <legend>Advertiser</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AdvertiserName)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.AdvertiserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AdvertiserContacts)
+        </div>
+        <div class="editor-field">
+            <select id="selectContacts" multiple="multiple" data-placeholder="Select contacts...">
+            </select>
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
 }
 
 <div>

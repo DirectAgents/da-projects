@@ -6,9 +6,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ClientPortal.Data.Contexts;
+using System.Web.Helpers;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
+    [Authorize(Users = "admin")]
     public class AdvertisersController : Controller
     {
         private ClientPortalContext db = new ClientPortalContext();
@@ -117,6 +119,37 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             db.SaveChanges();
 
             return View(advertiser);
+        }
+
+        public FileResult Logo(int id)
+        {
+            Advertiser advertiser = db.Advertisers.Find(id);
+            if (advertiser == null)
+                return null;
+
+            WebImage logo = new WebImage(advertiser.Logo);
+            return File(logo.GetBytes(), "image/" + logo.ImageFormat, logo.FileName);
+        }
+        public ActionResult EditLogo(int id = 0)
+        {
+            Advertiser advertiser = db.Advertisers.Find(id);
+            if (advertiser == null)
+            {
+                return HttpNotFound();
+            }
+            return View(advertiser);
+        }
+        [HttpPost]
+        public ActionResult UploadLogo(int id)
+        {
+            WebImage logo = WebImage.GetImageFromRequest();
+            byte[] imageBytes = logo.GetBytes();
+
+            Advertiser advertiser = db.Advertisers.Find(id);
+            advertiser.Logo = imageBytes;
+            db.SaveChanges();
+
+            return null;
         }
 
         //

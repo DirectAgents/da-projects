@@ -143,3 +143,10 @@ footer.row {
 {
     overflow-y: auto;
 }
+
+.display-label, .editor-label label {
+    font-weight: bold;
+}
+.editor-field, .display-field {
+    margin-bottom: 12px;
+}

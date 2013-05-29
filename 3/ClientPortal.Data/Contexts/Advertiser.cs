@@ -21,7 +21,7 @@ namespace ClientPortal.Data.Contexts
     
         public int AdvertiserId { get; set; }
         public string AdvertiserName { get; set; }
-        public string LogoFilename { get; set; }
+        public byte[] Logo { get; set; }
     
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }
     }

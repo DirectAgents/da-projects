@@ -2,10 +2,10 @@
 
 @if (Request.IsAuthenticated)
 {
-    if (!String.IsNullOrWhiteSpace(Model.LogoImage))
+    if (Model.HasLogo)
     {
     <p style="text-align: center">
-        <img src="~/Images/@Model.LogoImage" />
+        <img src="@Url.Action("Logo")" />
     </p>               
     }
     else

@@ -10,18 +10,18 @@
 }
 
 <p>
-    @Ajax.ActionLink("Create New", "Create", ajaxOptions)
+    @Ajax.ActionLink("Create New Advertiser", "Create", ajaxOptions)
 </p>
 <table>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.AdvertiserId)
+            Id
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AdvertiserName)
+            Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LogoFilename)
+            Logo?
         </th>
         <th></th>
     </tr>
@@ -35,11 +35,12 @@
             @Html.DisplayFor(modelItem => item.AdvertiserName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.LogoFilename)
+            @(item.Logo == null ? "no" : "yes")
         </td>
         <td>
             @Ajax.ActionLink("Edit", "Edit", new { id=item.AdvertiserId }, ajaxOptions) |
             @Ajax.ActionLink("Edit Contacts", "EditContacts", new { id=item.AdvertiserId }, ajaxOptions) |
+            @Ajax.ActionLink("Logo", "EditLogo", new { id=item.AdvertiserId }, ajaxOptions) |
             @Ajax.ActionLink("Details", "Details", new { id=item.AdvertiserId }, ajaxOptions) |
             @Ajax.ActionLink("Delete", "Delete", new { id=item.AdvertiserId }, ajaxOptions)
         </td>

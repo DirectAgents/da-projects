@@ -11,9 +11,15 @@
         <img src="~/Images/logo1a.png" />
     </div>
     <div class="two columns topinfo">
-        Admin
     </div>
     <div class="five columns logout">
+        <div style="float: right">
+        @using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <a class="button" href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+        }
+        </div>
     </div>
 </div>
 <!-- /TopBar -->
@@ -41,8 +47,7 @@
               | Vertical Tabs |
               +---------------+-->*@
         <dl class="vertical tabs">
-            <dd class="active"><a href="#vertical1" id="vertNav_Home">Home</a></dd>
-            <dd><a href="#vertical2" id="vertNav_ABC">ABC</a></dd>
+            <dd class="active"><a href="#vertical1" id="vertNav_Home">Admin</a></dd>
         </dl>
         <!-- /VTabs -->
 
@@ -54,14 +59,14 @@
           +---------------+-->*@
     <ul class="tabs-content">
 
-        @*<!--+----------
-              | Home VTab
-              +------------>*@
+        @*<!--+-----------+
+              | Home VTab |
+              +-----------+-->*@
         <li id="vertical1Tab" class="active">
             <div class="ten columns portaltabs-h">
 
                 @*<!--+----------------+
-                      | Home HTabs  |
+                      | Home HTabs     |
                       +----------------+-->*@
                 <dl class="tabs">
                     <dd class="active"><a href="#advertisers" id="navAdvertisers">Advertisers</a></dd>
@@ -70,7 +75,7 @@
                 <!-- /Home HTabs  -->
 
                 @*<!--+------------------------+
-                      | Home HTabs Content  |
+                      | Home HTabs Content     |
                       +------------------------+-->*@
                 <ul class="tabs-content">
                     <li id="advertisersTab" class="active"></li>
@@ -80,17 +85,7 @@
 
             </div>
         </li>
-        <!-- /Reports   -->
-
-        @*<!--+-----------
-              | ABC VTab
-              +------------->*@
-        <li id="vertical2Tab">
-            <div class="ten columns" id="abcTab">
-                abc
-            </div>
-        </li>
-        <!-- /ABC -->
+        <!-- /Home -->
 
     </ul>
     <!-- /VTabs -->

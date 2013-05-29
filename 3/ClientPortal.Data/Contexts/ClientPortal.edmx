@@ -30,7 +30,7 @@
           </Key>
           <Property Name="AdvertiserId" Type="int" Nullable="false" />
           <Property Name="AdvertiserName" Type="nvarchar(max)" />
-          <Property Name="LogoFilename" Type="nvarchar(max)" />
+          <Property Name="Logo" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -389,8 +389,8 @@
           </Key>
           <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
           <Property Type="String" Name="AdvertiserName" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="LogoFilename" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
+          <Property Type="Binary" Name="Logo" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -618,7 +618,7 @@
           <EntitySetMapping Name="Advertisers">
             <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
               <MappingFragment StoreEntitySet="Advertiser">
-                <ScalarProperty Name="LogoFilename" ColumnName="LogoFilename" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
               </MappingFragment>

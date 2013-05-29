@@ -89,6 +89,22 @@ namespace ClientPortal.Web
                 .ForMember(dest => dest.Leads, opt => opt.MapFrom(src => src.Count))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PriceReceived));
 
+            // add admin account if it does not exist
+            if (!WebSecurity.UserExists("admin"))
+            {
+                WebSecurity.CreateUserAndAccount(
+                    "admin",
+                    "da@dmin",
+                    new
+                    {
+                        CakeAdvertiserId = 0,
+                        Culture = "en-US",
+                        ShowCPMRep = false,
+                        ShowConversionData = false,
+                        ConversionValueIsNumber = false
+                    });
+            }
+
             // add service master beta account if it does not exist
             if (!WebSecurity.UserExists("sm"))
             {

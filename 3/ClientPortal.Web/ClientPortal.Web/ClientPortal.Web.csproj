@@ -563,9 +563,6 @@
     <Content Include="Images\logo1a.png" />
     <Content Include="Images\da.jpeg" />
     <Content Include="Images\logo1.png" />
-    <Content Include="Images\logoAHS.png" />
-    <Content Include="Images\logoITT.png" />
-    <Content Include="Images\logoLT.png" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\blackbird.js" />
     <Content Include="Scripts\foundation\app.js" />
@@ -601,6 +598,7 @@
     <Content Include="Content\kendo\2013.1.514\images\KendoUI.ttf" />
     <Content Include="Content\kendo\2013.1.514\images\KendoUI.woff" />
     <Content Include="Areas\Admin\Views\Advertisers\EditContacts.cshtml" />
+    <Content Include="Areas\Admin\Views\Advertisers\EditLogo.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />

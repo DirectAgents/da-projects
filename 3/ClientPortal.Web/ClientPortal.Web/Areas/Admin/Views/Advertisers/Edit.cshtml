@@ -15,8 +15,11 @@
 
         @Html.HiddenFor(model => model.AdvertiserId)
 
-        <div class="editor-label" style="margin-bottom: 12px">
-            AdvertiserId: @Html.DisplayFor(model => model.AdvertiserId)
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AdvertiserId)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.AdvertiserId)
         </div>
 
         <div class="editor-label">
@@ -25,14 +28,6 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.AdvertiserName)
             @Html.ValidationMessageFor(model => model.AdvertiserName)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.LogoFilename)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.LogoFilename)
-            @Html.ValidationMessageFor(model => model.LogoFilename)
         </div>
 
         <p>

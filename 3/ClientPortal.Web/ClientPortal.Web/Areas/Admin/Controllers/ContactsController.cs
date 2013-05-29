@@ -10,6 +10,7 @@ using ClientPortal.Web.Areas.Admin.Models;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
+    [Authorize(Users = "admin")]
     public class ContactsController : Controller
     {
         private ClientPortalContext db = new ClientPortalContext();

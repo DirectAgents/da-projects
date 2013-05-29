@@ -46,7 +46,7 @@ namespace ClientPortal.Web.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         public int AdvertiserId { get; set; }
         public string AdvertiserName { get; set; }
-        public string LogoFilename { get; set; }
+        public byte[] Logo { get; set; }
 
         public virtual ICollection<Contact> Contacts { get; set; }
     }
