@@ -47,13 +47,13 @@ namespace ClientPortal.Web
                 var selectquote = new Advertiser() { AdvertiserId = 580, AdvertiserName = "SelectQuote", LogoFilename = "logoSelectQuote.png" };
                 selectquote.AdvertiserContacts.Add(new AdvertiserContact() { Contact = dinesh, Order = 1 });
                 selectquote.AdvertiserContacts.Add(new AdvertiserContact() { Contact = rachel, Order = 2 });
-                var sm = new Advertiser() { AdvertiserId = 207, AdvertiserName = "ServiceMaster", LogoFilename = "logoAHS.png" };
+                var sm = new Advertiser() { AdvertiserId = 207, AdvertiserName = "ServiceMaster" };
                 sm.AdvertiserContacts.Add(new AdvertiserContact() { Contact = lyle, Order = 1 });
                 sm.AdvertiserContacts.Add(new AdvertiserContact() { Contact = jenv, Order = 2 });
-                var itt = new Advertiser() { AdvertiserId = 250, AdvertiserName = "ITT", LogoFilename = "logoITT.png" };
+                var itt = new Advertiser() { AdvertiserId = 250, AdvertiserName = "ITT" };
                 itt.AdvertiserContacts.Add(new AdvertiserContact() { Contact = adam, Order = 1 });
                 itt.AdvertiserContacts.Add(new AdvertiserContact() { Contact = sadie, Order = 2 });
-                var tree = new Advertiser() { AdvertiserId = 278, AdvertiserName = "Lending Tree", LogoFilename = "logoLT.png" };
+                var tree = new Advertiser() { AdvertiserId = 278, AdvertiserName = "Lending Tree" };
                 tree.AdvertiserContacts.Add(new AdvertiserContact() { Contact = lyle, Order = 1 });
                 tree.AdvertiserContacts.Add(new AdvertiserContact() { Contact = jenv, Order = 2 });
 

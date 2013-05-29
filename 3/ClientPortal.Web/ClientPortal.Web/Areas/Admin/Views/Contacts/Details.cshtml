@@ -1,0 +1,55 @@
+﻿@model ClientPortal.Data.Contexts.Contact
+
+@{
+    ViewBag.Title = "Details";
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "contactsTab",
+        HttpMethod = "Get"
+    };
+}
+
+<h4>Details</h4>
+
+<fieldset>
+    <legend>Contact</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ContactId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ContactId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FirstName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FirstName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.LastName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Title)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Title)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Email)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+</fieldset>
+<p>
+    @Ajax.ActionLink("Edit", "Edit", new { id=Model.ContactId }, ajaxOptions) |
+    @Ajax.ActionLink("Back to List", "Index", ajaxOptions)
+</p>

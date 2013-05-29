@@ -35,6 +35,14 @@ namespace ClientPortal.Web.Controllers
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {
+                if (model.UserName == "admin")
+                {
+                    if (returnUrl != "/Admin") returnUrl = "/Admin";
+                }
+                else
+                {
+                    if (returnUrl != null && returnUrl.ToLower() == "/admin") returnUrl = "/";
+                }
                 return RedirectToLocal(returnUrl);
             }
 

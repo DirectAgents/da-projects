@@ -16,6 +16,7 @@
     <span class="paddedlabel">End:</span>
     <input id="conrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('conrep')" />
     <a class="button paddedbutton" id="conrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('conrep'); return false">Filter</a>
+    <a class="button paddedbutton" style="float: right" href="#" onclick="ExportConRepCSV(); return false">Export CSV</a>
 </div>
 <div id="conrepChartSection" class="k-content">
     <div class="chart-wrapper">
@@ -23,7 +24,16 @@
     </div>
 </div>
 <div id="conrepGrid"></div>
+
 <script>
+    function ExportConRepCSV() {
+        var s = $('#conrep_startdate').val();
+        var e = $('#conrep_enddate').val();
+
+        var url = '@Url.Action("ConversionReport", "Export")?startdate=' + s + '&enddate=' + e;
+        window.location.href = url;
+    }
+
     function SetupConversionReportGrid() {
         $('#conrep_dateRangeSel').kendoDropDownList();
         $('#conrep_startdate').kendoDatePicker({ footer: ' ' });
@@ -45,7 +55,7 @@
                 { field: 'Date', width: 160, format: '{0:G}' },
                 { field: 'OfferId', title: 'OffID', width: 60 },
                 { field: 'Offer' },
-                { field: 'AffId', title: 'subid', width: 62 },
+                { field: 'AffId', title: 'SubID', width: 62 },
                 { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
 @if (Model.ShowConVal) {
     var templ = Model.ConValIsNum ? "kendo.toString(ConVal, 'n0')" : "FormatCurr(ConVal, Culture)";

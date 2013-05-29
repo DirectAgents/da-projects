@@ -16,6 +16,7 @@
     <span class="paddedlabel">End:</span>
     <input id="offsum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('offsum')" />
     <a class="button paddedbutton" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum'); return false">Filter</a>
+    <a class="button paddedbutton" style="float: right" href="#" onclick="ExportOffSumCSV(); return false">Export CSV</a>
 </div>
 <div id="offsumChartSection" class="k-content">
     <div class="chart-wrapper">
@@ -23,7 +24,6 @@
     </div>
 </div>
 <div id="offsumGrid"></div>
-@Html.ActionLink("Export CSV", "OfferSummaryReport", "Export", new { startdate = Model.StartDate, enddate = Model.EndDate }, null)
 
 <style type="text/css">
     td.k-detail-cell > div.k-grid
@@ -35,6 +35,14 @@
 </style>
 
 <script>
+    function ExportOffSumCSV() {
+        var s = $('#offsum_startdate').val();
+        var e = $('#offsum_enddate').val();
+
+        var url = '@Url.Action("OfferSummaryReport", "Export")?startdate=' + s + '&enddate=' + e;
+        window.location.href = url;
+    }
+
     var offerSummaryDataUrl = '@Url.Action("OfferSummaryData", "Reports")';
 
     function CreateOfferSummaryDataSource() {
@@ -158,7 +166,7 @@
         $("<div/>").appendTo(e.detailCell).kendoGrid({
             dataSource: dataSource,
             columns: [
-                { field: 'AffId', title: 'sub_id', width: 80 },
+                { field: 'AffId', title: 'SubId', width: 80 },
                 {
                     field: 'Count',
                     title: 'Leads',

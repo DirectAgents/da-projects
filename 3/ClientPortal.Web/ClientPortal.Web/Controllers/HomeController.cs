@@ -8,6 +8,7 @@ using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using WebMatrix.WebData;
 using StackExchange.Profiling;
+using System.Web.Helpers;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -52,12 +53,22 @@ namespace ClientPortal.Web.Controllers
                     model.Advertiser = cakeRepo.Advertiser(advId);
 
                     var advertiser = cpRepo.GetAdvertiser(advId);
-                    if (advertiser != null)
-                        model.LogoImage = advertiser.LogoFilename;
+                    if (advertiser != null && advertiser.Logo != null)
+                        model.HasLogo = true;
                 }
 
                 return View(model);
             }
+        }
+
+        public FileResult Logo()
+        {
+            var advertiser = GetAdvertiser();
+            if (advertiser == null || advertiser.Logo == null)
+                return null;
+
+            WebImage logo = new WebImage(advertiser.Logo);
+            return File(logo.GetBytes(), "image/" + logo.ImageFormat, logo.FileName);
         }
 
         public JsonResult MainContactsData()
@@ -67,7 +78,7 @@ namespace ClientPortal.Web.Controllers
             var advertiser = GetAdvertiser();
             if (advertiser != null)
             {
-                contacts = advertiser.AdvertiserContacts.OrderBy(ac => ac.Order).Select(ac => ac.Contact);
+                contacts = advertiser.AdvertiserContacts.OrderBy(ac => ac.Order).Take(2).Select(ac => ac.Contact);
             }
             var result = new JsonResult
             {

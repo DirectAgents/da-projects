@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.Contact>
+
+@{
+    ViewBag.Title = "Index";
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "contactsTab",
+        HttpMethod = "Get"
+    };
+}
+
+<p>
+    @Ajax.ActionLink("Create New Contact", "Create", ajaxOptions)
+</p>
+<table>
+    <tr>
+        <th>
+            Id
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Ajax.ActionLink("Edit", "Edit", new { id=item.ContactId }, ajaxOptions) |
+            @Ajax.ActionLink("Details", "Details", new { id=item.ContactId }, ajaxOptions) |
+            @Ajax.ActionLink("Delete", "Delete", new { id=item.ContactId }, ajaxOptions)
+        </td>
+    </tr>
+}
+
+</table>

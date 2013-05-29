@@ -1,7 +1,7 @@
 ﻿@model ClientPortal.Web.Models.ReportModel
 
 <div style="height: 35px;">
-    <select style="float: left; width: 110px" id="affrep_dateRangeSel" onchange="ChangeDateRange('affrep')">
+    <select style="width: 140px" id="affrep_dateRangeSel" onchange="ChangeDateRange('affrep')">
         <option value="today">Today</option>
         <option value="yesterday">Yesterday</option>
         <option value="wtd">Week to Date</option>
@@ -11,15 +11,28 @@
         <option value="lastmonth">Last Month</option>
         <option value="custom">- custom -</option>
     </select>
-    <span style="float: left; margin-left: 10px">Start:</span>
-    <input style="float:left; width:100px" id="affrep_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('affrep')" />
-    <span style="float: left; margin-left: 10px">End:</span>
-    <input style="float:left; width:100px" id="affrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('affrep')" />
-    <a class="button" style="padding: 3px; margin-left: 10px" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
+    <span class="paddedlabel">Start:</span>
+    <input id="affrep_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('affrep')" />
+    <span class="paddedlabel">End:</span>
+    <input id="affrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('affrep')" />
+    <a class="button paddedbutton" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
+    <a class="button paddedbutton" style="float: right" href="#" onclick="ExportAffRepCSV(); return false">Export CSV</a>
 </div>
 <div id="affrepGrid"></div>
+
 <script>
+    function ExportAffRepCSV() {
+        var s = $('#affrep_startdate').val();
+        var e = $('#affrep_enddate').val();
+
+        var url = '@Url.Action("AffiliateReport", "Export")?startdate=' + s + '&enddate=' + e;
+        window.location.href = url;
+    }
+
     function SetupAffiliateReportGrid() {
+        $('#affrep_dateRangeSel').kendoDropDownList();
+        $('#affrep_startdate').kendoDatePicker({ footer: ' ' });
+        $('#affrep_enddate').kendoDatePicker({ footer: ' ' });
 
         var readData = function () {
             return {
@@ -34,7 +47,7 @@
             dataSource: dataSource,
             height: 400,
             columns: [
-                { field: 'AffId', title: 'sub_id', width: 80, template: '<a href="">#: AffId#</a>' },
+                { field: 'AffId', title: 'SubId', width: 80, template: '<a href="">#: AffId#</a>' },
                 { field: 'OfferId', width: 80 },
                 { field: 'Offer' },
                 { field: 'Count', title: 'Leads', width: 100, footerTemplate: "#= sum #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
@@ -54,9 +67,6 @@
             },
             pageable: true
         });
-
-        $('#affrep_startdate').kendoDatePicker();
-        $('#affrep_enddate').kendoDatePicker();
     }
 
     function CreateAffiliateReportDataSource(readData) {

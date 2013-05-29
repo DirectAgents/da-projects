@@ -1,0 +1,68 @@
+﻿@model ClientPortal.Data.Contexts.Advertiser
+
+@{
+    ViewBag.Title = "Edit Contacts";
+}
+
+<h4>Edit Advertiser Contacts</h4>
+
+@using (Ajax.BeginForm("EditContacts", null, new AjaxOptions { UpdateTargetId = "advertisersTab" }, new { onsubmit = "SetContactsHidden()" }))
+{
+    <input type="hidden" id="contactids" name="contactids" />
+    <fieldset>
+        <legend>Advertiser</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AdvertiserName)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.AdvertiserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AdvertiserContacts)
+        </div>
+        <div class="editor-field">
+            <select id="selectContacts" multiple="multiple" data-placeholder="Select contacts...">
+            </select>
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
+        UpdateTargetId = "advertisersTab", HttpMethod = "Get"
+    })
+</div>
+
+<script>
+    SetupEditContacts();
+
+    function SetupEditContacts() {
+        var url = '@Url.Action("NameList", "Contacts")';
+        $("#selectContacts").kendoMultiSelect({
+//            placeholder: "Select contacts...",
+            dataTextField: "Name",
+            dataValueField: "ContactId",
+            dataSource: {
+                transport: {
+                    read: { url: url, dataType: "json" }
+                }
+            },
+            value: [
+@foreach(var ac in Model.AdvertiserContactsOrdered) {
+    <text>{ ContactId: "@ac.ContactId", Name: "@(ac.Contact.FirstName + " " + ac.Contact.LastName)" },</text>
+}
+            ]
+        });
+    }
+
+    function SetContactsHidden() {
+        var sel = $('#selectContacts').data('kendoMultiSelect');
+        $('#contactids').val(sel.value());
+    }
+</script>

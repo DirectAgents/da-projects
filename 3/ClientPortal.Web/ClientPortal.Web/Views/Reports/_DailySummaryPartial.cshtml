@@ -12,6 +12,7 @@
     <span class="paddedlabel">End:</span>
     <input id="daysum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('daysum')" />
     <a class="button paddedbutton" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum'); return false">Filter</a>
+    <a class="button paddedbutton" style="float: right" href="#" onclick="ExportDaySumCSV(); return false">Export CSV</a>
 </div>
 <div id="daysumChartSection" class="k-content">
     <div class="configuration k-widget k-header" style="width: 170px; float: right">
@@ -46,6 +47,14 @@
 <div id="daysumGrid"></div>
 
 <script>
+    function ExportDaySumCSV() {
+        var s = $('#daysum_startdate').val();
+        var e = $('#daysum_enddate').val();
+
+        var url = '@Url.Action("DailySummaryReport", "Export")?startdate=' + s + '&enddate=' + e;
+        window.location.href = url;
+    }
+
     function CreateDailySummaryDataSource() {
         return new kendo.data.DataSource({
             serverPaging: true,
