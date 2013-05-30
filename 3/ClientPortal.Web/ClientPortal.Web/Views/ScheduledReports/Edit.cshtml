@@ -1,0 +1,47 @@
+﻿@model ClientPortal.Web.Models.ScheduledReportVM
+@{
+    bool isNew = Model.Id < 0;
+}
+
+<div id="editScheduledReportWrapper">
+    @using (Ajax.BeginForm(new AjaxOptions { Url = Url.Action("Save"), HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "editScheduledReportWrapper", OnSuccess = "EditScheduledReportSuccess" }))
+    {
+        @Html.HiddenFor(model => model.Id)
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <legend>@(isNew ? "Add" : "Edit") Scheduled Report</legend>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.ReportType)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.ReportType, new SelectList(Enum.GetValues(typeof(ClientPortal.Data.Contexts.ReportType))), new { style = "width:auto" })
+                @Html.ValidationMessageFor(model => model.ReportType)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Frequency)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.Frequency, new SelectList(Enum.GetValues(typeof(ClientPortal.Web.Models.ReportFrequencyEnum))), new { style = "width:auto" })
+                @Html.ValidationMessageFor(model => model.Frequency)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.IsCumulative)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.IsCumulative)
+                @Html.ValidationMessageFor(model => model.IsCumulative)
+            </div>
+        </fieldset>
+
+        <div style="float:left">
+            <input type="submit" value="Save" />
+        </div>
+        <div style="float:right">
+            <input type="button" value="Cancel" onclick="CloseScheduledReportWindow()" />
+        </div>
+    }
+</div>

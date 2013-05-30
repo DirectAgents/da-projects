@@ -4,6 +4,7 @@ using System.Linq;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
+using System.Data;
 
 namespace ClientPortal.Data.Services
 {
@@ -247,6 +248,45 @@ namespace ClientPortal.Data.Services
 
         #endregion
 
+        #region ScheduledReports
+        public IQueryable<ScheduledReport> GetScheduledReports(int advertiserId)
+        {
+            var scheduledReports = context.ScheduledReports.Where(sr => sr.AdvertiserId == advertiserId);
+            return scheduledReports;
+        }
+
+        public ScheduledReport GetScheduledReport(int id)
+        {
+            var rep = context.ScheduledReports.Find(id);
+            return rep;
+        }
+
+        public void AddScheduledReport(ScheduledReport scheduledReport)
+        {
+            context.ScheduledReports.Add(scheduledReport);
+        }
+
+        //public void SaveScheduledReport(ScheduledReport scheduledReport)
+        //{
+        //    var entry = context.Entry(scheduledReport);
+        //    entry.State = EntityState.Modified;
+        //    context.SaveChanges();
+        //}
+
+        public bool DeleteScheduledReport(int id, int? advertiserId)
+        {
+            bool deleted = false;
+            var rep = context.ScheduledReports.Find(id);
+            if (rep != null && (advertiserId == null || rep.AdvertiserId == advertiserId.Value))
+            {
+                context.ScheduledReports.Remove(rep);
+                context.SaveChanges();
+                deleted = true;
+            }
+            return deleted;
+        }
+        #endregion
+
         #region Goals
         public IQueryable<Goal> GetGoals(int advertiserId)
         {
@@ -256,14 +296,14 @@ namespace ClientPortal.Data.Services
 
         public Goal GetGoal(int id)
         {
-            var goal = context.Goals.Where(g => g.Id == id).FirstOrDefault();
+            var goal = context.Goals.Find(id);
             return goal;
         }
 
         public bool DeleteGoal(int id, int? advertiserId)
         {
             bool deleted = false;
-            var goal = context.Goals.Where(g => g.Id == id).FirstOrDefault();
+            var goal = context.Goals.Find(id);
             if (goal != null && (advertiserId == null || goal.AdvertiserId == advertiserId.Value))
             {
                 context.Goals.Remove(goal);

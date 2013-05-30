@@ -30,6 +30,12 @@ namespace ClientPortal.Data.Contracts
         Advertiser GetAdvertiser(int id);
         Contact GetContact(string search);
 
+        IQueryable<ScheduledReport> GetScheduledReports(int advertiserId);
+        ScheduledReport GetScheduledReport(int id);
+        void AddScheduledReport(ScheduledReport scheduledReport);
+        //void SaveScheduledReport(ScheduledReport scheduledReport);
+        bool DeleteScheduledReport(int id, int? advertiserId);
+
         IQueryable<Goal> GetGoals(int advertiserId);
         Goal GetGoal(int id);
         bool DeleteGoal(int id, int? advertiserId);

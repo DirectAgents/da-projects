@@ -1,0 +1,26 @@
+﻿@model IEnumerable<ClientPortal.Web.Models.ScheduledReportVM>
+
+<table>
+<thead>
+    <tr>
+        <th></th>
+        <th>Type</th>
+        <th>Frequency</th>
+        <th>Cumulative?</th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var rep in Model)
+{
+<tr>
+    <td>
+        <a href="#" onclick="EditScheduledReport(@rep.Id); return false">Edit</a> |
+        <a href="#" onclick="DeleteScheduledReport(@rep.Id, true); return false">Delete</a>
+    </td>
+    <td>@rep.ReportType</td>
+    <td>@rep.Frequency</td>
+    <td>@rep.IsCumulative</td>
+</tr>
+}
+</tbody>
+</table>
