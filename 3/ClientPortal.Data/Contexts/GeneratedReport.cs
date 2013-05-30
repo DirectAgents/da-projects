@@ -20,10 +20,10 @@ namespace ClientPortal.Data.Contexts
         }
     
         public int Id { get; set; }
-        public int ReportType { get; set; }
+        public ReportType ReportType { get; set; }
         public System.DateTime StartDate { get; set; }
         public System.DateTime EndDate { get; set; }
-        public int ReportStatus { get; set; }
+        public ReportStatus ReportStatus { get; set; }
         public Nullable<System.DateTime> ReportStatusUpdated { get; set; }
         public string Content { get; set; }
         public int ScheduledReportId { get; set; }

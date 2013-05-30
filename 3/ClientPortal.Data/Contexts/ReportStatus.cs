@@ -10,16 +10,11 @@
 namespace ClientPortal.Data.Contexts
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class EmailedReport
+    public enum ReportStatus : int
     {
-        public int Id { get; set; }
-        public string EmailTo { get; set; }
-        public EmailStatus EmailStatus { get; set; }
-        public Nullable<System.DateTime> EmailStatusUpdated { get; set; }
-        public int GeneratedReportId { get; set; }
-    
-        public virtual GeneratedReport GeneratedReport { get; set; }
+        Default = 1,
+        QueuedForCreate = 2,
+        Created = 3
     }
 }

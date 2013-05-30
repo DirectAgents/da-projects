@@ -112,6 +112,9 @@
     <Compile Include="Contexts\EmailedReport.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\EmailStatus.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\GeneratedReport.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
@@ -122,6 +125,12 @@
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\Offer.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\ReportStatus.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\ReportType.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\ScheduledReport.cs">

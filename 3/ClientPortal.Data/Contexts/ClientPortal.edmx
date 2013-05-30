@@ -662,10 +662,10 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="ReportType" Nullable="false" />
+          <Property Type="ClientPortalModel.ReportType" Name="ReportType" Nullable="false" />
           <Property Type="DateTime" Name="StartDate" Nullable="false" />
           <Property Type="DateTime" Name="EndDate" Nullable="false" />
-          <Property Type="Int32" Name="ReportStatus" Nullable="false" />
+          <Property Type="ClientPortalModel.ReportStatus" Name="ReportStatus" Nullable="false" />
           <Property Type="DateTime" Name="ReportStatusUpdated" Nullable="true" />
           <Property Type="String" Name="Content" Nullable="false" />
           <NavigationProperty Name="ScheduledReport" Relationship="ClientPortalModel.ScheduledReportGeneratedReport" FromRole="GeneratedReport" ToRole="ScheduledReport" />
@@ -699,7 +699,7 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="EmailTo" Nullable="false" />
-          <Property Type="Int32" Name="EmailStatus" Nullable="false" />
+          <Property Type="ClientPortalModel.EmailStatus" Name="EmailStatus" Nullable="false" />
           <Property Type="DateTime" Name="EmailStatusUpdated" Nullable="true" />
           <NavigationProperty Name="GeneratedReport" Relationship="ClientPortalModel.GeneratedReportEmailedReport" FromRole="EmailedReport" ToRole="GeneratedReport" />
           <Property Type="Int32" Name="GeneratedReportId" Nullable="false" />
@@ -728,6 +728,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EnumType Name="EmailStatus">
+          <Member Name="Default" Value="1" />
+          <Member Name="QueuedForSend" Value="2" />
+          <Member Name="Sent" Value="3" />
+        </EnumType>
+        <EnumType Name="ReportStatus">
+          <Member Name="Default" Value="1" />
+          <Member Name="QueuedForCreate" Value="2" />
+          <Member Name="Created" Value="3" />
+        </EnumType>
+        <EnumType Name="ReportType">
+          <Member Name="OfferSummary" Value="1" />
+          <Member Name="DailySummary" Value="2" />
+          <Member Name="ConversionReport" Value="3" />
+          <Member Name="Affiliates" Value="4" />
+        </EnumType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
