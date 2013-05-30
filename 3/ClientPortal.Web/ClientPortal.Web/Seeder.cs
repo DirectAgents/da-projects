@@ -44,7 +44,7 @@ namespace ClientPortal.Web
                 var dinesh = cpRepo.GetContact("Boaz"); // AA: what if two contacts have same last name?
                 var rachel = cpRepo.GetContact("Nugent");
 
-                var selectquote = new Advertiser() { AdvertiserId = 580, AdvertiserName = "SelectQuote", LogoFilename = "logoSelectQuote.png" };
+                var selectquote = new Advertiser() { AdvertiserId = 580, AdvertiserName = "SelectQuote" };
                 selectquote.AdvertiserContacts.Add(new AdvertiserContact() { Contact = dinesh, Order = 1 });
                 selectquote.AdvertiserContacts.Add(new AdvertiserContact() { Contact = rachel, Order = 2 });
                 var sm = new Advertiser() { AdvertiserId = 207, AdvertiserName = "ServiceMaster" };

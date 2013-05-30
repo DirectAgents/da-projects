@@ -17,6 +17,7 @@ namespace ClientPortal.Data.Contexts
         public Advertiser()
         {
             this.AdvertiserContacts = new HashSet<AdvertiserContact>();
+            this.ScheduledReports = new HashSet<ScheduledReport>();
         }
     
         public int AdvertiserId { get; set; }
@@ -29,5 +30,6 @@ namespace ClientPortal.Data.Contexts
         public bool ConversionValueIsNumber { get; set; }
     
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }
+        public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
     }
 }
