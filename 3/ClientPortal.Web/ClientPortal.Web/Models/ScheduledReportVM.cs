@@ -14,7 +14,7 @@ namespace ClientPortal.Web.Models
     {
         public int Id { get; set; }
 
-        [Display(Name="Type")]
+        [Display(Name="Report Type")]
         public ReportType ReportType { get; set; }
 
         public int Months { get; set; }
@@ -57,8 +57,11 @@ namespace ClientPortal.Web.Models
             }
         }
 
-        [Display(Name="Cumulative?")]
+        [Display(Name="Cumulative for Month?")]
         public bool IsCumulative { get; set; }
+
+        [Display(Name="Email Recipients")]
+        public string[] Recipients { get; set; }
 
 
         // Constructors
@@ -79,6 +82,9 @@ namespace ClientPortal.Web.Models
             this.Months = rep.Months;
             this.Days = rep.Days;
             this.IsCumulative = rep.IsCumulative;
+
+            this.Recipients = new string[] { };
+//            this.Recipients = rep.ScheduledReportRecipients.Select(r => r.EmailAddress).ToArray();
         }
 
         public void SetEntityProperties(ScheduledReport rep)
@@ -87,6 +93,36 @@ namespace ClientPortal.Web.Models
             rep.Months = this.Months;
             rep.Days = this.Days;
             rep.IsCumulative = this.IsCumulative;
+
+            //TODO: redo. need to delete the removed recipients from the context
+            //if (Recipients.Length == 0)
+            //{
+            //    if (rep.ScheduledReportRecipients.Any())
+            //        rep.ScheduledReportRecipients.Clear();
+            //}
+            //else
+            //{
+            //    bool anyDiffs = false;
+            //    if (Recipients.Length != rep.ScheduledReportRecipients.Count)
+            //        anyDiffs = true;
+            //    else
+            //    {
+            //        for (var i = 0; i < Recipients.Length; i++)
+            //        {
+            //            if (Recipients[i] != rep.ScheduledReportRecipients.ElementAt(i).EmailAddress)
+            //                anyDiffs = true;
+            //        }
+            //    }
+            //    if (anyDiffs)
+            //    {
+            //        rep.ScheduledReportRecipients.Clear();
+            //        foreach (var recipient in Recipients)
+            //        {
+            //            var scheduledReportRecipient = new ScheduledReportRecipient() { EmailAddress = recipient };
+            //            rep.ScheduledReportRecipients.Add(scheduledReportRecipient);
+            //        }
+            //    }
+            //}
         }
     }
 }

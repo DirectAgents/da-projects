@@ -4,7 +4,7 @@
 <thead>
     <tr>
         <th></th>
-        <th>Type</th>
+        <th>Report Type</th>
         <th>Frequency</th>
         <th>Cumulative?</th>
     </tr>
@@ -19,7 +19,7 @@
     </td>
     <td>@rep.ReportType</td>
     <td>@rep.Frequency</td>
-    <td>@rep.IsCumulative</td>
+    <td>@(rep.IsCumulative ? "Yes" : "No")</td>
 </tr>
 }
 </tbody>

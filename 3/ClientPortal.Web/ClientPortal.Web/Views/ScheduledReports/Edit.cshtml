@@ -12,29 +12,51 @@
         <fieldset>
             <legend>@(isNew ? "Add" : "Edit") Scheduled Report</legend>
 
-            <div class="editor-label">
-                @Html.LabelFor(model => model.ReportType)
-            </div>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.ReportType, new SelectList(Enum.GetValues(typeof(ClientPortal.Data.Contexts.ReportType))), new { style = "width:auto" })
-                @Html.ValidationMessageFor(model => model.ReportType)
-            </div>
-
-            <div class="editor-label">
-                @Html.LabelFor(model => model.Frequency)
-            </div>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.Frequency, new SelectList(Enum.GetValues(typeof(ClientPortal.Web.Models.ReportFrequencyEnum))), new { style = "width:auto" })
-                @Html.ValidationMessageFor(model => model.Frequency)
+            <div>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.ReportType)
+                </div>
+                <div class="editor-field">
+                    @Html.DropDownListFor(model => model.ReportType, new SelectList(Enum.GetValues(typeof(ClientPortal.Data.Contexts.ReportType))), new { style = "width:auto" })
+                    @Html.ValidationMessageFor(model => model.ReportType)
+                </div>
             </div>
 
-            <div class="editor-label">
-                @Html.LabelFor(model => model.IsCumulative)
+            <div>
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Frequency)
+                </div>
+                <div class="editor-field">
+                    @Html.DropDownListFor(model => model.Frequency, new SelectList(Enum.GetValues(typeof(ClientPortal.Web.Models.ReportFrequencyEnum))), new { style = "width:auto" })
+                    @Html.ValidationMessageFor(model => model.Frequency)
+                </div>
             </div>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.IsCumulative)
-                @Html.ValidationMessageFor(model => model.IsCumulative)
+
+            <div>
+                <div class="editor-field">
+                    @Html.LabelFor(model => model.IsCumulative, new { style = "float:left" })
+                    @Html.EditorFor(model => model.IsCumulative)
+                    @Html.ValidationMessageFor(model => model.IsCumulative)
+                </div>
             </div>
+
+            <div id="divRecipients">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Recipients)
+                </div>
+                <div class="editor-field">
+                    <input name="Recipients" type="text" value="@(Model.Recipients.Length > 0 ? Model.Recipients[0] : "")" />
+                </div>
+                @for (var i = 1; i < Model.Recipients.Length; i++)
+                {
+                    var recipient = Model.Recipients[i];
+                    <div class="editor-field" style="clear:both">
+                        <input name="Recipients" type="text" style="float:left; width:97%; margin-right:5px" value="@recipient" />
+                        <a href="#" onclick="$(this).parent().remove(); return false">X</a>
+                    </div>
+                }
+            </div>
+            <input type="button" value="Add Recipient" onclick="AddRecipient()" />
         </fieldset>
 
         <div style="float:left">
@@ -45,3 +67,14 @@
         </div>
     }
 </div>
+
+<script>
+    function AddRecipient() {
+        var div = $("<div class=\"editor-field\" style=\"clear:both\"></div>");
+        var input = $("<input name=\"Recipients\" type=\"text\" style=\"float:left;width:97%;margin-right:5px\" />");
+        var remove = $("<a href=\"#\" onclick=\"$(this).parent().remove();return false\">X</a>");
+        div.append(input);
+        div.append(remove);
+        $('#divRecipients').append(div);
+    }
+</script>
