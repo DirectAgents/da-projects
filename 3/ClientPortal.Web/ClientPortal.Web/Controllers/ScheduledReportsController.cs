@@ -6,18 +6,16 @@ using System.Linq;
 
 namespace ClientPortal.Web.Controllers
 {
-    public class ScheduledReportsController : Controller
+    public class ScheduledReportsController : CPController
     {
-        private IClientPortalRepository cpRepo;
-
-        public ScheduledReportsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
+        public ScheduledReportsController(IClientPortalRepository cpRepository)
         {
             this.cpRepo = cpRepository;
         }
 
         public ActionResult Index()
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             if (advId == null) return null;
             var reps = cpRepo.GetScheduledReports(advId.Value).ToList().Select(sr => new ScheduledReportVM(sr));
             return PartialView(reps);
@@ -25,7 +23,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult List()
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             if (advId == null) return null;
             var reps = cpRepo.GetScheduledReports(advId.Value).ToList().Select(sr => new ScheduledReportVM(sr));
             return PartialView(reps);
@@ -52,7 +50,7 @@ namespace ClientPortal.Web.Controllers
         public ActionResult Save(ScheduledReportVM scheduledReport)
         {
             bool success = false;
-            int? advId = HomeController.GetAdvertiserId();
+            int? advId = GetAdvertiserId();
 
             if (ModelState.IsValid)
             {
@@ -87,7 +85,7 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             cpRepo.DeleteScheduledReport(id, advId);
             return null;
         }

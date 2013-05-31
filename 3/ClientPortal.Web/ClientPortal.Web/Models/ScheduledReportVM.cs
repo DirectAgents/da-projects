@@ -74,6 +74,8 @@ namespace ClientPortal.Web.Models
             this.Id = rep.Id;
 
 //            this.ReportType = rep.ReportType;
+            this.ReportType = ReportType.OfferSummary; // temp!
+
             this.Months = rep.Months;
             this.Days = rep.Days;
             this.IsCumulative = rep.IsCumulative;

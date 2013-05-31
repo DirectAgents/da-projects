@@ -15,10 +15,9 @@ using DirectAgents.Mvc.KendoGridBinder;
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
-    public class ReportsController : Controller
+    public class ReportsController : CPController
     {
         private ICakeRepository cakeRepo;
-        private IClientPortalRepository cpRepo;
 
         public ReportsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
@@ -28,16 +27,16 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult OfferSummaryPartial()
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
 
             var now = DateTime.Now;
             var model = new ReportModel()
             {
-                StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userProfile.CultureInfo),
-                EndDate = now.ToString("d", userProfile.CultureInfo),
-                ShowConVal = userProfile.ShowConversionData,
-                ConValName = userProfile.ConversionValueName,
-                ConValIsNum = userProfile.ConversionValueIsNumber
+                StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userInfo.CultureInfo),
+                EndDate = now.ToString("d", userInfo.CultureInfo),
+                ShowConVal = userInfo.ShowConversionData,
+                ConValName = userInfo.ConversionValueName,
+                ConValIsNum = userInfo.ConversionValueIsNumber
             };
             return PartialView("_OfferSummaryPartial", model);
         }
@@ -45,14 +44,14 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult OfferSummaryData(KendoGridRequest request, string startdate, string enddate)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var offerInfos = cakeRepo.GetOfferInfos(start, end, userProfile.CakeAdvertiserId);
+            var offerInfos = cakeRepo.GetOfferInfos(start, end, userInfo.AdvertiserId);
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             if (offerInfos.Any())
             {
@@ -69,13 +68,13 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult DailySummaryPartial()
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
 
             var now = DateTime.Now;
             var model = new ReportModel()
             {
-                StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userProfile.CultureInfo),
-                EndDate = now.ToString("d", userProfile.CultureInfo)
+                StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userInfo.CultureInfo),
+                EndDate = now.ToString("d", userInfo.CultureInfo)
             };
             return PartialView("_DailySummaryPartial", model);
         }
@@ -83,14 +82,14 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult DailySummaryData(KendoGridRequest request, string startdate, string enddate, bool cumulative = false, bool projection = false)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var dailyInfos = cakeRepo.GetDailyInfos(start, end, userProfile.CakeAdvertiserId);
+            var dailyInfos = cakeRepo.GetDailyInfos(start, end, userInfo.AdvertiserId);
 
             if (cumulative)
                 dailyInfos = cakeRepo.MakeCumulative(dailyInfos);
@@ -141,14 +140,14 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult MonthlySummaryData(KendoGridRequest request, string startdate, string enddate)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, 1, 1);
 
-            var monthlyInfos = cakeRepo.GetMonthlyInfosFromDaily(start, end, userProfile.CakeAdvertiserId.Value, null);
+            var monthlyInfos = cakeRepo.GetMonthlyInfosFromDaily(start, end, userInfo.AdvertiserId.Value, null);
             var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
 
             if (monthlyInfos.Any())
@@ -165,16 +164,16 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult ConversionReportPartial()
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
 
             var now = DateTime.Now;
             var model = new ReportModel()
             {
-                StartDate = now.ToString("d", userProfile.CultureInfo),
-                EndDate = now.ToString("d", userProfile.CultureInfo),
-                ShowConVal = userProfile.ShowConversionData,
-                ConValName = userProfile.ConversionValueName,
-                ConValIsNum = userProfile.ConversionValueIsNumber
+                StartDate = now.ToString("d", userInfo.CultureInfo),
+                EndDate = now.ToString("d", userInfo.CultureInfo),
+                ShowConVal = userInfo.ShowConversionData,
+                ConValName = userInfo.ConversionValueName,
+                ConValIsNum = userInfo.ConversionValueIsNumber
             };
 
             return PartialView("_ConversionReportPartial", model);
@@ -183,14 +182,14 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult ConversionReportData(KendoGridRequest request, string startdate, string enddate, int? offerid)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var conversionInfos = cpRepo.GetConversionInfos(start, end, userProfile.CakeAdvertiserId, offerid);
+            var conversionInfos = cpRepo.GetConversionInfos(start, end, userInfo.AdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionInfo>(request, conversionInfos);
             if (conversionInfos.Any())
@@ -208,14 +207,14 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult ConversionSummaryData(KendoGridRequest request, string startdate, string enddate, int? offerid)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var conversionSummaries = cakeRepo.GetConversionSummaries(start, end, userProfile.CakeAdvertiserId, offerid);
+            var conversionSummaries = cakeRepo.GetConversionSummaries(start, end, userInfo.AdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionSummary>(request, conversionSummaries);
             // todo: aggregates?
@@ -239,7 +238,7 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult CPMSummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
-            int? advertiserId = HomeController.GetAdvertiserId();
+            int? advertiserId = GetAdvertiserId();
 
             var monthlyInfos = cakeRepo
                 .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
@@ -259,13 +258,13 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult AffiliateReportPartial()
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
 
             var now = DateTime.Now;
             var model = new ReportModel()
             {
-                StartDate = now.ToString("d", userProfile.CultureInfo),
-                EndDate = now.ToString("d", userProfile.CultureInfo)
+                StartDate = now.ToString("d", userInfo.CultureInfo),
+                EndDate = now.ToString("d", userInfo.CultureInfo)
             };
             return PartialView("_AffiliateReportPartial", model);
         }
@@ -273,14 +272,14 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult AffiliateReportData(KendoGridRequest request, string startdate, string enddate, int? offerid)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var affiliateSummaries = cakeRepo.GetAffiliateSummaries(start, end, userProfile.CakeAdvertiserId, offerid);
+            var affiliateSummaries = cakeRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
 
             var kgrid = new KendoGrid<AffiliateSummary>(request, affiliateSummaries);
             if (affiliateSummaries.Any())
@@ -304,7 +303,7 @@ namespace ClientPortal.Web.Controllers
         {
             var fromDate = new DateTime(2013, 5, 1);
             var toDate = new DateTime(2013, 5, 30);
-            int advertiserId = HomeController.GetAdvertiserId() ?? 0;
+            int advertiserId = GetAdvertiserId() ?? 0;
             var json = new JsonResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             using (var db = new UsersContext())
             {
@@ -353,7 +352,7 @@ namespace ClientPortal.Web.Controllers
             var clicksByDevice = this.cpRepo.GetClicksByDeviceName(
                                                     start: startDate,
                                                     end: endDate ?? startDate,
-                                                    advertiserId: HomeController.GetAdvertiserId(),
+                                                    advertiserId: GetAdvertiserId(),
                                                     offerId: null);
 
             var data = clicksByDevice.Where(c => c.DeviceName != "Other");

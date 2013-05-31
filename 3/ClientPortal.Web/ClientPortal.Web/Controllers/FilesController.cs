@@ -12,10 +12,9 @@ using System.Globalization;
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
-    public class FilesController : Controller
+    public class FilesController : CPController
     {
         private ICakeRepository cakeRepo;
-        private IClientPortalRepository cpRepo;
 
         public FilesController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
@@ -37,7 +36,7 @@ namespace ClientPortal.Web.Controllers
 
         private List<FileUploadInfo> GetFiles()
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             using (var usersContext = new UsersContext())
             {
                 var files = usersContext.FileUploads.AsQueryable();
@@ -61,7 +60,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Upload(HttpPostedFileBase file)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             using (var reader = new StreamReader(file.InputStream))
             {
                 var fileUpload = new FileUpload()
@@ -82,7 +81,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Process(int id)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             if (advId == 278)
                 ProcessTree(id);
 
@@ -91,7 +90,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult ProcessScooter(int id)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
 
             //int advId = 294, offerId = 1604; // scooter store
             var start = new DateTime(2013, 2, 1);
@@ -125,7 +124,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult ProcessTree(int? id)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
 
             //var start = new DateTime(2013, 5, 1);
             var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);

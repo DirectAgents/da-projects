@@ -84,12 +84,6 @@ namespace ClientPortal.Web.Models
         public bool ShowConversionData { get; set; }
         public string ConversionValueName { get; set; }
         public bool ConversionValueIsNumber { get; set; }
-
-        [NotMapped]
-        public CultureInfo CultureInfo
-        {
-            get { return String.IsNullOrWhiteSpace(Culture) ? CultureInfo.InvariantCulture : CultureInfo.CreateSpecificCulture(Culture); }
-        }
     }
 
     [Table("FileUpload")]

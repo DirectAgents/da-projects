@@ -12,10 +12,9 @@ using ClientPortal.Web.Models;
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
-    public class ExportController : Controller
+    public class ExportController : CPController
     {
         private ICakeRepository cakeRepo;
-        private IClientPortalRepository cpRepo;
 
         private static int MaxExportedRows = 1000;
 
@@ -27,17 +26,17 @@ namespace ClientPortal.Web.Controllers
 
         public FileResult OfferSummaryReport(string startdate, string enddate)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
 
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
 
             if (!start.HasValue)
                 start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             // Get data and map to rows
-            var records = cakeRepo.GetOfferInfos(start, end, userProfile.CakeAdvertiserId)
+            var records = cakeRepo.GetOfferInfos(start, end, userInfo.AdvertiserId)
                 .OrderByDescending(r => r.Revenue).ThenByDescending(r => r.Clicks).ThenBy(r => r.OfferId).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<OfferInfo>, IEnumerable<OfferSummaryReportExportRow>>(records);
             return CsvFile(rows, "OfferSummary.csv");
@@ -45,17 +44,17 @@ namespace ClientPortal.Web.Controllers
 
         public FileResult DailySummaryReport(string startdate, string enddate)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
 
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
 
             if (!start.HasValue)
                 start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             // Get data and map to rows
-            var records = cakeRepo.GetDailyInfos(start, end, userProfile.CakeAdvertiserId)
+            var records = cakeRepo.GetDailyInfos(start, end, userInfo.AdvertiserId)
                 .OrderBy(r => r.Date).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<DailyInfo>, IEnumerable<DailySummaryReportExportRow>>(records);
             return CsvFile(rows, "DailySummary.csv");
@@ -63,17 +62,17 @@ namespace ClientPortal.Web.Controllers
 
         public FileResult ConversionReport(string startdate, string enddate)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
 
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
 
             if (!start.HasValue)
                 start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             // Get data and map to rows
-            var records = cpRepo.GetConversionInfos(start, end, userProfile.CakeAdvertiserId, null)
+            var records = cpRepo.GetConversionInfos(start, end, userInfo.AdvertiserId, null)
                 .OrderBy(r => r.Date).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<ConversionInfo>, IEnumerable<ConversionReportExportRow>>(records);
             return CsvFile(rows, "Conversions.csv");
@@ -81,17 +80,17 @@ namespace ClientPortal.Web.Controllers
 
         public FileResult AffiliateReport(string startdate, string enddate)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userInfo = GetUserInfo();
             DateTime? start, end;
 
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userProfile.CultureInfo, out start, out end))
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
 
             if (!start.HasValue)
                 start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             // Get data and map to rows
-            var records = cakeRepo.GetAffiliateSummaries(start, end, userProfile.CakeAdvertiserId, null)
+            var records = cakeRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, null)
                 .OrderBy(r => r.AffId).ThenBy(r => r.OfferId).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<AffiliateSummary>, IEnumerable<AffiliateReportExportRow>>(records);
             return CsvFile(rows, "Affiliates.csv");

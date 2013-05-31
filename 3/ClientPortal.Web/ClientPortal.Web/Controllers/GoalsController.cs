@@ -8,10 +8,9 @@ using ClientPortal.Web.Models;
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
-    public class GoalsController : Controller
+    public class GoalsController : CPController
     {
         private ICakeRepository cakeRepo;
-        private IClientPortalRepository cpRepo;
 
         public GoalsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
@@ -21,7 +20,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Index()
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             if (advId == null) return null;
 
             var goals = cpRepo.GetGoals(advId.Value);
@@ -36,7 +35,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult List()
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             if (advId == null) return null;
 
             var goals = cpRepo.GetGoals(advId.Value);
@@ -53,7 +52,7 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var userProfile = GetUserProfile();
             var goal = cpRepo.GetGoal(id);
             var goalVM = new GoalVM(goal, null, userProfile.Culture);
             return DoEdit(goalVM);
@@ -61,7 +60,7 @@ namespace ClientPortal.Web.Controllers
 
         private ActionResult DoEdit(GoalVM goalVM)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
 
             List<CakeOffer> offers = new List<CakeOffer>();
             if (advId.HasValue)
@@ -75,10 +74,9 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public ActionResult Save(GoalVM goal)
         {
-            var userProfile = HomeController.GetUserProfile();
+            var advId = GetAdvertiserId();
             if (ModelState.IsValid)
             {
-                var advId = userProfile.CakeAdvertiserId;
                 if (advId.HasValue)
                 {
                     goal.AdvertiserId = advId.Value;
@@ -95,7 +93,7 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             cpRepo.DeleteGoal(id, advId);
             return null;
         }
