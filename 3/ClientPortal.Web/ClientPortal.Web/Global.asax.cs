@@ -98,10 +98,6 @@ namespace ClientPortal.Web
                     new
                     {
                         CakeAdvertiserId = 0,
-                        Culture = "en-US",
-                        ShowCPMRep = false,
-                        ShowConversionData = false,
-                        ConversionValueIsNumber = false
                     });
             }
 
@@ -114,11 +110,6 @@ namespace ClientPortal.Web
                     new
                     {
                         CakeAdvertiserId = 580,
-                        Culture = "en-US",
-                        ShowCPMRep = false,
-                        ShowConversionData = false,
-                        ConversionValueIsNumber = false,
-                        ConversionValueName = "Signed"
                     });
             }
 
@@ -131,10 +122,6 @@ namespace ClientPortal.Web
                     new
                     {
                         CakeAdvertiserId = 207,
-                        Culture = "en-US",
-                        ShowCPMRep = false,
-                        ShowConversionData = false,
-                        ConversionValueIsNumber = false
                     });
             }
 
@@ -147,10 +134,6 @@ namespace ClientPortal.Web
                     new
                     {
                         CakeAdvertiserId = 435,
-                        Culture = "en-US",
-                        ShowCPMRep = false,
-                        ShowConversionData = false,
-                        ConversionValueIsNumber = false
                     });
             }
 
@@ -163,10 +146,6 @@ namespace ClientPortal.Web
                     new
                     {
                         CakeAdvertiserId = 250,
-                        Culture = "en-US",
-                        ShowCPMRep = false,
-                        ShowConversionData = false,
-                        ConversionValueIsNumber = false
                     });
             }
 
@@ -194,12 +173,12 @@ namespace ClientPortal.Web
                                                      "UserProfile", "UserId", "UserName", autoCreateTables: true);
 
             // For testing
-            WebSecurity.CreateUserAndAccount("affinitas", "123456", new { CakeAdvertiserId = 298, Culture = "de-DE", ShowCPMRep = false, ShowConversionData = true, ConversionValueName = "ValTest", ConversionValueIsNumber = false });
-            WebSecurity.CreateUserAndAccount("guthy", "123456", new { CakeAdvertiserId = 457, Culture = "en-US", ShowCPMRep = true, ShowConversionData = false, ConversionValueIsNumber = false });
+            WebSecurity.CreateUserAndAccount("affinitas", "123456", new { CakeAdvertiserId = 298 });
+            WebSecurity.CreateUserAndAccount("guthy", "123456", new { CakeAdvertiserId = 457 });
 
             // Beta customers
-            WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278, Culture = "en-US", ShowCPMRep = false, ShowConversionData = true, ConversionValueIsNumber = true }); // lending tree
-            WebSecurity.CreateUserAndAccount("bas", "123456", new { CakeAdvertiserId = 455, Culture = "en-US", ShowCPMRep = false, ShowConversionData = false, ConversionValueIsNumber = false }); // bryant and stratten
+            WebSecurity.CreateUserAndAccount("tree", "123456", new { CakeAdvertiserId = 278 }); // lending tree
+            WebSecurity.CreateUserAndAccount("bas", "123456", new { CakeAdvertiserId = 455 }); // bryant and stratten
 
             List<Goal> goals = new List<Goal> {
 

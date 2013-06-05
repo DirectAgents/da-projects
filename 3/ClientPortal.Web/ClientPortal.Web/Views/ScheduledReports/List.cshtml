@@ -17,7 +17,7 @@
         <a href="#" onclick="EditScheduledReport(@rep.Id); return false">Edit</a> |
         <a href="#" onclick="DeleteScheduledReport(@rep.Id, true); return false">Delete</a>
     </td>
-    <td>@rep.ReportType</td>
+    <td>@rep.ReportTypeString</td>
     <td>@rep.Frequency</td>
     <td>@(rep.IsCumulative ? "Yes" : "No")</td>
 </tr>

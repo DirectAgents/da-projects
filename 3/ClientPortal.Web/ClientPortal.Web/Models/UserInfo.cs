@@ -28,10 +28,9 @@ namespace ClientPortal.Web.Models
             get { return UserProfile.CakeAdvertiserId; }
         }
 
-        // TODO: convert to getting the following from Advertiser instead of UserProfile
         public string Culture
         {
-            get { return UserProfile.Culture; }
+            get { return Advertiser.Culture; }
         }
         public CultureInfo CultureInfo
         {
@@ -39,19 +38,19 @@ namespace ClientPortal.Web.Models
         }
         public bool ShowCPMRep
         {
-            get { return UserProfile.ShowCPMRep; }
+            get { return Advertiser.ShowCPMRep; }
         }
         public bool ShowConversionData
         {
-            get { return UserProfile.ShowConversionData; }
+            get { return Advertiser.ShowConversionData; }
         }
         public string ConversionValueName
         {
-            get { return UserProfile.ConversionValueName; }
+            get { return Advertiser.ConversionValueName; }
         }
         public bool ConversionValueIsNumber
         {
-            get { return UserProfile.ConversionValueIsNumber; }
+            get { return Advertiser.ConversionValueIsNumber; }
         }
 
         public byte[] Logo

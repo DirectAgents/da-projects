@@ -52,9 +52,9 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            var userProfile = GetUserProfile();
+            var userInfo = GetUserInfo();
             var goal = cpRepo.GetGoal(id);
-            var goalVM = new GoalVM(goal, null, userProfile.Culture);
+            var goalVM = new GoalVM(goal, null, userInfo.Culture);
             return DoEdit(goalVM);
         }
 

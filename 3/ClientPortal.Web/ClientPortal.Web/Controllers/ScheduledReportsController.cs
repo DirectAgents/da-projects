@@ -42,9 +42,9 @@ namespace ClientPortal.Web.Controllers
             return DoEdit(scheduledReportVM);
         }
 
-        private ActionResult DoEdit(ScheduledReportVM scheduledReport)
+        private ActionResult DoEdit(ScheduledReportVM scheduledReportVM)
         {
-            return PartialView("Edit", scheduledReport);
+            return PartialView("Edit", scheduledReportVM);
         }
 
         public ActionResult Save(ScheduledReportVM scheduledReport)

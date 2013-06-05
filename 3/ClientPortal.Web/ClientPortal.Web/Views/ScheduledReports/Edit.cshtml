@@ -1,6 +1,7 @@
 ﻿@model ClientPortal.Web.Models.ScheduledReportVM
 @{
     bool isNew = Model.Id < 0;
+    var reportTypeSelectList = ClientPortal.Web.Models.ScheduledReportVM.CamelEnumSelectList(typeof(ClientPortal.Data.Contexts.ReportType));
 }
 
 <div id="editScheduledReportWrapper">
@@ -17,7 +18,7 @@
                     @Html.LabelFor(model => model.ReportType)
                 </div>
                 <div class="editor-field">
-                    @Html.DropDownListFor(model => model.ReportType, new SelectList(Enum.GetValues(typeof(ClientPortal.Data.Contexts.ReportType))), new { style = "width:auto" })
+                    @Html.DropDownListFor(model => model.ReportType, reportTypeSelectList, new { style = "width:auto" })
                     @Html.ValidationMessageFor(model => model.ReportType)
                 </div>
             </div>

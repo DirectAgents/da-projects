@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Mvc;
 
 namespace ClientPortal.Web.Models
 {
@@ -16,6 +18,10 @@ namespace ClientPortal.Web.Models
 
         [Display(Name="Report Type")]
         public ReportType ReportType { get; set; }
+
+        public string ReportTypeString {
+            get { return SplitCamelCase(Enum.GetName(typeof(ReportType), ReportType)); }
+        }
 
         public int Months { get; set; }
         public int Days { get; set; }
@@ -71,6 +77,7 @@ namespace ClientPortal.Web.Models
             this.ReportType = ReportType.OfferSummary;
             this.Months = 0;
             this.Days = 1;
+            this.Recipients = new string[] { };
         }
         public ScheduledReportVM(ScheduledReport rep)
         {
@@ -123,6 +130,22 @@ namespace ClientPortal.Web.Models
             //        }
             //    }
             //}
+        }
+
+        public static string SplitCamelCase(string input)
+        {
+            return Regex.Replace(input, "([A-Z])", " $1", RegexOptions.Compiled).Trim();
+        }
+
+        public static IEnumerable<SelectListItem> CamelEnumSelectList(Type enumType)
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            var names = Enum.GetNames(enumType);
+            foreach (var name in names)
+            {
+                list.Add(new SelectListItem() { Value = name, Text = SplitCamelCase(name) });
+            }
+            return list;
         }
     }
 }

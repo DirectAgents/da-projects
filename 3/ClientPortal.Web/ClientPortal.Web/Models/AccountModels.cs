@@ -79,11 +79,6 @@ namespace ClientPortal.Web.Models
         public int? CakeAdvertiserId { get; set; }
         public int? QuickBooksCompanyId { get; set; }
         public int? QuickBooksAdvertiserId { get; set; }
-        public string Culture { get; set; }
-        public bool ShowCPMRep { get; set; }
-        public bool ShowConversionData { get; set; }
-        public string ConversionValueName { get; set; }
-        public bool ConversionValueIsNumber { get; set; }
     }
 
     [Table("FileUpload")]

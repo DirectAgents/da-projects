@@ -44,23 +44,76 @@ namespace ClientPortal.Web
                 var dinesh = cpRepo.GetContact("Boaz"); // AA: what if two contacts have same last name?
                 var rachel = cpRepo.GetContact("Nugent");
 
-                var selectquote = new Advertiser() { AdvertiserId = 580, AdvertiserName = "SelectQuote" };
+                var selectquote = new Advertiser() {
+                    AdvertiserId = 580,
+                    AdvertiserName = "SelectQuote",
+                    Culture = "en-US",
+                    ShowCPMRep = false,
+                    ShowConversionData = true,
+                    ConversionValueIsNumber = true,
+                    ConversionValueName = "Signed"
+                };
                 selectquote.AdvertiserContacts.Add(new AdvertiserContact() { Contact = dinesh, Order = 1 });
                 selectquote.AdvertiserContacts.Add(new AdvertiserContact() { Contact = rachel, Order = 2 });
-                var sm = new Advertiser() { AdvertiserId = 207, AdvertiserName = "ServiceMaster" };
+
+                var sm = new Advertiser() {
+                    AdvertiserId = 207,
+                    AdvertiserName = "ServiceMaster",
+                    Culture = "en-US",
+                    ShowCPMRep = false,
+                    ShowConversionData = true,
+                    ConversionValueIsNumber = true,
+                    ConversionValueName = "Sale"
+                };
                 sm.AdvertiserContacts.Add(new AdvertiserContact() { Contact = lyle, Order = 1 });
                 sm.AdvertiserContacts.Add(new AdvertiserContact() { Contact = jenv, Order = 2 });
-                var itt = new Advertiser() { AdvertiserId = 250, AdvertiserName = "ITT" };
+
+                var itt = new Advertiser() {
+                    AdvertiserId = 250,
+                    AdvertiserName = "ITT",
+                    Culture = "en-US",
+                    ShowCPMRep = false,
+                    ShowConversionData = false,
+                    ConversionValueIsNumber = false
+                };
                 itt.AdvertiserContacts.Add(new AdvertiserContact() { Contact = adam, Order = 1 });
                 itt.AdvertiserContacts.Add(new AdvertiserContact() { Contact = sadie, Order = 2 });
-                var tree = new Advertiser() { AdvertiserId = 278, AdvertiserName = "Lending Tree" };
+
+                var tree = new Advertiser() {
+                    AdvertiserId = 278,
+                    AdvertiserName = "Lending Tree",
+                    Culture = "en-US",
+                    ShowCPMRep = false,
+                    ShowConversionData = true,
+                    ConversionValueIsNumber = true,
+                    ConversionValueName = "Refi"
+                };
                 tree.AdvertiserContacts.Add(new AdvertiserContact() { Contact = lyle, Order = 1 });
                 tree.AdvertiserContacts.Add(new AdvertiserContact() { Contact = jenv, Order = 2 });
+
+                var amazon = new Advertiser() {
+                    AdvertiserId = 435,
+                    AdvertiserName = "Amazon Local",
+                    Culture = "en-US",
+                    ShowCPMRep = false,
+                    ShowConversionData = false,
+                    ConversionValueIsNumber = false
+                };
+                var affinitas = new Advertiser() {
+                    AdvertiserId = 298,
+                    AdvertiserName = "Affinitas",
+                    Culture = "de-DE",
+                    ShowConversionData = true,
+                    ConversionValueIsNumber = false,
+                    ConversionValueName = "valtest"
+                };
 
                 cpRepo.AddAdvertiser(selectquote);
                 cpRepo.AddAdvertiser(sm);
                 cpRepo.AddAdvertiser(itt);
                 cpRepo.AddAdvertiser(tree);
+                cpRepo.AddAdvertiser(amazon);
+                cpRepo.AddAdvertiser(affinitas);
 
                 cpRepo.SaveChanges();
             }
