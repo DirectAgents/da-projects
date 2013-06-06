@@ -28,15 +28,16 @@ namespace ClientPortal.Data.Contexts
         public DbSet<Click> Clicks { get; set; }
         public DbSet<Conversion> Conversions { get; set; }
         public DbSet<ConversionData> ConversionDatas { get; set; }
+        public DbSet<DailySummary> DailySummaries { get; set; }
         public DbSet<Goal> Goals { get; set; }
+        public DbSet<Offer> Offers { get; set; }
         public DbSet<Advertiser> Advertisers { get; set; }
         public DbSet<AdvertiserContact> AdvertiserContacts { get; set; }
         public DbSet<Contact> Contacts { get; set; }
-        public DbSet<DailySummary> DailySummaries { get; set; }
-        public DbSet<Offer> Offers { get; set; }
-        public DbSet<ScheduledReport> ScheduledReports { get; set; }
         public DbSet<GeneratedReport> GeneratedReports { get; set; }
+        public DbSet<ScheduledReport> ScheduledReports { get; set; }
         public DbSet<ScheduledReportRecipient> ScheduledReportRecipients { get; set; }
         public DbSet<EmailedReport> EmailedReports { get; set; }
+        public DbSet<FileUpload> FileUploads { get; set; }
     }
 }

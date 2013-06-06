@@ -18,6 +18,7 @@ namespace ClientPortal.Data.Contexts
         {
             this.AdvertiserContacts = new HashSet<AdvertiserContact>();
             this.ScheduledReports = new HashSet<ScheduledReport>();
+            this.FileUploads = new HashSet<FileUpload>();
         }
     
         public int AdvertiserId { get; set; }
@@ -31,5 +32,6 @@ namespace ClientPortal.Data.Contexts
     
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }
         public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
+        public virtual ICollection<FileUpload> FileUploads { get; set; }
     }
 }

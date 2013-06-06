@@ -16,7 +16,6 @@ namespace ClientPortal.Web.Models
         }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
-        public DbSet<FileUpload> FileUploads { get; set; }
         public DbSet<Goal> Goals { get; set; }
         public DbSet<Cake.conversion> Conversions { get; set; }
         public DbSet<Cake.click> Clicks { get; set; }
@@ -79,18 +78,6 @@ namespace ClientPortal.Web.Models
         public int? CakeAdvertiserId { get; set; }
         public int? QuickBooksCompanyId { get; set; }
         public int? QuickBooksAdvertiserId { get; set; }
-    }
-
-    [Table("FileUpload")]
-    public class FileUpload
-    {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public DateTime UploadDate { get; set; }
-        public string Filename { get; set; }
-        public string Text { get; set; }
-        public int? CakeAdvertiserId { get; set; }
     }
 
     public enum GoalTypeEnum { Absolute = 1, Percent };

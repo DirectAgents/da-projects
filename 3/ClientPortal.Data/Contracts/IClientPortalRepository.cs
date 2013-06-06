@@ -36,6 +36,11 @@ namespace ClientPortal.Data.Contracts
         //void SaveScheduledReport(ScheduledReport scheduledReport);
         bool DeleteScheduledReport(int id, int? advertiserId);
 
+        IQueryable<FileUpload> GetFileUploads(int? advertiserId);
+        FileUpload GetFileUpload(int id);
+        void AddFileUpload(FileUpload fileUpload, bool saveChanges = false);
+        void DeleteFileUpload(FileUpload fileUpload, bool saveChanges = false);
+
         IQueryable<Goal> GetGoals(int advertiserId);
         Goal GetGoal(int id);
         bool DeleteGoal(int id, int? advertiserId);

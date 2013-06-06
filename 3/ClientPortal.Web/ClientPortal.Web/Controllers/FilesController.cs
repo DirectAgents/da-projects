@@ -8,6 +8,7 @@ using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
 using CsvHelper;
 using System.Globalization;
+using ClientPortal.Data.Contexts;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -37,25 +38,16 @@ namespace ClientPortal.Web.Controllers
         private List<FileUploadInfo> GetFiles()
         {
             var advId = GetAdvertiserId();
-            using (var usersContext = new UsersContext())
-            {
-                var files = usersContext.FileUploads.AsQueryable();
-                if (advId.HasValue)
-                    files = files.Where(f => f.CakeAdvertiserId == advId);
-                else
-                    files = files.Where(f => f.CakeAdvertiserId == null);
-
-                var fileUploadInfos = files
-                    .Select(f => new FileUploadInfo()
-                    {
-                        Id = f.Id,
-                        UploadDate = f.UploadDate,
-                        Filename = f.Filename,
-                        CakeAdvertiserId = f.CakeAdvertiserId
-                    }); // avoid reading the Text
-
-                return fileUploadInfos.ToList();
-            }
+            var fileUploads = cpRepo.GetFileUploads(advId);
+            var fileUploadInfos = fileUploads
+                .Select(f => new FileUploadInfo()
+                {
+                    Id = f.Id,
+                    UploadDate = f.UploadDate,
+                    Filename = f.Filename,
+                    AdvertiserId = f.AdvertiserId
+                }); // avoid reading the Text
+            return fileUploadInfos.ToList();
         }
 
         public ActionResult Upload(HttpPostedFileBase file)
@@ -65,19 +57,29 @@ namespace ClientPortal.Web.Controllers
             {
                 var fileUpload = new FileUpload()
                 {
-                    CakeAdvertiserId = advId,
+                    AdvertiserId = advId,
                     UploadDate = DateTime.Now,
                     Filename = file.FileName,
                     Text = reader.ReadToEnd()
                 };
-                using (var usersContext = new UsersContext())
-                {
-                    usersContext.FileUploads.Add(fileUpload);
-                    usersContext.SaveChanges();
-                }
+                cpRepo.AddFileUpload(fileUpload, true);
             }
             return null;
         }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            var advId = GetAdvertiserId();
+            var fileUpload = cpRepo.GetFileUpload(id);
+            if (fileUpload != null && (advId == null || advId == fileUpload.AdvertiserId))
+            {
+                cpRepo.DeleteFileUpload(fileUpload, true);
+            }
+            return null;
+        }
+
+        // --- Processing files ---
 
         public ActionResult Process(int id)
         {
@@ -96,17 +98,14 @@ namespace ClientPortal.Web.Controllers
             var start = new DateTime(2013, 2, 1);
             var endBefore = new DateTime(2013, 3, 1);
 
-            List<ScooterRow> csvRows;
-            using (var usersContext = new UsersContext())
-            {
-                var fileUpload = usersContext.FileUploads.FirstOrDefault(f => f.Id == id && f.CakeAdvertiserId == advId);
-                if (fileUpload == null)
-                    return null;
+            var fileUpload = cpRepo.GetFileUpload(id);
+            if (fileUpload == null || fileUpload.AdvertiserId != advId)
+                return null;
 
-                var reader = new StringReader(fileUpload.Text);
-                var csv = new CsvReader(reader);
-                csvRows = csv.GetRecords<ScooterRow>().ToList();
-            }
+            var reader = new StringReader(fileUpload.Text);
+            var csv = new CsvReader(reader);
+            var csvRows = csv.GetRecords<ScooterRow>().ToList();
+
             var conversions = cakeRepo.Conversions.Where(c => c.Advertiser_Id == advId
                 && c.ConversionDate >= start && c.ConversionDate < endBefore).ToList();
             var qry = from conv in conversions
@@ -129,21 +128,18 @@ namespace ClientPortal.Web.Controllers
             //var start = new DateTime(2013, 5, 1);
             var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            List<TreeRow> csvRows;
-            using (var usersContext = new UsersContext())
-            {
-                var fileUploads = usersContext.FileUploads.Where(f => f.CakeAdvertiserId == advId);
-                if (id.HasValue)
-                    fileUploads = fileUploads.Where(f => f.Id == id.Value);
+            var fileUploads = cpRepo.GetFileUploads(advId);
+            if (id.HasValue)
+                fileUploads = fileUploads.Where(f => f.Id == id.Value);
 
-                var fileUpload = fileUploads.FirstOrDefault();
-                if (fileUpload == null)
-                    return null;
+            var fileUpload = fileUploads.FirstOrDefault();
+            if (fileUpload == null)
+                return null;
 
-                var reader = new StringReader(fileUpload.Text);
-                var csv = new CsvReader(reader);
-                csvRows = csv.GetRecords<TreeRow>().ToList();
-            }
+            var reader = new StringReader(fileUpload.Text);
+            var csv = new CsvReader(reader);
+            var csvRows = csv.GetRecords<TreeRow>().ToList();
+
             var conversions = cpRepo.GetConversions(start, null, advId, null).ToList();
             var qry = from conv in conversions
                       from csvRow in csvRows

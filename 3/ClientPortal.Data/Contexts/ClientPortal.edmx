@@ -14,6 +14,7 @@
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DailySummary" EntityType="ClientPortalModel.Store.DailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="EmailedReport" EntityType="ClientPortalModel.Store.EmailedReport" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="GeneratedReport" EntityType="ClientPortalModel.Store.GeneratedReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Goal" EntityType="ClientPortalModel.Store.Goal" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Offer" EntityType="ClientPortalModel.Store.Offer" store:Type="Tables" Schema="dbo" />
@@ -30,6 +31,10 @@
           <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
             <End Role="Contact" EntitySet="Contact" />
             <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FileUpload_Advertiser" Association="ClientPortalModel.Store.FK_FileUpload_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="FileUpload" EntitySet="FileUpload" />
           </AssociationSet>
           <AssociationSet Name="FK_GeneratedReportEmailedReport" Association="ClientPortalModel.Store.FK_GeneratedReportEmailedReport">
             <End Role="GeneratedReport" EntitySet="GeneratedReport" />
@@ -211,6 +216,16 @@
           <Property Name="EmailStatusUpdated" Type="datetime" />
           <Property Name="GeneratedReportId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="FileUpload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UploadDate" Type="datetime" Nullable="false" />
+          <Property Name="Filename" Type="nvarchar(max)" />
+          <Property Name="Text" Type="nvarchar(max)" />
+          <Property Name="AdvertiserId" Type="int" />
+        </EntityType>
         <EntityType Name="GeneratedReport">
           <Key>
             <PropertyRef Name="Id" />
@@ -323,6 +338,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_FileUpload_Advertiser">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
+          <End Role="FileUpload" Type="ClientPortalModel.Store.FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="FileUpload">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_GeneratedReportEmailedReport">
           <End Role="GeneratedReport" Type="ClientPortalModel.Store.GeneratedReport" Multiplicity="1" />
           <End Role="EmailedReport" Type="ClientPortalModel.Store.EmailedReport" Multiplicity="*" />
@@ -400,6 +427,11 @@
           <AssociationSet Name="FK_GeneratedReportEmailedReport" Association="ClientPortalModel.FK_GeneratedReportEmailedReport">
             <End Role="GeneratedReport" EntitySet="GeneratedReports" />
             <End Role="EmailedReport" EntitySet="EmailedReports" />
+          </AssociationSet>
+          <EntitySet Name="FileUploads" EntityType="ClientPortalModel.FileUpload" />
+          <AssociationSet Name="FK_FileUpload_Advertiser" Association="ClientPortalModel.FK_FileUpload_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="FileUpload" EntitySet="FileUploads" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -596,6 +628,7 @@
           <Property Type="Boolean" Name="ConversionValueIsNumber" Nullable="false" />
           <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
           <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
+          <NavigationProperty Name="FileUploads" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="Advertiser" ToRole="FileUpload" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -741,6 +774,29 @@
             </Principal>
             <Dependent Role="EmailedReport">
               <PropertyRef Name="GeneratedReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="FileUpload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="UploadDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Filename" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="AdvertiserId" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="FileUpload" ToRole="Advertiser" />
+        </EntityType>
+        <Association Name="FK_FileUpload_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.FileUpload" Role="FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="FileUpload">
+              <PropertyRef Name="AdvertiserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -996,6 +1052,17 @@
                 <ScalarProperty Name="EmailStatusUpdated" ColumnName="EmailStatusUpdated" />
                 <ScalarProperty Name="EmailStatus" ColumnName="EmailStatus" />
                 <ScalarProperty Name="EmailTo" ColumnName="EmailTo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FileUploads">
+            <EntityTypeMapping TypeName="ClientPortalModel.FileUpload">
+              <MappingFragment StoreEntitySet="FileUpload">
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Filename" ColumnName="Filename" />
+                <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

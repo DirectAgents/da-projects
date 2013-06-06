@@ -115,6 +115,9 @@
     <Compile Include="Contexts\EmailStatus.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\FileUpload.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\GeneratedReport.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>

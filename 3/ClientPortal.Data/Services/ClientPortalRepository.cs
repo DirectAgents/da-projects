@@ -287,6 +287,32 @@ namespace ClientPortal.Data.Services
         }
         #endregion
 
+        #region Files
+        public IQueryable<FileUpload> GetFileUploads(int? advertiserId)
+        {   // Note: if advertiserId == null, return the FileUploads where advertiserId is null
+            var fileUploads = context.FileUploads.Where(f => f.AdvertiserId == advertiserId);
+            return fileUploads;
+        }
+
+        public FileUpload GetFileUpload(int id)
+        {
+            var fileUpload = context.FileUploads.Find(id);
+            return fileUpload;
+        }
+
+        public void AddFileUpload(FileUpload fileUpload, bool saveChanges = false)
+        {
+            context.FileUploads.Add(fileUpload);
+            if (saveChanges) SaveChanges();
+        }
+
+        public void DeleteFileUpload(FileUpload fileUpload, bool saveChanges = false)
+        {
+            context.FileUploads.Remove(fileUpload);
+            if (saveChanges) SaveChanges();
+        }
+        #endregion
+
         #region Goals
         public IQueryable<Goal> GetGoals(int advertiserId)
         {
