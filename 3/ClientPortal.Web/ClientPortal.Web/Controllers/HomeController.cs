@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using MoreLinq;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
@@ -15,11 +16,8 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class HomeController : CPController
     {
-        private ICakeRepository cakeRepo;
-
-        public HomeController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
+        public HomeController(IClientPortalRepository cpRepository)
         {
-            this.cakeRepo = cakeRepository;
             this.cpRepo = cpRepository;
         }
 
@@ -227,38 +225,29 @@ namespace ClientPortal.Web.Controllers
             if (userInfo.AdvertiserId == null)
                 return null;
 
-            var offer = cakeRepo.Offers(userInfo.AdvertiserId).Where(o => o.Offer_Id == offerId).FirstOrDefault();
-            List<GoalVM> goalVMs;
+            var offer = cpRepo.Offers(userInfo.AdvertiserId).Where(o => o.Offer_Id == offerId).FirstOrDefault();
+            List<Goal> goals;
             if (goalId.HasValue)
-            {
-                GoalVM goalVM = null;
-                var goal = cpRepo.GetGoal(goalId.Value);
-                if (goal != null)
-                    goalVM = new GoalVM(goal);
-                goalVMs = new List<GoalVM> { goalVM };
-            }
+                goals = offer.Goals.Where(g => g.Id == goalId).ToList();
             else
-            {
-                goalVMs = cpRepo.GetGoals(userInfo.AdvertiserId.Value).ToList().Select(g => new GoalVM(g)).ToList();
-            }
+                goals = offer.Goals.ToList();
+
             var dates = new Dates();
-            var offerGoalSummary = CreateOfferGoalSummary(userInfo.AdvertiserId, offer, goalVMs, dates, userInfo.ShowConversionData);
+            var offerGoalSummary = CreateOfferGoalSummary(userInfo.AdvertiserId, offer, goals, dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalChart = true;
             return PartialView(offerGoalSummary);
         }
 
-        public List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates, bool includeConversionData)
+        private List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates, bool includeConversionData)
         {
-            var offers = cakeRepo.Offers(advId);
-            var goalVMs = cpRepo.GetGoals(advId).ToList().Select(g => new GoalVM(g)).ToList();
-            var offerIdsFromGoals = goalVMs.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
+            var goals = cpRepo.GetGoals(advId);
+            var offers = goals.Where(g => g.Offer != null).Select(g => g.Offer).DistinctBy(o => o.Offer_Id).OrderBy(o => o.OfferName);
             List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
-            foreach (var offerId in offerIdsFromGoals)
+            foreach (var offer in offers)
             {
-                var offer = offers.Where(o => o.Offer_Id == offerId).FirstOrDefault();
-                var monthlyGoals = goalVMs.Where(g => g.OfferId == offer.Offer_Id && g.IsMonthly).ToList();
-                var customGoals = goalVMs.Where(g => g.OfferId == offer.Offer_Id && !g.IsMonthly).ToList();
+                var monthlyGoals = offer.Goals.Where(g => g.IsMonthly).ToList();
+                var customGoals = offer.Goals.Where(g => !g.IsMonthly).ToList();
                 if (monthlyGoals.Any())
                 {
                     var offerGoalSummary = CreateOfferGoalSummary(advId, offer, monthlyGoals, dates, includeConversionData);
@@ -266,9 +255,9 @@ namespace ClientPortal.Web.Controllers
                 }
                 if (customGoals.Any())
                 {
-                    foreach (var goalGroup1 in customGoals.GroupBy(g => g.StartDateParsed))
+                    foreach (var goalGroup1 in customGoals.GroupBy(g => g.StartDate))
                     {
-                        foreach (var goalGroup2 in goalGroup1.GroupBy(g => g.EndDateParsed))
+                        foreach (var goalGroup2 in goalGroup1.GroupBy(g => g.EndDate))
                         {
                             var offerGoalSummary = CreateOfferGoalSummary(advId, offer, goalGroup2.ToList(), dates, includeConversionData);
                             offerGoalSummaries.Add(offerGoalSummary);
@@ -279,7 +268,7 @@ namespace ClientPortal.Web.Controllers
             return offerGoalSummaries;
         }
 
-        public OfferGoalSummary CreateOfferGoalSummary(int? advId, CakeOffer offer, List<GoalVM> goals, Dates dates, bool includeConversionData)
+        private OfferGoalSummary CreateOfferGoalSummary(int? advId, Offer offer, List<Goal> goals, Dates dates, bool includeConversionData)
         {
             List<DateRangeSummary> summaries;
             if (!goals.Any() || goals[0].IsMonthly) // assume all goals are the same type
@@ -295,9 +284,9 @@ namespace ClientPortal.Web.Controllers
             else
             {
                 var goal0 = goals[0];
-                var sumActual = cpRepo.GetDateRangeSummary(goal0.StartDateParsed.Value, goal0.EndDateParsed.Value, advId, offer.Offer_Id, includeConversionData);
-                sumActual.Name = (dates.Now.Date > goal0.EndDateParsed) ? "Results" : "Results to-Date";
-                var sumGoal = new DateRangeSummary() { Name = "Goal", Culture = goal0.Culture };
+                var sumActual = cpRepo.GetDateRangeSummary(goal0.StartDate, goal0.EndDate, advId, offer.Offer_Id, includeConversionData);
+                sumActual.Name = (dates.Now.Date > goal0.EndDate) ? "Results" : "Results to-Date";
+                var sumGoal = new DateRangeSummary() { Name = "Goal", Culture = OfferInfo.CurrencyToCulture(offer.Currency) };
                 foreach (var goal in goals)
                 {
                     switch (goal.MetricId)
@@ -319,7 +308,7 @@ namespace ClientPortal.Web.Controllers
             var offerGoalSummary = new OfferGoalSummary()
             {
                 Offer = offer,
-                Goals = goals,
+                Goals = goals.Select(g => new GoalVM(g)).ToList(),
                 DateRangeSummaries = summaries
             };
             return offerGoalSummary;

@@ -41,7 +41,7 @@ namespace ClientPortal.Web.Models
             }
         }
 
-        public CakeOffer Offer { get; set; }
+        public Offer Offer { get; set; }
         public List<GoalVM> Goals { get; set; }
         public List<DateRangeSummary> DateRangeSummaries { get; set; }
 
