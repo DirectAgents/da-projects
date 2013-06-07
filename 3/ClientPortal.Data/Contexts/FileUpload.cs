@@ -12,19 +12,14 @@ namespace ClientPortal.Data.Contexts
     using System;
     using System.Collections.Generic;
     
-    public partial class Goal
+    public partial class FileUpload
     {
         public int Id { get; set; }
-        public int AdvertiserId { get; set; }
-        public Nullable<int> OfferId { get; set; }
-        public string Name { get; set; }
-        public GoalType TypeId { get; set; }
-        public Metric MetricId { get; set; }
-        public decimal Target { get; set; }
-        public Nullable<System.DateTime> StartDate { get; set; }
-        public Nullable<System.DateTime> EndDate { get; set; }
+        public System.DateTime UploadDate { get; set; }
+        public string Filename { get; set; }
+        public string Text { get; set; }
+        public Nullable<int> AdvertiserId { get; set; }
     
         public virtual Advertiser Advertiser { get; set; }
-        public virtual Offer Offer { get; set; }
     }
 }

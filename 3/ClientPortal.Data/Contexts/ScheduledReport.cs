@@ -18,8 +18,8 @@ namespace ClientPortal.Data.Contexts
         {
             this.Months = 0;
             this.Days = 0;
-            this.ScheduledReportRecipients = new HashSet<ScheduledReportRecipient>();
             this.GeneratedReports = new HashSet<GeneratedReport>();
+            this.ScheduledReportRecipients = new HashSet<ScheduledReportRecipient>();
         }
     
         public int Id { get; set; }
@@ -31,7 +31,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<System.DateTime> NextSend { get; set; }
     
         public virtual Advertiser Advertiser { get; set; }
-        public virtual ICollection<ScheduledReportRecipient> ScheduledReportRecipients { get; set; }
         public virtual ICollection<GeneratedReport> GeneratedReports { get; set; }
+        public virtual ICollection<ScheduledReportRecipient> ScheduledReportRecipients { get; set; }
     }
 }

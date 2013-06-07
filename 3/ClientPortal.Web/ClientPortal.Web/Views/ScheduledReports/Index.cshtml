@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ClientPortal.Web.Models.ScheduledReportVM>
+
+<h3>Scheduled Reports</h3>
+
+<div id="divScheduledReportsList">
+@Html.Partial("List")
+</div>
+
+<div id="divActions">
+    @Ajax.ActionLink("Add Scheduled Report", "Add", "ScheduledReports",
+                     new AjaxOptions
+                         {
+                             InsertionMode = InsertionMode.Replace, UpdateTargetId = "windowScheduledReport", HttpMethod = "GET",
+                             OnBegin = "BeginAddScheduledReport",
+                             OnSuccess = "EditScheduledReportLoaded"
+                         })
+    | <a href="#" onclick="RefreshScheduledReportsList(); return false">Refresh</a>
+</div>
+
+<script>
+    function RefreshScheduledReportsList() {
+        var url = '@Url.Action("List")';
+        $.ajax({ url: url, cache: false }).done(function (data) {
+            $('#divScheduledReportsList').html(data);
+        });
+    }
+
+    function DeleteScheduledReport(id, doConfirm) {
+        if (doConfirm && !confirm("Are you sure you want to delete this scheduled report?"))
+            return;
+        var url = '@Url.Action("Delete")';
+        $.ajax({ url: url, data: { id: id }, type: 'post', cache: false }).done(function (data) {
+            RefreshScheduledReportsAndCloseWindow();
+        });
+    }
+</script>

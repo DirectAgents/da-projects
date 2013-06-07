@@ -8,10 +8,9 @@ using ClientPortal.Web.Models;
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
-    public class GoalsController : Controller
+    public class GoalsController : CPController
     {
         private ICakeRepository cakeRepo;
-        private IClientPortalRepository cpRepo;
 
         public GoalsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
@@ -21,27 +20,23 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Index()
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = cpRepo.GetGoals(advId.Value);
-            var offers = cakeRepo.Offers(advId);
-            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
+            var goalVMs = cpRepo.GetGoals(advId.Value).ToList().Select(g => new GoalVM(g));
             var model = new GoalsModel()
             {
-                Goals = goalVMs
+                Goals = goalVMs.ToList()
             };
             return PartialView(model);
         }
 
         public ActionResult List()
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = cpRepo.GetGoals(advId.Value);
-            var offers = cakeRepo.Offers(advId);
-            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
+            var goalVMs = cpRepo.GetGoals(advId.Value).ToList().Select(g => new GoalVM(g));
             return PartialView(goalVMs);
         }
 
@@ -53,15 +48,14 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            var userProfile = HomeController.GetUserProfile();
             var goal = cpRepo.GetGoal(id);
-            var goalVM = new GoalVM(goal, null, userProfile.Culture);
+            var goalVM = new GoalVM(goal);
             return DoEdit(goalVM);
         }
 
         private ActionResult DoEdit(GoalVM goalVM)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
 
             List<CakeOffer> offers = new List<CakeOffer>();
             if (advId.HasValue)
@@ -73,54 +67,45 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(GoalVM goal)
+        public ActionResult Save(GoalVM goalVM)
         {
-            var userProfile = HomeController.GetUserProfile();
+            bool success = false;
+            var advId = GetAdvertiserId();
+
             if (ModelState.IsValid)
             {
-                var advId = userProfile.CakeAdvertiserId;
-                if (advId.HasValue)
+                Goal goal;
+                if (goalVM.Id < 0)
                 {
-                    goal.AdvertiserId = advId.Value;
-                    SaveGoal(goal);
+                    goal = new Goal() { AdvertiserId = advId.HasValue ? advId.Value : 0 };
+                    goalVM.SetEntityProperties(goal);
+                    cpRepo.AddGoal(goal, true);
+                    success = true;
                 }
-                return Json(new { success = true, OfferId = goal.OfferId, GoalId = goal.Id });
+                else
+                {
+                    var existingGoal = cpRepo.GetGoal(goalVM.Id);
+                    if (existingGoal != null && (advId == null || advId.Value == existingGoal.AdvertiserId))
+                    {
+                        goalVM.SetEntityProperties(existingGoal);
+                        cpRepo.SaveChanges();
+                        success = true;
+                    }
+                }
+                return Json(new { success = success, OfferId = goalVM.OfferId, GoalId = goalVM.Id });
             }
             else
             {
-                return DoEdit(goal);
+                return DoEdit(goalVM);
             }
         }
 
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            var advId = HomeController.GetAdvertiserId();
+            var advId = GetAdvertiserId();
             cpRepo.DeleteGoal(id, advId);
             return null;
         }
-
-        // --- repository-type methods ---
-
-        private void SaveGoal(GoalVM goalVM)
-        {
-            using (var usersContext = new UsersContext())
-            {
-                if (goalVM.Id < 0)
-                {
-                    var goal = new ClientPortal.Web.Models.Goal();
-                    goalVM.SetGoalEntityProperties(goal);
-                    usersContext.Goals.Add(goal);
-                }
-                else
-                {
-                    var existingGoal = usersContext.Goals.FirstOrDefault(g => g.Id == goalVM.Id);
-                    if (existingGoal != null)
-                        goalVM.SetGoalEntityProperties(existingGoal);
-                }
-                usersContext.SaveChanges();
-            }
-        }
-
     }
 }

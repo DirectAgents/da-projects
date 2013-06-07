@@ -144,7 +144,7 @@ footer.row {
     overflow-y: auto;
 }
 
-.display-label, .editor-label label {
+.display-label, .editor-label label, .editor-field label {
     font-weight: bold;
 }
 .editor-field, .display-field {

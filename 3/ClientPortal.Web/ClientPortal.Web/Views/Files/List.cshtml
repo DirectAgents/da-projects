@@ -6,18 +6,9 @@
     <tr>
         <td>@file.UploadDate</td>
         <td>@file.Filename</td>
-        <td>@Ajax.ActionLink("process", "Process", new { Id = file.Id }, new AjaxOptions { OnBegin = "ProcessBegin", OnSuccess = "ProcessSuccess" })</td>
+        <td>@Ajax.ActionLink("process", "Process", new { Id = file.Id }, new AjaxOptions { OnBegin = "ProcessFileBegin", OnSuccess = "ProcessFileSuccess" })
+            | <a href="#" onclick="DeleteFile(@file.Id, true); return false">Delete</a>
+        </td>
     </tr>
 }
 </table>
-<div id="filesMessage" style="margin: 0px 0px 18px 5px"></div>
-
-<script>
-    function ProcessBegin() {
-        $('#filesMessage').html('Processing...');
-    }
-
-    function ProcessSuccess() {
-        $('#filesMessage').html('File processed.');
-    }
-</script>

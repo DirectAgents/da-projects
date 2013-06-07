@@ -4,6 +4,7 @@ using System.Linq;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
+using System.Data;
 
 namespace ClientPortal.Data.Services
 {
@@ -247,7 +248,77 @@ namespace ClientPortal.Data.Services
 
         #endregion
 
+        #region ScheduledReports
+        public IQueryable<ScheduledReport> GetScheduledReports(int advertiserId)
+        {
+            var scheduledReports = context.ScheduledReports.Where(sr => sr.AdvertiserId == advertiserId);
+            return scheduledReports;
+        }
+
+        public ScheduledReport GetScheduledReport(int id)
+        {
+            var rep = context.ScheduledReports.Find(id);
+            return rep;
+        }
+
+        public void AddScheduledReport(ScheduledReport scheduledReport)
+        {
+            context.ScheduledReports.Add(scheduledReport);
+        }
+
+        //public void SaveScheduledReport(ScheduledReport scheduledReport)
+        //{
+        //    var entry = context.Entry(scheduledReport);
+        //    entry.State = EntityState.Modified;
+        //    context.SaveChanges();
+        //}
+
+        public bool DeleteScheduledReport(int id, int? advertiserId)
+        {
+            bool deleted = false;
+            var rep = context.ScheduledReports.Find(id);
+            if (rep != null && (advertiserId == null || rep.AdvertiserId == advertiserId.Value))
+            {
+                context.ScheduledReports.Remove(rep);
+                context.SaveChanges();
+                deleted = true;
+            }
+            return deleted;
+        }
+        #endregion
+
+        #region Files
+        public IQueryable<FileUpload> GetFileUploads(int? advertiserId)
+        {   // Note: if advertiserId == null, return the FileUploads where advertiserId is null
+            var fileUploads = context.FileUploads.Where(f => f.AdvertiserId == advertiserId);
+            return fileUploads;
+        }
+
+        public FileUpload GetFileUpload(int id)
+        {
+            var fileUpload = context.FileUploads.Find(id);
+            return fileUpload;
+        }
+
+        public void AddFileUpload(FileUpload fileUpload, bool saveChanges = false)
+        {
+            context.FileUploads.Add(fileUpload);
+            if (saveChanges) SaveChanges();
+        }
+
+        public void DeleteFileUpload(FileUpload fileUpload, bool saveChanges = false)
+        {
+            context.FileUploads.Remove(fileUpload);
+            if (saveChanges) SaveChanges();
+        }
+        #endregion
+
         #region Goals
+        public IQueryable<Goal> Goals
+        {
+            get { return context.Goals; }
+        }
+
         public IQueryable<Goal> GetGoals(int advertiserId)
         {
             var goals = context.Goals.Where(g => g.AdvertiserId == advertiserId);
@@ -256,14 +327,20 @@ namespace ClientPortal.Data.Services
 
         public Goal GetGoal(int id)
         {
-            var goal = context.Goals.Where(g => g.Id == id).FirstOrDefault();
+            var goal = context.Goals.Find(id);
             return goal;
+        }
+
+        public void AddGoal(Goal goal, bool saveChanges = false)
+        {
+            context.Goals.Add(goal);
+            if (saveChanges) SaveChanges();
         }
 
         public bool DeleteGoal(int id, int? advertiserId)
         {
             bool deleted = false;
-            var goal = context.Goals.Where(g => g.Id == id).FirstOrDefault();
+            var goal = context.Goals.Find(id);
             if (goal != null && (advertiserId == null || goal.AdvertiserId == advertiserId.Value))
             {
                 context.Goals.Remove(goal);

@@ -5,361 +5,420 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ClientPortalModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-  <EntityContainer Name="ClientPortalModelStoreContainer">
-    <EntitySet Name="Clicks" EntityType="ClientPortalModel.Store.Clicks" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Conversions" EntityType="ClientPortalModel.Store.Conversions" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.Store.ConversionDatas" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Goals" EntityType="ClientPortalModel.Store.Goals" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Advertisers" EntityType="ClientPortalModel.Store.Advertisers" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="AdvertiserContacts" EntityType="ClientPortalModel.Store.AdvertiserContacts" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Contacts" EntityType="ClientPortalModel.Store.Contacts" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.Store.DailySummaries" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Offers" EntityType="ClientPortalModel.Store.Offers" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="ScheduledReports" EntityType="ClientPortalModel.Store.ScheduledReports" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="GeneratedReports" EntityType="ClientPortalModel.Store.GeneratedReports" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="ScheduledReportRecipients" EntityType="ClientPortalModel.Store.ScheduledReportRecipients" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="EmailedReports" EntityType="ClientPortalModel.Store.EmailedReports" store:Type="Tables" Schema="dbo" />
-    <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
-      <End Role="Advertiser" EntitySet="Advertisers" />
-      <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
-    </AssociationSet>
-    <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
-      <End Role="Contact" EntitySet="Contacts" />
-      <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
-    </AssociationSet>
-    <AssociationSet Name="AdvertiserScheduledReport" Association="ClientPortalModel.Store.AdvertiserScheduledReport">
-      <End Role="Advertiser" EntitySet="Advertisers" />
-      <End Role="ScheduledReport" EntitySet="ScheduledReports" />
-    </AssociationSet>
-    <AssociationSet Name="ScheduledReportScheduledReportRecipient" Association="ClientPortalModel.Store.ScheduledReportScheduledReportRecipient">
-      <End Role="ScheduledReport" EntitySet="ScheduledReports" />
-      <End Role="ScheduledReportRecipient" EntitySet="ScheduledReportRecipients" />
-    </AssociationSet>
-    <AssociationSet Name="ScheduledReportGeneratedReport" Association="ClientPortalModel.Store.ScheduledReportGeneratedReport">
-      <End Role="ScheduledReport" EntitySet="ScheduledReports" />
-      <End Role="GeneratedReport" EntitySet="GeneratedReports" />
-    </AssociationSet>
-    <AssociationSet Name="GeneratedReportEmailedReport" Association="ClientPortalModel.Store.GeneratedReportEmailedReport">
-      <End Role="GeneratedReport" EntitySet="GeneratedReports" />
-      <End Role="EmailedReport" EntitySet="EmailedReports" />
-    </AssociationSet>
-  </EntityContainer>
-  <EntityType Name="Clicks">
-    <Key>
-      <PropertyRef Name="click_id" />
-    </Key>
-    <Property Name="click_id" Type="int" Nullable="false" />
-    <Property Name="visitor_id" Type="int" Nullable="false" />
-    <Property Name="request_session_id" Type="int" Nullable="false" />
-    <Property Name="click_date" Type="datetime" Nullable="false" />
-    <Property Name="affiliate_id" Type="int" Nullable="false" />
-    <Property Name="affiliate_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="advertiser_id" Type="int" Nullable="false" />
-    <Property Name="advertiser_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="offer_id" Type="int" Nullable="false" />
-    <Property Name="offer_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="campaign_id" Type="int" Nullable="false" />
-    <Property Name="creative_id" Type="int" Nullable="false" />
-    <Property Name="creative_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_1" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_2" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_3" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_4" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_5" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="ip_address" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="user_agent" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="referrer_url" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="request_url" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="redirect_url" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="country_code" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="country_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="region_code" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="region_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="language_id" Type="tinyint" Nullable="false" />
-    <Property Name="language_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="language_abbr" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="isp_id" Type="int" Nullable="false" />
-    <Property Name="isp_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="device_id" Type="smallint" Nullable="false" />
-    <Property Name="device_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="operating_system_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="browser_id" Type="int" Nullable="false" />
-    <Property Name="browser_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="disposition" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="paid_action" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="total_clicks" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="Conversions">
-    <Key>
-      <PropertyRef Name="conversion_id" />
-    </Key>
-    <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
-    <Property Name="visitor_id" Type="int" Nullable="false" />
-    <Property Name="request_session_id" Type="int" Nullable="false" />
-    <Property Name="click_id" Type="int" Nullable="true" />
-    <Property Name="conversion_date" Type="datetime" Nullable="false" />
-    <Property Name="last_updated" Type="datetime" Nullable="true" />
-    <Property Name="click_date" Type="datetime" Nullable="true" />
-    <Property Name="affiliate_id" Type="int" Nullable="false" />
-    <Property Name="affiliate_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="advertiser_id" Type="int" Nullable="false" />
-    <Property Name="advertiser_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="offer_id" Type="int" Nullable="false" />
-    <Property Name="offer_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="campaign_id" Type="int" Nullable="false" />
-    <Property Name="creative_id" Type="int" Nullable="false" />
-    <Property Name="creative_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_1" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_2" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_3" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_4" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="sub_id_5" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="conversion_type" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="paid_currency_id" Type="tinyint" Nullable="false" />
-    <Property Name="paid_amount" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="paid_formatted_amount" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="received_currency_id" Type="tinyint" Nullable="false" />
-    <Property Name="received_amount" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="received_formatted_amount" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="step_reached" Type="tinyint" Nullable="false" />
-    <Property Name="pixel_dropped" Type="bit" Nullable="false" />
-    <Property Name="suppressed" Type="bit" Nullable="false" />
-    <Property Name="returned" Type="bit" Nullable="false" />
-    <Property Name="test" Type="bit" Nullable="false" />
-    <Property Name="transaction_id" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="conversion_ip_address" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="click_ip_address" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="country" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="conversion_referrer_url" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="click_referrer_url" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="conversion_user_agent" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="click_user_agent" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="disposition_approved" Type="bit" Nullable="false" />
-    <Property Name="disposition_name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="disposition_contact" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="disposition_date" Type="datetime" Nullable="true" />
-    <Property Name="note" Type="nvarchar(max)" Nullable="true" />
-  </EntityType>
-  <EntityType Name="ConversionDatas">
-    <Key>
-      <PropertyRef Name="conversion_id" />
-    </Key>
-    <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
-    <Property Name="value0" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-  </EntityType>
-  <EntityType Name="Goals">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="AdvertiserId" Type="int" Nullable="false" />
-    <Property Name="OfferId" Type="int" Nullable="true" />
-    <Property Name="Name" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="TypeId" Type="int" Nullable="false" />
-    <Property Name="MetricId" Type="int" Nullable="false" />
-    <Property Name="Target" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="StartDate" Type="datetime" Nullable="true" />
-    <Property Name="EndDate" Type="datetime" Nullable="true" />
-  </EntityType>
-  <EntityType Name="Advertisers">
-    <Key>
-      <PropertyRef Name="AdvertiserId" />
-    </Key>
-    <Property Name="AdvertiserId" Type="int" Nullable="false" />
-    <Property Name="AdvertiserName" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Logo" Type="varbinary(max)" Nullable="true" />
-    <Property Name="Culture" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="ShowCPMRep" Type="bit" Nullable="false" />
-    <Property Name="ShowConversionData" Type="bit" Nullable="false" />
-    <Property Name="ConversionValueName" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="ConversionValueIsNumber" Type="bit" Nullable="false" />
-  </EntityType>
-  <EntityType Name="AdvertiserContacts">
-    <Key>
-      <PropertyRef Name="AdvertiserId" />
-      <PropertyRef Name="ContactId" />
-    </Key>
-    <Property Name="AdvertiserId" Type="int" Nullable="false" />
-    <Property Name="ContactId" Type="int" Nullable="false" />
-    <Property Name="Order" Type="int" Nullable="true" />
-  </EntityType>
-  <EntityType Name="Contacts">
-    <Key>
-      <PropertyRef Name="ContactId" />
-    </Key>
-    <Property Name="ContactId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="FirstName" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="LastName" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Title" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Email" Type="nvarchar(max)" Nullable="true" />
-  </EntityType>
-  <EntityType Name="DailySummaries">
-    <Key>
-      <PropertyRef Name="offer_id" />
-      <PropertyRef Name="date" />
-    </Key>
-    <Property Name="offer_id" Type="int" Nullable="false" />
-    <Property Name="date" Type="datetime" Nullable="false" />
-    <Property Name="views" Type="int" Nullable="false" />
-    <Property Name="clicks" Type="int" Nullable="false" />
-    <Property Name="click_thru" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="conversions" Type="int" Nullable="false" />
-    <Property Name="paid" Type="int" Nullable="false" />
-    <Property Name="sellable" Type="int" Nullable="false" />
-    <Property Name="conversion_rate" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="cpl" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="cost" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="rpt" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="revenue" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="margin" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="profit" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-    <Property Name="epc" Type="decimal" Nullable="false" Precision="18" Scale="2" />
-  </EntityType>
-  <EntityType Name="Offers">
-    <Key>
-      <PropertyRef Name="Offer_Id" />
-    </Key>
-    <Property Name="Offer_Id" Type="int" Nullable="false" />
-    <Property Name="OfferName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Advertiser_Id" Type="int" Nullable="true" />
-    <Property Name="VerticalName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="OfferType" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="StatusName" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="DefaultPriceFormat" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="DefaultPayout" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="PriceReceived" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Secure" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="OfferLink" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="ThumbnailImageUrl" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="ExpirationDate" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="CookieDays" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="CookieDaysImpressions" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="DateCreated" Type="nvarchar" Nullable="true" MaxLength="255" />
-    <Property Name="Currency" Type="nchar" Nullable="true" MaxLength="3" />
-    <Property Name="AllowedCountries" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="Xml" Type="nvarchar(max)" Nullable="true" />
-    <Property Name="AllowedMediaTypeNames" Type="nvarchar(max)" Nullable="false" />
-  </EntityType>
-  <EntityType Name="ScheduledReports">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="AdvertiserId" Type="int" Nullable="false" />
-    <Property Name="Months" Type="int" Nullable="false" DefaultValue="0" />
-    <Property Name="Days" Type="int" Nullable="false" DefaultValue="0" />
-    <Property Name="IsCumulative" Type="bit" Nullable="false" />
-    <Property Name="LastSent" Type="datetime" Nullable="true" />
-    <Property Name="NextSend" Type="datetime" Nullable="true" />
-  </EntityType>
-  <EntityType Name="GeneratedReports">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="ReportType" Type="int" Nullable="false" />
-    <Property Name="StartDate" Type="datetime" Nullable="false" />
-    <Property Name="EndDate" Type="datetime" Nullable="false" />
-    <Property Name="ReportStatus" Type="int" Nullable="false" />
-    <Property Name="ReportStatusUpdated" Type="datetime" Nullable="true" />
-    <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="ScheduledReportId" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="ScheduledReportRecipients">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="EmailAddress" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="ScheduledReportId" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="EmailedReports">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="EmailTo" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="EmailStatus" Type="int" Nullable="false" />
-    <Property Name="EmailStatusUpdated" Type="datetime" Nullable="true" />
-    <Property Name="GeneratedReportId" Type="int" Nullable="false" />
-  </EntityType>
-  <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
-    <End Role="Advertiser" Type="ClientPortalModel.Store.Advertisers" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="AdvertiserContact" Type="ClientPortalModel.Store.AdvertiserContacts" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Advertiser">
-        <PropertyRef Name="AdvertiserId" />
-      </Principal>
-      <Dependent Role="AdvertiserContact">
-        <PropertyRef Name="AdvertiserId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
-    <End Role="Contact" Type="ClientPortalModel.Store.Contacts" Multiplicity="1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Role="AdvertiserContact" Type="ClientPortalModel.Store.AdvertiserContacts" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Contact">
-        <PropertyRef Name="ContactId" />
-      </Principal>
-      <Dependent Role="AdvertiserContact">
-        <PropertyRef Name="ContactId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="AdvertiserScheduledReport">
-    <End Role="Advertiser" Type="ClientPortalModel.Store.Advertisers" Multiplicity="1" />
-    <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReports" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Advertiser">
-        <PropertyRef Name="AdvertiserId" />
-      </Principal>
-      <Dependent Role="ScheduledReport">
-        <PropertyRef Name="AdvertiserId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="ScheduledReportScheduledReportRecipient">
-    <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReports" Multiplicity="1" />
-    <End Role="ScheduledReportRecipient" Type="ClientPortalModel.Store.ScheduledReportRecipients" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ScheduledReport">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="ScheduledReportRecipient">
-        <PropertyRef Name="ScheduledReportId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="ScheduledReportGeneratedReport">
-    <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReports" Multiplicity="1" />
-    <End Role="GeneratedReport" Type="ClientPortalModel.Store.GeneratedReports" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="ScheduledReport">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="GeneratedReport">
-        <PropertyRef Name="ScheduledReportId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="GeneratedReportEmailedReport">
-    <End Role="GeneratedReport" Type="ClientPortalModel.Store.GeneratedReports" Multiplicity="1" />
-    <End Role="EmailedReport" Type="ClientPortalModel.Store.EmailedReports" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="GeneratedReport">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="EmailedReport">
-        <PropertyRef Name="GeneratedReportId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-</Schema></edmx:StorageModels>
+        <EntityContainer Name="ClientPortalModelStoreContainer">
+          <EntitySet Name="Advertiser" EntityType="ClientPortalModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AdvertiserContact" EntityType="ClientPortalModel.Store.AdvertiserContact" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Click" EntityType="ClientPortalModel.Store.Click" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DailySummary" EntityType="ClientPortalModel.Store.DailySummary" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="EmailedReport" EntityType="ClientPortalModel.Store.EmailedReport" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GeneratedReport" EntityType="ClientPortalModel.Store.GeneratedReport" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Goal" EntityType="ClientPortalModel.Store.Goal" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Offer" EntityType="ClientPortalModel.Store.Offer" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ScheduledReport" EntityType="ClientPortalModel.Store.ScheduledReport" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ScheduledReportRecipient" EntityType="ClientPortalModel.Store.ScheduledReportRecipient" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.Store.FK_AdvertiserScheduledReport">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="ScheduledReport" EntitySet="ScheduledReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
+            <End Role="Contact" EntitySet="Contact" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FileUpload_Advertiser" Association="ClientPortalModel.Store.FK_FileUpload_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="FileUpload" EntitySet="FileUpload" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GeneratedReportEmailedReport" Association="ClientPortalModel.Store.FK_GeneratedReportEmailedReport">
+            <End Role="GeneratedReport" EntitySet="GeneratedReport" />
+            <End Role="EmailedReport" EntitySet="EmailedReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Advertiser" Association="ClientPortalModel.Store.FK_Goal_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="Goal" EntitySet="Goal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.Store.FK_Goal_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="Goal" EntitySet="Goal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScheduledReportGeneratedReport" Association="ClientPortalModel.Store.FK_ScheduledReportGeneratedReport">
+            <End Role="ScheduledReport" EntitySet="ScheduledReport" />
+            <End Role="GeneratedReport" EntitySet="GeneratedReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScheduledReportScheduledReportRecipient" Association="ClientPortalModel.Store.FK_ScheduledReportScheduledReportRecipient">
+            <End Role="ScheduledReport" EntitySet="ScheduledReport" />
+            <End Role="ScheduledReportRecipient" EntitySet="ScheduledReportRecipient" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="AdvertiserId" />
+          </Key>
+          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="AdvertiserName" Type="nvarchar(max)" />
+          <Property Name="Logo" Type="varbinary(max)" />
+          <Property Name="Culture" Type="nvarchar(max)" />
+          <Property Name="ShowCPMRep" Type="bit" Nullable="false" />
+          <Property Name="ShowConversionData" Type="bit" Nullable="false" />
+          <Property Name="ConversionValueName" Type="nvarchar(max)" />
+          <Property Name="ConversionValueIsNumber" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AdvertiserContact">
+          <Key>
+            <PropertyRef Name="AdvertiserId" />
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="ContactId" Type="int" Nullable="false" />
+          <Property Name="Order" Type="int" />
+        </EntityType>
+        <EntityType Name="Click">
+          <Key>
+            <PropertyRef Name="click_id" />
+          </Key>
+          <Property Name="click_id" Type="int" Nullable="false" />
+          <Property Name="visitor_id" Type="int" Nullable="false" />
+          <Property Name="request_session_id" Type="int" Nullable="false" />
+          <Property Name="click_date" Type="datetime" Nullable="false" />
+          <Property Name="affiliate_affiliate_id" Type="int" Nullable="false" />
+          <Property Name="affiliate_affiliate_name" Type="nvarchar(max)" />
+          <Property Name="advertiser_advertiser_id" Type="int" Nullable="false" />
+          <Property Name="advertiser_advertiser_name" Type="nvarchar(max)" />
+          <Property Name="offer_offer_id" Type="int" Nullable="false" />
+          <Property Name="offer_offer_name" Type="nvarchar(max)" />
+          <Property Name="campaign_id" Type="int" Nullable="false" />
+          <Property Name="creative_creative_id" Type="int" Nullable="false" />
+          <Property Name="creative_creative_name" Type="nvarchar(max)" />
+          <Property Name="sub_id_1" Type="nvarchar(max)" />
+          <Property Name="sub_id_2" Type="nvarchar(max)" />
+          <Property Name="sub_id_3" Type="nvarchar(max)" />
+          <Property Name="sub_id_4" Type="nvarchar(max)" />
+          <Property Name="sub_id_5" Type="nvarchar(max)" />
+          <Property Name="ip_address" Type="nvarchar(max)" />
+          <Property Name="user_agent" Type="nvarchar(max)" />
+          <Property Name="referrer_url" Type="nvarchar(max)" />
+          <Property Name="request_url" Type="nvarchar(max)" />
+          <Property Name="redirect_url" Type="nvarchar(max)" />
+          <Property Name="country_country_code" Type="nvarchar(max)" />
+          <Property Name="country_country_name" Type="nvarchar(max)" />
+          <Property Name="region_region_code" Type="nvarchar(max)" />
+          <Property Name="region_region_name" Type="nvarchar(max)" />
+          <Property Name="language_language_id" Type="tinyint" Nullable="false" />
+          <Property Name="language_language_name" Type="nvarchar(max)" />
+          <Property Name="language_language_abbr" Type="nvarchar(max)" />
+          <Property Name="isp_isp_id" Type="int" Nullable="false" />
+          <Property Name="isp_isp_name" Type="nvarchar(max)" />
+          <Property Name="device_device_id" Type="smallint" Nullable="false" />
+          <Property Name="device_device_name" Type="nvarchar(max)" />
+          <Property Name="operating_system_operating_system_name" Type="nvarchar(max)" />
+          <Property Name="browser_browser_id" Type="int" Nullable="false" />
+          <Property Name="browser_browser_name" Type="nvarchar(max)" />
+          <Property Name="disposition" Type="nvarchar(max)" />
+          <Property Name="paid_action" Type="nvarchar(max)" />
+          <Property Name="total_clicks" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="ContactId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="nvarchar(max)" />
+          <Property Name="LastName" Type="nvarchar(max)" />
+          <Property Name="Title" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Conversion">
+          <Key>
+            <PropertyRef Name="conversion_id" />
+          </Key>
+          <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="visitor_id" Type="int" Nullable="false" />
+          <Property Name="request_session_id" Type="int" Nullable="false" />
+          <Property Name="click_id" Type="int" />
+          <Property Name="conversion_date" Type="datetime" Nullable="false" />
+          <Property Name="last_updated" Type="datetime" />
+          <Property Name="click_date" Type="datetime" />
+          <Property Name="affiliate_affiliate_id" Type="int" Nullable="false" />
+          <Property Name="affiliate_affiliate_name" Type="nvarchar(max)" />
+          <Property Name="advertiser_advertiser_id" Type="int" Nullable="false" />
+          <Property Name="advertiser_advertiser_name" Type="nvarchar(max)" />
+          <Property Name="offer_offer_id" Type="int" Nullable="false" />
+          <Property Name="offer_offer_name" Type="nvarchar(max)" />
+          <Property Name="campaign_id" Type="int" Nullable="false" />
+          <Property Name="creative_creative_id" Type="int" Nullable="false" />
+          <Property Name="creative_creative_name" Type="nvarchar(max)" />
+          <Property Name="sub_id_1" Type="nvarchar(max)" />
+          <Property Name="sub_id_2" Type="nvarchar(max)" />
+          <Property Name="sub_id_3" Type="nvarchar(max)" />
+          <Property Name="sub_id_4" Type="nvarchar(max)" />
+          <Property Name="sub_id_5" Type="nvarchar(max)" />
+          <Property Name="conversion_type" Type="nvarchar(max)" />
+          <Property Name="paid_currency_id" Type="tinyint" Nullable="false" />
+          <Property Name="paid_amount" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="paid_formatted_amount" Type="nvarchar(max)" />
+          <Property Name="received_currency_id" Type="tinyint" Nullable="false" />
+          <Property Name="received_amount" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="received_formatted_amount" Type="nvarchar(max)" />
+          <Property Name="step_reached" Type="tinyint" Nullable="false" />
+          <Property Name="pixel_dropped" Type="bit" Nullable="false" />
+          <Property Name="suppressed" Type="bit" Nullable="false" />
+          <Property Name="returned" Type="bit" Nullable="false" />
+          <Property Name="test" Type="bit" Nullable="false" />
+          <Property Name="transaction_id" Type="nvarchar(max)" />
+          <Property Name="conversion_ip_address" Type="nvarchar(max)" />
+          <Property Name="click_ip_address" Type="nvarchar(max)" />
+          <Property Name="country" Type="nvarchar(max)" />
+          <Property Name="conversion_referrer_url" Type="nvarchar(max)" />
+          <Property Name="click_referrer_url" Type="nvarchar(max)" />
+          <Property Name="conversion_user_agent" Type="nvarchar(max)" />
+          <Property Name="click_user_agent" Type="nvarchar(max)" />
+          <Property Name="disposition_approved" Type="bit" Nullable="false" />
+          <Property Name="disposition_disposition_name" Type="nvarchar(max)" />
+          <Property Name="disposition_contact" Type="nvarchar(max)" />
+          <Property Name="disposition_disposition_date" Type="datetime" />
+          <Property Name="note" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ConversionData">
+          <Key>
+            <PropertyRef Name="conversion_id" />
+          </Key>
+          <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="value0" Type="decimal" Nullable="false" Scale="2" />
+        </EntityType>
+        <EntityType Name="DailySummary">
+          <Key>
+            <PropertyRef Name="offer_id" />
+            <PropertyRef Name="date" />
+          </Key>
+          <Property Name="offer_id" Type="int" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="views" Type="int" Nullable="false" />
+          <Property Name="clicks" Type="int" Nullable="false" />
+          <Property Name="click_thru" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="conversions" Type="int" Nullable="false" />
+          <Property Name="paid" Type="int" Nullable="false" />
+          <Property Name="sellable" Type="int" Nullable="false" />
+          <Property Name="conversion_rate" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="cpl" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="cost" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="rpt" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="revenue" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="margin" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="profit" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="epc" Type="decimal" Nullable="false" Scale="2" />
+        </EntityType>
+        <EntityType Name="EmailedReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="EmailTo" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="EmailStatus" Type="int" Nullable="false" />
+          <Property Name="EmailStatusUpdated" Type="datetime" />
+          <Property Name="GeneratedReportId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FileUpload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UploadDate" Type="datetime" Nullable="false" />
+          <Property Name="Filename" Type="nvarchar(max)" />
+          <Property Name="Text" Type="nvarchar(max)" />
+          <Property Name="AdvertiserId" Type="int" />
+        </EntityType>
+        <EntityType Name="GeneratedReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ReportType" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="ReportStatus" Type="int" Nullable="false" />
+          <Property Name="ReportStatusUpdated" Type="datetime" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ScheduledReportId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Goal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="OfferId" Type="int" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="MetricId" Type="int" Nullable="false" />
+          <Property Name="Target" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Offer">
+          <Key>
+            <PropertyRef Name="Offer_Id" />
+          </Key>
+          <Property Name="Offer_Id" Type="int" Nullable="false" />
+          <Property Name="OfferName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Advertiser_Id" Type="int" />
+          <Property Name="VerticalName" Type="nvarchar" MaxLength="255" />
+          <Property Name="OfferType" Type="nvarchar" MaxLength="255" />
+          <Property Name="StatusName" Type="nvarchar" MaxLength="255" />
+          <Property Name="DefaultPriceFormat" Type="nvarchar" MaxLength="255" />
+          <Property Name="DefaultPayout" Type="nvarchar" MaxLength="255" />
+          <Property Name="PriceReceived" Type="nvarchar" MaxLength="255" />
+          <Property Name="Secure" Type="nvarchar" MaxLength="255" />
+          <Property Name="OfferLink" Type="nvarchar" MaxLength="255" />
+          <Property Name="ThumbnailImageUrl" Type="nvarchar" MaxLength="255" />
+          <Property Name="ExpirationDate" Type="nvarchar" MaxLength="255" />
+          <Property Name="CookieDays" Type="nvarchar" MaxLength="255" />
+          <Property Name="CookieDaysImpressions" Type="nvarchar" MaxLength="255" />
+          <Property Name="DateCreated" Type="nvarchar" MaxLength="255" />
+          <Property Name="Currency" Type="nchar" MaxLength="3" />
+          <Property Name="AllowedCountries" Type="nvarchar(max)" />
+          <Property Name="Xml" Type="xml" />
+          <Property Name="AllowedMediaTypeNames" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ScheduledReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="Months" Type="int" Nullable="false" />
+          <Property Name="Days" Type="int" Nullable="false" />
+          <Property Name="IsCumulative" Type="bit" Nullable="false" />
+          <Property Name="LastSent" Type="datetime" />
+          <Property Name="NextSend" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ScheduledReportRecipient">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="EmailAddress" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ScheduledReportId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AdvertiserScheduledReport">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
+          <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="ScheduledReport">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AdvertiserContact" Type="ClientPortalModel.Store.AdvertiserContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="AdvertiserContact">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
+          <End Role="Contact" Type="ClientPortalModel.Store.Contact" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AdvertiserContact" Type="ClientPortalModel.Store.AdvertiserContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Contact">
+              <PropertyRef Name="ContactId" />
+            </Principal>
+            <Dependent Role="AdvertiserContact">
+              <PropertyRef Name="ContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FileUpload_Advertiser">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
+          <End Role="FileUpload" Type="ClientPortalModel.Store.FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="FileUpload">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GeneratedReportEmailedReport">
+          <End Role="GeneratedReport" Type="ClientPortalModel.Store.GeneratedReport" Multiplicity="1" />
+          <End Role="EmailedReport" Type="ClientPortalModel.Store.EmailedReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GeneratedReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmailedReport">
+              <PropertyRef Name="GeneratedReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goal_Advertiser">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
+          <End Role="Goal" Type="ClientPortalModel.Store.Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goal_Offer">
+          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="0..1" />
+          <End Role="Goal" Type="ClientPortalModel.Store.Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="Offer_Id" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScheduledReportGeneratedReport">
+          <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReport" Multiplicity="1" />
+          <End Role="GeneratedReport" Type="ClientPortalModel.Store.GeneratedReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScheduledReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GeneratedReport">
+              <PropertyRef Name="ScheduledReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScheduledReportScheduledReportRecipient">
+          <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReport" Multiplicity="1" />
+          <End Role="ScheduledReportRecipient" Type="ClientPortalModel.Store.ScheduledReportRecipient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScheduledReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ScheduledReportRecipient">
+              <PropertyRef Name="ScheduledReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ClientPortalModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -367,7 +426,9 @@
           <EntitySet Name="Clicks" EntityType="ClientPortalModel.Click" />
           <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
           <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
+          <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
           <EntitySet Name="Goals" EntityType="ClientPortalModel.Goal" />
+          <EntitySet Name="Offers" EntityType="ClientPortalModel.Offer" />
           <EntitySet Name="Advertisers" EntityType="ClientPortalModel.Advertiser" />
           <EntitySet Name="AdvertiserContacts" EntityType="ClientPortalModel.AdvertiserContact" />
           <EntitySet Name="Contacts" EntityType="ClientPortalModel.Contact" />
@@ -379,124 +440,151 @@
             <End Role="Contact" EntitySet="Contacts" />
             <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
           </AssociationSet>
-          <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
-          <EntitySet Name="Offers" EntityType="ClientPortalModel.Offer" />
+          <EntitySet Name="GeneratedReports" EntityType="ClientPortalModel.GeneratedReport" />
           <EntitySet Name="ScheduledReports" EntityType="ClientPortalModel.ScheduledReport" />
-          <AssociationSet Name="AdvertiserScheduledReport" Association="ClientPortalModel.AdvertiserScheduledReport">
+          <EntitySet Name="ScheduledReportRecipients" EntityType="ClientPortalModel.ScheduledReportRecipient" />
+          <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.FK_AdvertiserScheduledReport">
             <End Role="Advertiser" EntitySet="Advertisers" />
             <End Role="ScheduledReport" EntitySet="ScheduledReports" />
           </AssociationSet>
-          <EntitySet Name="GeneratedReports" EntityType="ClientPortalModel.GeneratedReport" />
-          <EntitySet Name="ScheduledReportRecipients" EntityType="ClientPortalModel.ScheduledReportRecipient" />
-          <AssociationSet Name="ScheduledReportScheduledReportRecipient" Association="ClientPortalModel.ScheduledReportScheduledReportRecipient">
+          <AssociationSet Name="FK_ScheduledReportGeneratedReport" Association="ClientPortalModel.FK_ScheduledReportGeneratedReport">
+            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
+            <End Role="GeneratedReport" EntitySet="GeneratedReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScheduledReportScheduledReportRecipient" Association="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient">
             <End Role="ScheduledReport" EntitySet="ScheduledReports" />
             <End Role="ScheduledReportRecipient" EntitySet="ScheduledReportRecipients" />
           </AssociationSet>
           <EntitySet Name="EmailedReports" EntityType="ClientPortalModel.EmailedReport" />
-          <AssociationSet Name="ScheduledReportGeneratedReport" Association="ClientPortalModel.ScheduledReportGeneratedReport">
-            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
-            <End Role="GeneratedReport" EntitySet="GeneratedReports" />
-          </AssociationSet>
-          <AssociationSet Name="GeneratedReportEmailedReport" Association="ClientPortalModel.GeneratedReportEmailedReport">
+          <AssociationSet Name="FK_GeneratedReportEmailedReport" Association="ClientPortalModel.FK_GeneratedReportEmailedReport">
             <End Role="GeneratedReport" EntitySet="GeneratedReports" />
             <End Role="EmailedReport" EntitySet="EmailedReports" />
           </AssociationSet>
+          <EntitySet Name="FileUploads" EntityType="ClientPortalModel.FileUpload" />
+          <AssociationSet Name="FK_FileUpload_Advertiser" Association="ClientPortalModel.FK_FileUpload_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="FileUpload" EntitySet="FileUploads" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Advertiser" Association="ClientPortalModel.FK_Goal_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Goal" EntitySet="Goals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.FK_Goal_Offer">
+            <End Role="Offer" EntitySet="Offers" />
+            <End Role="Goal" EntitySet="Goals" />
+          </AssociationSet>
           </EntityContainer>
+        <EnumType Name="EmailStatus">
+          <Member Name="Default" Value="1" />
+          <Member Name="QueuedForSend" Value="2" />
+          <Member Name="Sent" Value="3" />
+        </EnumType>
+        <EnumType Name="ReportStatus">
+          <Member Name="Default" Value="1" />
+          <Member Name="QueuedForCreate" Value="2" />
+          <Member Name="Created" Value="3" />
+        </EnumType>
+        <EnumType Name="ReportType">
+          <Member Name="OfferSummary" Value="1" />
+          <Member Name="DailySummary" Value="2" />
+          <Member Name="ConversionReport" Value="3" />
+          <Member Name="Affiliates" Value="4" />
+        </EnumType>
         <EntityType Name="Click">
           <Key>
             <PropertyRef Name="click_id" />
           </Key>
-          <Property Name="click_id" Type="Int32" Nullable="false" />
-          <Property Name="visitor_id" Type="Int32" Nullable="false" />
-          <Property Name="request_session_id" Type="Int32" Nullable="false" />
-          <Property Name="click_date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="affiliate_id" Type="Int32" Nullable="false" />
-          <Property Name="affiliate_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="advertiser_id" Type="Int32" Nullable="false" />
-          <Property Name="advertiser_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="offer_id" Type="Int32" Nullable="false" />
-          <Property Name="offer_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="campaign_id" Type="Int32" Nullable="false" />
-          <Property Name="creative_id" Type="Int32" Nullable="false" />
-          <Property Name="creative_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_1" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_2" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_3" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_4" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_5" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="ip_address" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="user_agent" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="referrer_url" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="request_url" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="redirect_url" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="country_code" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="country_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="region_code" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="region_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="language_id" Type="Byte" Nullable="false" />
-          <Property Name="language_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="language_abbr" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="isp_id" Type="Int32" Nullable="false" />
-          <Property Name="isp_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="device_id" Type="Int16" Nullable="false" />
-          <Property Name="device_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="operating_system_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="browser_id" Type="Int32" Nullable="false" />
-          <Property Name="browser_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="disposition" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="paid_action" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="total_clicks" Type="Int32" Nullable="false" />
+          <Property Type="Int32" Name="click_id" Nullable="false" />
+          <Property Type="Int32" Name="visitor_id" Nullable="false" />
+          <Property Type="Int32" Name="request_session_id" Nullable="false" />
+          <Property Type="DateTime" Name="click_date" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="affiliate_id" Nullable="false" />
+          <Property Type="String" Name="affiliate_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="advertiser_id" Nullable="false" />
+          <Property Type="String" Name="advertiser_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="offer_id" Nullable="false" />
+          <Property Type="String" Name="offer_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="campaign_id" Nullable="false" />
+          <Property Type="Int32" Name="creative_id" Nullable="false" />
+          <Property Type="String" Name="creative_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_1" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_2" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_3" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_4" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_5" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ip_address" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="user_agent" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="referrer_url" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="request_url" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="redirect_url" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="country_code" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="country_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="region_code" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="region_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Byte" Name="language_id" Nullable="false" />
+          <Property Type="String" Name="language_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="language_abbr" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="isp_id" Nullable="false" />
+          <Property Type="String" Name="isp_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int16" Name="device_id" Nullable="false" />
+          <Property Type="String" Name="device_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="operating_system_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="browser_id" Nullable="false" />
+          <Property Type="String" Name="browser_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="disposition" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="paid_action" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="total_clicks" Nullable="false" />
         </EntityType>
         <EntityType Name="Conversion">
           <Key>
             <PropertyRef Name="conversion_id" />
           </Key>
-          <Property Name="conversion_id" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
-          <Property Name="visitor_id" Type="Int32" Nullable="false" />
-          <Property Name="request_session_id" Type="Int32" Nullable="false" />
-          <Property Name="click_id" Type="Int32" />
-          <Property Name="conversion_date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="last_updated" Type="DateTime" Precision="3" />
-          <Property Name="click_date" Type="DateTime" Precision="3" />
-          <Property Name="affiliate_id" Type="Int32" Nullable="false" />
-          <Property Name="affiliate_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="advertiser_id" Type="Int32" Nullable="false" />
-          <Property Name="advertiser_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="offer_id" Type="Int32" Nullable="false" />
-          <Property Name="offer_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="campaign_id" Type="Int32" Nullable="false" />
-          <Property Name="creative_id" Type="Int32" Nullable="false" />
-          <Property Name="creative_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_1" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_2" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_3" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_4" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="sub_id_5" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="conversion_type" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="paid_currency_id" Type="Byte" Nullable="false" />
-          <Property Name="paid_amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="paid_formatted_amount" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="received_currency_id" Type="Byte" Nullable="false" />
-          <Property Name="received_amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="received_formatted_amount" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="step_reached" Type="Byte" Nullable="false" />
-          <Property Name="pixel_dropped" Type="Boolean" Nullable="false" />
-          <Property Name="suppressed" Type="Boolean" Nullable="false" />
-          <Property Name="returned" Type="Boolean" Nullable="false" />
-          <Property Name="test" Type="Boolean" Nullable="false" />
-          <Property Name="transaction_id" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="conversion_ip_address" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="click_ip_address" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="country" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="conversion_referrer_url" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="click_referrer_url" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="conversion_user_agent" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="click_user_agent" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="disposition_approved" Type="Boolean" Nullable="false" />
-          <Property Name="disposition_name" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="disposition_contact" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="disposition_date" Type="DateTime" Precision="3" />
-          <Property Name="note" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="visitor_id" Nullable="false" />
+          <Property Type="Int32" Name="request_session_id" Nullable="false" />
+          <Property Type="Int32" Name="click_id" />
+          <Property Type="DateTime" Name="conversion_date" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="last_updated" Precision="3" />
+          <Property Type="DateTime" Name="click_date" Precision="3" />
+          <Property Type="Int32" Name="affiliate_id" Nullable="false" />
+          <Property Type="String" Name="affiliate_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="advertiser_id" Nullable="false" />
+          <Property Type="String" Name="advertiser_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="offer_id" Nullable="false" />
+          <Property Type="String" Name="offer_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="campaign_id" Nullable="false" />
+          <Property Type="Int32" Name="creative_id" Nullable="false" />
+          <Property Type="String" Name="creative_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_1" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_2" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_3" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_4" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="sub_id_5" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="conversion_type" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Byte" Name="paid_currency_id" Nullable="false" />
+          <Property Type="Decimal" Name="paid_amount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="paid_formatted_amount" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Byte" Name="received_currency_id" Nullable="false" />
+          <Property Type="Decimal" Name="received_amount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="received_formatted_amount" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Byte" Name="step_reached" Nullable="false" />
+          <Property Type="Boolean" Name="pixel_dropped" Nullable="false" />
+          <Property Type="Boolean" Name="suppressed" Nullable="false" />
+          <Property Type="Boolean" Name="returned" Nullable="false" />
+          <Property Type="Boolean" Name="test" Nullable="false" />
+          <Property Type="String" Name="transaction_id" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="conversion_ip_address" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="click_ip_address" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="country" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="conversion_referrer_url" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="click_referrer_url" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="conversion_user_agent" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="click_user_agent" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="disposition_approved" Nullable="false" />
+          <Property Type="String" Name="disposition_name" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="disposition_contact" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="disposition_date" Precision="3" />
+          <Property Type="String" Name="note" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ConversionData">
           <Key>
@@ -504,6 +592,28 @@
           </Key>
           <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Type="Decimal" Name="value0" Nullable="false" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="DailySummary">
+          <Key>
+            <PropertyRef Name="offer_id" />
+            <PropertyRef Name="date" />
+          </Key>
+          <Property Type="Int32" Name="offer_id" Nullable="false" />
+          <Property Type="DateTime" Name="date" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="views" Nullable="false" />
+          <Property Type="Int32" Name="clicks" Nullable="false" />
+          <Property Type="Decimal" Name="click_thru" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Int32" Name="conversions" Nullable="false" />
+          <Property Type="Int32" Name="paid" Nullable="false" />
+          <Property Type="Int32" Name="sellable" Nullable="false" />
+          <Property Type="Decimal" Name="conversion_rate" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="cpl" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="cost" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="rpt" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="revenue" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="margin" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="profit" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="epc" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Goal">
           <Key>
@@ -513,11 +623,39 @@
           <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
           <Property Type="Int32" Name="OfferId" />
           <Property Type="String" Name="Name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="TypeId" Nullable="false" />
-          <Property Type="Int32" Name="MetricId" Nullable="false" />
+          <Property Type="ClientPortalModel.GoalType" Name="TypeId" Nullable="false" />
+          <Property Type="ClientPortalModel.Metric" Name="MetricId" Nullable="false" />
           <Property Type="Decimal" Name="Target" Nullable="false" Precision="18" Scale="2" />
           <Property Type="DateTime" Name="StartDate" Precision="3" />
           <Property Type="DateTime" Name="EndDate" Precision="3" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Goal" ToRole="Advertiser" />
+          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Goal" ToRole="Offer" />
+        </EntityType>
+        <EntityType Name="Offer">
+          <Key>
+            <PropertyRef Name="Offer_Id" />
+          </Key>
+          <Property Type="Int32" Name="Offer_Id" Nullable="false" />
+          <Property Type="String" Name="OfferName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Advertiser_Id" />
+          <Property Type="String" Name="VerticalName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="OfferType" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="StatusName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DefaultPriceFormat" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DefaultPayout" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PriceReceived" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Secure" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="OfferLink" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ThumbnailImageUrl" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ExpirationDate" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CookieDays" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CookieDaysImpressions" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="DateCreated" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="AllowedCountries" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Xml" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AllowedMediaTypeNames" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
         </EntityType>
         <EntityType Name="Advertiser">
           <Key>
@@ -525,14 +663,16 @@
           </Key>
           <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
           <Property Type="String" Name="AdvertiserName" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
           <Property Type="Binary" Name="Logo" MaxLength="Max" FixedLength="false" />
           <Property Type="String" Name="Culture" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="ShowCPMRep" Nullable="false" />
           <Property Type="Boolean" Name="ShowConversionData" Nullable="false" />
           <Property Type="String" Name="ConversionValueName" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="ConversionValueIsNumber" Nullable="false" />
-          <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
+          <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
+          <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
+          <NavigationProperty Name="FileUploads" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="Advertiser" ToRole="FileUpload" />
+          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Advertiser" ToRole="Goal" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -583,69 +723,46 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="DailySummary">
+        <EntityType Name="GeneratedReport">
           <Key>
-            <PropertyRef Name="offer_id" />
-            <PropertyRef Name="date" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Type="Int32" Name="offer_id" Nullable="false" />
-          <Property Type="DateTime" Name="date" Nullable="false" Precision="3" />
-          <Property Type="Int32" Name="views" Nullable="false" />
-          <Property Type="Int32" Name="clicks" Nullable="false" />
-          <Property Type="Decimal" Name="click_thru" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Int32" Name="conversions" Nullable="false" />
-          <Property Type="Int32" Name="paid" Nullable="false" />
-          <Property Type="Int32" Name="sellable" Nullable="false" />
-          <Property Type="Decimal" Name="conversion_rate" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="cpl" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="cost" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="rpt" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="revenue" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="margin" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="profit" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="epc" Nullable="false" Precision="18" Scale="2" />
-        </EntityType>
-        <EntityType Name="Offer">
-          <Key>
-            <PropertyRef Name="Offer_Id" />
-          </Key>
-          <Property Type="Int32" Name="Offer_Id" Nullable="false" />
-          <Property Type="String" Name="OfferName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="Advertiser_Id" />
-          <Property Type="String" Name="VerticalName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="OfferType" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="StatusName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DefaultPriceFormat" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DefaultPayout" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="PriceReceived" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Secure" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="OfferLink" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ThumbnailImageUrl" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ExpirationDate" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="CookieDays" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="CookieDaysImpressions" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DateCreated" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
-          <Property Type="String" Name="AllowedCountries" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Xml" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="AllowedMediaTypeNames" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="ClientPortalModel.ReportType" Name="ReportType" Nullable="false" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="EndDate" Nullable="false" Precision="3" />
+          <Property Type="ClientPortalModel.ReportStatus" Name="ReportStatus" Nullable="false" />
+          <Property Type="DateTime" Name="ReportStatusUpdated" Precision="3" />
+          <Property Type="String" Name="Content" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ScheduledReportId" Nullable="false" />
+          <NavigationProperty Name="ScheduledReport" Relationship="ClientPortalModel.FK_ScheduledReportGeneratedReport" FromRole="GeneratedReport" ToRole="ScheduledReport" />
+          <NavigationProperty Name="EmailedReports" Relationship="ClientPortalModel.FK_GeneratedReportEmailedReport" FromRole="GeneratedReport" ToRole="EmailedReport" />
         </EntityType>
         <EntityType Name="ScheduledReport">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.AdvertiserScheduledReport" FromRole="ScheduledReport" ToRole="Advertiser" />
           <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
-          <NavigationProperty Name="ScheduledReportRecipients" Relationship="ClientPortalModel.ScheduledReportScheduledReportRecipient" FromRole="ScheduledReport" ToRole="ScheduledReportRecipient" />
-          <NavigationProperty Name="GeneratedReports" Relationship="ClientPortalModel.ScheduledReportGeneratedReport" FromRole="ScheduledReport" ToRole="GeneratedReport" />
           <Property Type="Int32" Name="Months" Nullable="false" DefaultValue="0" />
           <Property Type="Int32" Name="Days" Nullable="false" DefaultValue="0" />
           <Property Type="Boolean" Name="IsCumulative" Nullable="false" />
-          <Property Type="DateTime" Name="LastSent" Nullable="true" />
-          <Property Type="DateTime" Name="NextSend" Nullable="true" />
+          <Property Type="DateTime" Name="LastSent" Precision="3" />
+          <Property Type="DateTime" Name="NextSend" Precision="3" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="ScheduledReport" ToRole="Advertiser" />
+          <NavigationProperty Name="GeneratedReports" Relationship="ClientPortalModel.FK_ScheduledReportGeneratedReport" FromRole="ScheduledReport" ToRole="GeneratedReport" />
+          <NavigationProperty Name="ScheduledReportRecipients" Relationship="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient" FromRole="ScheduledReport" ToRole="ScheduledReportRecipient" />
         </EntityType>
-        <Association Name="AdvertiserScheduledReport">
+        <EntityType Name="ScheduledReportRecipient">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="EmailAddress" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ScheduledReportId" Nullable="false" />
+          <NavigationProperty Name="ScheduledReport" Relationship="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient" FromRole="ScheduledReportRecipient" ToRole="ScheduledReport" />
+        </EntityType>
+        <Association Name="FK_AdvertiserScheduledReport">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
           <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="*" />
           <ReferentialConstraint>
@@ -657,31 +774,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="GeneratedReport">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="ClientPortalModel.ReportType" Name="ReportType" Nullable="false" />
-          <Property Type="DateTime" Name="StartDate" Nullable="false" />
-          <Property Type="DateTime" Name="EndDate" Nullable="false" />
-          <Property Type="ClientPortalModel.ReportStatus" Name="ReportStatus" Nullable="false" />
-          <Property Type="DateTime" Name="ReportStatusUpdated" Nullable="true" />
-          <Property Type="String" Name="Content" Nullable="false" />
-          <NavigationProperty Name="ScheduledReport" Relationship="ClientPortalModel.ScheduledReportGeneratedReport" FromRole="GeneratedReport" ToRole="ScheduledReport" />
-          <Property Type="Int32" Name="ScheduledReportId" Nullable="false" />
-          <NavigationProperty Name="EmailedReports" Relationship="ClientPortalModel.GeneratedReportEmailedReport" FromRole="GeneratedReport" ToRole="EmailedReport" />
-        </EntityType>
-        <EntityType Name="ScheduledReportRecipient">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="EmailAddress" Nullable="false" />
-          <NavigationProperty Name="ScheduledReport" Relationship="ClientPortalModel.ScheduledReportScheduledReportRecipient" FromRole="ScheduledReportRecipient" ToRole="ScheduledReport" />
-          <Property Type="Int32" Name="ScheduledReportId" Nullable="false" />
-        </EntityType>
-        <Association Name="ScheduledReportScheduledReportRecipient">
+        <Association Name="FK_ScheduledReportGeneratedReport">
+          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="1" />
+          <End Type="ClientPortalModel.GeneratedReport" Role="GeneratedReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScheduledReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GeneratedReport">
+              <PropertyRef Name="ScheduledReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScheduledReportScheduledReportRecipient">
           <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="1" />
           <End Type="ClientPortalModel.ScheduledReportRecipient" Role="ScheduledReportRecipient" Multiplicity="*" />
           <ReferentialConstraint>
@@ -698,25 +803,13 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="EmailTo" Nullable="false" />
+          <Property Type="String" Name="EmailTo" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="ClientPortalModel.EmailStatus" Name="EmailStatus" Nullable="false" />
-          <Property Type="DateTime" Name="EmailStatusUpdated" Nullable="true" />
-          <NavigationProperty Name="GeneratedReport" Relationship="ClientPortalModel.GeneratedReportEmailedReport" FromRole="EmailedReport" ToRole="GeneratedReport" />
+          <Property Type="DateTime" Name="EmailStatusUpdated" Precision="3" />
           <Property Type="Int32" Name="GeneratedReportId" Nullable="false" />
+          <NavigationProperty Name="GeneratedReport" Relationship="ClientPortalModel.FK_GeneratedReportEmailedReport" FromRole="EmailedReport" ToRole="GeneratedReport" />
         </EntityType>
-        <Association Name="ScheduledReportGeneratedReport">
-          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="1" />
-          <End Type="ClientPortalModel.GeneratedReport" Role="GeneratedReport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ScheduledReport">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GeneratedReport">
-              <PropertyRef Name="ScheduledReportId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="GeneratedReportEmailedReport">
+        <Association Name="FK_GeneratedReportEmailedReport">
           <End Type="ClientPortalModel.GeneratedReport" Role="GeneratedReport" Multiplicity="1" />
           <End Type="ClientPortalModel.EmailedReport" Role="EmailedReport" Multiplicity="*" />
           <ReferentialConstraint>
@@ -728,21 +821,61 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EnumType Name="EmailStatus">
-          <Member Name="Default" Value="1" />
-          <Member Name="QueuedForSend" Value="2" />
-          <Member Name="Sent" Value="3" />
+        <EntityType Name="FileUpload">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="UploadDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="Filename" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Text" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="AdvertiserId" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="FileUpload" ToRole="Advertiser" />
+        </EntityType>
+        <Association Name="FK_FileUpload_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.FileUpload" Role="FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="FileUpload">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goal_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goal_Offer">
+          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="Offer_Id" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="GoalType">
+          <Member Name="Absolute" Value="1" />
+          <Member Name="Percent" Value="2" />
         </EnumType>
-        <EnumType Name="ReportStatus">
-          <Member Name="Default" Value="1" />
-          <Member Name="QueuedForCreate" Value="2" />
-          <Member Name="Created" Value="3" />
-        </EnumType>
-        <EnumType Name="ReportType">
-          <Member Name="OfferSummary" Value="1" />
-          <Member Name="DailySummary" Value="2" />
-          <Member Name="ConversionReport" Value="3" />
-          <Member Name="Affiliates" Value="4" />
+        <EnumType Name="Metric">
+          <Member Name="Clicks" Value="1" />
+          <Member Name="Leads" Value="2" />
+          <Member Name="Spend" Value="3" />
         </EnumType>
         </Schema>
     </edmx:ConceptualModels>
@@ -750,257 +883,268 @@
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="ClientPortalModelStoreContainer" CdmEntityContainer="ClientPortalContext">
-    <EntitySetMapping Name="Clicks">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.Click)">
-        <MappingFragment StoreEntitySet="Clicks">
-          <ScalarProperty Name="click_id" ColumnName="click_id" />
-          <ScalarProperty Name="visitor_id" ColumnName="visitor_id" />
-          <ScalarProperty Name="request_session_id" ColumnName="request_session_id" />
-          <ScalarProperty Name="click_date" ColumnName="click_date" />
-          <ScalarProperty Name="affiliate_id" ColumnName="affiliate_id" />
-          <ScalarProperty Name="affiliate_name" ColumnName="affiliate_name" />
-          <ScalarProperty Name="advertiser_id" ColumnName="advertiser_id" />
-          <ScalarProperty Name="advertiser_name" ColumnName="advertiser_name" />
-          <ScalarProperty Name="offer_id" ColumnName="offer_id" />
-          <ScalarProperty Name="offer_name" ColumnName="offer_name" />
-          <ScalarProperty Name="campaign_id" ColumnName="campaign_id" />
-          <ScalarProperty Name="creative_id" ColumnName="creative_id" />
-          <ScalarProperty Name="creative_name" ColumnName="creative_name" />
-          <ScalarProperty Name="sub_id_1" ColumnName="sub_id_1" />
-          <ScalarProperty Name="sub_id_2" ColumnName="sub_id_2" />
-          <ScalarProperty Name="sub_id_3" ColumnName="sub_id_3" />
-          <ScalarProperty Name="sub_id_4" ColumnName="sub_id_4" />
-          <ScalarProperty Name="sub_id_5" ColumnName="sub_id_5" />
-          <ScalarProperty Name="ip_address" ColumnName="ip_address" />
-          <ScalarProperty Name="user_agent" ColumnName="user_agent" />
-          <ScalarProperty Name="referrer_url" ColumnName="referrer_url" />
-          <ScalarProperty Name="request_url" ColumnName="request_url" />
-          <ScalarProperty Name="redirect_url" ColumnName="redirect_url" />
-          <ScalarProperty Name="country_code" ColumnName="country_code" />
-          <ScalarProperty Name="country_name" ColumnName="country_name" />
-          <ScalarProperty Name="region_code" ColumnName="region_code" />
-          <ScalarProperty Name="region_name" ColumnName="region_name" />
-          <ScalarProperty Name="language_id" ColumnName="language_id" />
-          <ScalarProperty Name="language_name" ColumnName="language_name" />
-          <ScalarProperty Name="language_abbr" ColumnName="language_abbr" />
-          <ScalarProperty Name="isp_id" ColumnName="isp_id" />
-          <ScalarProperty Name="isp_name" ColumnName="isp_name" />
-          <ScalarProperty Name="device_id" ColumnName="device_id" />
-          <ScalarProperty Name="device_name" ColumnName="device_name" />
-          <ScalarProperty Name="operating_system_name" ColumnName="operating_system_name" />
-          <ScalarProperty Name="browser_id" ColumnName="browser_id" />
-          <ScalarProperty Name="browser_name" ColumnName="browser_name" />
-          <ScalarProperty Name="disposition" ColumnName="disposition" />
-          <ScalarProperty Name="paid_action" ColumnName="paid_action" />
-          <ScalarProperty Name="total_clicks" ColumnName="total_clicks" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Conversions">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.Conversion)">
-        <MappingFragment StoreEntitySet="Conversions">
-          <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
-          <ScalarProperty Name="visitor_id" ColumnName="visitor_id" />
-          <ScalarProperty Name="request_session_id" ColumnName="request_session_id" />
-          <ScalarProperty Name="click_id" ColumnName="click_id" />
-          <ScalarProperty Name="conversion_date" ColumnName="conversion_date" />
-          <ScalarProperty Name="last_updated" ColumnName="last_updated" />
-          <ScalarProperty Name="click_date" ColumnName="click_date" />
-          <ScalarProperty Name="affiliate_id" ColumnName="affiliate_id" />
-          <ScalarProperty Name="affiliate_name" ColumnName="affiliate_name" />
-          <ScalarProperty Name="advertiser_id" ColumnName="advertiser_id" />
-          <ScalarProperty Name="advertiser_name" ColumnName="advertiser_name" />
-          <ScalarProperty Name="offer_id" ColumnName="offer_id" />
-          <ScalarProperty Name="offer_name" ColumnName="offer_name" />
-          <ScalarProperty Name="campaign_id" ColumnName="campaign_id" />
-          <ScalarProperty Name="creative_id" ColumnName="creative_id" />
-          <ScalarProperty Name="creative_name" ColumnName="creative_name" />
-          <ScalarProperty Name="sub_id_1" ColumnName="sub_id_1" />
-          <ScalarProperty Name="sub_id_2" ColumnName="sub_id_2" />
-          <ScalarProperty Name="sub_id_3" ColumnName="sub_id_3" />
-          <ScalarProperty Name="sub_id_4" ColumnName="sub_id_4" />
-          <ScalarProperty Name="sub_id_5" ColumnName="sub_id_5" />
-          <ScalarProperty Name="conversion_type" ColumnName="conversion_type" />
-          <ScalarProperty Name="paid_currency_id" ColumnName="paid_currency_id" />
-          <ScalarProperty Name="paid_amount" ColumnName="paid_amount" />
-          <ScalarProperty Name="paid_formatted_amount" ColumnName="paid_formatted_amount" />
-          <ScalarProperty Name="received_currency_id" ColumnName="received_currency_id" />
-          <ScalarProperty Name="received_amount" ColumnName="received_amount" />
-          <ScalarProperty Name="received_formatted_amount" ColumnName="received_formatted_amount" />
-          <ScalarProperty Name="step_reached" ColumnName="step_reached" />
-          <ScalarProperty Name="pixel_dropped" ColumnName="pixel_dropped" />
-          <ScalarProperty Name="suppressed" ColumnName="suppressed" />
-          <ScalarProperty Name="returned" ColumnName="returned" />
-          <ScalarProperty Name="test" ColumnName="test" />
-          <ScalarProperty Name="transaction_id" ColumnName="transaction_id" />
-          <ScalarProperty Name="conversion_ip_address" ColumnName="conversion_ip_address" />
-          <ScalarProperty Name="click_ip_address" ColumnName="click_ip_address" />
-          <ScalarProperty Name="country" ColumnName="country" />
-          <ScalarProperty Name="conversion_referrer_url" ColumnName="conversion_referrer_url" />
-          <ScalarProperty Name="click_referrer_url" ColumnName="click_referrer_url" />
-          <ScalarProperty Name="conversion_user_agent" ColumnName="conversion_user_agent" />
-          <ScalarProperty Name="click_user_agent" ColumnName="click_user_agent" />
-          <ScalarProperty Name="disposition_approved" ColumnName="disposition_approved" />
-          <ScalarProperty Name="disposition_name" ColumnName="disposition_name" />
-          <ScalarProperty Name="disposition_contact" ColumnName="disposition_contact" />
-          <ScalarProperty Name="disposition_date" ColumnName="disposition_date" />
-          <ScalarProperty Name="note" ColumnName="note" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ConversionDatas">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.ConversionData)">
-        <MappingFragment StoreEntitySet="ConversionDatas">
-          <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
-          <ScalarProperty Name="value0" ColumnName="value0" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Goals">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.Goal)">
-        <MappingFragment StoreEntitySet="Goals">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
-          <ScalarProperty Name="OfferId" ColumnName="OfferId" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="TypeId" ColumnName="TypeId" />
-          <ScalarProperty Name="MetricId" ColumnName="MetricId" />
-          <ScalarProperty Name="Target" ColumnName="Target" />
-          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Advertisers">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.Advertiser)">
-        <MappingFragment StoreEntitySet="Advertisers">
-          <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
-          <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
-          <ScalarProperty Name="Logo" ColumnName="Logo" />
-          <ScalarProperty Name="Culture" ColumnName="Culture" />
-          <ScalarProperty Name="ShowCPMRep" ColumnName="ShowCPMRep" />
-          <ScalarProperty Name="ShowConversionData" ColumnName="ShowConversionData" />
-          <ScalarProperty Name="ConversionValueName" ColumnName="ConversionValueName" />
-          <ScalarProperty Name="ConversionValueIsNumber" ColumnName="ConversionValueIsNumber" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="AdvertiserContacts">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.AdvertiserContact)">
-        <MappingFragment StoreEntitySet="AdvertiserContacts">
-          <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
-          <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-          <ScalarProperty Name="Order" ColumnName="Order" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Contacts">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.Contact)">
-        <MappingFragment StoreEntitySet="Contacts">
-          <ScalarProperty Name="ContactId" ColumnName="ContactId" />
-          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-          <ScalarProperty Name="LastName" ColumnName="LastName" />
-          <ScalarProperty Name="Title" ColumnName="Title" />
-          <ScalarProperty Name="Email" ColumnName="Email" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="DailySummaries">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.DailySummary)">
-        <MappingFragment StoreEntitySet="DailySummaries">
-          <ScalarProperty Name="offer_id" ColumnName="offer_id" />
-          <ScalarProperty Name="date" ColumnName="date" />
-          <ScalarProperty Name="views" ColumnName="views" />
-          <ScalarProperty Name="clicks" ColumnName="clicks" />
-          <ScalarProperty Name="click_thru" ColumnName="click_thru" />
-          <ScalarProperty Name="conversions" ColumnName="conversions" />
-          <ScalarProperty Name="paid" ColumnName="paid" />
-          <ScalarProperty Name="sellable" ColumnName="sellable" />
-          <ScalarProperty Name="conversion_rate" ColumnName="conversion_rate" />
-          <ScalarProperty Name="cpl" ColumnName="cpl" />
-          <ScalarProperty Name="cost" ColumnName="cost" />
-          <ScalarProperty Name="rpt" ColumnName="rpt" />
-          <ScalarProperty Name="revenue" ColumnName="revenue" />
-          <ScalarProperty Name="margin" ColumnName="margin" />
-          <ScalarProperty Name="profit" ColumnName="profit" />
-          <ScalarProperty Name="epc" ColumnName="epc" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Offers">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.Offer)">
-        <MappingFragment StoreEntitySet="Offers">
-          <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
-          <ScalarProperty Name="OfferName" ColumnName="OfferName" />
-          <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
-          <ScalarProperty Name="VerticalName" ColumnName="VerticalName" />
-          <ScalarProperty Name="OfferType" ColumnName="OfferType" />
-          <ScalarProperty Name="StatusName" ColumnName="StatusName" />
-          <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />
-          <ScalarProperty Name="DefaultPayout" ColumnName="DefaultPayout" />
-          <ScalarProperty Name="PriceReceived" ColumnName="PriceReceived" />
-          <ScalarProperty Name="Secure" ColumnName="Secure" />
-          <ScalarProperty Name="OfferLink" ColumnName="OfferLink" />
-          <ScalarProperty Name="ThumbnailImageUrl" ColumnName="ThumbnailImageUrl" />
-          <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
-          <ScalarProperty Name="CookieDays" ColumnName="CookieDays" />
-          <ScalarProperty Name="CookieDaysImpressions" ColumnName="CookieDaysImpressions" />
-          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-          <ScalarProperty Name="Currency" ColumnName="Currency" />
-          <ScalarProperty Name="AllowedCountries" ColumnName="AllowedCountries" />
-          <ScalarProperty Name="Xml" ColumnName="Xml" />
-          <ScalarProperty Name="AllowedMediaTypeNames" ColumnName="AllowedMediaTypeNames" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ScheduledReports">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.ScheduledReport)">
-        <MappingFragment StoreEntitySet="ScheduledReports">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
-          <ScalarProperty Name="Months" ColumnName="Months" />
-          <ScalarProperty Name="Days" ColumnName="Days" />
-          <ScalarProperty Name="IsCumulative" ColumnName="IsCumulative" />
-          <ScalarProperty Name="LastSent" ColumnName="LastSent" />
-          <ScalarProperty Name="NextSend" ColumnName="NextSend" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="GeneratedReports">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.GeneratedReport)">
-        <MappingFragment StoreEntitySet="GeneratedReports">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="ReportType" ColumnName="ReportType" />
-          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-          <ScalarProperty Name="ReportStatus" ColumnName="ReportStatus" />
-          <ScalarProperty Name="ReportStatusUpdated" ColumnName="ReportStatusUpdated" />
-          <ScalarProperty Name="Content" ColumnName="Content" />
-          <ScalarProperty Name="ScheduledReportId" ColumnName="ScheduledReportId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ScheduledReportRecipients">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.ScheduledReportRecipient)">
-        <MappingFragment StoreEntitySet="ScheduledReportRecipients">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-          <ScalarProperty Name="ScheduledReportId" ColumnName="ScheduledReportId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="EmailedReports">
-      <EntityTypeMapping TypeName="IsTypeOf(ClientPortalModel.EmailedReport)">
-        <MappingFragment StoreEntitySet="EmailedReports">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="EmailTo" ColumnName="EmailTo" />
-          <ScalarProperty Name="EmailStatus" ColumnName="EmailStatus" />
-          <ScalarProperty Name="EmailStatusUpdated" ColumnName="EmailStatusUpdated" />
-          <ScalarProperty Name="GeneratedReportId" ColumnName="GeneratedReportId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-  </EntityContainerMapping>
+          <EntitySetMapping Name="Clicks">
+            <EntityTypeMapping TypeName="ClientPortalModel.Click">
+              <MappingFragment StoreEntitySet="Click">
+                <ScalarProperty Name="total_clicks" ColumnName="total_clicks" />
+                <ScalarProperty Name="paid_action" ColumnName="paid_action" />
+                <ScalarProperty Name="disposition" ColumnName="disposition" />
+                <ScalarProperty Name="browser_name" ColumnName="browser_browser_name" />
+                <ScalarProperty Name="browser_id" ColumnName="browser_browser_id" />
+                <ScalarProperty Name="operating_system_name" ColumnName="operating_system_operating_system_name" />
+                <ScalarProperty Name="device_name" ColumnName="device_device_name" />
+                <ScalarProperty Name="device_id" ColumnName="device_device_id" />
+                <ScalarProperty Name="isp_name" ColumnName="isp_isp_name" />
+                <ScalarProperty Name="isp_id" ColumnName="isp_isp_id" />
+                <ScalarProperty Name="language_abbr" ColumnName="language_language_abbr" />
+                <ScalarProperty Name="language_name" ColumnName="language_language_name" />
+                <ScalarProperty Name="language_id" ColumnName="language_language_id" />
+                <ScalarProperty Name="region_name" ColumnName="region_region_name" />
+                <ScalarProperty Name="region_code" ColumnName="region_region_code" />
+                <ScalarProperty Name="country_name" ColumnName="country_country_name" />
+                <ScalarProperty Name="country_code" ColumnName="country_country_code" />
+                <ScalarProperty Name="redirect_url" ColumnName="redirect_url" />
+                <ScalarProperty Name="request_url" ColumnName="request_url" />
+                <ScalarProperty Name="referrer_url" ColumnName="referrer_url" />
+                <ScalarProperty Name="user_agent" ColumnName="user_agent" />
+                <ScalarProperty Name="ip_address" ColumnName="ip_address" />
+                <ScalarProperty Name="sub_id_5" ColumnName="sub_id_5" />
+                <ScalarProperty Name="sub_id_4" ColumnName="sub_id_4" />
+                <ScalarProperty Name="sub_id_3" ColumnName="sub_id_3" />
+                <ScalarProperty Name="sub_id_2" ColumnName="sub_id_2" />
+                <ScalarProperty Name="sub_id_1" ColumnName="sub_id_1" />
+                <ScalarProperty Name="creative_name" ColumnName="creative_creative_name" />
+                <ScalarProperty Name="creative_id" ColumnName="creative_creative_id" />
+                <ScalarProperty Name="campaign_id" ColumnName="campaign_id" />
+                <ScalarProperty Name="offer_name" ColumnName="offer_offer_name" />
+                <ScalarProperty Name="offer_id" ColumnName="offer_offer_id" />
+                <ScalarProperty Name="advertiser_name" ColumnName="advertiser_advertiser_name" />
+                <ScalarProperty Name="advertiser_id" ColumnName="advertiser_advertiser_id" />
+                <ScalarProperty Name="affiliate_name" ColumnName="affiliate_affiliate_name" />
+                <ScalarProperty Name="affiliate_id" ColumnName="affiliate_affiliate_id" />
+                <ScalarProperty Name="click_date" ColumnName="click_date" />
+                <ScalarProperty Name="request_session_id" ColumnName="request_session_id" />
+                <ScalarProperty Name="visitor_id" ColumnName="visitor_id" />
+                <ScalarProperty Name="click_id" ColumnName="click_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Conversions">
+            <EntityTypeMapping TypeName="ClientPortalModel.Conversion">
+              <MappingFragment StoreEntitySet="Conversion">
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="disposition_date" ColumnName="disposition_disposition_date" />
+                <ScalarProperty Name="disposition_contact" ColumnName="disposition_contact" />
+                <ScalarProperty Name="disposition_name" ColumnName="disposition_disposition_name" />
+                <ScalarProperty Name="disposition_approved" ColumnName="disposition_approved" />
+                <ScalarProperty Name="click_user_agent" ColumnName="click_user_agent" />
+                <ScalarProperty Name="conversion_user_agent" ColumnName="conversion_user_agent" />
+                <ScalarProperty Name="click_referrer_url" ColumnName="click_referrer_url" />
+                <ScalarProperty Name="conversion_referrer_url" ColumnName="conversion_referrer_url" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="click_ip_address" ColumnName="click_ip_address" />
+                <ScalarProperty Name="conversion_ip_address" ColumnName="conversion_ip_address" />
+                <ScalarProperty Name="transaction_id" ColumnName="transaction_id" />
+                <ScalarProperty Name="test" ColumnName="test" />
+                <ScalarProperty Name="returned" ColumnName="returned" />
+                <ScalarProperty Name="suppressed" ColumnName="suppressed" />
+                <ScalarProperty Name="pixel_dropped" ColumnName="pixel_dropped" />
+                <ScalarProperty Name="step_reached" ColumnName="step_reached" />
+                <ScalarProperty Name="received_formatted_amount" ColumnName="received_formatted_amount" />
+                <ScalarProperty Name="received_amount" ColumnName="received_amount" />
+                <ScalarProperty Name="received_currency_id" ColumnName="received_currency_id" />
+                <ScalarProperty Name="paid_formatted_amount" ColumnName="paid_formatted_amount" />
+                <ScalarProperty Name="paid_amount" ColumnName="paid_amount" />
+                <ScalarProperty Name="paid_currency_id" ColumnName="paid_currency_id" />
+                <ScalarProperty Name="conversion_type" ColumnName="conversion_type" />
+                <ScalarProperty Name="sub_id_5" ColumnName="sub_id_5" />
+                <ScalarProperty Name="sub_id_4" ColumnName="sub_id_4" />
+                <ScalarProperty Name="sub_id_3" ColumnName="sub_id_3" />
+                <ScalarProperty Name="sub_id_2" ColumnName="sub_id_2" />
+                <ScalarProperty Name="sub_id_1" ColumnName="sub_id_1" />
+                <ScalarProperty Name="creative_name" ColumnName="creative_creative_name" />
+                <ScalarProperty Name="creative_id" ColumnName="creative_creative_id" />
+                <ScalarProperty Name="campaign_id" ColumnName="campaign_id" />
+                <ScalarProperty Name="offer_name" ColumnName="offer_offer_name" />
+                <ScalarProperty Name="offer_id" ColumnName="offer_offer_id" />
+                <ScalarProperty Name="advertiser_name" ColumnName="advertiser_advertiser_name" />
+                <ScalarProperty Name="advertiser_id" ColumnName="advertiser_advertiser_id" />
+                <ScalarProperty Name="affiliate_name" ColumnName="affiliate_affiliate_name" />
+                <ScalarProperty Name="affiliate_id" ColumnName="affiliate_affiliate_id" />
+                <ScalarProperty Name="click_date" ColumnName="click_date" />
+                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
+                <ScalarProperty Name="conversion_date" ColumnName="conversion_date" />
+                <ScalarProperty Name="click_id" ColumnName="click_id" />
+                <ScalarProperty Name="request_session_id" ColumnName="request_session_id" />
+                <ScalarProperty Name="visitor_id" ColumnName="visitor_id" />
+                <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConversionDatas">
+            <EntityTypeMapping TypeName="ClientPortalModel.ConversionData">
+              <MappingFragment StoreEntitySet="ConversionData">
+                <ScalarProperty Name="value0" ColumnName="value0" />
+                <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailySummaries">
+            <EntityTypeMapping TypeName="ClientPortalModel.DailySummary">
+              <MappingFragment StoreEntitySet="DailySummary">
+                <ScalarProperty Name="epc" ColumnName="epc" />
+                <ScalarProperty Name="profit" ColumnName="profit" />
+                <ScalarProperty Name="margin" ColumnName="margin" />
+                <ScalarProperty Name="revenue" ColumnName="revenue" />
+                <ScalarProperty Name="rpt" ColumnName="rpt" />
+                <ScalarProperty Name="cost" ColumnName="cost" />
+                <ScalarProperty Name="cpl" ColumnName="cpl" />
+                <ScalarProperty Name="conversion_rate" ColumnName="conversion_rate" />
+                <ScalarProperty Name="sellable" ColumnName="sellable" />
+                <ScalarProperty Name="paid" ColumnName="paid" />
+                <ScalarProperty Name="conversions" ColumnName="conversions" />
+                <ScalarProperty Name="click_thru" ColumnName="click_thru" />
+                <ScalarProperty Name="clicks" ColumnName="clicks" />
+                <ScalarProperty Name="views" ColumnName="views" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="offer_id" ColumnName="offer_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Goals">
+            <EntityTypeMapping TypeName="ClientPortalModel.Goal">
+              <MappingFragment StoreEntitySet="Goal">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="Target" ColumnName="Target" />
+                <ScalarProperty Name="MetricId" ColumnName="MetricId" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Offers">
+            <EntityTypeMapping TypeName="ClientPortalModel.Offer">
+              <MappingFragment StoreEntitySet="Offer">
+                <ScalarProperty Name="AllowedMediaTypeNames" ColumnName="AllowedMediaTypeNames" />
+                <ScalarProperty Name="Xml" ColumnName="Xml" />
+                <ScalarProperty Name="AllowedCountries" ColumnName="AllowedCountries" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CookieDaysImpressions" ColumnName="CookieDaysImpressions" />
+                <ScalarProperty Name="CookieDays" ColumnName="CookieDays" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="ThumbnailImageUrl" ColumnName="ThumbnailImageUrl" />
+                <ScalarProperty Name="OfferLink" ColumnName="OfferLink" />
+                <ScalarProperty Name="Secure" ColumnName="Secure" />
+                <ScalarProperty Name="PriceReceived" ColumnName="PriceReceived" />
+                <ScalarProperty Name="DefaultPayout" ColumnName="DefaultPayout" />
+                <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+                <ScalarProperty Name="OfferType" ColumnName="OfferType" />
+                <ScalarProperty Name="VerticalName" ColumnName="VerticalName" />
+                <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
+                <ScalarProperty Name="OfferName" ColumnName="OfferName" />
+                <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Advertisers">
+            <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
+              <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="ConversionValueIsNumber" ColumnName="ConversionValueIsNumber" />
+                <ScalarProperty Name="ConversionValueName" ColumnName="ConversionValueName" />
+                <ScalarProperty Name="ShowConversionData" ColumnName="ShowConversionData" />
+                <ScalarProperty Name="ShowCPMRep" ColumnName="ShowCPMRep" />
+                <ScalarProperty Name="Culture" ColumnName="Culture" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdvertiserContacts">
+            <EntityTypeMapping TypeName="ClientPortalModel.AdvertiserContact">
+              <MappingFragment StoreEntitySet="AdvertiserContact">
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contacts">
+            <EntityTypeMapping TypeName="ClientPortalModel.Contact">
+              <MappingFragment StoreEntitySet="Contact">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GeneratedReports">
+            <EntityTypeMapping TypeName="ClientPortalModel.GeneratedReport">
+              <MappingFragment StoreEntitySet="GeneratedReport">
+                <ScalarProperty Name="ScheduledReportId" ColumnName="ScheduledReportId" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="ReportStatusUpdated" ColumnName="ReportStatusUpdated" />
+                <ScalarProperty Name="ReportStatus" ColumnName="ReportStatus" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="ReportType" ColumnName="ReportType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScheduledReports">
+            <EntityTypeMapping TypeName="ClientPortalModel.ScheduledReport">
+              <MappingFragment StoreEntitySet="ScheduledReport">
+                <ScalarProperty Name="NextSend" ColumnName="NextSend" />
+                <ScalarProperty Name="LastSent" ColumnName="LastSent" />
+                <ScalarProperty Name="IsCumulative" ColumnName="IsCumulative" />
+                <ScalarProperty Name="Days" ColumnName="Days" />
+                <ScalarProperty Name="Months" ColumnName="Months" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScheduledReportRecipients">
+            <EntityTypeMapping TypeName="ClientPortalModel.ScheduledReportRecipient">
+              <MappingFragment StoreEntitySet="ScheduledReportRecipient">
+                <ScalarProperty Name="ScheduledReportId" ColumnName="ScheduledReportId" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailedReports">
+            <EntityTypeMapping TypeName="ClientPortalModel.EmailedReport">
+              <MappingFragment StoreEntitySet="EmailedReport">
+                <ScalarProperty Name="GeneratedReportId" ColumnName="GeneratedReportId" />
+                <ScalarProperty Name="EmailStatusUpdated" ColumnName="EmailStatusUpdated" />
+                <ScalarProperty Name="EmailStatus" ColumnName="EmailStatus" />
+                <ScalarProperty Name="EmailTo" ColumnName="EmailTo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FileUploads">
+            <EntityTypeMapping TypeName="ClientPortalModel.FileUpload">
+              <MappingFragment StoreEntitySet="FileUpload">
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Filename" ColumnName="Filename" />
+                <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->

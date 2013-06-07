@@ -1,0 +1,53 @@
+﻿<div id="windowScheduledReport"></div>
+
+<script>
+    function SetupScheduledReportWindow() {
+        $('#windowScheduledReport').kendoWindow({
+            title: "Scheduled Report",
+            visible: false,
+            modal: true
+        });
+    }
+
+    function BeginAddScheduledReport() {
+        BeginEditScheduledReport("Add");
+    }
+    function BeginEditScheduledReport(addOrEdit) {
+        var win = $('#windowScheduledReport').data("kendoWindow");
+        win.setOptions({ width: 600, height: 500, title: addOrEdit + " Scheduled Report" });
+        win.center();
+        win.open();
+    }
+
+    function EditScheduledReport(id) {
+        BeginEditScheduledReport("Edit");
+        var url = '@Url.Action("Edit", "ScheduledReports")';
+        $.ajax({ url: url, data: { id: id }, cache: false }).done(function (data) {
+            $('#windowScheduledReport').html(data);
+            EditScheduledReportLoaded();
+        });
+    }
+
+    function EditScheduledReportLoaded() {
+        $('#scheduledReport_StartDate').kendoDatePicker();
+        $('#scheduledReport_EndDate').kendoDatePicker();
+        $.validator.unobtrusive.parse('#editScheduledReportWrapper'); @* enable validation *@
+    }
+
+    function EditScheduledReportSuccess(result) {
+        if (result.success) {
+            RefreshScheduledReportsAndCloseWindow(result.ScheduledReportId);
+        } else { @* validation error *@
+            EditScheduledReportLoaded();
+        }
+    }
+
+    function RefreshScheduledReportsAndCloseWindow(scheduledReportId) {
+        RefreshScheduledReportsList();
+        CloseScheduledReportWindow();
+    }
+
+    function CloseScheduledReportWindow() {
+        $('#windowScheduledReport').data("kendoWindow").close();
+    }
+</script>

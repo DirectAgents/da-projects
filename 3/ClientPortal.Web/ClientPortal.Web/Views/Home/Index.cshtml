@@ -107,6 +107,7 @@
                         <dd><a href="#repCPM" id="repNav_CPM">CPM</a></dd>
                     }
                     <dd><a href="#repAff" id="repNav_Aff">Affiliates</a></dd>
+                    <dd><a href="#repScheduled" id="repNav_Scheduled">Scheduled</a></dd>
                 </dl>
                 <!-- /ReportsHTabs  -->
 
@@ -124,6 +125,9 @@
                         <li id="repCPMTab"></li>
                     }
                     <li id="repAffTab"></li>
+                    <li id="repScheduledTab">
+                        <div id="divScheduledReports"></div>
+                    </li>
                 </ul>
                 <!-- /ReportsContent  -->
 
@@ -202,6 +206,7 @@
 </footer>
 <!-- /BottomBar  -->
 
+@Html.Partial("~/Views/ScheduledReports/_Infrastructure.cshtml")
 @Html.Partial("~/Views/Goals/_Infrastructure.cshtml")
 
 @section head {
@@ -222,6 +227,7 @@
             LoadMainContacts();
             LoadDashboard();
             SetupTabs();
+            SetupScheduledReportWindow();
             SetupGoalWindow();
             $(window).bind('resize', WindowResize);
         });
@@ -321,63 +327,14 @@
             });
 
             // Contacts
-                $("#navContact").one("click", function () {
-                    $("#divContact").html('Loading...');
-                    $.ajax({
-                        url: '@Url.Action("Contact", "Home")',
-                        cache: false
-                    }).done(function (html) {
-                        $("#divContact").html(html);
-                    });
+            $("#navContact").one("click", function () {
+                $("#divContact").html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("Contact", "Home")',
+                    cache: false
+                }).done(function (html) {
+                    $("#divContact").html(html);
                 });
-
-            // Offer Summary
-                $("#repNav_OffSum").click(function () {
-                    if ($('#offsumChart').length == 0) {
-                        $.ajax({
-                            url: '@Url.Action("OfferSummaryPartial", "Reports")',
-                            cache: false
-                        }).done(function (html) {
-                            $("#repOffSumTab").html(html);
-                            ResizeChart('offsum', false);
-                            SetupOfferSummaryGrid();
-                        });
-                    } else {
-                        setTimeout(function () { ResizeChart('offsum', true); }, 100);
-                    }
-                });
-
-            // Daily Summary
-                $("#repNav_DaySum").click(function () {
-                    if ($('#daysumChart').length == 0) {
-                        $.ajax({
-                            url: '@Url.Action("DailySummaryPartial", "Reports")',
-                            cache: false
-                        }).done(function (html) {
-                            $("#repDaySumTab").html(html);
-                            ResizeChart('daysum', false);
-                            SetupDailySummaryGrid();
-                        });
-                    } else {
-                        setTimeout(function () { ResizeChart('daysum', true); }, 100);
-                    }
-                });
-
-            // Conversions
-                $("#repNav_Conversions").click(function () {
-                    if ($('#conrepChart').length == 0) {
-                        $.ajax({
-                            url: '@Url.Action("ConversionReportPartial", "Reports")',
-                        cache: false
-                    }).done(function (html) {
-                        $("#repConversionsTab").html(html);
-                        ResizeChart('conrep', false);
-                        SetupConversionReportGrid();
-                        SetupConversionReportChart();
-                    });
-                } else {
-                    setTimeout(function () { ResizeChart('conrep', true); }, 100);
-                }
             });
 
             // Reports
@@ -389,6 +346,39 @@
             // Offer Summary
             $("#repNav_OffSum").click(function () {
                 OffSumClick();
+            });
+
+            // Daily Summary
+            $("#repNav_DaySum").click(function () {
+                if ($('#daysumChart').length == 0) {
+                    $.ajax({
+                        url: '@Url.Action("DailySummaryPartial", "Reports")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#repDaySumTab").html(html);
+                        ResizeChart('daysum', false);
+                        SetupDailySummaryGrid();
+                    });
+                } else {
+                    setTimeout(function () { ResizeChart('daysum', true); }, 100);
+                }
+            });
+
+            // Conversions
+            $("#repNav_Conversions").click(function () {
+                if ($('#conrepChart').length == 0) {
+                    $.ajax({
+                        url: '@Url.Action("ConversionReportPartial", "Reports")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#repConversionsTab").html(html);
+                        ResizeChart('conrep', false);
+                        SetupConversionReportGrid();
+                        SetupConversionReportChart();
+                    });
+                } else {
+                    setTimeout(function () { ResizeChart('conrep', true); }, 100);
+                }
             });
 
             // CPM
@@ -407,7 +397,7 @@
             </text>
             }
 
-            // Affilaites
+            // Affiliates
             $("#repNav_Aff").click(function () {
                 $.ajax({
                     url: '@Url.Action("AffiliateReportPartial", "Reports")',
@@ -418,45 +408,44 @@
                 });
             });
 
-            // Contacts
-            $("#navContact").one("click", function () {
-                $("#divContact").html('Loading...');
+            // Scheduled Reports
+            $("#repNav_Scheduled").click(function () {
                 $.ajax({
-                    url: '@Url.Action("Contact", "Home")',
+                    url: '@Url.Action("Index", "ScheduledReports")',
                     cache: false
                 }).done(function (html) {
-                    $("#divContact").html(html);
+                    $("#divScheduledReports").html(html);
                 });
             });
-            }
+        } // SetupTabs
 
-            //
-            function DateChanged(grid) {
-                $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
-                $('#' + grid + '_filterBtn').attr('disabled', false);
-            }
+        //
+        function DateChanged(grid) {
+            $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
+            $('#' + grid + '_filterBtn').attr('disabled', false);
+        }
 
-            //
-            function ChangeDateRange(grid) {
-                var startId = '#' + grid + '_startdate';
-                var endId = '#' + grid + '_enddate';
-                var refresh = true;
-                var dateRange = $('#' + grid + '_dateRangeSel').val();
-                switch (dateRange) {
-                    case "today":
-                        $(startId).val('@today');
-                        $(endId).val('@today');
-                        break;
-                    case "yesterday":
-                        $(startId).val('@yesterday');
-                        $(endId).val('@yesterday');
-                        break;
-                    case "wtd":
-                        $(startId).val('@firstOfWeek');
-                        $(endId).val('@today');
-                        break;
-                    case "mtd":
-                        $(startId).val('@firstOfMonth');
+        //
+        function ChangeDateRange(grid) {
+            var startId = '#' + grid + '_startdate';
+            var endId = '#' + grid + '_enddate';
+            var refresh = true;
+            var dateRange = $('#' + grid + '_dateRangeSel').val();
+            switch (dateRange) {
+                case "today":
+                    $(startId).val('@today');
+                    $(endId).val('@today');
+                    break;
+                case "yesterday":
+                    $(startId).val('@yesterday');
+                    $(endId).val('@yesterday');
+                    break;
+                case "wtd":
+                    $(startId).val('@firstOfWeek');
+                    $(endId).val('@today');
+                    break;
+                case "mtd":
+                    $(startId).val('@firstOfMonth');
                     $(endId).val('@today');
                     break;
                 case "ytd":

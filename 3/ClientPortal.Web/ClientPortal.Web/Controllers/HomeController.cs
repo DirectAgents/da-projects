@@ -13,10 +13,9 @@ using System.Web.Helpers;
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : CPController
     {
         private ICakeRepository cakeRepo;
-        private IClientPortalRepository cpRepo;
 
         public HomeController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
         {
@@ -26,8 +25,8 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Index()
         {
-            var userProfile = GetUserProfile();
-            if (userProfile == null)
+            var userInfo = GetUserInfo();
+            if (!userInfo.HasUserProfile)
             {
                 try
                 {
@@ -43,31 +42,21 @@ namespace ClientPortal.Web.Controllers
             {
                 var model = new IndexModel()
                 {
-                    CultureInfo = userProfile.CultureInfo,
-                    ShowCPMRep = userProfile.ShowCPMRep
+                    CultureInfo = userInfo.CultureInfo,
+                    HasLogo = (userInfo.Logo != null),
+                    ShowCPMRep = userInfo.ShowCPMRep
                 };
-
-                if (userProfile.CakeAdvertiserId.HasValue)
-                {
-                    int advId = userProfile.CakeAdvertiserId.Value;
-                    model.Advertiser = cakeRepo.Advertiser(advId);
-
-                    var advertiser = cpRepo.GetAdvertiser(advId);
-                    if (advertiser != null && advertiser.Logo != null)
-                        model.HasLogo = true;
-                }
-
                 return View(model);
             }
         }
 
         public FileResult Logo()
         {
-            var advertiser = GetAdvertiser();
-            if (advertiser == null || advertiser.Logo == null)
+            var userInfo = GetUserInfo();
+            if (userInfo.Logo == null)
                 return null;
 
-            WebImage logo = new WebImage(advertiser.Logo);
+            WebImage logo = new WebImage(userInfo.Logo);
             return File(logo.GetBytes(), "image/" + logo.ImageFormat, logo.FileName);
         }
 
@@ -100,13 +89,13 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult SetDashboardDateRange(string type, string startdate, string enddate)
         {
-            var userProfile = GetUserProfile();
+            var userInfo = GetUserInfo();
             Session["DashboardDateRangeType"] = type;
 
             DateTime? start, end;
-            if (ControllerHelpers.ParseDate(startdate, userProfile.CultureInfo, out start))
+            if (ControllerHelpers.ParseDate(startdate, userInfo.CultureInfo, out start))
                 Session["DashboardStart"] = start;
-            if (ControllerHelpers.ParseDate(enddate, userProfile.CultureInfo, out end))
+            if (ControllerHelpers.ParseDate(enddate, userInfo.CultureInfo, out end))
                 Session["DashboardEnd"] = end;
 
             return null;
@@ -149,12 +138,12 @@ namespace ClientPortal.Web.Controllers
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Dashboard"))
             {
-                var userProfile = GetUserProfile();
-                if (userProfile == null || userProfile.CakeAdvertiserId == null)
+                var userInfo = GetUserInfo();
+                if (userInfo.AdvertiserId == null)
                     return null;
                 
-                int? advId = userProfile.CakeAdvertiserId;
-                bool showConversionData = userProfile.ShowConversionData;
+                int? advId = userInfo.AdvertiserId;
+                bool showConversionData = userInfo.ShowConversionData;
 
                 var dates = new Dates();
 
@@ -201,7 +190,7 @@ namespace ClientPortal.Web.Controllers
                 List<OfferGoalSummary> offerGoalSummaries;
                 using (profiler.Step("offerGoalSummaries"))
                 {
-                    offerGoalSummaries = CreateOfferGoalSummaries(userProfile.CakeAdvertiserId.Value, dates, showConversionData);
+                    offerGoalSummaries = CreateOfferGoalSummaries(advId.Value, dates, showConversionData);
                 }
 
                 var model = new DashboardModel
@@ -211,9 +200,9 @@ namespace ClientPortal.Web.Controllers
                     DateRangeType = GetDashboardDateRangeType(),
                     Start = GetDashboardDateRangeStart(),
                     End = GetDashboardDateRangeEnd(),
-                    ShowConVal = userProfile.ShowConversionData,
-                    ConValName = userProfile.ConversionValueName,
-                    ConValIsNum = userProfile.ConversionValueIsNumber
+                    ShowConVal = showConversionData,
+                    ConValName = userInfo.ConversionValueName,
+                    ConValIsNum = userInfo.ConversionValueIsNumber
                 };
                 return PartialView(model);
             }
@@ -221,12 +210,12 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult DashboardGoals()
         {
-            var userProfile = GetUserProfile();
-            if (userProfile == null || userProfile.CakeAdvertiserId == null)
+            var userInfo = GetUserInfo();
+            if (userInfo.AdvertiserId == null)
                 return null;
 
             var dates = new Dates();
-            var offerGoalSummaries = CreateOfferGoalSummaries(userProfile.CakeAdvertiserId.Value, dates, userProfile.ShowConversionData);
+            var offerGoalSummaries = CreateOfferGoalSummaries(userInfo.AdvertiserId.Value, dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalCharts = true;
             return PartialView(offerGoalSummaries);
@@ -234,27 +223,26 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult OfferGoalsRow(int offerId, int? goalId)
         {
-            var userProfile = GetUserProfile();
-            if (userProfile == null || userProfile.CakeAdvertiserId == null)
+            var userInfo = GetUserInfo();
+            if (userInfo.AdvertiserId == null)
                 return null;
 
-            var offer = cakeRepo.Offers(userProfile.CakeAdvertiserId).Where(o => o.Offer_Id == offerId).FirstOrDefault();
+            var offer = cakeRepo.Offers(userInfo.AdvertiserId).Where(o => o.Offer_Id == offerId).FirstOrDefault();
             List<GoalVM> goalVMs;
             if (goalId.HasValue)
             {
                 GoalVM goalVM = null;
                 var goal = cpRepo.GetGoal(goalId.Value);
                 if (goal != null)
-                    goalVM = new GoalVM(goal, null, OfferInfo.CurrencyToCulture(offer.Currency));
+                    goalVM = new GoalVM(goal);
                 goalVMs = new List<GoalVM> { goalVM };
             }
             else
             {
-                var goals = cpRepo.GetGoals(userProfile.CakeAdvertiserId.Value);
-                goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), new[] { offer }, false);
+                goalVMs = cpRepo.GetGoals(userInfo.AdvertiserId.Value).ToList().Select(g => new GoalVM(g)).ToList();
             }
             var dates = new Dates();
-            var offerGoalSummary = CreateOfferGoalSummary(userProfile.CakeAdvertiserId, offer, goalVMs, dates, userProfile.ShowConversionData);
+            var offerGoalSummary = CreateOfferGoalSummary(userInfo.AdvertiserId, offer, goalVMs, dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalChart = true;
             return PartialView(offerGoalSummary);
@@ -263,8 +251,7 @@ namespace ClientPortal.Web.Controllers
         public List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates, bool includeConversionData)
         {
             var offers = cakeRepo.Offers(advId);
-            var goals = cpRepo.GetGoals(advId);
-            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
+            var goalVMs = cpRepo.GetGoals(advId).ToList().Select(g => new GoalVM(g)).ToList();
             var offerIdsFromGoals = goalVMs.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
             List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
             foreach (var offerId in offerIdsFromGoals)
@@ -315,13 +302,13 @@ namespace ClientPortal.Web.Controllers
                 {
                     switch (goal.MetricId)
                     {
-                        case MetricEnum.Clicks:
+                        case Metric.Clicks:
                             sumGoal.Clicks = (int)goal.Target;
                             break;
-                        case MetricEnum.Leads:
+                        case Metric.Leads:
                             sumGoal.Conversions = (int)goal.Target;
                             break;
-                        case MetricEnum.Spend:
+                        case Metric.Spend:
                             sumGoal.Revenue = goal.Target;
                             break;
                     }
@@ -336,48 +323,6 @@ namespace ClientPortal.Web.Controllers
                 DateRangeSummaries = summaries
             };
             return offerGoalSummary;
-        }
-
-        public Advertiser GetAdvertiser()
-        {
-            int? advId = GetAdvertiserId();
-            if (advId.HasValue)
-                return cpRepo.GetAdvertiser(advId.Value);
-            else
-                return null;
-        }
-
-        public static int? GetAdvertiserId()
-        {
-            int? advertiserId = null;
-
-            var userProfile = GetUserProfile();
-            if (userProfile != null)
-                advertiserId = userProfile.CakeAdvertiserId;
-
-            return advertiserId;
-        }
-
-        public static UserProfile GetUserProfile()
-        {
-            UserProfile userProfile = null;
-
-            if (WebSecurity.Initialized)
-            {
-                var userID = WebSecurity.CurrentUserId;
-                using (var usersContext = new UsersContext())
-                {
-                    userProfile = usersContext.UserProfiles.FirstOrDefault(c => c.UserId == userID);
-                }
-            }
-            return userProfile;
-        }
-
-        // ---
-
-        public ActionResult Foundation()
-        {
-            return View();
         }
     }
 

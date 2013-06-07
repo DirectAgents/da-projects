@@ -2,15 +2,20 @@
 
 <h3>Files</h3>
 
-<div id="divFileList">
+<div id="divFilesList">
     @Html.Partial("List")
 </div>
+<div id="filesMessage" style="margin: 0px 0px 18px 5px"></div>
 
 <form method="post" action="@Url.Action("Upload")" enctype="multipart/form-data">
     <div>
         <input id="fileUpload" name="file" type="file" />
     </div>
 </form>
+
+<div>
+    <a href="#" onclick="RefreshFilesList(); return false">Refresh</a>
+</div>
 
 <script>
     $(function () {
@@ -24,16 +29,33 @@
                 uploadSelectedFiles: "Upload"
             },
             multiple: false,
-            complete: onUploadComplete
+            complete: RefreshFilesList
         });
     });
 
-    function onUploadComplete() {
+    function RefreshFilesList() {
         $.ajax({
-            url: '@Url.Action("List", "Files")',
+            url: '@Url.Action("List")',
             cache: false
         }).done(function (html) {
-            $("#divFileList").html(html);
+            $("#divFilesList").html(html);
+        });
+    }
+
+    function ProcessFileBegin() {
+        $('#filesMessage').html('Processing...');
+    }
+
+    function ProcessFileSuccess() {
+        $('#filesMessage').html('File processed.');
+    }
+
+    function DeleteFile(id, doConfirm) {
+        if (doConfirm && !confirm("Are you sure you want to delete this file?"))
+            return;
+        var url = '@Url.Action("Delete")';
+        $.ajax({ url: url, data: { id: id }, type: 'post', cache: false }).done(function (data) {
+            RefreshFilesList();
         });
     }
 </script>
