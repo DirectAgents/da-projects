@@ -43,7 +43,7 @@ namespace LTWeb.Controllers
 
         public ActionResult LeadService()
         {
-            string path = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/questions.xml");
+            string path = System.Web.HttpContext.Current.Server.MapPath("~/App_Data/questions2.xml");
             var questions = XDocument.Load(path)
                                         .Descendants("question")
                                         .Distinct(new QuestionComparer())

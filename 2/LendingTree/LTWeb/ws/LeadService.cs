@@ -1,7 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
 using LTWeb.DataAccess;
 using LTWeb.Service;
-using System;
 
 namespace LTWeb.ws
 {
@@ -22,8 +21,11 @@ namespace LTWeb.ws
                 CopyProperties(lendingTreeModel, leadPost);
 
                 var service = new LendingTreeService();
-                service.Send(lendingTreeModel);
+                string errorResponse = service.SendAndReturnAnyErrorResponse(lendingTreeModel);
                 context.SaveChanges();
+
+                if (errorResponse != null)
+                    throw new Exception(errorResponse);
 
                 return leadPost.AppID;
             }
@@ -31,11 +33,21 @@ namespace LTWeb.ws
 
         private static void CopyProperties<TDest, TSource>(TDest destObj, TSource sourceObj)
         {
-            foreach (PropertyInfo sourceProp in typeof(TSource).GetProperties())
+            foreach (var sourceProp in typeof(TSource).GetProperties())
             {
-                PropertyInfo targetProp = typeof(TDest).GetProperty(sourceProp.Name);
+                var targetProp = typeof(TDest).GetProperty(sourceProp.Name);
                 if (targetProp != null)
-                    targetProp.SetValue(destObj, sourceProp.GetValue(sourceObj));
+                {
+                    var valueToSet = sourceProp.GetValue(sourceObj);
+
+                    if (valueToSet == null)
+                        continue;
+
+                    if (valueToSet is decimal && ((decimal)valueToSet) == 0)
+                        continue;
+
+                    targetProp.SetValue(destObj, valueToSet);
+                }
             }
         }
     }

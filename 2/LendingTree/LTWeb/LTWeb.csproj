@@ -193,6 +193,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\questions2.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\exampleLead.xml">
       <SubType>Designer</SubType>
     </Content>

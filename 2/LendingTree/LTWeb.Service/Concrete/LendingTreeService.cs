@@ -10,7 +10,7 @@ namespace LTWeb.Service
     {
         public ILendingTreeResult Send(ILendingTreeModel request)
         {
-            var webRequest = (HttpWebRequest) WebRequest.Create(request.GetUrlForPost());
+            var webRequest = (HttpWebRequest)WebRequest.Create(request.GetUrlForPost());
             webRequest.ContentType = "text/xml";
             webRequest.Method = "POST";
 
@@ -30,12 +30,12 @@ namespace LTWeb.Service
                 writer.Write(requestXML);
             }
 
-            using (var response = (HttpWebResponse) webRequest.GetResponse())
+            using (var response = (HttpWebResponse)webRequest.GetResponse())
             using (var reader = new StreamReader(response.GetResponseStream()))
             {
-                var responseXML = reader.ReadToEnd();
+                var responseXml = reader.ReadToEnd();
 
-                lead.ResponseContent = responseXML;
+                lead.ResponseContent = responseXml;
                 if (lead.ResponseContent != null)
                 {
                     lead.IsError = lead.ResponseContent.Contains("<Error>") ? 1 : 0;
@@ -53,13 +53,56 @@ namespace LTWeb.Service
             }
         }
 
+        public string SendAndReturnAnyErrorResponse(ILendingTreeModel request)
+        {
+            var webRequest = (HttpWebRequest)WebRequest.Create(request.GetUrlForPost());
+            webRequest.ContentType = "text/xml";
+            webRequest.Method = "POST";
+
+            string requestXML = request.GetXMLForPost();
+
+            var lead = new Lead
+            {
+                RequestContent = requestXML,
+                Timestamp = DateTime.Now.AddHours(3), // adjust from west coast to east coast time
+                AppId = request.AppID,
+                AffiliateId = request.AffiliateSiteID,
+                IPAddress = request.VisitorIPAddress,
+            };
+
+            using (var writer = new StreamWriter(webRequest.GetRequestStream()))
+            {
+                writer.Write(requestXML);
+            }
+
+            using (var response = (HttpWebResponse)webRequest.GetResponse())
+            using (var reader = new StreamReader(response.GetResponseStream()))
+            {
+                var responseXml = reader.ReadToEnd();
+
+                lead.ResponseContent = responseXml;
+                if (lead.ResponseContent != null)
+                {
+                    lead.IsError = lead.ResponseContent.Contains("<Error>") ? 1 : 0;
+                }
+                lead.ResponseTimestamp = DateTime.UtcNow;
+                using (var repo = new Repository(new LTWebDataContext(), false))
+                {
+                    repo.Add(lead);
+                }
+
+                return lead.IsError == 1 ? lead.ResponseContent : null;
+            }
+        }
+
+
         public void Resend(Lead lead)
         {
             string serviceConfigName = WebConfigurationManager.AppSettings["LendingTreeServiceConfig"];
             var ltm = new LendingTreeModel(serviceConfigName);
             string url = ltm.GetUrlForPost();
 
-            var webRequest = (HttpWebRequest) WebRequest.Create(url);
+            var webRequest = (HttpWebRequest)WebRequest.Create(url);
             webRequest.ContentType = "text/xml";
             webRequest.Method = "POST";
 
@@ -75,7 +118,7 @@ namespace LTWeb.Service
                     writer.Write(requestXML);
                 }
 
-                using (var response = (HttpWebResponse) webRequest.GetResponse())
+                using (var response = (HttpWebResponse)webRequest.GetResponse())
                 using (var reader = new StreamReader(response.GetResponseStream()))
                 {
                     var responseXML = reader.ReadToEnd();

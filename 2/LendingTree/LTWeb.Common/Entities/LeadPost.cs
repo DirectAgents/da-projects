@@ -1,5 +1,4 @@
-﻿using System;
-namespace LTWeb
+﻿namespace LTWeb
 {
     public class LeadPost
     {
@@ -10,10 +9,18 @@ namespace LTWeb
         public string PropertyType { get; set; }
         public string PropertyUse { get; set; }
         public string PropertyZip { get; set; }
-        public decimal PropertyApproximateValue { get; set; }
-        public decimal EstimatedMortgageBalance { get; set; }
-        public decimal CashOut { get; set; }
-        public decimal MonthlyPayment { get; set; }
+
+        // Refi Only
+        public decimal? PropertyApproximateValue { get; set; }
+        public decimal? EstimatedMortgageBalance { get; set; }
+        public decimal? CashOut { get; set; }
+        public decimal? MonthlyPayment { get; set; }
+
+        // Purchase Only
+        public decimal? PurchasePrice { get; set; }
+        public decimal? DownPayment { get; set; }
+        public string PropertyCity { get; set; }
+
         public string BankruptcyDischarged { get; set; }
         public string ForeclosureDischarged { get; set; }
         public bool IsVetran { get; set; }
