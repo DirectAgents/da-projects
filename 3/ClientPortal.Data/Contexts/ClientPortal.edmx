@@ -292,6 +292,7 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="ReportType" Type="int" Nullable="false" />
           <Property Name="Months" Type="int" Nullable="false" />
           <Property Name="Days" Type="int" Nullable="false" />
           <Property Name="IsCumulative" Type="bit" Nullable="false" />
@@ -441,20 +442,7 @@
             <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
           </AssociationSet>
           <EntitySet Name="GeneratedReports" EntityType="ClientPortalModel.GeneratedReport" />
-          <EntitySet Name="ScheduledReports" EntityType="ClientPortalModel.ScheduledReport" />
           <EntitySet Name="ScheduledReportRecipients" EntityType="ClientPortalModel.ScheduledReportRecipient" />
-          <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.FK_AdvertiserScheduledReport">
-            <End Role="Advertiser" EntitySet="Advertisers" />
-            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ScheduledReportGeneratedReport" Association="ClientPortalModel.FK_ScheduledReportGeneratedReport">
-            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
-            <End Role="GeneratedReport" EntitySet="GeneratedReports" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ScheduledReportScheduledReportRecipient" Association="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient">
-            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
-            <End Role="ScheduledReportRecipient" EntitySet="ScheduledReportRecipients" />
-          </AssociationSet>
           <EntitySet Name="EmailedReports" EntityType="ClientPortalModel.EmailedReport" />
           <AssociationSet Name="FK_GeneratedReportEmailedReport" Association="ClientPortalModel.FK_GeneratedReportEmailedReport">
             <End Role="GeneratedReport" EntitySet="GeneratedReports" />
@@ -472,6 +460,19 @@
           <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.FK_Goal_Offer">
             <End Role="Offer" EntitySet="Offers" />
             <End Role="Goal" EntitySet="Goals" />
+          </AssociationSet>
+          <EntitySet Name="ScheduledReports" EntityType="ClientPortalModel.ScheduledReport" />
+          <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.FK_AdvertiserScheduledReport">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScheduledReportGeneratedReport" Association="ClientPortalModel.FK_ScheduledReportGeneratedReport">
+            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
+            <End Role="GeneratedReport" EntitySet="GeneratedReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScheduledReportScheduledReportRecipient" Association="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient">
+            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
+            <End Role="ScheduledReportRecipient" EntitySet="ScheduledReportRecipients" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -670,9 +671,9 @@
           <Property Type="String" Name="ConversionValueName" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="ConversionValueIsNumber" Nullable="false" />
           <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
-          <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
           <NavigationProperty Name="FileUploads" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="Advertiser" ToRole="FileUpload" />
           <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Advertiser" ToRole="Goal" />
+          <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -735,23 +736,8 @@
           <Property Type="DateTime" Name="ReportStatusUpdated" Precision="3" />
           <Property Type="String" Name="Content" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ScheduledReportId" Nullable="false" />
-          <NavigationProperty Name="ScheduledReport" Relationship="ClientPortalModel.FK_ScheduledReportGeneratedReport" FromRole="GeneratedReport" ToRole="ScheduledReport" />
           <NavigationProperty Name="EmailedReports" Relationship="ClientPortalModel.FK_GeneratedReportEmailedReport" FromRole="GeneratedReport" ToRole="EmailedReport" />
-        </EntityType>
-        <EntityType Name="ScheduledReport">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
-          <Property Type="Int32" Name="Months" Nullable="false" DefaultValue="0" />
-          <Property Type="Int32" Name="Days" Nullable="false" DefaultValue="0" />
-          <Property Type="Boolean" Name="IsCumulative" Nullable="false" />
-          <Property Type="DateTime" Name="LastSent" Precision="3" />
-          <Property Type="DateTime" Name="NextSend" Precision="3" />
-          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="ScheduledReport" ToRole="Advertiser" />
-          <NavigationProperty Name="GeneratedReports" Relationship="ClientPortalModel.FK_ScheduledReportGeneratedReport" FromRole="ScheduledReport" ToRole="GeneratedReport" />
-          <NavigationProperty Name="ScheduledReportRecipients" Relationship="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient" FromRole="ScheduledReport" ToRole="ScheduledReportRecipient" />
+          <NavigationProperty Name="ScheduledReport" Relationship="ClientPortalModel.FK_ScheduledReportGeneratedReport" FromRole="GeneratedReport" ToRole="ScheduledReport" />
         </EntityType>
         <EntityType Name="ScheduledReportRecipient">
           <Key>
@@ -762,42 +748,6 @@
           <Property Type="Int32" Name="ScheduledReportId" Nullable="false" />
           <NavigationProperty Name="ScheduledReport" Relationship="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient" FromRole="ScheduledReportRecipient" ToRole="ScheduledReport" />
         </EntityType>
-        <Association Name="FK_AdvertiserScheduledReport">
-          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
-          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Advertiser">
-              <PropertyRef Name="AdvertiserId" />
-            </Principal>
-            <Dependent Role="ScheduledReport">
-              <PropertyRef Name="AdvertiserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ScheduledReportGeneratedReport">
-          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="1" />
-          <End Type="ClientPortalModel.GeneratedReport" Role="GeneratedReport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ScheduledReport">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="GeneratedReport">
-              <PropertyRef Name="ScheduledReportId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ScheduledReportScheduledReportRecipient">
-          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="1" />
-          <End Type="ClientPortalModel.ScheduledReportRecipient" Role="ScheduledReportRecipient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ScheduledReport">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ScheduledReportRecipient">
-              <PropertyRef Name="ScheduledReportId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="EmailedReport">
           <Key>
             <PropertyRef Name="Id" />
@@ -877,6 +827,58 @@
           <Member Name="Leads" Value="2" />
           <Member Name="Spend" Value="3" />
         </EnumType>
+        <EntityType Name="ScheduledReport">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="ClientPortalModel.ReportType" Name="ReportType" Nullable="false" />
+          <Property Type="Int32" Name="Months" Nullable="false" DefaultValue="0" />
+          <Property Type="Int32" Name="Days" Nullable="false" DefaultValue="0" />
+          <Property Type="Boolean" Name="IsCumulative" Nullable="false" />
+          <Property Type="DateTime" Name="LastSent" Precision="3" />
+          <Property Type="DateTime" Name="NextSend" Precision="3" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="ScheduledReport" ToRole="Advertiser" />
+          <NavigationProperty Name="GeneratedReports" Relationship="ClientPortalModel.FK_ScheduledReportGeneratedReport" FromRole="ScheduledReport" ToRole="GeneratedReport" />
+          <NavigationProperty Name="ScheduledReportRecipients" Relationship="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient" FromRole="ScheduledReport" ToRole="ScheduledReportRecipient" />
+        </EntityType>
+        <Association Name="FK_AdvertiserScheduledReport">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="ScheduledReport">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScheduledReportGeneratedReport">
+          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="1" />
+          <End Type="ClientPortalModel.GeneratedReport" Role="GeneratedReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScheduledReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="GeneratedReport">
+              <PropertyRef Name="ScheduledReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScheduledReportScheduledReportRecipient">
+          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="1" />
+          <End Type="ClientPortalModel.ScheduledReportRecipient" Role="ScheduledReportRecipient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScheduledReport">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ScheduledReportRecipient">
+              <PropertyRef Name="ScheduledReportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1100,19 +1102,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ScheduledReports">
-            <EntityTypeMapping TypeName="ClientPortalModel.ScheduledReport">
-              <MappingFragment StoreEntitySet="ScheduledReport">
-                <ScalarProperty Name="NextSend" ColumnName="NextSend" />
-                <ScalarProperty Name="LastSent" ColumnName="LastSent" />
-                <ScalarProperty Name="IsCumulative" ColumnName="IsCumulative" />
-                <ScalarProperty Name="Days" ColumnName="Days" />
-                <ScalarProperty Name="Months" ColumnName="Months" />
-                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ScheduledReportRecipients">
             <EntityTypeMapping TypeName="ClientPortalModel.ScheduledReportRecipient">
               <MappingFragment StoreEntitySet="ScheduledReportRecipient">
@@ -1140,6 +1129,20 @@
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="Filename" ColumnName="Filename" />
                 <ScalarProperty Name="UploadDate" ColumnName="UploadDate" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScheduledReports">
+            <EntityTypeMapping TypeName="ClientPortalModel.ScheduledReport">
+              <MappingFragment StoreEntitySet="ScheduledReport">
+                <ScalarProperty Name="NextSend" ColumnName="NextSend" />
+                <ScalarProperty Name="LastSent" ColumnName="LastSent" />
+                <ScalarProperty Name="IsCumulative" ColumnName="IsCumulative" />
+                <ScalarProperty Name="Days" ColumnName="Days" />
+                <ScalarProperty Name="Months" ColumnName="Months" />
+                <ScalarProperty Name="ReportType" ColumnName="ReportType" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

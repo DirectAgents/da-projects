@@ -3,6 +3,7 @@ using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
 using System.Web.Mvc;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -47,7 +48,7 @@ namespace ClientPortal.Web.Controllers
             return PartialView("Edit", scheduledReportVM);
         }
 
-        public ActionResult Save(ScheduledReportVM scheduledReport)
+        public ActionResult Save(ScheduledReportVM scheduledReportVM)
         {
             bool success = false;
             int? advId = GetAdvertiserId();
@@ -55,30 +56,35 @@ namespace ClientPortal.Web.Controllers
             if (ModelState.IsValid)
             {
                 ScheduledReport rep;
-                if (scheduledReport.Id < 0)
+                List<ScheduledReportRecipient> recipientsToDelete;
+                if (scheduledReportVM.Id < 0)
                 {
                     rep = new ScheduledReport() { AdvertiserId = advId.HasValue ? advId.Value : 0 };
-                    scheduledReport.SetEntityProperties(rep);
+                    scheduledReportVM.SetEntityProperties(rep, out recipientsToDelete);
                     cpRepo.AddScheduledReport(rep);
                     cpRepo.SaveChanges();
                     success = true;
                 }
                 else
                 {
-                    rep = cpRepo.GetScheduledReport(scheduledReport.Id);
+                    rep = cpRepo.GetScheduledReport(scheduledReportVM.Id);
                     if (rep != null && (advId == null || advId.Value == rep.AdvertiserId))
                     {
-                        scheduledReport.SetEntityProperties(rep);
+                        scheduledReportVM.SetEntityProperties(rep, out recipientsToDelete);
+                        foreach (var recipient in recipientsToDelete)
+                        {
+                            cpRepo.DeleteScheduledReportRecipient(recipient);
+                        }
                         cpRepo.SaveChanges();
                         success = true;
                     }
                 }
 
-                return Json(new { success = success, ScheduledReportId = scheduledReport.Id });
+                return Json(new { success = success, ScheduledReportId = scheduledReportVM.Id });
             }
             else
             {
-                return DoEdit(scheduledReport);
+                return DoEdit(scheduledReportVM);
             }
         }
 

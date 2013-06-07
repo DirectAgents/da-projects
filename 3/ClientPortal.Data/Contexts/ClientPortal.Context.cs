@@ -35,9 +35,9 @@ namespace ClientPortal.Data.Contexts
         public DbSet<AdvertiserContact> AdvertiserContacts { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<GeneratedReport> GeneratedReports { get; set; }
-        public DbSet<ScheduledReport> ScheduledReports { get; set; }
         public DbSet<ScheduledReportRecipient> ScheduledReportRecipients { get; set; }
         public DbSet<EmailedReport> EmailedReports { get; set; }
         public DbSet<FileUpload> FileUploads { get; set; }
+        public DbSet<ScheduledReport> ScheduledReports { get; set; }
     }
 }

@@ -28,7 +28,7 @@ namespace ClientPortal.Data.Contexts
         public string Content { get; set; }
         public int ScheduledReportId { get; set; }
     
-        public virtual ScheduledReport ScheduledReport { get; set; }
         public virtual ICollection<EmailedReport> EmailedReports { get; set; }
+        public virtual ScheduledReport ScheduledReport { get; set; }
     }
 }
