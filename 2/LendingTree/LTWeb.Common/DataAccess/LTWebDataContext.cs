@@ -4,6 +4,11 @@ namespace LTWeb.DataAccess
 {
     public class LTWebDataContext : DbContext
     {
+        public LTWebDataContext(string connectionString)
+            : base(connectionString)
+        {
+        }
+
         public DbSet<ServiceConfig> ServiceConfigs { get; set; }
 
         public DbSet<Lead> Leads { get; set; }
