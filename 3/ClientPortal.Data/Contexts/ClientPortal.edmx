@@ -40,6 +40,14 @@
             <End Role="GeneratedReport" EntitySet="GeneratedReport" />
             <End Role="EmailedReport" EntitySet="EmailedReport" />
           </AssociationSet>
+          <AssociationSet Name="FK_Goal_Advertiser" Association="ClientPortalModel.Store.FK_Goal_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="Goal" EntitySet="Goal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.Store.FK_Goal_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="Goal" EntitySet="Goal" />
+          </AssociationSet>
           <AssociationSet Name="FK_ScheduledReportGeneratedReport" Association="ClientPortalModel.Store.FK_ScheduledReportGeneratedReport">
             <End Role="ScheduledReport" EntitySet="ScheduledReport" />
             <End Role="GeneratedReport" EntitySet="GeneratedReport" />
@@ -362,6 +370,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Goal_Advertiser">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
+          <End Role="Goal" Type="ClientPortalModel.Store.Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goal_Offer">
+          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="0..1" />
+          <End Role="Goal" Type="ClientPortalModel.Store.Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="Offer_Id" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ScheduledReportGeneratedReport">
           <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReport" Multiplicity="1" />
           <End Role="GeneratedReport" Type="ClientPortalModel.Store.GeneratedReport" Multiplicity="*" />
@@ -432,6 +464,14 @@
           <AssociationSet Name="FK_FileUpload_Advertiser" Association="ClientPortalModel.FK_FileUpload_Advertiser">
             <End Role="Advertiser" EntitySet="Advertisers" />
             <End Role="FileUpload" EntitySet="FileUploads" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Advertiser" Association="ClientPortalModel.FK_Goal_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Goal" EntitySet="Goals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.FK_Goal_Offer">
+            <End Role="Offer" EntitySet="Offers" />
+            <End Role="Goal" EntitySet="Goals" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -583,11 +623,13 @@
           <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
           <Property Type="Int32" Name="OfferId" />
           <Property Type="String" Name="Name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="TypeId" Nullable="false" />
-          <Property Type="Int32" Name="MetricId" Nullable="false" />
+          <Property Type="ClientPortalModel.GoalType" Name="TypeId" Nullable="false" />
+          <Property Type="ClientPortalModel.Metric" Name="MetricId" Nullable="false" />
           <Property Type="Decimal" Name="Target" Nullable="false" Precision="18" Scale="2" />
           <Property Type="DateTime" Name="StartDate" Precision="3" />
           <Property Type="DateTime" Name="EndDate" Precision="3" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Goal" ToRole="Advertiser" />
+          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Goal" ToRole="Offer" />
         </EntityType>
         <EntityType Name="Offer">
           <Key>
@@ -613,6 +655,7 @@
           <Property Type="String" Name="AllowedCountries" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Xml" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AllowedMediaTypeNames" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
         </EntityType>
         <EntityType Name="Advertiser">
           <Key>
@@ -629,6 +672,7 @@
           <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
           <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
           <NavigationProperty Name="FileUploads" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="Advertiser" ToRole="FileUpload" />
+          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Advertiser" ToRole="Goal" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -800,6 +844,39 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Goal_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goal_Offer">
+          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="Offer_Id" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EnumType Name="GoalType">
+          <Member Name="Absolute" Value="1" />
+          <Member Name="Percent" Value="2" />
+        </EnumType>
+        <EnumType Name="Metric">
+          <Member Name="Clicks" Value="1" />
+          <Member Name="Leads" Value="2" />
+          <Member Name="Spend" Value="3" />
+        </EnumType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

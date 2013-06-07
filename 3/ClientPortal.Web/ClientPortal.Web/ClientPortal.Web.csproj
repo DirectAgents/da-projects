@@ -212,7 +212,6 @@
     </Compile>
     <Compile Include="HtmlHelpers\FormatHelpers.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\AccountRepository.cs" />
     <Compile Include="Models\CakeModels.cs">
       <SubType>Component</SubType>
     </Compile>

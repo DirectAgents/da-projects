@@ -1,4 +1,5 @@
-﻿using ClientPortal.Data.DTOs;
+﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Controllers;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -25,10 +26,10 @@ namespace ClientPortal.Web.Models
         public string Name { get; set; }
 
         [Display(Name = "Type")]
-        public GoalTypeEnum TypeId { get; set; }
+        public GoalType TypeId { get; set; }
 
         [Display(Name = "Metric")]
-        public MetricEnum MetricId { get; set; }
+        public Metric MetricId { get; set; }
 
         [Required]
         public decimal Target { get; set; }
@@ -36,7 +37,7 @@ namespace ClientPortal.Web.Models
         public string TargetFormatted
         {
             get {
-                if (TypeId == GoalTypeEnum.Absolute)
+                if (TypeId == GoalType.Absolute)
                     return FormatSomeTarget(Target);
                 else // Percent
                     return String.Format("{0:n1}", Target) + "%";
@@ -53,6 +54,15 @@ namespace ClientPortal.Web.Models
         public string StartDate { get; set; }
         public string EndDate { get; set; }
 
+        public DateTime? StartDateParsed
+        {
+            get { return ControllerHelpers.ParseDate(StartDate, CultureInfo); }
+        }
+        public DateTime? EndDateParsed
+        {
+            get { return ControllerHelpers.ParseDate(EndDate, CultureInfo); }
+        }
+
         public bool IsMonthly
         {
             get { return (String.IsNullOrEmpty(StartDate) && String.IsNullOrEmpty(EndDate)); }
@@ -66,41 +76,37 @@ namespace ClientPortal.Web.Models
 
         public string CreateGoalChartCall { get; set; }
 
-        public GoalVM(Data.Contexts.Goal goal, string offerName, string culture)
+        public GoalVM(Goal goal)
         {
             this.Id = goal.Id;
             this.AdvertiserId = goal.AdvertiserId;
             this.OfferId = goal.OfferId;
-            this.OfferName = offerName;
             this.Name = goal.Name;
-            this.TypeId = (GoalTypeEnum)goal.TypeId;
-            this.MetricId = (MetricEnum)goal.MetricId;
+            this.TypeId = (GoalType)goal.TypeId;
+            this.MetricId = (Metric)goal.MetricId;
             this.Target = goal.Target;
-            this.Culture = culture;
+
             if (goal.StartDate.HasValue)
                 this.StartDate = goal.StartDate.Value.ToString("d", CultureInfo);
             if (goal.EndDate.HasValue)
                 this.EndDate = goal.EndDate.Value.ToString("d", CultureInfo);
-        }
-        public DateTime? StartDateParsed
-        {
-            get { return ControllerHelpers.ParseDate(StartDate, CultureInfo); }
-        }
-        public DateTime? EndDateParsed
-        {
-            get { return ControllerHelpers.ParseDate(EndDate, CultureInfo); }
+
+            if (goal.Offer != null)
+            {
+                this.OfferName = goal.Offer.OfferName;
+                this.Culture = OfferInfo.CurrencyToCulture(goal.Offer.Currency);
+            }
         }
 
         public GoalVM()
         { // defaults
             this.Id = -1;
-            this.TypeId = GoalTypeEnum.Absolute;
-            this.MetricId = MetricEnum.Leads;
+            this.TypeId = GoalType.Absolute;
+            this.MetricId = Metric.Leads;
         }
 
-        public void SetGoalEntityProperties(Goal goal)
+        public void SetEntityProperties(Goal goal)
         {
-            goal.AdvertiserId = this.AdvertiserId;
             goal.OfferId = this.OfferId;
             goal.Name = this.Name;
             goal.TypeId = this.TypeId;
@@ -132,7 +138,7 @@ namespace ClientPortal.Web.Models
             {
                 if (!(startDate.Value < endDate.Value))
                     yield return new ValidationResult("End Date must be after Start Date.", new[] { "EndDate" });
-                else if (TypeId == GoalTypeEnum.Percent)
+                else if (TypeId == GoalType.Percent)
                     yield return new ValidationResult("Only absolute goals are supported with custom date ranges.", new[] { "TypeId" });
             }
         }
@@ -140,7 +146,7 @@ namespace ClientPortal.Web.Models
         // e.g. "Reach 1,000 Leads", "Reach $1,000 Spend", "Increase Leads 10.5% (to 1,105)", "Increase Spend 10.5% (to $1,105)"
         public string TargetFormattedBasedOn(DateRangeSummary rangeSummary, bool includeTimeframe = false)
         {
-            if (TypeId == GoalTypeEnum.Absolute)
+            if (TypeId == GoalType.Absolute)
                 return "Reach " + TargetFormatted + " " + this.MetricId + (includeTimeframe ? TimeframeFormatted(true, true) : "");
             else // Percent
                 return "Increase " + this.MetricId + " " + TargetFormatted + " (to " + FormatSomeTarget(TargetBasedOn(rangeSummary)) + ")";
@@ -156,7 +162,7 @@ namespace ClientPortal.Web.Models
 
         public decimal TargetBasedOn(DateRangeSummary rangeSummary)
         {
-            if (TypeId == GoalTypeEnum.Absolute)
+            if (TypeId == GoalType.Absolute)
                 return Target;
             else
             { // for Percent goal...
@@ -170,11 +176,11 @@ namespace ClientPortal.Web.Models
         {
             switch (MetricId)
             {
-                case MetricEnum.Clicks:
+                case Metric.Clicks:
                     return rangeSummary.Clicks.Value;
-                case MetricEnum.Leads:
+                case Metric.Leads:
                     return rangeSummary.Conversions.Value;
-                case MetricEnum.Spend:
+                case Metric.Spend:
                     return rangeSummary.Revenue.Value;
                 default:
                     return 0;
@@ -185,7 +191,7 @@ namespace ClientPortal.Web.Models
 
         private string FormatSomeTarget(decimal someTarget) // ...based on this goal's metric
         {
-            if (MetricId == MetricEnum.Spend)
+            if (MetricId == Metric.Spend)
                 return String.Format(new CultureInfo(Culture), "{0:c}", someTarget);
             else
                 return String.Format("{0:n0}", someTarget);

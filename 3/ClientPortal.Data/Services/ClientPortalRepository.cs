@@ -314,6 +314,11 @@ namespace ClientPortal.Data.Services
         #endregion
 
         #region Goals
+        public IQueryable<Goal> Goals
+        {
+            get { return context.Goals; }
+        }
+
         public IQueryable<Goal> GetGoals(int advertiserId)
         {
             var goals = context.Goals.Where(g => g.AdvertiserId == advertiserId);
@@ -324,6 +329,12 @@ namespace ClientPortal.Data.Services
         {
             var goal = context.Goals.Find(id);
             return goal;
+        }
+
+        public void AddGoal(Goal goal, bool saveChanges = false)
+        {
+            context.Goals.Add(goal);
+            if (saveChanges) SaveChanges();
         }
 
         public bool DeleteGoal(int id, int? advertiserId)

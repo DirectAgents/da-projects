@@ -23,12 +23,10 @@ namespace ClientPortal.Web.Controllers
             var advId = GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = cpRepo.GetGoals(advId.Value);
-            var offers = cakeRepo.Offers(advId);
-            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
+            var goalVMs = cpRepo.GetGoals(advId.Value).ToList().Select(g => new GoalVM(g));
             var model = new GoalsModel()
             {
-                Goals = goalVMs
+                Goals = goalVMs.ToList()
             };
             return PartialView(model);
         }
@@ -38,9 +36,7 @@ namespace ClientPortal.Web.Controllers
             var advId = GetAdvertiserId();
             if (advId == null) return null;
 
-            var goals = cpRepo.GetGoals(advId.Value);
-            var offers = cakeRepo.Offers(advId);
-            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
+            var goalVMs = cpRepo.GetGoals(advId.Value).ToList().Select(g => new GoalVM(g));
             return PartialView(goalVMs);
         }
 
@@ -52,9 +48,8 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Edit(int id)
         {
-            var userInfo = GetUserInfo();
             var goal = cpRepo.GetGoal(id);
-            var goalVM = new GoalVM(goal, null, userInfo.Culture);
+            var goalVM = new GoalVM(goal);
             return DoEdit(goalVM);
         }
 
@@ -72,21 +67,36 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(GoalVM goal)
+        public ActionResult Save(GoalVM goalVM)
         {
+            bool success = false;
             var advId = GetAdvertiserId();
+
             if (ModelState.IsValid)
             {
-                if (advId.HasValue)
+                Goal goal;
+                if (goalVM.Id < 0)
                 {
-                    goal.AdvertiserId = advId.Value;
-                    SaveGoal(goal);
+                    goal = new Goal() { AdvertiserId = advId.HasValue ? advId.Value : 0 };
+                    goalVM.SetEntityProperties(goal);
+                    cpRepo.AddGoal(goal, true);
+                    success = true;
                 }
-                return Json(new { success = true, OfferId = goal.OfferId, GoalId = goal.Id });
+                else
+                {
+                    var existingGoal = cpRepo.GetGoal(goalVM.Id);
+                    if (existingGoal != null && (advId == null || advId.Value == existingGoal.AdvertiserId))
+                    {
+                        goalVM.SetEntityProperties(existingGoal);
+                        cpRepo.SaveChanges();
+                        success = true;
+                    }
+                }
+                return Json(new { success = success, OfferId = goalVM.OfferId, GoalId = goalVM.Id });
             }
             else
             {
-                return DoEdit(goal);
+                return DoEdit(goalVM);
             }
         }
 
@@ -97,28 +107,5 @@ namespace ClientPortal.Web.Controllers
             cpRepo.DeleteGoal(id, advId);
             return null;
         }
-
-        // --- repository-type methods ---
-
-        private void SaveGoal(GoalVM goalVM)
-        {
-            using (var usersContext = new UsersContext())
-            {
-                if (goalVM.Id < 0)
-                {
-                    var goal = new ClientPortal.Web.Models.Goal();
-                    goalVM.SetGoalEntityProperties(goal);
-                    usersContext.Goals.Add(goal);
-                }
-                else
-                {
-                    var existingGoal = usersContext.Goals.FirstOrDefault(g => g.Id == goalVM.Id);
-                    if (existingGoal != null)
-                        goalVM.SetGoalEntityProperties(existingGoal);
-                }
-                usersContext.SaveChanges();
-            }
-        }
-
     }
 }

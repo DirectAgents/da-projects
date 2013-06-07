@@ -124,6 +124,12 @@
     <Compile Include="Contexts\Goal.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\GoalType.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\Metric.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\MonthlySummary.cs">
       <DependentUpon>Cake.tt</DependentUpon>
     </Compile>

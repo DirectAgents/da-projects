@@ -14,6 +14,11 @@ namespace ClientPortal.Data.Contexts
     
     public partial class Offer
     {
+        public Offer()
+        {
+            this.Goals = new HashSet<Goal>();
+        }
+    
         public int Offer_Id { get; set; }
         public string OfferName { get; set; }
         public Nullable<int> Advertiser_Id { get; set; }
@@ -34,5 +39,7 @@ namespace ClientPortal.Data.Contexts
         public string AllowedCountries { get; set; }
         public string Xml { get; set; }
         public string AllowedMediaTypeNames { get; set; }
+    
+        public virtual ICollection<Goal> Goals { get; set; }
     }
 }

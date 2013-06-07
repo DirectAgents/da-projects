@@ -234,13 +234,12 @@ namespace ClientPortal.Web.Controllers
                 GoalVM goalVM = null;
                 var goal = cpRepo.GetGoal(goalId.Value);
                 if (goal != null)
-                    goalVM = new GoalVM(goal, null, OfferInfo.CurrencyToCulture(offer.Currency));
+                    goalVM = new GoalVM(goal);
                 goalVMs = new List<GoalVM> { goalVM };
             }
             else
             {
-                var goals = cpRepo.GetGoals(userInfo.AdvertiserId.Value);
-                goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), new[] { offer }, false);
+                goalVMs = cpRepo.GetGoals(userInfo.AdvertiserId.Value).ToList().Select(g => new GoalVM(g)).ToList();
             }
             var dates = new Dates();
             var offerGoalSummary = CreateOfferGoalSummary(userInfo.AdvertiserId, offer, goalVMs, dates, userInfo.ShowConversionData);
@@ -252,8 +251,7 @@ namespace ClientPortal.Web.Controllers
         public List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates, bool includeConversionData)
         {
             var offers = cakeRepo.Offers(advId);
-            var goals = cpRepo.GetGoals(advId);
-            var goalVMs = AccountRepository.GetGoalVMs(goals.ToList(), offers.ToList(), false);
+            var goalVMs = cpRepo.GetGoals(advId).ToList().Select(g => new GoalVM(g)).ToList();
             var offerIdsFromGoals = goalVMs.Where(g => g.OfferId.HasValue).Select(g => g.OfferId.Value).Distinct().OrderBy(i => i);
             List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
             foreach (var offerId in offerIdsFromGoals)
@@ -304,13 +302,13 @@ namespace ClientPortal.Web.Controllers
                 {
                     switch (goal.MetricId)
                     {
-                        case MetricEnum.Clicks:
+                        case Metric.Clicks:
                             sumGoal.Clicks = (int)goal.Target;
                             break;
-                        case MetricEnum.Leads:
+                        case Metric.Leads:
                             sumGoal.Conversions = (int)goal.Target;
                             break;
-                        case MetricEnum.Spend:
+                        case Metric.Spend:
                             sumGoal.Revenue = goal.Target;
                             break;
                     }

@@ -16,58 +16,11 @@ namespace ClientPortal.Web.Models
         }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
-        public DbSet<Goal> Goals { get; set; }
         public DbSet<Cake.conversion> Conversions { get; set; }
         public DbSet<Cake.click> Clicks { get; set; }
         public DbSet<ConversionData> ConversionDatas { get; set; }
-/*
-        public DbSet<Advertiser> Advertisers { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Advertiser>()
-                .HasMany(x => x.Contacts)
-                .WithMany(x => x.Advertisers)
-                .Map(x =>
-                {
-                    x.ToTable("AdvertiserContact");
-                    x.MapLeftKey("AdvertiserId");
-                    x.MapRightKey("ContactId");
-                });
-        }
-*/
     }
-/*
-    [Table("Advertiser")]
-    public class Advertiser
-    {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        public int AdvertiserId { get; set; }
-        public string AdvertiserName { get; set; }
-        public byte[] Logo { get; set; }
-        public string Culture { get; set; }
-        public bool ShowCPMRep { get; set; }
-        public bool ShowConversionData { get; set; }
-        public string ConversionValueName { get; set; }
-        public bool ConversionValueIsNumber { get; set; }
 
-        public virtual ICollection<Contact> Contacts { get; set; }
-    }
-    [Table("Contact")]
-    public class Contact
-    {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int ContactId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Title { get; set; }
-        public string Email { get; set; }
-
-        public virtual ICollection<Advertiser> Advertisers { get; set; }
-    }
-*/
     [Table("UserProfile")]
     public class UserProfile
     {
@@ -78,27 +31,6 @@ namespace ClientPortal.Web.Models
         public int? CakeAdvertiserId { get; set; }
         public int? QuickBooksCompanyId { get; set; }
         public int? QuickBooksAdvertiserId { get; set; }
-    }
-
-    public enum GoalTypeEnum { Absolute = 1, Percent };
-    public enum MetricEnum { Clicks = 1, Leads, Spend };
-
-    [Table("Goal")]
-    public class Goal
-    {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public int AdvertiserId { get; set; }
-        public int? OfferId { get; set; }
-
-        public string Name { get; set; }
-        public GoalTypeEnum TypeId { get; set; }
-        public MetricEnum MetricId { get; set; }
-        public decimal Target { get; set; }
-
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
     }
 
     [Table("ConversionData")]

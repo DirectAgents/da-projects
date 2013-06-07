@@ -18,10 +18,13 @@ namespace ClientPortal.Data.Contexts
         public int AdvertiserId { get; set; }
         public Nullable<int> OfferId { get; set; }
         public string Name { get; set; }
-        public int TypeId { get; set; }
-        public int MetricId { get; set; }
+        public GoalType TypeId { get; set; }
+        public Metric MetricId { get; set; }
         public decimal Target { get; set; }
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
+    
+        public virtual Advertiser Advertiser { get; set; }
+        public virtual Offer Offer { get; set; }
     }
 }

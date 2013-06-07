@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -12,6 +13,8 @@ using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using StackExchange.Profiling;
 using WebMatrix.WebData;
+using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Services;
 
 namespace ClientPortal.Web
 {
@@ -149,19 +152,29 @@ namespace ClientPortal.Web
                     });
             }
 
+            var cpRepo = new ClientPortalRepository(new ClientPortalContext());
+            var existingGoals = cpRepo.Goals;
+
             // add goals for beta users
-            using (var db = new UsersContext())
+            Goal[] goalsToAdd = new[] {
+                // sm goals
+                new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = Metric.Leads, Target = 850, TypeId = GoalType.Absolute, Name = "reach 850 leads in month" },
+                new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = Metric.Spend, Target = 12000, TypeId = GoalType.Absolute, Name = "spend 12000" },
+            };
+            foreach (var goal in goalsToAdd)
             {
-                Goal[] goals = new[] {
-                    // sm goals
-                    new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = MetricEnum.Leads, Target = 850, TypeId = GoalTypeEnum.Absolute, Name = "reach 850 leads in month" },
-                    new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = MetricEnum.Spend, Target = 12000, TypeId = GoalTypeEnum.Absolute, Name = "spend 12000" },
-                };
-                db.Goals.AddOrUpdate(c => c.Name, goals); //TODO: addOrUpdate no worky
-                db.SaveChanges();
+                if (!existingGoals.Any(g => g.AdvertiserId == goal.AdvertiserId &&
+                                            g.OfferId == goal.OfferId &&
+                                            g.MetricId == goal.MetricId &&
+                                            g.Target == goal.Target &&
+                                            g.TypeId == goal.TypeId))
+                {
+                    cpRepo.AddGoal(goal);
+                }
+                cpRepo.SaveChanges();
             }
 
-            Seeder.Seed();
+            Seeder.Seed(cpRepo);
         }
     }
 
@@ -183,25 +196,27 @@ namespace ClientPortal.Web
             List<Goal> goals = new List<Goal> {
 
                 // select quote goals
-                new Goal() { AdvertiserId = 530, OfferId = 30389, MetricId = MetricEnum.Leads, Target = 1000, TypeId = GoalTypeEnum.Absolute, Name = "1000 leads" },
+                new Goal() { AdvertiserId = 530, OfferId = 30389, MetricId = Metric.Leads, Target = 1000, TypeId = GoalType.Absolute, Name = "1000 leads" },
 
                 // lending tree goals
-                new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = MetricEnum.Leads, Target = 2000, TypeId = GoalTypeEnum.Absolute, Name = "new form leads" },
-                new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = MetricEnum.Spend, Target = 100000, TypeId = GoalTypeEnum.Absolute, Name = "new form spend" },
-                new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = MetricEnum.Clicks, Target = 10.5m, TypeId = GoalTypeEnum.Percent, Name = "ssn clicks pct" },
-                new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = MetricEnum.Spend, Target = 5, TypeId = GoalTypeEnum.Percent, Name = "ssn spend pct" },
+                new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = Metric.Leads, Target = 2000, TypeId = GoalType.Absolute, Name = "new form leads" },
+                new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = Metric.Spend, Target = 100000, TypeId = GoalType.Absolute, Name = "new form spend" },
+                new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = Metric.Clicks, Target = 10.5m, TypeId = GoalType.Percent, Name = "ssn clicks pct" },
+                new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = Metric.Spend, Target = 5, TypeId = GoalType.Percent, Name = "ssn spend pct" },
 
                 // edarling goals (remove these?)
-                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = MetricEnum.Spend, Target = 50, TypeId = GoalTypeEnum.Absolute, Name = "tr edarling spend abs" },
-                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = MetricEnum.Spend, Target = 10, TypeId = GoalTypeEnum.Percent, Name = "tr edarling spend pct" },
-                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = MetricEnum.Clicks, Target = 6000, TypeId = GoalTypeEnum.Absolute, Name = "tr edarling clicks" },
+                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = Metric.Spend, Target = 50, TypeId = GoalType.Absolute, Name = "tr edarling spend abs" },
+                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = Metric.Spend, Target = 10, TypeId = GoalType.Percent, Name = "tr edarling spend pct" },
+                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = Metric.Clicks, Target = 6000, TypeId = GoalType.Absolute, Name = "tr edarling clicks" },
 
             };
+
+            var cpRepo = new ClientPortalRepository(new ClientPortalContext());
             foreach (var goal in goals)
             {
-                userscontext.Goals.Add(goal);
+                cpRepo.AddGoal(goal);
             }
-            userscontext.SaveChanges();
+            cpRepo.SaveChanges();
         }
     }
 }
