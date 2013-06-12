@@ -254,7 +254,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var affiliateSummaries = cakeRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
+            var affiliateSummaries = cpRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
 
             var kgrid = new KendoGrid<AffiliateSummary>(request, affiliateSummaries);
             if (affiliateSummaries.Any())
@@ -278,38 +278,37 @@ namespace ClientPortal.Web.Controllers
         {
             var fromDate = new DateTime(2013, 5, 1);
             var toDate = new DateTime(2013, 5, 30);
-            int advertiserId = GetAdvertiserId() ?? 0;
-            var json = new JsonResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            using (var db = new UsersContext())
+            var advertiserId = GetAdvertiserId();
+
+            var clicks = cpRepo.GetClicks(fromDate, toDate, advertiserId, null);
+            var conversions = cpRepo.GetConversions(fromDate, toDate, advertiserId, null);
+
+            var query = from click in clicks
+                        from conv in conversions
+                        where click.click_id == conv.click_id
+                        select new
+                        {
+                            Region = click.region_code,
+                            Conversions = 1
+                        };
+            var results = new List<object[]>();
+            var group = query.GroupBy(c => c.Region);
+            foreach (var grouping in group)
             {
-                var clicks = db.Clicks.Where(c => c.advertiser.advertiser_id == advertiserId);
-                var conversions = db.Conversions.Where(
-                                        c => c.advertiser.advertiser_id == advertiserId &&
-                                             c.conversion_date >= fromDate &&
-                                             c.conversion_date < toDate);
-                var query = from a in clicks
-                            from b in conversions
-                            where a.click_id == b.click_id
-                            select new
-                            {
-                                Region = a.region.region_code,
-                                Conversions = 1
-                            };
-                var results = new List<object[]>();
-                var group = query.GroupBy(c => c.Region);
-                foreach (var grouping in group)
-                {
-                    results.Add(new object[]
+                results.Add(new object[]
                     { 
                         "US-" + grouping.Key.ToUpper(), 
                         grouping.Sum(c => c.Conversions) 
                     });
-                }
-                results.Sort(new Comparer());
-                results.Insert(0, new[] { "State", "Conversions" });
-                json.Data = results;
-                return json;
             }
+            results.Sort(new Comparer());
+            results.Insert(0, new[] { "State", "Conversions" });
+
+            var json = new JsonResult {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = results
+            };
+            return json;
         }
 
         private class Comparer : IComparer<object[]>

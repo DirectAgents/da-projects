@@ -14,13 +14,10 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class ExportController : CPController
     {
-        private ICakeRepository cakeRepo;
-
         private static int MaxExportedRows = 1000;
 
-        public ExportController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
+        public ExportController(IClientPortalRepository cpRepository)
         {
-            this.cakeRepo = cakeRepository;
             this.cpRepo = cpRepository;
         }
 
@@ -36,10 +33,10 @@ namespace ClientPortal.Web.Controllers
                 start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             // Get data and map to rows
-            var records = cakeRepo.GetOfferInfos(start, end, userInfo.AdvertiserId)
+            var records = cpRepo.GetOfferInfos(start, end, userInfo.AdvertiserId)
                 .OrderByDescending(r => r.Revenue).ThenByDescending(r => r.Clicks).ThenBy(r => r.OfferId).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<OfferInfo>, IEnumerable<OfferSummaryReportExportRow>>(records);
-            return CsvFile(rows, "OfferSummary.csv");
+            return CsvFile(rows, "OfferSummary" + ControllerHelpers.DateStamp() + ".csv");
         }
 
         public FileResult DailySummaryReport(string startdate, string enddate)
@@ -54,10 +51,10 @@ namespace ClientPortal.Web.Controllers
                 start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             // Get data and map to rows
-            var records = cakeRepo.GetDailyInfos(start, end, userInfo.AdvertiserId)
+            var records = cpRepo.GetDailyInfos(start, end, userInfo.AdvertiserId)
                 .OrderBy(r => r.Date).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<DailyInfo>, IEnumerable<DailySummaryReportExportRow>>(records);
-            return CsvFile(rows, "DailySummary.csv");
+            return CsvFile(rows, "DailySummary" + ControllerHelpers.DateStamp() + ".csv");
         }
 
         public FileResult ConversionReport(string startdate, string enddate)
@@ -75,7 +72,7 @@ namespace ClientPortal.Web.Controllers
             var records = cpRepo.GetConversionInfos(start, end, userInfo.AdvertiserId, null)
                 .OrderBy(r => r.Date).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<ConversionInfo>, IEnumerable<ConversionReportExportRow>>(records);
-            return CsvFile(rows, "Conversions.csv");
+            return CsvFile(rows, "Conversions" + ControllerHelpers.DateStamp() + ".csv");
         }
 
         public FileResult AffiliateReport(string startdate, string enddate)
@@ -90,10 +87,10 @@ namespace ClientPortal.Web.Controllers
                 start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             // Get data and map to rows
-            var records = cakeRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, null)
+            var records = cpRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, null)
                 .OrderBy(r => r.AffId).ThenBy(r => r.OfferId).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<AffiliateSummary>, IEnumerable<AffiliateReportExportRow>>(records);
-            return CsvFile(rows, "Affiliates.csv");
+            return CsvFile(rows, "Affiliates" + ControllerHelpers.DateStamp() + ".csv");
         }
 
         // ------- helpers ---------

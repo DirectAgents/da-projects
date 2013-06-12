@@ -212,6 +212,43 @@ namespace ClientPortal.Data.Services
                 };
             return conversionSummaries;
         }
+
+        public IQueryable<AffiliateSummary> GetAffiliateSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        {
+            var conversions = GetConversions(start, end, advertiserId, offerId);
+
+            var offers = Offers(advertiserId);
+            if (offerId.HasValue)
+                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+
+            var affiliateInfos =
+                from conv in conversions
+                from offer in offers
+                where conv.offer_id == offer.Offer_Id
+                select new
+                {
+                    AffId = conv.affiliate_id,
+                    OfferId = conv.offer_id,
+                    Offer = (offer == null) ? String.Empty : offer.OfferName,
+                    PriceReceived = conv.received_amount,
+                    CurrencyId = conv.received_currency_id
+                };
+
+            // Doing group in memory because generated query was not optimal.. (TODO: see if Kevin knows how to improve this?)
+            var groupedConversionInfos = affiliateInfos.AsEnumerable().GroupBy(
+                    c => new { c.AffId, c.OfferId, c.Offer, c.CurrencyId },
+                    (key, group) => new AffiliateSummary()
+                    {
+                        AffId = key.AffId,
+                        OfferId = key.OfferId,
+                        Offer = key.Offer,
+                        CurrencyId = key.CurrencyId,
+                        PriceReceived = group.Sum(c => c.PriceReceived),
+                        Count = group.Count(c => true)
+                    });
+
+            return groupedConversionInfos.AsQueryable();
+        }
         #endregion
 
         // get clicks through 23:59:59 on the "end" date

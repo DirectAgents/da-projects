@@ -33,5 +33,10 @@ namespace ClientPortal.Web.Controllers
             bool endParsed = ParseDate(enddate, cultureInfo, out end);
             return (startParsed && endParsed);
         }
+
+        internal static string DateStamp()
+        {
+            return DateTime.Now.ToString("yyyyMMdd");
+        }
     }
 }
