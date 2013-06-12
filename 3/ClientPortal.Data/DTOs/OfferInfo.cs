@@ -6,6 +6,11 @@ namespace ClientPortal.Data.DTOs
     {
         public int OfferId { get; set; }
         public string AdvertiserId { get; set; }
+        public int? AdvertiserId_Int
+        {
+            set { this.AdvertiserId = value.ToString(); }
+        }
+
         public string Name { get; set; }
         public string Format { get; set; }
 
@@ -22,6 +27,18 @@ namespace ClientPortal.Data.DTOs
         }
         public string Culture { get; set; }
 
+        public static string CurrencyIdToCulture(int currencyId)
+        {
+            switch (currencyId)
+            {
+                case 2:
+                    return "de-DE";
+                case 3:
+                    return "en-GB";
+                default:
+                    return "en-US";
+            }
+        }
         public static string CurrencyToCulture(string currency)
         {
             switch (currency)

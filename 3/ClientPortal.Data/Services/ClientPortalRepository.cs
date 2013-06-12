@@ -66,9 +66,6 @@ namespace ClientPortal.Data.Services
 
         public DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int? advertiserId, int? offerId, bool includeConversionData)
         {
-            // * remove this when ready! *
-            return GetDateRangeSummaryOld(start, end, advertiserId, offerId, includeConversionData);
-
             string currency;
             var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
 
@@ -93,31 +90,74 @@ namespace ClientPortal.Data.Services
             return summary;
         }
 
-        private DateRangeSummary GetDateRangeSummaryOld(DateTime? start, DateTime? end, int? advertiserId, int? offerId, bool includeConversionData)
+        #region Report Queries
+        public IQueryable<MonthlyInfo> GetMonthlyInfosFromDaily(DateTime? start, DateTime? end, int advertiserId, int? offerId)
         {
-            int? advId = advertiserId;
+            string currency;
+            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
 
-            var clicks = GetClicks(start, end, advId, offerId);
-            var conversions = GetConversions(start, end, advId, offerId);
+            var m = from ds in dailySummaries
+                    group ds by new { ds.date.Year, ds.date.Month } into g
+                    select new MonthlyInfo()
+                    {
+                        Year = g.Key.Year,
+                        Month = g.Key.Month,
+                        AdvertiserId = advertiserId,
+                        OfferId = offerId.HasValue ? offerId.Value : -1,
+                        Revenue = g.Sum(ds => ds.revenue),
+                        Currency = currency
+                    };
+            return m;
+        }
 
-            var anyConv = conversions.Any();
-            DateRangeSummary summary = new DateRangeSummary()
-            {
-                Clicks = clicks.Count(),
-                Conversions = anyConv ? conversions.Count() : 0,
-                Revenue = anyConv ? conversions.Sum(c => c.received_amount) : 0,
-                Currency = null // TODO: determine this... need Offers in ClientPortalContext
-            };
-            if (includeConversionData)
-            {
-                var conv_datas =
-                    from c in conversions
-                    join conv_data in context.ConversionDatas on c.conversion_id equals conv_data.conversion_id
-                    select conv_data;
+        public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId)
+        {
+            var dailySummaries = context.DailySummaries.AsQueryable();
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
 
-                summary.ConVal = conv_datas.Any() ? conv_datas.Sum(c => c.value0) : 0;
-            }
-            return summary;
+            var summaryGroups = dailySummaries.GroupBy(s => s.offer_id);
+
+            var offers = Offers(advertiserId);
+            var offerInfos = from offer in offers
+                             join sumGroup in summaryGroups on offer.Offer_Id equals sumGroup.Key
+                             select new OfferInfo()
+                             {
+                                 OfferId = offer.Offer_Id,
+                                 AdvertiserId_Int = offer.Advertiser_Id,
+                                 Name = offer.OfferName,
+                                 Format = offer.DefaultPriceFormat,
+                                 Clicks = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.clicks),
+                                 Conversions = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.conversions),
+                                 Revenue = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.revenue),
+                                 Currency = offer.Currency,
+                             };
+            return offerInfos;
+        }
+
+        public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId)
+        {
+            var offers = Offers(advertiserId);
+            var offerIds = offers.Select(o => o.Offer_Id).ToList();
+
+            string currency = null; // Assume all offers for the advertiser have the same currency
+            if (offers.Count() > 0) currency = offers.First().Currency;
+
+            var dailySummaries = context.DailySummaries.Where(ds => offerIds.Contains(ds.offer_id));
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
+
+            var dailyInfos = from sumGroup in dailySummaries.GroupBy(s => s.date)
+                             select new DailyInfo()
+                             {
+                                 Date = sumGroup.Key,
+                                 Impressions = sumGroup.Sum(s => s.views),
+                                 Clicks = sumGroup.Sum(s => s.clicks),
+                                 Conversions = sumGroup.Sum(s => s.conversions),
+                                 Revenue = sumGroup.Sum(s => s.revenue),
+                                 Currency = currency
+                             };
+            return dailyInfos;
         }
 
         public IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
@@ -126,28 +166,53 @@ namespace ClientPortal.Data.Services
 
             var conversionInfos =
                 from c in conversions
-                join conv_data in context.ConversionDatas on c.conversion_id equals conv_data.conversion_id into gj
-                from cd in gj.DefaultIfEmpty() // left join to ConversionData
-                //                join curr in cakeContext.CakeCurrencies on c.PriceReceivedCurrencyId.Value equals curr.Id
-                //                join offer in cakeContext.CakeOffers on c.Offer_Id.Value equals offer.Offer_Id into gj
-                //                from o in gj.DefaultIfEmpty() // left join to CakeOffers
+                join offer in context.Offers on c.offer_id equals offer.Offer_Id into gj_offer
+                from o in gj_offer.DefaultIfEmpty() // left join to CakeOffers
+                join conv_data in context.ConversionDatas on c.conversion_id equals conv_data.conversion_id into gj_conv_data
+                from cd in gj_conv_data.DefaultIfEmpty() // left join to ConversionData
                 select new ConversionInfo()
                 {
                     ConversionIdString = c.conversion_id,
                     Date = c.conversion_date,
                     AffId = c.affiliate_id,
                     OfferId = c.offer_id,
-                    Offer = String.Empty,
-                    //                    Offer = (o == null) ? String.Empty : o.OfferName,
+                    Offer = (o == null) ? null : o.OfferName,
                     PriceReceived = c.received_amount,
-                    Currency = null,
-                    //                    Currency = curr.Name,
+                    CurrencyId = c.received_currency_id,
                     TransactionId = c.transaction_id,
-                    //                    Positive = c.Positive,
                     ConVal = (cd == null) ? 0 : cd.value0
                 };
             return conversionInfos;
         }
+
+        public IQueryable<ConversionSummary> GetConversionSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        {
+            var conversions = GetConversions(start, end, advertiserId, offerId);
+            var conversionGroups = conversions.GroupBy(c => c.offer_id);
+
+            var offers = Offers(advertiserId);
+
+            if (offerId.HasValue)
+                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+
+            var conversionSummaries =
+                from offer in offers
+                join conversionGroup in conversionGroups on offer.Offer_Id equals conversionGroup.Key into gj_convgroup
+                from convGroup in gj_convgroup.DefaultIfEmpty() // left join to conversionGroups
+                select new ConversionSummary()
+                {
+                    AdvertiserId = offer.Advertiser_Id,
+                    OfferId = offer.Offer_Id,
+                    OfferName = offer.OfferName,
+                    Format = offer.DefaultPriceFormat,
+                    Currency = offer.Currency,
+                    Count = convGroup.Count(),
+                    Revenue = (convGroup.Count() == 0) ? 0 : convGroup.Sum(g => g.received_amount),
+                    //ConValTotal = 
+                };
+            return conversionSummaries;
+        }
+        #endregion
 
         // get clicks through 23:59:59 on the "end" date
         public IQueryable<Click> GetClicks(DateTime? start, DateTime? end, int? advertiserId, int? offerId)

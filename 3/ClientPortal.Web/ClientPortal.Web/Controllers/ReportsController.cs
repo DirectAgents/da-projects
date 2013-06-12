@@ -51,7 +51,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var offerInfos = cakeRepo.GetOfferInfos(start, end, userInfo.AdvertiserId);
+            var offerInfos = cpRepo.GetOfferInfos(start, end, userInfo.AdvertiserId);
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             if (offerInfos.Any())
             {
@@ -89,12 +89,12 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var dailyInfos = cakeRepo.GetDailyInfos(start, end, userInfo.AdvertiserId);
+            var dailyInfos = cpRepo.GetDailyInfos(start, end, userInfo.AdvertiserId);
 
             if (cumulative)
-                dailyInfos = cakeRepo.MakeCumulative(dailyInfos);
+                dailyInfos = DailyInfo.MakeCumulative(dailyInfos);
             if (projection)
-                dailyInfos = cakeRepo.AddProjection(dailyInfos);
+                dailyInfos = DailyInfo.AddProjection(dailyInfos);
 
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
 
@@ -132,31 +132,6 @@ namespace ClientPortal.Web.Controllers
                         EPC = new { agg = totalEPC }
                     };
                 }
-            }
-            var json = Json(kgrid);
-            return json;
-        }
-
-        [HttpPost]
-        public JsonResult MonthlySummaryData(KendoGridRequest request, string startdate, string enddate)
-        {
-            var userInfo = GetUserInfo();
-            DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
-                return Json(new { });
-
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, 1, 1);
-
-            var monthlyInfos = cakeRepo.GetMonthlyInfosFromDaily(start, end, userInfo.AdvertiserId.Value, null);
-            var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
-
-            if (monthlyInfos.Any())
-            {
-                decimal totalRevenue = monthlyInfos.Sum(i => i.Revenue);
-                kgrid.aggregates = new
-                {
-                    Revenue = new { sum = totalRevenue }
-                };
             }
             var json = Json(kgrid);
             return json;
@@ -214,7 +189,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var conversionSummaries = cakeRepo.GetConversionSummaries(start, end, userInfo.AdvertiserId, offerid);
+            var conversionSummaries = cpRepo.GetConversionSummaries(start, end, userInfo.AdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionSummary>(request, conversionSummaries);
             // todo: aggregates?
