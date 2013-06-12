@@ -249,6 +249,12 @@ namespace ClientPortal.Data.Services
 
             return groupedConversionInfos.AsQueryable();
         }
+
+        public IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId)
+        {
+            List<MonthlyInfo> stub = new List<MonthlyInfo>();
+            return stub.AsQueryable();
+        }
         #endregion
 
         // get clicks through 23:59:59 on the "end" date

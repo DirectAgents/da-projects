@@ -93,6 +93,24 @@ namespace ClientPortal.Web.Controllers
             return CsvFile(rows, "Affiliates" + ControllerHelpers.DateStamp() + ".csv");
         }
 
+        public FileResult CPMSummaryReport(string startdate, string enddate)
+        {
+            var userInfo = GetUserInfo();
+            DateTime? start, end;
+
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
+                return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
+
+            if (!start.HasValue)
+                start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            // Get data and map to rows
+            var records = cpRepo.GetMonthlyInfos("CPM", start, end, userInfo.AdvertiserId)
+                .OrderBy(r => r.Offer).ThenBy(r => r.Year).ThenBy(r => r.Month).Take(MaxExportedRows);
+            var rows = Mapper.Map<IEnumerable<MonthlyInfo>, IEnumerable<CPMReportExportRow>>(records);
+            return CsvFile(rows, "CPM" + ControllerHelpers.DateStamp() + ".csv");
+        }
+
         // ------- helpers ---------
 
         private FileResult CsvFile<T>(IEnumerable<T> rows, string downloadFileName)

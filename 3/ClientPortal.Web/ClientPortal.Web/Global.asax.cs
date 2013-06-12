@@ -91,6 +91,8 @@ namespace ClientPortal.Web
                 .ForMember(dest => dest.SubId, opt => opt.MapFrom(src => src.AffId))
                 .ForMember(dest => dest.Leads, opt => opt.MapFrom(src => src.Count))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PriceReceived));
+            Mapper.CreateMap<MonthlyInfo, CPMReportExportRow>()
+                .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Revenue));
 
             // add admin account if it does not exist
             if (!WebSecurity.UserExists("admin"))

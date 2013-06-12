@@ -17,11 +17,8 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class ReportsController : CPController
     {
-        private ICakeRepository cakeRepo;
-
-        public ReportsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
+        public ReportsController(IClientPortalRepository cpRepository)
         {
-            this.cakeRepo = cakeRepository;
             this.cpRepo = cpRepository;
         }
 
@@ -215,7 +212,7 @@ namespace ClientPortal.Web.Controllers
         {
             int? advertiserId = GetAdvertiserId();
 
-            var monthlyInfos = cakeRepo
+            var monthlyInfos = cpRepo
                 .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
                 .Where(i => i.CampaignStatusId == CampaignStatus.Verified); // TODO: filter by AccountingStatus (or combine into one row)
 
