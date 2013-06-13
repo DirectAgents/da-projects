@@ -291,13 +291,13 @@ namespace ClientPortal.Web.Controllers
                 {
                     switch (goal.MetricId)
                     {
-                        case Metric.Clicks:
+                        case GoalMetric.Clicks:
                             sumGoal.Clicks = (int)goal.Target;
                             break;
-                        case Metric.Leads:
+                        case GoalMetric.Leads:
                             sumGoal.Conversions = (int)goal.Target;
                             break;
-                        case Metric.Spend:
+                        case GoalMetric.Spend:
                             sumGoal.Revenue = goal.Target;
                             break;
                     }

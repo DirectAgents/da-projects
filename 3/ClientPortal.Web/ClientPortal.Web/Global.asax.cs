@@ -160,8 +160,8 @@ namespace ClientPortal.Web
             // add goals for beta users
             Goal[] goalsToAdd = new[] {
                 // sm goals
-                new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = Metric.Leads, Target = 850, TypeId = GoalType.Absolute, Name = "reach 850 leads in month" },
-                new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = Metric.Spend, Target = 12000, TypeId = GoalType.Absolute, Name = "spend 12000" },
+                new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = GoalMetric.Leads, Target = 850, TypeId = GoalType.Absolute, Name = "reach 850 leads in month" },
+                new Goal() { AdvertiserId = 207, OfferId = 1927, MetricId = GoalMetric.Spend, Target = 12000, TypeId = GoalType.Absolute, Name = "spend 12000" },
             };
             foreach (var goal in goalsToAdd)
             {
@@ -198,18 +198,18 @@ namespace ClientPortal.Web
             List<Goal> goals = new List<Goal> {
 
                 // select quote goals
-                new Goal() { AdvertiserId = 530, OfferId = 30389, MetricId = Metric.Leads, Target = 1000, TypeId = GoalType.Absolute, Name = "1000 leads" },
+                new Goal() { AdvertiserId = 530, OfferId = 30389, MetricId = GoalMetric.Leads, Target = 1000, TypeId = GoalType.Absolute, Name = "1000 leads" },
 
                 // lending tree goals
-                new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = Metric.Leads, Target = 2000, TypeId = GoalType.Absolute, Name = "new form leads" },
-                new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = Metric.Spend, Target = 100000, TypeId = GoalType.Absolute, Name = "new form spend" },
-                new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = Metric.Clicks, Target = 10.5m, TypeId = GoalType.Percent, Name = "ssn clicks pct" },
-                new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = Metric.Spend, Target = 5, TypeId = GoalType.Percent, Name = "ssn spend pct" },
+                new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = GoalMetric.Leads, Target = 2000, TypeId = GoalType.Absolute, Name = "new form leads" },
+                new Goal() { AdvertiserId = 278, OfferId = 11993, MetricId = GoalMetric.Spend, Target = 100000, TypeId = GoalType.Absolute, Name = "new form spend" },
+                new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = GoalMetric.Clicks, Target = 10.5m, TypeId = GoalType.Percent, Name = "ssn clicks pct" },
+                new Goal() { AdvertiserId = 278, OfferId = 1734, MetricId = GoalMetric.Spend, Target = 5, TypeId = GoalType.Percent, Name = "ssn spend pct" },
 
                 // edarling goals (remove these?)
-                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = Metric.Spend, Target = 50, TypeId = GoalType.Absolute, Name = "tr edarling spend abs" },
-                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = Metric.Spend, Target = 10, TypeId = GoalType.Percent, Name = "tr edarling spend pct" },
-                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = Metric.Clicks, Target = 6000, TypeId = GoalType.Absolute, Name = "tr edarling clicks" },
+                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = GoalMetric.Spend, Target = 50, TypeId = GoalType.Absolute, Name = "tr edarling spend abs" },
+                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = GoalMetric.Spend, Target = 10, TypeId = GoalType.Percent, Name = "tr edarling spend pct" },
+                new Goal() { AdvertiserId = 298, OfferId = 1618, MetricId = GoalMetric.Clicks, Target = 6000, TypeId = GoalType.Absolute, Name = "tr edarling clicks" },
 
             };
 

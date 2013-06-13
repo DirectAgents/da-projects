@@ -29,7 +29,7 @@ namespace ClientPortal.Web.Models
         public GoalType TypeId { get; set; }
 
         [Display(Name = "Metric")]
-        public Metric MetricId { get; set; }
+        public GoalMetric MetricId { get; set; }
 
         [Required]
         public decimal Target { get; set; }
@@ -83,7 +83,7 @@ namespace ClientPortal.Web.Models
             this.OfferId = goal.OfferId;
             this.Name = goal.Name;
             this.TypeId = (GoalType)goal.TypeId;
-            this.MetricId = (Metric)goal.MetricId;
+            this.MetricId = (GoalMetric)goal.MetricId;
             this.Target = goal.Target;
 
             if (goal.StartDate.HasValue)
@@ -102,7 +102,7 @@ namespace ClientPortal.Web.Models
         { // defaults
             this.Id = -1;
             this.TypeId = GoalType.Absolute;
-            this.MetricId = Metric.Leads;
+            this.MetricId = GoalMetric.Leads;
         }
 
         public void SetEntityProperties(Goal goal)
@@ -176,11 +176,11 @@ namespace ClientPortal.Web.Models
         {
             switch (MetricId)
             {
-                case Metric.Clicks:
+                case GoalMetric.Clicks:
                     return rangeSummary.Clicks.Value;
-                case Metric.Leads:
+                case GoalMetric.Leads:
                     return rangeSummary.Conversions.Value;
-                case Metric.Spend:
+                case GoalMetric.Spend:
                     return rangeSummary.Revenue.Value;
                 default:
                     return 0;
@@ -191,7 +191,7 @@ namespace ClientPortal.Web.Models
 
         private string FormatSomeTarget(decimal someTarget) // ...based on this goal's metric
         {
-            if (MetricId == Metric.Spend)
+            if (MetricId == GoalMetric.Spend)
                 return String.Format(new CultureInfo(Culture), "{0:c}", someTarget);
             else
                 return String.Format("{0:n0}", someTarget);

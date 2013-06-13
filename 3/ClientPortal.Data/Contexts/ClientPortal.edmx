@@ -625,7 +625,7 @@
           <Property Type="Int32" Name="OfferId" />
           <Property Type="String" Name="Name" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="ClientPortalModel.GoalType" Name="TypeId" Nullable="false" />
-          <Property Type="ClientPortalModel.Metric" Name="MetricId" Nullable="false" />
+          <Property Type="ClientPortalModel.GoalMetric" Name="MetricId" Nullable="false" />
           <Property Type="Decimal" Name="Target" Nullable="false" Precision="18" Scale="2" />
           <Property Type="DateTime" Name="StartDate" Precision="3" />
           <Property Type="DateTime" Name="EndDate" Precision="3" />
@@ -822,7 +822,7 @@
           <Member Name="Absolute" Value="1" />
           <Member Name="Percent" Value="2" />
         </EnumType>
-        <EnumType Name="Metric">
+        <EnumType Name="GoalMetric">
           <Member Name="Clicks" Value="1" />
           <Member Name="Leads" Value="2" />
           <Member Name="Spend" Value="3" />
@@ -1147,7 +1147,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->

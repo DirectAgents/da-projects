@@ -11,7 +11,7 @@ namespace ClientPortal.Data.Contexts
 {
     using System;
     
-    public enum Metric : int
+    public enum GoalMetric : int
     {
         Clicks = 1,
         Leads = 2,
