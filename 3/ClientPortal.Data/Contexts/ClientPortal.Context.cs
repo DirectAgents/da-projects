@@ -39,5 +39,8 @@ namespace ClientPortal.Data.Contexts
         public DbSet<EmailedReport> EmailedReports { get; set; }
         public DbSet<FileUpload> FileUploads { get; set; }
         public DbSet<ScheduledReport> ScheduledReports { get; set; }
+        public DbSet<Metric> Metrics { get; set; }
+        public DbSet<MetricCount> MetricCounts { get; set; }
+        public DbSet<MetricValue> MetricValues { get; set; }
     }
 }

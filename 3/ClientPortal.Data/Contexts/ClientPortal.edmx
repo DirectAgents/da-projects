@@ -17,6 +17,9 @@
           <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="GeneratedReport" EntityType="ClientPortalModel.Store.GeneratedReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Goal" EntityType="ClientPortalModel.Store.Goal" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Metric" EntityType="ClientPortalModel.Store.Metric" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MetricCount" EntityType="ClientPortalModel.Store.MetricCount" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MetricValue" EntityType="ClientPortalModel.Store.MetricValue" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Offer" EntityType="ClientPortalModel.Store.Offer" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ScheduledReport" EntityType="ClientPortalModel.Store.ScheduledReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ScheduledReportRecipient" EntityType="ClientPortalModel.Store.ScheduledReportRecipient" store:Type="Tables" Schema="dbo" />
@@ -47,6 +50,14 @@
           <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.Store.FK_Goal_Offer">
             <End Role="Offer" EntitySet="Offer" />
             <End Role="Goal" EntitySet="Goal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetricCount_MetricValue" Association="ClientPortalModel.Store.FK_MetricCount_MetricValue">
+            <End Role="MetricValue" EntitySet="MetricValue" />
+            <End Role="MetricCount" EntitySet="MetricCount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetricValue_Metric" Association="ClientPortalModel.Store.FK_MetricValue_Metric">
+            <End Role="Metric" EntitySet="Metric" />
+            <End Role="MetricValue" EntitySet="MetricValue" />
           </AssociationSet>
           <AssociationSet Name="FK_ScheduledReportGeneratedReport" Association="ClientPortalModel.Store.FK_ScheduledReportGeneratedReport">
             <End Role="ScheduledReport" EntitySet="ScheduledReport" />
@@ -261,6 +272,35 @@
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="Metric">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="MetricCount">
+          <Key>
+            <PropertyRef Name="offer_id" />
+            <PropertyRef Name="date" />
+            <PropertyRef Name="conversions_only" />
+            <PropertyRef Name="metricvalue_id" />
+          </Key>
+          <Property Name="offer_id" Type="int" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="conversions_only" Type="bit" Nullable="false" />
+          <Property Name="metricvalue_id" Type="int" Nullable="false" />
+          <Property Name="count" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MetricValue">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="metric_id" Type="int" Nullable="false" />
+          <Property Name="name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="code" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Offer">
           <Key>
             <PropertyRef Name="Offer_Id" />
@@ -395,6 +435,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MetricCount_MetricValue">
+          <End Role="MetricValue" Type="ClientPortalModel.Store.MetricValue" Multiplicity="1" />
+          <End Role="MetricCount" Type="ClientPortalModel.Store.MetricCount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetricValue">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MetricCount">
+              <PropertyRef Name="metricvalue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetricValue_Metric">
+          <End Role="Metric" Type="ClientPortalModel.Store.Metric" Multiplicity="1" />
+          <End Role="MetricValue" Type="ClientPortalModel.Store.MetricValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Metric">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MetricValue">
+              <PropertyRef Name="metric_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ScheduledReportGeneratedReport">
           <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReport" Multiplicity="1" />
           <End Role="GeneratedReport" Type="ClientPortalModel.Store.GeneratedReport" Multiplicity="*" />
@@ -473,6 +537,17 @@
           <AssociationSet Name="FK_ScheduledReportScheduledReportRecipient" Association="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient">
             <End Role="ScheduledReport" EntitySet="ScheduledReports" />
             <End Role="ScheduledReportRecipient" EntitySet="ScheduledReportRecipients" />
+          </AssociationSet>
+          <EntitySet Name="Metrics" EntityType="ClientPortalModel.Metric" />
+          <EntitySet Name="MetricCounts" EntityType="ClientPortalModel.MetricCount" />
+          <EntitySet Name="MetricValues" EntityType="ClientPortalModel.MetricValue" />
+          <AssociationSet Name="FK_MetricValue_Metric" Association="ClientPortalModel.FK_MetricValue_Metric">
+            <End Role="Metric" EntitySet="Metrics" />
+            <End Role="MetricValue" EntitySet="MetricValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MetricCount_MetricValue" Association="ClientPortalModel.FK_MetricCount_MetricValue">
+            <End Role="MetricValue" EntitySet="MetricValues" />
+            <End Role="MetricCount" EntitySet="MetricCounts" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -879,6 +954,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Metric">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MetricValues" Relationship="ClientPortalModel.FK_MetricValue_Metric" FromRole="Metric" ToRole="MetricValue" />
+        </EntityType>
+        <EntityType Name="MetricCount">
+          <Key>
+            <PropertyRef Name="offer_id" />
+            <PropertyRef Name="date" />
+            <PropertyRef Name="conversions_only" />
+            <PropertyRef Name="metricvalue_id" />
+          </Key>
+          <Property Type="Int32" Name="offer_id" Nullable="false" />
+          <Property Type="DateTime" Name="date" Nullable="false" Precision="3" />
+          <Property Type="Boolean" Name="conversions_only" Nullable="false" />
+          <Property Type="Int32" Name="metricvalue_id" Nullable="false" />
+          <Property Type="Int32" Name="count" Nullable="false" DefaultValue="0" />
+          <NavigationProperty Name="MetricValue" Relationship="ClientPortalModel.FK_MetricCount_MetricValue" FromRole="MetricCount" ToRole="MetricValue" />
+        </EntityType>
+        <EntityType Name="MetricValue">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="metric_id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Metric" Relationship="ClientPortalModel.FK_MetricValue_Metric" FromRole="MetricValue" ToRole="Metric" />
+          <NavigationProperty Name="MetricCounts" Relationship="ClientPortalModel.FK_MetricCount_MetricValue" FromRole="MetricValue" ToRole="MetricCount" />
+          <Property Type="String" Name="code" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_MetricValue_Metric">
+          <End Type="ClientPortalModel.Metric" Role="Metric" Multiplicity="1" />
+          <End Type="ClientPortalModel.MetricValue" Role="MetricValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Metric">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MetricValue">
+              <PropertyRef Name="metric_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MetricCount_MetricValue">
+          <End Type="ClientPortalModel.MetricValue" Role="MetricValue" Multiplicity="1" />
+          <End Type="ClientPortalModel.MetricCount" Role="MetricCount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MetricValue">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MetricCount">
+              <PropertyRef Name="metricvalue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1144,6 +1276,35 @@
                 <ScalarProperty Name="ReportType" ColumnName="ReportType" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Metrics">
+            <EntityTypeMapping TypeName="ClientPortalModel.Metric">
+              <MappingFragment StoreEntitySet="Metric">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetricCounts">
+            <EntityTypeMapping TypeName="ClientPortalModel.MetricCount">
+              <MappingFragment StoreEntitySet="MetricCount">
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="metricvalue_id" ColumnName="metricvalue_id" />
+                <ScalarProperty Name="conversions_only" ColumnName="conversions_only" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="offer_id" ColumnName="offer_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetricValues">
+            <EntityTypeMapping TypeName="ClientPortalModel.MetricValue">
+              <MappingFragment StoreEntitySet="MetricValue">
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="metric_id" ColumnName="metric_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

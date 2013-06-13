@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using ClientPortal.Web.Models.Cake;
+using ClientPortal.Data.Contexts;
+using EntityFramework.Extensions;
 
 namespace CakeExtracter
 {
@@ -157,12 +159,16 @@ namespace CakeExtracter
 
         static class Syncher
         {
+            private static string MetricName_Device = "Device";
+
             public static void Run(string[] args)
             {
                 var advertiserId = int.Parse(args[0]);
                 var fromDate = DateTime.Parse(args[1]);
                 var toDate = DateTime.Parse(args[2]);
                 var operation = args[3];
+
+                Init();
 
                 if (useParallel)
                 {
@@ -176,6 +182,20 @@ namespace CakeExtracter
                     for (int i = 0; i < (toDate - fromDate).Days; i++)
                     {
                         DoSynch(advertiserId, fromDate, operation, i);
+                    }
+                }
+            }
+
+            private static void Init()
+            {
+                using (var db = new ClientPortalContext())
+                {
+                    // Ensure the "Device" metric exists
+                    if (!db.Metrics.Any(m => m.name == MetricName_Device))
+                    {
+                        var metric = new Metric() { name = MetricName_Device };
+                        db.Metrics.Add(metric);
+                        db.SaveChanges();
                     }
                 }
             }
@@ -340,12 +360,23 @@ namespace CakeExtracter
 
             private static void DeleteClicks(int advertiserId, DateTime date)
             {
+                var datePlusOne = date.AddDays(1);
                 using (var db = new UsersContext())
                 {
                     string deleteSql = "delete from Click where advertiser_advertiser_id = {0} and click_date between {1} and {2}";
-                    int rowCount = db.Database.ExecuteSqlCommand(deleteSql, advertiserId, date, date.AddDays(1));
+                    int rowCount = db.Database.ExecuteSqlCommand(deleteSql, advertiserId, date, datePlusOne);
 
                     Console.WriteLine("deleted {0} clicks", rowCount);
+                }
+                using (var db = new ClientPortalContext())
+                {
+                    var offerIds = db.Offers.Where(o => o.Advertiser_Id == advertiserId).Select(o => o.Offer_Id).ToList();
+                    var metricCounts = db.MetricCounts.Where(mc => offerIds.Contains(mc.offer_id) &&
+                                                                   mc.conversions_only == false &&
+                                                                   mc.date >= date &&
+                                                                   mc.date < datePlusOne);
+                    metricCounts.Delete();
+                    db.SaveChanges();
                 }
             }
 
@@ -407,6 +438,56 @@ namespace CakeExtracter
                     {
                         set.ForEach(c => db.Clicks.Add(c));
                         db.SaveChanges();
+                    }
+                }
+
+                // Save metrics (e.g. device stats)
+                if (result.clicks.Length > 0)
+                {
+                    using (var db = new ClientPortalContext())
+                    {
+                        var deviceMetric = db.Metrics.Where(m => m.name == MetricName_Device).First();
+
+                        var click0 = result.clicks[0];
+                        var offerId = click0.offer.offer_id;
+                        var date = new DateTime(click0.click_date.Year, click0.click_date.Month, click0.click_date.Day);
+
+                        var deviceGroups = result.clicks.GroupBy(c => c.device.device_name);
+
+                        // Ensure that all MetricValues exists
+                        foreach (var dg in deviceGroups)
+                        {
+                            if (!deviceMetric.MetricValues.Any(mv => mv.name == dg.Key))
+                            {
+                                Console.WriteLine("adding new MetricValue: {0}", dg.Key);
+
+                                var metricValue = new MetricValue() { name = dg.Key,
+                                                                      code = dg.First().device.device_id.ToString() };
+                                deviceMetric.MetricValues.Add(metricValue);
+                            }
+                        }
+                        db.SaveChanges();
+
+                        Console.WriteLine("adding MetricCounts..");
+
+                        // Add MetricCounts
+                        foreach (var dg in deviceGroups)
+                        {
+                            var metricValue = db.MetricValues.First(mv => mv.name == dg.Key);
+                            var offerGroups = dg.GroupBy(d => d.offer.offer_id);
+                            foreach (var og in offerGroups)
+                            {
+                                var metricCount = new MetricCount()
+                                {
+                                    offer_id = og.Key,
+                                    date = date,
+                                    conversions_only = false,
+                                    count = og.Count()
+                                };
+                                metricValue.MetricCounts.Add(metricCount);
+                            }
+                            db.SaveChanges();
+                        }
                     }
                 }
             }
