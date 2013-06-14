@@ -11,6 +11,7 @@ using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using CsvHelper;
 using DirectAgents.Mvc.KendoGridBinder;
+using StackExchange.Profiling;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -320,39 +321,43 @@ namespace ClientPortal.Web.Controllers
 
         public JsonResult MobileDevicesData(string startdate, string enddate, int take)
         {
-            var userInfo = GetUserInfo();
-            DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
-                return Json(new { });
-
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-
-            var clicksByDevice = this.cpRepo.GetClicksByDeviceName(
-                                                    start: start,
-                                                    end: end ?? start,
-                                                    advertiserId: GetAdvertiserId(),
-                                                    offerId: null);
-
-            var data = clicksByDevice.Where(c => c.DeviceName != "Other");
-
-            decimal totalClicks = data.Sum(c => c.ClickCount);
-
-            var chartData = data.Take(take).Select(c => new
+            var profiler = MiniProfiler.Current;
+            using (profiler.Step("MobileDevicesData"))
             {
-                category = TruncateDeviceNameForChartLegendLabel(c.DeviceName),
-                value = c.ClickCount / totalClicks
-            });
+                var userInfo = GetUserInfo();
+                DateTime? start, end;
+                if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
+                    return Json(new { });
 
-            var json = new JsonResult
-            {
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                Data = new
+                if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+                var clicksByDevice = this.cpRepo.GetClicksByDeviceName(
+                                                        start: start,
+                                                        end: end ?? start,
+                                                        advertiserId: GetAdvertiserId(),
+                                                        offerId: null);
+
+                var data = clicksByDevice.Where(c => c.DeviceName != "Other");
+
+                decimal totalClicks = data.Sum(c => c.ClickCount);
+
+                var chartData = data.Take(take).Select(c => new
                 {
-                    data = data,
-                    chart = chartData
-                }
-            };
-            return json;
+                    category = TruncateDeviceNameForChartLegendLabel(c.DeviceName),
+                    value = c.ClickCount / totalClicks
+                });
+
+                var json = new JsonResult
+                {
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                    Data = new
+                    {
+                        data = data,
+                        chart = chartData
+                    }
+                };
+                return json;
+            }
         }
 
         private string TruncateDeviceNameForChartLegendLabel(string deviceName)
