@@ -24,6 +24,7 @@ namespace ClientPortal.Data.Contexts
     
         public int Id { get; set; }
         public int AdvertiserId { get; set; }
+        public ReportType ReportType { get; set; }
         public int Months { get; set; }
         public int Days { get; set; }
         public bool IsCumulative { get; set; }

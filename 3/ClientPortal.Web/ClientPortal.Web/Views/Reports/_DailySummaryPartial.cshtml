@@ -189,7 +189,8 @@
             spark = (total > 62);
         }
 
-        chart.options.categoryAxis.labels.step = step;
+        if (step > 0)
+            chart.options.categoryAxis.labels.step = step;
 
         chart.options.categoryAxis.majorGridLines.visible = !spark;
         for (var i = 0; i < chart.options.series.length; i++) {

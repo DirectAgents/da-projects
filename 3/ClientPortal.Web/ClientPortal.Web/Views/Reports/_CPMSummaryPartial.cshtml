@@ -12,10 +12,21 @@
     <span class="paddedlabel">End:</span>
     <input id="cpmsum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('cpmsum')" />
     <a class="button paddedbutton" id="cpmsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('cpmsum'); return false">Filter</a>
+    <a class="button paddedbutton" style="float: right" href="#" onclick="ExportCPMSumCSV(); return false">Export CSV</a>
 </div>
 <div id="cpmsumGrid"></div>
 
 <script>
+    function ExportCPMSumCSV() {
+        var s = $('#cpmsum_startdate').val();
+        var e = $('#cpmsum_enddate').val();
+
+        var url = '@Url.Action("CPMSummaryReport", "Export")?startdate=' + s + '&enddate=' + e;
+        window.location.href = url;
+    }
+
+    var cpmSummaryDataUrl = '@Url.Action("CPMSummaryData", "Reports")';
+
     function CreateCPMSummaryDataSource() {
         return new kendo.data.DataSource({
             serverFiltering: true,
@@ -23,7 +34,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("CPMSummaryData", "Reports")',
+                    url: cpmSummaryDataUrl,
                     data: function () {
                         return {
                             startdate: $('#cpmsum_startdate').val(),

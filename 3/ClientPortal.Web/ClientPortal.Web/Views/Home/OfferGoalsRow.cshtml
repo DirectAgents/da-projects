@@ -28,7 +28,7 @@
         {
             var goal = Model.Goals[i];
             var dataGoal = goal.TargetBasedOn(Model.SummaryLM);
-            var valueFormat = (goal.MetricId == ClientPortal.Data.Contexts.Metric.Spend ? "C" : "N0");
+            var valueFormat = (goal.MetricId == ClientPortal.Data.Contexts.GoalMetric.Spend ? "C" : "N0");
             var goalString = goal.TargetFormattedBasedOn(Model.SummaryLM);
             //var heading = Model.Offer.OfferName.Replace("'", "");
             var subheading = goal.TimeframeFormatted(false, true);

@@ -83,53 +83,59 @@ namespace ClientPortal.Web.Models
         {
             this.Id = rep.Id;
 
-//            this.ReportType = rep.ReportType;
-            this.ReportType = ReportType.OfferSummary; // temp!
+            this.ReportType = rep.ReportType;
 
             this.Months = rep.Months;
             this.Days = rep.Days;
             this.IsCumulative = rep.IsCumulative;
 
-            this.Recipients = new string[] { };
-//            this.Recipients = rep.ScheduledReportRecipients.Select(r => r.EmailAddress).ToArray();
+            this.Recipients = rep.ScheduledReportRecipients.Select(r => r.EmailAddress).ToArray();
         }
 
-        public void SetEntityProperties(ScheduledReport rep)
+        public void SetEntityProperties(ScheduledReport reportEntity, out List<ScheduledReportRecipient> recipientsToDelete)
         {
-//            rep.ReportType = this.ReportType;
-            rep.Months = this.Months;
-            rep.Days = this.Days;
-            rep.IsCumulative = this.IsCumulative;
+            reportEntity.ReportType = this.ReportType;
+            reportEntity.Months = this.Months;
+            reportEntity.Days = this.Days;
+            reportEntity.IsCumulative = this.IsCumulative;
 
-            //TODO: redo. need to delete the removed recipients from the context
-            //if (Recipients.Length == 0)
-            //{
-            //    if (rep.ScheduledReportRecipients.Any())
-            //        rep.ScheduledReportRecipients.Clear();
-            //}
-            //else
-            //{
-            //    bool anyDiffs = false;
-            //    if (Recipients.Length != rep.ScheduledReportRecipients.Count)
-            //        anyDiffs = true;
-            //    else
-            //    {
-            //        for (var i = 0; i < Recipients.Length; i++)
-            //        {
-            //            if (Recipients[i] != rep.ScheduledReportRecipients.ElementAt(i).EmailAddress)
-            //                anyDiffs = true;
-            //        }
-            //    }
-            //    if (anyDiffs)
-            //    {
-            //        rep.ScheduledReportRecipients.Clear();
-            //        foreach (var recipient in Recipients)
-            //        {
-            //            var scheduledReportRecipient = new ScheduledReportRecipient() { EmailAddress = recipient };
-            //            rep.ScheduledReportRecipients.Add(scheduledReportRecipient);
-            //        }
-            //    }
-            //}
+            recipientsToDelete = new List<ScheduledReportRecipient>();
+
+            // Loop through "new" recipients. See what's changed
+            int i;
+            for (i = 0; i < Recipients.Length; i++)
+            {
+                if (i >= reportEntity.ScheduledReportRecipients.Count)
+                {
+                    var scheduledReportRecipient = new ScheduledReportRecipient() { EmailAddress = Recipients[i] };
+                    reportEntity.ScheduledReportRecipients.Add(scheduledReportRecipient);
+                }
+                else
+                {
+                    if (Recipients[i] != reportEntity.ScheduledReportRecipients.ElementAt(i).EmailAddress)
+                    { // remove all from here on, in the existing entity
+                        for (int j = reportEntity.ScheduledReportRecipients.Count - 1; j >= i; j--)
+                        {
+                            var recipient = reportEntity.ScheduledReportRecipients.ElementAt(j);
+                            recipientsToDelete.Add(recipient);
+                            reportEntity.ScheduledReportRecipients.Remove(recipient);
+                        }
+                        var scheduledReportRecipient = new ScheduledReportRecipient() { EmailAddress = Recipients[i] };
+                        reportEntity.ScheduledReportRecipients.Add(scheduledReportRecipient);
+                    }
+                }
+            }
+            // See if existing recipients need to be removed
+            if (i < reportEntity.ScheduledReportRecipients.Count)
+            {
+                // TODO: consolidate duplicate code
+                for (int j = reportEntity.ScheduledReportRecipients.Count - 1; j >= i; j--)
+                {
+                    var recipient = reportEntity.ScheduledReportRecipients.ElementAt(j);
+                    recipientsToDelete.Add(recipient);
+                    reportEntity.ScheduledReportRecipients.Remove(recipient);
+                }
+            }
         }
 
         public static string SplitCamelCase(string input)

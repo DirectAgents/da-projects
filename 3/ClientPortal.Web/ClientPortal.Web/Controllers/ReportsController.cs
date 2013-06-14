@@ -11,17 +11,15 @@ using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
 using CsvHelper;
 using DirectAgents.Mvc.KendoGridBinder;
+using StackExchange.Profiling;
 
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
     public class ReportsController : CPController
     {
-        private ICakeRepository cakeRepo;
-
-        public ReportsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
+        public ReportsController(IClientPortalRepository cpRepository)
         {
-            this.cakeRepo = cakeRepository;
             this.cpRepo = cpRepository;
         }
 
@@ -51,7 +49,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var offerInfos = cakeRepo.GetOfferInfos(start, end, userInfo.AdvertiserId);
+            var offerInfos = cpRepo.GetOfferInfos(start, end, userInfo.AdvertiserId);
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             if (offerInfos.Any())
             {
@@ -89,12 +87,12 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var dailyInfos = cakeRepo.GetDailyInfos(start, end, userInfo.AdvertiserId);
+            var dailyInfos = cpRepo.GetDailyInfos(start, end, userInfo.AdvertiserId);
 
             if (cumulative)
-                dailyInfos = cakeRepo.MakeCumulative(dailyInfos);
+                dailyInfos = DailyInfo.MakeCumulative(dailyInfos);
             if (projection)
-                dailyInfos = cakeRepo.AddProjection(dailyInfos);
+                dailyInfos = DailyInfo.AddProjection(dailyInfos);
 
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
 
@@ -132,31 +130,6 @@ namespace ClientPortal.Web.Controllers
                         EPC = new { agg = totalEPC }
                     };
                 }
-            }
-            var json = Json(kgrid);
-            return json;
-        }
-
-        [HttpPost]
-        public JsonResult MonthlySummaryData(KendoGridRequest request, string startdate, string enddate)
-        {
-            var userInfo = GetUserInfo();
-            DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
-                return Json(new { });
-
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, 1, 1);
-
-            var monthlyInfos = cakeRepo.GetMonthlyInfosFromDaily(start, end, userInfo.AdvertiserId.Value, null);
-            var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
-
-            if (monthlyInfos.Any())
-            {
-                decimal totalRevenue = monthlyInfos.Sum(i => i.Revenue);
-                kgrid.aggregates = new
-                {
-                    Revenue = new { sum = totalRevenue }
-                };
             }
             var json = Json(kgrid);
             return json;
@@ -214,7 +187,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var conversionSummaries = cakeRepo.GetConversionSummaries(start, end, userInfo.AdvertiserId, offerid);
+            var conversionSummaries = cpRepo.GetConversionSummaries(start, end, userInfo.AdvertiserId, offerid);
 
             var kgrid = new KendoGrid<ConversionSummary>(request, conversionSummaries);
             // todo: aggregates?
@@ -240,7 +213,7 @@ namespace ClientPortal.Web.Controllers
         {
             int? advertiserId = GetAdvertiserId();
 
-            var monthlyInfos = cakeRepo
+            var monthlyInfos = cpRepo
                 .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
                 .Where(i => i.CampaignStatusId == CampaignStatus.Verified); // TODO: filter by AccountingStatus (or combine into one row)
 
@@ -279,7 +252,7 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-            var affiliateSummaries = cakeRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
+            var affiliateSummaries = cpRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
 
             var kgrid = new KendoGrid<AffiliateSummary>(request, affiliateSummaries);
             if (affiliateSummaries.Any())
@@ -303,38 +276,37 @@ namespace ClientPortal.Web.Controllers
         {
             var fromDate = new DateTime(2013, 5, 1);
             var toDate = new DateTime(2013, 5, 30);
-            int advertiserId = GetAdvertiserId() ?? 0;
-            var json = new JsonResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            using (var db = new UsersContext())
+            var advertiserId = GetAdvertiserId();
+
+            var clicks = cpRepo.GetClicks(fromDate, toDate, advertiserId, null);
+            var conversions = cpRepo.GetConversions(fromDate, toDate, advertiserId, null);
+
+            var query = from click in clicks
+                        from conv in conversions
+                        where click.click_id == conv.click_id
+                        select new
+                        {
+                            Region = click.region_code,
+                            Conversions = 1
+                        };
+            var results = new List<object[]>();
+            var group = query.GroupBy(c => c.Region);
+            foreach (var grouping in group)
             {
-                var clicks = db.Clicks.Where(c => c.advertiser.advertiser_id == advertiserId);
-                var conversions = db.Conversions.Where(
-                                        c => c.advertiser.advertiser_id == advertiserId &&
-                                             c.conversion_date >= fromDate &&
-                                             c.conversion_date < toDate);
-                var query = from a in clicks
-                            from b in conversions
-                            where a.click_id == b.click_id
-                            select new
-                            {
-                                Region = a.region.region_code,
-                                Conversions = 1
-                            };
-                var results = new List<object[]>();
-                var group = query.GroupBy(c => c.Region);
-                foreach (var grouping in group)
-                {
-                    results.Add(new object[]
+                results.Add(new object[]
                     { 
                         "US-" + grouping.Key.ToUpper(), 
                         grouping.Sum(c => c.Conversions) 
                     });
-                }
-                results.Sort(new Comparer());
-                results.Insert(0, new[] { "State", "Conversions" });
-                json.Data = results;
-                return json;
             }
+            results.Sort(new Comparer());
+            results.Insert(0, new[] { "State", "Conversions" });
+
+            var json = new JsonResult {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = results
+            };
+            return json;
         }
 
         private class Comparer : IComparer<object[]>
@@ -347,34 +319,45 @@ namespace ClientPortal.Web.Controllers
             }
         }
 
-        public JsonResult MobileDevicesData(DateTime? startDate, DateTime? endDate, int take)
+        public JsonResult MobileDevicesData(string startdate, string enddate, int take)
         {
-            var clicksByDevice = this.cpRepo.GetClicksByDeviceName(
-                                                    start: startDate,
-                                                    end: endDate ?? startDate,
-                                                    advertiserId: GetAdvertiserId(),
-                                                    offerId: null);
-
-            var data = clicksByDevice.Where(c => c.DeviceName != "Other");
-
-            decimal totalClicks = data.Sum(c => c.ClickCount);
-
-            var chartData = data.Take(take).Select(c => new
+            var profiler = MiniProfiler.Current;
+            using (profiler.Step("MobileDevicesData"))
             {
-                category = TruncateDeviceNameForChartLegendLabel(c.DeviceName),
-                value = c.ClickCount / totalClicks
-            });
+                var userInfo = GetUserInfo();
+                DateTime? start, end;
+                if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
+                    return Json(new { });
 
-            var json = new JsonResult
-            {
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                Data = new
+                if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+                var clicksByDevice = this.cpRepo.GetClicksByDeviceName(
+                                                        start: start,
+                                                        end: end ?? start,
+                                                        advertiserId: GetAdvertiserId(),
+                                                        offerId: null);
+
+                var data = clicksByDevice.Where(c => c.DeviceName != "Other");
+
+                decimal totalClicks = data.Sum(c => c.ClickCount);
+
+                var chartData = data.Take(take).Select(c => new
                 {
-                    data = data,
-                    chart = chartData
-                }
-            };
-            return json;
+                    category = TruncateDeviceNameForChartLegendLabel(c.DeviceName),
+                    value = c.ClickCount / totalClicks
+                });
+
+                var json = new JsonResult
+                {
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                    Data = new
+                    {
+                        data = data,
+                        chart = chartData
+                    }
+                };
+                return json;
+            }
         }
 
         private string TruncateDeviceNameForChartLegendLabel(string deviceName)

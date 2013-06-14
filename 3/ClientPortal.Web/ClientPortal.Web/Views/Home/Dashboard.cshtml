@@ -193,6 +193,9 @@
             UpdateSpendLineChart();
         });
 
+        drawHeatMap();
+        FillClicksByDevice();
+
         CreateGoalCharts(); @* //defined in DashboardGoals *@
         ResizeDashboardPanelHeights();
     });
@@ -208,6 +211,7 @@
         $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
         $('#spendLineChart').data('kendoChart').dataSource.read();
         $('#projChart').data('kendoChart').dataSource.read();
+        UpdateClicksByDevice();
     }
 
     function DashboardDateChanged() {

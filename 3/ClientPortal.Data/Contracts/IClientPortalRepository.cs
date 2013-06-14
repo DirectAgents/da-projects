@@ -16,9 +16,15 @@ namespace ClientPortal.Data.Contracts
         IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency);
         DateRangeSummary GetDateRangeSummary(DateTime? start, DateTime? end, int? advertiserId, int? offerId, bool includeConversionData);
 
+        IQueryable<MonthlyInfo> GetMonthlyInfosFromDaily(DateTime? start, DateTime? end, int advertiserId, int? offerId);
+        IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+        IQueryable<ConversionSummary> GetConversionSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+        IQueryable<AffiliateSummary> GetAffiliateSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+        IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId);
 
         IQueryable<Click> GetClicks(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+        IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<Conversion> GetConversions(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
 
         IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
@@ -35,6 +41,7 @@ namespace ClientPortal.Data.Contracts
         void AddScheduledReport(ScheduledReport scheduledReport);
         //void SaveScheduledReport(ScheduledReport scheduledReport);
         bool DeleteScheduledReport(int id, int? advertiserId);
+        void DeleteScheduledReportRecipient(ScheduledReportRecipient recipient);
 
         IQueryable<FileUpload> GetFileUploads(int? advertiserId);
         FileUpload GetFileUpload(int id);

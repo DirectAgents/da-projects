@@ -10,11 +10,18 @@
 namespace ClientPortal.Data.Contexts
 {
     using System;
+    using System.Collections.Generic;
     
-    public enum Metric : int
+    public partial class Metric
     {
-        Clicks = 1,
-        Leads = 2,
-        Spend = 3
+        public Metric()
+        {
+            this.MetricValues = new HashSet<MetricValue>();
+        }
+    
+        public int id { get; set; }
+        public string name { get; set; }
+    
+        public virtual ICollection<MetricValue> MetricValues { get; set; }
     }
 }

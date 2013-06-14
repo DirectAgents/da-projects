@@ -52,4 +52,14 @@ namespace ClientPortal.Web.Models
         public decimal Price { get; set; }
         public string Culture { get; set; }
     }
+
+    public class CPMReportExportRow
+    {
+        public int OfferId { get; set; }
+        public string Offer { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public decimal Spend { get; set; }
+        public int AccountingStatusId { get; set; }
+    }
 }

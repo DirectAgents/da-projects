@@ -15,11 +15,8 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class FilesController : CPController
     {
-        private ICakeRepository cakeRepo;
-
-        public FilesController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
+        public FilesController(IClientPortalRepository cpRepository)
         {
-            this.cakeRepo = cakeRepository;
             this.cpRepo = cpRepository;
         }
 
@@ -106,11 +103,11 @@ namespace ClientPortal.Web.Controllers
             var csv = new CsvReader(reader);
             var csvRows = csv.GetRecords<ScooterRow>().ToList();
 
-            var conversions = cakeRepo.Conversions.Where(c => c.Advertiser_Id == advId
-                && c.ConversionDate >= start && c.ConversionDate < endBefore).ToList();
+            var conversions = cpRepo.GetConversions(start, endBefore, advId, null).ToList();
+
             var qry = from conv in conversions
                       from csvRow in csvRows
-                      where conv.Transaction_Id == csvRow.TransactionId
+                      where conv.transaction_id == csvRow.TransactionId
                       select new { Conversion = conv, FTNSO1 = csvRow.FTNSO1 };
             //foreach (var item in qry)
             //{

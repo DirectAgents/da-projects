@@ -10,11 +10,8 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class GoalsController : CPController
     {
-        private ICakeRepository cakeRepo;
-
-        public GoalsController(ICakeRepository cakeRepository, IClientPortalRepository cpRepository)
+        public GoalsController(IClientPortalRepository cpRepository)
         {
-            this.cakeRepo = cakeRepository;
             this.cpRepo = cpRepository;
         }
 
@@ -57,9 +54,9 @@ namespace ClientPortal.Web.Controllers
         {
             var advId = GetAdvertiserId();
 
-            List<CakeOffer> offers = new List<CakeOffer>();
+            List<Offer> offers = new List<Offer>();
             if (advId.HasValue)
-                offers = cakeRepo.Offers(advId).ToList();
+                offers = cpRepo.Offers(advId).ToList();
 
             ViewBag.Offers = offers;
 

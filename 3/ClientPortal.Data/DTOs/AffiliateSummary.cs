@@ -11,6 +11,10 @@ namespace ClientPortal.Data.DTOs
         public string Offer { get; set; }
 
         public decimal PriceReceived { get; set; }
+        public int CurrencyId
+        {
+            set { Culture = OfferInfo.CurrencyIdToCulture(value); }
+        }
         public string Currency
         {
             set { Culture = OfferInfo.CurrencyToCulture(value); }

@@ -1,6 +1,6 @@
 ﻿@model ClientPortal.Web.Models.GoalVM
 @{
-    List<ClientPortal.Data.Contexts.CakeOffer> offers = ViewBag.Offers;
+    List<ClientPortal.Data.Contexts.Offer> offers = ViewBag.Offers;
     bool isNewGoal = Model.Id < 0;
 }
 
@@ -36,7 +36,7 @@
                 @Html.LabelFor(model => model.MetricId)
             </div>
             <div class="editor-field">
-                @Html.DropDownListFor(model => model.MetricId, new SelectList(Enum.GetValues(typeof(ClientPortal.Data.Contexts.Metric))), new { style = "width:auto" })
+                @Html.DropDownListFor(model => model.MetricId, new SelectList(Enum.GetValues(typeof(ClientPortal.Data.Contexts.GoalMetric))), new { style = "width:auto" })
                 @Html.ValidationMessageFor(model => model.MetricId)
             </div>
 

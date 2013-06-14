@@ -92,7 +92,6 @@
             dataSource: dataSource,
             series: [
                 { field: "Count", name: "Conversions" },
-                { field: "PositiveCount", name: "Sales" }
             ],
             valueAxis: {
                 labels: { step: 2 }
@@ -127,10 +126,7 @@
                     fields: {
                         OfferName: { type: 'string' },
                         Count: { type: 'number' },
-                        PositiveCount: { type: 'number' },
-                        Revenue: { type: 'number' },
-                        TransactionId: { type: 'string' },
-                        Positive: { type: 'boolean' }
+                        Revenue: { type: 'number' }
                     }
                 },
                 parse: parseConvSum
@@ -145,7 +141,7 @@
         var item, result = { data: [] };
         for (var i = 0; i < items.data.length; i++) {
             item = items.data[i];
-            if (item.Count !== 0 || item.PositiveCount !== 0)
+            if (item.Count !== 0)
                 result.data.push(item);
         }
         return result;

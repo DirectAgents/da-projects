@@ -55,7 +55,6 @@ namespace ClientPortal.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<ICakeRepository>().To<CakeRepository>();
             kernel.Bind<IClientPortalRepository>().To<ClientPortalRepository>();
         }        
     }

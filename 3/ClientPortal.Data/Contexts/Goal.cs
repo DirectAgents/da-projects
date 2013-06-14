@@ -19,7 +19,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> OfferId { get; set; }
         public string Name { get; set; }
         public GoalType TypeId { get; set; }
-        public Metric MetricId { get; set; }
+        public GoalMetric MetricId { get; set; }
         public decimal Target { get; set; }
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
