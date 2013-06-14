@@ -206,12 +206,21 @@ namespace CakeExtracter
 
                 bool doClicks = operation == "clicks" || operation == "both";
                 bool doConversions = operation == "conversions" || operation == "both";
+                bool doMetrics = operation == "metrics";
 
-                if (doClicks)
+                if (doClicks || doMetrics)
                 {
                     var clicks = ExtractClicks(advertiserId, date);
-                    DeleteClicks(advertiserId, date);
-                    LoadClicks(clicks);
+                    if (doClicks)
+                    {
+                        DeleteClicks(advertiserId, date);
+                        LoadClicks(clicks);
+                    }
+                    if (doMetrics)
+                    {
+                        DeleteMetricCounts(advertiserId, date);
+                        LoadMetricCounts(clicks);
+                    }
                 }
 
                 if (doConversions)
@@ -368,6 +377,11 @@ namespace CakeExtracter
 
                     Console.WriteLine("deleted {0} clicks", rowCount);
                 }
+            }
+
+            private static void DeleteMetricCounts(int advertiserId, DateTime date)
+            {
+                var datePlusOne = date.AddDays(1);
                 using (var db = new ClientPortalContext())
                 {
                     var offerIds = db.Offers.Where(o => o.Advertiser_Id == advertiserId).Select(o => o.Offer_Id).ToList();
@@ -375,8 +389,10 @@ namespace CakeExtracter
                                                                    mc.conversions_only == false &&
                                                                    mc.date >= date &&
                                                                    mc.date < datePlusOne);
-                    metricCounts.Delete();
+                    int numDeleted = metricCounts.Delete();
                     db.SaveChanges();
+
+                    Console.WriteLine("deleted {0} MetricCounts", numDeleted);
                 }
             }
 
@@ -440,7 +456,10 @@ namespace CakeExtracter
                         db.SaveChanges();
                     }
                 }
+            }
 
+            private static void LoadMetricCounts(click_report_response result)
+            {
                 // Save metrics (e.g. device stats)
                 if (result.clicks.Length > 0)
                 {

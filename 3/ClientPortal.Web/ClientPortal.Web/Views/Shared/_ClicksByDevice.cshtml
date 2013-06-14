@@ -10,12 +10,28 @@
 <div id="divClicksByDevice"></div>
 
 <script type='text/javascript'>
+    function UpdateClicksByDevice() {
+
+        var url = '@Url.Action("MobileDevicesData", "Reports")';
+        var data = { startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val(), take: 5 };
+
+        $.get(url, data, function (result) {
+            var grid = $('#divClicksByDevice').data().kendoGrid;
+            grid.dataSource.data(result.data);
+            grid.refresh();
+
+            var chart = $('#divClicksByDeviceChart').data('kendoChart');
+            chart.options.series[0].data = result.chart;
+            chart.redraw();
+        });
+    }
+
     function fillClicksByDevice() {
 
         // Common width of both the grid and the pie chart
         var widgetHeight = 198;
 
-        var url = '@Url.Action("MobileDevicesData", "Reports")' + '?startDate=' + @Model.Start.Value.ToShortDateString() + '&endDate=' + @Model.End.Value.ToShortDateString() + '&take=5';
+        var url = '@Url.Action("MobileDevicesData", "Reports")?startdate=@Html.FormatDate(Model.Start, Model.CultureInfo)&enddate=@Html.FormatDate(Model.End, Model.CultureInfo)&take=5';
         $.get(url, function (result) {
 
             // Grid of click counts by device name

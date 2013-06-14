@@ -318,11 +318,18 @@ namespace ClientPortal.Web.Controllers
             }
         }
 
-        public JsonResult MobileDevicesData(DateTime? startDate, DateTime? endDate, int take)
+        public JsonResult MobileDevicesData(string startdate, string enddate, int take)
         {
+            var userInfo = GetUserInfo();
+            DateTime? start, end;
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
+                return Json(new { });
+
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
             var clicksByDevice = this.cpRepo.GetClicksByDeviceName(
-                                                    start: startDate,
-                                                    end: endDate ?? startDate,
+                                                    start: start,
+                                                    end: end ?? start,
                                                     advertiserId: GetAdvertiserId(),
                                                     offerId: null);
 

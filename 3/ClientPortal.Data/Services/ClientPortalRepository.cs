@@ -306,22 +306,32 @@ namespace ClientPortal.Data.Services
 
         public IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
-            var query = (
-                from click in GetClicks(start, end, advertiserId, offerId)
-                group click by click.device_name into g
-                orderby g.Count() descending
-                select new
+            var offers = Offers(advertiserId);
+            if (offerId.HasValue)
+                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+
+            var offerIds = offers.Select(o => o.Offer_Id).ToList();
+
+            var metricCounts = context.MetricCounts.Where(mc => offerIds.Contains(mc.offer_id));
+            if (start.HasValue)
+                metricCounts = metricCounts.Where(mc => mc.date >= start.Value);
+            if (end.HasValue)
+                metricCounts = metricCounts.Where(mc => mc.date <= end.Value);
+
+            var result = metricCounts.GroupBy(mc => mc.MetricValue)
+                .Select(g => new
                 {
-                    Device = g.Key,
+                    Device = g.Key.name,
                     Count = g.Count()
                 })
-                // we return IEnumerable (as opposed to IQueryable) bec. AsEnumerable() is called
-                .AsEnumerable().Select(c => new DeviceClicks 
+                .OrderByDescending(c => c.Count)
+                .AsEnumerable().Select(c => new DeviceClicks
                 {
                     DeviceName = string.IsNullOrWhiteSpace(c.Device) ? "Other" : c.Device,
                     ClickCount = c.Count
-                });
-            return query;
+                })
+                .AsEnumerable();
+            return result;
         }
 
         #region Advertisers & Contacts
