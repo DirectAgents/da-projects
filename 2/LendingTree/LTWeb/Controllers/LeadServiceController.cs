@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Http;
+using System.Xml.Linq;
 using AutoMapper;
 using LTWeb.Service.Tracking;
 using LTWeb.ws;
@@ -21,22 +22,28 @@ namespace LTWeb.Controllers
         {
             try
             {
-                FixupLead(data);
+                FixupSsn(data);
 
                 var appId = SendToTree(data);
 
-                TrackInCake(appId);
+                TrackInCake(data, appId);
 
-                var responseMessage = Request.CreateResponse(HttpStatusCode.OK, appId);
+                var responseData = new XDocument(
+                    new XElement("Response",
+                                 new XElement("Message", "Success"),
+                                 new XElement("LendingTreeGuid", appId)));
 
-                return responseMessage;
+                return new HttpResponseMessage
+                    {
+                        Content = new StringContent(responseData.ToString(), Encoding.UTF8, "application/xml")
+                    };
             }
             catch (Exception e)
             {
                 var message = new StringBuilder();
                 while (e != null)
                 {
-                    message.AppendFormat("[{0} {1}]", e.Message, e.StackTrace);             
+                    message.AppendFormat("[{0} {1}]", e.Message, e.StackTrace);
                     e = e.InnerException;
                 }
                 var response = Request.CreateResponse(HttpStatusCode.BadRequest, message.ToString());
@@ -44,7 +51,7 @@ namespace LTWeb.Controllers
             }
         }
 
-        private static void FixupLead(LeadPostWithCallerInfo data)
+        private static void FixupSsn(LeadPostWithCallerInfo data)
         {
             if (string.IsNullOrWhiteSpace(data.SSN))
                 return;
@@ -70,24 +77,48 @@ namespace LTWeb.Controllers
             return appId;
         }
 
-        private static void TrackInCake(string appId)
+        private static void TrackInCake(LeadPostWithCallerInfo data, string appId)
         {
+            InsertConversionParameters insertConversionParameters;
+            switch (data.Password)
+            {
+                case "h5b5creP":
+                    insertConversionParameters = new InsertConversionParameters
+                    {
+                        AffiliateId = 40500,
+                        BillingOption = BillingOption.ignore_billing,
+                        CampaignId = 13834,
+                        ConversionDate = DateTime.Now.AddHours(3),
+                        // adjust from west coast to east coast time
+                        CreativeId = 3456,
+                        Note = appId,
+                        Payout = 0m,
+                        Received = 0m,
+                        SubAffiliate = "40500-1",
+                        TotalToInsert = 1
+                    };
+                    break;
+                case "u2s9ruvQ":
+                    insertConversionParameters = new InsertConversionParameters
+                    {
+                        AffiliateId = 11863,
+                        BillingOption = BillingOption.ignore_billing,
+                        CampaignId = 15333,
+                        ConversionDate = DateTime.Now.AddHours(3),
+                        // adjust from west coast to east coast time
+                        CreativeId = 4631,
+                        Note = appId,
+                        Payout = 0m,
+                        Received = 0m,
+                        SubAffiliate = "11863-1",
+                        TotalToInsert = 1
+                    };
+                    break;
+                default:
+                    throw new Exception("Invalid Password");
+            }
             var service = new TrackingService("https://login.directagents.com/api/", "FCjdYAcwQE");
-            service.Execute("1/track.asmx/MassConversionInsert",
-                            new InsertConversionParameters
-                                {
-                                    AffiliateId = 40500,
-                                    BillingOption = BillingOption.ignore_billing,
-                                    CampaignId = 13834,
-                                    ConversionDate = DateTime.Now.AddHours(3),
-                                    // adjust from west coast to east coast time
-                                    CreativeId = 3456,
-                                    Note = appId,
-                                    Payout = 0m,
-                                    Received = 0m,
-                                    SubAffiliate = "40500-1",
-                                    TotalToInsert = 1
-                                });
+            var result = service.Execute("1/track.asmx/MassConversionInsert", insertConversionParameters);
         }
     }
 }
