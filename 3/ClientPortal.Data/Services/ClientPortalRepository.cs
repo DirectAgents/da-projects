@@ -322,7 +322,7 @@ namespace ClientPortal.Data.Services
                 .Select(g => new
                 {
                     Device = g.Key.name,
-                    Count = g.Count()
+                    Count = g.Sum(mc => mc.count)
                 })
                 .OrderByDescending(c => c.Count)
                 .AsEnumerable().Select(c => new DeviceClicks
