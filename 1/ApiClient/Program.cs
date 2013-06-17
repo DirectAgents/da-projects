@@ -41,9 +41,16 @@ namespace ApiClient
         {
             string command = args[0];
 
+            int numberDays = 20;
+
+            if (args.Length > 1)
+            {
+                numberDays = int.Parse(args[1]);
+            }
+
             if (command == "DailySummaries")
             {
-                var source = new DailySummariesFromWebService();
+                var source = new DailySummariesFromWebService(numberDays);
                 var dest = new DailySummariesToDatabase();
                 var extract = source.Extract();
                 var load = dest.Load(source);

@@ -352,15 +352,6 @@ namespace CakeExtracter
                     int rowCount = db.Database.ExecuteSqlCommand(deleteSql, advertiserId, date, date.AddDays(1));
                     Console.WriteLine("deleted {0} conversions", rowCount);
                 }
-
-                #region TEMP - will move away from Cake database
-                using (var db = new ClientPortal.Data.Contexts.CakeContext())
-                {
-                    string deleteSql = "delete from staging.CakeConversions where Advertiser_Id = {0} and ConversionDate between {1} and {2}";
-                    int rowCount = db.Database.ExecuteSqlCommand(deleteSql, advertiserId, date, date.AddDays(1));
-                    Console.WriteLine("[TEMP Cake] deleted {0} conversions", rowCount);
-                } 
-                #endregion
             }
 
             private static conversion_report_response ExtractConversions(int advertiserId, DateTime startDate)
@@ -425,51 +416,6 @@ namespace CakeExtracter
                         db.SaveChanges();
                     }
                 }
-
-                #region TEMP - will remove Cake database
-                count = 0;
-
-                using (var db = new ClientPortal.Data.Contexts.CakeContext())
-                {
-                    foreach (var set in conversionsResponse.conversions.InSetsOf(2000))
-                    {
-                        count += set.Count;
-
-                        Console.WriteLine("[TEMP Cake] saving {0}/{1} conversions..", count, total);
-
-                        foreach (var item in set)
-                        {
-                            var conversion = new ClientPortal.Data.Contexts.CakeConversion
-                            {
-                                Conversion_Id = int.Parse(item.conversion_id),
-                                ConversionDate = item.conversion_date,
-                                Affiliate_Id = item.affiliate.affiliate_id,
-                                Offer_Id = item.offer.offer_id,
-                                Advertiser_Id = item.advertiser.advertiser_id,
-                                Campaign_Id = item.campaign_id,
-                                Creative_Id = item.creative.creative_id,
-                                CreativeName = item.creative.creative_name,
-                                Subid1 = item.sub_id_1,
-                                ConversionType = item.conversion_type,
-                                PricePaid = item.paid.amount,
-                                PriceReceived = item.received.amount,
-                                IpAddress = item.conversion_ip_address,
-                                PricePaidCurrencyId = item.paid.currency_id,
-                                PricePaidFormattedAmount = item.paid.formatted_amount,
-                                PriceReceivedCurrencyId = item.received.currency_id,
-                                PriceReceivedFormattedAmount = item.received.formatted_amount,
-                                Deleted = false,
-                                Positive = true,
-                                Transaction_Id = item.transaction_id,
-                            };
-
-                            db.CakeConversions.Add(conversion);
-                        }
-
-                        db.SaveChanges();
-                    }
-                } 
-                #endregion
             }
 
             //
