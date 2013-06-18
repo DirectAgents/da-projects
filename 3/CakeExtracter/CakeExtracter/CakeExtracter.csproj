@@ -108,8 +108,16 @@
     <Compile Include="CakeModels.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="MetricNames.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProgramArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scheduler.cs" />
+    <Compile Include="SyncherRun.cs" />
+    <Compile Include="Syncher.cs" />
+    <Compile Include="UsersContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
