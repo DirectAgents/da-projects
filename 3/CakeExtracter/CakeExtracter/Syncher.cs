@@ -54,16 +54,16 @@ namespace CakeExtracter
             // bring all clicks for a single day into memory
             click_report_response clicks = ExtractClicks(advertiserId, date);
 
-            // DeleteClicks(advertiserId, date);
-            // LoadClicks(clicks);
-
             LoadDeviceCounts(clicks);
 
             conversion_report_response conversions = ExtractConversions(advertiserId, date);
             DeleteConversions(advertiserId, date);
             LoadConversions(conversions);
 
-            LoadRegionCounts(clicks, conversions);
+            var dw = new DataWarehouse();
+            dw.Update(clicks.clicks, conversions.conversions);
+
+            //LoadRegionCounts(clicks, conversions);
         }
 
         //
@@ -108,7 +108,7 @@ namespace CakeExtracter
                                                     from ck in clickReport.clicks
                                                                           .Where(c => c.click_id == cv.click_id)
                                                                           .DefaultIfEmpty()
-                                                    select new {Conversion = cv, Click = ck};
+                                                    select new { Conversion = cv, Click = ck };
 
                     var conversionsAndClicks = conversionsAndClicksQuery
                         .ToArray();
@@ -205,9 +205,13 @@ namespace CakeExtracter
             }
         }
 
-        private static IEnumerable<click_report_response> ClicksByConversion(IEnumerable<conversion> conversions)
+        public static IEnumerable<click_report_response> ClicksByConversion(IEnumerable<conversion> conversions)
         {
-            var results =
+            var conversionItems = new List<conversion>(conversions.ToList());
+
+            var results = new List<click_report_response>();
+
+            results.AddRange(
                 conversions
                     .GroupBy(c => new
                         {
@@ -232,7 +236,8 @@ namespace CakeExtracter
                             var clickDate = g.Key.Date;
                             var endDate = clickDate.AddDays(1);
 
-                            Console.WriteLine("Extracting clicks: affiliate_id={0},offer_id={1},campaign_id={2},creative_id={3},click_date={4},advertiser_id={5}",
+                            Console.WriteLine(
+                                "Extracting clicks: affiliate_id={0},offer_id={1},campaign_id={2},creative_id={3},click_date={4},advertiser_id={5}",
                                 affiliateId, offerId, campaignId, creativeId, clickDate, advertiserId);
 
                             var result = reports.Clicks(
@@ -240,7 +245,8 @@ namespace CakeExtracter
                                 offerId, campaignId, creativeId, includeTests, startAtRow, rowLimit);
 
                             return result;
-                        });
+                        }));
+
             return results;
         }
 
@@ -364,17 +370,6 @@ namespace CakeExtracter
         //
         // Clicks
         //
-
-        //private void DeleteClicks(int advertiserId, DateTime date)
-        //{
-        //    var datePlusOne = date.AddDays(1);
-        //    using (var db = new UsersContext())
-        //    {
-        //        string deleteSql = "delete from Click where advertiser_advertiser_id = {0} and click_date between {1} and {2}";
-        //        int rowCount = db.Database.ExecuteSqlCommand(deleteSql, advertiserId, date, datePlusOne);
-        //        Console.WriteLine("deleted {0} clicks", rowCount);
-        //    }
-        //}
 
         private static click_report_response ExtractClicks(int advertiserId, DateTime startDate)
         {

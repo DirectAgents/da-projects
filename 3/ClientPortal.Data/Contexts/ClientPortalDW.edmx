@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ClientPortalDWModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="ClientPortalDWModelStoreContainer">
+          <EntitySet Name="DimCountry" EntityType="ClientPortalDWModel.Store.DimCountry" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DimRegion" EntityType="ClientPortalDWModel.Store.DimRegion" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="FactClick" EntityType="ClientPortalDWModel.Store.FactClick" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="FactConversion" EntityType="ClientPortalDWModel.Store.FactConversion" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_FactClick_DimCountry" Association="ClientPortalDWModel.Store.FK_FactClick_DimCountry">
+            <End Role="DimCountry" EntitySet="DimCountry" />
+            <End Role="FactClick" EntitySet="FactClick" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FactClick_DimRegion" Association="ClientPortalDWModel.Store.FK_FactClick_DimRegion">
+            <End Role="DimRegion" EntitySet="DimRegion" />
+            <End Role="FactClick" EntitySet="FactClick" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FactConversion_FactClick" Association="ClientPortalDWModel.Store.FK_FactConversion_FactClick">
+            <End Role="FactClick" EntitySet="FactClick" />
+            <End Role="FactConversion" EntitySet="FactConversion" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="DimCountry">
+          <Key>
+            <PropertyRef Name="CountryKey" />
+          </Key>
+          <Property Name="CountryKey" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CountryCode" Type="nvarchar" Nullable="false" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="DimRegion">
+          <Key>
+            <PropertyRef Name="RegionKey" />
+          </Key>
+          <Property Name="RegionKey" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RegionCode" Type="nvarchar" Nullable="false" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="FactClick">
+          <Key>
+            <PropertyRef Name="ClickKey" />
+          </Key>
+          <Property Name="ClickKey" Type="int" Nullable="false" />
+          <Property Name="RegionKey" Type="int" Nullable="false" />
+          <Property Name="CountryKey" Type="int" Nullable="false" />
+          <Property Name="ConversionKey" Type="int" />
+        </EntityType>
+        <EntityType Name="FactConversion">
+          <Key>
+            <PropertyRef Name="ConversionKey" />
+          </Key>
+          <Property Name="ConversionKey" Type="int" Nullable="false" />
+          <Property Name="ClickKey" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_FactClick_DimCountry">
+          <End Role="DimCountry" Type="ClientPortalDWModel.Store.DimCountry" Multiplicity="1" />
+          <End Role="FactClick" Type="ClientPortalDWModel.Store.FactClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimCountry">
+              <PropertyRef Name="CountryKey" />
+            </Principal>
+            <Dependent Role="FactClick">
+              <PropertyRef Name="CountryKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FactClick_DimRegion">
+          <End Role="DimRegion" Type="ClientPortalDWModel.Store.DimRegion" Multiplicity="1" />
+          <End Role="FactClick" Type="ClientPortalDWModel.Store.FactClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimRegion">
+              <PropertyRef Name="RegionKey" />
+            </Principal>
+            <Dependent Role="FactClick">
+              <PropertyRef Name="RegionKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FactConversion_FactClick">
+          <End Role="FactClick" Type="ClientPortalDWModel.Store.FactClick" Multiplicity="1" />
+          <End Role="FactConversion" Type="ClientPortalDWModel.Store.FactConversion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FactClick">
+              <PropertyRef Name="ClickKey" />
+            </Principal>
+            <Dependent Role="FactConversion">
+              <PropertyRef Name="ClickKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ClientPortalDWModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ClientPortalDWContext" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="DimCountries" EntityType="ClientPortalDWModel.DimCountry" />
+          <EntitySet Name="DimRegions" EntityType="ClientPortalDWModel.DimRegion" />
+          <EntitySet Name="FactClicks" EntityType="ClientPortalDWModel.FactClick" />
+          <AssociationSet Name="FK_FactClick_DimCountry" Association="ClientPortalDWModel.FK_FactClick_DimCountry">
+            <End Role="DimCountry" EntitySet="DimCountries" />
+            <End Role="FactClick" EntitySet="FactClicks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FactClick_DimRegion" Association="ClientPortalDWModel.FK_FactClick_DimRegion">
+            <End Role="DimRegion" EntitySet="DimRegions" />
+            <End Role="FactClick" EntitySet="FactClicks" />
+          </AssociationSet>
+          <EntitySet Name="FactConversions" EntityType="ClientPortalDWModel.FactConversion" />
+          <AssociationSet Name="FK_FactConversion_FactClick" Association="ClientPortalDWModel.FK_FactConversion_FactClick">
+            <End Role="FactClick" EntitySet="FactClicks" />
+            <End Role="FactConversion" EntitySet="FactConversions" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="DimCountry">
+          <Key>
+            <PropertyRef Name="CountryKey" />
+          </Key>
+          <Property Name="CountryKey" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="CountryCode" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="FactClicks" Relationship="ClientPortalDWModel.FK_FactClick_DimCountry" FromRole="DimCountry" ToRole="FactClick" />
+        </EntityType>
+        <EntityType Name="DimRegion">
+          <Key>
+            <PropertyRef Name="RegionKey" />
+          </Key>
+          <Property Name="RegionKey" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="RegionCode" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="FactClicks" Relationship="ClientPortalDWModel.FK_FactClick_DimRegion" FromRole="DimRegion" ToRole="FactClick" />
+        </EntityType>
+        <EntityType Name="FactClick">
+          <Key>
+            <PropertyRef Name="ClickKey" />
+          </Key>
+          <Property Type="Int32" Name="ClickKey" Nullable="false" />
+          <Property Type="Int32" Name="RegionKey" Nullable="false" />
+          <Property Type="Int32" Name="CountryKey" Nullable="false" />
+          <NavigationProperty Name="DimCountry" Relationship="ClientPortalDWModel.FK_FactClick_DimCountry" FromRole="FactClick" ToRole="DimCountry" />
+          <NavigationProperty Name="DimRegion" Relationship="ClientPortalDWModel.FK_FactClick_DimRegion" FromRole="FactClick" ToRole="DimRegion" />
+          <Property Type="Int32" Name="ConversionKey" />
+          <NavigationProperty Name="FactConversions" Relationship="ClientPortalDWModel.FK_FactConversion_FactClick" FromRole="FactClick" ToRole="FactConversion" />
+          </EntityType>
+        <Association Name="FK_FactClick_DimCountry">
+          <End Type="ClientPortalDWModel.DimCountry" Role="DimCountry" Multiplicity="1" />
+          <End Type="ClientPortalDWModel.FactClick" Role="FactClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimCountry">
+              <PropertyRef Name="CountryKey" />
+            </Principal>
+            <Dependent Role="FactClick">
+              <PropertyRef Name="CountryKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FactClick_DimRegion">
+          <End Type="ClientPortalDWModel.DimRegion" Role="DimRegion" Multiplicity="1" />
+          <End Type="ClientPortalDWModel.FactClick" Role="FactClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimRegion">
+              <PropertyRef Name="RegionKey" />
+            </Principal>
+            <Dependent Role="FactClick">
+              <PropertyRef Name="RegionKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="FactConversion">
+          <Key>
+            <PropertyRef Name="ConversionKey" />
+          </Key>
+          <Property Type="Int32" Name="ConversionKey" Nullable="false" />
+          <Property Type="Int32" Name="ClickKey" Nullable="false" />
+          <NavigationProperty Name="FactClick" Relationship="ClientPortalDWModel.FK_FactConversion_FactClick" FromRole="FactConversion" ToRole="FactClick" />
+        </EntityType>
+        <Association Name="FK_FactConversion_FactClick">
+          <End Type="ClientPortalDWModel.FactClick" Role="FactClick" Multiplicity="1" />
+          <End Type="ClientPortalDWModel.FactConversion" Role="FactConversion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FactClick">
+              <PropertyRef Name="ClickKey" />
+            </Principal>
+            <Dependent Role="FactConversion">
+              <PropertyRef Name="ClickKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ClientPortalDWModelStoreContainer" CdmEntityContainer="ClientPortalDWContext">
+          <EntitySetMapping Name="DimCountries">
+            <EntityTypeMapping TypeName="ClientPortalDWModel.DimCountry">
+              <MappingFragment StoreEntitySet="DimCountry">
+                <ScalarProperty Name="CountryKey" ColumnName="CountryKey" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DimRegions">
+            <EntityTypeMapping TypeName="ClientPortalDWModel.DimRegion">
+              <MappingFragment StoreEntitySet="DimRegion">
+                <ScalarProperty Name="RegionKey" ColumnName="RegionKey" />
+                <ScalarProperty Name="RegionCode" ColumnName="RegionCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FactClicks">
+            <EntityTypeMapping TypeName="ClientPortalDWModel.FactClick">
+              <MappingFragment StoreEntitySet="FactClick">
+                <ScalarProperty Name="ConversionKey" ColumnName="ConversionKey" />
+                <ScalarProperty Name="CountryKey" ColumnName="CountryKey" />
+                <ScalarProperty Name="RegionKey" ColumnName="RegionKey" />
+                <ScalarProperty Name="ClickKey" ColumnName="ClickKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FactConversions">
+            <EntityTypeMapping TypeName="ClientPortalDWModel.FactConversion">
+              <MappingFragment StoreEntitySet="FactConversion">
+                <ScalarProperty Name="ClickKey" ColumnName="ClickKey" />
+                <ScalarProperty Name="ConversionKey" ColumnName="ConversionKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

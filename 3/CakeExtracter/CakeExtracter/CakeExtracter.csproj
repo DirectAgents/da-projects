@@ -108,6 +108,7 @@
     <Compile Include="CakeModels.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DataWarehouse.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="MetricNames.cs" />

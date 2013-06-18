@@ -104,6 +104,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClientPortal.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\ClientPortalDW.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientPortalDW.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\ClientPortalDW.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\ClientPortalDW.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClientPortalDW.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\Contact.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
@@ -116,11 +131,23 @@
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\DimCountry.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\DimRegion.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\EmailedReport.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\EmailStatus.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\FactClick.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\FactConversion.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\FileUpload.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
@@ -213,6 +240,23 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ClientPortal.edmx</DependentUpon>
       <LastGenOutput>ClientPortal.cs</LastGenOutput>
+    </None>
+    <EntityDeploy Include="Contexts\ClientPortalDW.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ClientPortalDW.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Contexts\ClientPortalDW.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClientPortalDW.edmx</DependentUpon>
+      <LastGenOutput>ClientPortalDW.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Contexts\ClientPortalDW.edmx.diagram">
+      <DependentUpon>ClientPortalDW.edmx</DependentUpon>
+    </None>
+    <None Include="Contexts\ClientPortalDW.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClientPortalDW.edmx</DependentUpon>
+      <LastGenOutput>ClientPortalDW.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

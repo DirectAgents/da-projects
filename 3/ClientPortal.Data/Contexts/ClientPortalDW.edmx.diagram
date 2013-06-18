@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c1e63698f29246b38bd9c854b8d7ac3a" Name="Diagram1">
+        <EntityTypeShape EntityType="ClientPortalDWModel.DimCountry" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.DimRegion" Width="1.5" PointX="3.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.FactClick" Width="1.5" PointX="3.25" PointY="0.5" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimCountry" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimRegion" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.FactConversion" Width="1.5" PointX="6.125" PointY="0.5" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactConversion_FactClick" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
