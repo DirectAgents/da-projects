@@ -1,0 +1,85 @@
+﻿<div class="row">
+    <div class="twelve columns">
+        <div class="searchpanel" id="weeksumOuter">
+            <b>Weekly Summary</b>
+            <div id="weeksumGrid"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="twelve columns">
+        <div class="searchpanel" id="monthsumOuter">
+            <b>Monthly Summary</b>
+            <div id="monthsumGrid"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="six columns">
+        <div id="weekrevChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="weekrevChart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="six columns">
+        <div id="weekorderChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="weekorderChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="six columns">
+        <div id="monthrevChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="monthrevChart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="six columns">
+        <div id="monthorderChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="monthorderChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="twelve columns">
+        <div class="searchpanel" id="channelperfOuter">
+            <b>Channel Performance</b>
+            <div id="channelperfGrid"></div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("SummaryGrid")
+
+<script>
+    $(function () {
+        var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData")');
+        CreateSummaryGrid(weeksumDS, 'weeksumGrid', 'Week', 0);
+
+        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData")');
+        CreateSummaryGrid(monthsumDS, 'monthsumGrid', 'Month', 0);
+
+        CreateRevROASChart(weeksumDS, 'weekrevChart', 'Weekly Revenue vs. ROAS Performance');
+        CreateOrderCPOChart(weeksumDS, 'weekorderChart', 'Weekly Orders vs. CPO Performance');
+
+        CreateRevROASChart(monthsumDS, 'monthrevChart', 'Monthly Revenue vs. ROAS Performance');
+        CreateOrderCPOChart(monthsumDS, 'monthorderChart', 'Monthly Orders vs. CPO Performance');
+
+        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData")');
+        CreateSummaryGrid(channelperfDS, 'channelperfGrid', 'title', 2);
+
+        weeksumDS.read();
+        monthsumDS.read();
+        channelperfDS.read();
+    });
+</script>
