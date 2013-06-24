@@ -212,10 +212,12 @@
     <Compile Include="DTOs\MonthlyInfo.cs" />
     <Compile Include="DTOs\DailyInfo.cs" />
     <Compile Include="DTOs\OfferInfo.cs" />
+    <Compile Include="DTOs\SearchStat.cs" />
     <Compile Include="Entities\Advertiser.cs" />
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
+    <Compile Include="Services\SearchRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

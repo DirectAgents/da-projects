@@ -75,13 +75,14 @@ namespace ClientPortal.Web.Controllers
             return result;
         }
 
-        public ActionResult Contact()
+        public ActionResult Contact(bool showtitle = true)
         {
             var advertiser = GetAdvertiser();
             IEnumerable<Contact> contacts = new List<Contact>();
             if (advertiser != null)
                 contacts = advertiser.AdvertiserContacts.OrderBy(ac => ac.Order).Select(ac => ac.Contact);
 
+            ViewBag.ShowTitle = showtitle;
             return PartialView(contacts);
         }
 

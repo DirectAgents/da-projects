@@ -1,0 +1,134 @@
+﻿<style>
+    .searchdiv {
+        padding: 10px;
+    }
+    .searchpanel {
+        padding: 10px;
+    }
+</style>
+
+@*<!--+---------+
+      | Top Bar |
+      +---------+-->*@
+<div class="row" style="height: 100px">
+    <div class="five columns toplogo">
+        <img src="~/Images/logo1a.png" />
+    </div>
+    <div class="two columns topinfo">
+        @*Html.Partial("_HelloPartial")*@
+    </div>
+    <div class="five columns logout">
+        <div style="float: right">
+            @*Html.Partial("_LoginPartial")*@
+        </div>
+    </div>
+</div>
+<!-- /TopBar -->
+
+@*<!--+--------------------------------------+
+      | Gray Band/HTabs Background/Container | 
+      +--------------------------------------+-->*@
+<div class="row">
+    <div class="twelve columns grayband">
+        @*<!--+---------------+
+              | Top Tabs      |
+              +---------------+-->*@
+        <dl class="tabs">
+            <dd class="active"><a href="#navDashboard" id="topnav_Dashboard">Dashboard</a></dd>
+            <dd><a href="#navContact" id="nav_Contact">Contact</a></dd>
+        </dl>
+        <!-- /Tabs -->
+    </div>
+</div>
+<!-- /GrayBandForHTabs -->
+
+@*<!--+--------------+
+      | Main Content |
+      +--------------+-->*@
+<div class="row" id="main">
+
+    @*<!--+---------------+
+          | Tabs Content  |
+          +---------------+-->*@
+    <ul class="tabs-content">
+
+        <li id="navDashboardTab" class="active">
+            <div id="divDashboard" class="searchdiv">
+            </div>
+        </li>
+
+        <li id="navContactTab">
+            <div id="divContact" class="searchdiv">
+            </div>
+        </li>
+
+    </ul>
+    <!-- /Tabs -->
+
+</div>
+<!-- /MainContent -->
+
+@*<!--+---------------------+
+      | Footer / Bottom Bar |
+      +---------------------+-->*@
+<footer class="row">
+    <div class="twelve columns">
+        <div class="row">
+            <div class="six columns">
+                <p>&copy; 2013 Direct Agents</p>
+            </div>
+            <div class="six columns">
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- /BottomBar  -->
+
+@section head {
+    <link href="~/Content/kendo/2013.1.514/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2013.1.514/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/index.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/Scripts/kendo/2013.1.514/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.de-DE.min.js"></script>
+    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-GB.min.js"></script>
+    <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-AU.min.js"></script>
+    <script>
+        // ready function
+        $(function () {
+            LoadDashboard();
+            SetupTabs();
+        });
+
+        function LoadDashboard() {
+            $.ajax({
+                url: '@Url.Action("Dashboard")',
+                cache: false
+            }).done(function (html) {
+                $("#divDashboard").html(html);
+            });
+        }
+
+        function SetupTabs() {
+
+            // Dashboard
+            //$("#topnav_Dashboard").click(function () {
+            //    LoadDashboard();
+            //});
+
+            // Contacts
+            $("#nav_Contact").one("click", function () {
+                $("#divContact").html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("Contact", "Home", new { showtitle = false })',
+                    cache: false
+                }).done(function (html) {
+                    $("#divContact").html(html);
+                });
+            });
+
+        }
+    </script>
+}

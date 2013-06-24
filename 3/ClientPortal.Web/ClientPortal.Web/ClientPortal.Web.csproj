@@ -213,6 +213,7 @@
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\ScheduledReportsController.cs" />
+    <Compile Include="Controllers\SearchHomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1523,6 +1524,9 @@
     <Content Include="Views\ScheduledReports\List.cshtml" />
     <Content Include="Views\ScheduledReports\_Infrastructure.cshtml" />
     <Content Include="Views\ScheduledReports\Edit.cshtml" />
+    <Content Include="Views\SearchHome\Index.cshtml" />
+    <Content Include="Views\SearchHome\Dashboard.cshtml" />
+    <Content Include="Views\SearchHome\SummaryGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
