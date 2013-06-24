@@ -29,5 +29,9 @@ namespace ClientPortal.Data.Contexts
         public DbSet<DimRegion> DimRegions { get; set; }
         public DbSet<FactClick> FactClicks { get; set; }
         public DbSet<FactConversion> FactConversions { get; set; }
+        public DbSet<DimDate> DimDates { get; set; }
+        public DbSet<DimAdvertiser> DimAdvertisers { get; set; }
+        public DbSet<DimAffiliate> DimAffiliates { get; set; }
+        public DbSet<DimOffer> DimOffers { get; set; }
     }
 }

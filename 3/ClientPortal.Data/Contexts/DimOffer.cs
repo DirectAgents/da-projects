@@ -12,13 +12,16 @@ namespace ClientPortal.Data.Contexts
     using System;
     using System.Collections.Generic;
     
-    public partial class FactConversion
+    public partial class DimOffer
     {
-        public int ConversionKey { get; set; }
-        public int ClickKey { get; set; }
-        public System.DateTime DateKey { get; set; }
+        public DimOffer()
+        {
+            this.FactClicks = new HashSet<FactClick>();
+        }
     
-        public virtual FactClick FactClick { get; set; }
-        public virtual DimDate DimDate { get; set; }
+        public int OfferKey { get; set; }
+        public string OfferName { get; set; }
+    
+        public virtual ICollection<FactClick> FactClicks { get; set; }
     }
 }

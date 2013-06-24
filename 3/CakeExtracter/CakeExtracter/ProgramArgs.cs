@@ -11,12 +11,18 @@
 
         public bool IsScheduler
         {
-            get { return ((_args.Length == 1) && (_args[0] == "scheduler")); }
+            get
+            {
+                return ((_args.Length == 1) && (_args[0] == "scheduler"));
+            }
         }
 
         public bool ValidForSyncher
         {
-            get { return (_args.Length == 3); }
+            get
+            {
+                return _args.Length == 4;
+            }
         }
     }
 }

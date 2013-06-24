@@ -131,7 +131,19 @@
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\DimAdvertiser.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\DimAffiliate.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DimCountry.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\DimDate.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\DimOffer.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\DimRegion.cs">

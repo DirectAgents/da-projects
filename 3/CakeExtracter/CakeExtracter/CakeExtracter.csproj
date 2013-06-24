@@ -105,12 +105,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CakeMarketingCache.cs" />
+    <Compile Include="CakeMarketing.cs" />
     <Compile Include="CakeModels.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DataWarehouse.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="ICakeMarketing.cs" />
+    <Compile Include="ICakeMarketingCache.cs" />
     <Compile Include="MetricNames.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramArgs.cs" />
@@ -119,6 +123,7 @@
     <Compile Include="SyncherRun.cs" />
     <Compile Include="Syncher.cs" />
     <Compile Include="UsersContext.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

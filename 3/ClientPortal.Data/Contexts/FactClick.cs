@@ -22,10 +22,17 @@ namespace ClientPortal.Data.Contexts
         public int ClickKey { get; set; }
         public int RegionKey { get; set; }
         public int CountryKey { get; set; }
-        public Nullable<int> ConversionKey { get; set; }
+        public System.DateTime DateKey { get; set; }
+        public int AdvertiserKey { get; set; }
+        public int OfferKey { get; set; }
+        public int AffiliateKey { get; set; }
     
         public virtual DimCountry DimCountry { get; set; }
         public virtual DimRegion DimRegion { get; set; }
         public virtual ICollection<FactConversion> FactConversions { get; set; }
+        public virtual DimDate DimDate { get; set; }
+        public virtual DimAdvertiser DimAdvertiser { get; set; }
+        public virtual DimAffiliate DimAffiliate { get; set; }
+        public virtual DimOffer DimOffer { get; set; }
     }
 }

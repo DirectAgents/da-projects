@@ -8,118 +8,91 @@ namespace CakeExtracter
 {
     class DataWarehouse
     {
-        public void Update(click[] clicks, conversion[] conversions)
+        public void UpdateClicks(List<click> clicks)
         {
-            Update(clicks);
+            Console.WriteLine("Processing {0} clicks..", clicks.Count);
 
-            var conversionsToProcess = Process(conversions);
+            ProcessAdvertisers(clicks.Select(c => c.advertiser));
+            ProcessOffers(clicks.Select(c => c.offer));
+            ProcessAffiliates(clicks.Select(c => c.affiliate));
+            ProcessRegions(clicks.Select(c => c.region));
+            ProcessCountries(clicks.Select(c => c.country));
+            ProcessClicks(clicks);
+        }
 
-            if (conversionsToProcess.Count > 0)
+        public void UpdateConversions(List<conversion> conversions)
+        {
+            var remaining = ProcessConversions(conversions);
+            int remainingCount = remaining.Count;
+            var cake = new CakeMarketing(new CakeMarketingCache {Enabled = false});
+
+            if (remaining.Count > 0)
             {
-                Console.WriteLine("{0} conversions to process..", conversionsToProcess.Count);
+                var dateGroups = remaining.GroupBy(c => (c.click_date ?? DateTime.MinValue).Date).ToArray();
+                int dateGroupsCount = dateGroups.Count();
 
-                var conversionsToProcessByDate = conversionsToProcess.GroupBy(c => c.click_date.Value.Date)
-                    .ToArray();
+                Console.WriteLine("extracting clicks for {0} dates in order to process remaining {1} conversions..", dateGroupsCount, remainingCount);
 
-                Console.WriteLine("need to extract clicks from {0} dates..", conversionsToProcessByDate.Count());
-
-                foreach (var conversionsToProcessSet in conversionsToProcessByDate.OrderBy(c => c.Key))
+                foreach (var dateGroup in dateGroups.OrderBy(c => c.Key))
                 {
-                    Console.WriteLine("extracting clicks for {0} in order to process {1} conversions", conversionsToProcessSet.Key, conversionsToProcessSet.Count());
+                    Console.WriteLine("extracting clicks for {0} in order to process {1} conversions", dateGroup.Key, dateGroup.Count());
 
-                    var clicksToProcess = Syncher.ClicksByConversion(conversionsToProcessSet).SelectMany(c => c.clicks);
-                    Update(clicksToProcess);
+                    var clicksToProcess = cake.ClicksByConversion(dateGroup).SelectMany(c => c.clicks);
 
-                    var stillToProcess = Process(conversionsToProcessSet);
+                    UpdateClicks(clicksToProcess.ToList());
 
+                    var stillToProcess = ProcessConversions(dateGroup);
                     if (stillToProcess.Count > 0)
-                    {
-                        throw new Exception(string.Format("Failed to process {0} convresions", conversionsToProcess.Count));
-                    }
+                        throw new Exception(string.Format("Failed to process {0} convresions", remainingCount));
                 }
             }
         }
 
-        public void Update(IEnumerable<click> allClicks)
+        #region Process Methods
+        private void ProcessAdvertisers(IEnumerable<advertiser> advertisers)
         {
-            var clicks = allClicks.ToArray();
-
-            Console.WriteLine("Update {0} clicks..", clicks.Length);
-
-            Process(clicks.Select(c => c.region));
-            Process(clicks.Select(c => c.country));
-            Process(clicks);
+            var dimAdvertisers = AdvertisersToDimAdvertisers(advertisers);
+            LoadDimension(dimAdvertisers, c => c.AdvertiserKey);
         }
 
-        private List<conversion> Process(IEnumerable<conversion> conversions)
+        private void ProcessOffers(IEnumerable<offer> offers)
         {
-            var factConversions = new List<FactConversion>();
-            var notProcessed = new List<conversion>();
-            using (var db = new ClientPortalDWContext())
-            {
-                foreach (var conversion in conversions)
-                {
-                    int conversionKey = int.Parse(conversion.conversion_id);
-                    if (db.FactConversions.FirstOrDefault(c => c.ConversionKey == conversionKey) == null)
-                    {
-
-                        int? clickKey = conversion.click_id;
-                        if (clickKey != null)
-                        {
-                            if (db.FactClicks.FirstOrDefault(c => c.ClickKey == conversion.click_id) != null)
-                            {
-                                factConversions.Add(new FactConversion
-                                    {
-                                        ConversionKey = conversionKey,
-                                        ClickKey = clickKey.Value
-                                    });
-                            }
-                            else
-                            {
-                                notProcessed.Add(conversion);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Conversion id {0} has null click id.", conversionKey);
-                        }
-                    }
-                }
-            }
-            Load(factConversions);
-            return notProcessed;
+            var dimOffers = OffersToDimOffers(offers);
+            LoadDimension(dimOffers, c => c.OfferKey);
         }
 
-        private void Process(IEnumerable<region> regions)
+        private void ProcessAffiliates(IEnumerable<affiliate> affiliates)
         {
-            var dimRegions = regions.Select(c => new DimRegion
-                {
-                    RegionCode = c.region_code
-                });
-            Load(dimRegions);
+            var dimAffiliates = AffiliatesToDimAffiliates(affiliates);
+            LoadDimension(dimAffiliates, c => c.AffiliateKey);
         }
 
-        private void Process(IEnumerable<country> countries)
+        private void ProcessRegions(IEnumerable<region> regions)
         {
-            var dimCountries = countries.Select(c => new DimCountry
-                {
-                    CountryCode = c.country_code
-                });
-            Load(dimCountries);
+            var dimRegions = RegionsToDimRegions(regions);
+            LoadDimRegions(dimRegions);
         }
 
-        private void Process(IEnumerable<click> allClicks)
+        private void ProcessCountries(IEnumerable<country> countries)
         {
-            var clicks = allClicks.ToArray();
+            var dimCountries = CountriesToDimCountries(countries);
+            LoadDimCountries(dimCountries);
+        }
+
+        private void ProcessClicks(List<click> clicks)
+        {
             var dimCountries = DimCountries();
             var dimRegions = DimRegions();
+
             int count = 0;
-            int total = clicks.Length;
+            int clicksCount = clicks.Count;
             const int step = 1000;
             foreach (var clickSet in clicks.InSetsOf(step))
             {
-                Console.WriteLine("Processing {0}/{1}..", count, total);
+                Console.WriteLine("Processing {0}/{1}..", count, clicksCount);
+
                 var factClicks = new List<FactClick>();
+
                 using (var db = new ClientPortalDWContext())
                 {
                     foreach (var click in clickSet)
@@ -130,27 +103,135 @@ namespace CakeExtracter
                             {
                                 ClickKey = click.click_id,
                                 CountryKey = dimCountries[click.country.country_code].CountryKey,
-                                RegionKey = dimRegions[click.region.region_code].RegionKey
+                                RegionKey = dimRegions[click.region.region_code].RegionKey,
+                                DateKey = click.click_date.Date,
+                                AdvertiserKey = click.advertiser.advertiser_id,
+                                AffiliateKey = click.affiliate.affiliate_id,
+                                OfferKey = click.offer.offer_id
                             });
                         }
                     }
+
+                    Console.WriteLine("Saving {0} click facts..", factClicks.Count);
+                    factClicks.ForEach(c => db.FactClicks.Add(c));
+                    db.SaveChanges();
+
                     count += step;
                 }
-                Load(factClicks);
             }
         }
 
-        private void Load(List<FactConversion> factConversions)
+        private List<conversion> ProcessConversions(IEnumerable<conversion> conversions)
+        {
+            var factConversionsToLoad = new List<FactConversion>();
+
+            var conversionsNeedingClick = new List<conversion>();
+
+            using (var db = new ClientPortalDWContext())
+            {
+                foreach (var conversion in conversions)
+                {
+                    int conversionKey = int.Parse(conversion.conversion_id);
+
+                    // if the conversion fact does not exist
+                    if (db.FactConversions.FirstOrDefault(c => c.ConversionKey == conversionKey) == null)
+                    {
+                        int? clickKey = conversion.click_id;
+
+                        if (clickKey != null)
+                        {
+                            // ..and if the click fact does exist
+                            if (db.FactClicks.FirstOrDefault(c => c.ClickKey == conversion.click_id) != null)
+                            {
+                                factConversionsToLoad.Add(new FactConversion
+                                {
+                                    ConversionKey = conversionKey,
+                                    ClickKey = clickKey.Value,
+                                    DateKey = conversion.conversion_date.Date,
+                                });
+                            }
+                            else
+                            {
+                                conversionsNeedingClick.Add(conversion);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Conversion id {0} has null click id.", conversionKey);
+                        }
+                    }
+                }
+
+                Console.WriteLine("Saving {0} conversion facts..", factConversionsToLoad.Count);
+                factConversionsToLoad.ForEach(c => db.FactConversions.Add(c));
+                db.SaveChanges();
+            }
+
+            return conversionsNeedingClick;
+        }
+        #endregion
+
+        #region Transform Methods
+        private IEnumerable<DimAdvertiser> AdvertisersToDimAdvertisers(IEnumerable<advertiser> advertisers)
+        {
+            return advertisers.Select(c => new DimAdvertiser
+                {
+                    AdvertiserKey = c.advertiser_id,
+                    AdvertiserName = c.advertiser_name
+                });
+        }
+
+        private IEnumerable<DimOffer> OffersToDimOffers(IEnumerable<offer> offers)
+        {
+            return offers.Select(c => new DimOffer
+            {
+                OfferKey = c.offer_id,
+                OfferName = c.offer_name
+            });
+        }
+
+        private IEnumerable<DimAffiliate> AffiliatesToDimAffiliates(IEnumerable<affiliate> affiliates)
+        {
+            return affiliates.Select(c => new DimAffiliate()
+            {
+                AffiliateKey = c.affiliate_id,
+                AffiliateName = c.affiliate_name
+            });
+        }
+
+        private IEnumerable<DimRegion> RegionsToDimRegions(IEnumerable<region> regions)
+        {
+            return regions.Select(c => new DimRegion
+            {
+                RegionCode = c.region_code
+            });
+        }
+
+        private IEnumerable<DimCountry> CountriesToDimCountries(IEnumerable<country> countries)
+        {
+            return countries.Select(c => new DimCountry
+            {
+                CountryCode = c.country_code
+            });
+        }
+        #endregion
+
+        #region Load Methods
+        private void LoadDimension<T>(IEnumerable<T> toLoad, Func<T, int> key) where T : class
         {
             using (var db = new ClientPortalDWContext())
             {
-                Console.WriteLine("Saving {0} conversion facts..", factConversions.Count);
-                factConversions.ForEach(c => db.FactConversions.Add(c));
+                var existing = db.Set<T>().ToList();
+                var add = toLoad.Except(existing, new IntKeyComparer<T>(key));
+                foreach (var item in add)
+                {
+                    db.Set<T>().Add(item);
+                }
                 db.SaveChanges();
             }
         }
 
-        private void Load(IEnumerable<DimRegion> dimRegions)
+        private void LoadDimRegions(IEnumerable<DimRegion> dimRegions)
         {
             using (var db = new ClientPortalDWContext())
             {
@@ -164,7 +245,7 @@ namespace CakeExtracter
             }
         }
 
-        private void Load(IEnumerable<DimCountry> dimCountries)
+        private void LoadDimCountries(IEnumerable<DimCountry> dimCountries)
         {
             using (var db = new ClientPortalDWContext())
             {
@@ -177,17 +258,9 @@ namespace CakeExtracter
                 db.SaveChanges();
             }
         }
+        #endregion
 
-        private void Load(List<FactClick> factClicks)
-        {
-            using (var db = new ClientPortalDWContext())
-            {
-                Console.WriteLine("Saving {0} click facts..", factClicks.Count);
-                factClicks.ForEach(c => db.FactClicks.Add(c));
-                db.SaveChanges();
-            }
-        }
-
+        #region Lookups
         Dictionary<string, DimCountry> DimCountries()
         {
             using (var db = new ClientPortalDWContext())
@@ -203,8 +276,27 @@ namespace CakeExtracter
                 return db.DimRegions.ToDictionary(c => c.RegionCode);
             }
         }
+        #endregion
 
         #region EqualityComparers
+        class IntKeyComparer<T> : IEqualityComparer<T>
+        {
+            private readonly Func<T, int> _key;
+
+            public IntKeyComparer(Func<T, int> key)
+            {
+                _key = key;
+            }
+            public bool Equals(T x, T y)
+            {
+                return _key(x) == _key(y);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                return _key(obj).GetHashCode();
+            }
+        }
         class DimCountryEqualityComparer : IEqualityComparer<DimCountry>
         {
             public bool Equals(DimCountry x, DimCountry y)

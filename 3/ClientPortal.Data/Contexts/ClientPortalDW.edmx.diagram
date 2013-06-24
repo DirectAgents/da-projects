@@ -4,14 +4,23 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c1e63698f29246b38bd9c854b8d7ac3a" Name="Diagram1">
-        <EntityTypeShape EntityType="ClientPortalDWModel.DimCountry" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ClientPortalDWModel.DimRegion" Width="1.5" PointX="3.25" PointY="3.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="ClientPortalDWModel.FactClick" Width="1.5" PointX="3.25" PointY="0.5" />
+      <Diagram DiagramId="c1e63698f29246b38bd9c854b8d7ac3a" Name="Diagram1" ZoomLevel="98">
+        <EntityTypeShape EntityType="ClientPortalDWModel.DimCountry" Width="1.5" PointX="1.125" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.DimRegion" Width="1.5" PointX="1.625" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.FactClick" Width="1.5" PointX="4.25" PointY="8.875" />
         <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimCountry" />
         <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimRegion" />
-        <EntityTypeShape EntityType="ClientPortalDWModel.FactConversion" Width="1.5" PointX="6.125" PointY="0.5" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.FactConversion" Width="1.5" PointX="4.375" PointY="6" />
         <AssociationConnector Association="ClientPortalDWModel.FK_FactConversion_FactClick" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.DimDate" Width="1.5" PointX="6.875" PointY="5.875" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimDate" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactConversion_DimDate" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.DimAdvertiser" Width="1.5" PointX="7" PointY="10.25" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.DimAffiliate" Width="1.5" PointX="2.125" PointY="12.875" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.DimOffer" Width="1.5" PointX="6.25" PointY="13" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimAdvertiser" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimAffiliate" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimOffer" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
