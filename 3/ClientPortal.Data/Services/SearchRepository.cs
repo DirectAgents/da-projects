@@ -34,10 +34,14 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<SearchStat> GetChannelStats()
         {
+            string google = "Google_AdWords";
+            string bing = "MSN_AdCenter";
             var stats = new List<SearchStat>
             {
-                new SearchStat(true, 6, 2, 357143, 2840, 64, 9965.30M, 3151.70M, "Google_AdWords"),
-                new SearchStat(true, 6, 2, 6495, 367, 15, 2809.80M, 284.57M, "MSN_AdCenter")
+                new SearchStat(true, 5, 26, 42609, 3044, 75, 9225.10m, 3586.54m, google),
+                new SearchStat(true, 5, 26, 6445, 372, 11, 1587.89m, 303.05m, bing),
+                new SearchStat(true, 6, 2, 357143, 2840, 64, 9965.30M, 3151.70M, google),
+                new SearchStat(true, 6, 2, 6495, 367, 15, 2809.80M, 284.57M, bing)
             };
             return stats.AsQueryable();
         }

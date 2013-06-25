@@ -63,11 +63,11 @@
 
 <script>
     $(function () {
-        var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData")');
-        CreateSummaryGrid(weeksumDS, 'weeksumGrid', 'Week', 0);
+        var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData")', false);
+        CreateSummaryGrid(weeksumDS, 'weeksumGrid', 200, 'Week', 0);
 
-        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData")');
-        CreateSummaryGrid(monthsumDS, 'monthsumGrid', 'Month', 0);
+        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData")', false);
+        CreateSummaryGrid(monthsumDS, 'monthsumGrid', 200, 'Month', 0);
 
         CreateRevROASChart(weeksumDS, 'weekrevChart', 'Weekly Revenue vs. ROAS Performance');
         CreateOrderCPOChart(weeksumDS, 'weekorderChart', 'Weekly Orders vs. CPO Performance');
@@ -75,8 +75,8 @@
         CreateRevROASChart(monthsumDS, 'monthrevChart', 'Monthly Revenue vs. ROAS Performance');
         CreateOrderCPOChart(monthsumDS, 'monthorderChart', 'Monthly Orders vs. CPO Performance');
 
-        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData")');
-        CreateSummaryGrid(channelperfDS, 'channelperfGrid', 'title', 2);
+        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData")', true);
+        CreateSummaryGrid(channelperfDS, 'channelperfGrid', 350, 'Channel', 2);
 
         weeksumDS.read();
         monthsumDS.read();

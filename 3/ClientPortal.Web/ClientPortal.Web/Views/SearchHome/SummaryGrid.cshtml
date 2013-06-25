@@ -1,6 +1,6 @@
 ﻿<script>
-    function CreateSummaryDataSource(url) {
-        return new kendo.data.DataSource({
+    function CreateSummaryDataSource(url, group) {
+        var args = {
             serverAggregates: true,
             transport: {
                 read: {
@@ -23,6 +23,8 @@
                     id: 'Date',
                     fields: {
                         Date: { type: 'date' },
+                        Range: { type: 'string' },
+                        Title: { type: 'string' },
                         Impressions: { type: 'number' },
                         Clicks: { type: 'number' },
                         Orders: { type: 'number' },
@@ -33,26 +35,34 @@
                     }
                 }
             },
-            sort: { field: "Date", dir: "asc" },
+            sort: { field: 'Date', dir: 'asc' },
             aggregate: [
-                { field: "Impressions", aggregate: "sum" },
-                { field: "Clicks", aggregate: "sum" },
-                { field: "Orders", aggregate: "sum" },
-                { field: "Revenue", aggregate: "sum" },
-                { field: "Cost", aggregate: "sum" },
-                { field: "ROAS", aggregate: "agg" },
-                { field: "CPO", aggregate: "agg" },
+                { field: 'Impressions', aggregate: 'sum' },
+                { field: 'Clicks', aggregate: 'sum' },
+                { field: 'Orders', aggregate: 'sum' },
+                { field: 'Revenue', aggregate: 'sum' },
+                { field: 'Cost', aggregate: 'sum' },
+                { field: 'ROAS', aggregate: 'agg' },
+                { field: 'CPO', aggregate: 'agg' },
             ]
-        });
+        };
+        if (group)
+            args.group = {
+                field: 'Range', aggregates: [
+                    { field: 'Orders', aggregate: 'sum' }
+                ]
+            };
+        return new kendo.data.DataSource(args);
     }
 
-    function CreateSummaryGrid(dataSource, elId, rangeTitle, decimals) {
+    function CreateSummaryGrid(dataSource, elId, height, titleHeader, decimals) {
         $('#' + elId).kendoGrid({
             dataSource: dataSource,
             autoBind: false,
-            height: 200,
+            height: height,
             columns: [
-                { field: 'RangeName', title: rangeTitle },
+                { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value #' },
+                { field: 'Title', title: titleHeader },
                 { field: 'Revenue', format: '{0:c' + decimals + '}', footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold" } },
                 { field: 'Cost', name: 'Costs', format: '{0:c' + decimals + '}', footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold" } },
                 //{ field: null, title: 'ROAS', template: "#= kendo.toString(Revenue / Cost, 'p0') #" },
@@ -111,7 +121,7 @@
             theme: $(document).data("kendoSkin") || "default",
             series: series,
             categoryAxis: {
-                field: "RangeName",
+                field: "Range",
                 labels: { template: "#= value #" },
                 axisCrossingValue: [0, 1000]
             },
