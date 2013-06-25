@@ -1,5 +1,5 @@
 ﻿<script>
-    function CreateSummaryDataSource(url, group) {
+    function CreateSummaryDataSource(url, readData, group) {
         var args = {
             serverAggregates: true,
             transport: {
@@ -7,12 +7,7 @@
                     type: 'post',
                     dataType: 'json',
                     url: url,
-                    //data: function () {
-                    //    return {
-                    //        startdate: $('#dash_startdate').val(),
-                    //        enddate: $('#dash_enddate').val()
-                    //    };
-                    //}
+                    data: readData
                 }
             },
             schema: {
@@ -55,14 +50,14 @@
         return new kendo.data.DataSource(args);
     }
 
-    function CreateSummaryGrid(dataSource, elId, height, titleHeader, decimals) {
-        $('#' + elId).kendoGrid({
+    function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, decimals, detailInit) {
+        el.kendoGrid({
             dataSource: dataSource,
             autoBind: false,
             height: height,
             columns: [
                 { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value #' },
-                { field: 'Title', title: titleHeader },
+                { field: 'Title', title: titleHeader, width: titleWidthPct + '%' },
                 { field: 'Revenue', format: '{0:c' + decimals + '}', footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold" } },
                 { field: 'Cost', name: 'Costs', format: '{0:c' + decimals + '}', footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold" } },
                 //{ field: null, title: 'ROAS', template: "#= kendo.toString(Revenue / Cost, 'p0') #" },
@@ -83,8 +78,22 @@
             sortable: {
                 mode: 'multiple'
             },
-            pageable: true
+            pageable: true,
+            detailInit: detailInit
         });
+    }
+
+    function DetailInit(e) {
+        var readData = function () {
+            return {
+                channel: e.data.Title
+            };
+        }
+        var dataSource = CreateSummaryDataSource('@Url.Action("CampaignPerfData")', readData, false);
+        dataSource.read();
+
+        var el = $("<div/>").appendTo(e.detailCell);
+        CreateSummaryGrid(dataSource, el, null, 'Campaign', 21, 2, null);
     }
 
     function CreateRevROASChart(dataSource, elId, title) {

@@ -90,5 +90,19 @@ namespace ClientPortal.Web.Controllers
             var json = Json(kgrid);
             return json;
         }
+
+        [HttpPost]
+        public JsonResult CampaignPerfData(KendoGridRequest request, string channel)
+        {
+            var sRepo = new SearchRepository();
+
+            var stats = sRepo.GetCampaignStats(channel);
+            var kgrid = new KendoGrid<SearchStat>(request, stats);
+            if (stats.Any())
+                kgrid.aggregates = Aggregates(stats);
+
+            var json = Json(kgrid);
+            return json;
+        }
     }
 }
