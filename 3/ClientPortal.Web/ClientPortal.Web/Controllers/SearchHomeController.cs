@@ -5,6 +5,7 @@ using DirectAgents.Mvc.KendoGridBinder;
 using System.Web.Mvc;
 using System.Linq;
 using System;
+using ClientPortal.Web.Models;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -23,6 +24,20 @@ namespace ClientPortal.Web.Controllers
         public PartialViewResult Dashboard()
         {
             return PartialView();
+        }
+
+        public PartialViewResult CampaignPerf()
+        {
+            var userInfo = GetUserInfo();
+
+            var start = new DateTime(2013, 5, 27);
+            var end = new DateTime(2013, 6, 2);
+            var model = new SearchReportModel()
+            {
+                StartDate = start.ToString("d", userInfo.CultureInfo),
+                EndDate = end.ToString("d", userInfo.CultureInfo)
+            };
+            return PartialView(model);
         }
 
         [HttpPost]

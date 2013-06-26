@@ -35,7 +35,7 @@ namespace ClientPortal.Data.Services
         public IQueryable<SearchStat> GetChannelStats()
         {
             string google = "Google_AdWords";
-            string bing = "MSN_AdCenter";
+            string bing = "Bing_Ads";
             var stats = new List<SearchStat>
             {
                 new SearchStat(true, 5, 26, 42609, 3044, 75, 9225.10m, 3586.54m, google),
@@ -48,17 +48,17 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<SearchStat> GetCampaignStats(string channel)
         {
-            var stats = channel.Contains("Google") ?
-                new List<SearchStat>
-                {
+            List<SearchStat> stats = new List<SearchStat>();
+            if (channel == null || channel.Contains("Google"))
+                stats.AddRange(new List<SearchStat> {
                     new SearchStat(true, 6, 2, 6025, 118, 4, 339.95m, 121.62m, "DA - \"Apple\" Memory - Keywords"),
                     new SearchStat(true, 6, 2, 6562, 293, 13, 2802.85m, 320.46m, "DA - \"Mac\" Memory - Keywords"),
-                } :
-                new List<SearchStat>
-                {
+                });
+            if (channel == null || channel.Contains("Bing"))
+                stats.AddRange(new List<SearchStat> {
                     new SearchStat(true, 6, 2, 1562, 67, 3, 599.97m, 71.86m, "DA - BING - \"Mac\" Memory - Keywords"),
                     new SearchStat(true, 6, 2, 1224, 116, 4, 419.96m, 74.01m, "DA - BING - iMac Memory"),
-                };
+                });
             return stats.AsQueryable();
         }
     }

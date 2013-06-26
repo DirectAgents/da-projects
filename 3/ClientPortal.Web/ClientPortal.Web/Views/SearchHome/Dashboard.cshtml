@@ -59,8 +59,6 @@
     </div>
 </div>
 
-@Html.Partial("SummaryGrid")
-
 <script>
     $(function () {
         var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData")', null, false);
@@ -76,21 +74,12 @@
         CreateOrderCPOChart(monthsumDS, 'monthorderChart', 'Monthly Orders vs. CPO Performance');
 
         var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData")', null, true);
-        CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 350, 'Channel', 20, 2, DetailInit);
+        CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 350, 'Channel', 20, 2, function (e) {
+            DetailInit(e, '@Url.Action("CampaignPerfData")');
+        });
 
         weeksumDS.read();
         monthsumDS.read();
         channelperfDS.read();
     });
 </script>
-
-<style>
-    .k-grid tbody .k-grid .k-grid-header, .k-detail-cell .k-pager-wrap, .k-detail-cell .k-grid-footer
-    {
-        display: none;
-    }
-    td.k-detail-cell > div.k-grid
-    {
-        border: 1px solid black;
-    }
-</style>
