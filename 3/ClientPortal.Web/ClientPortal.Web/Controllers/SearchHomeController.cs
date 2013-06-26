@@ -26,6 +26,11 @@ namespace ClientPortal.Web.Controllers
             return PartialView();
         }
 
+        public PartialViewResult ChannelPerf()
+        {
+            return PartialView();
+        }
+
         public PartialViewResult CampaignPerf()
         {
             var userInfo = GetUserInfo();

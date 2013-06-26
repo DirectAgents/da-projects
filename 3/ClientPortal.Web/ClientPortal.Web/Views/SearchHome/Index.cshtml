@@ -35,6 +35,7 @@
               +---------------+-->*@
         <dl class="tabs">
             <dd class="active"><a href="#navDashboard" id="nav_Dashboard">Dashboard</a></dd>
+            <dd><a href="#navChannelPerf" id="nav_ChannelPerf">Channel Perf</a></dd>
             <dd><a href="#navCampaignPerf" id="nav_CampaignPerf">Campaign Perf</a></dd>
             <dd><a href="#navContact" id="nav_Contact">Contact</a></dd>
         </dl>
@@ -55,6 +56,9 @@
 
         <li id="navDashboardTab" class="active">
             <div id="divDashboard" class="searchdiv"></div>
+        </li>
+        <li id="navChannelPerfTab">
+            <div id="divChannelPerf" class="searchdiv"></div>
         </li>
         <li id="navCampaignPerfTab">
             <div id="divCampaignPerf" class="searchdiv"></div>
@@ -131,6 +135,17 @@
             //    LoadDashboard();
             //});
 
+            // Channel Perf
+            $('#nav_ChannelPerf').one('click', function () {
+                $('#divChannelPerf').html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("ChannelPerf")',
+                    cache: false
+                }).done(function (html) {
+                    $('#divChannelPerf').html(html);
+                });
+            });
+
             // Campaign Perf
             $('#nav_CampaignPerf').one('click', function () {
                 $('#divCampaignPerf').html('Loading...');
@@ -153,6 +168,10 @@
                 });
             });
 
+        }
+
+        function RefreshGrid() {
+            alert('Coming Soon');
         }
     </script>
 }

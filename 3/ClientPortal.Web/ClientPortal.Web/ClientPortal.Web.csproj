@@ -1529,6 +1529,7 @@
     <Content Include="Views\SearchHome\Index.cshtml" />
     <Content Include="Views\SearchHome\Dashboard.cshtml" />
     <Content Include="Views\SearchHome\CampaignPerf.cshtml" />
+    <Content Include="Views\SearchHome\ChannelPerf.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
