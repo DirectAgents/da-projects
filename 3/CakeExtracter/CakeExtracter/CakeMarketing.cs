@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web.Services.Protocols;
+using CakeExtracter.Common;
 using ClientPortal.Web.Models.Cake;
 
 namespace CakeExtracter
 {
     public class CakeMarketing : ICakeMarketing
     {
+        private readonly string ApiKey = ConfigurationManager.AppSettings["CakeApiKey"];
+
         public CakeMarketing(ICakeMarketingCache cakeMarketingCache)
         {
             BatchSize = 25000;
@@ -15,6 +19,7 @@ namespace CakeExtracter
         }
 
         public int BatchSize { get; set; }
+
         public ICakeMarketingCache Cache { get; set; }
 
         public List<click> Clicks(int advertiserId, DateTime date)
@@ -44,23 +49,26 @@ namespace CakeExtracter
                 int count = rowCount;
 
                 Func<click_report_response> getClicks = () =>
-                    reports.Clicks(Globals.ApiKey, date, date.AddDays(1), affiliateId, advertiserId, offerId, campaignId,
+                    reports.Clicks(ApiKey, date, date.AddDays(1), affiliateId, advertiserId, offerId, campaignId,
                                    creativeId, includeTests, count + 1, BatchSize);
 
-                var r = Utilities.Retry(getClicks, 3, 10000, typeof (SoapException));
+                var getClicksResult = RetryUtility.Retry(getClicks, 3, 10000, typeof (SoapException));
 
                 if (result == null)
                 {
-                    result = r;
+                    result = getClicksResult;
                 }
                 else
                 {
-                    result.row_count += r.row_count;
-                    result.clicks = result.clicks.Concat(r.clicks).ToArray();
+                    result.row_count += getClicksResult.row_count;
+                    result.clicks = result.clicks.Concat(getClicksResult.clicks).ToArray();
                 }
-                rowCount += r.row_count;
+
+                rowCount += getClicksResult.row_count;
+
                 Console.WriteLine("row count is {0}", rowCount);
-                if (r.row_count < BatchSize)
+
+                if (getClicksResult.row_count < BatchSize)
                     break;
             }
 
@@ -111,7 +119,7 @@ namespace CakeExtracter
                         while (true)
                         {
                             var r = reports.Clicks(
-                                Globals.ApiKey, clickDate, endDate, affiliateId, advertiserId,
+                                ApiKey, clickDate, endDate, affiliateId, advertiserId,
                                 offerId, campaignId, creativeId, includeTests, rowCount + 1, BatchSize);
                             if (result == null)
                             {
@@ -158,7 +166,7 @@ namespace CakeExtracter
             var reports = new reports();
 
             var result = reports.Conversions(
-                Globals.ApiKey, startDate, endDate, affiliateId, advertiserId, offerId,
+                ApiKey, startDate, endDate, affiliateId, advertiserId, offerId,
                 campaignId, creativeId, includeTests, startAtRow, rowLimit, sortFields, isDescending);
 
             return result.conversions.ToList();

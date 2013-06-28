@@ -4,6 +4,6 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>435 5/4/2013 6/21/2013 clicks</StartArguments>
+    <StartArguments>synchSearchDailySummariesXml -f "C:\Users\aaron\Downloads\Campaign performance report %281%29.xml" -a "DAS PPC - SherrillTree %2a"</StartArguments>
   </PropertyGroup>
 </Project>

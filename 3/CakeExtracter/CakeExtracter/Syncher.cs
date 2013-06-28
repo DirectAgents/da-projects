@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common;
+using CakeExtracter.ConsoleCommands;
+using CakeExtracter.Data;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Web.Models.Cake;
 using EntityFramework.Extensions;
@@ -11,19 +14,17 @@ namespace CakeExtracter
     {
         private readonly CakeMarketing cake = new CakeMarketing(new CakeMarketingCache { Enabled = true });
 
-        public void Run(string[] args)
+        public void Run(SyncherCommand cmd)
         {
-            var advertiserId = int.Parse(args[0]);
-            var fromDate = DateTime.Parse(args[1]);
-            var toDate = DateTime.Parse(args[2]);
-            var mode = args[3];
+            //var toDate = DateTime.Parse(cmd[2]);
+            //var mode = cmd[3];
 
-            InitializeMetrics();
+            //InitializeMetrics();
 
-            for (int addDays = 0; addDays < (toDate - fromDate).Days; addDays++)
-            {
-                DoSynch(advertiserId, fromDate, addDays, mode);
-            }
+            //for (int addDays = 0; addDays < (cmd.EndDate - cmd.StartDate).Days; addDays++)
+            //{
+            //    DoSynch(cmd.AdvertiserId, cmd.StartDate, addDays, mode);
+            //}
         }
 
         /// <summary>
@@ -51,59 +52,59 @@ namespace CakeExtracter
 
         private void DoSynch(int advertiserId, DateTime fromDate, int addDays, string mode)
         {
-            bool doClicks = (mode == "clicks" || mode == "both");
-            bool doConversions = (mode == "conversions" || mode == "both");
-            bool? conversionsOnly = (mode == "conversions") ? true : (bool?)null;
-            // TODO: integrate to command line flags
-            bool doMainEtl = true;
-            bool doDataWarehouse = false;
-            bool doMetrics = false;
+            //bool doClicks = (mode == "clicks" || mode == "both");
+            //bool doConversions = (mode == "conversions" || mode == "both");
+            //bool? conversionsOnly = (mode == "conversions") ? true : (bool?)null;
+            //// TODO: integrate to command line flags
+            //bool doMainEtl = true;
+            //bool doDataWarehouse = false;
+            //bool doMetrics = false;
 
-            List<click> clicks = null;
-            List<conversion> conversions = null;
-            var date = fromDate.AddDays(addDays);
+            //List<click> clicks = null;
+            //List<conversion> conversions = null;
+            //var date = fromDate.AddDays(addDays);
 
-            if (doMainEtl)
-            {
-                if (doClicks)
-                {
-                    clicks = cake.Clicks(advertiserId, date);
-                }
+            //if (doMainEtl)
+            //{
+            //    if (doClicks)
+            //    {
+            //        clicks = cake.Clicks(advertiserId, date);
+            //    }
 
-                if (doConversions)
-                {
-                    conversions = cake.Conversions(advertiserId, date);
-                    DeleteConversions(advertiserId, date);
-                    LoadConversions(conversions);
-                } 
-            }
+            //    if (doConversions)
+            //    {
+            //        conversions = cake.Conversions(advertiserId, date);
+            //        DeleteConversions(advertiserId, date);
+            //        LoadConversions(conversions);
+            //    } 
+            //}
 
-            if (doDataWarehouse)
-            {
-                var dw = new DataWarehouse();
-                if (doClicks)
-                {
-                    dw.UpdateClicks(clicks);
-                }
-                if (doConversions)
-                {
-                    dw.UpdateConversions(conversions);
-                } 
-            }
+            //if (doDataWarehouse)
+            //{
+            //    var dw = new DataWarehouse();
+            //    if (doClicks)
+            //    {
+            //        dw.UpdateClicks(clicks);
+            //    }
+            //    if (doConversions)
+            //    {
+            //        dw.UpdateConversions(conversions);
+            //    } 
+            //}
 
-            if (doMetrics)
-            {
-                DeleteMetricCounts(advertiserId, date, conversionsOnly);
-                if (doClicks)
-                {
-                    LoadDeviceCounts(clicks);
-                }
-                if (doConversions)
-                {
+            //if (doMetrics)
+            //{
+            //    DeleteMetricCounts(advertiserId, date, conversionsOnly);
+            //    if (doClicks)
+            //    {
+            //        LoadDeviceCounts(clicks);
+            //    }
+            //    if (doConversions)
+            //    {
 
-                }
-                LoadRegionCounts(advertiserId); 
-            }
+            //    }
+            //    LoadRegionCounts(advertiserId); 
+            //}
         }
 
         //

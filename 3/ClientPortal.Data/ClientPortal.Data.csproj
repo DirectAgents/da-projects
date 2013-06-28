@@ -59,33 +59,6 @@
     <Compile Include="Contexts\AdvertiserContact.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contexts\Cake.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Cake.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\Cake.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Cake.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\Cake.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Cake.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\CakeAdvertiser.cs">
-      <DependentUpon>Cake.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\CakeConversion.cs">
-      <DependentUpon>Cake.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\CakeCurrency.cs">
-      <DependentUpon>Cake.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Contexts\CakeOffer.cs">
-      <DependentUpon>Cake.tt</DependentUpon>
-    </Compile>
     <Compile Include="Contexts\Click.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
@@ -185,9 +158,6 @@
     <Compile Include="Contexts\MetricValue.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contexts\MonthlySummary.cs">
-      <DependentUpon>Cake.tt</DependentUpon>
-    </Compile>
     <Compile Include="Contexts\Offer.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
@@ -201,6 +171,12 @@
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\ScheduledReportRecipient.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\SearchCampaign.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\SearchDailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contracts\IClientPortalRepository.cs" />
@@ -221,23 +197,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="Contexts\Cake.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Cake.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Contexts\Cake.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Cake.edmx</DependentUpon>
-      <LastGenOutput>Cake.Context.cs</LastGenOutput>
-    </None>
-    <None Include="Contexts\Cake.edmx.diagram">
-      <DependentUpon>Cake.edmx</DependentUpon>
-    </None>
-    <None Include="Contexts\Cake.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Cake.edmx</DependentUpon>
-      <LastGenOutput>Cake.cs</LastGenOutput>
-    </None>
     <EntityDeploy Include="Contexts\ClientPortal.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ClientPortal.Designer.cs</LastGenOutput>
@@ -276,9 +235,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Contexts\ClientPortal.edmx.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

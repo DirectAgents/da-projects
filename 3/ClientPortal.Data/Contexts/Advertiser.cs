@@ -20,6 +20,7 @@ namespace ClientPortal.Data.Contexts
             this.FileUploads = new HashSet<FileUpload>();
             this.Goals = new HashSet<Goal>();
             this.ScheduledReports = new HashSet<ScheduledReport>();
+            this.SearchCampaigns = new HashSet<SearchCampaign>();
         }
     
         public int AdvertiserId { get; set; }
@@ -30,10 +31,12 @@ namespace ClientPortal.Data.Contexts
         public bool ShowConversionData { get; set; }
         public string ConversionValueName { get; set; }
         public bool ConversionValueIsNumber { get; set; }
+        public bool HasSearch { get; set; }
     
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }
         public virtual ICollection<FileUpload> FileUploads { get; set; }
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
+        public virtual ICollection<SearchCampaign> SearchCampaigns { get; set; }
     }
 }

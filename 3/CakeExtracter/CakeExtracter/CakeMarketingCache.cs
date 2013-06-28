@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using CakeExtracter.Common;
 using ClientPortal.Web.Models.Cake;
 
 namespace CakeExtracter
@@ -115,6 +116,5 @@ namespace CakeExtracter
             return dateString;
         }
         #endregion
-
     }
 }
