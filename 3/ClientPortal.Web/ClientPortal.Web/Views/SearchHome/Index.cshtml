@@ -37,7 +37,6 @@
             <dd class="active"><a href="#navDashboard" id="nav_Dashboard">Dashboard</a></dd>
             <dd><a href="#navChannelPerf" id="nav_ChannelPerf">Channel Perf</a></dd>
             <dd><a href="#navCampaignPerf" id="nav_CampaignPerf">Campaign Perf</a></dd>
-            <dd><a href="#navAdgroupPerf" id="nav_AdgroupPerf">Adgroup Perf</a></dd>
             <dd><a href="#navContact" id="nav_Contact">Contact</a></dd>
         </dl>
         <!-- /Tabs -->
@@ -171,8 +170,24 @@
 
         }
 
-        function RefreshGrid() {
-            alert('Coming Soon');
+        function DateChanged(grid) {
+            $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
+            $('#' + grid + '_filterBtn').attr('disabled', false);
+        }
+
+        function ChangeDateRange(grid) {
+            alert('Coming soon.');
+        }
+
+        function RefreshGrid(grid) {
+            var gridDataSource = $('#' + grid + 'Grid').data('kendoGrid').dataSource;
+            gridDataSource.read();
+            if ($('#' + grid + 'Chart').length > 0) {
+                var chartDataSource = $('#' + grid + 'Chart').data('kendoChart').dataSource;
+                if (chartDataSource !== gridDataSource)
+                    chartDataSource.read();
+            }
+            $('#' + grid + '_filterBtn').attr('disabled', true);
         }
     </script>
 }

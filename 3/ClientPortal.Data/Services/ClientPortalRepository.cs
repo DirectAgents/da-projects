@@ -8,7 +8,7 @@ using System.Data;
 
 namespace ClientPortal.Data.Services
 {
-    public class ClientPortalRepository : IClientPortalRepository
+    public partial class ClientPortalRepository : IClientPortalRepository
     {
         ClientPortalContext context;
 

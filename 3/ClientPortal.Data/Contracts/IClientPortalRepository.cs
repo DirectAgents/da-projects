@@ -53,5 +53,13 @@ namespace ClientPortal.Data.Contracts
         Goal GetGoal(int id);
         void AddGoal(Goal goal, bool saveChanges = false);
         bool DeleteGoal(int id, int? advertiserId);
+
+        // Search
+        IQueryable<SearchStat> GetWeekStats();
+        IQueryable<SearchStat> GetMonthStats();
+        IQueryable<SearchStat> GetChannelStats();
+        IQueryable<SearchStat> GetCampaignStats(DateTime? start, DateTime? end);
+        IQueryable<SearchStat> GetCampaignStats(string channel);
+        IQueryable<SearchStat> GetAdgroupStats();
     }
 }
