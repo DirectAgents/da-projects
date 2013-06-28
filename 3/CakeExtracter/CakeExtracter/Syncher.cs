@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CakeExtracter.Common;
+using CakeExtracter.ConsoleCommands;
+using CakeExtracter.Data;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Web.Models.Cake;
 using EntityFramework.Extensions;
@@ -9,18 +12,19 @@ namespace CakeExtracter
 {
     class Syncher
     {
-        public void Run(string[] args)
+        private readonly CakeMarketing cake = new CakeMarketing(new CakeMarketingCache { Enabled = true });
+
+        public void Run(SyncherCommand cmd)
         {
-            var advertiserId = int.Parse(args[0]);
-            var fromDate = DateTime.Parse(args[1]);
-            var toDate = DateTime.Parse(args[2]);
+            //var toDate = DateTime.Parse(cmd[2]);
+            //var mode = cmd[3];
 
-            InitializeMetrics();
+            //InitializeMetrics();
 
-            for (int addDays = 0; addDays < (toDate - fromDate).Days; addDays++)
-            {
-                DoSynch(advertiserId, fromDate, addDays);
-            }
+            //for (int addDays = 0; addDays < (cmd.EndDate - cmd.StartDate).Days; addDays++)
+            //{
+            //    DoSynch(cmd.AdvertiserId, cmd.StartDate, addDays, mode);
+            //}
         }
 
         /// <summary>
@@ -44,30 +48,67 @@ namespace CakeExtracter
             }
         }
 
-        private void DoSynch(int advertiserId, DateTime fromDate, int addDays)
+        // TEMP: this method is called by DataWarehouse...
+
+        private void DoSynch(int advertiserId, DateTime fromDate, int addDays, string mode)
         {
-            var date = fromDate.AddDays(addDays);
+            //bool doClicks = (mode == "clicks" || mode == "both");
+            //bool doConversions = (mode == "conversions" || mode == "both");
+            //bool? conversionsOnly = (mode == "conversions") ? true : (bool?)null;
+            //// TODO: integrate to command line flags
+            //bool doMainEtl = true;
+            //bool doDataWarehouse = false;
+            //bool doMetrics = false;
 
-            // delete the metric counts for the day we are refreshing
-            DeleteMetricCounts(advertiserId, date, null);
+            //List<click> clicks = null;
+            //List<conversion> conversions = null;
+            //var date = fromDate.AddDays(addDays);
 
-            // bring all clicks for a single day into memory
-            click_report_response clicks = ExtractClicks(advertiserId, date);
+            //if (doMainEtl)
+            //{
+            //    if (doClicks)
+            //    {
+            //        clicks = cake.Clicks(advertiserId, date);
+            //    }
 
-            LoadDeviceCounts(clicks);
+            //    if (doConversions)
+            //    {
+            //        conversions = cake.Conversions(advertiserId, date);
+            //        DeleteConversions(advertiserId, date);
+            //        LoadConversions(conversions);
+            //    } 
+            //}
 
-            conversion_report_response conversions = ExtractConversions(advertiserId, date);
-            DeleteConversions(advertiserId, date);
-            LoadConversions(conversions);
+            //if (doDataWarehouse)
+            //{
+            //    var dw = new DataWarehouse();
+            //    if (doClicks)
+            //    {
+            //        dw.UpdateClicks(clicks);
+            //    }
+            //    if (doConversions)
+            //    {
+            //        dw.UpdateConversions(conversions);
+            //    } 
+            //}
 
-            var dw = new DataWarehouse();
-            dw.Update(clicks.clicks, conversions.conversions);
+            //if (doMetrics)
+            //{
+            //    DeleteMetricCounts(advertiserId, date, conversionsOnly);
+            //    if (doClicks)
+            //    {
+            //        LoadDeviceCounts(clicks);
+            //    }
+            //    if (doConversions)
+            //    {
 
-            //LoadRegionCounts(clicks, conversions);
+            //    }
+            //    LoadRegionCounts(advertiserId); 
+            //}
         }
 
         //
-        // MetricCounts
+        // Metrics
         //
 
         private static void DeleteMetricCounts(int advertiserId, DateTime date, bool? conversionsOnly)
@@ -90,6 +131,68 @@ namespace CakeExtracter
 
                 Console.WriteLine("deleted {0} MetricCounts", numDeleted);
             }
+        }
+
+        private static void LoadDeviceCounts(List<click> clickReport)
+        {
+            if (clickReport.Count > 0)
+            {
+                using (var db = new ClientPortalContext())
+                {
+                    var deviceMetric = db.Metrics.Where(m => m.name == MetricNames.Device).First();
+
+                    var click0 = clickReport[0];
+                    var date = new DateTime(click0.click_date.Year, click0.click_date.Month, click0.click_date.Day);
+
+                    var deviceGroups = clickReport.GroupBy(c => c.device.device_name);
+
+                    // Ensure that all MetricValues exists
+                    foreach (var dg in deviceGroups)
+                    {
+                        if (!deviceMetric.MetricValues.Any(mv => mv.name == dg.Key))
+                        {
+                            Console.WriteLine("adding new MetricValue: {0}", dg.Key);
+
+                            var metricValue = new MetricValue()
+                                {
+                                    name = dg.Key,
+                                    code = dg.First().device.device_id.ToString()
+                                };
+                            deviceMetric.MetricValues.Add(metricValue);
+                        }
+                    }
+
+                    db.SaveChanges();
+
+                    Console.WriteLine("adding MetricCounts..");
+
+                    // Add MetricCounts
+                    foreach (var dg in deviceGroups)
+                    {
+                        var metricValue = db.MetricValues.First(mv => mv.name == dg.Key);
+                        var offerGroups = dg.GroupBy(d => d.offer.offer_id);
+
+                        foreach (var og in offerGroups)
+                        {
+                            var metricCount = new MetricCount()
+                                {
+                                    offer_id = og.Key,
+                                    date = date,
+                                    conversions_only = false,
+                                    count = og.Count()
+                                };
+                            metricValue.MetricCounts.Add(metricCount);
+                        }
+
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
+        private void LoadRegionCounts(int advertiserId)
+        {
+
         }
 
         private void LoadRegionCounts(click_report_response clickReport, conversion_report_response conversionReport)
@@ -121,7 +224,7 @@ namespace CakeExtracter
                     var conversionsNeedingClick = unmatched.Select(c => c.Conversion);
 
                     // Extract clicks to fix unmatched
-                    var extractedClicks = ClicksByConversion(conversionsNeedingClick)
+                    var extractedClicks = cake.ClicksByConversion(conversionsNeedingClick)
                         .SelectMany(c => c.clicks)
                         .ToArray();
 
@@ -205,109 +308,6 @@ namespace CakeExtracter
             }
         }
 
-        public static IEnumerable<click_report_response> ClicksByConversion(IEnumerable<conversion> conversions)
-        {
-            var conversionItems = new List<conversion>(conversions.ToList());
-
-            var results = new List<click_report_response>();
-
-            results.AddRange(
-                conversions
-                    .GroupBy(c => new
-                        {
-                            c.affiliate.affiliate_id,
-                            c.offer.offer_id,
-                            c.campaign_id,
-                            c.creative.creative_id,
-                            c.click_date.Value.Date,
-                            c.advertiser.advertiser_id
-                        })
-                    .Select(g =>
-                        {
-                            var reports = new reports();
-                            int affiliateId = g.Key.affiliate_id;
-                            int offerId = g.Key.offer_id;
-                            int campaignId = g.Key.campaign_id;
-                            int advertiserId = g.Key.advertiser_id;
-                            int creativeId = g.Key.creative_id;
-                            const bool includeTests = false;
-                            const int startAtRow = 0;
-                            const int rowLimit = 0;
-                            var clickDate = g.Key.Date;
-                            var endDate = clickDate.AddDays(1);
-
-                            Console.WriteLine(
-                                "Extracting clicks: affiliate_id={0},offer_id={1},campaign_id={2},creative_id={3},click_date={4},advertiser_id={5}",
-                                affiliateId, offerId, campaignId, creativeId, clickDate, advertiserId);
-
-                            var result = reports.Clicks(
-                                Globals.ApiKey, clickDate, endDate, affiliateId, advertiserId,
-                                offerId, campaignId, creativeId, includeTests, startAtRow, rowLimit);
-
-                            return result;
-                        }));
-
-            return results;
-        }
-
-        private static void LoadDeviceCounts(click_report_response clickReport)
-        {
-            if (clickReport.clicks.Length > 0)
-            {
-                using (var db = new ClientPortalContext())
-                {
-                    var deviceMetric = db.Metrics.Where(m => m.name == MetricNames.Device).First();
-
-                    var click0 = clickReport.clicks[0];
-                    var offerId = click0.offer.offer_id;
-                    var date = new DateTime(click0.click_date.Year, click0.click_date.Month, click0.click_date.Day);
-
-                    var deviceGroups = clickReport.clicks.GroupBy(c => c.device.device_name);
-
-                    // Ensure that all MetricValues exists
-                    foreach (var dg in deviceGroups)
-                    {
-                        if (!deviceMetric.MetricValues.Any(mv => mv.name == dg.Key))
-                        {
-                            Console.WriteLine("adding new MetricValue: {0}", dg.Key);
-
-                            var metricValue = new MetricValue()
-                                {
-                                    name = dg.Key,
-                                    code = dg.First().device.device_id.ToString()
-                                };
-                            deviceMetric.MetricValues.Add(metricValue);
-                        }
-                    }
-
-                    db.SaveChanges();
-
-                    Console.WriteLine("adding MetricCounts..");
-
-                    // Add MetricCounts
-                    foreach (var dg in deviceGroups)
-                    {
-                        var metricValue = db.MetricValues.First(mv => mv.name == dg.Key);
-                        var offerGroups = dg.GroupBy(d => d.offer.offer_id);
-
-                        foreach (var og in offerGroups)
-                        {
-                            var metricCount = new MetricCount()
-                                {
-                                    offer_id = og.Key,
-                                    date = date,
-                                    conversions_only = false,
-                                    count = og.Count()
-                                };
-                            metricValue.MetricCounts.Add(metricCount);
-                        }
-
-                        db.SaveChanges();
-                    }
-                }
-            }
-        }
-
         //
         // Conversions
         //
@@ -322,40 +322,15 @@ namespace CakeExtracter
             }
         }
 
-        private static conversion_report_response ExtractConversions(int advertiserId, DateTime startDate)
+        private static void LoadConversions(List<conversion> conversions)
         {
-            Console.WriteLine("Extracting conversions for advertiser {0} on {1}..", advertiserId, startDate);
+            Console.WriteLine("loading {0} conversions..", conversions.Count);
 
-            var endDate = startDate.AddDays(1);
-            const int affiliateId = 0;
-            const int offerId = 0;
-            const int campaignId = 0;
-            const int creativeId = 0;
-            const bool includeTests = false;
-            const int startAtRow = 0;
-            const int rowLimit = 0;
-            const ConversionsSortFields sortFields = ConversionsSortFields.conversion_date;
-            const bool isDescending = false;
-
-            var reports = new reports();
-
-            var result = reports.Conversions(
-                Globals.ApiKey, startDate, endDate, affiliateId, advertiserId, offerId,
-                campaignId, creativeId, includeTests, startAtRow, rowLimit, sortFields, isDescending);
-
-            return result;
-        }
-
-        private static void LoadConversions(conversion_report_response conversionsResponse)
-        {
-            Console.WriteLine("loading {0} conversions..", conversionsResponse.row_count);
-
-            int total = conversionsResponse.row_count;
+            int total = conversions.Count;
             int count = 0;
-
-            using (var db = new UsersContext())
+            foreach (var set in conversions.InSetsOf(2000))
             {
-                foreach (var set in conversionsResponse.conversions.InSetsOf(2000))
+                using (var db = new UsersContext())
                 {
                     count += set.Count;
 
@@ -371,42 +346,55 @@ namespace CakeExtracter
         // Clicks
         //
 
-        private static click_report_response ExtractClicks(int advertiserId, DateTime startDate)
-        {
-            Console.WriteLine("Extracting clicks for advertiser {0} on {1}..", advertiserId, startDate);
-
-            var reports = new reports();
-            var endDate = startDate.AddDays(1);
-            const int affiliateId = 0;
-            const int offerId = 0;
-            const int campaignId = 0;
-            const int creativeId = 0;
-            const bool includeTests = false;
-            const int startAtRow = 0;
-            const int rowLimit = 0;
-
-            var result = reports.Clicks(
-                Globals.ApiKey, startDate, endDate, affiliateId, advertiserId, offerId,
-                campaignId, creativeId, includeTests, startAtRow, rowLimit);
-
-            return result;
-        }
-
-        private void LoadClicks(click_report_response result)
-        {
-            Console.WriteLine("loading {0} clicks..", result.row_count);
-            int total = result.row_count;
-            int count = 0;
-            foreach (var set in result.clicks.InSetsOf(2000))
-            {
-                count += set.Count;
-                Console.WriteLine("saving {0}/{1} clicks..", count, total);
-                using (var db = new UsersContext())
-                {
-                    set.ForEach(c => db.Clicks.Add(c));
-                    db.SaveChanges();
-                }
-            }
-        }
+        //private void LoadClicks(click_report_response result)
+        //{
+        //    Console.WriteLine("loading {0} clicks..", result.row_count);
+        //    int total = result.row_count;
+        //    int count = 0;
+        //    foreach (var set in result.clicks.InSetsOf(2000))
+        //    {
+        //        count += set.Count;
+        //        Console.WriteLine("saving {0}/{1} clicks..", count, total);
+        //        using (var db = new UsersContext())
+        //        {
+        //            set.ForEach(c => db.Clicks.Add(c));
+        //            db.SaveChanges();
+        //        }
+        //    }
+        //}
     }
 }
+
+//private static click_report_response ExtractConversionsFromFile(int advertiserId, DateTime startDate)
+//{
+//    string fileName = string.Format(baseDir + "conversions_{0}_{1}.txt", advertiserId, startDate.ToString("MM_dd_yyyy"));
+//    if (!File.Exists(fileName))
+//        return null;
+//    Console.WriteLine("Extracting conversions from file: {0}..", fileName);
+//    var serializer = new XmlSerializer(typeof(click_report_response));
+//    var reader = new StreamReader(fileName);
+//    var result = (click_report_response)serializer.Deserialize(reader);
+//    return result;
+//}
+//public click_report_response ExtractCakeClicks(
+//    string api_key,
+//    System.DateTime the_date,
+//    int affiliate_id,
+//    int advertiser_id,
+//    int offer_id,
+//    int campaign_id,
+//    int creative_id,
+//    bool include_tests,
+//    int start_at_row,
+//    int row_limit)
+//{
+//    string cachePath = "c:\\CakeCache\\advertiser_offer\\"
+//                       + string.Format("{0}_{1}", advertiser_id, offer_id)
+//                       + "\\affiliate_campaign\\"
+//                       + string.Format("{0}_{1}", affiliate_id, campaign_id)
+//                       + "\\"
+//                       + string.Format("clicks_{0}_{1}_{3}.xml");
+//    using (var fileStrean = File.Create(cachePath))
+//    {      
+//    }
+//}

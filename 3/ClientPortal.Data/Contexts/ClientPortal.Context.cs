@@ -42,5 +42,7 @@ namespace ClientPortal.Data.Contexts
         public DbSet<Metric> Metrics { get; set; }
         public DbSet<MetricCount> MetricCounts { get; set; }
         public DbSet<MetricValue> MetricValues { get; set; }
+        public DbSet<SearchCampaign> SearchCampaigns { get; set; }
+        public DbSet<SearchDailySummary> SearchDailySummaries { get; set; }
     }
 }

@@ -57,6 +57,9 @@
     <StartupObject>CakeExtracter.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\ClientPortal.Web\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
@@ -64,9 +67,27 @@
     <Reference Include="EntityFramework.Extended">
       <HintPath>..\..\ClientPortal.Web\packages\EntityFramework.Extended.5.0.0.73\lib\net45\EntityFramework.Extended.dll</HintPath>
     </Reference>
+    <Reference Include="ManyConsole">
+      <HintPath>..\..\ClientPortal.Web\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Logging, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45\Microsoft.Practices.EnterpriseLibrary.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="NDesk.Options">
+      <HintPath>..\..\ClientPortal.Web\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\..\ClientPortal.Web\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <Private>True</Private>
     </Reference>
@@ -105,23 +126,72 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrappers\AutoMapperBootstrapper.cs" />
+    <Compile Include="Bootstrappers\EntityFrameworkBootstrapper.cs" />
+    <Compile Include="Bootstrappers\IBootstrapper.cs" />
+    <Compile Include="Bootstrappers\LoggingBootstrapper.cs" />
+    <Compile Include="Bootstrappers\ServicePointBootstrapper.cs" />
+    <Compile Include="CakeMarketingApi\Clients\ApiClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\ApiRequest.cs" />
+    <Compile Include="CakeMarketingApi\Clients\DailySummariesRequest.cs" />
+    <Compile Include="Common\LogElapsedTime.cs" />
+    <Compile Include="Common\RestClient.cs" />
+    <Compile Include="Common\RestRequest.cs" />
+    <Compile Include="CakeMarketingApi\Entities\ArrayOfDailySummary.cs" />
+    <Compile Include="CakeMarketingApi\Clients\DailySummariesClient.cs" />
+    <Compile Include="CakeMarketingApi\Entities\DailySummary.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Offer.cs" />
+    <Compile Include="CakeMarketingApi\Clients\OffersClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\OffersRequest.cs" />
+    <Compile Include="CakeMarketingApi\Entities\OfferExportResponse.cs" />
+    <Compile Include="CakeMarketingCache.cs" />
+    <Compile Include="CakeMarketing.cs" />
     <Compile Include="CakeModels.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Common\ConsoleCommand.cs" />
+    <Compile Include="Common\ConsoleCommandDispatcher.cs" />
+    <Compile Include="Common\DateRange.cs" />
+    <Compile Include="ConsoleCommands\SchedulerCommand.cs" />
+    <Compile Include="ConsoleCommands\SyncherCommand.cs" />
+    <Compile Include="ConsoleCommands\SynchDailySummariesCommand.cs" />
+    <Compile Include="ConsoleCommands\SynchSearchDailySummariesXmlCommand.cs" />
     <Compile Include="DataWarehouse.cs" />
-    <Compile Include="EnumerableExtensions.cs" />
-    <Compile Include="Globals.cs" />
+    <Compile Include="Bootstrappers\EnterpriseLibraryBootstrapper.cs" />
+    <Compile Include="Common\InSetsOfExtension.cs" />
+    <Compile Include="CakeMarketingApi\CakeMarketingUtility.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\DailySummariesExtracter.cs" />
+    <Compile Include="Etl\CakeMarketing\Entities\OfferDailySummary.cs" />
+    <Compile Include="Etl\GoogleAdWords\Extracters\AdWordsXmlReportExtracter.cs" />
+    <Compile Include="Etl\GoogleAdWords\Loaders\AdWordsXmlReportLoader.cs" />
+    <Compile Include="Etl\IExtracter.cs" />
+    <Compile Include="Etl\Extracter.cs" />
+    <Compile Include="Etl\ILoader.cs" />
+    <Compile Include="Etl\Loader.cs" />
+    <Compile Include="Etl\CakeMarketing\Loaders\DailySummariesLoader.cs" />
+    <Compile Include="ICakeMarketing.cs" />
+    <Compile Include="ICakeMarketingCache.cs" />
+    <Compile Include="Logging\Loggers\ConsoleLogger.cs" />
+    <Compile Include="Logging\Loggers\EnterpriseLibraryLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\Loggers\NullLogger.cs" />
+    <Compile Include="Mef\Composer.cs" />
     <Compile Include="MetricNames.cs" />
+    <Compile Include="Logging\EnterpriseLibrary\ConsoleCustomTraceListener.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="ProgramArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="SyncherRun.cs" />
     <Compile Include="Syncher.cs" />
-    <Compile Include="UsersContext.cs" />
+    <Compile Include="Data\UsersContext.cs" />
+    <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CakeMarketingApi\CakeMarketingApi.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -147,5 +217,6 @@
       <Name>ClientPortal.Data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

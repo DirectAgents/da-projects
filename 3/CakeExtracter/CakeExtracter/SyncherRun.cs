@@ -1,4 +1,5 @@
 ﻿using System;
+using CakeExtracter.ConsoleCommands;
 
 namespace CakeExtracter
 {
@@ -29,10 +30,10 @@ namespace CakeExtracter
 
             _last = now;
 
-            _syncher.Run(new[] {
-                _advertiserId.ToString(),
-                today.AddDays(_offsetDays).ToShortDateString(),
-                tommorow.AddDays(_offsetDays).ToShortDateString()
+            _syncher.Run(new SyncherCommand {
+                AdvertiserId = _advertiserId.ToString(),
+                StartDate = today.AddDays(_offsetDays),
+                EndDate = tommorow.AddDays(_offsetDays)
             });
         }
 

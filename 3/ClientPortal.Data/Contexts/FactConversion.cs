@@ -16,7 +16,9 @@ namespace ClientPortal.Data.Contexts
     {
         public int ConversionKey { get; set; }
         public int ClickKey { get; set; }
+        public System.DateTime DateKey { get; set; }
     
         public virtual FactClick FactClick { get; set; }
+        public virtual DimDate DimDate { get; set; }
     }
 }
