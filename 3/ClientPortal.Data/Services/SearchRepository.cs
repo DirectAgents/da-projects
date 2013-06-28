@@ -34,11 +34,31 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<SearchStat> GetChannelStats()
         {
+            string google = "Google_AdWords";
+            string bing = "Bing_Ads";
             var stats = new List<SearchStat>
             {
-                new SearchStat(true, 6, 2, 357143, 2840, 64, 9965.30M, 3151.70M, "Google_AdWords"),
-                new SearchStat(true, 6, 2, 6495, 367, 15, 2809.80M, 284.57M, "MSN_AdCenter")
+                new SearchStat(true, 5, 26, 42609, 3044, 75, 9225.10m, 3586.54m, google),
+                new SearchStat(true, 5, 26, 6445, 372, 11, 1587.89m, 303.05m, bing),
+                new SearchStat(true, 6, 2, 357143, 2840, 64, 9965.30m, 3151.70m, google),
+                new SearchStat(true, 6, 2, 6495, 367, 15, 2809.80m, 284.57m, bing),
             };
+            return stats.AsQueryable();
+        }
+
+        public IQueryable<SearchStat> GetCampaignStats(string channel)
+        {
+            List<SearchStat> stats = new List<SearchStat>();
+            if (channel == null || channel.Contains("Google"))
+                stats.AddRange(new List<SearchStat> {
+                    new SearchStat(true, 6, 2, 6025, 118, 4, 339.95m, 121.62m, "DA - \"Apple\" Memory - Keywords"),
+                    new SearchStat(true, 6, 2, 6562, 293, 13, 2802.85m, 320.46m, "DA - \"Mac\" Memory - Keywords"),
+                });
+            if (channel == null || channel.Contains("Bing"))
+                stats.AddRange(new List<SearchStat> {
+                    new SearchStat(true, 6, 2, 1562, 67, 3, 599.97m, 71.86m, "DA - BING - \"Mac\" Memory - Keywords"),
+                    new SearchStat(true, 6, 2, 1224, 116, 4, 419.96m, 74.01m, "DA - BING - iMac Memory"),
+                });
             return stats.AsQueryable();
         }
     }

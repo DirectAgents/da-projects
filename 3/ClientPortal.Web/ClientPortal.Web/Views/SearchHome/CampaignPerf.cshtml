@@ -1,0 +1,32 @@
+﻿@model ClientPortal.Web.Models.SearchReportModel
+
+<div style="height: 40px;">
+    <select style="width: 140px" id="channelperf_dateRangeSel" onchange="ChangeDateRange('channelperf')">
+        <option value="yesterday">Yesterday</option>
+        <option value="wtd">Week to Date</option>
+        <option value="mtd">Month to Date</option>
+        <option value="ytd">Year to Date</option>
+        <option value="lastweek" selected="selected">Last Week</option>
+        <option value="lastmonth">Last Month</option>
+        <option value="custom">- custom -</option>
+    </select>
+    <span class="paddedlabel">Start:</span>
+    <input id="channelperf_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('channelperf')" />
+    <span class="paddedlabel">End:</span>
+    <input id="channelperf_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('channelperf')" />
+    <a class="button paddedbutton" id="channelperf_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('channelperf'); return false">Filter</a>
+</div>
+<div id="campaignperfGrid"></div>
+
+<script>
+    $(function () {
+        $('#channelperf_dateRangeSel').kendoDropDownList();
+        $('#channelperf_startdate').kendoDatePicker({ footer: ' ' });
+        $('#channelperf_enddate').kendoDatePicker({ footer: ' ' });
+
+        var campaignperfDS = CreateSummaryDataSource('@Url.Action("CampaignPerfData")', null, false);
+        CreateSummaryGrid(campaignperfDS, $('#campaignperfGrid'), 350, 'Campaign', 20, 2, null);
+
+        campaignperfDS.read();
+    });
+</script>

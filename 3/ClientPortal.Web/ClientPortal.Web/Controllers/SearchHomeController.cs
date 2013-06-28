@@ -5,6 +5,7 @@ using DirectAgents.Mvc.KendoGridBinder;
 using System.Web.Mvc;
 using System.Linq;
 using System;
+using ClientPortal.Web.Models;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -23,6 +24,25 @@ namespace ClientPortal.Web.Controllers
         public PartialViewResult Dashboard()
         {
             return PartialView();
+        }
+
+        public PartialViewResult ChannelPerf()
+        {
+            return PartialView();
+        }
+
+        public PartialViewResult CampaignPerf()
+        {
+            var userInfo = GetUserInfo();
+
+            var start = new DateTime(2013, 5, 27);
+            var end = new DateTime(2013, 6, 2);
+            var model = new SearchReportModel()
+            {
+                StartDate = start.ToString("d", userInfo.CultureInfo),
+                EndDate = end.ToString("d", userInfo.CultureInfo)
+            };
+            return PartialView(model);
         }
 
         [HttpPost]
@@ -86,6 +106,20 @@ namespace ClientPortal.Web.Controllers
             var kgrid = new KendoGrid<SearchStat>(request, channelStats);
             if (channelStats.Any())
                 kgrid.aggregates = Aggregates(channelStats);
+
+            var json = Json(kgrid);
+            return json;
+        }
+
+        [HttpPost]
+        public JsonResult CampaignPerfData(KendoGridRequest request, string channel)
+        {
+            var sRepo = new SearchRepository();
+
+            var stats = sRepo.GetCampaignStats(channel);
+            var kgrid = new KendoGrid<SearchStat>(request, stats);
+            if (stats.Any())
+                kgrid.aggregates = Aggregates(stats);
 
             var json = Json(kgrid);
             return json;

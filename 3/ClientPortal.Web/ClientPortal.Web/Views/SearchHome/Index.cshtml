@@ -34,7 +34,9 @@
               | Top Tabs      |
               +---------------+-->*@
         <dl class="tabs">
-            <dd class="active"><a href="#navDashboard" id="topnav_Dashboard">Dashboard</a></dd>
+            <dd class="active"><a href="#navDashboard" id="nav_Dashboard">Dashboard</a></dd>
+            <dd><a href="#navChannelPerf" id="nav_ChannelPerf">Channel Perf</a></dd>
+            <dd><a href="#navCampaignPerf" id="nav_CampaignPerf">Campaign Perf</a></dd>
             <dd><a href="#navContact" id="nav_Contact">Contact</a></dd>
         </dl>
         <!-- /Tabs -->
@@ -53,13 +55,16 @@
     <ul class="tabs-content">
 
         <li id="navDashboardTab" class="active">
-            <div id="divDashboard" class="searchdiv">
-            </div>
+            <div id="divDashboard" class="searchdiv"></div>
         </li>
-
+        <li id="navChannelPerfTab">
+            <div id="divChannelPerf" class="searchdiv"></div>
+        </li>
+        <li id="navCampaignPerfTab">
+            <div id="divCampaignPerf" class="searchdiv"></div>
+        </li>
         <li id="navContactTab">
-            <div id="divContact" class="searchdiv">
-            </div>
+            <div id="divContact" class="searchdiv"></div>
         </li>
 
     </ul>
@@ -88,6 +93,17 @@
     <link href="~/Content/kendo/2013.1.514/kendo.common.min.css" rel="stylesheet" />
     <link href="~/Content/kendo/2013.1.514/kendo.bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/index.css" rel="stylesheet" />
+
+<style>
+    .k-grid tbody .k-grid .k-grid-header, .k-detail-cell .k-pager-wrap, .k-detail-cell .k-grid-footer
+    {
+        display: none;
+    }
+    td.k-detail-cell > div.k-grid
+    {
+        border: 1px solid black;
+    }
+</style>
 }
 
 @section scripts {
@@ -95,6 +111,7 @@
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.de-DE.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-AU.min.js"></script>
+    <script src="~/Scripts/search_grids_charts.js"></script>
     <script>
         // ready function
         $(function () {
@@ -107,28 +124,54 @@
                 url: '@Url.Action("Dashboard")',
                 cache: false
             }).done(function (html) {
-                $("#divDashboard").html(html);
+                $('#divDashboard').html(html);
             });
         }
 
         function SetupTabs() {
 
             // Dashboard
-            //$("#topnav_Dashboard").click(function () {
+            //$('#nav_Dashboard').click(function () {
             //    LoadDashboard();
             //});
 
+            // Channel Perf
+            $('#nav_ChannelPerf').one('click', function () {
+                $('#divChannelPerf').html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("ChannelPerf")',
+                    cache: false
+                }).done(function (html) {
+                    $('#divChannelPerf').html(html);
+                });
+            });
+
+            // Campaign Perf
+            $('#nav_CampaignPerf').one('click', function () {
+                $('#divCampaignPerf').html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("CampaignPerf")',
+                    cache: false
+                }).done(function (html) {
+                    $('#divCampaignPerf').html(html);
+                });
+            });
+
             // Contacts
-            $("#nav_Contact").one("click", function () {
-                $("#divContact").html('Loading...');
+            $('#nav_Contact').one('click', function () {
+                $('#divContact').html('Loading...');
                 $.ajax({
                     url: '@Url.Action("Contact", "Home", new { showtitle = false })',
                     cache: false
                 }).done(function (html) {
-                    $("#divContact").html(html);
+                    $('#divContact').html(html);
                 });
             });
 
+        }
+
+        function RefreshGrid() {
+            alert('Coming Soon');
         }
     </script>
 }

@@ -8,7 +8,8 @@ namespace ClientPortal.Data.DTOs
 {
     public class SearchStat
     {
-        public string RangeName { get; set; }
+        public string Title { get; set; }
+        public string Range { get; set; }
         public DateTime Date { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }
@@ -27,10 +28,11 @@ namespace ClientPortal.Data.DTOs
 
         public decimal Days { get; set; }
 
-        public SearchStat(bool isWeekly, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string name = null)
+        public SearchStat(bool isWeekly, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string title = null)
         {
             this.Date = new DateTime(2013, month, day);
-            this.RangeName = name ?? ToRangeName(this.Date, isWeekly);
+            this.Range = ToRangeName(this.Date, isWeekly);
+            this.Title = title ?? Range;
 
             if (isWeekly)
                 Days = 7;

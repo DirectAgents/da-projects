@@ -1,0 +1,11 @@
+﻿<div id="channelperfGrid"></div>
+
+<script>
+    $(function () {
+        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData")', null, true);
+        CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 350, 'Channel', 20, 2, function (e) {
+            DetailInit(e, '@Url.Action("CampaignPerfData")');
+        });
+        channelperfDS.read();
+    });
+</script>

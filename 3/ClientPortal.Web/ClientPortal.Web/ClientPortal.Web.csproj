@@ -232,6 +232,7 @@
     <Compile Include="Models\QuickBooksModels.cs" />
     <Compile Include="Models\ReportModel.cs" />
     <Compile Include="Models\ScheduledReportVM.cs" />
+    <Compile Include="Models\SearchReportModel.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Seeder.cs" />
@@ -1454,6 +1455,7 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\search_grids_charts.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1526,7 +1528,8 @@
     <Content Include="Views\ScheduledReports\Edit.cshtml" />
     <Content Include="Views\SearchHome\Index.cshtml" />
     <Content Include="Views\SearchHome\Dashboard.cshtml" />
-    <Content Include="Views\SearchHome\SummaryGrid.cshtml" />
+    <Content Include="Views\SearchHome\CampaignPerf.cshtml" />
+    <Content Include="Views\SearchHome\ChannelPerf.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
