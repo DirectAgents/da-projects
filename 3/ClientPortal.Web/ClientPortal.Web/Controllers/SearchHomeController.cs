@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Linq;
 using System;
 using ClientPortal.Web.Models;
+using System.Globalization;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -33,14 +34,28 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult CampaignPerf()
         {
-            var userInfo = GetUserInfo();
+//            var userInfo = GetUserInfo();
 
             var start = new DateTime(2013, 5, 27);
             var end = new DateTime(2013, 6, 2);
             var model = new SearchReportModel()
             {
-                StartDate = start.ToString("d", userInfo.CultureInfo),
-                EndDate = end.ToString("d", userInfo.CultureInfo)
+                StartDate = start.ToString("d", CultureInfo.InvariantCulture),
+                EndDate = end.ToString("d", CultureInfo.InvariantCulture)
+            };
+            return PartialView(model);
+        }
+
+        public PartialViewResult AdgroupPerf()
+        {
+//            var userInfo = GetUserInfo();
+
+            var start = new DateTime(2013, 5, 27);
+            var end = new DateTime(2013, 6, 2);
+            var model = new SearchReportModel()
+            {
+                StartDate = start.ToString("d", CultureInfo.InvariantCulture),
+                EndDate = end.ToString("d", CultureInfo.InvariantCulture)
             };
             return PartialView(model);
         }
@@ -117,6 +132,20 @@ namespace ClientPortal.Web.Controllers
             var sRepo = new SearchRepository();
 
             var stats = sRepo.GetCampaignStats(channel);
+            var kgrid = new KendoGrid<SearchStat>(request, stats);
+            if (stats.Any())
+                kgrid.aggregates = Aggregates(stats);
+
+            var json = Json(kgrid);
+            return json;
+        }
+
+        [HttpPost]
+        public JsonResult AdgroupPerfData(KendoGridRequest request, string startdate, string enddate)
+        {
+            var sRepo = new SearchRepository();
+
+            var stats = sRepo.GetAdgroupStats();
             var kgrid = new KendoGrid<SearchStat>(request, stats);
             if (stats.Any())
                 kgrid.aggregates = Aggregates(stats);
