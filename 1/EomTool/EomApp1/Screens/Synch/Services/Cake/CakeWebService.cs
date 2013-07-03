@@ -140,9 +140,10 @@ namespace EomApp1.Screens.Synch.Services.Cake
                     throw new Exception("Error exporting affiliate: " + response.message);
                 }
             }
-      
+
             return affiliate;
         }
+
 
         public List<EomApp1.Cake.WebServices._4.Reports.conversion> Conversions(int offerID, DateTime fromDate, DateTime toDate)
         {
@@ -153,7 +154,7 @@ namespace EomApp1.Screens.Synch.Services.Cake
             var response = client.Conversions(
                                         api_key: ApiKey,
                                         start_date: fromDate,
-                                        end_date: toDate.AddDays(1),
+                                        end_date: fromDate.AddDays(15),
                                         affiliate_id: 0,
                                         advertiser_id: 0,
                                         offer_id: offerID,
@@ -165,16 +166,37 @@ namespace EomApp1.Screens.Synch.Services.Cake
                                         sort_field: EomApp1.Cake.WebServices._4.Reports.ConversionsSortFields.conversion_id,
                                         sort_descending: false);
 
+            EomApp1.Cake.WebServices._4.Reports.conversion_report_response response2 = null;
+
             if (!response.success)
-            {
                 throw new Exception(response.message);
-            }
-            else
-            {
-                var conversions = response.conversions;
-                this.logger.Log(string.Format("Got {0} conversions.", conversions.Length));
-                return conversions.ToList();
-            }
+
+            response2 = client.Conversions(
+                                    api_key: ApiKey,
+                                    start_date: fromDate.AddDays(15),
+                                    end_date: toDate.AddDays(1),
+                                    affiliate_id: 0,
+                                    advertiser_id: 0,
+                                    offer_id: offerID,
+                                    campaign_id: 0,
+                                    creative_id: 0,
+                                    include_tests: false,
+                                    start_at_row: 0,
+                                    row_limit: 0,
+                                    sort_field: EomApp1.Cake.WebServices._4.Reports.ConversionsSortFields.conversion_id,
+                                    sort_descending: false);
+
+            if (!response2.success)
+                throw new Exception(response.message);
+
+            var conversions = response.conversions.ToList();
+
+            if (response2 != null)
+                conversions.AddRange(response2.conversions);
+
+            this.logger.Log(string.Format("Got {0} conversions.", conversions.Count));
+
+            return conversions;
         }
 
         private static EomApp1.Cake.WebServices._3.Export.exportSoap GetExportServiceV3()
