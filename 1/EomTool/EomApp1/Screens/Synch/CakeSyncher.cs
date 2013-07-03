@@ -56,6 +56,17 @@ namespace EomApp1.Screens.Synch
             /// Gets Year, Month and ToDay as a DateTime.
             /// </summary>
             public DateTime ToDate { get { return new DateTime(this.Year, this.Month, this.ToDay); } }
+
+            /// <summary>
+            /// If true, ignore FromDay and ToDay, and instead synch the whole month
+            /// </summary>
+            public bool ExtractInBatches { get; set; }
+
+            /// <summary>
+            /// If true, create all items as a summary of the items for the month instead of
+            /// an item for each day with stats.
+            /// </summary>
+            public bool GroupItemsToFirstDayOfMonth { get; set; }
         }
 
         private readonly Parameters parameters;
@@ -153,8 +164,8 @@ namespace EomApp1.Screens.Synch
 
             var extracted = this.cakeService.Conversions(this.parameters.CampaignExternalId,
                                                          this.parameters.FromDate,
-                                                         this.parameters.ToDate).ToList();
-
+                                                         this.parameters.ToDate,
+                                                         this.parameters.ExtractInBatches).ToList();
 
             var validations = new Func<conversion, bool>[] { 
                  c => (c.affiliate != null) && (c.affiliate.affiliate_id > 0),
@@ -174,12 +185,8 @@ namespace EomApp1.Screens.Synch
             logger.Log("Extracted " + this.extractedConversions.Count + " conversions.");
         }
 
-
         List<CakeConversion> updatedCakeConversions = new List<CakeConversion>();
         // step 5
-
-        // TODO: in batches
-
         private void StageExtractedConversions()
         {
             this.logger.Log("Staging extracted conversions...");
@@ -207,20 +214,66 @@ namespace EomApp1.Screens.Synch
                                                                                 this.parameters.FromDate,
                                                                                 this.parameters.ToDate).ToList();
 
-            // TEMP TEMP TEMP
-            #region TEMP - regroup the summaries to all be first of the month - not production ready, just doing for 12061 as a one off for now
+            if (this.parameters.GroupItemsToFirstDayOfMonth)
+            {
+                int conversionSummaryCountBeforeGrouping = conversionSummariesFromView.Count;
+                var rx = new Regex(@"Cake/(\d+-\d+-\d+)/aff");
+                Func<DateTime, DateTime> firstOfMonth = dt => dt.AddDays(-1 * (dt.Day - 1));
 
-            int conversionSummaryCountBeforeGrouping = conversionSummariesFromView.Count;
-            this.logger.Log(string.Format("Regrouping {0} conversion summaries to 1st of month..", conversionSummaryCountBeforeGrouping));
+                this.conversionSummaries = conversionSummariesFromView
+                        .Select(c => new RegroupedCakeConversionSummary
+                        {
+                            Name = rx.Replace(c.Name, "Cake/" + firstOfMonth(c.ConversionDate.Value).ToString("yyyy-MM-dd") + "/aff"),
+                            ConversionDate = firstOfMonth(c.ConversionDate.Value),
+                            Affiliate_Id = c.Affiliate_Id,
+                            Offer_Id = c.Offer_Id,
+                            ConversionType = c.ConversionType,
+                            Units = c.Units,
+                            PricePaid = c.PricePaid,
+                            PriceReceived = c.PriceReceived,
+                            PricePaidCurrency = c.PricePaidCurrency,
+                            PriceReceivedCurrency = c.PriceReceivedCurrency,
+                            Paid = c.Paid,
+                            Received = c.Received
+                        })
+                        .GroupBy(c => new
+                        {
+                            c.Name,
+                            c.ConversionDate,
+                            c.Affiliate_Id,
+                            c.Offer_Id,
+                            c.ConversionType,
+                            c.PricePaid,
+                            c.PricePaidCurrency,
+                            c.PriceReceived,
+                            c.PriceReceivedCurrency
+                        })
+                        .Select(c => new RegroupedCakeConversionSummary
+                        {
+                            Name = c.Key.Name,
+                            ConversionDate = c.Key.ConversionDate,
+                            Affiliate_Id = c.Key.Affiliate_Id,
+                            Offer_Id = c.Key.Offer_Id,
+                            ConversionType = c.Key.ConversionType,
+                            Units = c.Sum(s => s.Units),
+                            PricePaid = c.Key.PricePaid,
+                            PriceReceived = c.Key.PriceReceived,
+                            PricePaidCurrency = c.Key.PricePaidCurrency,
+                            PriceReceivedCurrency = c.Key.PriceReceivedCurrency,
+                            Paid = c.Sum(s => s.Paid),
+                            Received = c.Sum(s => s.Received)
+                        }).ToList();
 
-            // Regroup the conversion summaries
-            var rx = new Regex(@"Cake/(\d+-\d+-\d+)/aff");
-            Func<DateTime, DateTime> firstOfMonth = dt => dt.AddDays(-1 * (dt.Day - 1));
-            this.conversionSummaries = conversionSummariesFromView
+                this.logger.Log(string.Format("Regrouped to {0} conversion summaries to {1} with 1st of month conversion date..",
+                    conversionSummaryCountBeforeGrouping, conversionSummaries.Count));
+            }
+            else
+            {
+                this.conversionSummaries = conversionSummariesFromView
                     .Select(c => new RegroupedCakeConversionSummary
                     {
-                        Name = rx.Replace(c.Name, "Cake/" + firstOfMonth(c.ConversionDate.Value).ToString("yyyy-MM-dd") + "/aff"),
-                        ConversionDate = firstOfMonth(c.ConversionDate.Value),
+                        Name = c.Name,
+                        ConversionDate = c.ConversionDate,
                         Affiliate_Id = c.Affiliate_Id,
                         Offer_Id = c.Offer_Id,
                         ConversionType = c.ConversionType,
@@ -231,39 +284,8 @@ namespace EomApp1.Screens.Synch
                         PriceReceivedCurrency = c.PriceReceivedCurrency,
                         Paid = c.Paid,
                         Received = c.Received
-                    })
-                    .GroupBy(c => new
-                    {
-                        c.Name,
-                        c.ConversionDate,
-                        c.Affiliate_Id,
-                        c.Offer_Id,
-                        c.ConversionType,
-                        c.PricePaid,
-                        c.PricePaidCurrency,
-                        c.PriceReceived,
-                        c.PriceReceivedCurrency
-                    })
-                    .Select(c => new RegroupedCakeConversionSummary
-                    {
-                        Name = c.Key.Name,
-                        ConversionDate = c.Key.ConversionDate,
-                        Affiliate_Id = c.Key.Affiliate_Id,
-                        Offer_Id = c.Key.Offer_Id,
-                        ConversionType = c.Key.ConversionType,
-                        Units = c.Sum(s => s.Units),
-                        PricePaid = c.Key.PricePaid,
-                        PriceReceived = c.Key.PriceReceived,
-                        PricePaidCurrency = c.Key.PricePaidCurrency,
-                        PriceReceivedCurrency = c.Key.PriceReceivedCurrency,
-                        Paid = c.Sum(s => s.Paid),
-                        Received = c.Sum(s => s.Received)
                     }).ToList();
-
-            this.logger.Log(string.Format("Regrouped to {0} conversion summaries to {1} with 1st of month conversion date..",
-                conversionSummaryCountBeforeGrouping, conversionSummaries.Count));
-
-            #endregion
+            }
         }
 
         private void TransformConversionSummariesToItems()
