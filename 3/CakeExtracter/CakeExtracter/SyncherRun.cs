@@ -1,5 +1,5 @@
 ﻿using System;
-using CakeExtracter.ConsoleCommands;
+using CakeExtracter.Commands;
 
 namespace CakeExtracter
 {

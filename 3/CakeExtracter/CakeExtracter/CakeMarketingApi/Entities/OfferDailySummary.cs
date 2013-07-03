@@ -1,6 +1,6 @@
 ﻿using CakeExtracter.CakeMarketingApi.Entities;
 
-namespace CakeExtracter.Etl.CakeMarketing.Entities
+namespace CakeExtracter.CakeMarketingApi.Entities
 {
     public class OfferDailySummary
     {

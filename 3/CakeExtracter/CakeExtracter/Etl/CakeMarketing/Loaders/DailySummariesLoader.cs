@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using CakeExtracter.Etl.CakeMarketing.Entities;
+using CakeExtracter.CakeMarketingApi.Entities;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {
     public class DailySummariesLoader : Loader<OfferDailySummary>
     {
-        protected override int LoadItems(List<OfferDailySummary> items)
+        protected override int Load(List<OfferDailySummary> items)
         {
-            var itemCount = 0;
-            var addedCount = 0;
-            var updatedCount = 0;
-            Logger.Info("Loading {0} DailySummaries..", items.Count);
+            var loaded = 0;
+            var added = 0;
+            var updated = 0;
             using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
             {
                 foreach (var item in items)
@@ -43,18 +42,18 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     if (db.Entry(target).State == EntityState.Detached)
                     {
                         db.DailySummaries.Add(target);
-                        addedCount++;
+                        added++;
                     }
                     else
                     {
-                        updatedCount++;
+                        updated++;
                     }
-                    itemCount++;
+                    loaded++;
                 }
-                Logger.Info("Saving {0} DailySummaries ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
+                Logger.Info("Loading {0} DailySummaries ({1} updates, {2} additions)", loaded, updated, added);
                 db.SaveChanges();
             }
-            return itemCount;
+            return loaded;
         }
     }
 }

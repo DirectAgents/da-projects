@@ -11,8 +11,8 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public OfferExportResponse Offers(OffersRequest request)
         {
-            var offerExportResponse = Execute<OfferExportResponse>(request);
-            return offerExportResponse;
+            var result = Execute<OfferExportResponse>(request);
+            return result;
         }
     }
 }

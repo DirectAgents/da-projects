@@ -3,7 +3,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.GoogleAdWords.Extracters;
 using CakeExtracter.Etl.GoogleAdWords.Loaders;
 
-namespace CakeExtracter.ConsoleCommands
+namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesXmlCommand : ConsoleCommand
@@ -19,9 +19,9 @@ namespace CakeExtracter.ConsoleCommands
         public override int Execute(string[] remainingArguments)
         {
             var extracter = new AdWordsXmlReportExtracter(XmlFile, AccountName);
-            var loader = new AdWordsXmlReportLoader();
-            var extracterThread = extracter.BeginExtracting();
-            var loaderThread = loader.BeginLoading(extracter);
+            var loader = new AdWordsLoader();
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
             return 0;

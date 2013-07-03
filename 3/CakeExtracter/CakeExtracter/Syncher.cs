@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CakeExtracter.Common;
-using CakeExtracter.ConsoleCommands;
+using CakeExtracter.Commands;
 using CakeExtracter.Data;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Web.Models.Cake;
@@ -328,7 +328,7 @@ namespace CakeExtracter
 
             int total = conversions.Count;
             int count = 0;
-            foreach (var set in conversions.InSetsOf(2000))
+            foreach (var set in conversions.InBatches(2000))
             {
                 using (var db = new UsersContext())
                 {

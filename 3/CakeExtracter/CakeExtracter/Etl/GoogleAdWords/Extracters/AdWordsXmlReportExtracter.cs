@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.GoogleAdWords.Extracters
 {
@@ -21,11 +20,8 @@ namespace CakeExtracter.Etl.GoogleAdWords.Extracters
         {
             Logger.Info("Extracting SearchDailySummaries for {0} from {1}", accountName, xmlFilePath);
             var items = EnumerateRows().Where(c => c["account"] == accountName);
-            foreach (var set in items.InSetsOf(100))
-            {
-                AddExtracted(set);
-            }
-            IsComplete = true;
+            Add(items);
+            End();
         }
 
         private IEnumerable<Dictionary<string, string>> EnumerateRows()

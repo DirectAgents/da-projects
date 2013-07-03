@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using CakeExtracter.Common;
+using RestSharp;
 
 namespace CakeExtracter.CakeMarketingApi.Clients
 {
@@ -15,6 +15,7 @@ namespace CakeExtracter.CakeMarketingApi.Clients
                                       let value = property.GetValue(this)
                                       where value != null
                                       select Tuple.Create(property.Name, value.ToString());
+
             foreach (var tuple in propertiesWithValue)
                 restRequest.AddParameter(tuple.Item1, tuple.Item2);
         }

@@ -11,8 +11,8 @@ namespace CakeExtracter.CakeMarketingApi.Clients
 
         public ArrayOfDailySummary DailySummaries(DailySummariesRequest request)
         {
-            var arrayOfDailySummaries = Execute<ArrayOfDailySummary>(request);
-            return arrayOfDailySummaries;
+            var result = Execute<ArrayOfDailySummary>(request);
+            return result;
         }
     }
 }

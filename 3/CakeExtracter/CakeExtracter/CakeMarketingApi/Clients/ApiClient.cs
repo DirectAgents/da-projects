@@ -1,5 +1,6 @@
 ﻿using System;
-using CakeExtracter.Common;
+using RestSharp;
+using RestSharp.Deserializers;
 
 namespace CakeExtracter.CakeMarketingApi.Clients
 {
@@ -7,30 +8,30 @@ namespace CakeExtracter.CakeMarketingApi.Clients
     {
         protected const string ApiKey = "FCjdYAcwQE";
         protected const string Domain = "login.directagents.com";
-        protected readonly int Version;
-        protected readonly string ASMX;
-        protected readonly string Operation;
+        protected readonly string BaseUrl;
 
         protected ApiClient(int version, string asmx, string operation)
         {
-            Version = version;
-            ASMX = asmx;
-            Operation = operation;
+            BaseUrl = "https://" + Domain + "/api/" + version + "/" + asmx + ".asmx/" + operation;
         }
 
-        public string BaseUrl
-        {
-            get { return "https://" + Domain + "/api/" + Version + "/" + ASMX + ".asmx/" + Operation; }
-        }
-
-        public T Execute<T>(ApiRequest apiRequest) where T : new()
+        public T Execute<T>(ApiRequest apiRequest, IDeserializer deserializer = null) where T : new()
         {
             var restRequest = new RestRequest();
-            restRequest.AddParameter("api_key", ApiKey);            
+
+            restRequest.AddParameter("api_key", ApiKey);
+       
             apiRequest.AddParameters(restRequest);
 
             var restClient = new RestClient { BaseUrl = BaseUrl };
+
+            if (deserializer != null)
+            {
+                restClient.AddHandler("text/xml", deserializer);
+            }
+
             var response = restClient.ExecuteAsGet<T>(restRequest, "GET");
+
             if (response.ErrorException != null)
             {
                 Logger.Error(response.ErrorException);
