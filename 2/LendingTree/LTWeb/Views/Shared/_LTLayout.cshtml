@@ -11,7 +11,7 @@
     <div class="website-wrapper">
         <div id="topheader" class="png">
             
-            <span id="tagline" class="inline">Get mortgage offers</span>
+            
         </div>
         <div id="step1" class="board-content-data">
             <div class="left-rail inline">
@@ -22,15 +22,22 @@
                         and Save Money Now!</h2>
                 </div>
                 <div id="page1RailRates" class="stroke">
+
+                     <div class="orange-bar">
+                    <div class="orange-bar-left"></div>
+                    <div class="orange-bar-continue"></div>
+                </div>  
+                 
                     <h2>Refinance Rates From</h2>
                     <div class="rate">
                         <!--@LTWeb.Session.Admin["Rate1"]%-->
                         2.5%
-                        <br />
+                        
                         <!--(@LTWeb.Session.Admin["Rate2"]% APR)*-->
                         (2.62% APR)*
                     </div>
-                    <h2>Affordable Mortgage Payments</h2>
+            
+                   
                     
                 </div>
                 <div id="payments">
@@ -44,9 +51,17 @@
                 </div>
             </div>
 
+            
+
             <div id="form-fields" class="form-fields">
                 @RenderBody()
             </div>
+
+
+            <div class="orange-bar-right">
+                    
+                    <div class="orange-bar-continue-right"></div>
+                </div>  
 
             <div class="clear">
             </div>
@@ -61,16 +76,14 @@
                     <a target="_blank" href="http://quickmatch.lendingtree.com/LT_housing.asp">
                         <img src="~/Content/images/house-logo.gif" alt="house-logo" /></a>
                     <!--CERTIFICATE TRUST LOGO-->
+                    <p>
                     <span id="siteseal">
                         <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=2nOOUr9eTPDXWnZhyCuzuV3T0u15tx2nRXhbr6K9zjPWT8FdsYJea78Nk8"></script>
-                        <br />
-                        <a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/email/email-hosting.aspx"
-                            target="_blank">email hosting</a></span>
+                       
+                       
                     <!--END CERTIFICATE TRUST LOGO-->
-                    <p>
-                        Online Security:<a target="_blank" href="http://www.lendingtree.com/about-us/online-security/">
-                            <span>Protect Against Fraud</span></a>
                     </p>
+                      
                 </div>
                 <!--End .footer-logo-->
                 <div class="footer-text">

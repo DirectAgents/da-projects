@@ -1,12 +1,39 @@
 ﻿@model LTWeb.Models.QuestionVM
 
+@if (Model.Key == "LoanType" || Model.Key == "PropertyState" || Model.Key == "CreditRating"
+    || Model.Key == "PropertyType" || Model.Key == "PropertyUse" || Model.Key == "PropertyZip"
+    || Model.Key == "PropertyApproximateValue" || Model.Key == "EstimatedMortgageBalance")
+{
+            <div id="lenny-first"></div>
+}
+else if (Model.Key == "CashOut" || Model.Key == "MonthlyPayment" || Model.Key == "BankruptcyDischarged"
+|| Model.Key == "ForeclosureDischarged" || Model.Key == "IsVetran" || Model.Key == "FirstName"
+|| Model.Key == "Address" || Model.Key == "Email" || Model.Key == "HomePhone" )
+     {
+            <div id="lenny-middle"></div>
+     }
+
+else if (Model.Key == "SSN")
+     {
+            <div id="lenny-last"></div>
+     }
+
+
+
+
+
+
     <div id="page1FormHeader" class="png">
         <h2>Get FREE Quotes from Trusted Lenders</h2>
 
-        @if (LTWeb.Session.LTModel.SsnRequired) {
+
+        @if (LTWeb.Session.LTModel.SsnRequired)
+        {
             <h3 class="ssnOptional">&nbsp;</h3>
-        } else {
-            <h3 class="ssnOptional" style="margin-top: 0px">No SSN Required</h3>
+        }
+        else
+        {
+            <h3 class="ssnOptional" style="margin-top: 0px;">No SSN Required</h3>
         }
         <div id="progressbarcontainer" style="margin-left: 30px; margin-top: 25px">
             <div style="float:left; color:black">Progress:&nbsp;</div>
@@ -22,12 +49,15 @@
                     <div style="width:380px">
                         @if (!string.IsNullOrWhiteSpace(Model.Supertext))
                         {
-                            <span class="green">@Model.Supertext</span><br /><br />
+                            <span class="green-final-step">@Model.Supertext</span><br /><br />
                         }
                         <div>
-                            @if (Model.Key == "Complete") {
+                            @if (Model.Key == "Complete")
+                            {
                                 <p>@Model.Text</p>
-                            } else {
+                            }
+                            else
+                            {
                                 Html.RenderPartial("ShowInner");
                                 LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
                                 while (subquestion != null)
@@ -44,8 +74,8 @@
                     <br />
                     <br /> 
                     <br />                                               
-                    if (Model.Key != "Complete")
-                    {
+                            if (Model.Key != "Complete")
+                            {
                         <div>
                             <div style="float: left; width: 400px; margin-right: 100px">
                                 @*-------------*@
@@ -66,11 +96,11 @@
                                 Html.RenderPartial("TermsConsent");
                             }
                         </div>
-                    }
-                    else
-                    {
+                            }
+                            else
+                            {
                         <iframe src="https://smarttrk.com/p.ashx?o=30253&t=@ViewBag.AppID" height="1" width="1" frameborder="0"></iframe>
-                    }
+                            }
                 }
             </div>
         </div>

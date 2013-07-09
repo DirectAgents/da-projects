@@ -163,7 +163,9 @@
     <Content Include="App_Data\questions.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\connectionsconfig.xml" />
+    <Content Include="App_Data\connectionsconfig.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\images\bbb-logo.gif" />
     <Content Include="Content\images\bg-narrow-repeat.png" />
     <Content Include="Content\images\bg-narrowgreen-end.png" />
