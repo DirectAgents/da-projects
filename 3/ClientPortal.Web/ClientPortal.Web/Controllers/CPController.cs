@@ -14,6 +14,23 @@ namespace ClientPortal.Web.Controllers
     {
         protected IClientPortalRepository cpRepo;
 
+        protected ActionResult CheckLogout(UserInfo userInfo)
+        {
+            ActionResult result = null;
+            if (!userInfo.HasUserProfile)
+            {
+                try
+                {
+                    WebSecurity.Logout();
+                }
+                catch
+                {
+                }
+                result = RedirectToAction("Login", "Account");
+            }
+            return result;
+        }
+
         public UserInfo GetUserInfo()
         {
             var userProfile = GetUserProfile();

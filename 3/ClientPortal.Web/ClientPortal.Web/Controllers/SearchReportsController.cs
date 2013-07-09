@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
 {
+    [Authorize]
     public class SearchReportsController : CPController
     {
         public SearchReportsController(IClientPortalRepository cpRepository)
@@ -50,9 +51,8 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate)
         {
-            //var userInfo = GetUserInfo();
-            //var cultureInfo = userInfo.CultureInfo;
-            var cultureInfo = CultureInfo.InvariantCulture;
+            var userInfo = GetUserInfo();
+            var cultureInfo = userInfo.CultureInfo;
             DateTime? start, end;
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });

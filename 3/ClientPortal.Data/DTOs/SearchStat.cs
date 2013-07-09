@@ -44,6 +44,8 @@ namespace ClientPortal.Data.DTOs
         //    }
         //}
 
+        // --- Initializers (monthly, weekly or custom date range) ---
+
         public DateTime MonthByMaxDate
         {
             set
@@ -100,6 +102,8 @@ namespace ClientPortal.Data.DTOs
             }
         }
 
+        // --- Constructors ---
+
         public SearchStat() { }
 
         public SearchStat(bool isWeekly, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string title = null)
@@ -120,7 +124,7 @@ namespace ClientPortal.Data.DTOs
             this.Cost = cost;
         }
 
-        // --- private methods ---
+        // --- Private methods ---
 
         private string ToRangeName(DateTime date, bool isWeekly)
         {

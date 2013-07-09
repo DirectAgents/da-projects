@@ -154,6 +154,18 @@ namespace ClientPortal.Web
                     });
             }
 
+            // add ramjet beta (search) account if it does not exist
+            if (!WebSecurity.UserExists("ramjet"))
+            {
+                WebSecurity.CreateUserAndAccount(
+                    "ramjet",
+                    "123456",
+                    new
+                    {
+                        CakeAdvertiserId = 90000,
+                    });
+            }
+
             var cpRepo = new ClientPortalRepository(new ClientPortalContext());
             var existingGoals = cpRepo.Goals;
 

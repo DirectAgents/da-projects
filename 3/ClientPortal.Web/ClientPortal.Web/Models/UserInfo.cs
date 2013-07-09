@@ -53,6 +53,11 @@ namespace ClientPortal.Web.Models
             get { return Advertiser.ConversionValueIsNumber; }
         }
 
+        public bool HasSearch
+        {
+            get { return Advertiser.HasSearch; }
+        }
+
         public byte[] Logo
         {
             get { return Advertiser == null ? null : Advertiser.Logo; }
