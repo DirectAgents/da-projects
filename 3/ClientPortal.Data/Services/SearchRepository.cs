@@ -40,9 +40,14 @@ namespace ClientPortal.Data.Services
         //        });
         //    return stats;
         //}
-        public IQueryable<SearchStat> GetWeekStats()
+        public IQueryable<SearchStat> GetWeekStats(int? numWeeks)
         {
-            var start = DateTime.Today.AddYears(-1);
+            DateTime start;
+            if (numWeeks.HasValue)
+                start = DateTime.Today.AddDays(-7 * numWeeks.Value + 6);
+            else
+                start = DateTime.Today.AddYears(-1);
+
             while (start.DayOfWeek != DayOfWeek.Monday)
                 start = start.AddDays(-1);
 
@@ -87,9 +92,14 @@ namespace ClientPortal.Data.Services
             //}
         }
 
-        public IQueryable<SearchStat> GetMonthStats()
+        public IQueryable<SearchStat> GetMonthStats(int? numMonths)
         {
-            var start = DateTime.Today.AddYears(-1);
+            DateTime start;
+            if (numMonths.HasValue)
+                start = DateTime.Today.AddMonths((numMonths.Value - 1) * -1);
+            else
+                start = DateTime.Today.AddYears(-1);
+
             start = new DateTime(start.Year, start.Month, 1);
 
             var stats = GetSearchDailySummaries(start, null)

@@ -20,14 +20,9 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult WeekSumData(KendoGridRequest request, string startdate, string enddate)
+        public JsonResult WeekSumData(KendoGridRequest request, int numWeeks = 8)
         {
-            //var userInfo = GetUserInfo();
-            //DateTime? start, end;
-            //if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
-            //    return Json(new { });
-
-            var weekStats = cpRepo.GetWeekStats();
+            var weekStats = cpRepo.GetWeekStats(numWeeks);
             var kgrid = new KendoGrid<SearchStat>(request, weekStats);
             if (weekStats.Any())
                 kgrid.aggregates = Aggregates(weekStats);
@@ -37,9 +32,9 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult MonthSumData(KendoGridRequest request, string startdate, string enddate)
+        public JsonResult MonthSumData(KendoGridRequest request, int numMonths = 6)
         {
-            var monthStats = cpRepo.GetMonthStats();
+            var monthStats = cpRepo.GetMonthStats(numMonths);
             var kgrid = new KendoGrid<SearchStat>(request, monthStats);
             if (monthStats.Any())
                 kgrid.aggregates = Aggregates(monthStats);
