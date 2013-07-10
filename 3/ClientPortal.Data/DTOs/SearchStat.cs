@@ -10,7 +10,6 @@ namespace ClientPortal.Data.DTOs
     {
         public string Title { get; set; }
         public string Range { get; set; }
-        public DateTime Date { get; set; }
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Orders { get; set; }
@@ -26,7 +25,13 @@ namespace ClientPortal.Data.DTOs
             get { return Orders == 0 ? 0 : Math.Round(Cost / Orders, 2); }
         }
 
-        public decimal Days { get; set; }
+        public int Days { get; set; }
+
+        public DateTime EndDate { get; set; }
+        public DateTime StartDate
+        {
+            get { return EndDate.AddDays((Days - 1) * -1); }
+        }
 
         //public int Year
         //{
@@ -50,10 +55,10 @@ namespace ClientPortal.Data.DTOs
         {
             set
             {
-                this.Date = value;
-                this.Days = this.Date.Day;
+                this.EndDate = value;
+                this.Days = this.EndDate.Day;
 
-                this.Range = ToRangeName(this.Date, false);
+                this.Range = ToRangeName(this.EndDate, false);
                 this.Title = Range;
             }
         }
@@ -68,9 +73,9 @@ namespace ClientPortal.Data.DTOs
 
                 this.Days = (value - monday).Days + 1;
                 //this.Date = monday.AddDays(6);
-                this.Date = value;
+                this.EndDate = value;
 
-                this.Range = ToRangeName(monday, this.Date);
+                this.Range = ToRangeName(monday, this.EndDate);
                 this.Title = Range;
             }
         }
@@ -94,11 +99,11 @@ namespace ClientPortal.Data.DTOs
         {
             set
             {
-                if (value > this.Date)
+                if (value > this.EndDate)
                     throw new Exception("Must set (end) Date first and start date must be <= end date.");
 
-                this.Days = (this.Date - value).Days + 1;
-                this.Range = ToRangeName(value, this.Date);
+                this.Days = (this.EndDate - value).Days + 1;
+                this.Range = ToRangeName(value, this.EndDate);
             }
         }
 
@@ -108,8 +113,8 @@ namespace ClientPortal.Data.DTOs
 
         public SearchStat(bool isWeekly, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string title = null)
         {
-            this.Date = new DateTime(2013, month, day);
-            this.Range = ToRangeName(this.Date, isWeekly);
+            this.EndDate = new DateTime(2013, month, day);
+            this.Range = ToRangeName(this.EndDate, isWeekly);
             this.Title = title ?? Range;
 
             if (isWeekly)

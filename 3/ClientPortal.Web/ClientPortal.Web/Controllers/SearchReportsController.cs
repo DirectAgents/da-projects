@@ -44,7 +44,7 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate)
+        public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate, string channel)
         {
             var userInfo = GetUserInfo();
             var cultureInfo = userInfo.CultureInfo;
@@ -52,7 +52,12 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });
 
-            var stats = cpRepo.GetCampaignStats(start, end);
+            IQueryable<SearchStat> stats;
+            if (!String.IsNullOrWhiteSpace(channel) && channel.ToLower().Contains("bing"))
+                stats = cpRepo.GetCampaignStats(channel); // dummy bing stats
+            else
+                stats = cpRepo.GetCampaignStats(start, end);
+
             var kgrid = new KendoGrid<SearchStat>(request, stats);
             if (stats.Any())
                 kgrid.aggregates = Aggregates(stats);

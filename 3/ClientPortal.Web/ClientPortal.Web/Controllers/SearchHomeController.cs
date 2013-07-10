@@ -100,18 +100,6 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult CampaignPerfData(KendoGridRequest request, string channel)
-        {
-            var stats = cpRepo.GetCampaignStats(channel);
-            var kgrid = new KendoGrid<SearchStat>(request, stats);
-            if (stats.Any())
-                kgrid.aggregates = Aggregates(stats);
-
-            var json = Json(kgrid);
-            return json;
-        }
-
-        [HttpPost]
         public JsonResult AdgroupPerfData(KendoGridRequest request, string startdate, string enddate)
         {
             var stats = cpRepo.GetAdgroupStats();

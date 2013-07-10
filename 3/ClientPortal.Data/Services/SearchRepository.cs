@@ -144,7 +144,7 @@ namespace ClientPortal.Data.Services
                 .OrderBy(g => g.Key)
                 .Select(g => new SearchStat
                 {
-                    Date = end.Value,
+                    EndDate = end.Value,
                     CustomByStartDate = start.Value,
                     Title = g.Key,
                     Impressions = g.Sum(s => s.Impressions),

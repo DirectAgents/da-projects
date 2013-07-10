@@ -15,9 +15,10 @@
             total: 'total',
             aggregates: 'aggregates',
             model: {
-                id: 'Date',
+                id: 'StartDate',
                 fields: {
-                    Date: { type: 'date' },
+                    StartDate: { type: 'date' },
+                    EndDate: { type: 'date' },
                     Range: { type: 'string' },
                     Title: { type: 'string' },
                     Impressions: { type: 'number' },
@@ -30,7 +31,7 @@
                 }
             }
         },
-        sort: { field: 'Date', dir: 'asc' },
+        sort: { field: 'StartDate', dir: 'asc' },
         aggregate: [
             { field: 'Impressions', aggregate: 'sum' },
             { field: 'Clicks', aggregate: 'sum' },
@@ -86,7 +87,9 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
 function DetailInit(e, url) {
     var readData = function () {
         return {
-            channel: e.data.Title
+            channel: e.data.Title,
+            startdate: e.data.StartDate.toLocaleDateString(),
+            enddate: e.data.EndDate.toLocaleDateString()
         };
     }
     var dataSource = CreateSummaryDataSource(url, readData, false);
