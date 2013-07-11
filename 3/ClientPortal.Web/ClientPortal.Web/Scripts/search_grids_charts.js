@@ -139,7 +139,7 @@ function CreateSummaryChart(dataSource, elId, title, series, valueAxis) {
         theme: $(document).data("kendoSkin") || "default",
         series: series,
         categoryAxis: {
-            field: "Range",
+            field: "Title",
             labels: { template: "#= value #" },
             axisCrossingValue: [0, 1000]
         },
