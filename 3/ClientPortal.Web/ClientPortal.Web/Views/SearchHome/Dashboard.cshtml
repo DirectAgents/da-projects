@@ -8,15 +8,6 @@
 </div>
 
 <div class="row">
-    <div class="twelve columns">
-        <div class="searchpanel" id="monthsumOuter">
-            <b>Monthly Summary</b>
-            <div id="monthsumGrid"></div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
     <div class="six columns">
         <div id="weekrevChartSection" class="k-content">
             <div class="chart-wrapper">
@@ -33,38 +24,14 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="six columns">
-        <div id="monthrevChartSection" class="k-content">
-            <div class="chart-wrapper">
-                <div id="monthrevChart"></div>
-            </div>
-        </div>
-    </div>
-    <div class="six columns">
-        <div id="monthorderChartSection" class="k-content">
-            <div class="chart-wrapper">
-                <div id="monthorderChart"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     $(function () {
         var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData", "SearchReports")', null, false);
         CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 0, true, null);
 
-        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData", "SearchReports")', null, false);
-        CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 0, true, null);
-
         CreateRevROASChart(weeksumDS, 'weekrevChart', 'Weekly Revenue vs. ROAS Performance');
         CreateOrderCPOChart(weeksumDS, 'weekorderChart', 'Weekly Orders vs. CPO Performance');
 
-        CreateRevROASChart(monthsumDS, 'monthrevChart', 'Monthly Revenue vs. ROAS Performance');
-        CreateOrderCPOChart(monthsumDS, 'monthorderChart', 'Monthly Orders vs. CPO Performance');
-
         weeksumDS.read();
-        monthsumDS.read();
     });
 </script>

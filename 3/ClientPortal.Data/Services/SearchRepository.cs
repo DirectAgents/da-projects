@@ -9,11 +9,16 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
-        public IQueryable<SearchDailySummary> GetSearchDailySummaries(DateTime? start, DateTime? end, bool includeToday = false)
+        public IQueryable<SearchDailySummary> GetSearchDailySummaries(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = false)
         {
             var summaries = context.SearchDailySummaries.AsQueryable();
+
+            if (advertiserId.HasValue)
+                summaries = summaries.Where(s => s.SearchCampaign.AdvertiserId == advertiserId.Value);
+
             if (start.HasValue)
                 summaries = summaries.Where(s => s.Date >= start);
+
             if (!includeToday)
             {
                 var yesterday = DateTime.Today.AddDays(-1);
@@ -40,7 +45,7 @@ namespace ClientPortal.Data.Services
         //        });
         //    return stats;
         //}
-        public IQueryable<SearchStat> GetWeekStats(int? numWeeks, string channel = null)
+        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? numWeeks, string channel = null)
         {
             if (!String.IsNullOrWhiteSpace(channel) && channel.ToLower().Contains("bing"))
             {   // dummy bing stats...
@@ -65,7 +70,7 @@ namespace ClientPortal.Data.Services
             while (start.DayOfWeek != DayOfWeek.Monday)
                 start = start.AddDays(-1);
 
-            var stats = GetSearchDailySummaries(start, null).GroupBy(s => s.Date).Select(g => new
+            var stats = GetSearchDailySummaries(advertiserId, start, null).GroupBy(s => s.Date).Select(g => new
             {
                 Date = g.Key,
                 Impressions = g.Sum(x => x.Impressions),
@@ -107,7 +112,7 @@ namespace ClientPortal.Data.Services
             //}
         }
 
-        public IQueryable<SearchStat> GetMonthStats(int? numMonths)
+        public IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths)
         {
             DateTime start;
             if (numMonths.HasValue)
@@ -117,7 +122,7 @@ namespace ClientPortal.Data.Services
 
             start = new DateTime(start.Year, start.Month, 1);
 
-            var stats = GetSearchDailySummaries(start, null)
+            var stats = GetSearchDailySummaries(advertiserId, start, null)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
                 .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
                 .Select(g =>
@@ -133,21 +138,21 @@ namespace ClientPortal.Data.Services
             return stats;
         }
 
-        public IQueryable<SearchStat> GetChannelStats()
+        public IQueryable<SearchStat> GetChannelStats(int? advertiserId)
         {
-            var googleStats = GetWeekStats(null, "Google_AdWords");
-            var bingStats = GetWeekStats(null, "Bing_Ads");
+            var googleStats = GetWeekStats(advertiserId, null, "Google_AdWords");
+            var bingStats = GetWeekStats(advertiserId, null, "Bing_Ads");
             return googleStats.Concat(bingStats).AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetCampaignStats(DateTime? start, DateTime? end)
+        public IQueryable<SearchStat> GetCampaignStats(int? advertiserId, DateTime? start, DateTime? end)
         {
             if (!start.HasValue)
                 start = new DateTime(DateTime.Today.Year, 1, 1);
             if (!end.HasValue)
                 end = DateTime.Today.AddDays(-1);
 
-            var stats = GetSearchDailySummaries(start, end)
+            var stats = GetSearchDailySummaries(advertiserId, start, end)
                 .GroupBy(s => s.SearchCampaign.SearchCampaignName)
                 .OrderBy(g => g.Key)
                 .Select(g => new SearchStat
@@ -164,6 +169,7 @@ namespace ClientPortal.Data.Services
             return stats;
         }
 
+        // temp; for dummy data
         public IQueryable<SearchStat> GetCampaignStats(string channel)
         {
             List<SearchStat> stats = new List<SearchStat>();

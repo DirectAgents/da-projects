@@ -1532,6 +1532,7 @@
     <Content Include="Views\SearchHome\CampaignPerf.cshtml" />
     <Content Include="Views\SearchHome\ChannelPerf.cshtml" />
     <Content Include="Views\Shared\_DateFuncs.cshtml" />
+    <Content Include="Views\SearchHome\Monthly.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

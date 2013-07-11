@@ -22,7 +22,9 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult WeekSumData(KendoGridRequest request, int numWeeks = 8)
         {
-            var weekStats = cpRepo.GetWeekStats(numWeeks);
+            var userInfo = GetUserInfo();
+
+            var weekStats = cpRepo.GetWeekStats(userInfo.AdvertiserId, numWeeks);
             var kgrid = new KendoGrid<SearchStat>(request, weekStats);
             if (weekStats.Any())
                 kgrid.aggregates = Aggregates(weekStats);
@@ -34,7 +36,9 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult MonthSumData(KendoGridRequest request, int numMonths = 6)
         {
-            var monthStats = cpRepo.GetMonthStats(numMonths);
+            var userInfo = GetUserInfo();
+
+            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, numMonths);
             var kgrid = new KendoGrid<SearchStat>(request, monthStats);
             if (monthStats.Any())
                 kgrid.aggregates = Aggregates(monthStats);
@@ -56,7 +60,7 @@ namespace ClientPortal.Web.Controllers
             if (!String.IsNullOrWhiteSpace(channel) && channel.ToLower().Contains("bing"))
                 stats = cpRepo.GetCampaignStats(channel); // dummy bing stats
             else
-                stats = cpRepo.GetCampaignStats(start, end);
+                stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, start, end);
 
             var kgrid = new KendoGrid<SearchStat>(request, stats);
             if (stats.Any())
@@ -69,10 +73,24 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult ChannelPerfData(KendoGridRequest request, string startdate, string enddate)
         {
-            var channelStats = cpRepo.GetChannelStats();
+            var userInfo = GetUserInfo();
+
+            var channelStats = cpRepo.GetChannelStats(userInfo.AdvertiserId);
             var kgrid = new KendoGrid<SearchStat>(request, channelStats);
             if (channelStats.Any())
                 kgrid.aggregates = Aggregates(channelStats);
+
+            var json = Json(kgrid);
+            return json;
+        }
+
+        [HttpPost]
+        public JsonResult AdgroupPerfData(KendoGridRequest request, string startdate, string enddate)
+        {
+            var stats = cpRepo.GetAdgroupStats();
+            var kgrid = new KendoGrid<SearchStat>(request, stats);
+            if (stats.Any())
+                kgrid.aggregates = Aggregates(stats);
 
             var json = Json(kgrid);
             return json;

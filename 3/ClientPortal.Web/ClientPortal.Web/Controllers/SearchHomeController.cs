@@ -36,6 +36,11 @@ namespace ClientPortal.Web.Controllers
             return PartialView();
         }
 
+        public PartialViewResult Monthly()
+        {
+            return PartialView();
+        }
+
         public PartialViewResult ChannelPerf()
         {
             return PartialView();
@@ -69,34 +74,5 @@ namespace ClientPortal.Web.Controllers
             return PartialView(model);
         }
 
-        private object Aggregates(IQueryable<SearchStat> stats)
-        {
-            var sumRevenue = stats.Sum(s => s.Revenue);
-            var sumCost = stats.Sum(s => s.Cost);
-            var sumOrders = stats.Sum(s => s.Orders);
-            var aggregates = new
-            {
-                Revenue = new { sum = sumRevenue },
-                Cost = new { sum = sumCost },
-                ROAS = new { agg = (int)Math.Round(100 * sumRevenue / sumCost) },
-                Orders = new { sum = sumOrders },
-                CPO = new { agg = Math.Round( sumCost / sumOrders, 2) },
-                Clicks = new { sum = stats.Sum(s => s.Clicks) },
-                Impressions = new { sum = stats.Sum(s => s.Impressions) },
-            };
-            return aggregates;
-        }
-
-        [HttpPost]
-        public JsonResult AdgroupPerfData(KendoGridRequest request, string startdate, string enddate)
-        {
-            var stats = cpRepo.GetAdgroupStats();
-            var kgrid = new KendoGrid<SearchStat>(request, stats);
-            if (stats.Any())
-                kgrid.aggregates = Aggregates(stats);
-
-            var json = Json(kgrid);
-            return json;
-        }
     }
 }

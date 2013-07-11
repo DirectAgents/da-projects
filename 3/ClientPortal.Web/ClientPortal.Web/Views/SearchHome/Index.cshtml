@@ -36,7 +36,8 @@
               | Top Tabs      |
               +---------------+-->*@
         <dl class="tabs">
-            <dd class="active"><a href="#navDashboard" id="nav_Dashboard">Dashboard</a></dd>
+            <dd class="active"><a href="#navDashboard" id="nav_Dashboard">Weekly</a></dd>
+            <dd><a href="#navMonthly" id="nav_Monthly">Monthly</a></dd>
             <dd><a href="#navChannelPerf" id="nav_ChannelPerf">Channel Performance</a></dd>
             <dd><a href="#navCampaignPerf" id="nav_CampaignPerf">Campaign Performance</a></dd>
             <dd><a href="#navContact" id="nav_Contact">Contact</a></dd>
@@ -58,6 +59,9 @@
 
         <li id="navDashboardTab" class="active">
             <div id="divDashboard" class="searchdiv"></div>
+        </li>
+        <li id="navMonthlyTab">
+            <div id="divMonthly" class="searchdiv"></div>
         </li>
         <li id="navChannelPerfTab">
             <div id="divChannelPerf" class="searchdiv"></div>
@@ -137,6 +141,17 @@
             //$('#nav_Dashboard').click(function () {
             //    LoadDashboard();
             //});
+
+            // Monthly
+            $('#nav_Monthly').one('click', function () {
+                $('#divMonthly').html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("Monthly")',
+                    cache: false
+                }).done(function (html) {
+                    $('#divMonthly').html(html);
+                });
+            });
 
             // Channel Perf
             $('#nav_ChannelPerf').one('click', function () {
