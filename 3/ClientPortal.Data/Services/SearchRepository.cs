@@ -47,6 +47,9 @@ namespace ClientPortal.Data.Services
                 string bing = "Bing_Ads";
                 var dummyStats = new List<SearchStat>
                 {
+                    new SearchStat(true, 5, 5, 6061, 313, 7, 829.92m, 273.34m, bing),
+                    new SearchStat(true, 5, 12, 6015, 346, 6, 849.93m, 280.44m, bing),
+                    new SearchStat(true, 5, 19, 5616, 344, 9, 1099.91m, 274.85m, bing),
                     new SearchStat(true, 5, 26, 6445, 372, 11, 1587.89m, 303.05m, bing),
                     new SearchStat(true, 6, 2, 6495, 367, 15, 2809.80m, 284.57m, bing),
                 };

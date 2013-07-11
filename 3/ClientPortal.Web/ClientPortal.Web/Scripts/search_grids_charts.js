@@ -31,7 +31,6 @@
                 }
             }
         },
-        sort: { field: 'StartDate', dir: 'asc' },
         aggregate: [
             { field: 'Impressions', aggregate: 'sum' },
             { field: 'Clicks', aggregate: 'sum' },
@@ -42,17 +41,21 @@
             { field: 'CPO', aggregate: 'agg' },
         ]
     };
-    if (group)
+    if (group) {
         args.group = {
             field: 'Range', aggregates: [
                 { field: 'Orders', aggregate: 'sum' }
             ]
         };
+        args.sort = { field: 'Title', dir: 'desc' };
+    } else {
+        //args.sort = { field: 'StartDate', dir: 'asc' };
+    }
     return new kendo.data.DataSource(args);
 }
 
-function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, decimals, detailInit) {
-    el.kendoGrid({
+function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, detailInit) {
+    var args = {
         dataSource: dataSource,
         autoBind: false,
         height: height,
@@ -76,12 +79,15 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
             { field: null, title: 'Avg Order/Day', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Orders / Days, 'n" + decimals + "') #" },
         ],
         filterable: true,
-        sortable: {
-            mode: 'multiple'
-        },
         pageable: true,
         detailInit: detailInit
-    });
+    };
+    if (sortable) {
+        args.sortable = { mode: 'multiple' };
+    } else {
+        args.sortable = false;
+    }
+    el.kendoGrid(args);
 }
 
 function DetailInit(e, url) {
@@ -96,7 +102,7 @@ function DetailInit(e, url) {
     dataSource.read();
 
     var el = $("<div/>").appendTo(e.detailCell);
-    CreateSummaryGrid(dataSource, el, null, 'Campaign', 21, 2, null);
+    CreateSummaryGrid(dataSource, el, null, 'Campaign', 21, 2, true, null);
 }
 
 function CreateRevROASChart(dataSource, elId, title) {
