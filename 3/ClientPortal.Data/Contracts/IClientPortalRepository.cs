@@ -55,7 +55,7 @@ namespace ClientPortal.Data.Contracts
         bool DeleteGoal(int id, int? advertiserId);
 
         // Search
-        IQueryable<SearchStat> GetWeekStats(int? numWeeks);
+        IQueryable<SearchStat> GetWeekStats(int? numWeeks, string channel = null);
         IQueryable<SearchStat> GetMonthStats(int? numMonths);
         IQueryable<SearchStat> GetChannelStats();
         IQueryable<SearchStat> GetCampaignStats(DateTime? start, DateTime? end);

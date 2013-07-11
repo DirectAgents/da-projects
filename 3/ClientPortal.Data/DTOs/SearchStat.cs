@@ -75,8 +75,8 @@ namespace ClientPortal.Data.DTOs
                 //this.Date = monday.AddDays(6);
                 this.EndDate = value;
 
-                this.Range = ToRangeName(monday, this.EndDate);
-                this.Title = Range;
+                this.Range = ToRangeName(monday, this.EndDate, true);
+                this.Title = ToRangeName(monday, this.EndDate);
             }
         }
 
@@ -107,6 +107,12 @@ namespace ClientPortal.Data.DTOs
             }
         }
 
+        // will set Title only if value is not null
+        public string TitleIfNotNull
+        {
+            set { if (value != null) this.Title = value; }
+        }
+
         // --- Constructors ---
 
         public SearchStat() { }
@@ -114,8 +120,8 @@ namespace ClientPortal.Data.DTOs
         public SearchStat(bool isWeekly, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string title = null)
         {
             this.EndDate = new DateTime(2013, month, day);
-            this.Range = ToRangeName(this.EndDate, isWeekly);
-            this.Title = title ?? Range;
+            this.Range = ToRangeName(this.EndDate, isWeekly, true);
+            this.Title = title ?? ToRangeName(this.EndDate, isWeekly);
 
             if (isWeekly)
                 Days = 7;
@@ -131,20 +137,20 @@ namespace ClientPortal.Data.DTOs
 
         // --- Private methods ---
 
-        private string ToRangeName(DateTime date, bool isWeekly)
+        private string ToRangeName(DateTime date, bool isWeekly, bool prependYMD = false)
         {
             if (isWeekly)
             {
                 DateTime weekStart = date.AddDays(-6);
-                return ToRangeName(weekStart, date);
+                return ToRangeName(weekStart, date, prependYMD);
             }
             else
-                return date.ToString("MMM-yy");
+                return (prependYMD ? date.ToString("yyyyMMdd") + " " : "") + date.ToString("MMM-yy");
         }
 
-        private string ToRangeName(DateTime start, DateTime end)
+        private string ToRangeName(DateTime start, DateTime end, bool prependYMD = false)
         {
-            return start.ToString("M/d") + " - " + end.ToString("M/d");
+            return (prependYMD ? start.ToString("yyyyMMdd") + " " : "") + start.ToString("M/d") + " - " + end.ToString("M/d");
         }
     }
 }

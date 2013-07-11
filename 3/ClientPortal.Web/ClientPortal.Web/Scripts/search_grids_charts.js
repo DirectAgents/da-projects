@@ -57,7 +57,7 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
         autoBind: false,
         height: height,
         columns: [
-            { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value #' },
+            { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value.substring(9) #' },
             { field: 'Title', title: titleHeader, width: titleWidthPct + '%' },
             { field: 'Revenue', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'Cost', name: 'Costs', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },

@@ -66,6 +66,18 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
+        [HttpPost]
+        public JsonResult ChannelPerfData(KendoGridRequest request, string startdate, string enddate)
+        {
+            var channelStats = cpRepo.GetChannelStats();
+            var kgrid = new KendoGrid<SearchStat>(request, channelStats);
+            if (channelStats.Any())
+                kgrid.aggregates = Aggregates(channelStats);
+
+            var json = Json(kgrid);
+            return json;
+        }
+
         // --- private methods ---
 
         private object Aggregates(IQueryable<SearchStat> stats)

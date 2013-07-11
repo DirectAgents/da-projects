@@ -40,8 +40,19 @@ namespace ClientPortal.Data.Services
         //        });
         //    return stats;
         //}
-        public IQueryable<SearchStat> GetWeekStats(int? numWeeks)
+        public IQueryable<SearchStat> GetWeekStats(int? numWeeks, string channel = null)
         {
+            if (!String.IsNullOrWhiteSpace(channel) && channel.ToLower().Contains("bing"))
+            {   // dummy bing stats...
+                string bing = "Bing_Ads";
+                var dummyStats = new List<SearchStat>
+                {
+                    new SearchStat(true, 5, 26, 6445, 372, 11, 1587.89m, 303.05m, bing),
+                    new SearchStat(true, 6, 2, 6495, 367, 15, 2809.80m, 284.57m, bing),
+                };
+                return dummyStats.AsQueryable();
+            }
+
             DateTime start;
             if (numWeeks.HasValue)
                 start = DateTime.Today.AddDays(-7 * numWeeks.Value + 6);
@@ -77,6 +88,7 @@ namespace ClientPortal.Data.Services
             .Select((g, i) => new SearchStat
             {
                 WeekByMaxDate = g.Max(s => s.Date),
+                TitleIfNotNull = channel, // (if null, Title is "Range")
                 Impressions = g.Sum(s => s.Impressions),
                 Clicks = g.Sum(s => s.Clicks),
                 Orders = g.Sum(s => s.Orders),
@@ -120,16 +132,9 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<SearchStat> GetChannelStats()
         {
-            string google = "Google_AdWords";
-            string bing = "Bing_Ads";
-            var stats = new List<SearchStat>
-            {
-                new SearchStat(true, 5, 26, 42609, 3044, 75, 9225.10m, 3586.54m, google),
-                new SearchStat(true, 5, 26, 6445, 372, 11, 1587.89m, 303.05m, bing),
-                new SearchStat(true, 6, 2, 357143, 2840, 64, 9965.30m, 3151.70m, google),
-                new SearchStat(true, 6, 2, 6495, 367, 15, 2809.80m, 284.57m, bing),
-            };
-            return stats.AsQueryable();
+            var googleStats = GetWeekStats(null, "Google_AdWords");
+            var bingStats = GetWeekStats(null, "Bing_Ads");
+            return googleStats.Concat(bingStats).AsQueryable();
         }
 
         public IQueryable<SearchStat> GetCampaignStats(DateTime? start, DateTime? end)
