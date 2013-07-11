@@ -40,6 +40,8 @@ namespace EomApp1.Screens.Synch.Models.Eom
             affiliate.media_buyer_id = eom.MediaBuyers.IdOrCreate(extracted);
             affiliate.add_code = "CA" + extracted.affiliate_id;
             affiliate.currency_id = eom.Currencies.IdByName(extracted.Currency);
+            if (extracted.contacts == null || extracted.contacts.Length < 1)
+                throw new Exception("Affiliate " + extracted.affiliate_id + " has no contacts.  Please enter one and resynch.");
             affiliate.email = extracted.contacts[0].email_address;
             affiliate.net_term_type_id = eom.NetTermTypes.IdByName("Net 30");
             affiliate.payment_method_id = eom.AffiliatePaymentMethods.IdByName("default");
