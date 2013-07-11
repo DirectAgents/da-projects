@@ -140,41 +140,63 @@ namespace EomApp1.Screens.Synch.Services.Cake
                     throw new Exception("Error exporting affiliate: " + response.message);
                 }
             }
-      
+
             return affiliate;
         }
 
-        public List<EomApp1.Cake.WebServices._4.Reports.conversion> Conversions(int offerID, DateTime fromDate, DateTime toDate)
+
+        public List<EomApp1.Cake.WebServices._4.Reports.conversion> Conversions(int offerID, DateTime fromDate, DateTime toDate, bool enableBatches)
         {
             this.logger.Log(string.Format("Calling Cake web service to get Conversions for OfferID={0} from {1} to {2}.", offerID, fromDate, toDate));
 
             var client = GetReportsServiceV4();
+            List<EomApp1.Cake.WebServices._4.Reports.conversion> conversions;
+            EomApp1.Cake.WebServices._4.Reports.conversion_report_response response = null;
+            EomApp1.Cake.WebServices._4.Reports.conversion_report_response response2 = null;
 
-            var response = client.Conversions(
-                                        api_key: ApiKey,
-                                        start_date: fromDate,
-                                        end_date: toDate.AddDays(1),
-                                        affiliate_id: 0,
-                                        advertiser_id: 0,
-                                        offer_id: offerID,
-                                        campaign_id: 0,
-                                        creative_id: 0,
-                                        include_tests: false,
-                                        start_at_row: 0,
-                                        row_limit: 0,
-                                        sort_field: EomApp1.Cake.WebServices._4.Reports.ConversionsSortFields.conversion_id,
-                                        sort_descending: false);
+            Func<DateTime, DateTime, EomApp1.Cake.WebServices._4.Reports.conversion_report_response> getConversions = (from, to) =>
+                client.Conversions(
+                            api_key: ApiKey,
+                            start_date: from,
+                            end_date: to,
+                            affiliate_id: 0,
+                            advertiser_id: 0,
+                            offer_id: offerID,
+                            campaign_id: 0,
+                            creative_id: 0,
+                            include_tests: false,
+                            start_at_row: 0,
+                            row_limit: 0,
+                            sort_field: EomApp1.Cake.WebServices._4.Reports.ConversionsSortFields.conversion_id,
+                            sort_descending: false);
 
-            if (!response.success)
+            if (enableBatches && toDate.Day > 1)
             {
-                throw new Exception(response.message);
+                int midPoint = toDate.Day / 2;
+
+                response = getConversions(fromDate, fromDate.AddDays(midPoint));
+                if (!response.success)
+                    throw new Exception(response.message);
+
+                response2 = getConversions(fromDate.AddDays(midPoint), toDate.AddDays(1));
+                if (!response2.success)
+                    throw new Exception(response.message);
             }
             else
             {
-                var conversions = response.conversions;
-                this.logger.Log(string.Format("Got {0} conversions.", conversions.Length));
-                return conversions.ToList();
+                response = getConversions(fromDate, toDate.AddDays(1));
+
+                if (!response.success)
+                    throw new Exception(response.message);
             }
+
+            conversions = response.conversions.ToList();
+            if (response2 != null)
+                conversions.AddRange(response2.conversions);
+
+            this.logger.Log(string.Format("Got {0} conversions.", conversions.Count));
+
+            return conversions;
         }
 
         private static EomApp1.Cake.WebServices._3.Export.exportSoap GetExportServiceV3()

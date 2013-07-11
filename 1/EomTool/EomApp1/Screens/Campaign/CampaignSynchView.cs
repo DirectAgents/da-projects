@@ -125,7 +125,6 @@ namespace EomApp1.Screens.Campaign
                         month,
                         startDay,
                         endDay,
-                        false,
                         0);
                 }
                 if (synchStats || synchPayouts)
