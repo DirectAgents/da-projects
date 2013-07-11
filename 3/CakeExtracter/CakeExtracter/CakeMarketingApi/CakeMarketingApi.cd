@@ -25,7 +25,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="CakeExtracter.CakeMarketingApi.Entities.ArrayOfDailySummary">
-    <Position X="15" Y="7.25" Width="2" />
+    <Position X="15" Y="7" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>CakeMarketingApi\Entities\ArrayOfDailySummary.cs</FileName>
@@ -35,7 +35,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="CakeExtracter.CakeMarketingApi.Entities.DailySummary">
-    <Position X="14.5" Y="8.75" Width="2.75" />
+    <Position X="14.75" Y="8.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AgAAAAAEAAAgAAAAAAAAABiCBAABAAEBCAQAAAAAAgA=</HashCode>
       <FileName>CakeMarketingApi\Entities\DailySummary.cs</FileName>
@@ -83,7 +83,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="CakeExtracter.CakeMarketingApi.Entities.Offer">
-    <Position X="1" Y="8.5" Width="2.25" />
+    <Position X="0.75" Y="8.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAABAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>CakeMarketingApi\Entities\Offer.cs</FileName>

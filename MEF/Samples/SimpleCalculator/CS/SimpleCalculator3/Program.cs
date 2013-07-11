@@ -126,7 +126,6 @@ namespace SimpleCalculator3
             }
         }
 
-
         static void Main(string[] args)
         {
             Program p = new Program(); //Composition is performed in the constructor
@@ -137,8 +136,6 @@ namespace SimpleCalculator3
                 s = Console.ReadLine();
                 Console.WriteLine(p.calculator.Calculate(s));
             }
-            
-
         }
     }
 }

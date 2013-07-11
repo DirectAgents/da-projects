@@ -1,17 +1,12 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
 using CakeExtracter.Etl;
-using CakeExtracter.Etl.CakeMarketing;
-using CakeExtracter.Etl.CakeMarketing.Entities;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Xml.Serialization;
 
 namespace CakeExtracter.UnitTests
 {
@@ -30,20 +25,38 @@ namespace CakeExtracter.UnitTests
         }
 
         [TestMethod]
+        public void CakeMarketingUtility_Conversions()
+        {
+            const int advertiserId = 278;
+            const int offerId = 0;
+            var dateRange = new DateRange(new DateTime(2013, 6, 1), new DateTime(2013, 6, 2));
+            var result = CakeMarketingUtility.Conversions(dateRange, advertiserId, offerId);
+            Console.WriteLine(result.ToArray().ToXml());
+        }
+
+        [TestMethod]
+        public void CakeMarketingUtility_Traffic()
+        {
+            var dateRange = new DateRange(new DateTime(2013, 6, 1), new DateTime(2013, 6, 2));
+            var result = CakeMarketingUtility.Traffic(dateRange);
+            Console.WriteLine(result.ToArray().ToXml());
+        }
+
+        [TestMethod]
         public void Etl_DailySummariesExtracter()
         {
             var dateRange = new DateRange(new DateTime(2013, 6, 1), new DateTime(2013, 6, 3));
             var extracter = new DailySummariesExtracter(dateRange, 278);
             var loader = new MockLoader();
-            var extracterThread = extracter.BeginExtracting();
-            var loaderThread = loader.BeginLoading(extracter);
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
         }
 
         public class MockLoader : Loader<OfferDailySummary>
         {
-            protected override int LoadItems(List<OfferDailySummary> items)
+            protected override int Load(List<OfferDailySummary> items)
             {
                 var loadedCount = 0;
                 if (items != null)
@@ -55,20 +68,14 @@ namespace CakeExtracter.UnitTests
                 return loadedCount;
             }
         }
-    }
 
-    public static class Ext
-    {
-        public static string ToXml<T>(this T[] arr)
+        [TestMethod]
+        public void CakeExtracter_SynchCakeTrafficCommand()
         {
-            var serializer = new XmlSerializer(typeof (T[]));
-            var sb = new StringBuilder();
-            using (var sw = new StringWriter(sb))
-            {
-                serializer.Serialize(sw, arr); 
-            }
-            var result = sb.ToString();
-            return result;
+            var obj = new CakeExtracter.Commands.SynchCakeTrafficCommand();
+            obj.StartDate = new DateTime(2013, 6, 1);
+            obj.EndDate = new DateTime(2013, 7, 1);
+            obj.Execute(null);
         }
     }
 }

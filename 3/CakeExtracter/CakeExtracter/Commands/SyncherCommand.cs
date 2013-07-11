@@ -2,7 +2,7 @@
 using System.ComponentModel.Composition;
 using CakeExtracter.Common;
 
-namespace CakeExtracter.ConsoleCommands
+namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
     public class SyncherCommand : ConsoleCommand

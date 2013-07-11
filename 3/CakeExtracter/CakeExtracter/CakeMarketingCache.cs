@@ -39,7 +39,7 @@ namespace CakeExtracter
                         string fileName = FileName(date, advertiserId);
 
                         int i = 0;
-                        foreach (var clicksSet in dateGroup.InSetsOf(ItemsPerFile))
+                        foreach (var clicksSet in dateGroup.InBatches(ItemsPerFile))
                         {
                             var filePath = dirName + string.Format(fileName, ++i);
 

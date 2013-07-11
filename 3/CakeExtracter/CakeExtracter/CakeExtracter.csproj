@@ -133,10 +133,21 @@
     <Compile Include="Bootstrappers\ServicePointBootstrapper.cs" />
     <Compile Include="CakeMarketingApi\Clients\ApiClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\ApiRequest.cs" />
+    <Compile Include="CakeMarketingApi\Clients\ConversionsClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\ConversionsRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\DailySummariesRequest.cs" />
+    <Compile Include="CakeMarketingApi\Clients\TrafficClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\TrafficRequest.cs" />
+    <Compile Include="CakeMarketingApi\Entities\ArrayOfTraffic.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Conversion.cs" />
+    <Compile Include="CakeMarketingApi\Entities\ConversionReportResponse.cs" />
+    <Compile Include="CakeMarketingApi\Entities\DateRangeTraffic.cs" />
+    <Compile Include="Commands\SynchCakeTrafficCommand.cs" />
+    <Compile Include="Common\CopyPropertiesUtility.cs" />
+    <Compile Include="Common\EmailUtility.cs" />
+    <Compile Include="Common\LinqExtensions.cs" />
     <Compile Include="Common\LogElapsedTime.cs" />
-    <Compile Include="Common\RestClient.cs" />
-    <Compile Include="Common\RestRequest.cs" />
+    <Compile Include="Common\ReflectionExtensions.cs" />
     <Compile Include="CakeMarketingApi\Entities\ArrayOfDailySummary.cs" />
     <Compile Include="CakeMarketingApi\Clients\DailySummariesClient.cs" />
     <Compile Include="CakeMarketingApi\Entities\DailySummary.cs" />
@@ -152,21 +163,25 @@
     <Compile Include="Common\ConsoleCommand.cs" />
     <Compile Include="Common\ConsoleCommandDispatcher.cs" />
     <Compile Include="Common\DateRange.cs" />
-    <Compile Include="ConsoleCommands\SchedulerCommand.cs" />
-    <Compile Include="ConsoleCommands\SyncherCommand.cs" />
-    <Compile Include="ConsoleCommands\SynchDailySummariesCommand.cs" />
-    <Compile Include="ConsoleCommands\SynchSearchDailySummariesXmlCommand.cs" />
+    <Compile Include="Commands\SchedulerCommand.cs" />
+    <Compile Include="Commands\SyncherCommand.cs" />
+    <Compile Include="Commands\SynchDailySummariesCommand.cs" />
+    <Compile Include="Commands\SynchSearchDailySummariesXmlCommand.cs" />
+    <Compile Include="Common\SqlUtility.cs" />
+    <Compile Include="Common\XmlExtensions.cs" />
     <Compile Include="DataWarehouse.cs" />
     <Compile Include="Bootstrappers\EnterpriseLibraryBootstrapper.cs" />
-    <Compile Include="Common\InSetsOfExtension.cs" />
+    <Compile Include="Common\BatchingExtensions.cs" />
     <Compile Include="CakeMarketingApi\CakeMarketingUtility.cs" />
+    <Compile Include="Data\CakeTraffic\CakeTrafficContext.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\TrafficExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\DailySummariesExtracter.cs" />
-    <Compile Include="Etl\CakeMarketing\Entities\OfferDailySummary.cs" />
+    <Compile Include="CakeMarketingApi\Entities\OfferDailySummary.cs" />
+    <Compile Include="Etl\CakeMarketing\Loaders\TrafficLoader.cs" />
+    <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\GoogleAdWords\Extracters\AdWordsXmlReportExtracter.cs" />
-    <Compile Include="Etl\GoogleAdWords\Loaders\AdWordsXmlReportLoader.cs" />
-    <Compile Include="Etl\IExtracter.cs" />
+    <Compile Include="Etl\GoogleAdWords\Loaders\AdWordsLoader.cs" />
     <Compile Include="Etl\Extracter.cs" />
-    <Compile Include="Etl\ILoader.cs" />
     <Compile Include="Etl\Loader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\DailySummariesLoader.cs" />
     <Compile Include="ICakeMarketing.cs" />
@@ -192,6 +207,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="CakeMarketingApi\CakeMarketingApi.cd" />
+    <None Include="Etl\Etl.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -216,6 +232,9 @@
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

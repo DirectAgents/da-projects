@@ -28,51 +28,51 @@ namespace DAgents.Synch
         /// <param name="synchDate"></param>
         /// <param name="logger"></param>
         /// <param name="db"></param>
-        public static void SynchStats(int programID, DateTime synchDate, ILogger logger, SynchDBDataContext db, bool deleteStats, int redirectProgramID) // redirected pid
+        public static void SynchStats(int programID, DateTime synchDate, ILogger logger, SynchDBDataContext db, int redirectProgramID) // redirected pid
         {
             logger.Log("date " + synchDate.ToString());
             logger.Log("campaign pid " + programID);
 
             #region Delete stats and line items for current pid and date
-            {
-                if (deleteStats)
-                {
-                    using (var db2 = new SynchDBDataContext(true))
-                    {
-                        var stats = from c in db2.StatEntities
-                                    where c.pid == programID && c.stat_date == synchDate
-                                    select c;
+            //{
+            //    if (deleteStats)
+            //    {
+            //        using (var db2 = new SynchDBDataContext(true))
+            //        {
+            //            var stats = from c in db2.StatEntities
+            //                        where c.pid == programID && c.stat_date == synchDate
+            //                        select c;
 
-                        var badStats = from stat in stats
-                                       where stat.ItemEntities.Any(c => c.ItemAccountingStatusEntity.name != "default")
-                                       select stat;
+            //            var badStats = from stat in stats
+            //                           where stat.ItemEntities.Any(c => c.ItemAccountingStatusEntity.name != "default")
+            //                           select stat;
 
-                        if (badStats.Count() > 0)
-                        {
-                            logger.LogError("cannot delete " + badStats.Count() + " items with status other than default");
+            //            if (badStats.Count() > 0)
+            //            {
+            //                logger.LogError("cannot delete " + badStats.Count() + " items with status other than default");
 
-                            stats = stats.Except(badStats);
-                        }
+            //                stats = stats.Except(badStats);
+            //            }
 
-                        string statIDs = string.Join(",", stats.Select(c => c.id));
+            //            string statIDs = string.Join(",", stats.Select(c => c.id));
 
-                        logger.Log("delete stat ids: " + statIDs);
+            //            logger.Log("delete stat ids: " + statIDs);
 
-                        db2.StatEntities.DeleteAllOnSubmit(stats);
+            //            db2.StatEntities.DeleteAllOnSubmit(stats);
 
-                        // TODO: key off of Source id, instead of glob matching to name
-                        var items = from c in db2.ItemEntities where c.pid == programID && c.name.Contains(synchDate.ToString("yyyy-MM-dd")) select c;
-                        db2.ItemEntities.DeleteAllOnSubmit(items);
-                        string itemIDs = string.Join(",", from c in items select c.id);
+            //            // TODO: key off of Source id, instead of glob matching to name
+            //            var items = from c in db2.ItemEntities where c.pid == programID && c.name.Contains(synchDate.ToString("yyyy-MM-dd")) select c;
+            //            db2.ItemEntities.DeleteAllOnSubmit(items);
+            //            string itemIDs = string.Join(",", from c in items select c.id);
 
-                        logger.Log("delete item ids: " + itemIDs);
+            //            logger.Log("delete item ids: " + itemIDs);
 
-                        logger.Log("cleaning stats/items");
+            //            logger.Log("cleaning stats/items");
 
-                        db2.SubmitChanges();
-                    }
-                }
-            }
+            //            db2.SubmitChanges();
+            //        }
+            //    }
+            //}
             #endregion
 
             // Get all the affiliates
@@ -506,7 +506,6 @@ namespace DAgents.Synch
             int month,
             int sday,
             int eday,
-            bool preDelete,
             int redirectedPID)
         {
             var days = new List<int>();
@@ -528,7 +527,7 @@ namespace DAgents.Synch
                         Logger.Log(string.Format("+synch stats for {0}/{1}/{2}", month, day, year));
 
                         // redirect pid
-                        SynchStats(pid, new DateTime(year, month, day), Logger, db, preDelete, redirectedPID);
+                        SynchStats(pid, new DateTime(year, month, day), Logger, db, redirectedPID);
 
                         Logger.Log(string.Format("-synch stats for {0}/{1}/{2} {3}", month, day, year, CounterString(++done, --toGo)));
                     }

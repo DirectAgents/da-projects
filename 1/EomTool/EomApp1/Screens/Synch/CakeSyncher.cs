@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DAgents.Common;
 using EomApp1.Cake.WebServices._4.Reports;
 using EomApp1.Screens.Synch.Models.Cake;
@@ -55,6 +56,17 @@ namespace EomApp1.Screens.Synch
             /// Gets Year, Month and ToDay as a DateTime.
             /// </summary>
             public DateTime ToDate { get { return new DateTime(this.Year, this.Month, this.ToDay); } }
+
+            /// <summary>
+            /// If true, ignore FromDay and ToDay, and instead synch the whole month
+            /// </summary>
+            public bool ExtractInBatches { get; set; }
+
+            /// <summary>
+            /// If true, create all items as a summary of the items for the month instead of
+            /// an item for each day with stats.
+            /// </summary>
+            public bool GroupItemsToFirstDayOfMonth { get; set; }
         }
 
         private readonly Parameters parameters;
@@ -63,8 +75,8 @@ namespace EomApp1.Screens.Synch
         private List<conversion> extractedConversions;
         private CakeEntities cakeEntities;
         private EomDatabaseEntities eomEntities;
-        private List<CakeConversionSummary> conversionSummaries;
-        private Dictionary<CakeConversionSummary, Item> itemsFromConversionSummaries;
+        private List<RegroupedCakeConversionSummary> conversionSummaries;
+        private Dictionary<RegroupedCakeConversionSummary, Item> itemsFromConversionSummaries;
 
         public CakeSyncher(ILogger logger, Parameters parameters)
         {
@@ -77,23 +89,29 @@ namespace EomApp1.Screens.Synch
         {
             using (this.cakeEntities = new CakeEntities())
             {
-                this.DeleteExistingConversions();
+                this.DeleteExistingConversions(); // 1
                 this.cakeEntities.SaveChanges();
             }
             using (this.eomEntities = EomDatabaseEntities.Create())
             {
-                this.DeleteExistingItems();
+                this.DeleteExistingItems(); // 2
                 this.eomEntities.SaveChanges();
             }
             using (this.cakeEntities = new CakeEntities())
             {
+                // 3, 4
                 this.ExtractConversions();
+                // 5
                 this.StageExtractedConversions();
+                // 6 - save changes
                 this.cakeEntities.SaveChanges();
                 using (this.eomEntities = EomDatabaseEntities.Create())
                 {
+                    // 7, 8
                     this.ReadConversionSummaries();
+                    // 9
                     this.TransformConversionSummariesToItems();
+                    // 10, 11
                     this.LoadItems();
                     this.eomEntities.SaveChanges();
                 }
@@ -101,6 +119,7 @@ namespace EomApp1.Screens.Synch
         }
 
         #region Prepare
+        // step 1
         private void DeleteExistingConversions()
         {
             this.logger.Log("Deleting existing conversions...");
@@ -117,6 +136,7 @@ namespace EomApp1.Screens.Synch
             this.logger.Log("Deleted " + existingConversions.Count() + " conversions.");
         }
 
+        // step 2
         private void DeleteExistingItems()
         {
             this.logger.Log("Deleting Items with default accounting/reporting status...");
@@ -137,14 +157,15 @@ namespace EomApp1.Screens.Synch
         #endregion
 
         #region Extract
+        // step 3
         private void ExtractConversions()
         {
             logger.Log("Extracting conversions...");
 
             var extracted = this.cakeService.Conversions(this.parameters.CampaignExternalId,
                                                          this.parameters.FromDate,
-                                                         this.parameters.ToDate).ToList();
-
+                                                         this.parameters.ToDate,
+                                                         this.parameters.ExtractInBatches).ToList();
 
             var validations = new Func<conversion, bool>[] { 
                  c => (c.affiliate != null) && (c.affiliate.affiliate_id > 0),
@@ -158,13 +179,14 @@ namespace EomApp1.Screens.Synch
                 logger.Log("Ignoring " + partitioned[false].Count() + " conversions.");
             }
 
+            // step 4 - SET extractedConversions to list of valid conversions
             this.extractedConversions = partitioned[true].ToList();
 
             logger.Log("Extracted " + this.extractedConversions.Count + " conversions.");
         }
 
-
         List<CakeConversion> updatedCakeConversions = new List<CakeConversion>();
+        // step 5
         private void StageExtractedConversions()
         {
             this.logger.Log("Staging extracted conversions...");
@@ -181,31 +203,115 @@ namespace EomApp1.Screens.Synch
         #endregion
 
         #region Transform
+        // step 7
         private void ReadConversionSummaries()
         {
-            this.conversionSummaries = cakeEntities.CakeConversionSummaries.ByOfferIdAndDateRange(
+            // step 8
+            // CakeConversionSummaries is a view that groups conversions by offerId and Date, and gives them a unique string name key
+            // SET conversionSummaries to rows from special view for offerId and date range
+            var conversionSummariesFromView = cakeEntities.CakeConversionSummaries.ByOfferIdAndDateRange(
                                                                                 this.parameters.CampaignExternalId,
                                                                                 this.parameters.FromDate,
                                                                                 this.parameters.ToDate).ToList();
+
+            if (this.parameters.GroupItemsToFirstDayOfMonth)
+            {
+                int conversionSummaryCountBeforeGrouping = conversionSummariesFromView.Count;
+                var rx = new Regex(@"Cake/(\d+-\d+-\d+)/aff");
+                Func<DateTime, DateTime> firstOfMonth = dt => dt.AddDays(-1 * (dt.Day - 1));
+
+                this.conversionSummaries = conversionSummariesFromView
+                        .Select(c => new RegroupedCakeConversionSummary
+                        {
+                            Name = rx.Replace(c.Name, "Cake/" + firstOfMonth(c.ConversionDate.Value).ToString("yyyy-MM-dd") + "/aff"),
+                            ConversionDate = firstOfMonth(c.ConversionDate.Value),
+                            Affiliate_Id = c.Affiliate_Id,
+                            Offer_Id = c.Offer_Id,
+                            ConversionType = c.ConversionType,
+                            Units = c.Units,
+                            PricePaid = c.PricePaid,
+                            PriceReceived = c.PriceReceived,
+                            PricePaidCurrency = c.PricePaidCurrency,
+                            PriceReceivedCurrency = c.PriceReceivedCurrency,
+                            Paid = c.Paid,
+                            Received = c.Received
+                        })
+                        .GroupBy(c => new
+                        {
+                            c.Name,
+                            c.ConversionDate,
+                            c.Affiliate_Id,
+                            c.Offer_Id,
+                            c.ConversionType,
+                            c.PricePaid,
+                            c.PricePaidCurrency,
+                            c.PriceReceived,
+                            c.PriceReceivedCurrency
+                        })
+                        .Select(c => new RegroupedCakeConversionSummary
+                        {
+                            Name = c.Key.Name,
+                            ConversionDate = c.Key.ConversionDate,
+                            Affiliate_Id = c.Key.Affiliate_Id,
+                            Offer_Id = c.Key.Offer_Id,
+                            ConversionType = c.Key.ConversionType,
+                            Units = c.Sum(s => s.Units),
+                            PricePaid = c.Key.PricePaid,
+                            PriceReceived = c.Key.PriceReceived,
+                            PricePaidCurrency = c.Key.PricePaidCurrency,
+                            PriceReceivedCurrency = c.Key.PriceReceivedCurrency,
+                            Paid = c.Sum(s => s.Paid),
+                            Received = c.Sum(s => s.Received)
+                        }).ToList();
+
+                this.logger.Log(string.Format("Regrouped to {0} conversion summaries to {1} with 1st of month conversion date..",
+                    conversionSummaryCountBeforeGrouping, conversionSummaries.Count));
+            }
+            else
+            {
+                this.conversionSummaries = conversionSummariesFromView
+                    .Select(c => new RegroupedCakeConversionSummary
+                    {
+                        Name = c.Name,
+                        ConversionDate = c.ConversionDate,
+                        Affiliate_Id = c.Affiliate_Id,
+                        Offer_Id = c.Offer_Id,
+                        ConversionType = c.ConversionType,
+                        Units = c.Units,
+                        PricePaid = c.PricePaid,
+                        PriceReceived = c.PriceReceived,
+                        PricePaidCurrency = c.PricePaidCurrency,
+                        PriceReceivedCurrency = c.PriceReceivedCurrency,
+                        Paid = c.Paid,
+                        Received = c.Received
+                    }).ToList();
+            }
         }
 
         private void TransformConversionSummariesToItems()
         {
+            // step 9
+            // TRICKY - we get a dictionary where the key is a summary and the value is an existing item which matches
+            // date, affiliate id, offer id, and offer type (e.g. CPA), thus matching everything BUT the currency types and amounts
+            // for cost and revenue.  If there is not matching item, the value is set to null.
             this.itemsFromConversionSummaries = this.conversionSummaries.ToDictionary(c => c, c => c.MatchingItem(this.eomEntities));
         }
         #endregion
 
         #region Load
+        // step 10
         private void LoadItems()
         {
             logger.Log("Loading items from conversion summaries...");
 
             foreach (var conversionSummary in this.itemsFromConversionSummaries.Keys.ToList())
             {
+                // check the dictionary of conversionSummary to existing item
                 var item = this.itemsFromConversionSummaries[conversionSummary];
 
-                if (item == null)
+                if (item == null)  // no existing item?
                 {
+                    // ?10a
                     item = CreateItem(conversionSummary, item);
                 }
                 else
@@ -213,6 +319,8 @@ namespace EomApp1.Screens.Synch
                     logger.Log(string.Format("Updating item {0} from conversion {1}.", item.name, conversionSummary.Name));
                 }
 
+                // Here's the logic that used to be required when there were two tracking systems and the campaign IDs could conflict
+                // Lesson to be learned, when there's an external system, use a key that will never conflict now or in the future
                 if (this.parameters.CampaignId != this.parameters.CampaignExternalId)
                 {
                     logger.Log(string.Format("Cake Offer {0} is redirecting to PID {1}.", this.parameters.CampaignExternalId, this.parameters.CampaignId));
@@ -220,6 +328,7 @@ namespace EomApp1.Screens.Synch
 
                 try
                 {
+                    // 11 - alot of stuff happens in the implementation of Update
                     item.Update(this.eomEntities, conversionSummary, this.parameters.CampaignId, this.cakeService, this.logger);
                 }
                 catch (CannotChangePromotedItemException)
@@ -237,7 +346,8 @@ namespace EomApp1.Screens.Synch
             logger.Log("Items loaded.");
         }
 
-        private Item CreateItem(CakeConversionSummary conversionSummary, Item item)
+        // ?10a
+        private Item CreateItem(RegroupedCakeConversionSummary conversionSummary, Item item)
         {
             logger.Log("Creating item: " + conversionSummary.Name);
 
@@ -248,5 +358,45 @@ namespace EomApp1.Screens.Synch
             return item;
         }
         #endregion
+    }
+
+    public class RegroupedCakeConversionSummary
+    {
+        public string Name { get; set; }
+
+        public DateTime? ConversionDate { get; set; }
+
+        public int? Affiliate_Id { get; set; }
+
+        public int? Offer_Id { get; set; }
+
+        public string ConversionType { get; set; }
+
+        public int? Units { get; set; }
+
+        public decimal? PricePaid { get; set; }
+
+        public decimal? PriceReceived { get; set; }
+
+        public string PricePaidCurrency { get; set; }
+
+        public string PriceReceivedCurrency { get; set; }
+
+        public decimal? Paid { get; set; }
+
+        public decimal? Received { get; set; }
+
+        //Cake/2012-05-18/aff:10901/offer:1539/type:CPA/paycur:EUR/paid:2/recvcur:EUR/recv:3
+        public Item MatchingItem(EomDatabaseEntities eomEntities)
+        {
+            string name = this.Name;
+            string keyPart = name.Substring(0, name.IndexOf("/paycur"));
+
+            var matchingItem = from c in eomEntities.Items
+                               where c.name.StartsWith(keyPart)
+                               select c;
+
+            return matchingItem.FirstOrDefault();
+        }
     }
 }

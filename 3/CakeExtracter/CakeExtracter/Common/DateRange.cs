@@ -18,6 +18,11 @@ namespace CakeExtracter.Common
             ToDate = toDate.Date;
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0} to {1}", FromDate.ToShortDateString(), ToDate.ToShortDateString());
+        }
+
         //public DateRange(DateTime fromDate, DateTime toDate, Func<DateTime, DateTime> step)
         //    : this(fromDate, toDate)
         //{

@@ -1,58 +1,51 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl
 {
-    public abstract class Loader<T> : ILoader<T>
+    public abstract class Loader<T>
     {
-        private IExtracter<T> extracter;
-
-        public int TotalLoaded { get; set; }
-
-        public int LoadBatchSize { get; set; }
+        private Extracter<T> extracter;
 
         protected Loader()
         {
-            LoadBatchSize = 100;
+            BatchSize = 100;
         }
 
-        public Thread BeginLoading(IExtracter<T> source)
+        public int BatchSize { get; set; }
+
+        public Thread Start(Extracter<T> source)
         {
             extracter = source;
-            var thread = new Thread(Load);
+            var thread = new Thread(DoLoad);
             thread.Start();
             return thread;
         }
 
-        private void Load()
+        private void DoLoad()
         {
-            while ((!extracter.IsComplete) || (extracter.TotalExtracted != TotalLoaded))
+            var loadedCount = 0;
+            var extractedCount = 0;
+
+            foreach (var list in extracter.EnumerateAll().InBatches(BatchSize))
             {
-                IEnumerable<T> itemsToLoad = null;
+                loadedCount += Load(list);
+                extractedCount = extracter.Added;
 
-                Thread.Sleep(250);
+                Logger.Info("Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", extractedCount, loadedCount,
+                            extracter.Count, extracter.Done);
+            }
 
-                lock (extracter.Locker)
-                {
-                    if (extracter.TotalExtracted > TotalLoaded)
-                    {
-                        itemsToLoad = extracter.ExtractedItems.Skip(TotalLoaded).ToList();
-                    }
-                }
-
-                if (itemsToLoad != null)
-                {
-                    foreach (var batch in itemsToLoad.InSetsOf(LoadBatchSize))
-                    {
-                        TotalLoaded += LoadItems(batch);
-                        Logger.Info("{0}/{1}, Done: {2}", TotalLoaded, extracter.TotalExtracted, extracter.IsComplete);
-                    }
-                }
+            if (loadedCount != extractedCount)
+            {
+                var ex = new Exception(string.Format("Unmatched counts: loaded {0}, extracted {1}", loadedCount, extractedCount));
+                Logger.Error(ex);
+                throw ex;
             }
         }
 
-        protected abstract int LoadItems(List<T> items);
+        protected abstract int Load(List<T> items);
     }
 }

@@ -53,7 +53,6 @@ namespace EomApp1.Screens.Synch
 
         private void ApplySettings()
         {
-            this.targetSystem1.TargetSystemChoice = Properties.Settings.Default.SynchScreenTargetSystemChoice;
         }
 
         private void SaveSettings()
@@ -232,14 +231,7 @@ namespace EomApp1.Screens.Synch
             Log("synch starting..");
             pidList.AsParallel().ForAll(pid =>
             {
-                if (ShouldSynchPayouts)
-                {
-                    SynchPayouts(pid);
-                }
-                if (ShouldSynchStats)
-                {
-                    SynchStats(pid, 0); // redirect pid
-                }
+                SynchStats(pid, 0); // redirect pid
             });
             Log("synch done.");
         }
@@ -272,17 +264,7 @@ namespace EomApp1.Screens.Synch
             int endDay = Convert.ToInt32(toDayTextBox.Text);
             try
             {
-                switch (this.targetSystem1.TargetSystemChoice)
-                {
-                    case TargetSystemChoice.DirectTrack:
-                        SynchStatsFromDirectTrack(pid, redirectedPID, startDay, endDay);
-                        break;
-                    case TargetSystemChoice.Cake:
-                        SynchStatsFromCake(pid, startDay, endDay);
-                        break;
-                    default:
-                        break;
-                }
+                SynchStatsFromCake(pid, startDay, endDay);
             }
             catch (Exception ex)
             {
@@ -318,14 +300,16 @@ namespace EomApp1.Screens.Synch
             catch
             {
             }
-            var parameters = new CakeSyncher.Parameters 
+            var parameters = new CakeSyncher.Parameters
             {
                 CampaignId = campaignID,
                 CampaignExternalId = offerID,
-                Year = Properties.Settings.Default.StatsYear, 
+                Year = Properties.Settings.Default.StatsYear,
                 Month = Properties.Settings.Default.StatsMonth,
                 FromDay = startDay,
-                ToDay = endDay 
+                ToDay = endDay,
+                ExtractInBatches = _extractConversionsFromCakeInBatches.Checked,
+                GroupItemsToFirstDayOfMonth = _groupItemsToFirstDayOfMonthCheckBox.Checked
             };
             var cakeSyncher = new CakeSyncher(this.Logger, parameters);
             cakeSyncher.SynchStatsForOfferId();
@@ -340,7 +324,6 @@ namespace EomApp1.Screens.Synch
                 Properties.Settings.Default.StatsMonth,
                 startDay,
                 endDay,
-                ShouldPreDeleteStats,
                 redirectedPID); // redirect pid
         }
 
@@ -371,21 +354,6 @@ namespace EomApp1.Screens.Synch
         private bool ShouldLoop
         {
             get { return _loopCheckBox.Checked; }
-        }
-
-        private bool ShouldSynchStats
-        {
-            get { return checkBox2.Checked; }
-        }
-
-        private bool ShouldSynchPayouts
-        {
-            get { return (checkBox1.Enabled && checkBox1.Checked); }
-        }
-
-        private bool ShouldPreDeleteStats
-        {
-            get { return _preDeleteCheckBox.Checked; }
         }
 
         private ILogger Logger { get { return this; } }
@@ -454,24 +422,21 @@ namespace EomApp1.Screens.Synch
 
         private void EnableAndDisableControlsForDirectTrackTargetSystemChoice()
         {
-            this.checkBox1.Enabled = true;
-            this._preDeleteCheckBox.Enabled = true;
-            this.groupBox1.Enabled = true;
-            this.redirectsLinkLabel.Visible = false;
         }
 
         private void EnableAndDisableControlsForCakeTargetSystemChoice()
         {
-            this.checkBox1.Enabled = false;
-            this._preDeleteCheckBox.Enabled = false;
             this.groupBox1.Enabled = false;
-            this.redirectsLinkLabel.Visible = true;
         }
 
         private void redirectsLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var form = new SetupForm();
             form.ShowDialog();
+        }
+
+        private void _groupItemsToFirstDayOfMonthCheckBox_EnabledChanged(object sender, EventArgs e)
+        {
         }
     }
 }

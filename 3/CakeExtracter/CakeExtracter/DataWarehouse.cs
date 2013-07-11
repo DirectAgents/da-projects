@@ -88,7 +88,7 @@ namespace CakeExtracter
             int count = 0;
             int clicksCount = clicks.Count;
             const int step = 1000;
-            foreach (var clickSet in clicks.InSetsOf(step))
+            foreach (var clickSet in clicks.InBatches(step))
             {
                 Console.WriteLine("Processing {0}/{1}..", count, clicksCount);
 
@@ -217,7 +217,7 @@ namespace CakeExtracter
         }
         #endregion
 
-        #region Load Methods
+        #region DoLoad Methods
         private void LoadDimension<T>(IEnumerable<T> toLoad, Func<T, int> key) where T : class
         {
             using (var db = new ClientPortalDWContext())
