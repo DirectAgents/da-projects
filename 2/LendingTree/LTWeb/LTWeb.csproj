@@ -163,9 +163,6 @@
     <Content Include="App_Data\questions.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\connectionsconfig.xml">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Content\images\bbb-logo.gif" />
     <Content Include="Content\images\bg-narrow-repeat.png" />
     <Content Include="Content\images\bg-narrowgreen-end.png" />
@@ -179,7 +176,25 @@
     <Content Include="Content\images\house-logo.gif" />
     <Content Include="Content\images\icon-lock.png" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\new\bg-narrow-repeat.png" />
+    <Content Include="Content\images\new\bg-narrowgreen-end.png" />
+    <Content Include="Content\images\new\bg-narrowgreen.png" />
+    <Content Include="Content\images\new\btn-continue.jpg" />
+    <Content Include="Content\images\new\btn-showresults.jpg" />
+    <Content Include="Content\images\new\get-free-quotes-now.jpg" />
+    <Content Include="Content\images\new\icon-lock.png" />
+    <Content Include="Content\images\new\lendingtree-bg-left.jpg" />
+    <Content Include="Content\images\new\lendingtree-bg-lright.jpg" />
+    <Content Include="Content\images\new\lendingtree-bg.jpg" />
+    <Content Include="Content\images\new\lenny-first.png" />
+    <Content Include="Content\images\new\lenny-last.png" />
+    <Content Include="Content\images\new\lenny-middle.png" />
+    <Content Include="Content\images\new\logo.png" />
+    <Content Include="Content\images\new\orange-bar-continue.png" />
+    <Content Include="Content\images\new\orange-bar-left.png" />
+    <Content Include="Content\images\new\small-lock.png" />
     <Content Include="Content\images\privacy-security-logo.gif" />
+    <Content Include="Content\images\question-mark.gif" />
     <Content Include="Content\images\siteseal_gd_3_h_d_m.gif" />
     <Content Include="Content\images\x.gif" />
     <Content Include="Content\kendo\2012.3.1114\Black\editor.png" />
@@ -348,6 +363,7 @@
     <Content Include="Dynamic Expressions.html" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\images\new\lendingtree-bg.psd" />
     <None Include="Properties\PublishProfiles\LTWeb.pubxml" />
     <None Include="Properties\PublishProfiles\LTWebLive.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
