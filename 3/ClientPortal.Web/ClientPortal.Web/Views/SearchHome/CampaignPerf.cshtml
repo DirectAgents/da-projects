@@ -1,30 +1,38 @@
 ﻿@model ClientPortal.Web.Models.SearchReportModel
 
 <div style="height: 40px;">
-    <select style="width: 140px" id="channelperf_dateRangeSel" onchange="ChangeDateRange('channelperf')">
+    <select style="width: 140px" id="campaignperf_dateRangeSel" onchange="ChangeDateRange('campaignperf')">
         <option value="yesterday">Yesterday</option>
         <option value="wtd">Week to Date</option>
         <option value="mtd">Month to Date</option>
         <option value="ytd">Year to Date</option>
-        <option value="lastweek" selected="selected">Last Week</option>
+        <option value="lastweek">Last Week</option>
         <option value="lastmonth">Last Month</option>
-        <option value="custom">- custom -</option>
+        <option value="custom" selected="selected">- custom -</option>
     </select>
     <span class="paddedlabel">Start:</span>
-    <input id="channelperf_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('channelperf')" />
+    <input id="campaignperf_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('campaignperf')" />
     <span class="paddedlabel">End:</span>
-    <input id="channelperf_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('channelperf')" />
-    <a class="button paddedbutton" id="channelperf_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('channelperf'); return false">Filter</a>
+    <input id="campaignperf_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('campaignperf')" />
+    <a class="button paddedbutton" id="campaignperf_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('campaignperf'); return false">Filter</a>
 </div>
 <div id="campaignperfGrid"></div>
 
 <script>
     $(function () {
-        $('#channelperf_dateRangeSel').kendoDropDownList();
-        $('#channelperf_startdate').kendoDatePicker({ footer: ' ' });
-        $('#channelperf_enddate').kendoDatePicker({ footer: ' ' });
+        $('#campaignperf_dateRangeSel').kendoDropDownList();
+        $('#campaignperf_startdate').kendoDatePicker({ footer: ' ' });
+        $('#campaignperf_enddate').kendoDatePicker({ footer: ' ' });
 
-        var campaignperfDS = CreateSummaryDataSource('@Url.Action("CampaignPerfData")', null, false);
+        var campaignperfDS = CreateSummaryDataSource(
+            '@Url.Action("CampaignPerfData", "SearchReports")',
+            function () {
+                return {
+                    startdate: $('#campaignperf_startdate').val(),
+                    enddate: $('#campaignperf_enddate').val()
+                };
+            },
+            false);
         CreateSummaryGrid(campaignperfDS, $('#campaignperfGrid'), 350, 'Campaign', 20, 2, null);
 
         campaignperfDS.read();

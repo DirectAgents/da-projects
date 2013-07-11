@@ -1,4 +1,6 @@
-﻿<style>
+﻿@model ClientPortal.Web.Models.IndexModel
+
+<style>
     .searchdiv {
         padding: 10px;
     }
@@ -15,11 +17,11 @@
         <img src="~/Images/logo1a.png" />
     </div>
     <div class="two columns topinfo">
-        @*Html.Partial("_HelloPartial")*@
+        @Html.Partial("_HelloPartial")
     </div>
     <div class="five columns logout">
         <div style="float: right">
-            @*Html.Partial("_LoginPartial")*@
+            @Html.Partial("_LoginPartial")
         </div>
     </div>
 </div>
@@ -112,6 +114,7 @@
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-AU.min.js"></script>
     <script src="~/Scripts/search_grids_charts.js"></script>
+    @Html.Partial("_DateFuncs")
     <script>
         // ready function
         $(function () {
@@ -168,10 +171,6 @@
                 });
             });
 
-        }
-
-        function RefreshGrid() {
-            alert('Coming Soon');
         }
     </script>
 }

@@ -52,11 +52,11 @@
 
 <script>
     $(function () {
-        var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData")', null, false);
-        CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 200, 'Week', 10, 0, null);
+        var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData", "SearchReports")', null, false);
+        CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 0, null);
 
-        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData")', null, false);
-        CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 200, 'Month', 10, 0, null);
+        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData", "SearchReports")', null, false);
+        CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 0, null);
 
         CreateRevROASChart(weeksumDS, 'weekrevChart', 'Weekly Revenue vs. ROAS Performance');
         CreateOrderCPOChart(weeksumDS, 'weekorderChart', 'Weekly Orders vs. CPO Performance');

@@ -1,35 +1,121 @@
-﻿using ClientPortal.Data.DTOs;
+﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Data.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientPortal.Data.Services
 {
-    public class SearchRepository
+    public partial class ClientPortalRepository
     {
-        public IQueryable<SearchStat> GetWeekStats()
+        public IQueryable<SearchDailySummary> GetSearchDailySummaries(DateTime? start, DateTime? end, bool includeToday = false)
         {
-            var stats = new List<SearchStat> {
-                new SearchStat(true, 5, 12, 378754, 3268, 85, 15295.83M, 3450.53M),
-                new SearchStat(true, 5, 19, 395107, 3364, 74, 10818.05M, 3756.82M),
-                new SearchStat(true, 5, 26, 431054, 3416, 86, 10812.99M, 3889.59M),
-                new SearchStat(true, 6, 2, 363638, 3207, 79, 12775.10M, 3436.27M),
-            };
-            return stats.AsQueryable();
+            var summaries = context.SearchDailySummaries.AsQueryable();
+            if (start.HasValue)
+                summaries = summaries.Where(s => s.Date >= start);
+            if (!includeToday)
+            {
+                var yesterday = DateTime.Today.AddDays(-1);
+                if (!end.HasValue || yesterday < end.Value)
+                    end = yesterday;
+            }
+            if (end.HasValue)
+                summaries = summaries.Where(s => s.Date <= end);
+            return summaries;
         }
 
-        public IQueryable<SearchStat> GetMonthStats()
+        // this does sunday through saturday. would have to SET DATEFIRST 1 in sql server to get it to work correctly
+        //public IQueryable<SearchStat> GetWeekStatsX()
+        //{   // need to group by year also
+        //    var stats = context.SearchDailySummaries.GroupBy(s => SqlFunctions.DatePart("week", s.Date)).Select(g =>
+        //        new SearchStat
+        //        {
+        //            Week = g.Key ?? 0,
+        //            Impressions = g.Sum(s => s.Impressions),
+        //            Clicks = g.Sum(s => s.Clicks),
+        //            Orders = g.Sum(s => s.Orders),
+        //            Revenue = g.Sum(s => s.Revenue),
+        //            Cost = g.Sum(s => s.Cost)
+        //        });
+        //    return stats;
+        //}
+        public IQueryable<SearchStat> GetWeekStats(int? numWeeks)
         {
-            var stats = new List<SearchStat>
+            DateTime start;
+            if (numWeeks.HasValue)
+                start = DateTime.Today.AddDays(-7 * numWeeks.Value + 6);
+            else
+                start = DateTime.Today.AddYears(-1);
+
+            while (start.DayOfWeek != DayOfWeek.Monday)
+                start = start.AddDays(-1);
+
+            var stats = GetSearchDailySummaries(start, null).GroupBy(s => s.Date).Select(g => new
             {
-                new SearchStat(false, 3, 31, 2214862, 17262, 382, 49044.51M, 18339.43M),
-                new SearchStat(false, 4, 30, 1867419, 16016, 374, 54776.48M, 17673.75M),
-                new SearchStat(false, 5, 31, 1712332, 14696, 363, 57189.38M, 16079.54M),
-                new SearchStat(false, 6, 3, 198700, 1358, 23, 3205.80M, 1466.40M),
-            };
+                Date = g.Key,
+                Impressions = g.Sum(x => x.Impressions),
+                Clicks = g.Sum(x => x.Clicks),
+                Orders = g.Sum(x => x.Orders),
+                Revenue = g.Sum(x => x.Revenue),
+                Cost = g.Sum(x => x.Cost)
+            })
+            .ToList()
+            .Select(s => new
+            {
+                Date = s.Date,
+                Year = s.Date.Year,
+                Week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(s.Date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday),
+                Impressions = s.Impressions,
+                Clicks = s.Clicks,
+                Orders = s.Orders,
+                Revenue = s.Revenue,
+                Cost = s.Cost
+            })
+            .GroupBy(x => new { x.Year, x.Week })
+            .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Week)
+            .Select((g, i) => new SearchStat
+            {
+                WeekByMaxDate = g.Max(s => s.Date),
+                Impressions = g.Sum(s => s.Impressions),
+                Clicks = g.Sum(s => s.Clicks),
+                Orders = g.Sum(s => s.Orders),
+                Revenue = g.Sum(s => s.Revenue),
+                Cost = g.Sum(s => s.Cost)
+            });
             return stats.AsQueryable();
+            //{
+            //    WeekGroup = g,
+            //    WeekNum = i + 1,
+            //    Year = g.Key.Year,
+            //    CalendarWeek = g.Key.Week
+            //}
+        }
+
+        public IQueryable<SearchStat> GetMonthStats(int? numMonths)
+        {
+            DateTime start;
+            if (numMonths.HasValue)
+                start = DateTime.Today.AddMonths((numMonths.Value - 1) * -1);
+            else
+                start = DateTime.Today.AddYears(-1);
+
+            start = new DateTime(start.Year, start.Month, 1);
+
+            var stats = GetSearchDailySummaries(start, null)
+                .GroupBy(s => new { s.Date.Year, s.Date.Month })
+                .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
+                .Select(g =>
+                new SearchStat
+                {
+                    MonthByMaxDate = g.Max(s => s.Date),
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Orders = g.Sum(s => s.Orders),
+                    Revenue = g.Sum(s => s.Revenue),
+                    Cost = g.Sum(s => s.Cost)
+                });
+            return stats;
         }
 
         public IQueryable<SearchStat> GetChannelStats()
@@ -46,6 +132,30 @@ namespace ClientPortal.Data.Services
             return stats.AsQueryable();
         }
 
+        public IQueryable<SearchStat> GetCampaignStats(DateTime? start, DateTime? end)
+        {
+            if (!start.HasValue)
+                start = new DateTime(DateTime.Today.Year, 1, 1);
+            if (!end.HasValue)
+                end = DateTime.Today.AddDays(-1);
+
+            var stats = GetSearchDailySummaries(start, end)
+                .GroupBy(s => s.SearchCampaign.SearchCampaignName)
+                .OrderBy(g => g.Key)
+                .Select(g => new SearchStat
+                {
+                    EndDate = end.Value,
+                    CustomByStartDate = start.Value,
+                    Title = g.Key,
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Orders = g.Sum(s => s.Orders),
+                    Revenue = g.Sum(s => s.Revenue),
+                    Cost = g.Sum(s => s.Cost)
+                });
+            return stats;
+        }
+
         public IQueryable<SearchStat> GetCampaignStats(string channel)
         {
             List<SearchStat> stats = new List<SearchStat>();
@@ -59,6 +169,18 @@ namespace ClientPortal.Data.Services
                     new SearchStat(true, 6, 2, 1562, 67, 3, 599.97m, 71.86m, "DA - BING - \"Mac\" Memory - Keywords"),
                     new SearchStat(true, 6, 2, 1224, 116, 4, 419.96m, 74.01m, "DA - BING - iMac Memory"),
                 });
+            return stats.AsQueryable();
+        }
+
+        public IQueryable<SearchStat> GetAdgroupStats()
+        {
+            var stats = new List<SearchStat>
+            {
+                new SearchStat(true, 6, 2, 1281, 34, 2, 230m, 31.49m, "Apple Computer Ram"),
+                new SearchStat(true, 6, 2, 1002, 23, 0, 0m, 14.13m, "Apple Memory"),
+                new SearchStat(true, 6, 2, 1819, 20, 1, 80m, 15.96m, "Apple Memory Module"),
+                new SearchStat(true, 6, 2, 1295, 11, 0, 0m, 17.31m, "Apple RAM"),
+            };
             return stats.AsQueryable();
         }
     }

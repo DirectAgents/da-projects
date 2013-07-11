@@ -1,27 +1,5 @@
 ﻿@model ClientPortal.Web.Models.IndexModel
 
-@{
-    var now = DateTime.Now;
-    var sunday = now;
-    while (sunday.DayOfWeek != DayOfWeek.Sunday) { sunday = sunday.AddDays(-1); }
-    var firstOfMonthDT = new DateTime(now.Year, now.Month, 1);
-
-    var today = now.ToString("d", Model.CultureInfo);
-    var yesterday = now.AddDays(-1).ToString("d", Model.CultureInfo);
-    var firstOfMonth = firstOfMonthDT.ToString("d", Model.CultureInfo);
-    var firstOfYear = new DateTime(now.Year, 1, 1).ToString("d", Model.CultureInfo);
-    var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
-    var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
-    var firstOfWeek = sunday.ToString("d", Model.CultureInfo);
-    var firstOfLastWeek = sunday.AddDays(-7).ToString("d", Model.CultureInfo);
-    var lastOfLastWeek = sunday.AddDays(-1).ToString("d", Model.CultureInfo);
-
-    var todayMY = now.ToString("MM/yyyy");
-    var lastMonthMY = firstOfMonthDT.AddMonths(-1).ToString("MM/yyyy");
-    var threeMonthsAgoMY = firstOfMonthDT.AddMonths(-3).ToString("MM/yyyy");
-    var firstOfYearMY = new DateTime(now.Year, 1, 1).ToString("MM/yyyy");
-}
-
 @*<!--+---------+
       | Top Bar |
       +---------+-->*@
@@ -220,6 +198,7 @@
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.de-DE.min.js"></script>
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
+    @Html.Partial("_DateFuncs")
     <script>
 
         // ready function
@@ -417,91 +396,6 @@
             });
         } // SetupTabs
 
-        //
-        function DateChanged(grid) {
-            $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
-            $('#' + grid + '_filterBtn').attr('disabled', false);
-        }
-
-        //
-        function ChangeDateRange(grid) {
-            var startId = '#' + grid + '_startdate';
-            var endId = '#' + grid + '_enddate';
-            var refresh = true;
-            var dateRange = $('#' + grid + '_dateRangeSel').val();
-            switch (dateRange) {
-                case "today":
-                    $(startId).val('@today');
-                    $(endId).val('@today');
-                    break;
-                case "yesterday":
-                    $(startId).val('@yesterday');
-                    $(endId).val('@yesterday');
-                    break;
-                case "wtd":
-                    $(startId).val('@firstOfWeek');
-                    $(endId).val('@today');
-                    break;
-                case "mtd":
-                    $(startId).val('@firstOfMonth');
-                    $(endId).val('@today');
-                    break;
-                case "ytd":
-                    $(startId).val('@firstOfYear');
-                    $(endId).val('@today');
-                    break;
-                case "lastweek":
-                    $(startId).val('@firstOfLastWeek');
-                    $(endId).val('@lastOfLastWeek');
-                    break;
-                case "lastmonth":
-                    $(startId).val('@firstOfLastMonth');
-                    $(endId).val('@lastOfLastMonth');
-                    break;
-                default:
-                    refresh = false;
-            }
-            if (refresh)
-                RefreshGrid(grid);
-        }
-
-        //
-        function ChangeDateRangeMY(grid) {
-            var startId = '#' + grid + '_startdate';
-            var endId = '#' + grid + '_enddate';
-            var refresh = true;
-            var dateRange = $('#' + grid + '_dateRangeSel').val();
-            switch (dateRange) {
-                case "prev3months":
-                    $(startId).val('@threeMonthsAgoMY');
-                    $(endId).val('@lastMonthMY');
-                    break;
-                case "lastmonth":
-                    $(startId).val('@lastMonthMY');
-                    $(endId).val('@lastMonthMY');
-                    break;
-                case "ytd":
-                    $(startId).val('@firstOfYearMY');
-                    $(endId).val('@todayMY');
-                    break;
-                default:
-                    refresh = false;
-            }
-            if (refresh)
-                RefreshGrid(grid);
-        }
-
-        //
-        function RefreshGrid(grid) {
-            var gridDataSource = $('#' + grid + 'Grid').data('kendoGrid').dataSource;
-            gridDataSource.read();
-            if ($('#' + grid + 'Chart').length > 0) {
-                var chartDataSource = $('#' + grid + 'Chart').data('kendoChart').dataSource;
-                if (chartDataSource !== gridDataSource)
-                    chartDataSource.read();
-            }
-            $('#' + grid + '_filterBtn').attr('disabled', true);
-        }
 
         // Returns val as a culture formatted string.
         function FormatCurr(val, culture) {

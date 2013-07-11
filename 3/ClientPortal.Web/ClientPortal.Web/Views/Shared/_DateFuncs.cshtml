@@ -1,0 +1,85 @@
+﻿@model ClientPortal.Web.Models.IndexModel
+
+<script>
+    function DateChanged(grid) {
+        $('#' + grid + '_dateRangeSel').data('kendoDropDownList').value('custom');
+        $('#' + grid + '_filterBtn').attr('disabled', false);
+    }
+
+    function ChangeDateRange(grid) {
+        var startId = '#' + grid + '_startdate';
+        var endId = '#' + grid + '_enddate';
+        var refresh = true;
+        var dateRange = $('#' + grid + '_dateRangeSel').val();
+        switch (dateRange) {
+            case "today":
+                $(startId).val('@Model.Today');
+                $(endId).val('@Model.Today');
+                break;
+            case "yesterday":
+                $(startId).val('@Model.Yesterday');
+                $(endId).val('@Model.Yesterday');
+                break;
+            case "wtd":
+                $(startId).val('@Model.FirstOfWeek');
+                $(endId).val('@Model.Today');
+                break;
+            case "mtd":
+                $(startId).val('@Model.FirstOfMonth');
+                $(endId).val('@Model.Today');
+                break;
+            case "ytd":
+                $(startId).val('@Model.FirstOfYear');
+                $(endId).val('@Model.Today');
+                break;
+            case "lastweek":
+                $(startId).val('@Model.FirstOfLastWeek');
+                $(endId).val('@Model.LastOfLastWeek');
+                break;
+            case "lastmonth":
+                $(startId).val('@Model.FirstOfLastMonth');
+                $(endId).val('@Model.LastOfLastMonth');
+                break;
+            default:
+                refresh = false;
+        }
+        if (refresh)
+            RefreshGrid(grid);
+    }
+
+    function ChangeDateRangeMY(grid) {
+        var startId = '#' + grid + '_startdate';
+        var endId = '#' + grid + '_enddate';
+        var refresh = true;
+        var dateRange = $('#' + grid + '_dateRangeSel').val();
+        switch (dateRange) {
+            case "prev3months":
+                $(startId).val('@Model.ThreeMonthsAgoMY');
+                $(endId).val('@Model.LastMonthMY');
+                break;
+            case "lastmonth":
+                $(startId).val('@Model.LastMonthMY');
+                $(endId).val('@Model.LastMonthMY');
+                break;
+            case "ytd":
+                $(startId).val('@Model.FirstOfYearMY');
+                $(endId).val('@Model.TodayMY');
+                break;
+            default:
+                refresh = false;
+        }
+        if (refresh)
+            RefreshGrid(grid);
+    }
+
+    function RefreshGrid(grid) {
+        var gridDataSource = $('#' + grid + 'Grid').data('kendoGrid').dataSource;
+        gridDataSource.read();
+        if ($('#' + grid + 'Chart').length > 0) {
+            var chartDataSource = $('#' + grid + 'Chart').data('kendoChart').dataSource;
+            if (chartDataSource !== gridDataSource)
+                chartDataSource.read();
+        }
+        $('#' + grid + '_filterBtn').attr('disabled', true);
+    }
+</script>
