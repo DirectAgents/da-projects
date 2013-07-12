@@ -25,7 +25,6 @@ namespace ClientPortal.Data.Contexts
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Click> Clicks { get; set; }
         public DbSet<Conversion> Conversions { get; set; }
         public DbSet<ConversionData> ConversionDatas { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }

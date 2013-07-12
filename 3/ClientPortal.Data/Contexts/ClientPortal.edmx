@@ -8,7 +8,6 @@
         <EntityContainer Name="ClientPortalModelStoreContainer">
           <EntitySet Name="Advertiser" EntityType="ClientPortalModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="AdvertiserContact" EntityType="ClientPortalModel.Store.AdvertiserContact" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Click" EntityType="ClientPortalModel.Store.Click" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
@@ -100,51 +99,6 @@
           <Property Name="AdvertiserId" Type="int" Nullable="false" />
           <Property Name="ContactId" Type="int" Nullable="false" />
           <Property Name="Order" Type="int" />
-        </EntityType>
-        <EntityType Name="Click">
-          <Key>
-            <PropertyRef Name="click_id" />
-          </Key>
-          <Property Name="click_id" Type="int" Nullable="false" />
-          <Property Name="visitor_id" Type="int" Nullable="false" />
-          <Property Name="request_session_id" Type="int" Nullable="false" />
-          <Property Name="click_date" Type="datetime" Nullable="false" />
-          <Property Name="affiliate_affiliate_id" Type="int" Nullable="false" />
-          <Property Name="affiliate_affiliate_name" Type="nvarchar(max)" />
-          <Property Name="advertiser_advertiser_id" Type="int" Nullable="false" />
-          <Property Name="advertiser_advertiser_name" Type="nvarchar(max)" />
-          <Property Name="offer_offer_id" Type="int" Nullable="false" />
-          <Property Name="offer_offer_name" Type="nvarchar(max)" />
-          <Property Name="campaign_id" Type="int" Nullable="false" />
-          <Property Name="creative_creative_id" Type="int" Nullable="false" />
-          <Property Name="creative_creative_name" Type="nvarchar(max)" />
-          <Property Name="sub_id_1" Type="nvarchar(max)" />
-          <Property Name="sub_id_2" Type="nvarchar(max)" />
-          <Property Name="sub_id_3" Type="nvarchar(max)" />
-          <Property Name="sub_id_4" Type="nvarchar(max)" />
-          <Property Name="sub_id_5" Type="nvarchar(max)" />
-          <Property Name="ip_address" Type="nvarchar(max)" />
-          <Property Name="user_agent" Type="nvarchar(max)" />
-          <Property Name="referrer_url" Type="nvarchar(max)" />
-          <Property Name="request_url" Type="nvarchar(max)" />
-          <Property Name="redirect_url" Type="nvarchar(max)" />
-          <Property Name="country_country_code" Type="nvarchar(max)" />
-          <Property Name="country_country_name" Type="nvarchar(max)" />
-          <Property Name="region_region_code" Type="nvarchar(max)" />
-          <Property Name="region_region_name" Type="nvarchar(max)" />
-          <Property Name="language_language_id" Type="tinyint" Nullable="false" />
-          <Property Name="language_language_name" Type="nvarchar(max)" />
-          <Property Name="language_language_abbr" Type="nvarchar(max)" />
-          <Property Name="isp_isp_id" Type="int" Nullable="false" />
-          <Property Name="isp_isp_name" Type="nvarchar(max)" />
-          <Property Name="device_device_id" Type="smallint" Nullable="false" />
-          <Property Name="device_device_name" Type="nvarchar(max)" />
-          <Property Name="operating_system_operating_system_name" Type="nvarchar(max)" />
-          <Property Name="browser_browser_id" Type="int" Nullable="false" />
-          <Property Name="browser_browser_name" Type="nvarchar(max)" />
-          <Property Name="disposition" Type="nvarchar(max)" />
-          <Property Name="paid_action" Type="nvarchar(max)" />
-          <Property Name="total_clicks" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -545,7 +499,6 @@
     <edmx:ConceptualModels>
       <Schema Namespace="ClientPortalModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ClientPortalContext" p1:LazyLoadingEnabled="true">
-          <EntitySet Name="Clicks" EntityType="ClientPortalModel.Click" />
           <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
           <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
           <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
@@ -633,51 +586,6 @@
           <Member Name="ConversionReport" Value="3" />
           <Member Name="Affiliates" Value="4" />
         </EnumType>
-        <EntityType Name="Click">
-          <Key>
-            <PropertyRef Name="click_id" />
-          </Key>
-          <Property Type="Int32" Name="click_id" Nullable="false" />
-          <Property Type="Int32" Name="visitor_id" Nullable="false" />
-          <Property Type="Int32" Name="request_session_id" Nullable="false" />
-          <Property Type="DateTime" Name="click_date" Nullable="false" Precision="3" />
-          <Property Type="Int32" Name="affiliate_id" Nullable="false" />
-          <Property Type="String" Name="affiliate_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="advertiser_id" Nullable="false" />
-          <Property Type="String" Name="advertiser_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="offer_id" Nullable="false" />
-          <Property Type="String" Name="offer_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="campaign_id" Nullable="false" />
-          <Property Type="Int32" Name="creative_id" Nullable="false" />
-          <Property Type="String" Name="creative_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_1" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_2" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_3" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_4" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_5" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ip_address" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="user_agent" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="referrer_url" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="request_url" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="redirect_url" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="country_code" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="country_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="region_code" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="region_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Byte" Name="language_id" Nullable="false" />
-          <Property Type="String" Name="language_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="language_abbr" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="isp_id" Nullable="false" />
-          <Property Type="String" Name="isp_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int16" Name="device_id" Nullable="false" />
-          <Property Type="String" Name="device_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="operating_system_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="browser_id" Nullable="false" />
-          <Property Type="String" Name="browser_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="disposition" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="paid_action" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="total_clicks" Nullable="false" />
-        </EntityType>
         <EntityType Name="Conversion">
           <Key>
             <PropertyRef Name="conversion_id" />
@@ -1135,52 +1043,6 @@
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="ClientPortalModelStoreContainer" CdmEntityContainer="ClientPortalContext">
-          <EntitySetMapping Name="Clicks">
-            <EntityTypeMapping TypeName="ClientPortalModel.Click">
-              <MappingFragment StoreEntitySet="Click">
-                <ScalarProperty Name="total_clicks" ColumnName="total_clicks" />
-                <ScalarProperty Name="paid_action" ColumnName="paid_action" />
-                <ScalarProperty Name="disposition" ColumnName="disposition" />
-                <ScalarProperty Name="browser_name" ColumnName="browser_browser_name" />
-                <ScalarProperty Name="browser_id" ColumnName="browser_browser_id" />
-                <ScalarProperty Name="operating_system_name" ColumnName="operating_system_operating_system_name" />
-                <ScalarProperty Name="device_name" ColumnName="device_device_name" />
-                <ScalarProperty Name="device_id" ColumnName="device_device_id" />
-                <ScalarProperty Name="isp_name" ColumnName="isp_isp_name" />
-                <ScalarProperty Name="isp_id" ColumnName="isp_isp_id" />
-                <ScalarProperty Name="language_abbr" ColumnName="language_language_abbr" />
-                <ScalarProperty Name="language_name" ColumnName="language_language_name" />
-                <ScalarProperty Name="language_id" ColumnName="language_language_id" />
-                <ScalarProperty Name="region_name" ColumnName="region_region_name" />
-                <ScalarProperty Name="region_code" ColumnName="region_region_code" />
-                <ScalarProperty Name="country_name" ColumnName="country_country_name" />
-                <ScalarProperty Name="country_code" ColumnName="country_country_code" />
-                <ScalarProperty Name="redirect_url" ColumnName="redirect_url" />
-                <ScalarProperty Name="request_url" ColumnName="request_url" />
-                <ScalarProperty Name="referrer_url" ColumnName="referrer_url" />
-                <ScalarProperty Name="user_agent" ColumnName="user_agent" />
-                <ScalarProperty Name="ip_address" ColumnName="ip_address" />
-                <ScalarProperty Name="sub_id_5" ColumnName="sub_id_5" />
-                <ScalarProperty Name="sub_id_4" ColumnName="sub_id_4" />
-                <ScalarProperty Name="sub_id_3" ColumnName="sub_id_3" />
-                <ScalarProperty Name="sub_id_2" ColumnName="sub_id_2" />
-                <ScalarProperty Name="sub_id_1" ColumnName="sub_id_1" />
-                <ScalarProperty Name="creative_name" ColumnName="creative_creative_name" />
-                <ScalarProperty Name="creative_id" ColumnName="creative_creative_id" />
-                <ScalarProperty Name="campaign_id" ColumnName="campaign_id" />
-                <ScalarProperty Name="offer_name" ColumnName="offer_offer_name" />
-                <ScalarProperty Name="offer_id" ColumnName="offer_offer_id" />
-                <ScalarProperty Name="advertiser_name" ColumnName="advertiser_advertiser_name" />
-                <ScalarProperty Name="advertiser_id" ColumnName="advertiser_advertiser_id" />
-                <ScalarProperty Name="affiliate_name" ColumnName="affiliate_affiliate_name" />
-                <ScalarProperty Name="affiliate_id" ColumnName="affiliate_affiliate_id" />
-                <ScalarProperty Name="click_date" ColumnName="click_date" />
-                <ScalarProperty Name="request_session_id" ColumnName="request_session_id" />
-                <ScalarProperty Name="visitor_id" ColumnName="visitor_id" />
-                <ScalarProperty Name="click_id" ColumnName="click_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Conversions">
             <EntityTypeMapping TypeName="ClientPortalModel.Conversion">
               <MappingFragment StoreEntitySet="Conversion">

@@ -217,7 +217,7 @@ namespace CakeExtracter
         }
         #endregion
 
-        #region DoLoad Methods
+        #region ToLoad Methods
         private void LoadDimension<T>(IEnumerable<T> toLoad, Func<T, int> key) where T : class
         {
             using (var db = new ClientPortalDWContext())
