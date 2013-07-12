@@ -257,25 +257,6 @@ namespace ClientPortal.Data.Services
         }
         #endregion
 
-        // get clicks through 23:59:59 on the "end" date
-        public IQueryable<Click> GetClicks(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
-        {
-            var clicks = context.Clicks.AsQueryable();
-            if (start.HasValue)
-                clicks = clicks.Where(c => c.click_date >= start.Value);
-            if (end.HasValue)
-            {
-                DateTime endOfDay = new DateTime(end.Value.Year, end.Value.Month, end.Value.Day, 23, 59, 59);
-                clicks = clicks.Where(c => c.click_date <= endOfDay);
-            }
-            if (advertiserId.HasValue)
-                clicks = clicks.Where(c => c.advertiser_id == advertiserId.Value);
-            if (offerId.HasValue)
-                clicks = clicks.Where(c => c.offer_id == offerId.Value);
-
-            return clicks;
-        }
-
         // get conversions through 23:59:59 on the "end" date
         public IQueryable<Conversion> GetConversions(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
