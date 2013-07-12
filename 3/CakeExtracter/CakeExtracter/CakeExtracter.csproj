@@ -60,6 +60,9 @@
     <Reference Include="AutoMapper">
       <HintPath>..\..\ClientPortal.Web\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\..\ClientPortal.Web\packages\CsvHelper.1.17.0\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
@@ -143,6 +146,7 @@
     <Compile Include="CakeMarketingApi\Entities\ConversionReportResponse.cs" />
     <Compile Include="CakeMarketingApi\Entities\DateRangeTraffic.cs" />
     <Compile Include="Commands\SynchCakeTrafficCommand.cs" />
+    <Compile Include="Commands\SyncSearchDailySummariesBingCsvCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
     <Compile Include="Common\EmailUtility.cs" />
     <Compile Include="Common\LinqExtensions.cs" />
@@ -178,6 +182,8 @@
     <Compile Include="Etl\CakeMarketing\Extracters\DailySummariesExtracter.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferDailySummary.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\TrafficLoader.cs" />
+    <Compile Include="Etl\GoogleAdWords\Extracters\BingCsvReportExtracter.cs" />
+    <Compile Include="Etl\GoogleAdWords\Loaders\BingLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\GoogleAdWords\Extracters\AdWordsXmlReportExtracter.cs" />
     <Compile Include="Etl\GoogleAdWords\Loaders\AdWordsLoader.cs" />
