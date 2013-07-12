@@ -272,42 +272,42 @@ namespace ClientPortal.Web.Controllers
             return PartialView("_HeatMap");
         }
 
-        public JsonResult HeatMapData()
-        {
-            var fromDate = new DateTime(2013, 5, 1);
-            var toDate = new DateTime(2013, 5, 30);
-            var advertiserId = GetAdvertiserId();
+        //public JsonResult HeatMapData()
+        //{
+        //    var fromDate = new DateTime(2013, 5, 1);
+        //    var toDate = new DateTime(2013, 5, 30);
+        //    var advertiserId = GetAdvertiserId();
 
-            var clicks = cpRepo.GetClicks(fromDate, toDate, advertiserId, null);
-            var conversions = cpRepo.GetConversions(fromDate, toDate, advertiserId, null);
+        //    var clicks = cpRepo.GetClicks(fromDate, toDate, advertiserId, null);
+        //    var conversions = cpRepo.GetConversions(fromDate, toDate, advertiserId, null);
 
-            var query = from click in clicks
-                        from conv in conversions
-                        where click.click_id == conv.click_id
-                        select new
-                        {
-                            Region = click.region_code,
-                            Conversions = 1
-                        };
-            var results = new List<object[]>();
-            var group = query.GroupBy(c => c.Region);
-            foreach (var grouping in group)
-            {
-                results.Add(new object[]
-                    { 
-                        "US-" + grouping.Key.ToUpper(), 
-                        grouping.Sum(c => c.Conversions) 
-                    });
-            }
-            results.Sort(new Comparer());
-            results.Insert(0, new[] { "State", "Conversions" });
+        //    var query = from click in clicks
+        //                from conv in conversions
+        //                where click.click_id == conv.click_id
+        //                select new
+        //                {
+        //                    Region = click.region_code,
+        //                    Conversions = 1
+        //                };
+        //    var results = new List<object[]>();
+        //    var group = query.GroupBy(c => c.Region);
+        //    foreach (var grouping in group)
+        //    {
+        //        results.Add(new object[]
+        //            { 
+        //                "US-" + grouping.Key.ToUpper(), 
+        //                grouping.Sum(c => c.Conversions) 
+        //            });
+        //    }
+        //    results.Sort(new Comparer());
+        //    results.Insert(0, new[] { "State", "Conversions" });
 
-            var json = new JsonResult {
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                Data = results
-            };
-            return json;
-        }
+        //    var json = new JsonResult {
+        //        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+        //        Data = results
+        //    };
+        //    return json;
+        //}
 
         private class Comparer : IComparer<object[]>
         {
