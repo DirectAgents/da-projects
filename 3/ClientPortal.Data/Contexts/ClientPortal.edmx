@@ -319,6 +319,7 @@
           <Property Name="SearchCampaignId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="SearchCampaignName" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="Channel" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
@@ -997,6 +998,7 @@
           <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
           <NavigationProperty Name="SearchDailySummaries" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary" />
+          <Property Type="String" Name="Channel" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
@@ -1292,6 +1294,7 @@
           <EntitySetMapping Name="SearchCampaigns">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchCampaign">
               <MappingFragment StoreEntitySet="SearchCampaign">
+                <ScalarProperty Name="Channel" ColumnName="Channel" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="SearchCampaignName" ColumnName="SearchCampaignName" />
                 <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />

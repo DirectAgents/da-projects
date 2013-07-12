@@ -9,12 +9,15 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
-        public IQueryable<SearchDailySummary> GetSearchDailySummaries(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = false)
+        public IQueryable<SearchDailySummary> GetSearchDailySummaries(int? advertiserId, string channel, DateTime? start, DateTime? end, bool includeToday = false)
         {
             var summaries = context.SearchDailySummaries.AsQueryable();
 
             if (advertiserId.HasValue)
                 summaries = summaries.Where(s => s.SearchCampaign.AdvertiserId == advertiserId.Value);
+
+            if (channel != null)
+                summaries = summaries.Where(s => s.SearchCampaign.Channel == channel);
 
             if (start.HasValue)
                 summaries = summaries.Where(s => s.Date >= start);
@@ -47,20 +50,6 @@ namespace ClientPortal.Data.Services
         //}
         public IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? numWeeks, string channel = null)
         {
-            if (!String.IsNullOrWhiteSpace(channel) && channel.ToLower().Contains("bing"))
-            {   // dummy bing stats...
-                string bing = "Bing_Ads";
-                var dummyStats = new List<SearchStat>
-                {
-                    new SearchStat(true, 5, 5, 6061, 313, 7, 829.92m, 273.34m, bing),
-                    new SearchStat(true, 5, 12, 6015, 346, 6, 849.93m, 280.44m, bing),
-                    new SearchStat(true, 5, 19, 5616, 344, 9, 1099.91m, 274.85m, bing),
-                    new SearchStat(true, 5, 26, 6445, 372, 11, 1587.89m, 303.05m, bing),
-                    new SearchStat(true, 6, 2, 6495, 367, 15, 2809.80m, 284.57m, bing),
-                };
-                return dummyStats.AsQueryable();
-            }
-
             DateTime start;
             if (numWeeks.HasValue)
                 start = DateTime.Today.AddDays(-7 * numWeeks.Value + 6);
@@ -70,7 +59,7 @@ namespace ClientPortal.Data.Services
             while (start.DayOfWeek != DayOfWeek.Monday)
                 start = start.AddDays(-1);
 
-            var stats = GetSearchDailySummaries(advertiserId, start, null).GroupBy(s => s.Date).Select(g => new
+            var stats = GetSearchDailySummaries(advertiserId, channel, start, null).GroupBy(s => s.Date).Select(g => new
             {
                 Date = g.Key,
                 Impressions = g.Sum(x => x.Impressions),
@@ -122,7 +111,7 @@ namespace ClientPortal.Data.Services
 
             start = new DateTime(start.Year, start.Month, 1);
 
-            var stats = GetSearchDailySummaries(advertiserId, start, null)
+            var stats = GetSearchDailySummaries(advertiserId, null, start, null)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
                 .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
                 .Select(g =>
@@ -140,19 +129,19 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<SearchStat> GetChannelStats(int? advertiserId)
         {
-            var googleStats = GetWeekStats(advertiserId, null, "Google_AdWords");
-            var bingStats = GetWeekStats(advertiserId, null, "Bing_Ads");
+            var googleStats = GetWeekStats(advertiserId, null, "Google");
+            var bingStats = GetWeekStats(advertiserId, null, "Bing");
             return googleStats.Concat(bingStats).AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetCampaignStats(int? advertiserId, DateTime? start, DateTime? end)
+        public IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end)
         {
             if (!start.HasValue)
                 start = new DateTime(DateTime.Today.Year, 1, 1);
             if (!end.HasValue)
                 end = DateTime.Today.AddDays(-1);
 
-            var stats = GetSearchDailySummaries(advertiserId, start, end)
+            var stats = GetSearchDailySummaries(advertiserId, channel, start, end)
                 .GroupBy(s => s.SearchCampaign.SearchCampaignName)
                 .OrderBy(g => g.Key)
                 .Select(g => new SearchStat

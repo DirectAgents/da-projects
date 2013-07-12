@@ -22,6 +22,7 @@ namespace ClientPortal.Data.Contexts
         public int SearchCampaignId { get; set; }
         public string SearchCampaignName { get; set; }
         public int AdvertiserId { get; set; }
+        public string Channel { get; set; }
     
         public virtual Advertiser Advertiser { get; set; }
         public virtual ICollection<SearchDailySummary> SearchDailySummaries { get; set; }
