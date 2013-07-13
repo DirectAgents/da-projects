@@ -56,11 +56,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });
 
-            IQueryable<SearchStat> stats;
-            if (!String.IsNullOrWhiteSpace(channel) && channel.ToLower().Contains("bing"))
-                stats = cpRepo.GetCampaignStats(channel); // dummy bing stats
-            else
-                stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, start, end);
+            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end);
 
             var kgrid = new KendoGrid<SearchStat>(request, stats);
             if (stats.Any())
@@ -107,9 +103,9 @@ namespace ClientPortal.Web.Controllers
             {
                 Revenue = new { sum = sumRevenue },
                 Cost = new { sum = sumCost },
-                ROAS = new { agg = (int)Math.Round(100 * sumRevenue / sumCost) },
+                ROAS = new { agg = sumCost == 0 ? 0 : (int)Math.Round(100 * sumRevenue / sumCost) },
                 Orders = new { sum = sumOrders },
-                CPO = new { agg = Math.Round(sumCost / sumOrders, 2) },
+                CPO = new { agg = sumOrders == 0 ? 0 : Math.Round(sumCost / sumOrders, 2) },
                 Clicks = new { sum = stats.Sum(s => s.Clicks) },
                 Impressions = new { sum = stats.Sum(s => s.Impressions) },
             };
