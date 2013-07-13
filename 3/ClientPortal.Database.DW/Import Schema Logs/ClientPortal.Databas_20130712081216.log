@@ -1,0 +1,71 @@
+7/12/2013 1:12:16 PM	This log contains information about the import schema operation into project 'ClientPortal.Database.DW' on computer 'AARON-PAVILLION' by user 'aaron'.
+7/12/2013 1:12:16 PM	Import of database schema has started.
+7/12/2013 1:12:25 PM	Gathering database options
+7/12/2013 1:12:25 PM	Gathering users
+7/12/2013 1:12:25 PM	Gathering roles
+7/12/2013 1:12:25 PM	Gathering application roles
+7/12/2013 1:12:25 PM	Gathering role memberships
+7/12/2013 1:12:25 PM	Gathering filegroups
+7/12/2013 1:12:25 PM	Gathering full-text catalogs
+7/12/2013 1:12:25 PM	Gathering assemblies
+7/12/2013 1:12:25 PM	Gathering certificates
+7/12/2013 1:12:25 PM	Gathering asymmetric keys
+7/12/2013 1:12:25 PM	Gathering symmetric keys
+7/12/2013 1:12:25 PM	Gathering encrypted symmetric keys
+7/12/2013 1:12:25 PM	Gathering schemas
+7/12/2013 1:12:25 PM	Gathering XML schema collections
+7/12/2013 1:12:25 PM	Gathering user-defined data types
+7/12/2013 1:12:25 PM	Gathering user-defined types
+7/12/2013 1:12:25 PM	Gathering table types
+7/12/2013 1:12:25 PM	Gathering unique keys for table types
+7/12/2013 1:12:25 PM	Gathering primary keys for table types
+7/12/2013 1:12:25 PM	Gathering check constraints for table types
+7/12/2013 1:12:25 PM	Gathering default constraints for table types
+7/12/2013 1:12:25 PM	Gathering partition functions
+7/12/2013 1:12:25 PM	Gathering partition schemes
+7/12/2013 1:12:25 PM	Gathering functions
+7/12/2013 1:12:25 PM	Gathering encrypted functions
+7/12/2013 1:12:25 PM	Gathering aggregates
+7/12/2013 1:12:25 PM	Gathering procedures
+7/12/2013 1:12:25 PM	Gathering encrypted procedures
+7/12/2013 1:12:25 PM	Gathering tables
+7/12/2013 1:12:25 PM	Gathering primary keys
+7/12/2013 1:12:25 PM	Gathering unique constraints
+7/12/2013 1:12:25 PM	Gathering foreign keys
+7/12/2013 1:12:25 PM	Gathering default constraints
+7/12/2013 1:12:25 PM	Gathering check constraints
+7/12/2013 1:12:25 PM	Gathering views
+7/12/2013 1:12:25 PM	Gathering encrypted views
+7/12/2013 1:12:25 PM	Gathering indexes
+7/12/2013 1:12:25 PM	Gathering statistics
+7/12/2013 1:12:25 PM	Gathering full-text index stoplists
+7/12/2013 1:12:25 PM	Gathering full-text indexes
+7/12/2013 1:12:25 PM	Gathering spatial indexes
+7/12/2013 1:12:25 PM	Gathering XML indexes
+7/12/2013 1:12:25 PM	Gathering encrypted triggers
+7/12/2013 1:12:25 PM	Gathering triggers
+7/12/2013 1:12:25 PM	Gathering encrypted and clr ddl triggers
+7/12/2013 1:12:25 PM	Gathering ddl triggers
+7/12/2013 1:12:25 PM	Gathering synonyms
+7/12/2013 1:12:25 PM	Gathering defaults
+7/12/2013 1:12:25 PM	Gathering data constraint uddt bindings
+7/12/2013 1:12:25 PM	Gathering rules
+7/12/2013 1:12:25 PM	Gathering data constraint uddt bindings
+7/12/2013 1:12:25 PM	Gathering message types
+7/12/2013 1:12:25 PM	Gathering queues
+7/12/2013 1:12:25 PM	Gathering contracts
+7/12/2013 1:12:25 PM	Gathering services
+7/12/2013 1:12:25 PM	Gathering event notifications
+7/12/2013 1:12:25 PM	Gathering remote service bindings
+7/12/2013 1:12:25 PM	Gathering broker priorities
+7/12/2013 1:12:25 PM	Gathering signatures
+7/12/2013 1:12:25 PM	Gathering data compression options
+7/12/2013 1:12:25 PM	Gathering extended properties
+7/12/2013 1:12:26 PM	Gathering credentials
+7/12/2013 1:12:26 PM	Gathering logins
+7/12/2013 1:12:26 PM	Gathering server audits
+7/12/2013 1:12:26 PM	Scanning project for duplicate elements
+7/12/2013 1:12:26 PM	Finished duplicate element processing
+7/12/2013 1:12:26 PM	Finished importing database.
+7/12/2013 1:12:26 PM	A summary of the import was saved to the following location: C:\GitHub\da-projects\3\ClientPortal.Database.DW\Import Schema Logs\ClientPortal.Databas_20130712081216.log
+7/12/2013 1:12:26 PM	Click Finish to continue...

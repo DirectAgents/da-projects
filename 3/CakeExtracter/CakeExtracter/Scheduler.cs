@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace CakeExtracter
 {
-    class Scheduler
+    class Scheduler : IDisposable
     {
         private readonly object _locker = new object();
         private bool _inUse;
@@ -71,6 +71,28 @@ namespace CakeExtracter
                 {
                     _inUse = false;
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resource
+                    _timer.Dispose();
+                }
+                // Dispose unmanaged resource
+                disposed = true;
             }
         }
     }
