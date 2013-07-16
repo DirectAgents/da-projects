@@ -27,7 +27,7 @@
 <script>
     $(function () {
         var weeksumDS = CreateSummaryDataSource('@Url.Action("WeekSumData", "SearchReports")', null, false);
-        CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 0, true, null);
+        CreateSummaryGrid(weeksumDS, $('#weeksumGrid'), 300, 'Week', 10, 0, true, false, null);
 
         CreateRevROASChart(weeksumDS, 'weekrevChart', 'Weekly Revenue vs. ROAS Performance');
         CreateOrderCPOChart(weeksumDS, 'weekorderChart', 'Weekly Orders vs. CPO Performance');

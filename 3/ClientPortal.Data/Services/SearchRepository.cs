@@ -142,13 +142,14 @@ namespace ClientPortal.Data.Services
                 end = DateTime.Today.AddDays(-1);
 
             var stats = GetSearchDailySummaries(advertiserId, channel, start, end)
-                .GroupBy(s => s.SearchCampaign.SearchCampaignName)
-                .OrderBy(g => g.Key)
+                .GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaign.SearchCampaignName })
+                .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
                 .Select(g => new SearchStat
                 {
                     EndDate = end.Value,
                     CustomByStartDate = start.Value,
-                    Title = g.Key,
+                    Channel = g.Key.Channel,
+                    Title = g.Key.SearchCampaignName,
                     Impressions = g.Sum(s => s.Impressions),
                     Clicks = g.Sum(s => s.Clicks),
                     Orders = g.Sum(s => s.Orders),
@@ -156,23 +157,6 @@ namespace ClientPortal.Data.Services
                     Cost = g.Sum(s => s.Cost)
                 });
             return stats;
-        }
-
-        // temp; for dummy data
-        public IQueryable<SearchStat> GetCampaignStats(string channel)
-        {
-            List<SearchStat> stats = new List<SearchStat>();
-            if (channel == null || channel.Contains("Google"))
-                stats.AddRange(new List<SearchStat> {
-                    new SearchStat(true, 6, 2, 6025, 118, 4, 339.95m, 121.62m, "DA - \"Apple\" Memory - Keywords"),
-                    new SearchStat(true, 6, 2, 6562, 293, 13, 2802.85m, 320.46m, "DA - \"Mac\" Memory - Keywords"),
-                });
-            if (channel == null || channel.Contains("Bing"))
-                stats.AddRange(new List<SearchStat> {
-                    new SearchStat(true, 6, 2, 1562, 67, 3, 599.97m, 71.86m, "DA - BING - \"Mac\" Memory - Keywords"),
-                    new SearchStat(true, 6, 2, 1224, 116, 4, 419.96m, 74.01m, "DA - BING - iMac Memory"),
-                });
-            return stats.AsQueryable();
         }
 
         public IQueryable<SearchStat> GetAdgroupStats()

@@ -21,6 +21,7 @@
                     EndDate: { type: 'date' },
                     Range: { type: 'string' },
                     Title: { type: 'string' },
+                    Channel: { type: 'string' },
                     Impressions: { type: 'number' },
                     Clicks: { type: 'number' },
                     Orders: { type: 'number' },
@@ -49,17 +50,18 @@
         };
         args.sort = { field: 'Title', dir: 'desc' };
     } else {
-        //args.sort = { field: 'StartDate', dir: 'asc' };
+        args.sort = { field: 'Channel', dir: 'desc' };
     }
     return new kendo.data.DataSource(args);
 }
 
-function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, detailInit) {
+function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, decimals, sortable, showChannel, detailInit) {
     var args = {
         dataSource: dataSource,
         autoBind: false,
         height: height,
         columns: [
+            { field: 'Channel', hidden: !showChannel },
             { field: 'Range', hidden: true, groupHeaderTemplate: 'Timeframe: #= value.substring(9) #' },
             { field: 'Title', title: titleHeader, width: titleWidthPct + '%' },
             { field: 'Revenue', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
@@ -102,7 +104,7 @@ function DetailInit(e, url) {
     dataSource.read();
 
     var el = $("<div/>").appendTo(e.detailCell);
-    CreateSummaryGrid(dataSource, el, null, 'Campaign', 21, 2, true, null);
+    CreateSummaryGrid(dataSource, el, null, 'Campaign', 21, 2, true, false, null);
 }
 
 function CreateRevROASChart(dataSource, elId, title) {
