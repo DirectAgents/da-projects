@@ -182,8 +182,8 @@
     <Compile Include="Etl\CakeMarketing\Extracters\DailySummariesExtracter.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferDailySummary.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\TrafficLoader.cs" />
-    <Compile Include="Etl\GoogleAdWords\Extracters\BingCsvReportExtracter.cs" />
-    <Compile Include="Etl\GoogleAdWords\Loaders\BingLoader.cs" />
+    <Compile Include="Etl\BingAds\Extracters\BingCsvReportExtracter.cs" />
+    <Compile Include="Etl\BingAds\Loaders\BingLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\GoogleAdWords\Extracters\AdWordsXmlReportExtracter.cs" />
     <Compile Include="Etl\GoogleAdWords\Loaders\AdWordsLoader.cs" />

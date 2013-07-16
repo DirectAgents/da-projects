@@ -1,6 +1,6 @@
 ﻿using CakeExtracter.Common;
-using CakeExtracter.Etl.GoogleAdWords.Extracters;
-using CakeExtracter.Etl.GoogleAdWords.Loaders;
+using CakeExtracter.Etl.BingAds.Extracters;
+using CakeExtracter.Etl.BingAds.Loaders;
 using System.ComponentModel.Composition;
 
 namespace CakeExtracter.Commands

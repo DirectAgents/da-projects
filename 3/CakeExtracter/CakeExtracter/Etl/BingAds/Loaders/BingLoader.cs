@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CakeExtracter.Etl.GoogleAdWords.Loaders
+namespace CakeExtracter.Etl.BingAds.Loaders
 {
     public class BingLoader : Loader<Dictionary<string, string>>
     {
