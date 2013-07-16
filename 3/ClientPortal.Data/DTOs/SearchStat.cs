@@ -8,6 +8,7 @@ namespace ClientPortal.Data.DTOs
 {
     public class SearchStat
     {
+        public string Channel { get; set; }
         public string Title { get; set; }
         public string Range { get; set; }
         public int Impressions { get; set; }
