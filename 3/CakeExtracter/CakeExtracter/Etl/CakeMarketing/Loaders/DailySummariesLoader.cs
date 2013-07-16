@@ -19,6 +19,8 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     var source = item.DailySummary;
                     var pk1 = item.OfferId;
                     var pk2 = DateTime.Parse(source.Date);
+
+                    // BUG: this doesn't update, does it?
                     var target = db.Set<ClientPortal.Data.Contexts.DailySummary>().Find(pk1, pk2)
                                  ?? new ClientPortal.Data.Contexts.DailySummary
                                      {
@@ -39,6 +41,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                                          profit = source.Profit,
                                          epc = source.EPC
                                      };
+
                     if (db.Entry(target).State == EntityState.Detached)
                     {
                         db.DailySummaries.Add(target);

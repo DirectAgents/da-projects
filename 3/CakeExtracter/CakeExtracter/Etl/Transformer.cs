@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CakeExtracter.Etl
 {
@@ -23,11 +25,13 @@ namespace CakeExtracter.Etl
             extracterThread.Join();
         }
 
-        protected override void Extract()
+        protected sealed override void Extract()
         {
             Add(extracter.EnumerateAll().Select(c => Transform(c)));
         }
 
+        // Default transform just tries to cast input to output.
+        // This should be overrided in derived class to do someting useful.
         protected virtual TOut Transform(TIn item)
         {
             return item as TOut;

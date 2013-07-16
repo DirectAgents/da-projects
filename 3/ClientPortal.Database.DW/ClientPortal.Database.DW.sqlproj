@@ -70,5 +70,6 @@
     <Build Include="dbo\Tables\DimOffer.sql" />
     <Build Include="dbo\Tables\DimAdvertiser.sql" />
     <Build Include="dbo\Tables\FactClick.sql" />
+    <Build Include="dbo\Tables\DimBrowser.sql" />
   </ItemGroup>
 </Project>

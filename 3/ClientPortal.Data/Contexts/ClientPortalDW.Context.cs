@@ -33,5 +33,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<DimAdvertiser> DimAdvertisers { get; set; }
         public DbSet<DimAffiliate> DimAffiliates { get; set; }
         public DbSet<DimOffer> DimOffers { get; set; }
+        public DbSet<DimBrowser> DimBrowsers { get; set; }
     }
 }

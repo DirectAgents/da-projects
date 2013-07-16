@@ -8,6 +8,7 @@
         <EntityContainer Name="ClientPortalDWModelStoreContainer">
           <EntitySet Name="DimAdvertiser" EntityType="ClientPortalDWModel.Store.DimAdvertiser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DimAffiliate" EntityType="ClientPortalDWModel.Store.DimAffiliate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DimBrowser" EntityType="ClientPortalDWModel.Store.DimBrowser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DimCountry" EntityType="ClientPortalDWModel.Store.DimCountry" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DimDate" EntityType="ClientPortalDWModel.Store.DimDate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DimOffer" EntityType="ClientPortalDWModel.Store.DimOffer" store:Type="Tables" Schema="dbo" />
@@ -20,6 +21,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_FactClick_DimAffiliate" Association="ClientPortalDWModel.Store.FK_FactClick_DimAffiliate">
             <End Role="DimAffiliate" EntitySet="DimAffiliate" />
+            <End Role="FactClick" EntitySet="FactClick" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FactClick_DimBrowser" Association="ClientPortalDWModel.Store.FK_FactClick_DimBrowser">
+            <End Role="DimBrowser" EntitySet="DimBrowser" />
             <End Role="FactClick" EntitySet="FactClick" />
           </AssociationSet>
           <AssociationSet Name="FK_FactClick_DimCountry" Association="ClientPortalDWModel.Store.FK_FactClick_DimCountry">
@@ -60,6 +65,13 @@
           </Key>
           <Property Name="AffiliateKey" Type="int" Nullable="false" />
           <Property Name="AffiliateName" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="DimBrowser">
+          <Key>
+            <PropertyRef Name="BrowserKey" />
+          </Key>
+          <Property Name="BrowserKey" Type="int" Nullable="false" />
+          <Property Name="BrowserName" Type="nvarchar" Nullable="false" MaxLength="250" />
         </EntityType>
         <EntityType Name="DimCountry">
           <Key>
@@ -110,6 +122,7 @@
           <Property Name="AdvertiserKey" Type="int" Nullable="false" />
           <Property Name="OfferKey" Type="int" Nullable="false" />
           <Property Name="AffiliateKey" Type="int" Nullable="false" />
+          <Property Name="BrowserKey" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="FactConversion">
           <Key>
@@ -140,6 +153,18 @@
             </Principal>
             <Dependent Role="FactClick">
               <PropertyRef Name="AffiliateKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FactClick_DimBrowser">
+          <End Role="DimBrowser" Type="ClientPortalDWModel.Store.DimBrowser" Multiplicity="1" />
+          <End Role="FactClick" Type="ClientPortalDWModel.Store.FactClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimBrowser">
+              <PropertyRef Name="BrowserKey" />
+            </Principal>
+            <Dependent Role="FactClick">
+              <PropertyRef Name="BrowserKey" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -260,6 +285,11 @@
             <End Role="DimOffer" EntitySet="DimOffers" />
             <End Role="FactClick" EntitySet="FactClicks" />
           </AssociationSet>
+          <EntitySet Name="DimBrowsers" EntityType="ClientPortalDWModel.DimBrowser" />
+          <AssociationSet Name="FK_FactClick_DimBrowser" Association="ClientPortalDWModel.FK_FactClick_DimBrowser">
+            <End Role="DimBrowser" EntitySet="DimBrowsers" />
+            <End Role="FactClick" EntitySet="FactClicks" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="DimCountry">
           <Key>
@@ -295,6 +325,8 @@
           <NavigationProperty Name="DimAdvertiser" Relationship="ClientPortalDWModel.FK_FactClick_DimAdvertiser" FromRole="FactClick" ToRole="DimAdvertiser" />
           <NavigationProperty Name="DimAffiliate" Relationship="ClientPortalDWModel.FK_FactClick_DimAffiliate" FromRole="FactClick" ToRole="DimAffiliate" />
           <NavigationProperty Name="DimOffer" Relationship="ClientPortalDWModel.FK_FactClick_DimOffer" FromRole="FactClick" ToRole="DimOffer" />
+          <Property Type="Int32" Name="BrowserKey" Nullable="false" />
+          <NavigationProperty Name="DimBrowser" Relationship="ClientPortalDWModel.FK_FactClick_DimBrowser" FromRole="FactClick" ToRole="DimBrowser" />
           </EntityType>
         <Association Name="FK_FactClick_DimCountry">
           <End Type="ClientPortalDWModel.DimCountry" Role="DimCountry" Multiplicity="1" />
@@ -445,6 +477,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="DimBrowser">
+          <Key>
+            <PropertyRef Name="BrowserKey" />
+          </Key>
+          <Property Type="Int32" Name="BrowserKey" Nullable="false" />
+          <Property Type="String" Name="BrowserName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="FactClicks" Relationship="ClientPortalDWModel.FK_FactClick_DimBrowser" FromRole="DimBrowser" ToRole="FactClick" />
+        </EntityType>
+        <Association Name="FK_FactClick_DimBrowser">
+          <End Type="ClientPortalDWModel.DimBrowser" Role="DimBrowser" Multiplicity="1" />
+          <End Type="ClientPortalDWModel.FactClick" Role="FactClick" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DimBrowser">
+              <PropertyRef Name="BrowserKey" />
+            </Principal>
+            <Dependent Role="FactClick">
+              <PropertyRef Name="BrowserKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -470,6 +522,7 @@
           <EntitySetMapping Name="FactClicks">
             <EntityTypeMapping TypeName="ClientPortalDWModel.FactClick">
               <MappingFragment StoreEntitySet="FactClick">
+                <ScalarProperty Name="BrowserKey" ColumnName="BrowserKey" />
                 <ScalarProperty Name="AffiliateKey" ColumnName="AffiliateKey" />
                 <ScalarProperty Name="OfferKey" ColumnName="OfferKey" />
                 <ScalarProperty Name="AdvertiserKey" ColumnName="AdvertiserKey" />
@@ -528,6 +581,14 @@
               <MappingFragment StoreEntitySet="DimOffer">
                 <ScalarProperty Name="OfferName" ColumnName="OfferName" />
                 <ScalarProperty Name="OfferKey" ColumnName="OfferKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DimBrowsers">
+            <EntityTypeMapping TypeName="ClientPortalDWModel.DimBrowser">
+              <MappingFragment StoreEntitySet="DimBrowser">
+                <ScalarProperty Name="BrowserName" ColumnName="BrowserName" />
+                <ScalarProperty Name="BrowserKey" ColumnName="BrowserKey" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

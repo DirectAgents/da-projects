@@ -115,51 +115,13 @@
             <PropertyRef Name="conversion_id" />
           </Key>
           <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
-          <Property Name="visitor_id" Type="int" Nullable="false" />
-          <Property Name="request_session_id" Type="int" Nullable="false" />
-          <Property Name="click_id" Type="int" />
           <Property Name="conversion_date" Type="datetime" Nullable="false" />
-          <Property Name="last_updated" Type="datetime" />
-          <Property Name="click_date" Type="datetime" />
-          <Property Name="affiliate_affiliate_id" Type="int" Nullable="false" />
-          <Property Name="affiliate_affiliate_name" Type="nvarchar(max)" />
-          <Property Name="advertiser_advertiser_id" Type="int" Nullable="false" />
-          <Property Name="advertiser_advertiser_name" Type="nvarchar(max)" />
-          <Property Name="offer_offer_id" Type="int" Nullable="false" />
-          <Property Name="offer_offer_name" Type="nvarchar(max)" />
-          <Property Name="campaign_id" Type="int" Nullable="false" />
-          <Property Name="creative_creative_id" Type="int" Nullable="false" />
-          <Property Name="creative_creative_name" Type="nvarchar(max)" />
-          <Property Name="sub_id_1" Type="nvarchar(max)" />
-          <Property Name="sub_id_2" Type="nvarchar(max)" />
-          <Property Name="sub_id_3" Type="nvarchar(max)" />
-          <Property Name="sub_id_4" Type="nvarchar(max)" />
-          <Property Name="sub_id_5" Type="nvarchar(max)" />
-          <Property Name="conversion_type" Type="nvarchar(max)" />
-          <Property Name="paid_currency_id" Type="tinyint" Nullable="false" />
-          <Property Name="paid_amount" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="paid_formatted_amount" Type="nvarchar(max)" />
+          <Property Name="affiliate_id" Type="int" Nullable="false" />
+          <Property Name="advertiser_id" Type="int" Nullable="false" />
+          <Property Name="offer_id" Type="int" Nullable="false" />
           <Property Name="received_currency_id" Type="tinyint" Nullable="false" />
           <Property Name="received_amount" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="received_formatted_amount" Type="nvarchar(max)" />
-          <Property Name="step_reached" Type="tinyint" Nullable="false" />
-          <Property Name="pixel_dropped" Type="bit" Nullable="false" />
-          <Property Name="suppressed" Type="bit" Nullable="false" />
-          <Property Name="returned" Type="bit" Nullable="false" />
-          <Property Name="test" Type="bit" Nullable="false" />
           <Property Name="transaction_id" Type="nvarchar(max)" />
-          <Property Name="conversion_ip_address" Type="nvarchar(max)" />
-          <Property Name="click_ip_address" Type="nvarchar(max)" />
-          <Property Name="country" Type="nvarchar(max)" />
-          <Property Name="conversion_referrer_url" Type="nvarchar(max)" />
-          <Property Name="click_referrer_url" Type="nvarchar(max)" />
-          <Property Name="conversion_user_agent" Type="nvarchar(max)" />
-          <Property Name="click_user_agent" Type="nvarchar(max)" />
-          <Property Name="disposition_approved" Type="bit" Nullable="false" />
-          <Property Name="disposition_disposition_name" Type="nvarchar(max)" />
-          <Property Name="disposition_contact" Type="nvarchar(max)" />
-          <Property Name="disposition_disposition_date" Type="datetime" />
-          <Property Name="note" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="ConversionData">
           <Key>
@@ -500,7 +462,6 @@
     <edmx:ConceptualModels>
       <Schema Namespace="ClientPortalModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ClientPortalContext" p1:LazyLoadingEnabled="true">
-          <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
           <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
           <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
           <EntitySet Name="Goals" EntityType="ClientPortalModel.Goal" />
@@ -560,8 +521,9 @@
             <End Role="MetricValue" EntitySet="MetricValues" />
             <End Role="MetricCount" EntitySet="MetricCounts" />
           </AssociationSet>
-          <EntitySet Name="SearchCampaigns" EntityType="ClientPortalModel.SearchCampaign" />
           <EntitySet Name="SearchDailySummaries" EntityType="ClientPortalModel.SearchDailySummary" />
+          <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
+          <EntitySet Name="SearchCampaigns" EntityType="ClientPortalModel.SearchCampaign" />
           <AssociationSet Name="FK_SearchCampaign_Advertiser" Association="ClientPortalModel.FK_SearchCampaign_Advertiser">
             <End Role="Advertiser" EntitySet="Advertisers" />
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
@@ -587,57 +549,6 @@
           <Member Name="ConversionReport" Value="3" />
           <Member Name="Affiliates" Value="4" />
         </EnumType>
-        <EntityType Name="Conversion">
-          <Key>
-            <PropertyRef Name="conversion_id" />
-          </Key>
-          <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="visitor_id" Nullable="false" />
-          <Property Type="Int32" Name="request_session_id" Nullable="false" />
-          <Property Type="Int32" Name="click_id" />
-          <Property Type="DateTime" Name="conversion_date" Nullable="false" Precision="3" />
-          <Property Type="DateTime" Name="last_updated" Precision="3" />
-          <Property Type="DateTime" Name="click_date" Precision="3" />
-          <Property Type="Int32" Name="affiliate_id" Nullable="false" />
-          <Property Type="String" Name="affiliate_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="advertiser_id" Nullable="false" />
-          <Property Type="String" Name="advertiser_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="offer_id" Nullable="false" />
-          <Property Type="String" Name="offer_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="campaign_id" Nullable="false" />
-          <Property Type="Int32" Name="creative_id" Nullable="false" />
-          <Property Type="String" Name="creative_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_1" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_2" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_3" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_4" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="sub_id_5" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="conversion_type" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Byte" Name="paid_currency_id" Nullable="false" />
-          <Property Type="Decimal" Name="paid_amount" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="String" Name="paid_formatted_amount" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Byte" Name="received_currency_id" Nullable="false" />
-          <Property Type="Decimal" Name="received_amount" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="String" Name="received_formatted_amount" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Byte" Name="step_reached" Nullable="false" />
-          <Property Type="Boolean" Name="pixel_dropped" Nullable="false" />
-          <Property Type="Boolean" Name="suppressed" Nullable="false" />
-          <Property Type="Boolean" Name="returned" Nullable="false" />
-          <Property Type="Boolean" Name="test" Nullable="false" />
-          <Property Type="String" Name="transaction_id" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="conversion_ip_address" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="click_ip_address" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="country" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="conversion_referrer_url" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="click_referrer_url" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="conversion_user_agent" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="click_user_agent" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="disposition_approved" Nullable="false" />
-          <Property Type="String" Name="disposition_name" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="disposition_contact" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="disposition_date" Precision="3" />
-          <Property Type="String" Name="note" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="ConversionData">
           <Key>
             <PropertyRef Name="conversion_id" />
@@ -725,8 +636,8 @@
           <NavigationProperty Name="FileUploads" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="Advertiser" ToRole="FileUpload" />
           <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Advertiser" ToRole="Goal" />
           <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
-          <NavigationProperty Name="SearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="Advertiser" ToRole="SearchCampaign" />
           <Property Type="Boolean" Name="HasSearch" Nullable="false" />
+          <NavigationProperty Name="SearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="Advertiser" ToRole="SearchCampaign" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -989,17 +900,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="SearchCampaign">
-          <Key>
-            <PropertyRef Name="SearchCampaignId" />
-          </Key>
-          <Property Type="Int32" Name="SearchCampaignId" Nullable="false" />
-          <Property Type="String" Name="SearchCampaignName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
-          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
-          <NavigationProperty Name="SearchDailySummaries" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary" />
-          <Property Type="String" Name="Channel" MaxLength="255" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
             <PropertyRef Name="SearchCampaignId" />
@@ -1014,6 +914,30 @@
           <Property Type="Int32" Name="Impressions" Nullable="false" />
           <Property Type="Int32" Name="CurrencyId" Nullable="false" />
           <NavigationProperty Name="SearchCampaign" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchDailySummary" ToRole="SearchCampaign" />
+        </EntityType>
+        <EntityType Name="Conversion">
+          <Key>
+            <PropertyRef Name="conversion_id" />
+          </Key>
+          <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="conversion_date" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="affiliate_id" Nullable="false" />
+          <Property Type="Int32" Name="advertiser_id" Nullable="false" />
+          <Property Type="Int32" Name="offer_id" Nullable="false" />
+          <Property Type="Byte" Name="received_currency_id" Nullable="false" />
+          <Property Type="Decimal" Name="received_amount" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="transaction_id" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SearchCampaign">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+          </Key>
+          <Property Type="Int32" Name="SearchCampaignId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="SearchCampaignName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="String" Name="Channel" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
+          <NavigationProperty Name="SearchDailySummaries" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary" />
         </EntityType>
         <Association Name="FK_SearchCampaign_Advertiser">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -1045,58 +969,6 @@
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="ClientPortalModelStoreContainer" CdmEntityContainer="ClientPortalContext">
-          <EntitySetMapping Name="Conversions">
-            <EntityTypeMapping TypeName="ClientPortalModel.Conversion">
-              <MappingFragment StoreEntitySet="Conversion">
-                <ScalarProperty Name="note" ColumnName="note" />
-                <ScalarProperty Name="disposition_date" ColumnName="disposition_disposition_date" />
-                <ScalarProperty Name="disposition_contact" ColumnName="disposition_contact" />
-                <ScalarProperty Name="disposition_name" ColumnName="disposition_disposition_name" />
-                <ScalarProperty Name="disposition_approved" ColumnName="disposition_approved" />
-                <ScalarProperty Name="click_user_agent" ColumnName="click_user_agent" />
-                <ScalarProperty Name="conversion_user_agent" ColumnName="conversion_user_agent" />
-                <ScalarProperty Name="click_referrer_url" ColumnName="click_referrer_url" />
-                <ScalarProperty Name="conversion_referrer_url" ColumnName="conversion_referrer_url" />
-                <ScalarProperty Name="country" ColumnName="country" />
-                <ScalarProperty Name="click_ip_address" ColumnName="click_ip_address" />
-                <ScalarProperty Name="conversion_ip_address" ColumnName="conversion_ip_address" />
-                <ScalarProperty Name="transaction_id" ColumnName="transaction_id" />
-                <ScalarProperty Name="test" ColumnName="test" />
-                <ScalarProperty Name="returned" ColumnName="returned" />
-                <ScalarProperty Name="suppressed" ColumnName="suppressed" />
-                <ScalarProperty Name="pixel_dropped" ColumnName="pixel_dropped" />
-                <ScalarProperty Name="step_reached" ColumnName="step_reached" />
-                <ScalarProperty Name="received_formatted_amount" ColumnName="received_formatted_amount" />
-                <ScalarProperty Name="received_amount" ColumnName="received_amount" />
-                <ScalarProperty Name="received_currency_id" ColumnName="received_currency_id" />
-                <ScalarProperty Name="paid_formatted_amount" ColumnName="paid_formatted_amount" />
-                <ScalarProperty Name="paid_amount" ColumnName="paid_amount" />
-                <ScalarProperty Name="paid_currency_id" ColumnName="paid_currency_id" />
-                <ScalarProperty Name="conversion_type" ColumnName="conversion_type" />
-                <ScalarProperty Name="sub_id_5" ColumnName="sub_id_5" />
-                <ScalarProperty Name="sub_id_4" ColumnName="sub_id_4" />
-                <ScalarProperty Name="sub_id_3" ColumnName="sub_id_3" />
-                <ScalarProperty Name="sub_id_2" ColumnName="sub_id_2" />
-                <ScalarProperty Name="sub_id_1" ColumnName="sub_id_1" />
-                <ScalarProperty Name="creative_name" ColumnName="creative_creative_name" />
-                <ScalarProperty Name="creative_id" ColumnName="creative_creative_id" />
-                <ScalarProperty Name="campaign_id" ColumnName="campaign_id" />
-                <ScalarProperty Name="offer_name" ColumnName="offer_offer_name" />
-                <ScalarProperty Name="offer_id" ColumnName="offer_offer_id" />
-                <ScalarProperty Name="advertiser_name" ColumnName="advertiser_advertiser_name" />
-                <ScalarProperty Name="advertiser_id" ColumnName="advertiser_advertiser_id" />
-                <ScalarProperty Name="affiliate_name" ColumnName="affiliate_affiliate_name" />
-                <ScalarProperty Name="affiliate_id" ColumnName="affiliate_affiliate_id" />
-                <ScalarProperty Name="click_date" ColumnName="click_date" />
-                <ScalarProperty Name="last_updated" ColumnName="last_updated" />
-                <ScalarProperty Name="conversion_date" ColumnName="conversion_date" />
-                <ScalarProperty Name="click_id" ColumnName="click_id" />
-                <ScalarProperty Name="request_session_id" ColumnName="request_session_id" />
-                <ScalarProperty Name="visitor_id" ColumnName="visitor_id" />
-                <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ConversionDatas">
             <EntityTypeMapping TypeName="ClientPortalModel.ConversionData">
               <MappingFragment StoreEntitySet="ConversionData">
@@ -1291,16 +1163,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SearchCampaigns">
-            <EntityTypeMapping TypeName="ClientPortalModel.SearchCampaign">
-              <MappingFragment StoreEntitySet="SearchCampaign">
-                <ScalarProperty Name="Channel" ColumnName="Channel" />
-                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
-                <ScalarProperty Name="SearchCampaignName" ColumnName="SearchCampaignName" />
-                <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SearchDailySummaries">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchDailySummary">
               <MappingFragment StoreEntitySet="SearchDailySummary">
@@ -1311,6 +1173,30 @@
                 <ScalarProperty Name="Cost" ColumnName="Cost" />
                 <ScalarProperty Name="Revenue" ColumnName="Revenue" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Conversions">
+            <EntityTypeMapping TypeName="ClientPortalModel.Conversion">
+              <MappingFragment StoreEntitySet="Conversion">
+                <ScalarProperty Name="transaction_id" ColumnName="transaction_id" />
+                <ScalarProperty Name="received_amount" ColumnName="received_amount" />
+                <ScalarProperty Name="received_currency_id" ColumnName="received_currency_id" />
+                <ScalarProperty Name="offer_id" ColumnName="offer_id" />
+                <ScalarProperty Name="advertiser_id" ColumnName="advertiser_id" />
+                <ScalarProperty Name="affiliate_id" ColumnName="affiliate_id" />
+                <ScalarProperty Name="conversion_date" ColumnName="conversion_date" />
+                <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchCampaigns">
+            <EntityTypeMapping TypeName="ClientPortalModel.SearchCampaign">
+              <MappingFragment StoreEntitySet="SearchCampaign">
+                <ScalarProperty Name="Channel" ColumnName="Channel" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="SearchCampaignName" ColumnName="SearchCampaignName" />
                 <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
               </MappingFragment>
             </EntityTypeMapping>

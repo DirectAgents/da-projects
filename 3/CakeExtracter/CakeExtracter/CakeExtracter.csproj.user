@@ -4,6 +4,6 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>synchSearchDailySummariesBingCsv -f "C:\Users\kslesinsky\Downloads\Ramjet-Bing-June-withRev_527763833.csv" -v 90000</StartArguments>
+    <StartArguments>synchClicks -a 278 -s 6/1/2013 -e 6/2/2013</StartArguments>
   </PropertyGroup>
 </Project>
