@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace CakeExtracter.Etl.BingAds.Extracters
+namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class BingCsvReportExtracter : Extracter<Dictionary<string, string>>
     {

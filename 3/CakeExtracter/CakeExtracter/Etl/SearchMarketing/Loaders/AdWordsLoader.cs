@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using ClientPortal.Data.Contexts;
 
-namespace CakeExtracter.Etl.GoogleAdWords.Loaders
+namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class AdWordsLoader : Loader<Dictionary<string, string>>
     {

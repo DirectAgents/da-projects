@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using CakeExtracter.Common;
-using CakeExtracter.Etl.GoogleAdWords.Extracters;
-using CakeExtracter.Etl.GoogleAdWords.Loaders;
+using CakeExtracter.Etl.SearchMarketing.Extracters;
+using CakeExtracter.Etl.SearchMarketing.Loaders;
 
 namespace CakeExtracter.Commands
 {

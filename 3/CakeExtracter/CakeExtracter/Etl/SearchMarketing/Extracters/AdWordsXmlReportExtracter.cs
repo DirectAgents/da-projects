@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
-namespace CakeExtracter.Etl.GoogleAdWords.Extracters
+namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class AdWordsXmlReportExtracter : Extracter<Dictionary<string, string>>
     {
