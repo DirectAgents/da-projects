@@ -16,9 +16,9 @@ namespace BingAds
         private static string m_token = "EW65911AO";
 
         // 234647, 886985
-        static Campaign[] GetCampaigns(long customerId, long accountId)
+        public static Campaign[] GetCampaigns(long customerId, long accountId)
         {
-            //service = new CampaignManagementServiceClient();
+            service = new CampaignManagementServiceClient();
 
             GetCampaignsByAccountIdRequest request = new GetCampaignsByAccountIdRequest();
             GetCampaignsByAccountIdResponse response = null;
