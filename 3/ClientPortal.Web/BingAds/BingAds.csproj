@@ -1,0 +1,422 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E2EA8AB5-ABAF-4007-A446-09624CB159E6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BingAds</RootNamespace>
+    <AssemblyName>BingAds</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Campaigns.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\CampaignManagement\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddAdExtensionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddAdGroupCriterionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddAdGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddAdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddBusinessesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddGoalsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddImageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddKeywordsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddMediaResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddSitePlacementsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddTargetResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AddTargetsToLibraryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.AppealEditorialRejectionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteAdExtensionsFromCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteAdExtensionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteAdGroupCriterionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteAdGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteAdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteBusinessesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteGoalsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteKeywordsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteSitePlacementsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteTargetFromAdGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteTargetFromCampaignResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteTargetResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.DeleteTargetsFromLibraryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAccountMigrationStatusesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdEditorialReasonsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdExtensionIdsByAccountIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdExtensionsByCampaignIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdExtensionsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdExtensionsEditorialReasonsByCampaignIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdGroupCriterionsByAdGroupIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdGroupCriterionsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdGroupsByCampaignIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdGroupsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdRotationByAdGroupIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdsByAdGroupIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdsByEditorialStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAdsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetAnalyticsTypeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetBMCStoresByCustomerIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetBusinessesByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetBusinessesInfoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetCampaignAdExtensionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetCampaignsByAccountIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetCampaignsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetDestinationUrlByKeywordIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetDeviceOSTargetsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetEditorialReasonsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetExclusionsByAssociatedEntityIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetGoalsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetImageByIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetKeywordEditorialReasonsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetKeywordsByAdGroupIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetKeywordsByEditorialStatusResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetKeywordsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetMediaByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetNegativeKeywordsByAdGroupIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetNegativeKeywordsByCampaignIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetNegativeSitesByAdGroupIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetNegativeSitesByCampaignIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetNormalizedStringsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetPlacementDetailsForUrlsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetSitePlacementsByAdGroupIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetSitePlacementsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetTargetByAdGroupIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetTargetsByAdGroupIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetTargetsByCampaignIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetTargetsByIdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.GetTargetsInfoFromLibraryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.PauseAdGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.PauseAdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.PauseCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.PauseKeywordsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.PauseSitePlacementsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.ResumeAdGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.ResumeAdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.ResumeCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.ResumeKeywordsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.ResumeSitePlacementsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetAdExtensionsToCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetAdRotationToAdGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetAnalyticsTypeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetCampaignAdExtensionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetDestinationUrlToKeywordsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetExclusionsToAssociatedEntitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetNegativeKeywordsToAdGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetNegativeKeywordsToCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetNegativeSitesToAdGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetNegativeSitesToCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetTargetToAdGroupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SetTargetToCampaignResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.SubmitAdGroupForApprovalResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateAdExtensionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateAdGroupCriterionsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateAdGroupsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateAdsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateBusinessesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateCampaignsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateDeviceOSTargetsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateGoalsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateKeywordsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateSitePlacementsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateTargetResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\BingAds.CampaignManagement.UpdateTargetsInLibraryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CampaignManagement\CampaignManagementService.wsdl" />
+    <None Include="Service References\CampaignManagement\CampaignManagementService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CampaignManagement\CampaignManagementService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CampaignManagement\CampaignManagementService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CampaignManagement\CampaignManagementService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CampaignManagement\CampaignManagementService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CampaignManagement\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CampaignManagement\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CampaignManagement\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CampaignManagement\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
