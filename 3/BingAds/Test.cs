@@ -5,18 +5,16 @@ using System.ServiceModel;
 
 namespace BingAds
 {
-    public class Campaigns
+    public class Test
     {
-        //private readonly string ApiKey = ConfigurationManager.AppSettings["CakeApiKey"];
+        private readonly string m_token = ConfigurationManager.AppSettings["BingApiToken"];
+        private readonly string m_username = ConfigurationManager.AppSettings["BingApiUsername"];
+        private readonly string m_password = ConfigurationManager.AppSettings["BingApiPassword"];
 
         private static CampaignManagementServiceClient service = null;
 
-        private static string m_password = "agentdan1";
-        private static string m_username = "API_DanielOwen";
-        private static string m_token = "EW65911AO";
-
         // 234647, 886985
-        public static Campaign[] GetCampaigns(long customerId, long accountId)
+        public Campaign[] GetCampaigns(long customerId, long accountId)
         {
             service = new CampaignManagementServiceClient();
 
