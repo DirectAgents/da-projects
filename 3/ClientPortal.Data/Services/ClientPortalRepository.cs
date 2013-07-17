@@ -4,7 +4,6 @@ using System.Linq;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
-using System.Data;
 
 namespace ClientPortal.Data.Services
 {

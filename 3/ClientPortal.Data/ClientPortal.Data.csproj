@@ -107,6 +107,9 @@
     <Compile Include="Contexts\DimAffiliate.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\DimBrowser.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DimCountry.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>

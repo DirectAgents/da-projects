@@ -35,6 +35,23 @@ namespace CakeExtracter.CakeMarketingApi
             return response.DailySummaries;
         }
 
+        public static List<Click> Clicks(DateRange dateRange, int advertiserId, int offerId, out int rowCount)
+        {
+            var request = new ClicksRequest
+            {
+                start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
+                end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                advertiser_id = advertiserId,
+                offer_id = offerId
+            };
+            var client = new ClicksClient();
+            var response = client.Clicks(request);
+            if (!response.Success)
+                throw new Exception("ClicksClient failed");        
+            rowCount = response.RowCount;
+            return response.Clicks.ToList();
+        }
+
         public static List<Conversion> Conversions(DateRange dateRange, int advertiserId, int offerId)
         {
             var request = new ConversionsRequest

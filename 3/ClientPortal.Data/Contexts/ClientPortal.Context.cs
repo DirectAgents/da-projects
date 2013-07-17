@@ -25,7 +25,6 @@ namespace ClientPortal.Data.Contexts
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Conversion> Conversions { get; set; }
         public DbSet<ConversionData> ConversionDatas { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }
         public DbSet<Goal> Goals { get; set; }
@@ -41,7 +40,8 @@ namespace ClientPortal.Data.Contexts
         public DbSet<Metric> Metrics { get; set; }
         public DbSet<MetricCount> MetricCounts { get; set; }
         public DbSet<MetricValue> MetricValues { get; set; }
-        public DbSet<SearchCampaign> SearchCampaigns { get; set; }
         public DbSet<SearchDailySummary> SearchDailySummaries { get; set; }
+        public DbSet<Conversion> Conversions { get; set; }
+        public DbSet<SearchCampaign> SearchCampaigns { get; set; }
     }
 }

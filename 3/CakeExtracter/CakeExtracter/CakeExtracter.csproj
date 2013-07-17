@@ -136,16 +136,26 @@
     <Compile Include="Bootstrappers\ServicePointBootstrapper.cs" />
     <Compile Include="CakeMarketingApi\Clients\ApiClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\ApiRequest.cs" />
+    <Compile Include="CakeMarketingApi\Clients\ClicksClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\ClicksRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\ConversionsClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\ConversionsRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\DailySummariesRequest.cs" />
     <Compile Include="CakeMarketingApi\Clients\TrafficClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\TrafficRequest.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Advertiser.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Affiliate.cs" />
     <Compile Include="CakeMarketingApi\Entities\ArrayOfTraffic.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Browser.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Click.cs" />
+    <Compile Include="CakeMarketingApi\Entities\ClickReportResponse.cs" />
     <Compile Include="CakeMarketingApi\Entities\Conversion.cs" />
     <Compile Include="CakeMarketingApi\Entities\ConversionReportResponse.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Country.cs" />
     <Compile Include="CakeMarketingApi\Entities\DateRangeTraffic.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Region.cs" />
     <Compile Include="Commands\SynchCakeTrafficCommand.cs" />
+    <Compile Include="Commands\SynchClicksCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesBingCsvCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
     <Compile Include="Common\EmailUtility.cs" />
@@ -178,9 +188,11 @@
     <Compile Include="Common\BatchingExtensions.cs" />
     <Compile Include="CakeMarketingApi\CakeMarketingUtility.cs" />
     <Compile Include="Data\CakeTraffic\CakeTrafficContext.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\ClicksExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\TrafficExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\DailySummariesExtracter.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferDailySummary.cs" />
+    <Compile Include="Etl\CakeMarketing\Loaders\ClicksLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\TrafficLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingCsvReportExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingLoader.cs" />
@@ -213,6 +225,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="CakeMarketingApi\CakeMarketingApi.cd" />
+    <None Include="CakeMarketingApi\Entities\Click.cd" />
     <None Include="Etl\Etl.cd" />
     <None Include="packages.config" />
   </ItemGroup>
