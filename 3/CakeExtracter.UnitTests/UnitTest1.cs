@@ -16,7 +16,7 @@ namespace CakeExtracter.UnitTests
     public class UnitTest1
     {
         [TestMethod]
-        public void BingAds_Campaigns()
+        public void BingAdsTest_Campaigns()
         {
             var bingTest = new BingAds.Test();
             var campaigns = bingTest.GetCampaigns(234647, 886985);
@@ -27,10 +27,17 @@ namespace CakeExtracter.UnitTests
         }
 
         [TestMethod]
-        public void BingAds_KeywordPerformance()
+        public void BingAdsReport_KeywordPerformance()
         {
             var bingReports = new BingAds.Reports();
             bingReports.GetKeywordPerformance(886985, 51468225);
+        }
+
+        [TestMethod]
+        public void BingAdsReport_DailySums()
+        {
+            var bingReports = new BingAds.Reports();
+            bingReports.GetDailySums(886985);
         }
 
         [TestMethod]

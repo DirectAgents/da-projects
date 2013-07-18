@@ -2,6 +2,7 @@
 using System;
 using System.Configuration;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.ServiceModel;
 using System.Threading;
@@ -13,12 +14,23 @@ namespace BingAds
         private readonly string _developerToken = ConfigurationManager.AppSettings["BingApiToken"];
         private readonly string _userName = ConfigurationManager.AppSettings["BingApiUsername"];
         private readonly string _password = ConfigurationManager.AppSettings["BingApiPassword"];
-
-        private readonly string _downloadPath = @"C:\Users\kslesinsky\Downloads\keywordperf.zip";
+        private readonly string _folder = ConfigurationManager.AppSettings["BingReportFolder"];
+        private readonly string _filename = ConfigurationManager.AppSettings["BingReportFilename"];
 
         private static ReportingServiceClient _service;
 
         public void GetKeywordPerformance(long accountId, long campaignId)
+        {
+            ReportRequest reportRequest = GetReportRequest_KeywordPerf(accountId, campaignId);
+            GetReport(reportRequest);
+        }
+        public void GetDailySums(long accountId)
+        {
+            ReportRequest reportRequest = GetReportRequest_DailySums(accountId);
+            GetReport(reportRequest);
+        }
+
+        private void GetReport(ReportRequest reportRequest)
         {
             ReportRequestStatus response = null;
 
@@ -26,8 +38,7 @@ namespace BingAds
             {
                 _service = new ReportingServiceClient();
 
-                ReportRequest report = GetRequestData(accountId, campaignId);
-                string reportId = RequestReport(report);
+                string reportId = RequestReport(reportRequest);
 
                 if (null != reportId)
                 {
@@ -39,9 +50,9 @@ namespace BingAds
                     {
                         if (ReportRequestStatusType.Success == response.Status)
                         {
-                            DownloadReport(response.ReportDownloadUrl, _downloadPath);
-                            Console.WriteLine("The zipped file was written to {0}. \nYou will " +
-                                "need to uncompress it in order to read it.", _downloadPath);
+                            string zipfileLocation = _folder + "\\" + _filename;
+                            DownloadReport(response.ReportDownloadUrl, zipfileLocation);
+                            ZipFile.ExtractToDirectory(zipfileLocation, _folder);
                         }
                         else if (ReportRequestStatusType.Error == response.Status)
                         {
@@ -109,11 +120,45 @@ namespace BingAds
             }
         }
 
-        public ReportRequest GetRequestData(long accountId, long campaignId)
+        private ReportRequest GetReportRequest_DailySums(long accountId)
         {
-            var report = new KeywordPerformanceReportRequest
+            var reportRequest = new ConversionPerformanceReportRequest
             {
-                Format = ReportFormat.Xml,
+                Format = ReportFormat.Csv,
+                ReportName = "Conversion Report",
+                ReturnOnlyCompleteData = true,
+                Aggregation = NonHourlyReportAggregation.Daily,
+                Scope = new AccountThroughAdGroupReportScope
+                {
+                    AccountIds = new[] { accountId },
+                    AdGroups = null,
+                    Campaigns = null
+                },
+                Time = new ReportTime
+                {
+                    PredefinedTime = ReportTimePeriod.LastMonth
+                },
+                Columns = new[] {
+                    ConversionPerformanceReportColumn.TimePeriod,
+                    ConversionPerformanceReportColumn.Impressions,
+                    ConversionPerformanceReportColumn.Clicks,
+                    ConversionPerformanceReportColumn.Conversions,
+                    ConversionPerformanceReportColumn.Spend,
+                    ConversionPerformanceReportColumn.Revenue,
+                    ConversionPerformanceReportColumn.AccountId,
+                    ConversionPerformanceReportColumn.AccountName,
+                    ConversionPerformanceReportColumn.AccountNumber,
+                    ConversionPerformanceReportColumn.CampaignId,
+                    ConversionPerformanceReportColumn.CampaignName
+                }
+            };
+            return reportRequest;
+        }
+        private ReportRequest GetReportRequest_KeywordPerf(long accountId, long campaignId)
+        {
+            var reportRequest = new KeywordPerformanceReportRequest
+            {
+                Format = ReportFormat.Csv,
                 ReportName = "My Keyword Performance Report",
                 ReturnOnlyCompleteData = true,
                 Aggregation = ReportAggregation.Daily,
@@ -168,10 +213,10 @@ namespace BingAds
                             KeywordPerformanceReportColumn.QualityScore
                         }
             };
-            return report;
+            return reportRequest;
         }
 
-        public string RequestReport(ReportRequest report)
+        private string RequestReport(ReportRequest reportRequest)
         {
             var request = new SubmitGenerateReportRequest();
             SubmitGenerateReportResponse response;
@@ -186,7 +231,7 @@ namespace BingAds
 
                 // Set the request information.
 
-                request.ReportRequest = report;
+                request.ReportRequest = reportRequest;
 
                 response = _service.SubmitGenerateReport(request);
             }
@@ -285,7 +330,7 @@ namespace BingAds
             return (null == response) ? null : response.ReportRequestId;
         }
 
-        public ReportRequestStatus GetDownloadUrl(string reportId)
+        private ReportRequestStatus GetDownloadUrl(string reportId)
         {
             var request = new PollGenerateReportRequest();
             PollGenerateReportResponse response = null;
@@ -395,7 +440,7 @@ namespace BingAds
             return (null == response) ? null : response.ReportRequestStatus;
         }
 
-        static void DownloadReport(string reportDownloadUrl, string downloadPath)
+        private static void DownloadReport(string reportDownloadUrl, string downloadPath)
         {
             var request = (HttpWebRequest)WebRequest.Create(reportDownloadUrl);
             var response = (HttpWebResponse)request.GetResponse();
