@@ -37,7 +37,10 @@ namespace CakeExtracter.UnitTests
         public void BingAdsReport_DailySums()
         {
             var bingReports = new BingAds.Reports();
-            bingReports.GetDailySums(886985);
+            var startDate = new DateTime(2013, 6, 1);
+            var endDate = new DateTime(2013, 6, 30);
+            var filepath = bingReports.GetDailySummaries(886985, startDate, endDate);
+            Console.WriteLine("Filepath: " + filepath);
         }
 
         [TestMethod]

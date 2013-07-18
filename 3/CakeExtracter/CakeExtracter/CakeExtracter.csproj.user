@@ -4,6 +4,6 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>synchClicks -a 278 -s 6/1/2013 -e 6/2/2013</StartArguments>
+    <StartArguments>synchSearchDailySummariesBing -v 90000 -a 886985 -s 7/1/2013 -e 7/14/2013</StartArguments>
   </PropertyGroup>
 </Project>

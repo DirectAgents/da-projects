@@ -19,26 +19,29 @@ namespace BingAds
 
         private static ReportingServiceClient _service;
 
-        public void GetKeywordPerformance(long accountId, long campaignId)
+        public string GetKeywordPerformance(long accountId, long campaignId)
         {
             ReportRequest reportRequest = GetReportRequest_KeywordPerf(accountId, campaignId);
-            GetReport(reportRequest);
+            var filepath = GetReport(reportRequest);
+            return filepath;
         }
-        public void GetDailySums(long accountId)
+        public string GetDailySummaries(long accountId, DateTime startDate, DateTime endDate)
         {
-            ReportRequest reportRequest = GetReportRequest_DailySums(accountId);
-            GetReport(reportRequest);
+            ReportRequest reportRequest = GetReportRequest_DailySums(accountId, startDate, endDate);
+            var filepath = GetReport(reportRequest);
+            return filepath;
         }
 
-        private void GetReport(ReportRequest reportRequest)
+        private string GetReport(ReportRequest reportRequest)
         {
             ReportRequestStatus response = null;
+            string filepath = null;
 
             try
             {
                 _service = new ReportingServiceClient();
 
-                string reportId = RequestReport(reportRequest);
+                var reportId = RequestReport(reportRequest);
 
                 if (null != reportId)
                 {
@@ -53,6 +56,9 @@ namespace BingAds
                             string zipfileLocation = _folder + "\\" + _filename;
                             DownloadReport(response.ReportDownloadUrl, zipfileLocation);
                             ZipFile.ExtractToDirectory(zipfileLocation, _folder);
+
+                            if (reportRequest.Format == ReportFormat.Csv)
+                                filepath = _folder + "\\" + reportId + ".csv";
                         }
                         else if (ReportRequestStatusType.Error == response.Status)
                         {
@@ -118,9 +124,10 @@ namespace BingAds
                     _service.Abort();
                 }
             }
+            return filepath;
         }
 
-        private ReportRequest GetReportRequest_DailySums(long accountId)
+        private ReportRequest GetReportRequest_DailySums(long accountId, DateTime startDate, DateTime endDate)
         {
             var reportRequest = new ConversionPerformanceReportRequest
             {
@@ -136,7 +143,18 @@ namespace BingAds
                 },
                 Time = new ReportTime
                 {
-                    PredefinedTime = ReportTimePeriod.LastMonth
+                    CustomDateRangeStart = new Date
+                    {
+                        Year = startDate.Year,
+                        Month = startDate.Month,
+                        Day = startDate.Day
+                    },
+                    CustomDateRangeEnd = new Date
+                    {
+                        Year = endDate.Year,
+                        Month = endDate.Month,
+                        Day = endDate.Day
+                    }
                 },
                 Columns = new[] {
                     ConversionPerformanceReportColumn.TimePeriod,

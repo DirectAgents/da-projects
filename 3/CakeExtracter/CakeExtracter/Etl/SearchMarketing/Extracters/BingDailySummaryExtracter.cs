@@ -1,23 +1,29 @@
 ﻿using CsvHelper;
-using CsvHelper.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
-    public class BingCsvReportExtracter : Extracter<Dictionary<string, string>>
+    public class BingDailySummaryExtracter : Extracter<Dictionary<string, string>>
     {
-        private readonly string csvFilePath;
+        private readonly long accountId; // 886985 ramjet
+        private readonly DateTime startDate;
+        private readonly DateTime endDate;
 
-        public BingCsvReportExtracter(string csvFilePath) //, string accountName)
+        public BingDailySummaryExtracter(long accountId, DateTime startDate, DateTime endDate)
         {
-            this.csvFilePath = csvFilePath;
+            this.accountId = accountId;
+            this.startDate = startDate;
+            this.endDate = endDate;
         }
 
         protected override void Extract()
         {
-            Logger.Info("Extracting SearchDailySummaries from {0}", csvFilePath);
+            Logger.Info("Extracting SearchDailySummaries for {0} from {1} to {2}", accountId, startDate, endDate);
             var items = EnumerateRows();
             Add(items);
             End();
@@ -25,7 +31,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         private IEnumerable<Dictionary<string, string>> EnumerateRows()
         {
-            using (StreamReader reader = File.OpenText(csvFilePath))
+            var bingReports = new BingAds.Reports();
+            var filepath = bingReports.GetDailySummaries(accountId, startDate, endDate);
+            if (filepath == null)
+                yield break;
+
+            using (StreamReader reader = File.OpenText(filepath))
             {
                 for (int i = 0; i < 9; i++)
                     reader.ReadLine();
@@ -35,8 +46,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                     var csvRows = csv.GetRecords<BingRow>().ToList();
                     foreach (var csvRow in csvRows)
                     {
+                        if (csvRow.GregorianDate.ToLower().Contains("microsoft"))
+                            continue; // skip footer
+
                         var row = new Dictionary<string, string>();
-                        //row["Gregorian_date"] = csvRow.Gregorian_date;
 
                         // Use reflection to add values
                         var type = typeof(BingRow);
@@ -53,27 +66,20 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
         public class BingRow
         {
-            [CsvField(Name = "Gregorian date")]
-            public string GregorianDate { get; set; }
-
+            public string GregorianDate { get; set; } // date
             public string Impressions { get; set; } // int
             public string Clicks { get; set; } // int
-            public string Spend { get; set; } // decimal
             public string Conversions { get; set; } // int
+            public string Spend { get; set; } // decimal
             public string Revenue { get; set; } // decimal
-
-            [CsvField(Name = "Account name")]
-            public string AccountName { get; set; }
-            [CsvField(Name = "Account ID")]
             public string AccountId { get; set; } // int
-            [CsvField(Name = "Account number")]
-            public string AccountNumber { get; set; }
-            [CsvField(Name = "Campaign name")]
-            public string CampaignName { get; set; }
-            [CsvField(Name = "Campaign ID")]
+            public string AccountName { get; set; } // string
+            public string AccountNumber { get; set; } // string
             public string CampaignId { get; set; } // int
-            //[CsvField(Name="Currency code")]
+            public string CampaignName { get; set; } // string
+
             //public string CurrencyCode { get; set; }
         }
     }
+
 }
