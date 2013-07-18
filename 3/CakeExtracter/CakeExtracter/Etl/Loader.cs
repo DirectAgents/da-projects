@@ -31,7 +31,9 @@ namespace CakeExtracter.Etl
 
             foreach (var list in extracter.EnumerateAll().InBatches(BatchSize))
             {
-                loadedCount += Load(list);
+                int loadCount = Load(list);
+
+                Interlocked.Add(ref loadedCount, loadCount);
                 extractedCount = extracter.Added;
 
                 Logger.Info("Extracted: {0} Loaded: {1} Queue: {2} Done: {3}", extractedCount, loadedCount,

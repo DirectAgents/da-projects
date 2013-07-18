@@ -235,23 +235,8 @@
           <Property Name="Offer_Id" Type="int" Nullable="false" />
           <Property Name="OfferName" Type="nvarchar" MaxLength="255" />
           <Property Name="Advertiser_Id" Type="int" />
-          <Property Name="VerticalName" Type="nvarchar" MaxLength="255" />
-          <Property Name="OfferType" Type="nvarchar" MaxLength="255" />
-          <Property Name="StatusName" Type="nvarchar" MaxLength="255" />
           <Property Name="DefaultPriceFormat" Type="nvarchar" MaxLength="255" />
-          <Property Name="DefaultPayout" Type="nvarchar" MaxLength="255" />
-          <Property Name="PriceReceived" Type="nvarchar" MaxLength="255" />
-          <Property Name="Secure" Type="nvarchar" MaxLength="255" />
-          <Property Name="OfferLink" Type="nvarchar" MaxLength="255" />
-          <Property Name="ThumbnailImageUrl" Type="nvarchar" MaxLength="255" />
-          <Property Name="ExpirationDate" Type="nvarchar" MaxLength="255" />
-          <Property Name="CookieDays" Type="nvarchar" MaxLength="255" />
-          <Property Name="CookieDaysImpressions" Type="nvarchar" MaxLength="255" />
-          <Property Name="DateCreated" Type="nvarchar" MaxLength="255" />
           <Property Name="Currency" Type="nchar" MaxLength="3" />
-          <Property Name="AllowedCountries" Type="nvarchar(max)" />
-          <Property Name="Xml" Type="xml" />
-          <Property Name="AllowedMediaTypeNames" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="ScheduledReport">
           <Key>
@@ -465,7 +450,6 @@
           <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
           <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
           <EntitySet Name="Goals" EntityType="ClientPortalModel.Goal" />
-          <EntitySet Name="Offers" EntityType="ClientPortalModel.Offer" />
           <EntitySet Name="Advertisers" EntityType="ClientPortalModel.Advertiser" />
           <EntitySet Name="AdvertiserContacts" EntityType="ClientPortalModel.AdvertiserContact" />
           <EntitySet Name="Contacts" EntityType="ClientPortalModel.Contact" />
@@ -491,10 +475,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Goal_Advertiser" Association="ClientPortalModel.FK_Goal_Advertiser">
             <End Role="Advertiser" EntitySet="Advertisers" />
-            <End Role="Goal" EntitySet="Goals" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.FK_Goal_Offer">
-            <End Role="Offer" EntitySet="Offers" />
             <End Role="Goal" EntitySet="Goals" />
           </AssociationSet>
           <EntitySet Name="ScheduledReports" EntityType="ClientPortalModel.ScheduledReport" />
@@ -531,6 +511,11 @@
           <AssociationSet Name="FK_SearchDailySummary_SearchCampaign" Association="ClientPortalModel.FK_SearchDailySummary_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
             <End Role="SearchDailySummary" EntitySet="SearchDailySummaries" />
+          </AssociationSet>
+          <EntitySet Name="Offers" EntityType="ClientPortalModel.Offer" />
+          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.FK_Goal_Offer">
+            <End Role="Offer" EntitySet="Offers" />
+            <End Role="Goal" EntitySet="Goals" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -593,32 +578,6 @@
           <Property Type="DateTime" Name="EndDate" Precision="3" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Goal" ToRole="Advertiser" />
           <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Goal" ToRole="Offer" />
-        </EntityType>
-        <EntityType Name="Offer">
-          <Key>
-            <PropertyRef Name="Offer_Id" />
-          </Key>
-          <Property Type="Int32" Name="Offer_Id" Nullable="false" />
-          <Property Type="String" Name="OfferName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="Advertiser_Id" />
-          <Property Type="String" Name="VerticalName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="OfferType" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="StatusName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DefaultPriceFormat" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DefaultPayout" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="PriceReceived" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Secure" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="OfferLink" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ThumbnailImageUrl" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="ExpirationDate" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="CookieDays" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="CookieDaysImpressions" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="DateCreated" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
-          <Property Type="String" Name="AllowedCountries" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Xml" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="AllowedMediaTypeNames" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
         </EntityType>
         <EntityType Name="Advertiser">
           <Key>
@@ -770,18 +729,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Goal_Offer">
-          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
-          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Offer">
-              <PropertyRef Name="Offer_Id" />
-            </Principal>
-            <Dependent Role="Goal">
-              <PropertyRef Name="OfferId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EnumType Name="GoalType">
           <Member Name="Absolute" Value="1" />
           <Member Name="Percent" Value="2" />
@@ -919,7 +866,7 @@
           <Key>
             <PropertyRef Name="conversion_id" />
           </Key>
-          <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
           <Property Type="DateTime" Name="conversion_date" Nullable="false" Precision="3" />
           <Property Type="Int32" Name="affiliate_id" Nullable="false" />
           <Property Type="Int32" Name="advertiser_id" Nullable="false" />
@@ -960,6 +907,29 @@
             </Principal>
             <Dependent Role="SearchDailySummary">
               <PropertyRef Name="SearchCampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Offer">
+          <Key>
+            <PropertyRef Name="Offer_Id" />
+          </Key>
+          <Property Type="Int32" Name="Offer_Id" Nullable="false" />
+          <Property Type="String" Name="OfferName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Advertiser_Id" />
+          <Property Type="String" Name="DefaultPriceFormat" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
+        </EntityType>
+        <Association Name="FK_Goal_Offer">
+          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="Offer_Id" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="OfferId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1011,32 +981,6 @@
                 <ScalarProperty Name="OfferId" ColumnName="OfferId" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Offers">
-            <EntityTypeMapping TypeName="ClientPortalModel.Offer">
-              <MappingFragment StoreEntitySet="Offer">
-                <ScalarProperty Name="AllowedMediaTypeNames" ColumnName="AllowedMediaTypeNames" />
-                <ScalarProperty Name="Xml" ColumnName="Xml" />
-                <ScalarProperty Name="AllowedCountries" ColumnName="AllowedCountries" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="CookieDaysImpressions" ColumnName="CookieDaysImpressions" />
-                <ScalarProperty Name="CookieDays" ColumnName="CookieDays" />
-                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
-                <ScalarProperty Name="ThumbnailImageUrl" ColumnName="ThumbnailImageUrl" />
-                <ScalarProperty Name="OfferLink" ColumnName="OfferLink" />
-                <ScalarProperty Name="Secure" ColumnName="Secure" />
-                <ScalarProperty Name="PriceReceived" ColumnName="PriceReceived" />
-                <ScalarProperty Name="DefaultPayout" ColumnName="DefaultPayout" />
-                <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />
-                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
-                <ScalarProperty Name="OfferType" ColumnName="OfferType" />
-                <ScalarProperty Name="VerticalName" ColumnName="VerticalName" />
-                <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
-                <ScalarProperty Name="OfferName" ColumnName="OfferName" />
-                <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1198,6 +1142,17 @@
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="SearchCampaignName" ColumnName="SearchCampaignName" />
                 <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Offers">
+            <EntityTypeMapping TypeName="ClientPortalModel.Offer">
+              <MappingFragment StoreEntitySet="Offer">
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />
+                <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
+                <ScalarProperty Name="OfferName" ColumnName="OfferName" />
+                <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

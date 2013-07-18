@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity.Validation;
-using System.Linq;
 using CakeExtracter.CakeMarketingApi.Entities;
+using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {
@@ -28,37 +27,37 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
 
                         source.Region = source.Region ?? new Region
                         {
-                             RegionCode = "unknown",
-                             RegionName = "unknown"
+                            RegionCode = "unknown",
+                            RegionName = "unknown"
                         };
-                        source.Region.RegionCode = string.IsNullOrWhiteSpace(source.Region.RegionCode) 
+                        source.Region.RegionCode = string.IsNullOrWhiteSpace(source.Region.RegionCode)
                                                         ? "unknown"
                                                         : source.Region.RegionCode;
-                        target.DimRegion = FindByPredicate(db, source, c => c.RegionCode == source.Region.RegionCode, () => new ClientPortal.Data.Contexts.DimRegion
+                        target.DimRegion = db.FindOrCreateByPredicate(c => c.RegionCode == source.Region.RegionCode, () => new ClientPortal.Data.Contexts.DimRegion
                         {
                             RegionCode = source.Region.RegionCode
                         });
 
-                        target.DimCountry = FindByPredicate(db, source, c => c.CountryCode == source.Country.CountryCode, () => new ClientPortal.Data.Contexts.DimCountry
+                        target.DimCountry = db.FindOrCreateByPredicate(c => c.CountryCode == source.Country.CountryCode, () => new ClientPortal.Data.Contexts.DimCountry
                         {
                             CountryCode = source.Country.CountryCode,
                         });
 
                         target.DateKey = source.ClickDate.Date;
 
-                        target.DimAdvertiser = FindByKey(db, source, source.Advertiser.AdvertiserId, () => new ClientPortal.Data.Contexts.DimAdvertiser
+                        target.DimAdvertiser = db.FindOrCreateByKey(source.Advertiser.AdvertiserId, () => new ClientPortal.Data.Contexts.DimAdvertiser
                         {
                             AdvertiserKey = source.Advertiser.AdvertiserId,
                             AdvertiserName = source.Advertiser.AdvertiserName
                         });
 
-                        target.DimOffer = FindByKey(db, source, source.Offer.OfferId, () => new ClientPortal.Data.Contexts.DimOffer
+                        target.DimOffer = db.FindOrCreateByKey(source.Offer.OfferId, () => new ClientPortal.Data.Contexts.DimOffer
                         {
                             OfferKey = source.Offer.OfferId,
                             OfferName = source.Offer.OfferName
                         });
 
-                        target.DimAffiliate = FindByKey(db, source, source.Affiliate.AffiliateId, () => new ClientPortal.Data.Contexts.DimAffiliate
+                        target.DimAffiliate = db.FindOrCreateByKey(source.Affiliate.AffiliateId, () => new ClientPortal.Data.Contexts.DimAffiliate
                         {
                             AffiliateKey = source.Affiliate.AffiliateId,
                             AffiliateName = source.Affiliate.AffiliateName
@@ -69,7 +68,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                             BrowserId = 0,
                             BrowserName = "unknown"
                         };
-                        target.DimBrowser = FindByKey(db, source, source.Browser.BrowserId, () => new ClientPortal.Data.Contexts.DimBrowser
+                        target.DimBrowser = db.FindOrCreateByKey(source.Browser.BrowserId, () => new ClientPortal.Data.Contexts.DimBrowser
                         {
                             BrowserKey = source.Browser.BrowserId,
                             BrowserName = source.Browser.BrowserName
@@ -84,7 +83,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     }
                     loaded++;
                 }
-                Logger.Info("Loading {0} DimClicks ({1} updates, {2} additions)", loaded, updated, added);
+                Logger.Info("Loading {0} FactClicks ({1} updates, {2} additions)", loaded, updated, added);
                 try
                 {
                     db.SaveChanges();
@@ -103,38 +102,6 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                 }
             }
             return loaded;
-        }
-
-        private T FindByKey<T>(ClientPortal.Data.Contexts.ClientPortalDWContext context,
-                               Click source,
-                               object pk,
-                               Func<T> createNew) where T : class
-        {
-            T result;
-            var set = context.Set<T>();
-            result = set.Find(pk);
-            if (result == null)
-            {
-                result = createNew();
-                set.Add(result);
-            }
-            return result;
-        }
-
-        private T FindByPredicate<T>(ClientPortal.Data.Contexts.ClientPortalDWContext context,
-                                     Click source,
-                                     Func<T, bool> predicate,
-                                     Func<T> createNew) where T : class
-        {
-            T result;
-            var set = context.Set<T>();
-            result = set.FirstOrDefault(predicate);
-            if (result == null)
-            {
-                result = createNew();
-                set.Add(result);
-            }
-            return result;
         }
     }
 }

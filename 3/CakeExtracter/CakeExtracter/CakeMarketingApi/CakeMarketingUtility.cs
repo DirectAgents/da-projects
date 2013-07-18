@@ -37,19 +37,90 @@ namespace CakeExtracter.CakeMarketingApi
 
         public static List<Click> Clicks(DateRange dateRange, int advertiserId, int offerId, out int rowCount)
         {
-            var request = new ClicksRequest
+            int startAtRow = 1;
+            int rowLimitForOneCall = 5000;
+            List<Click> result = new List<Click>();
+            while (true)
             {
-                start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
-                end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
-                advertiser_id = advertiserId,
-                offer_id = offerId
-            };
-            var client = new ClicksClient();
-            var response = client.Clicks(request);
-            if (!response.Success)
-                throw new Exception("ClicksClient failed");        
-            rowCount = response.RowCount;
-            return response.Clicks.ToList();
+                int total = 0;
+                var request = new ClicksRequest
+                {
+                    start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
+                    end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                    advertiser_id = advertiserId,
+                    offer_id = offerId,
+                    row_limit = rowLimitForOneCall,
+                    start_at_row = startAtRow
+                };
+
+                var client = new ClicksClient();
+                var response = client.Clicks(request);
+
+                if (!response.Success)
+                    throw new Exception("ClicksClient failed");
+
+                total += response.RowCount;
+                result.AddRange(response.Clicks);
+                if (response.RowCount < rowLimitForOneCall)
+                {
+                    Logger.Info("Extracted a total of {0}, returning result..", total);
+                    break;
+                }
+                startAtRow += rowLimitForOneCall;
+                Logger.Info("Extracted a total of {0}, checking for more, starting at row {1}..", total, startAtRow);
+            }
+            rowCount = result.Count;
+            return result;
+        }
+
+        public static IEnumerable<Click> EnumerateClicks(DateRange dateRange, int advertiserId, int offerId)
+        {
+            // initialize to start at the first row
+            int startAtRow = 1;
+
+            // hard code an upper limit for the max number of rows to be returned in one call
+            int rowLimitForOneCall = 5000;
+
+            bool done = false;
+            int total = 0;
+            while (!done)
+            {
+                Logger.Info("Extracted a total of {0} rows, checking for more, starting at row {1}..", total, startAtRow);
+
+                // prepare the request
+                var request = new ClicksRequest
+                {
+                    start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
+                    end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                    advertiser_id = advertiserId,
+                    offer_id = offerId,
+                    row_limit = rowLimitForOneCall,
+                    start_at_row = startAtRow
+                };
+
+                // create the client, call the service and check the response
+                var client = new ClicksClient();
+                var response = client.Clicks(request);
+                if (!response.Success)
+                {
+                    throw new Exception("ClicksClient failed");
+                }
+
+                // update the running total
+                total += response.RowCount;
+
+                // return result
+                foreach (var click in response.Clicks)
+                    yield return click;
+
+                // update stopping condition for loop
+                done = (response.RowCount < rowLimitForOneCall);
+
+                // increment start row for next iteration
+                startAtRow += rowLimitForOneCall;
+            }
+
+            Logger.Info("Extracted a total of {0}, done.", total);
         }
 
         public static List<Conversion> Conversions(DateRange dateRange, int advertiserId, int offerId)

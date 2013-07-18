@@ -27,6 +27,8 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ClientPortal.Database", "..
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ClientPortal.Database.DW", "..\ClientPortal.Database.DW\ClientPortal.Database.DW.sqlproj", "{107F782C-C03E-4EDF-92C2-AD76D12662F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineCommander", "..\LineCommander\LineCommander.csproj", "{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +175,16 @@ Global
 		{107F782C-C03E-4EDF-92C2-AD76D12662F9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{107F782C-C03E-4EDF-92C2-AD76D12662F9}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
 		{107F782C-C03E-4EDF-92C2-AD76D12662F9}.Release|x86.ActiveCfg = Release|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C6525AE5-CDD0-40A7-8BBF-4DA0BEEFD537}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

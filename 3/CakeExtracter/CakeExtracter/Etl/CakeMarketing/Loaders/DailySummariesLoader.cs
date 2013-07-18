@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using CakeExtracter.CakeMarketingApi.Entities;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
@@ -20,30 +19,15 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     var pk1 = item.OfferId;
                     var pk2 = DateTime.Parse(source.Date);
 
-                    // BUG: this doesn't update, does it?
-                    var target = db.Set<ClientPortal.Data.Contexts.DailySummary>().Find(pk1, pk2)
-                                 ?? new ClientPortal.Data.Contexts.DailySummary
+                    var target = db.Set<ClientPortal.Data.Contexts.DailySummary>().Find(pk1, pk2);
+
+                    if (target == null)
+                    {
+                        target = new ClientPortal.Data.Contexts.DailySummary
                                      {
                                          offer_id = pk1,
-                                         date = pk2,
-                                         views = source.Views,
-                                         clicks = source.Clicks,
-                                         click_thru = source.ClickThru,
-                                         conversions = source.Conversions,
-                                         paid = source.Paid,
-                                         sellable = source.Sellable,
-                                         conversion_rate = source.ConversionRate,
-                                         cpl = source.CPL,
-                                         cost = source.Cost,
-                                         rpt = source.RPT,
-                                         revenue = source.Revenue,
-                                         margin = source.Margin,
-                                         profit = source.Profit,
-                                         epc = source.EPC
+                                         date = pk2
                                      };
-
-                    if (db.Entry(target).State == EntityState.Detached)
-                    {
                         db.DailySummaries.Add(target);
                         added++;
                     }
@@ -51,11 +35,30 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     {
                         updated++;
                     }
+
+                    target.views = source.Views;
+                    target.clicks = source.Clicks;
+                    target.click_thru = source.ClickThru;
+                    target.conversions = source.Conversions;
+                    target.paid = source.Paid;
+                    target.sellable = source.Sellable;
+                    target.conversion_rate = source.ConversionRate;
+                    target.cpl = source.CPL;
+                    target.cost = source.Cost;
+                    target.rpt = source.RPT;
+                    target.revenue = source.Revenue;
+                    target.margin = source.Margin;
+                    target.profit = source.Profit;
+                    target.epc = source.EPC;
+
                     loaded++;
                 }
+
                 Logger.Info("Loading {0} DailySummaries ({1} updates, {2} additions)", loaded, updated, added);
+
                 db.SaveChanges();
             }
+
             return loaded;
         }
     }

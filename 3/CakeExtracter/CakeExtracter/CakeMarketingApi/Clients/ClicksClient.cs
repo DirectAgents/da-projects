@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CakeExtracter.CakeMarketingApi.Entities;
+﻿using CakeExtracter.CakeMarketingApi.Entities;
 
 namespace CakeExtracter.CakeMarketingApi.Clients
 {

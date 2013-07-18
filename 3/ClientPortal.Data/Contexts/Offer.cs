@@ -22,23 +22,8 @@ namespace ClientPortal.Data.Contexts
         public int Offer_Id { get; set; }
         public string OfferName { get; set; }
         public Nullable<int> Advertiser_Id { get; set; }
-        public string VerticalName { get; set; }
-        public string OfferType { get; set; }
-        public string StatusName { get; set; }
         public string DefaultPriceFormat { get; set; }
-        public string DefaultPayout { get; set; }
-        public string PriceReceived { get; set; }
-        public string Secure { get; set; }
-        public string OfferLink { get; set; }
-        public string ThumbnailImageUrl { get; set; }
-        public string ExpirationDate { get; set; }
-        public string CookieDays { get; set; }
-        public string CookieDaysImpressions { get; set; }
-        public string DateCreated { get; set; }
         public string Currency { get; set; }
-        public string AllowedCountries { get; set; }
-        public string Xml { get; set; }
-        public string AllowedMediaTypeNames { get; set; }
     
         public virtual ICollection<Goal> Goals { get; set; }
     }

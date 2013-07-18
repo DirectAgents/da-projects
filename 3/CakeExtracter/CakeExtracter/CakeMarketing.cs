@@ -52,7 +52,7 @@ namespace CakeExtracter
                     reports.Clicks(ApiKey, date, date.AddDays(1), affiliateId, advertiserId, offerId, campaignId,
                                    creativeId, includeTests, count + 1, BatchSize);
 
-                var getClicksResult = RetryUtility.Retry(getClicks, 3, 10000, typeof (SoapException));
+                var getClicksResult = RetryUtility.Retry(3, 10000, new[] { typeof(SoapException) }, getClicks);
 
                 if (result == null)
                 {
