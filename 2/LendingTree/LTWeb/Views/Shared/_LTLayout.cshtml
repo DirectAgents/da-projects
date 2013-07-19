@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/lt_css", "~/Content/themes/base/css")
+    <!--[if IE]>
+    @Styles.Render("~/Content/style_IE.css")
+    <![endif]-->
+
+
+
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -31,19 +37,19 @@
                     <h2>Refinance Rates From</h2>
                     <div class="rate">
                         <!--@LTWeb.Session.Admin["Rate1"]%-->
-                        2.5%
+                        3.13%
                         
                         <!--(@LTWeb.Session.Admin["Rate2"]% APR)*-->
-                        (2.62% APR)*
+                        (3.13% APR)*
                     </div>
             
                    
                     
                 </div>
                 <div id="payments">
-                    <h2 class="green">$200,000 mortgage for $790/month</h2>
-                    <h2 class="green">$300,000 mortgage for $1,185/month</h2>
-                    <h2 class="green">$400,000 mortgage for $1,581/month</h2>
+                    <h2 class="green">$200,000 mortgage for $898/month</h2>
+                    <h2 class="green">$300,000 mortgage for $1,286/month</h2>
+                    <h2 class="green">$400,000 mortgage for $1,714/month</h2>
                     <div class="disclosure">
                         <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/advertising-disclosures')">Full Advertising Disclosures
                         </a>
@@ -93,13 +99,9 @@
                     <br />
 
                     <p style="text-align: left;">
-                        LendingTree technology and processes are patented under U.S. Patent Nos. 6,385,594
+                        
 
-                        and 6,611,816 and licensed under U.S. Patent Nos. 5,995,947 and 5,758,328. © 1998
-
-                        - 2011 LendingTree, LLC. All Rights Reserved. This site is directed at, and made
-
-                        available to, persons in the continental U.S., Alaska and Hawaii only.
+                        LendingTree, LLC is a Marketing Lead Generator and is a Duly Licensed Mortgage Broker, as required by law, with its main office located at 11115 Rushmore Dr., Charlotte, NC 28277, Telephone Number 866-501-2397. NMLS Unique Identifier #1136. LendingTree, LLC is known as LT Technologies in lieu of true name LendingTree, LLC in NY. LendingTree technology and processes are patented under U.S. Patent Nos. 6,385,594 and 6,611,816 and licensed under U.S. Patent Nos. 5,995,947 and 5,758,328. © 2013 LendingTree, LLC. All Rights Reserved.
                     </p>
 
                 </div>

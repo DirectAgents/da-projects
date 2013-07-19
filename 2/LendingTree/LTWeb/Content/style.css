@@ -161,6 +161,8 @@ h2
     background: url('images/new/bg-narrow-repeat.png') repeat-y scroll left top transparent;
     padding: 0pt;
     overflow:hidden;
+    float:left;
+    margin-top:0px;
 
    
 }
@@ -177,6 +179,7 @@ h2
     width: 461px;
     height: 45px;
     background: url('images/new/bg-narrowgreen-end.png') repeat-y scroll right top transparent;
+    float:left;
 }
 #step1 .left-rail
 {
@@ -190,7 +193,7 @@ h2
 {
     position:absolute;
     line-height: 17px;
-    margin:15px 0 0 50px;
+    margin:10px 0 0 50px;
     color:#fff;
     font-size:21px;
 }
@@ -339,7 +342,7 @@ input[type=radio], input.radio
 }
 .stroke
 {
-    border-bottom: 1px solid rgb(229, 229, 229);
+    border-bottom: 0px solid rgb(229, 229, 229);
 }
 .leftRailImage
 {
@@ -383,6 +386,227 @@ input[type=radio], input.radio
 {
     width: 53px !important;
 }
+
+input {
+padding:5px;
+}
+
+#CreditRating {
+float: left; width: 100px; margin-left: 0px;
+}
+
+.CreditRating-label {
+    float: left;
+    margin-left: 30px;
+    width: 130px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right:15px;
+}
+
+
+
+
+.LoanType-label {
+    float: left;
+    margin-left: 0px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#PropertyState {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyState-label {
+    float: left;
+    margin-left: 0px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+
+#PropertyType {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyType-label {
+    float: left;
+    margin-left: -25px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+#PropertyUse {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyUse-label {
+    float: left;
+    margin-left: -5px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#PropertyZip {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyZip-label {
+    float: left;
+    margin-left: 15px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#PropertyApproximateValue {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyApproximateValue-label {
+    float: left;
+    margin-left: 0px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+#EstimatedMortgageBalance {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.EstimatedMortgageBalance-label {
+    float: left;
+    margin-left: 0px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#CashOut {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.CashOut-label {
+    float: left;
+    margin-left: 20px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#MonthlyPayment {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.MonthlyPayment-label {
+    float: left;
+    margin-left: 20px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#BankruptcyDischarged {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.BankruptcyDischarged-label {
+    float: left;
+    margin-left: -10px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#ForeclosureDischarged {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.ForeclosureDischarged-label {
+    float: left;
+    margin-left: -5px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#IsVetran {
+float: left; width: 80px; margin-left: 0px; margin-top:5px;
+}
+
+.IsVetran-label {
+    float: left;
+    margin-left: 50px;
+    width: 170px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#FirstName, #LastName, #Address, #ApplicantZipCode, #Email, #DOB, #HomePhone,
+#WorkPhone, #SSN {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.FirstName-label, .LastName-label, .Address-label, .ApplicantZipCode-label, .Email-label,
+.DOB-label, .HomePhone-label, .WorkPhone-label, .SSN-label  {
+    float: left;
+    margin-left: 20px;
+    width: 100px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#progressbarcontainer {
+  background: url('images/new/bg-narrow-repeat.png') repeat-y scroll left top transparent;
+  width:461px;
+  overflow:hidden;
+  float:left; 
+  padding-left: 125px; 
+  padding-top: 15px; 
+  padding-bottom:3px;
+  margin-left:-10px;
+}
+
+#progressbar-label {
+position:absolute; color:black; margin:115px 0 0 45px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#progressbar-label {
+position:absolute; color:black; margin:115px 0 0 45px;
+}
+}
+
 
 .bottom-description
 {
@@ -560,7 +784,7 @@ div.smartTipWindow
     background-image: url('images/new/logo.png');
     margin: 20pt auto;
     width: 770px;
-    height: 50px;
+    height: 60px;
     background-repeat: no-repeat;
     text-align: right;
     font-size: 17px;
@@ -581,31 +805,95 @@ div.smartTipWindow
     padding-right: 7px;
 }
 
+
+
+
+select  {
+   
+  font-size:15px;
+  padding:5px;
+  /*background:url(images/new/down_arrow_select.jpg) no-repeat right #ddd;*/
+  margin-top:-2px;
+  z-index:999999
+}
+
+
+
+
 #lenny-first {
 position:absolute;
-background: url('images/new/lenny-first.png') no-repeat scroll right top transparent;
-width:233px;
+background: url('images/new/lenny-new-first.png') no-repeat scroll right top transparent;
+width:494px;
+height:207px;
+margin:-190px 0 0 -10px;
+display:block;
+z-index:-1;
+}
+
+#lenny-second {
+position:absolute;
+background: url('images/new/lenny-new-second.png') no-repeat scroll right top transparent;
+width:402px;
 height:160px;
-margin:-130px 0 0 180px;
+margin:-121px 0 0 -10px;
 display:block;
 }
 
-#lenny-middle {
+#lenny-three {
 position:absolute;
-background: url('images/new/lenny-middle.png') no-repeat scroll right top transparent;
+background: url('images/new/lenny-new-three.png') no-repeat scroll right top transparent;
+width:282px;
+height:310px;
+margin:270px 0 0 325px;
+display:block;
+}
+
+#lenny-four {
+position:absolute;
+background: url('images/new/lenny-new-four.png') no-repeat scroll right top transparent;
 width:208px;
 height:287px;
 margin:210px 0 0 360px;
 display:block;
 }
 
-#lenny-last {
+#lenny-five-option1 {
 position:absolute;
-background: url('images/new/lenny-last.png') no-repeat scroll right top transparent;
+background: url('images/new/lenny-new-five-option1.png') no-repeat scroll right top transparent;
 width:282px;
 height:310px;
 margin:270px 0 0 325px;
 display:block;
+}
+
+
+#lenny-five-option2 {
+position:absolute;
+background: url('images/new/lenny-new-five-option2.png') no-repeat scroll right top transparent;
+width:360px;
+height:310px;
+margin:280px 0 0 345px;
+display:block;
+}
+
+
+#lenny-six {
+position:absolute;
+background: url('images/new/lenny-new-six.png') no-repeat scroll right top transparent;
+width:402px;
+height:160px;
+margin:-121px 0 0 -10px;
+display:block;
+}
+
+#lenny-seven {
+position:absolute;
+background: url('images/new/lenny-new-seven.png') no-repeat scroll right top transparent;
+width:428px;
+height:297px;
+margin:320px 0 0 125px;
+display:block;
+z-index:0;
 }
 
 #page1RailHeader, #page2RailHeader, #page3RailHeader, #page2FormHeader, #page3FormHeader, #page2RailChecklist, #page3RailChecklist
@@ -623,7 +911,7 @@ display:block;
     background: url('images/new/bg-narrowgreen.png') no-repeat scroll right top transparent;
     color: rgb(255, 255, 255);
     text-align: center;
-    padding: 30px 40px 0px 10px;
+    padding: 38px 40px 0px 10px;
    
     
    
@@ -671,7 +959,7 @@ display:block;
 {
     font-size: 22px;
 }
-.security, .security2
+.security, .security2, .security3
 {
     background: url('images/new/icon-lock.png') no-repeat scroll left top transparent;
     width: 34px;
@@ -680,6 +968,8 @@ display:block;
     float: left;
 
 }
+
+
 #step1 .security
 {
     float:left;
@@ -687,11 +977,16 @@ display:block;
 }
 #step1 .security2
 {
-    margin: 10px 0pt 0pt 40px;
+    margin: 10px 0pt 0pt 45px;
 }
 #step2 .security
 {
     margin: 20px 0pt 0pt 150px;
+}
+
+.security3
+{
+    margin: 10px 0pt 0pt 40px;
 }
 
 
@@ -771,7 +1066,7 @@ margin-left:10px; margin-top:10px; padding-left:15px; padding-top:4px;}
     height: 54px;
     background-image: url('images/new/btn-continue.jpg');
     margin-top: 30px;
-    margin-left:20px;
+    margin-left:10px;
     border: 0px;
     cursor: pointer;
 }
@@ -852,7 +1147,7 @@ margin-left:10px; margin-top:10px; padding-left:15px; padding-top:4px;}
     position:absolute;
     height:79px;
     z-index:0px !important;
-    margin-top:0px;
+    margin-top:-3px;
 }
 
 
@@ -885,7 +1180,7 @@ margin-left:10px; margin-top:10px; padding-left:15px; padding-top:4px;}
 
 .orange-bar-continue-right{
     
-    background: url('images/new/oranddge-bar-continue.png') repeat-x;
+    /*background: url('images/new/oranddge-bar-continue.png') repeat-x;*/
     width:100%;
     height:79px;
     margin-left:47px;

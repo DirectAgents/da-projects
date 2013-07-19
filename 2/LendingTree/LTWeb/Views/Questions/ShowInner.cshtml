@@ -24,15 +24,18 @@
 @*
     Question
 *@
-<div style="float: left; width: 150px; text-align: @( Model.Text.EndsWith(":") ? "right" : "left"); margin-top: 2px">@Model.Text</div>
+<div class="@Model.Key-label">@Model.Text</div>
 @* 
     Answer
 *@
-<div style="float: right; width: 220px; margin-left: 10px">
+
+
+<div id="@Model.Key">
+
     @switch (Model.AnswerType)
     {
         case "dropdown":
-        <select name="@Model.Key" class="validate[required]" data-prompt-position="@promptPosition">
+        <select name="@Model.Key" id="LoanType" class="validate[required]" data-prompt-position="@promptPosition">
             @foreach (var option in Model.Options)
             {
                 <option value="@option.Value" @( option.Value == Model.Answer ? "selected=\"selected\"" : "")>@option.Text</option>
@@ -52,7 +55,7 @@
         <input name="@Model.Key" type="text" value="@Model.Answer" maxlength="5" class="validate[required,custom[zipcode]]" data-prompt-position="@promptPosition" />
             break;
         case "birthday":
-        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[birthday]]" data-prompt-position="@promptPosition" />
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[birthday]]" data-prompt-position="@promptPosition" placeholder="mm/dd/yyy" />
             break;
         case "email":
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[email]]" data-prompt-position="@promptPosition" />
@@ -62,10 +65,13 @@
             break;
         case "phone":
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[phone]]" data-prompt-position="@promptPosition" />
-            break;
+            break;   
+        case "phone2":
+        <input name="@Model.Key" type="text" value="@Model.Answer" data-prompt-position="@promptPosition" />
+            break;   
         case "ssn":
         <div class="ssn-input">
-        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[ssnumber]]" data-prompt-position="@promptPosition" />   
+        <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[ssnumber]]" data-prompt-position="@promptPosition" placeholder="XXX-XX-XXXX" />   
       <br /><span style="font-size: smaller;">@Model.Subtext</span>
         </div>
     <div class="smallLabel_img"> <a href="#"><img src="../../Content/images/new/small-lock.png" alt="" /></a> </div>

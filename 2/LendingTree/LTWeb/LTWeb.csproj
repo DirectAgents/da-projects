@@ -181,14 +181,20 @@
     <Content Include="Content\images\new\bg-narrowgreen.png" />
     <Content Include="Content\images\new\btn-continue.jpg" />
     <Content Include="Content\images\new\btn-showresults.jpg" />
+    <Content Include="Content\images\new\down_arrow_select.jpg" />
     <Content Include="Content\images\new\get-free-quotes-now.jpg" />
     <Content Include="Content\images\new\icon-lock.png" />
     <Content Include="Content\images\new\lendingtree-bg-left.jpg" />
     <Content Include="Content\images\new\lendingtree-bg-lright.jpg" />
     <Content Include="Content\images\new\lendingtree-bg.jpg" />
-    <Content Include="Content\images\new\lenny-first.png" />
-    <Content Include="Content\images\new\lenny-last.png" />
-    <Content Include="Content\images\new\lenny-middle.png" />
+    <Content Include="Content\images\new\lenny-new-first.png" />
+    <Content Include="Content\images\new\lenny-new-five-option1.png" />
+    <Content Include="Content\images\new\lenny-new-five-option2.png" />
+    <Content Include="Content\images\new\lenny-new-four.png" />
+    <Content Include="Content\images\new\lenny-new-second.png" />
+    <Content Include="Content\images\new\lenny-new-seven.png" />
+    <Content Include="Content\images\new\lenny-new-six.png" />
+    <Content Include="Content\images\new\lenny-new-three.png" />
     <Content Include="Content\images\new\logo.png" />
     <Content Include="Content\images\new\orange-bar-continue.png" />
     <Content Include="Content\images\new\orange-bar-left.png" />
@@ -306,6 +312,7 @@
     <Content Include="Content\kendo\2012.3.1114\Uniform\slider-v.gif" />
     <Content Include="Content\kendo\2012.3.1114\Uniform\sprite.png" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\style_IE.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -911,11 +918,13 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       <CustomToolNamespace>LTWeb</CustomToolNamespace>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SessionKeys.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SessionKeys.Designer.cs</LastGenOutput>
       <CustomToolNamespace>LTWeb</CustomToolNamespace>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
