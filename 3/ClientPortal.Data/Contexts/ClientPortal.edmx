@@ -24,6 +24,7 @@
           <EntitySet Name="ScheduledReportRecipient" EntityType="ClientPortalModel.Store.ScheduledReportRecipient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchCampaign" EntityType="ClientPortalModel.Store.SearchCampaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary" EntityType="ClientPortalModel.Store.SearchDailySummary" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.Store.FK_AdvertiserScheduledReport">
             <End Role="Advertiser" EntitySet="Advertiser" />
             <End Role="ScheduledReport" EntitySet="ScheduledReport" />
@@ -282,6 +283,16 @@
           <Property Name="Impressions" Type="int" Nullable="false" />
           <Property Name="CurrencyId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="nvarchar(max)" />
+          <Property Name="CakeAdvertiserId" Type="int" />
+          <Property Name="QuickBooksCompanyId" Type="int" />
+          <Property Name="QuickBooksAdvertiserId" Type="int" />
+        </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
           <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReport" Multiplicity="*" />
@@ -517,6 +528,7 @@
             <End Role="Offer" EntitySet="Offers" />
             <End Role="Goal" EntitySet="Goals" />
           </AssociationSet>
+          <EntitySet Name="UserProfiles" EntityType="ClientPortalModel.UserProfile" />
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -933,6 +945,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="Int32" Name="UserId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="UserName" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="CakeAdvertiserId" />
+          <Property Type="Int32" Name="QuickBooksCompanyId" />
+          <Property Type="Int32" Name="QuickBooksAdvertiserId" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1153,6 +1175,17 @@
                 <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
                 <ScalarProperty Name="OfferName" ColumnName="OfferName" />
                 <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserProfiles">
+            <EntityTypeMapping TypeName="ClientPortalModel.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="QuickBooksAdvertiserId" ColumnName="QuickBooksAdvertiserId" />
+                <ScalarProperty Name="QuickBooksCompanyId" ColumnName="QuickBooksCompanyId" />
+                <ScalarProperty Name="CakeAdvertiserId" ColumnName="CakeAdvertiserId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
