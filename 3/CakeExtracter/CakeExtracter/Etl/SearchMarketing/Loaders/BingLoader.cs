@@ -35,9 +35,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 foreach (var item in items)
                 {
-                    var campaignName = item["Campaign_name"];
+                    var campaignName = item["CampaignName"];
                     var pk1 = db.SearchCampaigns.Single(c => c.Channel == bingChannel && c.SearchCampaignName == campaignName).SearchCampaignId;
-                    var pk2 = DateTime.Parse(item["Gregorian_date"]);
+                    var pk2 = DateTime.Parse(item["GregorianDate"]);
                     var source = new SearchDailySummary
                     {
                         SearchCampaignId = pk1,
@@ -47,7 +47,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         Orders = int.Parse(item["Conversions"]),
                         Clicks = int.Parse(item["Clicks"]),
                         Impressions = int.Parse(item["Impressions"]),
-                        CurrencyId = 1 // item["Currency_code"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
+                        CurrencyId = 1 // item["CurrencyCode"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                     };
                     var target = db.Set<SearchDailySummary>().Find(pk1, pk2);
                     if (target == null)
@@ -73,7 +73,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             using (var db = new ClientPortalContext())
             {
-                foreach (var campaignName in items.Select(i => i["Campaign_name"]).Distinct())
+                foreach (var campaignName in items.Select(i => i["CampaignName"]).Distinct())
                 {
                     if (!db.SearchCampaigns.Any(c => c.Channel == bingChannel && c.SearchCampaignName == campaignName))
                     {

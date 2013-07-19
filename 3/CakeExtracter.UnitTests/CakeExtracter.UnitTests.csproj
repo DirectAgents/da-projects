@@ -48,6 +48,7 @@
       <HintPath>..\ClientPortal.Web\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
@@ -68,6 +69,10 @@
     <Compile Include="UnitTest2.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BingAds\BingAds.csproj">
+      <Project>{e2ea8ab5-abaf-4007-a446-09624cb159e6}</Project>
+      <Name>BingAds</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>

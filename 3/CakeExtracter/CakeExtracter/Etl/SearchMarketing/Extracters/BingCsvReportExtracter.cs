@@ -50,30 +50,30 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 }
             }
         }
-    }
 
-    public class BingRow
-    {
-        [CsvField(Name="Gregorian date")]
-        public string Gregorian_date { get; set; }
+        public class BingRow
+        {
+            [CsvField(Name = "Gregorian date")]
+            public string GregorianDate { get; set; }
 
-        public string Impressions { get; set; } // int
-        public string Clicks { get; set; } // int
-        public string Spend { get; set; } // decimal
-        public string Conversions { get; set; } // int
-        public string Revenue { get; set; } // decimal
+            public string Impressions { get; set; } // int
+            public string Clicks { get; set; } // int
+            public string Spend { get; set; } // decimal
+            public string Conversions { get; set; } // int
+            public string Revenue { get; set; } // decimal
 
-        [CsvField(Name="Account name")]
-        public string Account_name { get; set; }
-        [CsvField(Name = "Account ID")]
-        public string Account_ID { get; set; } // int
-        [CsvField(Name = "Account number")]
-        public string Account_number { get; set; }
-        [CsvField(Name="Campaign name")]
-        public string Campaign_name { get; set; }
-        [CsvField(Name = "Campaign ID")]
-        public string Campaign_ID { get; set; } // int
-        //[CsvField(Name="Currency code")]
-        //public string Currency_code { get; set; }
+            [CsvField(Name = "Account name")]
+            public string AccountName { get; set; }
+            [CsvField(Name = "Account ID")]
+            public string AccountId { get; set; } // int
+            [CsvField(Name = "Account number")]
+            public string AccountNumber { get; set; }
+            [CsvField(Name = "Campaign name")]
+            public string CampaignName { get; set; }
+            [CsvField(Name = "Campaign ID")]
+            public string CampaignId { get; set; } // int
+            //[CsvField(Name="Currency code")]
+            //public string CurrencyCode { get; set; }
+        }
     }
 }

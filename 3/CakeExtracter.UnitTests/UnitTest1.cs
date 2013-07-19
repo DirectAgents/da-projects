@@ -8,12 +8,41 @@ using CakeExtracter.Etl;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
 using CakeExtracter.Etl.CakeMarketing.Loaders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using BingAds;
 
 namespace CakeExtracter.UnitTests
 {
     [TestClass]
     public class UnitTest1
     {
+        [TestMethod]
+        public void BingAdsTest_Campaigns()
+        {
+            var bingTest = new BingAds.Test();
+            var campaigns = bingTest.GetCampaigns(234647, 886985);
+            foreach (var campaign in campaigns)
+            {
+                Console.WriteLine(campaign.Id + " " + campaign.Name);
+            }
+        }
+
+        [TestMethod]
+        public void BingAdsReport_KeywordPerformance()
+        {
+            var bingReports = new BingAds.Reports();
+            bingReports.GetKeywordPerformance(886985, 51468225);
+        }
+
+        [TestMethod]
+        public void BingAdsReport_DailySums()
+        {
+            var bingReports = new BingAds.Reports();
+            var startDate = new DateTime(2013, 6, 1);
+            var endDate = new DateTime(2013, 6, 30);
+            var filepath = bingReports.GetDailySummaries(886985, startDate, endDate);
+            Console.WriteLine("Filepath: " + filepath);
+        }
+
         [TestMethod]
         public void CakeMarketingUtility_OfferIds()
         {

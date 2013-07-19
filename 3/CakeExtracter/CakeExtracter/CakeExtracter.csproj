@@ -158,6 +158,7 @@
     <Compile Include="Commands\SynchConversionsCommand.cs" />
     <Compile Include="Commands\SynchCakeTrafficCommand.cs" />
     <Compile Include="Commands\SynchClicksCommand.cs" />
+    <Compile Include="Commands\SynchSearchDailySummariesBingCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesBingCsvCommand.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
     <Compile Include="Common\EmailUtility.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Etl\CakeMarketing\Loaders\TrafficLoader.cs" />
     <Compile Include="Etl\MultiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingCsvReportExtracter.cs" />
+    <Compile Include="Etl\SearchMarketing\Extracters\BingDailySummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsXmlReportExtracter.cs" />
@@ -253,6 +255,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BingAds\BingAds.csproj">
+      <Project>{e2ea8ab5-abaf-4007-a446-09624cb159e6}</Project>
+      <Name>BingAds</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>
