@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CakeExtracter.Common;
 
 namespace CakeExtracter.Etl
 {
-    public interface ILoader<T>
-    {
-        int Load(List<T> items);
-    }
-
     public class MultiLoader<T>
     {
         private Extracter<T> extracter;
@@ -32,44 +25,14 @@ namespace CakeExtracter.Etl
             return thread;
         }
 
-        class Worker
-        {
-            public Worker(ILoader<T> loader, int batchSize)
-            {
-                Loader = loader;
-                Collection = new BlockingCollection<T>(5000);
-            }
-
-            public void Start()
-            {
-                Task = new Task<int>(() =>
-                {
-                    var loadedCount = 0;
-                    foreach (var list in Collection.GetConsumingEnumerable().InBatches(BatchSize))
-                    {
-                        loadedCount += Loader.Load(list);
-                    }
-                    return loadedCount;
-                });
-            }
-
-            public Task<int> Task { get; set; }
-
-            public BlockingCollection<T> Collection { get; set; }
-
-            public ILoader<T> Loader { get; set; }
-
-            public int BatchSize { get; set; }
-        }
-
         private void DoLoad()
         {
-            var workers = new List<Worker>();
+            var workers = new List<LoaderTask<T>>();
 
             // Create workers
             foreach (var loader in destinations)
             {
-                workers.Add(new Worker(loader, BatchSize));
+                workers.Add(new LoaderTask<T>(loader, BatchSize));
             }
 
             // Start workers

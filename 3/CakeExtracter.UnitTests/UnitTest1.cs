@@ -44,6 +44,13 @@ namespace CakeExtracter.UnitTests
         }
 
         [TestMethod]
+        public void CakeMarketingUtility_Advertisers()
+        {
+            var offers = CakeMarketingUtility.Advertisers();
+            Console.WriteLine(offers.ToArray().ToXml());
+        }
+
+        [TestMethod]
         public void CakeMarketingUtility_OfferIds()
         {
             const int advertiserId = 278;
@@ -52,6 +59,25 @@ namespace CakeExtracter.UnitTests
             {
                 Console.WriteLine(offerId);
             }
+        }
+
+        [TestMethod]
+        public void CakeMarketingUtility_Offers()
+        {
+            var offers = CakeMarketingUtility.Offers();
+            Console.WriteLine(offers.ToArray().ToXml());
+        }
+
+
+        [TestMethod]
+        public void Integration_Offers_Extracter_And_Loader()
+        {
+            var extracter = new OffersExtracter();
+            var loader = new OffersLoader();
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
         }
 
         [TestMethod]

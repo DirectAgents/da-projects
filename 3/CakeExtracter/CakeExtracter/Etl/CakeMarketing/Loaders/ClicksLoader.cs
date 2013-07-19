@@ -83,7 +83,9 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     }
                     loaded++;
                 }
+
                 Logger.Info("Loading {0} FactClicks ({1} updates, {2} additions)", loaded, updated, added);
+
                 try
                 {
                     db.SaveChanges();
@@ -97,6 +99,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                             Logger.Warn("entity validation error for property {0}: {1}", validationError.PropertyName, validationError.ErrorMessage);
                         }
                     }
+
                     Logger.Error(ex);
                     throw;
                 }

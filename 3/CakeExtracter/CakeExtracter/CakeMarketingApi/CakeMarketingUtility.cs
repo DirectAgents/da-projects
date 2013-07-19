@@ -9,6 +9,14 @@ namespace CakeExtracter.CakeMarketingApi
 {
     public static class CakeMarketingUtility
     {
+        public static List<Advertiser> Advertisers()
+        {
+            var client = new AdvertisersClient();
+            var request = new AdvertisersRequest();
+            var response = client.Advertisers(request);
+            return response.Advertisers;
+        }
+
         public static List<int> OfferIds(int advertiserId)
         {
             var client = new OffersClient();
@@ -19,6 +27,14 @@ namespace CakeExtracter.CakeMarketingApi
             var response = client.Offers(request);
             var offerIds = response.Offers.Select(c => c.OfferId);
             return offerIds.ToList();
+        }
+
+        public static List<Offer> Offers()
+        {
+            var client = new OffersClient();
+            var request = new OffersRequest();
+            var response = client.Offers(request);
+            return response.Offers;
         }
 
         public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId)

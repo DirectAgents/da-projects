@@ -1,8 +1,8 @@
-﻿using CakeExtracter.Common;
+﻿using System;
+using System.ComponentModel.Composition;
+using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
-using System;
-using System.ComponentModel.Composition;
 
 namespace CakeExtracter.Commands
 {
