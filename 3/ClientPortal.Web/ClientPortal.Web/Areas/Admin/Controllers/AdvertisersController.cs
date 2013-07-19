@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using ClientPortal.Data.Contexts;
 using System.Web.Helpers;
+using WebMatrix.WebData;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
@@ -18,9 +19,29 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         //
         // GET: /Admin/Advertisers/
 
-        public ActionResult Index()
+        public ActionResult Index(string sort)
         {
-            return View(db.Advertisers.ToList());
+            var advertisers = db.Advertisers.AsQueryable();
+            switch (sort)
+            {
+                case "AdvertiserName":
+                    advertisers = advertisers.OrderBy(a => a.AdvertiserName);
+                    break;
+                default:
+                    advertisers = advertisers.OrderBy(a => a.AdvertiserId);
+                    break;
+            }
+            var advList = advertisers.ToList();
+
+            // fill in the user profiles for the advertisers
+            // TODO: do a join on the db
+            var userProfiles = db.UserProfiles.ToList();
+            foreach (var advertiser in advList)
+            {
+                advertiser.UserProfiles = userProfiles.Where(u => u.CakeAdvertiserId == advertiser.AdvertiserId);
+            }
+
+            return View(advList);
         }
 
         //
@@ -152,6 +173,33 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             db.SaveChanges();
 
             return null;
+        }
+
+        public ActionResult CreateUserProfile(int id = 0)
+        {
+            Advertiser advertiser = db.Advertisers.Find(id);
+            if (advertiser == null)
+            {
+                return HttpNotFound();
+            }
+            return View(advertiser);
+        }
+
+        [HttpPost]
+        public ActionResult CreateUserProfile(int id, string username, string password)
+        {
+            Advertiser advertiser = db.Advertisers.Find(id);
+            if (advertiser != null)
+            {
+                WebSecurity.CreateUserAndAccount(
+                    username,
+                    password,
+                    new
+                    {
+                        CakeAdvertiserId = advertiser.AdvertiserId,
+                    });
+            }
+            return RedirectToAction("Index");
         }
 
         //

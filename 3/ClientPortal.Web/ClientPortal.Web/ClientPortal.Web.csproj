@@ -572,6 +572,10 @@
     <Content Include="Images\arrow_down.jpg" />
     <Content Include="Images\arrow_up.jpg" />
     <Content Include="Images\avatar.png" />
+    <Content Include="Images\icon_metrics.gif" />
+    <Content Include="Images\icon_mobile.gif" />
+    <Content Include="Images\icon_reports.gif" />
+    <Content Include="Images\icon_track.gif" />
     <Content Include="Images\logo1a.png" />
     <Content Include="Images\da.jpeg" />
     <Content Include="Images\logo1.png" />
@@ -611,6 +615,7 @@
     <Content Include="Content\kendo\2013.1.514\images\KendoUI.woff" />
     <Content Include="Areas\Admin\Views\Advertisers\EditContacts.cshtml" />
     <Content Include="Areas\Admin\Views\Advertisers\EditLogo.cshtml" />
+    <Content Include="Areas\Admin\Views\Advertisers\CreateUserProfile.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
