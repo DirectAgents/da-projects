@@ -116,6 +116,9 @@
     <Compile Include="Contexts\DimDate.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\DimDevice.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DimOffer.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
