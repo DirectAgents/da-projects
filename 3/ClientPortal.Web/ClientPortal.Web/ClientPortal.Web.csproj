@@ -572,9 +572,14 @@
     <Content Include="Images\arrow_down.jpg" />
     <Content Include="Images\arrow_up.jpg" />
     <Content Include="Images\avatar.png" />
+    <Content Include="Images\icon_metrics.gif" />
+    <Content Include="Images\icon_mobile.gif" />
+    <Content Include="Images\icon_reports.gif" />
+    <Content Include="Images\icon_track.gif" />
     <Content Include="Images\logo1a.png" />
     <Content Include="Images\da.jpeg" />
     <Content Include="Images\logo1.png" />
+    <Content Include="Images\logoSelectQuote.png" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\blackbird.js" />
     <Content Include="Scripts\foundation\app.js" />
@@ -613,6 +618,7 @@
     <Content Include="Areas\Admin\Views\Advertisers\EditLogo.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
+    <None Include="Properties\PublishProfiles\gogrid - test.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />
