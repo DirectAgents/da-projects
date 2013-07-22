@@ -84,63 +84,54 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
             return loaded;
         }
 
-        private int LoadToDataWarehouse(List<Conversion> items)
+        private int LoadToDataWarehouse(List<Conversion> conversionsFromSource)
         {
             Logger.Info("Loading Conversions to Data Warehouse..");
 
-            var loaded = 0;
-            var added = 0;
-            var updated = 0;
-            var skipped = 0;
             using (var db = new ClientPortal.Data.Contexts.ClientPortalDWContext())
             {
-                foreach (var source in items)
+                foreach (var conversionFromSource in conversionsFromSource)
                 {
-                    var target = db.FactConversions.Find(source.ConversionId);
+                    var factConversion = db.FactConversions.Find(conversionFromSource.ConversionId);
 
-                    if (target == null)
+                    if (factConversion == null)
                     {
-                        target = new ClientPortal.Data.Contexts.FactConversion
+                        // Skip if conversion has no click
+                        if (conversionFromSource.ClickId == 0)
                         {
-                            ConversionKey = source.ConversionId
+                            Logger.Warn("Conversion id {0} has no click, skipping.", conversionFromSource.ConversionId);
+                            continue;
+                        }
+
+                        factConversion = new ClientPortal.Data.Contexts.FactConversion
+                        {
+                            ConversionKey = conversionFromSource.ConversionId
                         };
 
-                        target.DateKey = source.ConversionDate.Date;
+                        // DateKey
+                        factConversion.DateKey = conversionFromSource.ConversionDate.Date;
 
-                        if (source.ClickId == 0)
+                        // ClickDateKey
+                        if (conversionFromSource.ClickDate != null)
                         {
-                            Logger.Warn("No click to go with conversion id {0}", target.ConversionKey);
-
-                            skipped++;
-                            loaded++; // intentionally skipping, so increment to keep counts correct (TODO: address this design issue)
-                            continue;
+                            factConversion.ClickDateKey = conversionFromSource.ClickDate.Date;
                         }
 
-                        var factClick = db.FactClicks.Find(source.ClickId);
-
+                        // ClickKey, if it exists
+                        var factClick = db.FactClicks.Find(conversionFromSource.ClickId);
                         if (factClick == null) // this means we didn't synch up the clicks far back enough
                         {
-                            Logger.Warn("No click id {0} to go with conversion id {1}", source.ClickId, target.ConversionKey);
-
-                            skipped++;
-                            loaded++; // intentionally skipping, so increment to keep counts correct (TODO: address this design issue)
-                            continue;
+                            Logger.Warn("No click id {0} to go with conversion id {1}", conversionFromSource.ClickId, factConversion.ConversionKey);
+                        }
+                        else
+                        {
+                            factConversion.ClickKey = factClick.ClickKey;
                         }
 
-                        target.ClickKey = factClick.ClickKey;
-
-                        db.FactConversions.Add(target);
-                        added++;
+                        db.FactConversions.Add(factConversion);
                     }
-                    else
-                    {
-                        updated++;
-                    }
-                    loaded++;
                 }
-
-                Logger.Info("Loading {0} FactConversions (Data Warehouse) ({1} updates, {2} additions, {3} skipped)", loaded, updated, added, skipped);
-
+                Logger.Info(db.ChangeCountsAsString());
                 try
                 {
                     db.SaveChanges();
@@ -148,20 +139,13 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                 catch (DbEntityValidationException ex)
                 {
                     foreach (var entityValidationError in ex.EntityValidationErrors)
-                    {
                         foreach (var validationError in entityValidationError.ValidationErrors)
-                        {
                             Logger.Warn("entity validation error for property {0}: {1}", validationError.PropertyName, validationError.ErrorMessage);
-                        }
-                    }
-
                     Logger.Error(ex);
-
                     throw;
                 }
             }
-
-            return loaded;
+            return conversionsFromSource.Count;
         }
     }
 }

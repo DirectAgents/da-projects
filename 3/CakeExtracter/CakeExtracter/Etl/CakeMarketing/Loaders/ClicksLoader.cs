@@ -20,11 +20,13 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     target = db.FactClicks.Find(source.ClickId);
                     if (target == null)
                     {
+                        // New factClick
                         target = new ClientPortal.Data.Contexts.FactClick
                         {
                             ClickKey = source.ClickId,
                         };
 
+                        // Region
                         source.Region = source.Region ?? new Region
                         {
                             RegionCode = "unknown",
@@ -38,31 +40,49 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                             RegionCode = source.Region.RegionCode
                         });
 
+                        // Country
                         target.DimCountry = db.FindOrCreateByPredicate(c => c.CountryCode == source.Country.CountryCode, () => new ClientPortal.Data.Contexts.DimCountry
                         {
                             CountryCode = source.Country.CountryCode,
                         });
 
+                        // Date
                         target.DateKey = source.ClickDate.Date;
 
+                        // Advertiser
                         target.DimAdvertiser = db.FindOrCreateByKey(source.Advertiser.AdvertiserId, () => new ClientPortal.Data.Contexts.DimAdvertiser
                         {
                             AdvertiserKey = source.Advertiser.AdvertiserId,
                             AdvertiserName = source.Advertiser.AdvertiserName
                         });
 
+                        // Offer
                         target.DimOffer = db.FindOrCreateByKey(source.Offer.OfferId, () => new ClientPortal.Data.Contexts.DimOffer
                         {
                             OfferKey = source.Offer.OfferId,
                             OfferName = source.Offer.OfferName
                         });
 
+                        // Affiliate
                         target.DimAffiliate = db.FindOrCreateByKey(source.Affiliate.AffiliateId, () => new ClientPortal.Data.Contexts.DimAffiliate
                         {
                             AffiliateKey = source.Affiliate.AffiliateId,
                             AffiliateName = source.Affiliate.AffiliateName
                         });
 
+                        // Device
+                        source.Device = source.Device ?? new Device
+                        {
+                            DeviceId = 0,
+                            DeviceName = "unknown"
+                        };
+                        target.DimDevice = db.FindOrCreateByKey(source.Device.DeviceId, () => new ClientPortal.Data.Contexts.DimDevice
+                        {
+                            DeviceKey = source.Device.DeviceId,
+                            DeviceName = source.Device.DeviceName
+                        });
+
+                        // Browser
                         source.Browser = source.Browser ?? new Browser
                         {
                             BrowserId = 0,
@@ -74,6 +94,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                             BrowserName = source.Browser.BrowserName
                         });
 
+                        // Add New Click
                         db.FactClicks.Add(target);
                         added++;
                     }

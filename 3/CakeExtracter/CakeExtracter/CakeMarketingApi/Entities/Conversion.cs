@@ -6,6 +6,7 @@ namespace CakeExtracter.CakeMarketingApi.Entities
     {
         public int ConversionId { get; set; }
         public DateTime ConversionDate { get; set; }
+        public DateTime ClickDate { get; set; }
         public int ClickId { get; set; }
         public Affiliate Affiliate { get; set; }
         public Advertiser Advertiser { get; set; }
