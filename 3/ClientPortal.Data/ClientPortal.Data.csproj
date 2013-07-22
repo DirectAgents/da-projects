@@ -182,6 +182,9 @@
     <Compile Include="Contexts\SearchDailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\UserProfile.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contracts\IClientPortalRepository.cs" />
     <Compile Include="DTOs\AffiliateSummary.cs" />
     <Compile Include="DTOs\DateRangeSummary.cs" />

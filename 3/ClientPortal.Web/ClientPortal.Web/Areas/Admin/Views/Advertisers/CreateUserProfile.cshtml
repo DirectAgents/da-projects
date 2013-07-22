@@ -1,0 +1,51 @@
+﻿@model ClientPortal.Data.Contexts.Advertiser
+
+@{
+    ViewBag.Title = "Create UserProfile";
+}
+
+<h4>Create UserProfile</h4>
+
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "advertisersTab" }))
+{
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>UserProfile</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AdvertiserName)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.AdvertiserName)
+        </div>
+
+        <div class="editor-label">
+            <label>UserName</label>
+        </div>
+        <div class="editor-field">
+            <input class="text-box single-line" id="UserName" name="UserName" type="text" value="">
+        </div>
+
+        <div class="editor-label">
+            <label>Password</label>
+        </div>
+        <div class="editor-field">
+            <input class="text-box single-line" id="Password" name="Password" type="text" value="">
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Ajax.ActionLink("Back to List", "Index", new AjaxOptions() {
+        UpdateTargetId = "advertisersTab", HttpMethod = "Get"
+    })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

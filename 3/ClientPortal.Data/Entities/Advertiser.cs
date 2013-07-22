@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace ClientPortal.Data.Contexts
@@ -10,5 +11,8 @@ namespace ClientPortal.Data.Contexts
         {
             get { return this.AdvertiserContacts.OrderBy(ac => ac.Order); }
         }
+
+        [NotMapped]
+        public IEnumerable<UserProfile> UserProfiles { get; set; }
     }
 }

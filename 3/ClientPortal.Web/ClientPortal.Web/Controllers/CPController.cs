@@ -43,9 +43,9 @@ namespace ClientPortal.Web.Controllers
             return userInfo;
         }
 
-        public static UserProfile GetUserProfile()
+        public static ClientPortal.Web.Models.UserProfile GetUserProfile()
         {
-            UserProfile userProfile = null;
+            ClientPortal.Web.Models.UserProfile userProfile = null;
 
             if (WebSecurity.Initialized)
             {

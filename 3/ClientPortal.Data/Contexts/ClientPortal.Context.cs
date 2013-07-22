@@ -43,5 +43,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<Conversion> Conversions { get; set; }
         public DbSet<SearchCampaign> SearchCampaigns { get; set; }
         public DbSet<Offer> Offers { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
     }
 }
