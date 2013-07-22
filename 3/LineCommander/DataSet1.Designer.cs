@@ -323,6 +323,8 @@ namespace LineCommander {
             
             private global::System.Data.DataColumn columnCommandName;
             
+            private global::System.Data.DataColumn columnCommandType;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CommandsDataTable() {
@@ -366,6 +368,14 @@ namespace LineCommander {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CommandTypeColumn {
+                get {
+                    return this.columnCommandType;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -401,10 +411,11 @@ namespace LineCommander {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CommandsRow AddCommandsRow(string CommandName) {
+            public CommandsRow AddCommandsRow(string CommandName, string CommandType) {
                 CommandsRow rowCommandsRow = ((CommandsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        CommandName};
+                        CommandName,
+                        CommandType};
                 rowCommandsRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowCommandsRow);
                 return rowCommandsRow;
@@ -428,6 +439,7 @@ namespace LineCommander {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
                 this.columnCommandName = base.Columns["CommandName"];
+                this.columnCommandType = base.Columns["CommandType"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -435,6 +447,8 @@ namespace LineCommander {
             private void InitClass() {
                 this.columnCommandName = new global::System.Data.DataColumn("CommandName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCommandName);
+                this.columnCommandType = new global::System.Data.DataColumn("CommandType", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCommandType);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -574,6 +588,8 @@ namespace LineCommander {
             
             private global::System.Data.DataColumn columnParameterValue;
             
+            private global::System.Data.DataColumn columnParameterType;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CommandParametersDataTable() {
@@ -633,6 +649,14 @@ namespace LineCommander {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ParameterTypeColumn {
+                get {
+                    return this.columnParameterType;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -668,12 +692,13 @@ namespace LineCommander {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public CommandParametersRow AddCommandParametersRow(CommandsRow parentCommandsRowByCommands_CommandParameters, string ParameterName, string ParameterValue) {
+            public CommandParametersRow AddCommandParametersRow(CommandsRow parentCommandsRowByCommands_CommandParameters, string ParameterName, string ParameterValue, string ParameterType) {
                 CommandParametersRow rowCommandParametersRow = ((CommandParametersRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         ParameterName,
-                        ParameterValue};
+                        ParameterValue,
+                        ParameterType};
                 if ((parentCommandsRowByCommands_CommandParameters != null)) {
                     columnValuesArray[0] = parentCommandsRowByCommands_CommandParameters[0];
                 }
@@ -702,6 +727,7 @@ namespace LineCommander {
                 this.columnCommandName = base.Columns["CommandName"];
                 this.columnParameterName = base.Columns["ParameterName"];
                 this.columnParameterValue = base.Columns["ParameterValue"];
+                this.columnParameterType = base.Columns["ParameterType"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -713,6 +739,8 @@ namespace LineCommander {
                 base.Columns.Add(this.columnParameterName);
                 this.columnParameterValue = new global::System.Data.DataColumn("ParameterValue", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnParameterValue);
+                this.columnParameterType = new global::System.Data.DataColumn("ParameterType", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnParameterType);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -871,6 +899,22 @@ namespace LineCommander {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string CommandType {
+                get {
+                    try {
+                        return ((string)(this[this.tableCommands.CommandTypeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CommandType\' in table \'Commands\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCommands.CommandTypeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsCommandNameNull() {
                 return this.IsNull(this.tableCommands.CommandNameColumn);
             }
@@ -879,6 +923,18 @@ namespace LineCommander {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetCommandNameNull() {
                 this[this.tableCommands.CommandNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCommandTypeNull() {
+                return this.IsNull(this.tableCommands.CommandTypeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCommandTypeNull() {
+                this[this.tableCommands.CommandTypeColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -957,6 +1013,22 @@ namespace LineCommander {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string ParameterType {
+                get {
+                    try {
+                        return ((string)(this[this.tableCommandParameters.ParameterTypeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ParameterType\' in table \'CommandParameters\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCommandParameters.ParameterTypeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public CommandsRow CommandsRow {
                 get {
                     return ((CommandsRow)(this.GetParentRow(this.Table.ParentRelations["Commands_CommandParameters"])));
@@ -1000,6 +1072,18 @@ namespace LineCommander {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetParameterValueNull() {
                 this[this.tableCommandParameters.ParameterValueColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsParameterTypeNull() {
+                return this.IsNull(this.tableCommandParameters.ParameterTypeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetParameterTypeNull() {
+                this[this.tableCommandParameters.ParameterTypeColumn] = global::System.Convert.DBNull;
             }
         }
         

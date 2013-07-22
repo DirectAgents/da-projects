@@ -16,6 +16,7 @@
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CommandName" msprop:Generator_ColumnVarNameInTable="columnCommandName" msprop:Generator_ColumnPropNameInRow="CommandName" msprop:Generator_ColumnPropNameInTable="CommandNameColumn" msprop:Generator_UserColumnName="CommandName" type="xs:string" minOccurs="0" />
+              <xs:element name="CommandType" msprop:Generator_ColumnVarNameInTable="columnCommandType" msprop:Generator_ColumnPropNameInRow="CommandType" msprop:Generator_ColumnPropNameInTable="CommandTypeColumn" msprop:Generator_UserColumnName="CommandType" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -25,6 +26,7 @@
               <xs:element name="CommandName" msprop:Generator_ColumnVarNameInTable="columnCommandName" msprop:Generator_ColumnPropNameInRow="CommandName" msprop:Generator_ColumnPropNameInTable="CommandNameColumn" msprop:Generator_UserColumnName="CommandName" type="xs:string" minOccurs="0" />
               <xs:element name="ParameterName" msprop:Generator_ColumnVarNameInTable="columnParameterName" msprop:Generator_ColumnPropNameInRow="ParameterName" msprop:Generator_ColumnPropNameInTable="ParameterNameColumn" msprop:Generator_UserColumnName="ParameterName" type="xs:string" minOccurs="0" />
               <xs:element name="ParameterValue" msprop:Generator_ColumnVarNameInTable="columnParameterValue" msprop:Generator_ColumnPropNameInRow="ParameterValue" msprop:Generator_ColumnPropNameInTable="ParameterValueColumn" msprop:Generator_UserColumnName="ParameterValue" type="xs:string" minOccurs="0" />
+              <xs:element name="ParameterType" msprop:Generator_ColumnVarNameInTable="columnParameterType" msprop:Generator_ColumnPropNameInRow="ParameterType" msprop:Generator_ColumnPropNameInTable="ParameterTypeColumn" msprop:Generator_UserColumnName="ParameterType" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
