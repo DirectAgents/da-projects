@@ -22,8 +22,8 @@
         <th>ConVal</th>
         <th>Show?</th>
         <th>IsNum?</th>
-        <th>Profile?</th>
-        <th>Logo?</th>
+        <th style="text-align:center">Profile</th>
+        <th style="text-align:center">Logo</th>
         <th></th>
     </tr>
 
@@ -50,15 +50,15 @@
         <td>
             @Html.DisplayFor(modelItem => item.ConversionValueIsNumber)
         </td>
-        <td>
+        <td style="text-align:center">
             @if (item.UserProfiles.Count() > 0) {
-                <text>yes</text>
+                @(String.Join(", ", item.UserProfiles.Select(u => u.UserName).ToArray()))
             } else {
-                @Ajax.ActionLink("no", "CreateUserProfile", new { id=item.AdvertiserId }, ajaxOptions)
+                @Ajax.ActionLink("create", "CreateUserProfile", new { id=item.AdvertiserId }, ajaxOptions)
             }
         </td>
-        <td>
-            @Ajax.ActionLink((item.Logo == null ? "no" : "yes"), "EditLogo", new { id=item.AdvertiserId }, ajaxOptions)
+        <td style="text-align:center">
+            @Ajax.ActionLink((item.Logo == null ? "add" : "edit"), "EditLogo", new { id=item.AdvertiserId }, ajaxOptions)
         </td>
         <td>
             @Ajax.ActionLink("Edit", "Edit", new { id=item.AdvertiserId }, ajaxOptions) |
