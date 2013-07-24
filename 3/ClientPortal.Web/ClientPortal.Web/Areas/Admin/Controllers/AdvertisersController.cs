@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using ClientPortal.Data.Contexts;
 using System.Web.Helpers;
 using WebMatrix.WebData;
+using System.Web.Configuration;
+using ClientPortal.Web.Controllers;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
@@ -186,20 +188,38 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateUserProfile(int id, string username, string password)
+        public ActionResult CreateUserProfile(int id, string username, string password, bool sendemail, string email)
         {
             Advertiser advertiser = db.Advertisers.Find(id);
             if (advertiser != null)
             {
                 WebSecurity.CreateUserAndAccount(
-                    username,
-                    password,
-                    new
-                    {
-                        CakeAdvertiserId = advertiser.AdvertiserId,
-                    });
+                    username, password,
+                    new { CakeAdvertiserId = advertiser.AdvertiserId });
+
+                if (sendemail && !String.IsNullOrWhiteSpace(email))
+                    SendUserProfileEmail(username, password, email);
             }
             return RedirectToAction("Index");
+        }
+
+        void SendUserProfileEmail(string username, string password, string email)
+        {
+            string from = WebConfigurationManager.AppSettings["EmailFromDefault"];
+            string subject = "Direct Agents Client Portal account created";
+            string url = WebConfigurationManager.AppSettings["PortalUrl"];
+            string body = (@"Congratulations! Your Direct Agents Client Portal account has been created:
+<p>
+Username: [[Username]]<br/>
+Password: [[Password]]<br/>
+<br/>
+Portal URL: [[Url]]
+</p>")
+               .Replace("[[Username]]", username)
+               .Replace("[[Password]]", password)
+               .Replace("[[Url]]", url);
+
+            ControllerHelpers.SendEmail(from, new string[] { email }, new string[] { }, subject, body, true);
         }
 
         //

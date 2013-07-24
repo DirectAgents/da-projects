@@ -116,13 +116,7 @@ namespace ClientPortal.Web.Controllers
         private FileResult CsvFile<T>(IEnumerable<T> rows, string downloadFileName)
             where T : class
         {
-            var output = new MemoryStream();
-            var writer = new StreamWriter(output);
-            var csv = new CsvWriter(writer);
-            csv.WriteRecords<T>(rows);
-            writer.Flush();
-            output.Position = 0;
-            return File(output, "application/CSV", downloadFileName);
+            return File(ControllerHelpers.CsvStream(rows), "application/CSV", downloadFileName);
         }
     }
 }
