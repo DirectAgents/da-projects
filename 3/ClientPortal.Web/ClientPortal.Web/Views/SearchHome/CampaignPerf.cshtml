@@ -15,6 +15,7 @@
     <span class="paddedlabel">End:</span>
     <input id="campaignperf_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('campaignperf')" />
     <a class="button paddedbutton" id="campaignperf_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('campaignperf'); return false">Filter</a>
+    <a class="button paddedbutton" style="float: right" href="#" onclick="ExportCampaignPerfCSV(); return false">Export CSV</a>
 </div>
 <div id="campaignperfGrid"></div>
 
@@ -37,4 +38,10 @@
 
         campaignperfDS.read();
     });
+
+    function ExportCampaignPerfCSV() {
+        var s = $('#campaignperf_startdate').val();
+        var e = $('#campaignperf_enddate').val();
+        window.location.href = '@Url.Action("CampaignPerfExport", "SearchReports")?startdate=' + s + '&enddate=' + e;
+    }
 </script>

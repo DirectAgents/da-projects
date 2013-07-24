@@ -2,7 +2,8 @@
     <div class="twelve columns">
         <div class="searchpanel" id="weeksumOuter">
             <b>Weekly Summary</b>
-            <div id="weeksumGrid"></div>
+            <a class="button paddedbutton" style="float: right" href="#" onclick="ExportWeekSumCSV(); return false">Export CSV</a>
+            <div id="weeksumGrid" style="margin-top: 10px"></div>
         </div>
     </div>
 </div>
@@ -34,4 +35,8 @@
 
         weeksumDS.read();
     });
+
+    function ExportWeekSumCSV() {
+        window.location.href = '@Url.Action("WeekSumExport", "SearchReports")';
+    }
 </script>

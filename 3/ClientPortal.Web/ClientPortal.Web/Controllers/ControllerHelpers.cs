@@ -1,5 +1,8 @@
-﻿using System;
+﻿using CsvHelper;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -37,6 +40,19 @@ namespace ClientPortal.Web.Controllers
         internal static string DateStamp()
         {
             return DateTime.Now.ToString("yyyyMMdd");
+        }
+
+        internal static MemoryStream CsvStream<T>(IEnumerable<T> rows)
+            where T : class
+        {
+            var output = new MemoryStream();
+            var writer = new StreamWriter(output);
+            var csv = new CsvWriter(writer);
+            csv.WriteRecords<T>(rows);
+            writer.Flush();
+            output.Position = 0;
+            return output;
+            //return File(output, "application/CSV", downloadFileName);
         }
     }
 }

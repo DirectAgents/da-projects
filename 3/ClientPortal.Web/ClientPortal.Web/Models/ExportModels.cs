@@ -62,4 +62,28 @@ namespace ClientPortal.Web.Models
         public decimal Spend { get; set; }
         public int AccountingStatusId { get; set; }
     }
+
+    public class SearchStatExportRow
+    {
+        public string Channel { get; set; }
+        public string Title { get; set; }
+        //public string Range { get; set; }
+        public decimal Revenue { get; set; }
+        public decimal Cost { get; set; }
+        public int ROAS { get; set; }
+        public decimal Margin { get; set; }
+        public int Orders { get; set; }
+        public decimal CPO { get; set; }
+        public decimal OrderRate { get; set; }
+        public decimal RevenuePerOrder { get; set; }
+        public decimal CPC { get; set; }
+        public int Clicks { get; set; }
+        public int Impressions { get; set; }
+        public decimal CTR { get; set; }
+        public decimal OrdersPerDay { get; set; }
+
+        public int Days { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
 }

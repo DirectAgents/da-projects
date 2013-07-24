@@ -2,7 +2,8 @@
     <div class="twelve columns">
         <div class="searchpanel" id="monthsumOuter">
             <b>Monthly Summary</b>
-            <div id="monthsumGrid"></div>
+            <a class="button paddedbutton" style="float: right" href="#" onclick="ExportMonthSumCSV(); return false">Export CSV</a>
+            <div id="monthsumGrid" style="margin-top: 10px"></div>
         </div>
     </div>
 </div>
@@ -34,4 +35,8 @@
 
         monthsumDS.read();
     });
+
+    function ExportMonthSumCSV() {
+        window.location.href = '@Url.Action("MonthSumExport", "SearchReports")';
+    }
 </script>
