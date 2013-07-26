@@ -30,16 +30,16 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     var pk1 = db.SearchCampaigns.Single(c => c.SearchCampaignName == campaignName).SearchCampaignId;
                     var pk2 = DateTime.Parse(item["day"].Replace('-', '/'));
                     var source = new SearchDailySummary
-                        {
-                            SearchCampaignId = pk1,
-                            Date = pk2,
-                            Revenue = decimal.Parse(item["totalConvValue"]),
-                            Cost = decimal.Parse(item["cost"]),
-                            Orders = int.Parse(item["conv1PerClick"]),
-                            Clicks = int.Parse(item["clicks"]),
-                            Impressions = int.Parse(item["impressions"]),
-                            CurrencyId = item["currency"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
-                        };
+                    {
+                        SearchCampaignId = pk1,
+                        Date = pk2,
+                        Revenue = decimal.Parse(item["totalConvValue"]),
+                        Cost = decimal.Parse(item["cost"]),
+                        Orders = int.Parse(item["conv1PerClick"]),
+                        Clicks = int.Parse(item["clicks"]),
+                        Impressions = int.Parse(item["impressions"]),
+                        CurrencyId = item["currency"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
+                    };
                     var target = db.Set<SearchDailySummary>().Find(pk1, pk2);
                     if (target == null)
                     {

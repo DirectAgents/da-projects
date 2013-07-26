@@ -24,8 +24,16 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_NC_ON_FactClick_CountryKey_AdvertiserKey_INC_ClickKey_RegionKey]
     ON [dbo].[FactClick]([CountryKey] ASC, [AdvertiserKey] ASC)
     INCLUDE([ClickKey], [RegionKey]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_NC_ON_FactClick_DateKey_AdvertiserKey]
+    ON [dbo].[FactClick]([DateKey] ASC, [AdvertiserKey] ASC)
+    INCLUDE([DeviceKey]);
 

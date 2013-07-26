@@ -22,6 +22,8 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                                              return newOffer;
                                          });
 
+                    offer.Advertiser_Id = item.Advertiser.AdvertiserId;
+
                     offer.Offer_Id = item.OfferId;
 
                     offer.OfferName = item.OfferName;

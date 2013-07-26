@@ -95,6 +95,23 @@ namespace CakeExtracter.UnitTests
         }
 
         [TestMethod]
+        public void ClientAndRequest_Clicks()
+        {
+            var request = new CakeExtracter.CakeMarketingApi.Clients.ClicksRequest
+            {
+                start_date = "7/24/2013",
+                end_date = "7/25/2013",
+                advertiser_id = 435,
+                offer_id = 12061,
+                row_limit = 5000,
+                start_at_row = 55001
+            };
+            var client = new CakeExtracter.CakeMarketingApi.Clients.ClicksClient();
+            var response = client.Clicks(request);
+            Console.WriteLine(response.Clicks.Take(10).ToArray().ToXml());
+        }
+
+        [TestMethod]
         public void Integration_Clicks_Extracter_And_Loader()
         {
             var dateRange = new DateRange(new DateTime(2013, 6, 1), new DateTime(2013, 6, 3));

@@ -12,6 +12,9 @@ namespace ClientPortal.Data.Contexts
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Objects;
+    using System.Data.Objects.DataClasses;
+    using System.Linq;
     
     public partial class ClientPortalDWContext : DbContext
     {
@@ -35,5 +38,22 @@ namespace ClientPortal.Data.Contexts
         public DbSet<DimBrowser> DimBrowsers { get; set; }
         public DbSet<DimDevice> DimDevices { get; set; }
         public DbSet<FactConversion> FactConversions { get; set; }
+    
+        public virtual ObjectResult<DeviceClicks> ClicksByDevice(Nullable<int> advertiserId, Nullable<System.DateTime> date1, Nullable<System.DateTime> date2)
+        {
+            var advertiserIdParameter = advertiserId.HasValue ?
+                new ObjectParameter("advertiserId", advertiserId) :
+                new ObjectParameter("advertiserId", typeof(int));
+    
+            var date1Parameter = date1.HasValue ?
+                new ObjectParameter("date1", date1) :
+                new ObjectParameter("date1", typeof(System.DateTime));
+    
+            var date2Parameter = date2.HasValue ?
+                new ObjectParameter("date2", date2) :
+                new ObjectParameter("date2", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DeviceClicks>("ClicksByDevice", advertiserIdParameter, date1Parameter, date2Parameter);
+        }
     }
 }

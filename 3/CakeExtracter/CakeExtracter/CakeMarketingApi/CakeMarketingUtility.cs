@@ -116,7 +116,17 @@ namespace CakeExtracter.CakeMarketingApi
 
                 // create the client, call the service and check the response
                 var client = new ClicksClient();
-                var response = client.Clicks(request);
+                ClickReportResponse response;
+                try
+                {
+                    response = client.Clicks(request);
+                }
+                catch(Exception ex)
+                {
+                    Logger.Warn("Caught an exception while extracting clicks, bailing out..");
+                    yield break;
+                }
+
                 if (!response.Success)
                 {
                     throw new Exception("ClicksClient failed");

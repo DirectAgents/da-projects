@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.IO;
+using System.Text;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
 

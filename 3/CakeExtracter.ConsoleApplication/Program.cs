@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using CakeExtracter.Bootstrappers;
+using CakeExtracter.Common;
+using CakeExtracter.Mef;
 
 namespace CakeExtracter
 {
-    using Common;
-    using Bootstrappers;
-    using Mef;
-
     class Program
     {
         private readonly Composer<Program> composer;

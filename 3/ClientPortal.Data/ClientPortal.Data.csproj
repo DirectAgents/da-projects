@@ -101,6 +101,9 @@
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\DeviceClicks.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DimAdvertiser.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
@@ -190,7 +193,6 @@
     <Compile Include="DTOs\DateRangeSummary.cs" />
     <Compile Include="DTOs\ConversionInfo.cs" />
     <Compile Include="DTOs\ConversionSummary.cs" />
-    <Compile Include="DTOs\DeviceClicks.cs" />
     <Compile Include="DTOs\MonthlyInfo.cs" />
     <Compile Include="DTOs\DailyInfo.cs" />
     <Compile Include="DTOs\OfferInfo.cs" />
