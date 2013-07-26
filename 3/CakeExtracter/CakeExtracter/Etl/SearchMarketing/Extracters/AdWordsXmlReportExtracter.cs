@@ -19,7 +19,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         protected override void Extract()
         {
             Logger.Info("Extracting SearchDailySummaries for {0} from {1}", accountName, xmlFilePath);
-            var items = EnumerateRows().Where(c => c["account"] == accountName);
+            var items = EnumerateRows(); //.Where(c => c["account"] == accountName);
             Add(items);
             End();
         }
@@ -54,6 +54,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                                             else
                                                 throw new Exception("could not move to column " + columnName);
                                         }
+
+                                        // FOR TESTING !!!
+                                        row.Add("account", accountName);
+
                                         yield return row;
                                     }
                                     break;
