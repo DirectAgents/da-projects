@@ -28,7 +28,13 @@
                     Revenue: { type: 'number' },
                     Cost: { type: 'number' },
                     ROAS: { type: 'number' },
+                    Margin: { type: 'number' },
                     CPO: { type: 'number' },
+                    OrderRate: { type: 'number' },
+                    RevenuePerOrder: { type: 'number' },
+                    CPC: { type: 'number' },
+                    CTR: { type: 'number' },
+                    OrdersPerDay: { type: 'number' },
                 }
             }
         },
@@ -39,7 +45,13 @@
             { field: 'Revenue', aggregate: 'sum' },
             { field: 'Cost', aggregate: 'sum' },
             { field: 'ROAS', aggregate: 'agg' },
+            { field: 'Margin', aggregate: 'agg' },
             { field: 'CPO', aggregate: 'agg' },
+            { field: 'OrderRate', aggregate: 'agg' },
+            { field: 'RevenuePerOrder', aggregate: 'agg' },
+            { field: 'CPC', aggregate: 'agg' },
+            { field: 'CTR', aggregate: 'agg' },
+            { field: 'OrdersPerDay', aggregate: 'agg' },
         ]
     };
     if (group) {
@@ -51,6 +63,7 @@
         args.sort = { field: 'Title', dir: 'desc' };
     } else {
         args.sort = { field: 'Channel', dir: 'desc' };
+//        args.sort = { field: 'StartDate', dir: 'asc' };
     }
     return new kendo.data.DataSource(args);
 }
@@ -68,17 +81,23 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
             { field: 'Cost', name: 'Costs', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             //{ field: null, title: 'ROAS', template: "#= kendo.toString(Revenue / Cost, 'p0') #" },
             { field: 'ROAS', format: '{0:n0}%', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n0') + '%' #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-            { field: null, title: 'Margin', attributes: { style: "text-align: right" }, template: "#= kendo.toString(Revenue - Cost, 'c" + decimals + "') #" },
+            //{ field: null, title: 'Margin', attributes: { style: "text-align: right" }, template: "#= kendo.toString(Revenue - Cost, 'c" + decimals + "') #" },
+            { field: 'Margin', format: '{0:c' + decimals + '}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'Orders', format: '{0:n0}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             //{ field: null, title: 'CPO', template: "#= kendo.toString(Cost / Orders, 'c0') #" },
             { field: 'CPO', format: '{0:c' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-            { field: null, title: 'Order Rate', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Orders / Clicks, 'p2') #" },
-            { field: null, title: 'Rev/Order', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Revenue / Orders, 'c" + decimals + "') #" },
-            { field: null, title: 'CPC', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Cost / Clicks, 'c2') #" },
+            //{ field: null, title: 'Order Rate', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Orders / Clicks, 'p2') #" },
+            { field: 'OrderRate', title: 'Order Rate', format: '{0:n2}%', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n2') + '%' #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            //{ field: null, title: 'Rev/Order', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Revenue / Orders, 'c" + decimals + "') #" },
+            { field: 'RevenuePerOrder', title: 'Rev/Order', format: '{0:c' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            //{ field: null, title: 'CPC', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Cost / Clicks, 'c2') #" },
+            { field: 'CPC', format: '{0:c2}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'c2') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
             { field: 'Clicks', format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'Impressions', format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-            { field: null, title: 'CTR', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Clicks / Impressions, 'p2') #" },
-            { field: null, title: 'Avg Order/Day', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Orders / Days, 'n" + decimals + "') #" },
+            //{ field: null, title: 'CTR', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Clicks / Impressions, 'p2') #" },
+            { field: 'CTR', format: '{0:n2}%', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n2') + '%' #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            //{ field: null, title: 'Avg Order/Day', attributes: { style: "text-align: center" }, template: "#= kendo.toString(Orders / Days, 'n" + decimals + "') #" },
+            { field: 'OrdersPerDay', title: 'Avg Orders/Day', format: '{0:n' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
         ],
         filterable: true,
         pageable: true,

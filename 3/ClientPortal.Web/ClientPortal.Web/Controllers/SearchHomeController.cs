@@ -50,8 +50,8 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var start = new DateTime(2013, 5, 27);
-            var end = new DateTime(2013, 6, 2);
+            var start = new DateTime(2013, 6, 17);
+            var end = new DateTime(2013, 6, 23);
             var model = new SearchReportModel()
             {
                 StartDate = start.ToString("d", userInfo.CultureInfo),
@@ -64,8 +64,8 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var start = new DateTime(2013, 5, 27);
-            var end = new DateTime(2013, 6, 2);
+            var start = new DateTime(2013, 6, 17);
+            var end = new DateTime(2013, 6, 23);
             var model = new SearchReportModel()
             {
                 StartDate = start.ToString("d", userInfo.CultureInfo),

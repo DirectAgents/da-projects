@@ -21,9 +21,33 @@ namespace ClientPortal.Data.DTOs
         {
             get { return Cost == 0 ? 0 : (int)Math.Round(100 * Revenue / Cost); }
         }
+        public decimal Margin
+        {
+            get { return Revenue - Cost; }
+        }
         public decimal CPO
         {
             get { return Orders == 0 ? 0 : Math.Round(Cost / Orders, 2); }
+        }
+        public decimal OrderRate
+        {
+            get { return Clicks == 0 ? 0 : Math.Round((decimal)100 * Orders / Clicks, 2); }
+        }
+        public decimal RevenuePerOrder
+        {
+            get { return Orders == 0 ? 0 : Math.Round(Revenue / Orders, 2); }
+        }
+        public decimal CPC
+        {
+            get { return Clicks == 0 ? 0 : Math.Round(Cost / Clicks, 2); }
+        }
+        public decimal CTR
+        {
+            get { return Impressions == 0 ? 0 : Math.Round((decimal)100 * Clicks / Impressions, 2); }
+        }
+        public decimal OrdersPerDay
+        {
+            get { return Days == 0 ? 0 : Math.Round((decimal)Orders / Days, 2); }
         }
 
         public int Days { get; set; }
@@ -59,8 +83,8 @@ namespace ClientPortal.Data.DTOs
                 this.EndDate = value;
                 this.Days = this.EndDate.Day;
 
-                this.Range = ToRangeName(this.EndDate, false);
-                this.Title = Range;
+                this.Range = ToRangeName(this.EndDate, false, true);
+                this.Title = ToRangeName(this.EndDate, false);
             }
         }
 
@@ -151,7 +175,7 @@ namespace ClientPortal.Data.DTOs
 
         private string ToRangeName(DateTime start, DateTime end, bool prependYMD = false)
         {
-            return (prependYMD ? start.ToString("yyyyMMdd") + " " : "") + start.ToString("M/d") + " - " + end.ToString("M/d");
+            return (prependYMD ? start.ToString("yyyyMMdd") + " " : "") + start.ToString("MM/dd") + " - " + end.ToString("MM/dd");
         }
     }
 }

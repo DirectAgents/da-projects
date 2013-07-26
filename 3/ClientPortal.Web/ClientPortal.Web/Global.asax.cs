@@ -92,6 +92,7 @@ namespace ClientPortal.Web
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PriceReceived));
             Mapper.CreateMap<MonthlyInfo, CPMReportExportRow>()
                 .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Revenue));
+            Mapper.CreateMap<SearchStat, SearchStatExportRow>();
 
             // add admin account if it does not exist
             if (!WebSecurity.UserExists("admin"))

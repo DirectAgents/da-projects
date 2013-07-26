@@ -1,6 +1,8 @@
-﻿using ClientPortal.Data.Contracts;
+﻿using AutoMapper;
+using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Data.Services;
+using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
 using System;
 using System.Collections.Generic;
@@ -20,11 +22,11 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult WeekSumData(KendoGridRequest request, int numWeeks = 8)
+        public JsonResult WeekSumData(KendoGridRequest request, int numweeks = 8)
         {
             var userInfo = GetUserInfo();
 
-            var weekStats = cpRepo.GetWeekStats(userInfo.AdvertiserId, numWeeks);
+            var weekStats = cpRepo.GetWeekStats(userInfo.AdvertiserId, numweeks);
             var kgrid = new KendoGrid<SearchStat>(request, weekStats);
             if (weekStats.Any())
                 kgrid.aggregates = Aggregates(weekStats);
@@ -33,12 +35,26 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
-        [HttpPost]
-        public JsonResult MonthSumData(KendoGridRequest request, int numMonths = 6)
+        public FileResult WeekSumExport(int numweeks = 8)
         {
             var userInfo = GetUserInfo();
 
-            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, numMonths);
+            var weekStats = cpRepo.GetWeekStats(userInfo.AdvertiserId, numweeks);
+            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(weekStats);
+
+            string filename = "WeeklySummary" + ControllerHelpers.DateStamp() + ".csv";
+            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+        }
+
+        [HttpPost]
+        public JsonResult MonthSumData(KendoGridRequest request, int nummonths = 6)
+        {
+            var userInfo = GetUserInfo();
+
+            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths)
+                .ToList()
+                .OrderBy(s => s.StartDate)
+                .AsQueryable();
             var kgrid = new KendoGrid<SearchStat>(request, monthStats);
             if (monthStats.Any())
                 kgrid.aggregates = Aggregates(monthStats);
@@ -47,23 +63,15 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
-        [HttpPost]
-        public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate, string channel)
+        public FileResult MonthSumExport(int nummonths = 8)
         {
             var userInfo = GetUserInfo();
-            var cultureInfo = userInfo.CultureInfo;
-            DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
-                return Json(new { });
 
-            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end);
+            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths);
+            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(monthStats);
 
-            var kgrid = new KendoGrid<SearchStat>(request, stats);
-            if (stats.Any())
-                kgrid.aggregates = Aggregates(stats);
-
-            var json = Json(kgrid);
-            return json;
+            string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";
+            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
         }
 
         [HttpPost]
@@ -78,6 +86,54 @@ namespace ClientPortal.Web.Controllers
 
             var json = Json(kgrid);
             return json;
+        }
+
+        public FileResult ChannelPerfExport()
+        {
+            var userInfo = GetUserInfo();
+
+            var stats = cpRepo.GetChannelStats(userInfo.AdvertiserId);
+            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
+
+            string filename = "ChannelPerformance" + ControllerHelpers.DateStamp() + ".csv";
+            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
+        }
+
+        [HttpPost]
+        public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate, string channel)
+        {
+            var userInfo = GetUserInfo();
+            var cultureInfo = userInfo.CultureInfo;
+            DateTime? start, end;
+            if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
+                return Json(new { });
+
+            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end)
+                .ToList()
+                .AsQueryable();
+
+            var kgrid = new KendoGrid<SearchStat>(request, stats);
+            if (stats.Any())
+                kgrid.aggregates = Aggregates(stats);
+
+            var json = Json(kgrid);
+            return json;
+        }
+
+        public FileResult CampaignPerfExport(string startdate, string enddate)
+        {
+            var userInfo = GetUserInfo();
+            var cultureInfo = userInfo.CultureInfo;
+            DateTime? start, end;
+            if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
+                return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
+
+            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, null, start, end)
+                .OrderByDescending(s => s.Channel).ThenBy(s => s.Title);
+            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
+
+            string filename = "CampaignPerformance" + ControllerHelpers.DateStamp() + ".csv";
+            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
         }
 
         [HttpPost]
@@ -99,15 +155,28 @@ namespace ClientPortal.Web.Controllers
             var sumRevenue = stats.Sum(s => s.Revenue);
             var sumCost = stats.Sum(s => s.Cost);
             var sumOrders = stats.Sum(s => s.Orders);
+            var sumClicks = stats.Sum(s => s.Clicks);
+            var sumImpressions = stats.Sum(s => s.Impressions);
+
+            // Determine totalDays (The stats may or may not be for the same time period.)
+            var periods = stats.Select(s => new { StartDate = s.StartDate, EndDate = s.EndDate });
+            var distinctPeriods = periods.Distinct();
+            var totalDays = distinctPeriods.Sum(p => (p.EndDate - p.StartDate).Days + 1);
             var aggregates = new
             {
                 Revenue = new { sum = sumRevenue },
                 Cost = new { sum = sumCost },
                 ROAS = new { agg = sumCost == 0 ? 0 : (int)Math.Round(100 * sumRevenue / sumCost) },
+                Margin = new { agg = sumRevenue - sumCost },
                 Orders = new { sum = sumOrders },
                 CPO = new { agg = sumOrders == 0 ? 0 : Math.Round(sumCost / sumOrders, 2) },
-                Clicks = new { sum = stats.Sum(s => s.Clicks) },
-                Impressions = new { sum = stats.Sum(s => s.Impressions) },
+                OrderRate = new { agg = sumClicks == 0 ? 0 : Math.Round((decimal)100 * sumOrders / sumClicks, 2) },
+                RevenuePerOrder = new { agg = sumOrders == 0 ? 0 : Math.Round(sumRevenue / sumOrders, 2) },
+                CPC = new { agg = sumClicks == 0 ? 0 : Math.Round(sumCost / sumClicks, 2) },
+                Clicks = new { sum = sumClicks },
+                Impressions = new { sum = sumImpressions },
+                CTR = new { agg = sumImpressions == 0 ? 0 : Math.Round((decimal)100 * sumClicks / sumImpressions, 2) },
+                OrdersPerDay = new { agg = totalDays == 0 ? 0 : Math.Round((decimal)sumOrders / totalDays, 2) },
             };
             return aggregates;
         }
