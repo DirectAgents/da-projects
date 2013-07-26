@@ -24,6 +24,7 @@
           <EntitySet Name="ScheduledReportRecipient" EntityType="ClientPortalModel.Store.ScheduledReportRecipient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchCampaign" EntityType="ClientPortalModel.Store.SearchCampaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary" EntityType="ClientPortalModel.Store.SearchDailySummary" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.Store.FK_AdvertiserScheduledReport">
             <End Role="Advertiser" EntitySet="Advertiser" />
@@ -76,6 +77,10 @@
           <AssociationSet Name="FK_SearchDailySummary_SearchCampaign" Association="ClientPortalModel.Store.FK_SearchDailySummary_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaign" />
             <End Role="SearchDailySummary" EntitySet="SearchDailySummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchDailySummary2_SearchCampaign" Association="ClientPortalModel.Store.FK_SearchDailySummary2_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+            <End Role="SearchDailySummary2" EntitySet="SearchDailySummary2" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Advertiser">
@@ -283,6 +288,26 @@
           <Property Name="Impressions" Type="int" Nullable="false" />
           <Property Name="CurrencyId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="SearchDailySummary2">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="Network" />
+            <PropertyRef Name="Device" />
+            <PropertyRef Name="ClickType" />
+          </Key>
+          <Property Name="SearchCampaignId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Revenue" Type="money" Nullable="false" />
+          <Property Name="Cost" Type="money" Nullable="false" />
+          <Property Name="Orders" Type="int" Nullable="false" />
+          <Property Name="Clicks" Type="int" Nullable="false" />
+          <Property Name="Impressions" Type="int" Nullable="false" />
+          <Property Name="CurrencyId" Type="int" Nullable="false" />
+          <Property Name="Network" Type="nchar" Nullable="false" MaxLength="1" />
+          <Property Name="Device" Type="nchar" Nullable="false" MaxLength="1" />
+          <Property Name="ClickType" Type="nchar" Nullable="false" MaxLength="1" />
+        </EntityType>
         <EntityType Name="UserProfile">
           <Key>
             <PropertyRef Name="UserId" />
@@ -453,6 +478,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SearchDailySummary2_SearchCampaign">
+          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="1" />
+          <End Role="SearchDailySummary2" Type="ClientPortalModel.Store.SearchDailySummary2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCampaign">
+              <PropertyRef Name="SearchCampaignId" />
+            </Principal>
+            <Dependent Role="SearchDailySummary2">
+              <PropertyRef Name="SearchCampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -529,6 +566,11 @@
             <End Role="Goal" EntitySet="Goals" />
           </AssociationSet>
           <EntitySet Name="UserProfiles" EntityType="ClientPortalModel.UserProfile" />
+          <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.SearchDailySummary2" />
+          <AssociationSet Name="FK_SearchDailySummary2_SearchCampaign" Association="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
+            <End Role="SearchDailySummary2" EntitySet="SearchDailySummary2" />
+          </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -955,6 +997,39 @@
           <Property Type="Int32" Name="QuickBooksCompanyId" />
           <Property Type="Int32" Name="QuickBooksAdvertiserId" />
         </EntityType>
+        <EntityType Name="SearchDailySummary2">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="Network" />
+            <PropertyRef Name="Device" />
+            <PropertyRef Name="ClickType" />
+          </Key>
+          <Property Type="Int32" Name="SearchCampaignId" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
+          <Property Type="Decimal" Name="Revenue" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Cost" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Int32" Name="Orders" Nullable="false" />
+          <Property Type="Int32" Name="Clicks" Nullable="false" />
+          <Property Type="Int32" Name="Impressions" Nullable="false" />
+          <Property Type="Int32" Name="CurrencyId" Nullable="false" />
+          <Property Type="String" Name="Network" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="Device" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="ClickType" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="SearchCampaign" Relationship="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign" FromRole="SearchDailySummary2" ToRole="SearchCampaign" />
+        </EntityType>
+        <Association Name="FK_SearchDailySummary2_SearchCampaign">
+          <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
+          <End Type="ClientPortalModel.SearchDailySummary2" Role="SearchDailySummary2" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCampaign">
+              <PropertyRef Name="SearchCampaignId" />
+            </Principal>
+            <Dependent Role="SearchDailySummary2">
+              <PropertyRef Name="SearchCampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1186,6 +1261,23 @@
                 <ScalarProperty Name="CakeAdvertiserId" ColumnName="CakeAdvertiserId" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchDailySummary2">
+            <EntityTypeMapping TypeName="ClientPortalModel.SearchDailySummary2">
+              <MappingFragment StoreEntitySet="SearchDailySummary2">
+                <ScalarProperty Name="ClickType" ColumnName="ClickType" />
+                <ScalarProperty Name="Device" ColumnName="Device" />
+                <ScalarProperty Name="Network" ColumnName="Network" />
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+                <ScalarProperty Name="Impressions" ColumnName="Impressions" />
+                <ScalarProperty Name="Clicks" ColumnName="Clicks" />
+                <ScalarProperty Name="Orders" ColumnName="Orders" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
