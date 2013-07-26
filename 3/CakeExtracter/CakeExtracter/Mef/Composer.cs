@@ -13,7 +13,8 @@ namespace CakeExtracter.Mef
         public void Compose()
         {
             AggregateCatalog = new AggregateCatalog();
-            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(T).Assembly));
+            //AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(T).Assembly));
+            AggregateCatalog.Catalogs.Add(new DirectoryCatalog(@".", "CakeExtracter.dll")); 
             ComposistionContainer = new CompositionContainer(AggregateCatalog);
             ComposistionContainer.ComposeParts(Object);
         }

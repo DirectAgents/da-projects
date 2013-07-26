@@ -41,7 +41,9 @@ namespace ClientPortal.Data.Services
         public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency)
         {
             var dailySummaries = context.DailySummaries.AsQueryable();
+
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+
             if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
 
             var offers = Offers(advertiserId);
@@ -286,32 +288,14 @@ namespace ClientPortal.Data.Services
 
         public IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
-            var offers = Offers(advertiserId);
-            if (offerId.HasValue)
-                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+            using (var db = new ClientPortalDWContext())
+            {
+                var result = db.ClicksByDevice(advertiserId, start, end)
+                    .OrderByDescending(c => c.ClickCount)
+                    .ToList();
 
-            var offerIds = offers.Select(o => o.Offer_Id).ToList();
-
-            var metricCounts = context.MetricCounts.Where(mc => offerIds.Contains(mc.offer_id));
-            if (start.HasValue)
-                metricCounts = metricCounts.Where(mc => mc.date >= start.Value);
-            if (end.HasValue)
-                metricCounts = metricCounts.Where(mc => mc.date <= end.Value);
-
-            var result = metricCounts.GroupBy(mc => mc.MetricValue)
-                .Select(g => new
-                {
-                    Device = g.Key.name,
-                    Count = g.Sum(mc => mc.count)
-                })
-                .OrderByDescending(c => c.Count)
-                .AsEnumerable().Select(c => new DeviceClicks
-                {
-                    DeviceName = string.IsNullOrWhiteSpace(c.Device) ? "Other" : c.Device,
-                    ClickCount = c.Count
-                })
-                .AsEnumerable();
-            return result;
+                return result;
+            }
         }
 
         #region Advertisers & Contacts

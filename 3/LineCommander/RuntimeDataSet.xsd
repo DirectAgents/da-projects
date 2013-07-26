@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="RuntimeDataSet" targetNamespace="http://tempuri.org/RuntimeDataSet.xsd" xmlns:mstns="http://tempuri.org/RuntimeDataSet.xsd" xmlns="http://tempuri.org/RuntimeDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="RuntimeDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="RuntimeDataSet" msprop:Generator_UserDSName="RuntimeDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="RunningCommands" msprop:Generator_TableClassName="RunningCommandsDataTable" msprop:Generator_TableVarName="tableRunningCommands" msprop:Generator_RowChangedName="RunningCommandsRowChanged" msprop:Generator_TablePropName="RunningCommands" msprop:Generator_RowDeletingName="RunningCommandsRowDeleting" msprop:Generator_RowChangingName="RunningCommandsRowChanging" msprop:Generator_RowEvHandlerName="RunningCommandsRowChangeEventHandler" msprop:Generator_RowDeletedName="RunningCommandsRowDeleted" msprop:Generator_RowClassName="RunningCommandsRow" msprop:Generator_UserTableName="RunningCommands" msprop:Generator_RowEvArgName="RunningCommandsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TaskGuid" msdata:DataType="System.Guid, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Generator_ColumnVarNameInTable="columnTaskGuid" msprop:Generator_ColumnPropNameInRow="TaskGuid" msprop:Generator_ColumnPropNameInTable="TaskGuidColumn" msprop:Generator_UserColumnName="TaskGuid" type="xs:string" />
+              <xs:element name="Description" msprop:Generator_ColumnVarNameInTable="columnDescription" msprop:Generator_ColumnPropNameInRow="Description" msprop:Generator_ColumnPropNameInTable="DescriptionColumn" msprop:Generator_UserColumnName="Description" type="xs:string" minOccurs="0" />
+              <xs:element name="RunState" msprop:Generator_ColumnVarNameInTable="columnRunState" msprop:Generator_ColumnPropNameInRow="RunState" msprop:Generator_ColumnPropNameInTable="RunStateColumn" msprop:Generator_UserColumnName="RunState" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:RunningCommands" />
+      <xs:field xpath="mstns:TaskGuid" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

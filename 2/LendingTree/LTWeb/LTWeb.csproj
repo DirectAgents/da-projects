@@ -215,7 +215,31 @@
     <Content Include="Content\images\house-logo.gif" />
     <Content Include="Content\images\icon-lock.png" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\new\bg-narrow-repeat.png" />
+    <Content Include="Content\images\new\bg-narrowgreen-end.png" />
+    <Content Include="Content\images\new\bg-narrowgreen.png" />
+    <Content Include="Content\images\new\btn-continue.jpg" />
+    <Content Include="Content\images\new\btn-showresults.jpg" />
+    <Content Include="Content\images\new\down_arrow_select.jpg" />
+    <Content Include="Content\images\new\get-free-quotes-now.jpg" />
+    <Content Include="Content\images\new\icon-lock.png" />
+    <Content Include="Content\images\new\lendingtree-bg-left.jpg" />
+    <Content Include="Content\images\new\lendingtree-bg-lright.jpg" />
+    <Content Include="Content\images\new\lendingtree-bg.jpg" />
+    <Content Include="Content\images\new\lenny-new-first.png" />
+    <Content Include="Content\images\new\lenny-new-five-option1.png" />
+    <Content Include="Content\images\new\lenny-new-five-option2.png" />
+    <Content Include="Content\images\new\lenny-new-four.png" />
+    <Content Include="Content\images\new\lenny-new-second.png" />
+    <Content Include="Content\images\new\lenny-new-seven.png" />
+    <Content Include="Content\images\new\lenny-new-six.png" />
+    <Content Include="Content\images\new\lenny-new-three.png" />
+    <Content Include="Content\images\new\logo.png" />
+    <Content Include="Content\images\new\orange-bar-continue.png" />
+    <Content Include="Content\images\new\orange-bar-left.png" />
+    <Content Include="Content\images\new\small-lock.png" />
     <Content Include="Content\images\privacy-security-logo.gif" />
+    <Content Include="Content\images\question-mark.gif" />
     <Content Include="Content\images\siteseal_gd_3_h_d_m.gif" />
     <Content Include="Content\images\x.gif" />
     <Content Include="Content\kendo\2012.3.1114\Black\editor.png" />
@@ -327,6 +351,7 @@
     <Content Include="Content\kendo\2012.3.1114\Uniform\slider-v.gif" />
     <Content Include="Content\kendo\2012.3.1114\Uniform\sprite.png" />
     <Content Include="Content\style.css" />
+    <Content Include="Content\style_IE.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -385,6 +410,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Test\LeadService.cshtml" />
+    <Content Include="Content\images\new\lendingtree-bg.psd" />
     <None Include="Properties\PublishProfiles\LTWeb.pubxml" />
     <None Include="Properties\PublishProfiles\LTWebLive.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -954,7 +980,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>62247</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

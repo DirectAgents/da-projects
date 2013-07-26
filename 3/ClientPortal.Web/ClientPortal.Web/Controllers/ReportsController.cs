@@ -337,7 +337,7 @@ namespace ClientPortal.Web.Controllers
                                                         advertiserId: GetAdvertiserId(),
                                                         offerId: null);
 
-                var data = clicksByDevice.Where(c => c.DeviceName != "Other");
+                var data = clicksByDevice.Where(c => c.DeviceName != "unknown");
 
                 decimal totalClicks = data.Sum(c => c.ClickCount);
 

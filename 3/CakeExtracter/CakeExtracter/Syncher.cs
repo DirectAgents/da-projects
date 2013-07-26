@@ -14,19 +14,6 @@ namespace CakeExtracter
     {
         private readonly CakeMarketing cake = new CakeMarketing(new CakeMarketingCache { Enabled = true });
 
-        public void Run(SyncherCommand cmd)
-        {
-            //var toDate = DateTime.Parse(cmd[2]);
-            //var mode = cmd[3];
-
-            //InitializeMetrics();
-
-            //for (int addDays = 0; addDays < (cmd.EndDate - cmd.StartDate).Days; addDays++)
-            //{
-            //    DoSynch(cmd.AdvertiserId, cmd.StartDate, addDays, mode);
-            //}
-        }
-
         /// <summary>
         /// Ensure the Metrics exists
         /// </summary>

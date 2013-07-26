@@ -12,6 +12,7 @@ namespace CakeExtracter.CakeMarketingApi.Entities
         public Offer Offer { get; set; }
         public Country Country { get; set; }
         public Region Region { get; set; }
+        public Device Device { get; set; }
         public Browser Browser { get; set; }
     }
 }

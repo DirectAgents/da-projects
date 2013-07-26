@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingAds", "..\BingAds\BingA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoreLinq", "..\..\morelinq\MoreLinq\MoreLinq.csproj", "{8642E81B-3414-4C13-914F-05A4E600FE49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter.ConsoleApplication", "..\CakeExtracter.ConsoleApplication\CakeExtracter.ConsoleApplication.csproj", "{5C9EEBEE-1F02-47F3-92B8-700542642C7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,6 +211,16 @@ Global
 		{8642E81B-3414-4C13-914F-05A4E600FE49}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8642E81B-3414-4C13-914F-05A4E600FE49}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8642E81B-3414-4C13-914F-05A4E600FE49}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

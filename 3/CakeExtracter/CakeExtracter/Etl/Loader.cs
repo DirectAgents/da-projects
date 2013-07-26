@@ -46,8 +46,14 @@ namespace CakeExtracter.Etl
                 Logger.Error(ex);
                 throw ex;
             }
+
+            AfterLoad();
         }
 
         protected abstract int Load(List<T> items);
+
+        protected virtual void AfterLoad()
+        {
+        }
     }
 }

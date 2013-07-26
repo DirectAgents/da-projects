@@ -35,19 +35,19 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     var pk4 = item["device"].Substring(0, 1);
                     var pk5 = item["clickType"].Substring(0, 1);
                     var source = new SearchDailySummary2
-                        {
-                            SearchCampaignId = pk1,
-                            Date = pk2,
-                            Network = pk3,
-                            Device = pk4,
-                            ClickType = pk5,
-                            Revenue = decimal.Parse(item["totalConvValue"]),
-                            Cost = decimal.Parse(item["cost"]),
-                            Orders = int.Parse(item["conv1PerClick"]),
-                            Clicks = int.Parse(item["clicks"]),
-                            Impressions = int.Parse(item["impressions"]),
-                            CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1 // NOTE: non USD (if exists) -1 for now
-                        };
+                    {
+                        SearchCampaignId = pk1,
+                        Date = pk2,
+                        Network = pk3,
+                        Device = pk4,
+                        ClickType = pk5,
+                        Revenue = decimal.Parse(item["totalConvValue"]),
+                        Cost = decimal.Parse(item["cost"]),
+                        Orders = int.Parse(item["conv1PerClick"]),
+                        Clicks = int.Parse(item["clicks"]),
+                        Impressions = int.Parse(item["impressions"]),
+                        CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1 // NOTE: non USD (if exists) -1 for now
+                    };
                     var target = db.Set<SearchDailySummary2>().Find(pk1, pk2, pk3, pk4, pk5);
                     if (target == null)
                     {

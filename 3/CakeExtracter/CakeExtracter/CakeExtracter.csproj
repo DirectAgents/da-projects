@@ -4,7 +4,7 @@
     <ProjectGuid>{3B6C5433-5392-4165-A7E4-4AA431A75BB3}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>CakeExtracter</RootNamespace>
     <AssemblyName>CakeExtracter</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -48,17 +48,24 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <Prefer32Bit>True</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <Prefer32Bit>True</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>CakeExtracter.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper">
       <HintPath>..\..\ClientPortal.Web\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\ClientPortal.Web\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="CsvHelper">
       <HintPath>..\..\ClientPortal.Web\packages\CsvHelper.1.17.0\lib\net40-client\CsvHelper.dll</HintPath>
@@ -83,6 +90,9 @@
     </Reference>
     <Reference Include="NDesk.Options">
       <HintPath>..\..\ClientPortal.Web\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\..\ClientPortal.Web\packages\Quartz.2.1.2\lib\net40\Quartz.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\..\ClientPortal.Web\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
@@ -157,11 +167,15 @@
     <Compile Include="CakeMarketingApi\Entities\Country.cs" />
     <Compile Include="CakeMarketingApi\Entities\Currency.cs" />
     <Compile Include="CakeMarketingApi\Entities\DateRangeTraffic.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Device.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferContractInfo.cs" />
     <Compile Include="CakeMarketingApi\Entities\PriceFormat.cs" />
     <Compile Include="CakeMarketingApi\Entities\Received.cs" />
     <Compile Include="CakeMarketingApi\Entities\Region.cs" />
+    <Compile Include="Commands\ScheduledCommand.cs" />
+    <Compile Include="Commands\ScheduledCommandJob.cs" />
     <Compile Include="Commands\SynchAdvertisersCommand.cs" />
+    <Compile Include="Commands\SynchClicksCommand2.cs" />
     <Compile Include="Commands\SynchConversionsCommand.cs" />
     <Compile Include="Commands\SynchCakeTrafficCommand.cs" />
     <Compile Include="Commands\SynchClicksCommand.cs" />
@@ -189,8 +203,6 @@
     <Compile Include="Common\ConsoleCommand.cs" />
     <Compile Include="Common\ConsoleCommandDispatcher.cs" />
     <Compile Include="Common\DateRange.cs" />
-    <Compile Include="Commands\SchedulerCommand.cs" />
-    <Compile Include="Commands\SyncherCommand.cs" />
     <Compile Include="Commands\SynchDailySummariesCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesXmlCommand.cs" />
     <Compile Include="Common\SqlUtility.cs" />
@@ -209,6 +221,7 @@
     <Compile Include="CakeMarketingApi\Entities\OfferDailySummary.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\AdvertisersLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\ClicksLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\Loaders\ClicksLoader2.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\ConversionsLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\OffersLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\TrafficLoader.cs" />
@@ -234,10 +247,7 @@
     <Compile Include="Mef\Composer.cs" />
     <Compile Include="MetricNames.cs" />
     <Compile Include="Logging\EnterpriseLibrary\ConsoleCustomTraceListener.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scheduler.cs" />
-    <Compile Include="SyncherRun.cs" />
     <Compile Include="Syncher.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
@@ -247,7 +257,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="CakeMarketingApi\CakeMarketingApi.cd" />
-    <None Include="CakeMarketingApi\Entities\Class Diagram.cd" />
+    <None Include="CakeMarketingApi\Entities\Entities.cd" />
     <None Include="Etl\Etl.cd" />
     <None Include="packages.config" />
   </ItemGroup>

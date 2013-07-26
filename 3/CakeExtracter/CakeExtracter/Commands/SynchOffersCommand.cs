@@ -15,6 +15,7 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            Logger.Info("Synching Daily Summaries");
             var extracter = new OffersExtracter();
             var loader = new OffersLoader();
             var extracterThread = extracter.Start();

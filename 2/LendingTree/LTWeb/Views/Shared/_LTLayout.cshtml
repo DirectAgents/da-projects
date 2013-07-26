@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/lt_css", "~/Content/themes/base/css")
+    <!--[if IE]>
+    @Styles.Render("~/Content/style_IE.css")
+    <![endif]-->
+
+
+
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <div class="website-wrapper">
         <div id="topheader" class="png">
-
-            <span id="tagline" class="inline">Get mortgage offers</span>
+            
+            
         </div>
         <div id="step1" class="board-content-data">
             <div class="left-rail inline">
@@ -22,13 +28,28 @@
                         and Save Money Now!</h2>
                 </div>
                 <div id="page1RailRates" class="stroke">
-                    <h2>Refinance Rates From</h2>
-                    @Html.Raw(LTWeb.Session.Admin["Rate1"])
-                    <h2>Affordable Mortgage Payments</h2>
 
+                     <div class="orange-bar">
+                    <div class="orange-bar-left"></div>
+                    <div class="orange-bar-continue"></div>
+                </div>  
+                 
+                    <h2>Refinance Rates From</h2>
+                    <div class="rate">
+                        <!--@LTWeb.Session.Admin["Rate1"]%-->
+                        3.13%
+                        
+                        <!--(@LTWeb.Session.Admin["Rate2"]% APR)*-->
+                        (3.13% APR)*
+                    </div>
+            
+                   
+                    
                 </div>
                 <div id="payments">
-                    @Html.Raw(LTWeb.Session.Admin["Rate2"])
+                    <h2 class="green">$200,000 mortgage for $898/month</h2>
+                    <h2 class="green">$300,000 mortgage for $1,286/month</h2>
+                    <h2 class="green">$400,000 mortgage for $1,714/month</h2>
                     <div class="disclosure">
                         <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/advertising-disclosures')">Full Advertising Disclosures
                         </a>
@@ -36,9 +57,17 @@
                 </div>
             </div>
 
+            
+
             <div id="form-fields" class="form-fields">
                 @RenderBody()
             </div>
+
+
+            <div class="orange-bar-right">
+                    
+                    <div class="orange-bar-continue-right"></div>
+                </div>  
 
             <div class="clear">
             </div>
@@ -53,16 +82,14 @@
                     <a target="_blank" href="http://quickmatch.lendingtree.com/LT_housing.asp">
                         <img src="~/Content/images/house-logo.gif" alt="house-logo" /></a>
                     <!--CERTIFICATE TRUST LOGO-->
+                    <p>
                     <span id="siteseal">
                         <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=2nOOUr9eTPDXWnZhyCuzuV3T0u15tx2nRXhbr6K9zjPWT8FdsYJea78Nk8"></script>
-                        <br />
-                        <a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/email/email-hosting.aspx"
-                            target="_blank">email hosting</a></span>
+                       
+                       
                     <!--END CERTIFICATE TRUST LOGO-->
-                    <p>
-                        Online Security:<a target="_blank" href="http://www.lendingtree.com/about-us/online-security/">
-                            <span>Protect Against Fraud</span></a>
                     </p>
+                      
                 </div>
                 <!--End .footer-logo-->
                 <div class="footer-text">
@@ -71,8 +98,10 @@
 
                     <br />
 
-                    <p style="text-align: left;font-size: 8.5pt; font-family: Arial,sans-serif; color: #9b9b9b">
-                        LendingTree, LLC is a Marketing Lead Generator and is a Duly Licensed Mortgage Broker, as required by law, with its main office located at 11115 Rushmore Dr., Charlotte, NC 28277, Telephone Number 866-501-2397. NMLS Unique Identifier #1136. LendingTree, LLC is known as LT Technologies in lieu of true name LendingTree, LLC in NY. LendingTree technology and processes are patented under U.S. Patent Nos. 6,385,594 and 6,611,816 and licensed under U.S. Patent Nos. 5,995,947 and 5,758,328. © 2013 LendingTree, LLC. All Rights Reserved. This site is directed at, and made available to, persons in the continental U.S., Alaska and Hawaii only.
+                    <p style="text-align: left;">
+                        
+
+                        LendingTree, LLC is a Marketing Lead Generator and is a Duly Licensed Mortgage Broker, as required by law, with its main office located at 11115 Rushmore Dr., Charlotte, NC 28277, Telephone Number 866-501-2397. NMLS Unique Identifier #1136. LendingTree, LLC is known as LT Technologies in lieu of true name LendingTree, LLC in NY. LendingTree technology and processes are patented under U.S. Patent Nos. 6,385,594 and 6,611,816 and licensed under U.S. Patent Nos. 5,995,947 and 5,758,328. © 2013 LendingTree, LLC. All Rights Reserved.
                     </p>
 
                 </div>

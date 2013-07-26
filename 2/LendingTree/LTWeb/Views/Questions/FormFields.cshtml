@@ -1,16 +1,80 @@
 ﻿@model LTWeb.Models.QuestionVM
 
+@if (Model.Key == "LoanType")
+{
+            <div id="lenny-first"></div>
+    <div id="progressbar" style="display:none"></div>
+    
+    
+}
+else if (Model.Key == "PropertyState")
+{
+            <div id="lenny-second"></div>
+    <div id="progressbar-label">Progress:&nbsp;</div>
+    
+}
+
+
+else if (Model.Key == "CreditRating"
+|| Model.Key == "PropertyType" || Model.Key == "PropertyUse" || Model.Key == "PropertyZip")
+{
+            <div id="lenny-six"></div>
+    <div id="progressbar-label">Progress:&nbsp;</div>
+}
+
+
+else if (Model.Key == "PropertyApproximateValue" || Model.Key == "EstimatedMortgageBalance" || Model.Key == "CashOut")
+{
+            <div id="lenny-three"></div>
+    <div id="progressbar-label">Progress:&nbsp;</div>
+}
+
+
+else if (Model.Key == "MonthlyPayment" || Model.Key == "BankruptcyDischarged" || Model.Key == "ForeclosureDischarged" || Model.Key == "IsVetran")
+{
+            <div id="lenny-seven"></div>
+    <div id="progressbar-label">Progress:&nbsp;</div>
+}
+
+
+else if (Model.Key == "FirstName" || Model.Key == "Address" || Model.Key == "Email" || Model.Key == "HomePhone")
+{
+            <div id="lenny-four"></div>
+    <div id="progressbar-label">Progress:&nbsp;</div>
+}
+
+
+else if (Model.Key == "SSN")
+{
+            <div id="lenny-five-option2"></div>
+    <div id="progressbar-label">Progress:&nbsp;</div>
+}
+
+
+
+
+
+
     <div id="page1FormHeader" class="png">
         <h2>Get FREE Quotes from Trusted Lenders</h2>
 
-        @if (LTWeb.Session.LTModel.SsnRequired) {
-            <h3 class="ssnOptional">&nbsp;</h3>
-        } else {
-            <h3 class="ssnOptional" style="margin-top: 0px">No SSN Required</h3>
+
+        @if (LTWeb.Session.LTModel.SsnRequired)
+        {
+            <!--<h3 class="ssnOptional">&nbsp;</h3>--><br /><br />
         }
-        <div id="progressbarcontainer" style="margin-left: 30px; margin-top: 25px">
-            <div style="float:left; color:black">Progress:&nbsp;</div>
-            <div id="progressbar" style="width:270px; height:18px"></div>
+        else
+        {
+            <!--<h3 class="ssnOptional" style="margin-top: 0px;">No SSN Required</h3>--><br /><br />
+        }
+        
+        <div id="progressbarcontainer">
+            
+            
+           
+
+           <div id="progressbar" style="width:270px; height:12px; margin-top:3px;"></div>
+             
         </div>
     </div>
     <div class="form-content png">
@@ -22,16 +86,23 @@
                     <div style="width:380px">
                         @if (!string.IsNullOrWhiteSpace(Model.Supertext))
                         {
-                            <span class="green">@Model.Supertext</span><br /><br />
+                            <span class="green-final-step">@Model.Supertext</span><br /><br />
                         }
                         <div>
-                            @if (Model.Key == "Complete") {
+                            @if (Model.Key == "Complete")
+                            {
                                 <p>@Model.Text</p>
-                            } else {
+                            }
+                            else
+                            {
                                 Html.RenderPartial("ShowInner");
                                 LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
                                 while (subquestion != null)
                                 {
+                                    if (subquestion.Key == "phone2")
+                                    {
+                                        continue;
+                                    }
                                     <br />
                                     <br />     
                                     <br />                                                                               
@@ -44,15 +115,24 @@
                     <br />
                     <br /> 
                     <br />                                               
-                    if (Model.Key != "Complete")
-                    {
+                            if (Model.Key != "Complete")
+                            {
                         <div>
-                            <div style="float: left; width: 400px; margin-right: 100px">
+                            <div style="float: left; width: 400px; margin-left: 20px">
                                 @*-------------*@
                                 @*     LOCK    *@
                                 @*-------------*@
                                 <div style="float: left; width: @(Model.IsFirstQuestion ? "30px" : "80px"); display: inline; margin-top: 20px;">
-                                    <div class="@(Model.IsFirstQuestion ? "security" : "security2")"></div>
+                                    
+                                    @if (Model.Key == "SSN")
+                                        {
+                                    
+                                        <div class="security3"></div>
+                                    
+                                    }else{
+                                      
+                                        <div class="@(Model.IsFirstQuestion ? "security" : "security2")"></div>
+                                    }
                                 </div>
                                 @*-------------*@
                                 @*SUBMIT BUTTON*@
@@ -66,11 +146,11 @@
                                 Html.RenderPartial("TermsConsent");
                             }
                         </div>
-                    }
-                    else
-                    {
+                            }
+                            else
+                            {
                         <iframe src="https://smarttrk.com/p.ashx?o=30253&t=@ViewBag.AppID" height="1" width="1" frameborder="0"></iframe>
-                    }
+                            }
                 }
             </div>
         </div>
