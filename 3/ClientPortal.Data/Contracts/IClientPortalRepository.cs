@@ -57,7 +57,7 @@ namespace ClientPortal.Data.Contracts
         IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? numWeeks, string channel = null);
         IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths);
         IQueryable<SearchStat> GetChannelStats(int? advertiserId);
-        IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end);
+        IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end, bool breakdown);
         IQueryable<SearchStat> GetAdgroupStats();
     }
 }

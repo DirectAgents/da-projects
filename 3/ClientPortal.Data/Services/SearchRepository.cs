@@ -9,9 +9,9 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
-        public IQueryable<SearchDailySummary> GetSearchDailySummaries(int? advertiserId, string channel, DateTime? start, DateTime? end, bool includeToday = false)
+        public IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, string channel, DateTime? start, DateTime? end, bool includeToday = false)
         {
-            var summaries = context.SearchDailySummaries.AsQueryable();
+            var summaries = context.SearchDailySummary2.AsQueryable();
 
             if (advertiserId.HasValue)
                 summaries = summaries.Where(s => s.SearchCampaign.AdvertiserId == advertiserId.Value);
@@ -134,28 +134,52 @@ namespace ClientPortal.Data.Services
             return googleStats.Concat(bingStats).AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end)
+        public IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end, bool breakdown)
         {
             if (!start.HasValue)
                 start = new DateTime(DateTime.Today.Year, 1, 1);
             if (!end.HasValue)
                 end = DateTime.Today.AddDays(-1);
 
-            var stats = GetSearchDailySummaries(advertiserId, channel, start, end)
-                .GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaign.SearchCampaignName })
-                .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
-                .Select(g => new SearchStat
-                {
-                    EndDate = end.Value,
-                    CustomByStartDate = start.Value,
-                    Channel = g.Key.Channel,
-                    Title = g.Key.SearchCampaignName,
-                    Impressions = g.Sum(s => s.Impressions),
-                    Clicks = g.Sum(s => s.Clicks),
-                    Orders = g.Sum(s => s.Orders),
-                    Revenue = g.Sum(s => s.Revenue),
-                    Cost = g.Sum(s => s.Cost)
-                });
+            var summaries = GetSearchDailySummaries(advertiserId, channel, start, end);
+            IQueryable<SearchStat> stats;
+            if (breakdown)
+            {
+                stats = summaries.GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaign.SearchCampaignName, s.Network, s.Device, s.ClickType })
+                    .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
+                    .Select(g => new SearchStat
+                    {
+                        EndDate = end.Value,
+                        CustomByStartDate = start.Value,
+                        Channel = g.Key.Channel,
+                        Title = g.Key.SearchCampaignName,
+                        Network = g.Key.Network,
+                        Device = g.Key.Device,
+                        ClickType = g.Key.ClickType,
+                        Impressions = g.Sum(s => s.Impressions),
+                        Clicks = g.Sum(s => s.Clicks),
+                        Orders = g.Sum(s => s.Orders),
+                        Revenue = g.Sum(s => s.Revenue),
+                        Cost = g.Sum(s => s.Cost)
+                    });
+            }
+            else
+            {
+                stats = summaries.GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaign.SearchCampaignName })
+                    .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
+                    .Select(g => new SearchStat
+                    {
+                        EndDate = end.Value,
+                        CustomByStartDate = start.Value,
+                        Channel = g.Key.Channel,
+                        Title = g.Key.SearchCampaignName,
+                        Impressions = g.Sum(s => s.Impressions),
+                        Clicks = g.Sum(s => s.Clicks),
+                        Orders = g.Sum(s => s.Orders),
+                        Revenue = g.Sum(s => s.Revenue),
+                        Cost = g.Sum(s => s.Cost)
+                    });
+            }
             return stats;
         }
 

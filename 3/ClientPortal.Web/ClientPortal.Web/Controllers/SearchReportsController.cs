@@ -100,7 +100,7 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate, string channel)
+        public JsonResult CampaignPerfData(KendoGridRequest request, string startdate, string enddate, string channel, bool breakdown = false)
         {
             var userInfo = GetUserInfo();
             var cultureInfo = userInfo.CultureInfo;
@@ -108,7 +108,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });
 
-            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end)
+            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end, breakdown)
                 .ToList()
                 .AsQueryable();
 
@@ -120,7 +120,7 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
-        public FileResult CampaignPerfExport(string startdate, string enddate)
+        public FileResult CampaignPerfExport(string startdate, string enddate, string channel, bool breakdown = false)
         {
             var userInfo = GetUserInfo();
             var cultureInfo = userInfo.CultureInfo;
@@ -128,7 +128,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
 
-            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, null, start, end)
+            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end, breakdown)
                 .OrderByDescending(s => s.Channel).ThenBy(s => s.Title);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
 
