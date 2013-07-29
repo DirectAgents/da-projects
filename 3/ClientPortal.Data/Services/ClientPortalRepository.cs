@@ -286,13 +286,25 @@ namespace ClientPortal.Data.Services
                 return null;
         }
 
-        public IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        public IList<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
             using (var db = new ClientPortalDWContext())
             {
                 var result = db.ClicksByDevice(advertiserId, start, end)
                     .OrderByDescending(c => c.ClickCount)
                     .ToList();
+
+                return result;
+            }
+        }
+
+        public IList<ConversionsByRegion> GetConversionCountsByRegion(DateTime start, DateTime end, int advertiserId)
+        {
+            using (var db = new ClientPortalDWContext())
+            {
+                var result = db.ConversionsByRegion(advertiserId, start, end)
+                               .OrderBy(c => c.ClickCount)
+                               .ToList();
 
                 return result;
             }

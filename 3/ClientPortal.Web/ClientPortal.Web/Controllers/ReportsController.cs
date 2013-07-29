@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
-using AutoMapper;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Web.Models;
-using CsvHelper;
 using DirectAgents.Mvc.KendoGridBinder;
 using StackExchange.Profiling;
 
@@ -272,50 +267,30 @@ namespace ClientPortal.Web.Controllers
             return PartialView("_HeatMap");
         }
 
-        //public JsonResult HeatMapData()
-        //{
-        //    var fromDate = new DateTime(2013, 5, 1);
-        //    var toDate = new DateTime(2013, 5, 30);
-        //    var advertiserId = GetAdvertiserId();
-
-        //    var clicks = cpRepo.GetClicks(fromDate, toDate, advertiserId, null);
-        //    var conversions = cpRepo.GetConversions(fromDate, toDate, advertiserId, null);
-
-        //    var query = from click in clicks
-        //                from conv in conversions
-        //                where click.click_id == conv.click_id
-        //                select new
-        //                {
-        //                    Region = click.region_code,
-        //                    Conversions = 1
-        //                };
-        //    var results = new List<object[]>();
-        //    var group = query.GroupBy(c => c.Region);
-        //    foreach (var grouping in group)
-        //    {
-        //        results.Add(new object[]
-        //            { 
-        //                "US-" + grouping.Key.ToUpper(), 
-        //                grouping.Sum(c => c.Conversions) 
-        //            });
-        //    }
-        //    results.Sort(new Comparer());
-        //    results.Insert(0, new[] { "State", "Conversions" });
-
-        //    var json = new JsonResult {
-        //        JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-        //        Data = results
-        //    };
-        //    return json;
-        //}
-
-        private class Comparer : IComparer<object[]>
+        public JsonResult HeatMapData()
         {
-            public int Compare(object[] x, object[] y)
+            var fromDate = new DateTime(2013, 7, 1);
+            var toDate = new DateTime(2013, 7, 30);
+            var advertiserId = GetAdvertiserId();
+            var profiler = MiniProfiler.Current;
+            using (profiler.Step("HeatMapData"))
             {
-                int a = (int)x[1];
-                int b = (int)y[1];
-                return (a < b) ? -1 : (a == b) ? 0 : 1;
+                var results = cpRepo.GetConversionCountsByRegion(fromDate, toDate, advertiserId.Value)
+                    .Select(c => new object[]
+                {
+                    "US-" + c.RegionCode,
+                    c.ClickCount // TODO: ClickCount is named wrong, should be ConversionCount
+                }).ToList();
+
+                results.Insert(0, new[] { "State", "Conversions" });
+
+                var json = new JsonResult
+                {
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                    Data = results
+                };
+
+                return json;
             }
         }
 

@@ -55,6 +55,9 @@ namespace ClientPortal.Web.Controllers
                     userProfile = usersContext.UserProfiles.FirstOrDefault(c => c.UserId == userID);
                 }
             }
+            else 
+                throw new Exception("web security not initialized");
+
             return userProfile;
         }
 

@@ -10,7 +10,7 @@ namespace ClientPortal.Web.Models
     public class UserInfo
     {
         public UserInfo(UserProfile userProfile, Advertiser advertiser)
-        {
+        {      
             this.UserProfile = userProfile;
             this.Advertiser = advertiser;
         }
@@ -30,7 +30,12 @@ namespace ClientPortal.Web.Models
 
         public string Culture
         {
-            get { return Advertiser.Culture; }
+            get 
+            {
+                if (Advertiser == null)
+                    return "en-US";
+                return Advertiser.Culture; 
+            }
         }
         public CultureInfo CultureInfo
         {
@@ -38,29 +43,57 @@ namespace ClientPortal.Web.Models
         }
         public bool ShowCPMRep
         {
-            get { return Advertiser.ShowCPMRep; }
+            get 
+            {
+                if (Advertiser == null)
+                    return false;
+                return Advertiser.ShowCPMRep;
+            }
         }
         public bool ShowConversionData
         {
-            get { return Advertiser.ShowConversionData; }
+            get 
+            {
+                if (Advertiser == null)
+                    return false;
+                return Advertiser.ShowConversionData; 
+            }
         }
         public string ConversionValueName
         {
-            get { return Advertiser.ConversionValueName; }
+            get
+            {
+                if (Advertiser == null)
+                    return null;
+                return Advertiser.ConversionValueName;
+            }
         }
         public bool ConversionValueIsNumber
         {
-            get { return Advertiser.ConversionValueIsNumber; }
+            get
+            {
+                if (Advertiser == null)
+                    return false;
+                return Advertiser.ConversionValueIsNumber; 
+            }
         }
 
         public bool HasSearch
         {
-            get { return Advertiser.HasSearch; }
+            get 
+            {
+                if (Advertiser == null)
+                    return false;
+                return Advertiser.HasSearch; 
+            }
         }
 
         public byte[] Logo
         {
-            get { return Advertiser == null ? null : Advertiser.Logo; }
+            get 
+            { 
+                return Advertiser == null ? null : Advertiser.Logo; 
+            }
         }
 
     }

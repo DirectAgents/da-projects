@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[FactClick] (
+CREATE TABLE [dbo].[FactClick] (
     [ClickKey]      INT      NOT NULL,
     [RegionKey]     INT      NOT NULL,
     [CountryKey]    INT      NOT NULL,
@@ -26,14 +26,20 @@
 
 
 
+
+
 GO
-CREATE NONCLUSTERED INDEX [IX_NC_ON_FactClick_CountryKey_AdvertiserKey_INC_ClickKey_RegionKey]
-    ON [dbo].[FactClick]([CountryKey] ASC, [AdvertiserKey] ASC)
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_NC_ON_FactClick_AdvertiserKey_DateKey_INC_ClickKey_RegionKey]
+    ON [dbo].[FactClick]([AdvertiserKey] ASC, [DateKey] ASC)
     INCLUDE([ClickKey], [RegionKey]);
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_NC_ON_FactClick_DateKey_AdvertiserKey]
-    ON [dbo].[FactClick]([DateKey] ASC, [AdvertiserKey] ASC)
+CREATE NONCLUSTERED INDEX [IX_NC_FactClick_AdvertiserKey_DateKey_INC_DeviceKey]
+    ON [dbo].[FactClick]([AdvertiserKey] ASC, [DateKey] ASC)
     INCLUDE([DeviceKey]);
 

@@ -55,5 +55,22 @@ namespace ClientPortal.Data.Contexts
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DeviceClicks>("ClicksByDevice", advertiserIdParameter, date1Parameter, date2Parameter);
         }
+    
+        public virtual ObjectResult<ConversionsByRegion> ConversionsByRegion(Nullable<int> advertiserId, Nullable<System.DateTime> date1, Nullable<System.DateTime> date2)
+        {
+            var advertiserIdParameter = advertiserId.HasValue ?
+                new ObjectParameter("advertiserId", advertiserId) :
+                new ObjectParameter("advertiserId", typeof(int));
+    
+            var date1Parameter = date1.HasValue ?
+                new ObjectParameter("date1", date1) :
+                new ObjectParameter("date1", typeof(System.DateTime));
+    
+            var date2Parameter = date2.HasValue ?
+                new ObjectParameter("date2", date2) :
+                new ObjectParameter("date2", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ConversionsByRegion>("ConversionsByRegion", advertiserIdParameter, date1Parameter, date2Parameter);
+        }
     }
 }

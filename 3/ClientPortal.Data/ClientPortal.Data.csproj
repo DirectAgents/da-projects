@@ -98,6 +98,9 @@
     <Compile Include="Contexts\ConversionData.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\ConversionsByRegion.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>

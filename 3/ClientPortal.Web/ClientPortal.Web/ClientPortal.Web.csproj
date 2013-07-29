@@ -617,6 +617,7 @@
     <Content Include="Areas\Admin\Views\Advertisers\EditContacts.cshtml" />
     <Content Include="Areas\Admin\Views\Advertisers\EditLogo.cshtml" />
     <Content Include="Areas\Admin\Views\Advertisers\CreateUserProfile.cshtml" />
+    <Content Include="Controllers\Class Diagrams\Controllers.cd" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - test.pubxml" />

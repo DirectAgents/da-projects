@@ -287,6 +287,11 @@
           <Parameter Name="date1" Type="datetime" Mode="In" />
           <Parameter Name="date2" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="spConversionsByRegion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="advertiserId" Type="int" Mode="In" />
+          <Parameter Name="date1" Type="datetime" Mode="In" />
+          <Parameter Name="date2" Type="datetime" Mode="In" />
+        </Function>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -347,6 +352,11 @@
             <End Role="FactConversion" EntitySet="FactConversions" />
           </AssociationSet>
           <FunctionImport Name="ClicksByDevice" ReturnType="Collection(ClientPortalDWModel.DeviceClicks)">
+            <Parameter Name="advertiserId" Mode="In" Type="Int32" />
+            <Parameter Name="date1" Mode="In" Type="DateTime" />
+            <Parameter Name="date2" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="ConversionsByRegion" ReturnType="Collection(ClientPortalDWModel.ConversionsByRegion)">
             <Parameter Name="advertiserId" Mode="In" Type="Int32" />
             <Parameter Name="date1" Mode="In" Type="DateTime" />
             <Parameter Name="date2" Mode="In" Type="DateTime" />
@@ -599,6 +609,10 @@
           <Property Type="String" Name="DeviceName" Nullable="false" MaxLength="250" />
           <Property Type="Int32" Name="ClickCount" Nullable="false" />
         </ComplexType>
+        <ComplexType Name="ConversionsByRegion">
+          <Property Type="String" Name="RegionCode" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="ClickCount" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -708,6 +722,14 @@
             <ResultMapping>
               <ComplexTypeMapping TypeName="ClientPortalDWModel.DeviceClicks">
                 <ScalarProperty Name="DeviceName" ColumnName="DeviceName" />
+                <ScalarProperty Name="ClickCount" ColumnName="ClickCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ConversionsByRegion" FunctionName="ClientPortalDWModel.Store.spConversionsByRegion">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ClientPortalDWModel.ConversionsByRegion">
+                <ScalarProperty Name="RegionCode" ColumnName="RegionCode" />
                 <ScalarProperty Name="ClickCount" ColumnName="ClickCount" />
               </ComplexTypeMapping>
             </ResultMapping>

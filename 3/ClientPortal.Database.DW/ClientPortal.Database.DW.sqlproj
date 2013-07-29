@@ -76,5 +76,6 @@
     <Build Include="dbo\Tables\DimDevice.sql" />
     <Build Include="dbo\Stored Procedures\spClicksByDevice.sql" />
     <PostDeploy Include="Post Deployment Scripts\InsertDimDateRows.sql" />
+    <Build Include="dbo\Stored Procedures\spConversionsByRegion.sql" />
   </ItemGroup>
 </Project>
