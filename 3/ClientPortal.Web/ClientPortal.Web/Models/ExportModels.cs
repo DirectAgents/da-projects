@@ -85,5 +85,9 @@ namespace ClientPortal.Web.Models
         public int Days { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+
+        public string Network { get; set; }
+        public string Device { get; set; }
+        public string ClickType { get; set; }
     }
 }

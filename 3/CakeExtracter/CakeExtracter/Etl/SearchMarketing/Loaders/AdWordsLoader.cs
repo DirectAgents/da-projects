@@ -26,24 +26,32 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 foreach (var item in items)
                 {
+                    var advertiserName = item["account"];
+                    var advertiserId = db.Advertisers.Single(c => c.AdvertiserName == advertiserName).AdvertiserId;
                     var campaignName = item["campaign"];
-                    var pk1 = db.SearchCampaigns.Single(c => c.SearchCampaignName == campaignName).SearchCampaignId;
+                    var pk1 = db.SearchCampaigns.Single(c => c.SearchCampaignName == campaignName && c.AdvertiserId == advertiserId && c.Channel == "google").SearchCampaignId;
                     var pk2 = DateTime.Parse(item["day"].Replace('-', '/'));
-                    var source = new SearchDailySummary
+                    var pk3 = item["campaignType"].Substring(0, 1);
+                    var pk4 = item["device"].Substring(0, 1);
+                    var pk5 = item["clickType"].Substring(0, 1);
+                    var source = new SearchDailySummary2
                     {
                         SearchCampaignId = pk1,
                         Date = pk2,
+                        Network = pk3,
+                        Device = pk4,
+                        ClickType = pk5,
                         Revenue = decimal.Parse(item["totalConvValue"]),
                         Cost = decimal.Parse(item["cost"]),
                         Orders = int.Parse(item["conv1PerClick"]),
                         Clicks = int.Parse(item["clicks"]),
                         Impressions = int.Parse(item["impressions"]),
-                        CurrencyId = item["currency"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
+                        CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                     };
-                    var target = db.Set<SearchDailySummary>().Find(pk1, pk2);
+                    var target = db.Set<SearchDailySummary2>().Find(pk1, pk2, pk3, pk4, pk5);
                     if (target == null)
                     {
-                        db.SearchDailySummaries.Add(source);
+                        db.SearchDailySummary2.Add(source);
                         addedCount++;
                     }
                     else
@@ -105,13 +113,15 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 foreach (var tuple in items.Select(c => Tuple.Create(c["account"], c["campaign"])).Distinct())
                 {
                     var advertiserName = tuple.Item1;
+                    var advertiser = db.Advertisers.Single(c => c.AdvertiserName == advertiserName);
                     var campaignName = tuple.Item2;
-                    if (!db.SearchCampaigns.Any(c => c.SearchCampaignName == campaignName))
+                    if (!db.SearchCampaigns.Any(c => c.SearchCampaignName == campaignName && c.AdvertiserId == advertiser.AdvertiserId && c.Channel == "google"))
                     {
                         db.SearchCampaigns.Add(new SearchCampaign
                         {
-                            Advertiser = db.Advertisers.Single(c => c.AdvertiserName == advertiserName),
-                            SearchCampaignName = campaignName
+                            Advertiser = advertiser,
+                            SearchCampaignName = campaignName,
+                            Channel = "google"
                         });
                         Logger.Info("Saving new SearchCampaign: {0} ({1})", campaignName, advertiserName);
                         db.SaveChanges();

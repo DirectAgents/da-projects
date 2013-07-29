@@ -11,6 +11,61 @@ namespace ClientPortal.Data.DTOs
         public string Channel { get; set; }
         public string Title { get; set; }
         public string Range { get; set; }
+
+        private string _network;
+        public string Network
+        {
+            set { _network = value; }
+            get
+            {
+                switch (_network)
+                {
+                    case "S":
+                        return "Search";
+                    case "D":
+                        return "Display";
+                    default:
+                        return _network;
+                }
+            }
+        }
+        private string _device;
+        public string Device
+        {
+            set { _device = value; }
+            get
+            {
+                switch (_device)
+                {
+                    case "C":
+                        return "Computer";
+                    case "M":
+                        return "Mobile";
+                    case "T":
+                        return "Tablet";
+                    default:
+                        return _device;
+                }
+            }
+        }
+        private string _clickType;
+        public string ClickType
+        {
+            set { _clickType = value; }
+            get
+            {
+                switch (_clickType)
+                {
+                    case "H":
+                        return "Headline";
+                    case "S":
+                        return "Sitelink";
+                    default:
+                        return _clickType;
+                }
+            }
+        }
+
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Orders { get; set; }

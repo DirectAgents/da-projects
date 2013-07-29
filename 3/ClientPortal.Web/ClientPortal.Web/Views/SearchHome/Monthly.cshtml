@@ -28,7 +28,7 @@
 <script>
     $(function () {
         var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData", "SearchReports")', null, false);
-        CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 0, true, false, null);
+        CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 0, true, false, false, null);
 
         CreateRevROASChart(monthsumDS, 'monthrevChart', 'Monthly Revenue vs. ROAS Performance');
         CreateOrderCPOChart(monthsumDS, 'monthorderChart', 'Monthly Orders vs. CPO Performance');
