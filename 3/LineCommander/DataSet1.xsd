@@ -12,19 +12,19 @@
   <xs:element name="DataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DataSet1" msprop:Generator_UserDSName="DataSet1">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Commands" msprop:Generator_TableClassName="CommandsDataTable" msprop:Generator_TableVarName="tableCommands" msprop:Generator_RowChangedName="CommandsRowChanged" msprop:Generator_TablePropName="Commands" msprop:Generator_RowDeletingName="CommandsRowDeleting" msprop:Generator_RowChangingName="CommandsRowChanging" msprop:Generator_RowEvHandlerName="CommandsRowChangeEventHandler" msprop:Generator_RowDeletedName="CommandsRowDeleted" msprop:Generator_RowClassName="CommandsRow" msprop:Generator_UserTableName="Commands" msprop:Generator_RowEvArgName="CommandsRowChangeEvent">
+        <xs:element name="Commands" msprop:Generator_TableClassName="CommandsDataTable" msprop:Generator_TableVarName="tableCommands" msprop:Generator_TablePropName="Commands" msprop:Generator_RowDeletingName="CommandsRowDeleting" msprop:Generator_RowChangingName="CommandsRowChanging" msprop:Generator_RowEvHandlerName="CommandsRowChangeEventHandler" msprop:Generator_RowDeletedName="CommandsRowDeleted" msprop:Generator_UserTableName="Commands" msprop:Generator_RowChangedName="CommandsRowChanged" msprop:Generator_RowEvArgName="CommandsRowChangeEvent" msprop:Generator_RowClassName="CommandsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CommandName" msprop:Generator_ColumnVarNameInTable="columnCommandName" msprop:Generator_ColumnPropNameInRow="CommandName" msprop:Generator_ColumnPropNameInTable="CommandNameColumn" msprop:Generator_UserColumnName="CommandName" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="CommandParameters" msprop:Generator_TableClassName="CommandParametersDataTable" msprop:Generator_TableVarName="tableCommandParameters" msprop:Generator_TablePropName="CommandParameters" msprop:Generator_RowDeletingName="CommandParametersRowDeleting" msprop:Generator_RowChangingName="CommandParametersRowChanging" msprop:Generator_RowEvHandlerName="CommandParametersRowChangeEventHandler" msprop:Generator_RowDeletedName="CommandParametersRowDeleted" msprop:Generator_UserTableName="CommandParameters" msprop:Generator_RowChangedName="CommandParametersRowChanged" msprop:Generator_RowEvArgName="CommandParametersRowChangeEvent" msprop:Generator_RowClassName="CommandParametersRow">
+        <xs:element name="CommandParameters" msprop:Generator_TableClassName="CommandParametersDataTable" msprop:Generator_TableVarName="tableCommandParameters" msprop:Generator_RowChangedName="CommandParametersRowChanged" msprop:Generator_TablePropName="CommandParameters" msprop:Generator_RowDeletingName="CommandParametersRowDeleting" msprop:Generator_RowChangingName="CommandParametersRowChanging" msprop:Generator_RowEvHandlerName="CommandParametersRowChangeEventHandler" msprop:Generator_RowDeletedName="CommandParametersRowDeleted" msprop:Generator_RowClassName="CommandParametersRow" msprop:Generator_UserTableName="CommandParameters" msprop:Generator_RowEvArgName="CommandParametersRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CommandName" msprop:Generator_ColumnVarNameInTable="columnCommandName" msprop:Generator_ColumnPropNameInRow="CommandName" msprop:Generator_ColumnPropNameInTable="CommandNameColumn" msprop:Generator_UserColumnName="CommandName" type="xs:string" minOccurs="0" />
               <xs:element name="ParameterName" msprop:Generator_ColumnVarNameInTable="columnParameterName" msprop:Generator_ColumnPropNameInRow="ParameterName" msprop:Generator_ColumnPropNameInTable="ParameterNameColumn" msprop:Generator_UserColumnName="ParameterName" type="xs:string" minOccurs="0" />
-              <xs:element name="ParameterValue" msprop:Generator_ColumnVarNameInTable="columnParameterValue" msprop:Generator_ColumnPropNameInRow="ParameterValue" msprop:Generator_ColumnPropNameInTable="ParameterValueColumn" msprop:Generator_UserColumnName="ParameterValue" type="xs:string" minOccurs="0" />
+              <xs:element name="ParameterValue" msprop:nullValue="_empty" msprop:Generator_ColumnPropNameInRow="ParameterValue" msprop:Generator_ColumnVarNameInTable="columnParameterValue" msprop:Generator_ColumnPropNameInTable="ParameterValueColumn" msprop:Generator_UserColumnName="ParameterValue" type="xs:string" minOccurs="0" />
               <xs:element name="ParameterType" msprop:Generator_ColumnVarNameInTable="columnParameterType" msprop:Generator_ColumnPropNameInRow="ParameterType" msprop:Generator_ColumnPropNameInTable="ParameterTypeColumn" msprop:Generator_UserColumnName="ParameterType" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
@@ -34,7 +34,7 @@
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="Commands_CommandParameters" msdata:parent="Commands" msdata:child="CommandParameters" msdata:parentkey="CommandName" msdata:childkey="CommandName" msprop:Generator_UserChildTable="CommandParameters" msprop:Generator_ChildPropName="GetCommandParametersRows" msprop:Generator_UserRelationName="Commands_CommandParameters" msprop:Generator_RelationVarName="relationCommands_CommandParameters" msprop:Generator_UserParentTable="Commands" msprop:Generator_ParentPropName="CommandsRow" />
+      <msdata:Relationship name="Commands_CommandParameters" msdata:parent="Commands" msdata:child="CommandParameters" msdata:parentkey="CommandName" msdata:childkey="CommandName" msprop:Generator_UserChildTable="CommandParameters" msprop:Generator_ChildPropName="GetCommandParametersRows" msprop:Generator_UserRelationName="Commands_CommandParameters" msprop:Generator_ParentPropName="CommandsRow" msprop:Generator_RelationVarName="relationCommands_CommandParameters" msprop:Generator_UserParentTable="Commands" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

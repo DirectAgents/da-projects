@@ -957,11 +957,11 @@ namespace LineCommander {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public string ParameterValue {
                 get {
-                    try {
-                        return ((string)(this[this.tableCommandParameters.ParameterValueColumn]));
+                    if (this.IsParameterValueNull()) {
+                        return string.Empty;
                     }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ParameterValue\' in table \'CommandParameters\' is DBNull.", e);
+                    else {
+                        return ((string)(this[this.tableCommandParameters.ParameterValueColumn]));
                     }
                 }
                 set {
