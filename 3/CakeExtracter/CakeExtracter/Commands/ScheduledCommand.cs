@@ -22,6 +22,7 @@ namespace CakeExtracter.Commands
         {
             this.scheduler = scheduler;
             this.consoleCommandToExecute = consoleCommandToExecute;
+
             IsCommand(this.consoleCommandToExecute.Command, "scheduled command: " + this.consoleCommandToExecute.Command);
         }
 
@@ -34,11 +35,21 @@ namespace CakeExtracter.Commands
 
         private int RunSchedule()
         {
-            string thisTypeName = this.GetType().FullName;
+            // Make sure this is a unique name, otherwise parallel jobs will not be scheduled
+            string thisTypeName = this.GetType().Name + "_" + this.consoleCommandToExecute.GetType().FullName + "_" + Guid.NewGuid().ToString();
 
-            var jobDetail = JobBuilder.Create<ScheduledCommandJob>()
-                    .WithIdentity("Job_" + thisTypeName, "Group_" + thisTypeName)
-                    .Build();
+            var jobDetailIdentity = "Job_" + thisTypeName;
+
+            var groupIdentity = "Group_" + thisTypeName;
+
+            Logger.Info("Scheduling with group identity {0}..", groupIdentity);
+
+            Logger.Info("Creating job detail with identity {0}..", jobDetailIdentity);
+
+            var jobDetail = JobBuilder
+                                .Create<ScheduledJob>()
+                                .WithIdentity(jobDetailIdentity, groupIdentity)
+                                .Build();
 
             var jobDataMap = jobDetail.JobDataMap;
             Type consoleCommandToExecuteType = this.consoleCommandToExecute.GetType();
@@ -51,18 +62,36 @@ namespace CakeExtracter.Commands
                                                                                     .GetValue(this.consoleCommandToExecute);
             }
 
+            var triggerIdentity = "Trigger_" + thisTypeName;
+
+            Logger.Info("Creating trigger with identity {0}..", triggerIdentity);
+
             var triggerBuilder = TriggerBuilder
                                     .Create()
-                                    .WithIdentity("Trigger_" + thisTypeName, "Group_" + thisTypeName)
+                                    .WithIdentity(triggerIdentity, groupIdentity)
                                     .WithSimpleSchedule(c => c.WithInterval(GetInterval()).RepeatForever());
+
             if (StartHoursFromNow > 0)
+            {
+                Logger.Info("Configuring trigger to start {0} hours from now..", StartHoursFromNow);
+
                 triggerBuilder.StartAt(DateTimeOffset.UtcNow.AddHours(StartHoursFromNow));
+            }
             else
+            {
+                Logger.Info("Configuring trigger to start now..");
+
                 triggerBuilder.StartNow();
+            }
 
             var trigger = triggerBuilder.Build();
+
             this.scheduler.ScheduleJob(jobDetail, trigger);
+
+            Logger.Warn("This thread will now effectively sleep forever (log message every minute) so the scheduler can run..");
+
             SleepLoopForever();
+
             return 0;
         }
 
@@ -86,13 +115,14 @@ namespace CakeExtracter.Commands
             return result;
         }
 
-        private static void SleepLoopForever()
+        private void SleepLoopForever()
         {
+            var runningCommandTypeName = this.consoleCommandToExecute.GetType().Name;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             while (true)
             {
-                Logger.Info("ScheduledSynchDailySummariesCommand running for {0}", stopwatch.Elapsed.ToString());
+                Logger.Info("Scheduled {0} running for {1}", runningCommandTypeName, stopwatch.Elapsed.ToString());
                 Thread.Sleep(TimeSpan.FromMinutes(1));
             }
         }
@@ -104,8 +134,9 @@ namespace CakeExtracter.Commands
 
         public override bool TrySetProperty(string propertyName, object propertyValue)
         {
-            return this.consoleCommandToExecute.TrySetProperty(propertyName, propertyValue) ||
-                    base.TrySetProperty(propertyName, propertyValue);
+            return this.consoleCommandToExecute.TrySetProperty(propertyName, propertyValue)
+                   ||
+                   base.TrySetProperty(propertyName, propertyValue);
         }
     }
 }

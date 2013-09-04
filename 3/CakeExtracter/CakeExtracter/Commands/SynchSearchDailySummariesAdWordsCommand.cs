@@ -7,21 +7,20 @@ using CakeExtracter.Etl.SearchMarketing.Loaders;
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class SynchSearchDailySummariesBingCommand : ConsoleCommand
+    public class SynchSearchDailySummariesAdWordsCommand : ConsoleCommand
     {
-        public SynchSearchDailySummariesBingCommand()
+        public SynchSearchDailySummariesAdWordsCommand()
         {
-            IsCommand("synchSearchDailySummariesBing", "synch SearchDailySummaries for Bing API Report");
-            HasRequiredOption<int>("v|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
-            HasRequiredOption<int>("a|accountId=", "Account Id", c => AccountId = c);
+            IsCommand("synchSearchDailySummariesAdWords", "synch SearchDailySummaries for Bing API Report");
+            HasRequiredOption<string>("v|clientCustomerId=", "Client Customer Id", c => ClientCustomerId = c);
             HasRequiredOption<DateTime>("s|startDate=", "Start Date", c => StartDate = c);
             HasRequiredOption<DateTime>("e|endDate=", "End Date", c => EndDate = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var extracter = new BingDailySummaryExtracter(AccountId, StartDate, EndDate);
-            var loader = new BingLoader(AdvertiserId);
+            var extracter = new AdWordsApiExtracter(ClientCustomerId, StartDate, EndDate);
+            var loader = new AdWordsApiLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
@@ -29,8 +28,7 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public int AdvertiserId { get; set; }
-        public int AccountId { get; set; }
+        public string ClientCustomerId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
     }

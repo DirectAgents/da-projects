@@ -121,10 +121,15 @@ namespace CakeExtracter.CakeMarketingApi
                 {
                     response = client.Clicks(request);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Logger.Warn("Caught an exception while extracting clicks, bailing out..");
                     yield break;
+                }
+
+                if (response == null)
+                {
+                    throw new Exception("Clicks client returned null response");
                 }
 
                 if (!response.Success)
@@ -137,7 +142,9 @@ namespace CakeExtracter.CakeMarketingApi
 
                 // return result
                 foreach (var click in response.Clicks)
+                {
                     yield return click;
+                }
 
                 // update stopping condition for loop
                 done = (response.RowCount < rowLimitForOneCall);

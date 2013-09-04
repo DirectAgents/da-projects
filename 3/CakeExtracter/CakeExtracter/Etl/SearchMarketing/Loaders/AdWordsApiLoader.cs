@@ -6,9 +6,7 @@ using ClientPortal.Data.Contexts;
 
 namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
-    // TODO: remove this class all together and then make AdWordsApiLoader accept an xml file without 
-    //       calling the Api
-    public class AdWordsLoader : Loader<Dictionary<string, string>>
+    public class AdWordsApiLoader : Loader<Dictionary<string, string>>
     {
         protected override int Load(List<Dictionary<string, string>> items)
         {
@@ -30,10 +28,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 {
                     var advertiserName = item["account"];
                     var advertiserId = db.Advertisers.Single(c => c.AdvertiserName == advertiserName).AdvertiserId;
-                    var campaignName = item["campaign"];
-                    var pk1 = db.SearchCampaigns.Single(c => c.SearchCampaignName == campaignName && c.AdvertiserId == advertiserId && c.Channel == "google").SearchCampaignId;
+                    var campaignId = int.Parse(item["campaignID"]);
+                    var pk1 = db.SearchCampaigns.Single(c => c.ExternalId == campaignId && c.AdvertiserId == advertiserId && c.Channel == "google").SearchCampaignId;
                     var pk2 = DateTime.Parse(item["day"].Replace('-', '/'));
-                    var pk3 = item["campaignType"].Substring(0, 1);
+                    var pk3 = item["network"].Substring(0, 1);
                     var pk4 = item["device"].Substring(0, 1);
                     var pk5 = item["clickType"].Substring(0, 1);
                     var source = new SearchDailySummary2
@@ -44,7 +42,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         Device = pk4,
                         ClickType = pk5,
                         Revenue = decimal.Parse(item["totalConvValue"]),
-                        Cost = decimal.Parse(item["cost"]),
+                        Cost = decimal.Parse(item["cost"]) / 1000000, // convert from mincrons to dollars
                         Orders = int.Parse(item["conv1PerClick"]),
                         Clicks = int.Parse(item["clicks"]),
                         Impressions = int.Parse(item["impressions"]),
@@ -70,7 +68,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             return itemCount;
         }
 
-        private void AddDependentAdvertisers(List<Dictionary<string, string>> items)
+        private static void AddDependentAdvertisers(List<Dictionary<string, string>> items)
         {
             using (var db = new ClientPortalContext())
             {
@@ -95,12 +93,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             advertiserId = lowAdvertiserId;
                         }
                         db.Advertisers.Add(new Advertiser
-                            {
-                                AdvertiserId = advertiserId,
-                                AdvertiserName = advertiserName,
-                                Culture = "en-US",
-                                HasSearch = true
-                            });
+                        {
+                            AdvertiserId = advertiserId,
+                            AdvertiserName = advertiserName,
+                            Culture = "en-US",
+                            HasSearch = true
+                        });
                         Logger.Info("Saving new Advertiser: {0} ({1})", advertiserName, advertiserId);
                         db.SaveChanges();
                     }
@@ -108,24 +106,35 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             }
         }
 
-        private void AddDependentSearchCampaigns(List<Dictionary<string, string>> items)
+        private static void AddDependentSearchCampaigns(List<Dictionary<string, string>> items)
         {
             using (var db = new ClientPortalContext())
             {
-                foreach (var tuple in items.Select(c => Tuple.Create(c["account"], c["campaign"])).Distinct())
+                foreach (var tuple in items.Select(c => Tuple.Create(c["account"], c["campaign"], c["campaignID"])).Distinct())
                 {
                     var advertiserName = tuple.Item1;
                     var advertiser = db.Advertisers.Single(c => c.AdvertiserName == advertiserName);
                     var campaignName = tuple.Item2;
-                    if (!db.SearchCampaigns.Any(c => c.SearchCampaignName == campaignName && c.AdvertiserId == advertiser.AdvertiserId && c.Channel == "google"))
+                    var campaignId = int.Parse(tuple.Item3);
+
+                    var existing = db.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId && c.AdvertiserId == advertiser.AdvertiserId && c.Channel == "google");
+
+                    if (existing == null)
                     {
                         db.SearchCampaigns.Add(new SearchCampaign
                         {
                             Advertiser = advertiser,
                             SearchCampaignName = campaignName,
-                            Channel = "google"
+                            Channel = "google",
+                            ExternalId = campaignId
                         });
                         Logger.Info("Saving new SearchCampaign: {0} ({1})", campaignName, advertiserName);
+                        db.SaveChanges();
+                    }
+                    else if(existing.SearchCampaignName != campaignName)
+                    {
+                        existing.SearchCampaignName = campaignName;
+                        Logger.Info("Saving updated SearchCampaign name: {0} ({1})", campaignName, advertiserName);
                         db.SaveChanges();
                     }
                 }
