@@ -96,5 +96,15 @@ namespace ClientPortal.Web.Models
             }
         }
 
+        public Tuple<DayOfWeek, DayOfWeek> SearchWeekDays
+        {
+            get
+            {
+                var firstDayOfWeek = (DayOfWeek)this.UserProfile.SearchWeekStartDay;
+                var secondDayOfWeek = (DayOfWeek)this.UserProfile.SearchWeekEndDay;
+                return Tuple.Create(firstDayOfWeek, secondDayOfWeek);
+            }
+        }
+
     }
 }

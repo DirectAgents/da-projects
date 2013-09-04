@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Google.Ads.Common</id>
+    <version>1.8.0</version>
+    <title>Ads API Dotnet Common Library</title>
+    <authors>Anash P. Oommen</authors>
+    <owners>Anash P. Oommen</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://developers.google.com/</projectUrl>
+    <iconUrl>https://ssl.gstatic.com/codesite/ph/images/search-48.gif</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>This library provides you with common functionality to access Google's Ads APIs.</description>
+    <summary>This library provides you with common functionality to access Google's Ads APIs.</summary>
+    <copyright>Copyright 2012, Google Inc. All Rights Reserved.</copyright>
+    <tags>Adwords DFP DFA AdxBuyer Doubleclick Google</tags>
+  </metadata>
+</package>

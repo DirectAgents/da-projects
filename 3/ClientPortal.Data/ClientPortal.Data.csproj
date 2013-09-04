@@ -196,6 +196,7 @@
     </Compile>
     <Compile Include="Contracts\IClientPortalRepository.cs" />
     <Compile Include="DTOs\AffiliateSummary.cs" />
+    <Compile Include="DTOs\CalenderWeek.cs" />
     <Compile Include="DTOs\DateRangeSummary.cs" />
     <Compile Include="DTOs\ConversionInfo.cs" />
     <Compile Include="DTOs\ConversionSummary.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="DTOs\DailyInfo.cs" />
     <Compile Include="DTOs\OfferInfo.cs" />
     <Compile Include="DTOs\SearchStat.cs" />
+    <Compile Include="DTOs\WeeklySearchStat.cs" />
     <Compile Include="Entities\Advertiser.cs" />
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

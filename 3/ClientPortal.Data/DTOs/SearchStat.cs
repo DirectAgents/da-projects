@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientPortal.Data.DTOs
 {
     public class SearchStat
     {
+        public string Campaign { get; set; }
         public string Channel { get; set; }
         public string Title { get; set; }
         public string Range { get; set; }
@@ -113,22 +110,6 @@ namespace ClientPortal.Data.DTOs
             get { return EndDate.AddDays((Days - 1) * -1); }
         }
 
-        //public int Year
-        //{
-        //    set { this.Date = new DateTime(value, 1, 1); }
-        //}
-        //public int Month // (note: set year first)
-        //{
-        //    set
-        //    {
-        //        this.Date = new DateTime(this.Date.Year, value, 1).AddMonths(1).AddDays(-1);
-        //        this.Days = this.Date.Day;
-
-        //        this.Range = ToRangeName(this.Date, false);
-        //        this.Title = Range;
-        //    }
-        //}
-
         // --- Initializers (monthly, weekly or custom date range) ---
 
         public DateTime MonthByMaxDate
@@ -159,21 +140,6 @@ namespace ClientPortal.Data.DTOs
                 this.Title = ToRangeName(monday, this.EndDate);
             }
         }
-
-        //public int Week
-        //{
-        //    set
-        //    {
-        //        this.Days = 7;
-
-        //        this.Date = new DateTime(2013, 1, 1).AddDays(value * 7);
-        //        while (this.Date.DayOfWeek != DayOfWeek.Sunday)
-        //            this.Date = this.Date.AddDays(-1);
-
-        //        this.Range = ToRangeName(this.Date, true);
-        //        this.Title = Range;
-        //    }
-        //}
 
         public DateTime CustomByStartDate // (note: set (end) Date first)
         {

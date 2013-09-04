@@ -1,15 +1,17 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using AutoMapper;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
 using ClientPortal.Data.Services;
 using ClientPortal.Web.Models;
 using DirectAgents.Mvc.KendoGridBinder;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -120,6 +122,79 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
+        public JsonResult CampaignPerfWeeklyData(string startdate, string enddate)
+        {
+            var userInfo = GetUserInfo();
+            var cultureInfo = userInfo.CultureInfo;
+            DateTime? start, end;
+
+            if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
+                return Json(new { });
+
+            // Get weekly search stats
+            var rows = cpRepo.GetCampaignWeekStats2(userInfo.AdvertiserId, start.Value, end.Value, userInfo.SearchWeekDays.Item1);
+
+            // Create DataTable
+            var dataTable = new DataTable("data");
+
+            // Add regular columns
+            dataTable.Columns.AddRange(new[]
+            {
+                new DataColumn("colChannel"),
+                new DataColumn("colCampaign"),
+                new DataColumn("colIsActive"),
+                new DataColumn("colShowing"),
+            });
+
+            // Local func to convert two dates into a column name
+            Func<DateTime, DateTime, string> strinfifyDates = 
+                (dt1, dt2) =>
+                    "col" + dt1.ToString("MM/dd").Replace("/", "_slash_") + "_space__dash__space_" + dt2.ToString("MM/dd").Replace("/", "_slash_");
+
+            // Select week column headers
+            var weekColumnHeaders = rows
+                                    .Select(c => new { c.StartDate, c.EndDate })
+                                    .Distinct()
+                                    .Select(c => strinfifyDates(c.StartDate, c.EndDate));
+
+            // Add week columns
+            foreach (var week in weekColumnHeaders)
+            {
+                dataTable.Columns.Add(week);
+            }
+
+            // Group by channel and campaign to process rows
+            var groups = rows.GroupBy(c => new { c.Channel, c.Campaign });
+
+            // Add a row for each group
+            foreach (var group in groups)
+            {
+                var dataRow = dataTable.NewRow();
+                var showing = group.All(c => c.ROAS == 0) ? "CPO" : "ROAS";
+                var isActive = true; // TODO: make real
+
+                dataRow.SetField("colChannel", group.Key.Channel);
+                dataRow.SetField("colCampaign", group.Key.Campaign);
+                dataRow.SetField("colIsActive", isActive);
+                dataRow.SetField("colShowing", showing);
+
+                foreach (var item in group)
+                {
+                    var columnName = strinfifyDates(item.StartDate, item.EndDate);
+                    var columnValue = (showing == "ROAS") ? item.ROAS: item.CPO;
+                    dataRow.SetField(columnName, columnValue);
+                }
+
+                dataTable.Rows.Add(dataRow);
+            }
+
+            // Create result
+            var json = new JsonNetResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            json.Data = new { data = dataTable };
+
+            return json;
+        }
+
         public FileResult CampaignPerfExport(string startdate, string enddate, string channel, bool breakdown = false)
         {
             var userInfo = GetUserInfo();
@@ -179,6 +254,55 @@ namespace ClientPortal.Web.Controllers
                 OrdersPerDay = new { agg = totalDays == 0 ? 0 : Math.Round((decimal)sumOrders / totalDays, 2) },
             };
             return aggregates;
+        }
+    }
+
+    public class JsonNetResult : JsonResult
+    {
+        //        public JsonRequestBehavior JsonRequestBehavior { get; set; }
+        //        public Encoding ContentEncoding { get; set; }
+        //        public string ContentType { get; set; }
+        //        public object Data { get; set; }
+
+        public JsonSerializerSettings SerializerSettings { get; set; }
+        public Formatting Formatting { get; set; }
+
+        public JsonNetResult()
+        {
+            Formatting = Formatting.None;
+            SerializerSettings = new JsonSerializerSettings();
+            JsonRequestBehavior = JsonRequestBehavior.DenyGet;
+        }
+
+        public override void ExecuteResult(ControllerContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException("context");
+
+            if (JsonRequestBehavior == JsonRequestBehavior.DenyGet
+                && String.Equals(context.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("This request has been blocked because sensitive information could be disclosed to third party web sites when this is used in a GET request. To allow GET requests, set JsonRequestBehavior to AllowGet.");
+            }
+
+            HttpResponseBase response = context.HttpContext.Response;
+
+            response.ContentType = !string.IsNullOrEmpty(ContentType)
+                                        ? ContentType
+                                        : "application/json";
+
+            if (ContentEncoding != null)
+                response.ContentEncoding = ContentEncoding;
+
+            if (Data != null)
+            {
+                var writer = new JsonTextWriter(response.Output) { Formatting = Formatting };
+
+                var serializer = JsonSerializer.Create(SerializerSettings);
+                serializer.Serialize(writer, Data);
+
+                writer.Flush();
+            }
         }
     }
 }

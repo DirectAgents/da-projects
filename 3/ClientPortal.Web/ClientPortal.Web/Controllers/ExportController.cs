@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
-using CsvHelper;
 using ClientPortal.Web.Models;
 
 namespace ClientPortal.Web.Controllers

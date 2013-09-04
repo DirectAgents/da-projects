@@ -1,12 +1,7 @@
-﻿using ClientPortal.Data.Contracts;
-using ClientPortal.Data.DTOs;
-using ClientPortal.Data.Services;
-using DirectAgents.Mvc.KendoGridBinder;
+﻿using System;
 using System.Web.Mvc;
-using System.Linq;
-using System;
+using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
-using System.Globalization;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -50,14 +45,27 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var start = new DateTime(2013, 6, 17);
-            var end = new DateTime(2013, 6, 23);
+            var today = DateTime.Today;
+            var start = new DateTime(today.Year, today.Month, 1);
+            var end = today;
             var model = new SearchReportModel()
             {
                 StartDate = start.ToString("d", userInfo.CultureInfo),
                 EndDate = end.ToString("d", userInfo.CultureInfo)
             };
             return PartialView(model);
+        }
+
+        // (add a report tab) 4. Add action method for partial view to generate tab content
+        public PartialViewResult CampaignWeekly()
+        {
+            var userInfo = GetUserInfo();
+
+            return PartialView(new SearchReportModel
+            {
+                StartDate = new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(-2).Month, 1).ToString("d", userInfo.CultureInfo),
+                EndDate = DateTime.Today.ToString("d", userInfo.CultureInfo)
+            });
         }
 
         public PartialViewResult AdgroupPerf()

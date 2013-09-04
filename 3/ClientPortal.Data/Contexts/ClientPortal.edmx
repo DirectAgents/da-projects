@@ -273,6 +273,7 @@
           <Property Name="SearchCampaignName" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="AdvertiserId" Type="int" Nullable="false" />
           <Property Name="Channel" Type="nvarchar" MaxLength="255" />
+          <Property Name="ExternalId" Type="int" />
         </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
@@ -317,6 +318,8 @@
           <Property Name="CakeAdvertiserId" Type="int" />
           <Property Name="QuickBooksCompanyId" Type="int" />
           <Property Name="QuickBooksAdvertiserId" Type="int" />
+          <Property Name="SearchWeekStartDay" Type="int" Nullable="false" />
+          <Property Name="SearchWeekEndDay" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
@@ -939,6 +942,7 @@
           <Property Type="String" Name="Channel" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
           <NavigationProperty Name="SearchDailySummaries" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary" />
+          <Property Type="Int32" Name="ExternalId" />
         </EntityType>
         <Association Name="FK_SearchCampaign_Advertiser">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -996,6 +1000,8 @@
           <Property Type="Int32" Name="CakeAdvertiserId" />
           <Property Type="Int32" Name="QuickBooksCompanyId" />
           <Property Type="Int32" Name="QuickBooksAdvertiserId" />
+          <Property Type="Int32" Name="SearchWeekStartDay" Nullable="false" />
+          <Property Type="Int32" Name="SearchWeekEndDay" Nullable="false" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -1235,6 +1241,7 @@
           <EntitySetMapping Name="SearchCampaigns">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchCampaign">
               <MappingFragment StoreEntitySet="SearchCampaign">
+                <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
                 <ScalarProperty Name="Channel" ColumnName="Channel" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="SearchCampaignName" ColumnName="SearchCampaignName" />
@@ -1256,6 +1263,8 @@
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="SearchWeekEndDay" ColumnName="SearchWeekEndDay" />
+                <ScalarProperty Name="SearchWeekStartDay" ColumnName="SearchWeekStartDay" />
                 <ScalarProperty Name="QuickBooksAdvertiserId" ColumnName="QuickBooksAdvertiserId" />
                 <ScalarProperty Name="QuickBooksCompanyId" ColumnName="QuickBooksCompanyId" />
                 <ScalarProperty Name="CakeAdvertiserId" ColumnName="CakeAdvertiserId" />

@@ -19,5 +19,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> CakeAdvertiserId { get; set; }
         public Nullable<int> QuickBooksCompanyId { get; set; }
         public Nullable<int> QuickBooksAdvertiserId { get; set; }
+        public int SearchWeekStartDay { get; set; }
+        public int SearchWeekEndDay { get; set; }
     }
 }

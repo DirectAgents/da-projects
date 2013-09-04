@@ -1,10 +1,10 @@
-﻿using CsvHelper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using CsvHelper;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -49,6 +49,11 @@ namespace ClientPortal.Web.Controllers
         {
             var output = new MemoryStream();
             var writer = new StreamWriter(output);
+
+            writer.WriteLine("Exported by Direct Agents Client Portal");
+            writer.WriteLine("on " + DateTime.Now.ToString());
+            writer.WriteLine();
+
             var csv = new CsvWriter(writer);
             csv.WriteRecords<T>(rows);
             writer.Flush();

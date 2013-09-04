@@ -63,9 +63,15 @@ namespace LineCommander
             }
         }
 
+        //
         // Click Run
+        //
         private void toolStripButton1_RunClicked(object sender, EventArgs e)
         {
+            // Make sure changes are flushed to the dataset
+            commandParametersDataGridView.EndEdit();
+            commandParametersBindingSource.EndEdit();
+
             ExecuteSelectedConsoleCommand();
         }
 
@@ -107,23 +113,34 @@ namespace LineCommander
             return commandsRow;
         }
 
+        //
         // Click Save
+        //
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
+            // Make sure changes are flushed to the dataset
             commandParametersDataGridView.EndEdit();
+            commandParametersBindingSource.EndEdit();
 
+            // Show the save dialog
             var fd = new SaveFileDialog();
             var fdr = fd.ShowDialog();
             if (fdr == System.Windows.Forms.DialogResult.OK)
             {
                 var saveFilePath = fd.FileName;
+
+                // Save the file
                 dataSet1.WriteXml(saveFilePath);
+
+                // Store path in user settings and save them
                 LineCommander.Properties.Settings.Default.SaveFilePath = saveFilePath;
                 LineCommander.Properties.Settings.Default.Save();
             }
         }
 
+        //
         // Click Load
+        //
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             var fd = new OpenFileDialog();

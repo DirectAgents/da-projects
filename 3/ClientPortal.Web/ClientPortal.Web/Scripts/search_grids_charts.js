@@ -1,15 +1,26 @@
 ﻿function CreateSummaryDataSource(url, readData, group) {
+
     var args = {
+
         serverAggregates: true,
+
         pageSize: 100,
+
         transport: {
+
             read: {
-                type: 'post',
-                dataType: 'json',
-                url: url,
-                data: readData
+
+                type: 'post', // hard coding transport to POST
+
+                dataType: 'json', // hard coding transport to JSON
+
+                url: url, // URL sent in
+
+                data: readData // func to read data sent in
+
             }
         },
+
         schema: {
             data: 'data',
             total: 'total',
@@ -102,7 +113,10 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
         detailInit: detailInit
     };
     if (sortable) {
-        args.sortable = { mode: 'multiple' };
+        args.sortable = {
+            mode: 'single',
+            allowUnsort: false
+        };
     } else {
         args.sortable = false;
     }
@@ -126,19 +140,19 @@ function DetailInit(e, url) {
 
 function CreateRevROASChart(dataSource, elId, title) {
     var series = [
-            { field: "Revenue", axis: "revenue", tooltip: { template: "Revenue: #= kendo.format('{0:C}',value) #" } },
-            { field: "ROAS", axis: "roas", tooltip: { template: "ROAS: #= kendo.format('{0:N0}',value) #%" }, type: "line" }
+            { field: "Revenue", axis: "revenue", tooltip: { template: "Revenue: #= kendo.format('{0:C}',value) #" }, markers: { type: "square" }, name: 'Revenue' },
+            { field: "ROAS", axis: "roas", tooltip: { template: "ROAS: #= kendo.format('{0:N0}',value) #%" }, type: "line", name: 'ROAS' }
     ];
     var valueAxis = [
-            { name: "roas", labels: { format: "{0:N0}%", step: 2 }, title: { text: "ROAS" } },
+            { name: "roas", labels: { format: "{0:N0}%", step: 2 }, title: { text: "ROAS" }},
             { name: "revenue", labels: { format: "C0", step: 2 }, title: { text: "Revenue" } }
     ];
     CreateSummaryChart(dataSource, elId, title, series, valueAxis);
 }
 function CreateOrderCPOChart(dataSource, elId, title) {
     var series = [
-            { field: "Orders", axis: "orders", tooltip: { template: "Orders: #= kendo.format('{0:N0}',value) #" } },
-            { field: "CPO", axis: "cpo", tooltip: { template: "CPO: #= kendo.format('{0:C}',value) #" }, type: "line" }
+            { field: "Orders", axis: "orders", tooltip: { template: "Orders: #= kendo.format('{0:N0}',value) #" }, markers: { type: 'square' }, name: 'Orders'},
+            { field: "CPO", axis: "cpo", tooltip: { template: "CPO: #= kendo.format('{0:C}',value) #" }, type: "line", name: 'CPO'}
     ];
     var valueAxis = [
             { name: "cpo", labels: { format: "C0", step: 2 }, title: { text: "CPO" } },
@@ -167,9 +181,9 @@ function CreateSummaryChart(dataSource, elId, title, series, valueAxis) {
             visible: true
         },
         legend: {
-            position: "left",
-            offsetX: 90,
-            offsetY: 0
+            position: "bottom",
+            //offsetX: 90,
+            //offsetY: 0
         }
     });
 }

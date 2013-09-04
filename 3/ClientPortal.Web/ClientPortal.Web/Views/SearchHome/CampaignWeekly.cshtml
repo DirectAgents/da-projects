@@ -1,0 +1,131 @@
+﻿@model ClientPortal.Web.Models.SearchReportModel
+
+@* Top Bar *@
+<div style="height: 40px;">
+    @* Start Date *@
+    <span
+        class="paddedlabel">Start:
+    </span>
+    <input 
+        id="searchStatsWeekly_startdate" 
+        name="startdate" 
+        type="text" 
+        value="@Model.StartDate" />
+    @* End Date *@
+    <span
+        class="paddedlabel">End:
+    </span>
+    <input 
+        id="searchStatsWeekly_enddate" 
+        name="enddate" 
+        type="text" 
+        value="@Model.EndDate" />
+    @* Filter Button *@
+    <a
+        class="button paddedbutton"
+        id="searchStatsWeekly_filterBtn"
+        href="#"
+        onclick="SearchStatsWeeklyRefreshGrid(); return false">Filter
+    </a>
+</div>
+@* Grid *@
+<div id="searchStatsWeeklyGrid"></div>
+
+<script>
+    $(function () {
+        $('#searchStatsWeekly_startdate').kendoDatePicker({ footer: ' ' });
+        $('#searchStatsWeekly_enddate').kendoDatePicker({ footer: ' ' });
+        SearchStatsWeeklyRefreshGrid();
+    });
+
+    function SearchStatsWeeklyRefreshGrid() {
+
+        // Clear the grid div
+        $("#searchStatsWeeklyGrid").html("");
+
+        // Create the data source
+        var ds = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("CampaignPerfWeeklyData", "SearchReports")',
+                    data: function () {
+                        return {
+                            startdate: $('#searchStatsWeekly_startdate').val(),
+                            enddate: $('#searchStatsWeekly_enddate').val()
+                        };
+                    }
+                }
+            },
+            schema: {
+                data: 'data'
+            }
+        });
+
+        // Async data get
+        ds.fetch(function () {
+
+            // Get the fetched data
+            var gridData = ds.data();
+
+            // Columns and fields
+            var fields = {};
+            var columns = [];
+
+            // Use first row of data
+            for (var col in gridData[0]) {
+
+                // Properties which are column names start with 'col'
+                var isCol = (/^col/).test(col);
+
+                if (isCol) {
+
+                    // Column properties which are dates start with 'col' followed by two digits
+                    var isDateCol = (/^col\d{2}/).test(col);
+
+                    columns.push({
+                        field: col,
+                        format: (isDateCol ? '{0:n2}%' : '{0}'),
+                        title: col 
+                                // Substitute formatting tokens
+                                .replace(/_space_/g, ' ') // space
+                                .replace(/_dash_/g, '-')  // -
+                                .replace(/_slash_/g, '/') // /
+                                .replace(/^col/, ''),     // get rid of initial 'col'
+                        headerAttributes: {
+                            // Make date columns bold
+                            style: 'font-weight: ' + (isDateCol ? 'bold' : 'normal')
+                        },
+                        // Set the column width
+                        width: (col == 'colIsActive' || col == 'colShowing')
+                                    ? '75px'
+                                    : (col == 'colCampaign')
+                                        ? '160px'
+                                        : '100px'
+                    });
+
+                    fields[col] = {
+                        type: (isDateCol ? 'number' : 'string')
+                    };
+                }
+            }
+
+            // Create Grid
+            $("#searchStatsWeeklyGrid").kendoGrid({
+                dataSource: {
+                    data: gridData,
+                    schema: {
+                        model: {
+                            id: 'colCampaign',
+                            fields: fields
+                        }
+                    }
+                },
+                height: 430,
+                sortable: true,
+                columns: columns
+            });
+        });
+    }
+</script>
