@@ -585,6 +585,18 @@ float: left; width: 200px; margin-left: 0px;
     margin-right: 15px;
 }
 
+#PurchasePrice, #DownPayment, #PropertyCity {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PurchasePrice-label, .DownPayment-label, .PropertyCity-label {
+    float: left;
+    margin-left: 20px;
+    width: 100px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
 
 #progressbarcontainer {
   background: url('images/new/bg-narrow-repeat.png') repeat-y scroll left top transparent;

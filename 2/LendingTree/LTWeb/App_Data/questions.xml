@@ -1,10 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <data>
-  <question key="LoanType" class="LoanType" text="Type of loan:" answertype="dropdown">
+  <question 
+    key="LoanType" 
+    class="LoanType" 
+    text="Type of loan:" 
+    answertype="dropdown">
     <option selected="" value="REFINANCE">Refinance Mortgage</option>
     <option value="PURCHASE">Purchase Home</option>
   </question>
-  <question key="PropertyState" id="PropertyState" text="Property State:" answertype="dropdown">
+  <question 
+    key="PropertyState"
+    id="PropertyState" 
+    text="Property State:"
+    answertype="dropdown">
     <option selected="" value="">Select state</option>
     <option value="AL">Alabama</option>
     <option value="AK">Alaska</option>
@@ -58,26 +66,48 @@
     <option value="WI">Wisconsin</option>
     <option value="WY">Wyoming</option>
   </question>
-  <question key="CreditRating" id="CreditRating" text="Credit Rating:" answertype="dropdown">
+  <question 
+    key="CreditRating" 
+    id="CreditRating" 
+    text="Credit Rating:" 
+    answertype="dropdown">
     <option value="EXCELLENT">Excellent</option>
     <option selected="" value="SOMECREDITPROBLEMS">Good</option>
     <option value="MAJORCREDITPROBLEMS">Fair</option>
     <option value="LITTLEORNOCREDITHISTORY">Poor</option>
   </question>
-  <question key="PropertyType" id="PropertyType" text="What type of property?" answertype="dropdown">
+  <question 
+    key="PropertyType" 
+    id="PropertyType" 
+    text="What type of property?" 
+    answertype="dropdown">
     <option selected="" value="SINGLEFAMDET">Single family home</option>
     <option value="SINGLEFAMATT">Townhome</option>
     <option value="LOWRISECONDO">Condo</option>
     <option value="2TO4UNITFAM">Multi family dwelling</option>
     <option value="MOBILEPERMANENT">Mobile/Manufactured Home</option>
   </question>
-  <question key="PropertyUse" id="PropertyUse" text="What is the purpose of this property?" answertype="dropdown">
+  <question 
+    key="PropertyUse" 
+    id="PropertyUse" 
+    text="What is the purpose of this property?" 
+    answertype="dropdown">
     <option selected="" value="OWNEROCCUPIED">Primary Residence</option>
     <option value="SECONDHOME">Secondary home</option>
     <option value="INVESTMENTPROPERTY">Investment Property</option>
   </question>
-  <question key="PropertyZip" text="Which zip code is the property in?" answertype="zipcode" />
-  <question key="PropertyApproximateValue" id="PropertyApproximateValue" text="What is the approximate value of the property?" subtext="(ok to estimate)" answertype="dropdown" dependencykey="LoanType" dependencyvalue="REFINANCE">
+  <question 
+    key="PropertyZip" 
+    text="Which zip code is the property in?" 
+    answertype="zipcode" />
+  <question 
+    key="PropertyApproximateValue" 
+    id="PropertyApproximateValue" 
+    text="What is the approximate value of the property?" 
+    subtext="(ok to estimate)" 
+    answertype="dropdown" 
+    dependencykey="LoanType" 
+    dependencyvalue="REFINANCE">
     <option selected="selected" value="">Select home value</option>
     <option value="100000">$90,001 - $100,000</option>
     <option value="110000">$100,001 - $110,000</option>
@@ -114,7 +144,14 @@
     <option value="1000000">$950,001 - $1,000,000</option>
     <option value="1000001">Over $1,000,000</option>
   </question>
-  <question key="EstimatedMortgageBalance" id="EstimatedMortgageBalance"  text="What is your total mortage balance?" subtext="(ok to estimate)" answertype="dropdown" dependencykey="LoanType" dependencyvalue="REFINANCE">
+  <question 
+    key="EstimatedMortgageBalance" 
+    id="EstimatedMortgageBalance"  
+    text="What is your total mortage balance?" 
+    subtext="(ok to estimate)" 
+    answertype="dropdown" 
+    dependencykey="LoanType" 
+    dependencyvalue="REFINANCE">
     <option selected="" value="">Select mortgage balance</option>
     <option value="9000">Less than $10,000</option>
     <option value="10000">$10,001 - $20,000</option>
@@ -159,7 +196,14 @@
     <option value="900001">$900,001 - $950,000</option>
     <option value="950001">$950,001 - $1,000,000</option>
   </question>
-  <question key="CashOut" id="CashOut" text="How much cash would you like to receive at closing?" subtext="(ok to estimate)" answertype="dropdown" dependencykey="LoanType" dependencyvalue="REFINANCE">
+  <question 
+    key="CashOut" 
+    id="CashOut" 
+    text="How much cash would you like to receive at closing?" 
+    subtext="(ok to estimate)" 
+    answertype="dropdown" 
+    dependencykey="LoanType" 
+    dependencyvalue="REFINANCE">
     <option selected="selected" value="0">$0 No Cash</option>
     <option value="5000">$1,000 - $5,000</option>
     <option value="10000">$5,001 - $10,000</option>
@@ -198,7 +242,14 @@
     <option value="400000">$380,001 - $400,000</option>
     <option value="400001">Over $400,000</option>
   </question>
-  <question key="MonthlyPayment" id="MonthlyPayment" text="What is your monthly mortgage payment?" subtext="(ok to estimate)" answertype="dropdown" dependencykey="LoanType" dependencyvalue="REFINANCE">
+  <question 
+    key="MonthlyPayment" 
+    id="MonthlyPayment" 
+    text="What is your monthly mortgage payment?" 
+    subtext="(ok to estimate)" 
+    answertype="dropdown" 
+    dependencykey="LoanType" 
+    dependencyvalue="REFINANCE">
     <option selected="selected" value="">Select payment </option>
     <option value="450">$401 - $500</option>
     <option value="550">$501 - $600</option>
@@ -212,6 +263,59 @@
     <option value="4750">$4,501 - $6,000</option>
     <option value="6250">$6,001 - $7,500</option>
     <option value="7501">Over $7,501</option>
+  </question>
+  <question
+    key="PurchasePrice"
+    id="PurchasePrice"
+    text="What is the approximate purchase price?"
+    subtext="(ok to estimate)"
+    answertype="dropdown"
+    dependencykey="LoanType"
+    dependencyvalue="PURCHASE">
+    <option selected="selected" value="">Select purchase price</option>
+    <option value="100000">Less than $100,000</option>
+    <option value="110000">$100,001 - $120,000</option>
+    <option value="130000">$120,001 - $140,000</option>
+    <option value="150000">$140,001 - $160,000</option>
+    <option value="170000">$160,001 - $180,000</option>
+    <option value="190000">$180,001 - $200,000</option>
+    <option value="225000">$200,001 - $250,000</option>
+    <option value="275000">$250,001 - $300,000</option>
+    <option value="325000">$300,001 - $350,000</option>
+    <option value="375000">$350,001 - $400,000</option>
+    <option value="425000">$400,001 - $450,000</option>
+    <option value="475000">$450,001 - $500,000</option>
+    <option value="525000">$500,001 - $550,000</option>
+    <option value="575000">$550,001 - $600,000</option>
+    <option value="625000">$600,001 - $650,000</option>
+    <option value="675000">$650,001 - $700,000</option>
+    <option value="725000">$700,001 - $750,000</option>
+    <option value="775000">$750,001 - $800,000</option>
+    <option value="825000">$800,001 - $850,000</option>
+    <option value="875000">$850,001 - $900,000</option>
+    <option value="925000">$900,001 - $950,000</option>
+    <option value="975000">$950,001 - $1,000,000</option>
+    <option value="1000001">Over $1 million</option>
+  </question>
+  <question
+    key="DownPayment"
+    id="DownPayment"
+    text="How much do you have available for a down payment?"
+    answertype="dropdown"
+    dependencykey="LoanType"
+    dependencyvalue="PURCHASE">
+    <option selected="selected" value="">Select down payment amount</option>
+    <option value="1">Less than 20%</option>
+    <option value="2">Exactly 20%</option>
+    <option value="3">Greater than 20%</option>
+  </question>
+  <question
+    key="PropertyCity"
+    id="PropertyCity"
+    text="Which city is the property in?"
+    answertype="freeform"
+    dependencykey="LoanType"
+    dependencyvalue="PURCHASE">
   </question>
   <question key="BankruptcyDischarged" id="BankruptcyDischarged" text="Have you ever had a bankruptcy?" subtext="(ok to estimate)" answertype="dropdown">
     <option selected="selected" value="NEVER">Never/Not in the last 7 years</option>
@@ -252,13 +356,13 @@
   <question key="HomePhone" text="Home Phone:" answertype="phone">
     <!--<question key="WorkPhone" text="Work Phone:" answertype="phone2" />-->
   </question>
-  <question key="SSN" text="Social Security Number:" answertype="ssn" 
+  <question key="SSN" text="Social Security Number:" answertype="ssn"
             subtext="(optional)"
             supertext=""
-            dependencykey="SsnRequired" 
+            dependencykey="SsnRequired"
             dependencyvalue="False" />
   <question key="SSN" text="Social Security Number:" answertype="ssn"
-            dependencykey="SsnRequired" 
+            dependencykey="SsnRequired"
             dependencyvalue="True" />
   <question key="Complete" text="Your information has been received. A LendingTree representative will be in contact with you shortly." answertype="" />
 </data>

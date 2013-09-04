@@ -2,14 +2,14 @@
 
 @if (Model.Key == "LoanType")
 {
-            <div id="lenny-first"></div>
-    <div id="progressbar" style="display:none"></div>
+    <div id="lenny-first"></div>
+    <div id="progressbar" style="display: none"></div>
     
     
 }
 else if (Model.Key == "PropertyState")
 {
-            <div id="lenny-second"></div>
+    <div id="lenny-second"></div>
     <div id="progressbar-label">Progress:&nbsp;</div>
     
 }
@@ -18,35 +18,41 @@ else if (Model.Key == "PropertyState")
 else if (Model.Key == "CreditRating"
 || Model.Key == "PropertyType" || Model.Key == "PropertyUse" || Model.Key == "PropertyZip")
 {
-            <div id="lenny-six"></div>
+    <div id="lenny-six"></div>
     <div id="progressbar-label">Progress:&nbsp;</div>
 }
 
 
 else if (Model.Key == "PropertyApproximateValue" || Model.Key == "EstimatedMortgageBalance" || Model.Key == "CashOut")
 {
-            <div id="lenny-three"></div>
+    <div id="lenny-three"></div>
     <div id="progressbar-label">Progress:&nbsp;</div>
 }
 
 
 else if (Model.Key == "MonthlyPayment" || Model.Key == "BankruptcyDischarged" || Model.Key == "ForeclosureDischarged" || Model.Key == "IsVetran")
 {
-            <div id="lenny-seven"></div>
+    <div id="lenny-seven"></div>
     <div id="progressbar-label">Progress:&nbsp;</div>
 }
 
 
 else if (Model.Key == "FirstName" || Model.Key == "Address" || Model.Key == "Email" || Model.Key == "HomePhone")
 {
-            <div id="lenny-four"></div>
+    <div id="lenny-four"></div>
     <div id="progressbar-label">Progress:&nbsp;</div>
 }
 
 
 else if (Model.Key == "SSN")
 {
-            <div id="lenny-five-option2"></div>
+    <div id="lenny-five-option2"></div>
+    <div id="progressbar-label">Progress:&nbsp;</div>
+}
+
+else if (Model.DependencyValue == "PURCHASE")
+{ 
+    <div id="lenny-second"></div>
     <div id="progressbar-label">Progress:&nbsp;</div>
 }
 
@@ -55,119 +61,126 @@ else if (Model.Key == "SSN")
 
 
 
-    <div id="page1FormHeader" class="png">
-        <h2>Get FREE Quotes from Trusted Lenders</h2>
+<div id="page1FormHeader" class="png">
+    <h2>Get FREE Quotes from Trusted Lenders</h2>
 
 
-        @if (LTWeb.Session.LTModel.SsnRequired)
-        {
-            <!--<h3 class="ssnOptional">&nbsp;</h3>--><br /><br />
-        }
-        else
-        {
-            <!--<h3 class="ssnOptional" style="margin-top: 0px;">No SSN Required</h3>--><br /><br />
-        }
-        
-        <div id="progressbarcontainer">
-            
-            
-           
+    @if (LTWeb.Session.LTModel.SsnRequired)
+    {
+        <!--<h3 class="ssnOptional">&nbsp;</h3>-->
+        <br />
+        <br />
+    }
+    else
+    {
+        <!--<h3 class="ssnOptional" style="margin-top: 0px;">No SSN Required</h3>-->
+        <br />
+        <br />
+    }
 
-           <div id="progressbar" style="width:270px; height:12px; margin-top:3px;"></div>
-             
-        </div>
+    <div id="progressbarcontainer">
+
+
+
+
+        <div id="progressbar" style="width: 270px; height: 12px; margin-top: 3px;"></div>
+
     </div>
-    <div class="form-content png">
-        <div class="dropdown-item" style="margin-top: 30px">
-            <div id="form_inner_1step">
-                @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = LTWeb.Settings.QuestionsFormId }))
-                {
-                    <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
-                    <div style="width:380px">
-                        @if (!string.IsNullOrWhiteSpace(Model.Supertext))
+</div>
+<div class="form-content png">
+    <div class="dropdown-item" style="margin-top: 30px">
+        <div id="form_inner_1step">
+            @using (Html.BeginForm("Save", "Questions", FormMethod.Post, new { id = LTWeb.Settings.QuestionsFormId }))
+            {
+                <input type="hidden" name="QuestionIndex" value="@Model.QuestionIndex" />
+                <div style="width: 380px">
+                    @if (!string.IsNullOrWhiteSpace(Model.Supertext))
+                    {
+                        <span class="green-final-step">@Model.Supertext</span><br />
+                        <br />
+                    }
+                    <div>
+                        @if (Model.Key == "Complete")
                         {
-                            <span class="green-final-step">@Model.Supertext</span><br /><br />
+                            <p>@Model.Text</p>
                         }
-                        <div>
-                            @if (Model.Key == "Complete")
+                        else
+                        {
+                            Html.RenderPartial("ShowInner");
+                            LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
+                            while (subquestion != null)
                             {
-                                <p>@Model.Text</p>
-                            }
-                            else
-                            {
-                                Html.RenderPartial("ShowInner");
-                                LTWeb.Models.QuestionVM subquestion = Model.SamePageQuestion;
-                                while (subquestion != null)
+                                if (subquestion.Key == "phone2")
                                 {
-                                    if (subquestion.Key == "phone2")
-                                    {
-                                        continue;
-                                    }
-                                    <br />
-                                    <br />     
-                                    <br />                                                                               
-                                    @Html.Partial("ShowInner", subquestion)
-                                    subquestion = subquestion.SamePageQuestion;
+                                    continue;
                                 }
+                            <br />
+                            <br />     
+                            <br />                                                                               
+                            @Html.Partial("ShowInner", subquestion)
+                                subquestion = subquestion.SamePageQuestion;
                             }
-                        </div>
+                        }
                     </div>
-                    <br />
-                    <br /> 
-                    <br />                                               
-                            if (Model.Key != "Complete")
-                            {
-                        <div>
-                            <div style="float: left; width: 400px; margin-left: 20px">
-                                @*-------------*@
-                                @*     LOCK    *@
-                                @*-------------*@
-                                <div style="float: left; width: @(Model.IsFirstQuestion ? "30px" : "80px"); display: inline; margin-top: 20px;">
+                </div>
+                <br />
+                <br /> 
+                <br />                                               
+                if (Model.Key != "Complete")
+                {
+                    <div>
+                        <div style="float: left; width: 400px; margin-left: 20px">
+                            @*-------------*@
+                            @*     LOCK    *@
+                            @*-------------*@
+                            <div style="float: left; width: @(Model.IsFirstQuestion ? "30px" : "80px"); display: inline; margin-top: 20px;">
+
+                                @if (Model.Key == "SSN")
+                                {
                                     
-                                    @if (Model.Key == "SSN")
-                                        {
+                                    <div class="security3"></div>
                                     
-                                        <div class="security3"></div>
-                                    
-                                    }else{
+                                }
+                                else
+                                {
                                       
-                                        <div class="@(Model.IsFirstQuestion ? "security" : "security2")"></div>
-                                    }
-                                </div>
-                                @*-------------*@
-                                @*SUBMIT BUTTON*@
-                                @*-------------*@
-                                <div style="float: left; width: 201px">
-                                    <input type="submit" onclick="Save(); return false" value="" id="SaveButton" class="@(Model.IsFirstQuestion ? "btnPage1" : Model.Key == "SSN" ? "btnPage3" : "btnPage2")" />
-                                </div>
+                                    <div class="@(Model.IsFirstQuestion ? "security" : "security2")"></div>
+                                }
                             </div>
-                            @if (Model.Key == "SSN")
-                            {
-                                Html.RenderPartial("TermsConsent");
-                            }
+                            @*-------------*@
+                            @*SUBMIT BUTTON*@
+                            @*-------------*@
+                            <div style="float: left; width: 201px">
+                                <input type="submit" onclick="Save(); return false" value="" id="SaveButton" class="@(Model.IsFirstQuestion ? "btnPage1" : Model.Key == "SSN" ? "btnPage3" : "btnPage2")" />
+                            </div>
                         </div>
-                            }
-                            else
-                            {
-                        <iframe src="https://smarttrk.com/p.ashx?o=30253&t=@ViewBag.AppID" height="1" width="1" frameborder="0"></iframe>
-                            }
+                        @if (Model.Key == "SSN")
+                        {
+                            Html.RenderPartial("TermsConsent");
+                        }
+                    </div>
                 }
-            </div>
+                else if (ViewBag.ShouldFirePixel)
+                {
+                    <iframe src="https://smarttrk.com/p.ashx?o=30253&t=@ViewBag.AppID" height="1" width="1" frameborder="0"></iframe>
+                }
+            }
         </div>
     </div>
-    <div class="form-fields-end png">&nbsp;</div>
+</div>
+<div class="form-fields-end png">&nbsp;</div>
 
 <script type="text/javascript">
     if (typeof InitializeProgressbar == 'function') InitializeProgressbar(@Model.Progress);
 </script>
 
 @section Scripts {
-<script type="text/javascript">
+    <script type="text/javascript">
 
-var processing = false;
+        var processing = false;
 
-(function(window,undefined){
-    InitializeProgressbar(@Model.Progress); //after full page load
+        (function (window, undefined) {
+            InitializeProgressbar(@Model.Progress); //after full page load
     $.ajaxSetup({ cache: false });
 
     var History = window.History;
@@ -185,5 +198,5 @@ var processing = false;
 
 // TODO: initialize validation?
 
-</script>
+    </script>
 }

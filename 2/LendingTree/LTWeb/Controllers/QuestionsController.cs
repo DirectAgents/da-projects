@@ -86,18 +86,15 @@ namespace LTWeb.Controllers
             if (nextQuestionVM.Key == "Complete")
             {
                 // submit to LendingTree & save to db
-                //
-
                 var service = new LendingTreeService();
                 var result = service.Send(LendingTreeModel);
-
-                // TODO!!!: pixel code (put into Admin?)
-
                 // TODO: handle errors
+
+                // Pixel only fires on ReFi
+                ViewBag.ShouldFirePixel = (LendingTreeModel.LoanType == "REFINANCE");
 
                 ViewBag.AppID = LendingTreeModel.AppID; // gets inserted into pixel
 
-                //return Content("send result is " + result.IsSuccess.ToString());
                 return PartialView("FormFields", nextQuestionVM);
             }
             else
