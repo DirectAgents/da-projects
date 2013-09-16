@@ -93,7 +93,9 @@ namespace LTWeb.Controllers
                 // Pixel only fires on ReFi
                 ViewBag.ShouldFirePixel = (LendingTreeModel.LoanType == "REFINANCE");
 
-                ViewBag.AppID = LendingTreeModel.AppID; // gets inserted into pixel
+                ViewBag.AppID = LendingTreeModel.AppID; // gets inserted into Cake pixel and securepaths.com pixel
+
+                ViewBag.SubID = LendingTreeModel.AffiliateSiteID ?? "-1"; // gets inserted into securepaths.com pixel
 
                 return PartialView("FormFields", nextQuestionVM);
             }
