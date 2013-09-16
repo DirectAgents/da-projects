@@ -31,8 +31,8 @@ namespace ClientPortal.Data.Contexts
         public Nullable<System.DateTime> LastSent { get; set; }
         public Nullable<System.DateTime> NextSend { get; set; }
     
-        public virtual Advertiser Advertiser { get; set; }
         public virtual ICollection<GeneratedReport> GeneratedReports { get; set; }
         public virtual ICollection<ScheduledReportRecipient> ScheduledReportRecipients { get; set; }
+        public virtual Advertiser Advertiser { get; set; }
     }
 }

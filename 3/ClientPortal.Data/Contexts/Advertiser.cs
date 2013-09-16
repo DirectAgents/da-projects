@@ -16,10 +16,10 @@ namespace ClientPortal.Data.Contexts
     {
         public Advertiser()
         {
+            this.ScheduledReports = new HashSet<ScheduledReport>();
             this.AdvertiserContacts = new HashSet<AdvertiserContact>();
             this.FileUploads = new HashSet<FileUpload>();
             this.Goals = new HashSet<Goal>();
-            this.ScheduledReports = new HashSet<ScheduledReport>();
             this.SearchCampaigns = new HashSet<SearchCampaign>();
         }
     
@@ -32,11 +32,15 @@ namespace ClientPortal.Data.Contexts
         public string ConversionValueName { get; set; }
         public bool ConversionValueIsNumber { get; set; }
         public bool HasSearch { get; set; }
+        public bool AutomatedReportsEnabled { get; set; }
+        public string AutomatedReportsDestinationEmail { get; set; }
+        public int AutomatedReportsPeriodDays { get; set; }
+        public Nullable<System.DateTime> AutomatedReportsNextSendAfter { get; set; }
     
+        public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }
         public virtual ICollection<FileUpload> FileUploads { get; set; }
         public virtual ICollection<Goal> Goals { get; set; }
-        public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
         public virtual ICollection<SearchCampaign> SearchCampaigns { get; set; }
     }
 }

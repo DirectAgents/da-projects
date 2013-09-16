@@ -15,25 +15,39 @@
 </p>
 <table>
     <tr>
+        <th></th>
         <th>@Ajax.ActionLink("Id", "Index", new { sort="AdvertiserId" }, ajaxOptions)</th>
         <th>@Ajax.ActionLink("Name", "Index", new { sort="AdvertiserName" }, ajaxOptions)</th>
+        <th style="text-align:center">Profile</th>        
         <th>Culture</th>
         <th>ShowCPM?</th>
         <th>ConVal</th>
         <th>Show?</th>
-        <th>IsNum?</th>
-        <th style="text-align:center">Profile</th>
+        <th>IsNum?</th> 
         <th style="text-align:center">Logo</th>
-        <th></th>
+        <th>Reports<br />Enabled?</th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Ajax.ActionLink("Edit", "Edit", new { id=item.AdvertiserId }, ajaxOptions) |
+            @Ajax.ActionLink("Edit Contacts", "EditContacts", new { id=item.AdvertiserId }, ajaxOptions) |
+            @Ajax.ActionLink("Details", "Details", new { id=item.AdvertiserId }, ajaxOptions) |
+            @Ajax.ActionLink("Delete", "Delete", new { id=item.AdvertiserId }, ajaxOptions)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.AdvertiserId)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.AdvertiserName)
+        </td>
+        <td style="text-align:center">
+            @if (item.UserProfiles.Count() > 0) {
+                @(String.Join(", ", item.UserProfiles.Select(u => u.UserName).ToArray()))
+            } else {
+                @Ajax.ActionLink("create", "CreateUserProfile", new { id=item.AdvertiserId }, ajaxOptions)
+            }
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Culture)
@@ -51,20 +65,10 @@
             @Html.DisplayFor(modelItem => item.ConversionValueIsNumber)
         </td>
         <td style="text-align:center">
-            @if (item.UserProfiles.Count() > 0) {
-                @(String.Join(", ", item.UserProfiles.Select(u => u.UserName).ToArray()))
-            } else {
-                @Ajax.ActionLink("create", "CreateUserProfile", new { id=item.AdvertiserId }, ajaxOptions)
-            }
-        </td>
-        <td style="text-align:center">
             @Ajax.ActionLink((item.Logo == null ? "add" : "edit"), "EditLogo", new { id=item.AdvertiserId }, ajaxOptions)
         </td>
         <td>
-            @Ajax.ActionLink("Edit", "Edit", new { id=item.AdvertiserId }, ajaxOptions) |
-            @Ajax.ActionLink("Edit Contacts", "EditContacts", new { id=item.AdvertiserId }, ajaxOptions) |
-            @Ajax.ActionLink("Details", "Details", new { id=item.AdvertiserId }, ajaxOptions) |
-            @Ajax.ActionLink("Delete", "Delete", new { id=item.AdvertiserId }, ajaxOptions)
+            @Html.DisplayFor(modelItem => item.AutomatedReportsEnabled)
         </td>
     </tr>
 }

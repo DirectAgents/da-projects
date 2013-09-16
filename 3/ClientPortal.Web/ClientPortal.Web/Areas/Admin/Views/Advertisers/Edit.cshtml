@@ -70,6 +70,30 @@
             @Html.ValidationMessageFor(model => model.ConversionValueIsNumber)
         </div>
 
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AutomatedReportsEnabled)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.AutomatedReportsEnabled)
+            @Html.ValidationMessageFor(model => model.AutomatedReportsEnabled)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AutomatedReportsDestinationEmail)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.AutomatedReportsDestinationEmail)
+            @Html.ValidationMessageFor(model => model.AutomatedReportsDestinationEmail)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AutomatedReportsPeriodDays)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.AutomatedReportsPeriodDays)
+            @Html.ValidationMessageFor(model => model.AutomatedReportsPeriodDays)
+        </div>
+
         <p>
             <input type="submit" value="Save" />
         </p>

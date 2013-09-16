@@ -24,7 +24,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
     
-        public virtual Advertiser Advertiser { get; set; }
         public virtual Offer Offer { get; set; }
+        public virtual Advertiser Advertiser { get; set; }
     }
 }

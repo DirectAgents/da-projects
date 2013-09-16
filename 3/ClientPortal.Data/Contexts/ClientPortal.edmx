@@ -96,6 +96,10 @@
           <Property Name="ConversionValueName" Type="nvarchar(max)" />
           <Property Name="ConversionValueIsNumber" Type="bit" Nullable="false" />
           <Property Name="HasSearch" Type="bit" Nullable="false" />
+          <Property Name="AutomatedReportsEnabled" Type="bit" Nullable="false" />
+          <Property Name="AutomatedReportsDestinationEmail" Type="nvarchar(max)" />
+          <Property Name="AutomatedReportsPeriodDays" Type="int" Nullable="false" />
+          <Property Name="AutomatedReportsNextSendAfter" Type="datetime" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -501,13 +505,8 @@
           <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
           <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
           <EntitySet Name="Goals" EntityType="ClientPortalModel.Goal" />
-          <EntitySet Name="Advertisers" EntityType="ClientPortalModel.Advertiser" />
           <EntitySet Name="AdvertiserContacts" EntityType="ClientPortalModel.AdvertiserContact" />
           <EntitySet Name="Contacts" EntityType="ClientPortalModel.Contact" />
-          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
-            <End Role="Advertiser" EntitySet="Advertisers" />
-            <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId" Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
             <End Role="Contact" EntitySet="Contacts" />
             <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
@@ -520,19 +519,7 @@
             <End Role="EmailedReport" EntitySet="EmailedReports" />
           </AssociationSet>
           <EntitySet Name="FileUploads" EntityType="ClientPortalModel.FileUpload" />
-          <AssociationSet Name="FK_FileUpload_Advertiser" Association="ClientPortalModel.FK_FileUpload_Advertiser">
-            <End Role="Advertiser" EntitySet="Advertisers" />
-            <End Role="FileUpload" EntitySet="FileUploads" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Goal_Advertiser" Association="ClientPortalModel.FK_Goal_Advertiser">
-            <End Role="Advertiser" EntitySet="Advertisers" />
-            <End Role="Goal" EntitySet="Goals" />
-          </AssociationSet>
           <EntitySet Name="ScheduledReports" EntityType="ClientPortalModel.ScheduledReport" />
-          <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.FK_AdvertiserScheduledReport">
-            <End Role="Advertiser" EntitySet="Advertisers" />
-            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
-          </AssociationSet>
           <AssociationSet Name="FK_ScheduledReportGeneratedReport" Association="ClientPortalModel.FK_ScheduledReportGeneratedReport">
             <End Role="ScheduledReport" EntitySet="ScheduledReports" />
             <End Role="GeneratedReport" EntitySet="GeneratedReports" />
@@ -555,10 +542,6 @@
           <EntitySet Name="SearchDailySummaries" EntityType="ClientPortalModel.SearchDailySummary" />
           <EntitySet Name="Conversions" EntityType="ClientPortalModel.Conversion" />
           <EntitySet Name="SearchCampaigns" EntityType="ClientPortalModel.SearchCampaign" />
-          <AssociationSet Name="FK_SearchCampaign_Advertiser" Association="ClientPortalModel.FK_SearchCampaign_Advertiser">
-            <End Role="Advertiser" EntitySet="Advertisers" />
-            <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
-          </AssociationSet>
           <AssociationSet Name="FK_SearchDailySummary_SearchCampaign" Association="ClientPortalModel.FK_SearchDailySummary_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
             <End Role="SearchDailySummary" EntitySet="SearchDailySummaries" />
@@ -573,6 +556,27 @@
           <AssociationSet Name="FK_SearchDailySummary2_SearchCampaign" Association="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
             <End Role="SearchDailySummary2" EntitySet="SearchDailySummary2" />
+          </AssociationSet>
+          <EntitySet Name="Advertisers" EntityType="ClientPortalModel.Advertiser" />
+          <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.FK_AdvertiserScheduledReport">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="ScheduledReport" EntitySet="ScheduledReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="AdvertiserContact" EntitySet="AdvertiserContacts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FileUpload_Advertiser" Association="ClientPortalModel.FK_FileUpload_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="FileUpload" EntitySet="FileUploads" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Goal_Advertiser" Association="ClientPortalModel.FK_Goal_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="Goal" EntitySet="Goals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCampaign_Advertiser" Association="ClientPortalModel.FK_SearchCampaign_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -633,27 +637,8 @@
           <Property Type="Decimal" Name="Target" Nullable="false" Precision="18" Scale="2" />
           <Property Type="DateTime" Name="StartDate" Precision="3" />
           <Property Type="DateTime" Name="EndDate" Precision="3" />
-          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Goal" ToRole="Advertiser" />
           <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Goal" ToRole="Offer" />
-        </EntityType>
-        <EntityType Name="Advertiser">
-          <Key>
-            <PropertyRef Name="AdvertiserId" />
-          </Key>
-          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
-          <Property Type="String" Name="AdvertiserName" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Binary" Name="Logo" MaxLength="Max" FixedLength="false" />
-          <Property Type="String" Name="Culture" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="ShowCPMRep" Nullable="false" />
-          <Property Type="Boolean" Name="ShowConversionData" Nullable="false" />
-          <Property Type="String" Name="ConversionValueName" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="Boolean" Name="ConversionValueIsNumber" Nullable="false" />
-          <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
-          <NavigationProperty Name="FileUploads" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="Advertiser" ToRole="FileUpload" />
-          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Advertiser" ToRole="Goal" />
-          <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
-          <Property Type="Boolean" Name="HasSearch" Nullable="false" />
-          <NavigationProperty Name="SearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="Advertiser" ToRole="SearchCampaign" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Goal" ToRole="Advertiser" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -663,8 +648,8 @@
           <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
           <Property Type="Int32" Name="ContactId" Nullable="false" />
           <Property Type="Int32" Name="Order" />
-          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="AdvertiserContact" ToRole="Advertiser" />
           <NavigationProperty Name="Contact" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Contact_ContactId" FromRole="AdvertiserContact" ToRole="Contact" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="AdvertiserContact" ToRole="Advertiser" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -676,20 +661,6 @@
           <Property Type="String" Name="Title" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Email" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
-          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="ClientPortalModel.AdvertiserContact" Role="AdvertiserContact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Advertiser">
-              <PropertyRef Name="AdvertiserId" />
-            </Principal>
-            <Dependent Role="AdvertiserContact">
-              <PropertyRef Name="AdvertiserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_AdvertiserContact_dbo_Contact_ContactId">
           <End Type="ClientPortalModel.Contact" Role="Contact" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -762,30 +733,6 @@
           <Property Type="Int32" Name="AdvertiserId" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="FileUpload" ToRole="Advertiser" />
         </EntityType>
-        <Association Name="FK_FileUpload_Advertiser">
-          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
-          <End Type="ClientPortalModel.FileUpload" Role="FileUpload" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Advertiser">
-              <PropertyRef Name="AdvertiserId" />
-            </Principal>
-            <Dependent Role="FileUpload">
-              <PropertyRef Name="AdvertiserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Goal_Advertiser">
-          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
-          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Advertiser">
-              <PropertyRef Name="AdvertiserId" />
-            </Principal>
-            <Dependent Role="Goal">
-              <PropertyRef Name="AdvertiserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EnumType Name="GoalType">
           <Member Name="Absolute" Value="1" />
           <Member Name="Percent" Value="2" />
@@ -807,22 +754,10 @@
           <Property Type="Boolean" Name="IsCumulative" Nullable="false" />
           <Property Type="DateTime" Name="LastSent" Precision="3" />
           <Property Type="DateTime" Name="NextSend" Precision="3" />
-          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="ScheduledReport" ToRole="Advertiser" />
           <NavigationProperty Name="GeneratedReports" Relationship="ClientPortalModel.FK_ScheduledReportGeneratedReport" FromRole="ScheduledReport" ToRole="GeneratedReport" />
           <NavigationProperty Name="ScheduledReportRecipients" Relationship="ClientPortalModel.FK_ScheduledReportScheduledReportRecipient" FromRole="ScheduledReport" ToRole="ScheduledReportRecipient" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="ScheduledReport" ToRole="Advertiser" />
         </EntityType>
-        <Association Name="FK_AdvertiserScheduledReport">
-          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
-          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Advertiser">
-              <PropertyRef Name="AdvertiserId" />
-            </Principal>
-            <Dependent Role="ScheduledReport">
-              <PropertyRef Name="AdvertiserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ScheduledReportGeneratedReport">
           <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="1" />
           <End Type="ClientPortalModel.GeneratedReport" Role="GeneratedReport" Multiplicity="*" />
@@ -940,22 +875,10 @@
           <Property Type="String" Name="SearchCampaignName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
           <Property Type="String" Name="Channel" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
           <NavigationProperty Name="SearchDailySummaries" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary" />
           <Property Type="Int32" Name="ExternalId" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
         </EntityType>
-        <Association Name="FK_SearchCampaign_Advertiser">
-          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
-          <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Advertiser">
-              <PropertyRef Name="AdvertiserId" />
-            </Principal>
-            <Dependent Role="SearchCampaign">
-              <PropertyRef Name="AdvertiserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SearchDailySummary_SearchCampaign">
           <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
           <End Type="ClientPortalModel.SearchDailySummary" Role="SearchDailySummary" Multiplicity="*" />
@@ -1036,6 +959,91 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Advertiser">
+          <Key>
+            <PropertyRef Name="AdvertiserId" />
+          </Key>
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="String" Name="AdvertiserName" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Binary" Name="Logo" MaxLength="Max" FixedLength="false" />
+          <Property Type="String" Name="Culture" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="ShowCPMRep" Nullable="false" />
+          <Property Type="Boolean" Name="ShowConversionData" Nullable="false" />
+          <Property Type="String" Name="ConversionValueName" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="ConversionValueIsNumber" Nullable="false" />
+          <Property Type="Boolean" Name="HasSearch" Nullable="false" />
+          <Property Type="Boolean" Name="AutomatedReportsEnabled" Nullable="false" />
+          <Property Type="String" Name="AutomatedReportsDestinationEmail" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="AutomatedReportsPeriodDays" Nullable="false" />
+          <Property Type="DateTime" Name="AutomatedReportsNextSendAfter" Precision="3" />
+          <NavigationProperty Name="ScheduledReports" Relationship="ClientPortalModel.FK_AdvertiserScheduledReport" FromRole="Advertiser" ToRole="ScheduledReport" />
+          <NavigationProperty Name="AdvertiserContacts" Relationship="ClientPortalModel.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" FromRole="Advertiser" ToRole="AdvertiserContact" />
+          <NavigationProperty Name="FileUploads" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="Advertiser" ToRole="FileUpload" />
+          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Advertiser" ToRole="Goal" />
+          <NavigationProperty Name="SearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="Advertiser" ToRole="SearchCampaign" />
+        </EntityType>
+        <Association Name="FK_AdvertiserScheduledReport">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.ScheduledReport" Role="ScheduledReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="ScheduledReport">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="ClientPortalModel.AdvertiserContact" Role="AdvertiserContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="AdvertiserContact">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FileUpload_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.FileUpload" Role="FileUpload" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="FileUpload">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Goal_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCampaign_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="SearchCampaign">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1084,21 +1092,6 @@
                 <ScalarProperty Name="OfferId" ColumnName="OfferId" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Advertisers">
-            <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
-              <MappingFragment StoreEntitySet="Advertiser">
-                <ScalarProperty Name="HasSearch" ColumnName="HasSearch" />
-                <ScalarProperty Name="ConversionValueIsNumber" ColumnName="ConversionValueIsNumber" />
-                <ScalarProperty Name="ConversionValueName" ColumnName="ConversionValueName" />
-                <ScalarProperty Name="ShowConversionData" ColumnName="ShowConversionData" />
-                <ScalarProperty Name="ShowCPMRep" ColumnName="ShowCPMRep" />
-                <ScalarProperty Name="Culture" ColumnName="Culture" />
-                <ScalarProperty Name="Logo" ColumnName="Logo" />
-                <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
-                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1287,6 +1280,25 @@
                 <ScalarProperty Name="Revenue" ColumnName="Revenue" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Advertisers">
+            <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
+              <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="AutomatedReportsNextSendAfter" ColumnName="AutomatedReportsNextSendAfter" />
+                <ScalarProperty Name="AutomatedReportsPeriodDays" ColumnName="AutomatedReportsPeriodDays" />
+                <ScalarProperty Name="AutomatedReportsDestinationEmail" ColumnName="AutomatedReportsDestinationEmail" />
+                <ScalarProperty Name="AutomatedReportsEnabled" ColumnName="AutomatedReportsEnabled" />
+                <ScalarProperty Name="HasSearch" ColumnName="HasSearch" />
+                <ScalarProperty Name="ConversionValueIsNumber" ColumnName="ConversionValueIsNumber" />
+                <ScalarProperty Name="ConversionValueName" ColumnName="ConversionValueName" />
+                <ScalarProperty Name="ShowConversionData" ColumnName="ShowConversionData" />
+                <ScalarProperty Name="ShowCPMRep" ColumnName="ShowCPMRep" />
+                <ScalarProperty Name="Culture" ColumnName="Culture" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

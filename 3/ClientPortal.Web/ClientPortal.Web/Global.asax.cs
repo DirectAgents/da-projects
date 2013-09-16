@@ -1,20 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Data.Entity.Migrations;
-using System.Linq;
+﻿using System.Configuration;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using AutoMapper;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.DTOs;
+using ClientPortal.Data.Services;
 using ClientPortal.Web.Models;
 using StackExchange.Profiling;
 using WebMatrix.WebData;
-using ClientPortal.Data.Contexts;
-using ClientPortal.Data.Services;
 
 namespace ClientPortal.Web
 {

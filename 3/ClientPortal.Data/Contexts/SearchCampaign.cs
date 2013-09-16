@@ -25,7 +25,7 @@ namespace ClientPortal.Data.Contexts
         public string Channel { get; set; }
         public Nullable<int> ExternalId { get; set; }
     
-        public virtual Advertiser Advertiser { get; set; }
         public virtual ICollection<SearchDailySummary> SearchDailySummaries { get; set; }
+        public virtual Advertiser Advertiser { get; set; }
     }
 }

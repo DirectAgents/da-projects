@@ -43,16 +43,16 @@ namespace ClientPortal.Web.Tests
             }
         }
 
-        [TestMethod]
-        public void Test_ClientPortalRepository_GetCampaignWeekStats()
-        {
-            using (var context = new ClientPortalContext())
-            {
-                var repo = new ClientPortalRepository(context);
-                var result = repo.GetCampaignWeekStats(90001, new DateTime(2013, 8, 1), new DateTime(2013, 8, 28));
-                Console.WriteLine(result.ToArray().ToJson());
-            }
-        }
+        //[TestMethod]
+        //public void Test_ClientPortalRepository_GetCampaignWeekStats()
+        //{
+        //    using (var context = new ClientPortalContext())
+        //    {
+        //        var repo = new ClientPortalRepository(context);
+        //        var result = repo.GetCampaignWeekStats(90001, new DateTime(2013, 8, 1), new DateTime(2013, 8, 28));
+        //        Console.WriteLine(result.ToArray().ToJson());
+        //    }
+        //}
 
         [TestMethod]
         public void Test_ClientPortalRespository_GetSearchDailySummaries()
