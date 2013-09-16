@@ -16,6 +16,13 @@ namespace CakeExtracter.UnitTests
     public class UnitTest1
     {
         [TestMethod]
+        public void SendAutomatedReportsCommandTest()
+        {
+            var command = new CakeExtracter.Commands.SendAutomatedReportsCommand();
+            command.Execute(null);
+        }
+
+        [TestMethod]
         public void AdWordsApiExtracterTest()
         {
             var file = @"C:\Downloads\adwordsrep.xml";

@@ -181,6 +181,7 @@
     <Compile Include="Commands\PrintItCommand.cs" />
     <Compile Include="Commands\ScheduledCommand.cs" />
     <Compile Include="Commands\ScheduledJob.cs" />
+    <Compile Include="Commands\SendAutomatedReportsCommand.cs" />
     <Compile Include="Commands\SynchAdvertisersCommand.cs" />
     <Compile Include="Commands\SynchClicksCommand2.cs" />
     <Compile Include="Commands\SynchConversionsCommand.cs" />
@@ -258,6 +259,22 @@
     <Compile Include="MetricNames.cs" />
     <Compile Include="Logging\EnterpriseLibrary\ConsoleCustomTraceListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\CakeReport.cs" />
+    <Compile Include="Reports\CakeReportRuntimeTextTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CakeReportRuntimeTextTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\CakeReportRuntimeTextTemplate.partial.cs" />
+    <Compile Include="Reports\GmailEmailer.cs" />
+    <Compile Include="Reports\IReport.cs" />
+    <Compile Include="Reports\ReportManager.cs" />
+    <Compile Include="Reports\SearchReport.cs" />
+    <Compile Include="Reports\SearchReportRuntimeTextTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SearchReportRuntimeTextTemplate.tt</DependentUpon>
+    </Compile>
     <Compile Include="Syncher.cs" />
     <Compile Include="Data\UsersContext.cs" />
     <Compile Include="Common\RetryUtility.cs" />
@@ -270,6 +287,15 @@
     <None Include="CakeMarketingApi\Entities\Entities.cd" />
     <None Include="Etl\Etl.cd" />
     <None Include="packages.config" />
+    <Compile Include="Reports\SearchReportRuntimeTextTemplate.partial.cs" />
+    <None Include="Reports\CakeReportRuntimeTextTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CakeReportRuntimeTextTemplate.cs</LastGenOutput>
+    </None>
+    <None Include="Reports\SearchReportRuntimeTextTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SearchReportRuntimeTextTemplate.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -305,6 +331,8 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

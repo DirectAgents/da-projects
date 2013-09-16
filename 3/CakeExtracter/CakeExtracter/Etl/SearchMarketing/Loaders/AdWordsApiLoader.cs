@@ -48,6 +48,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         Impressions = int.Parse(item["impressions"]),
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1 // NOTE: non USD (if exists) -1 for now
                     };
+
+                    // HACK: ignoring impressions for rows that do not have H as click type
+                    if (source.ClickType != "H")
+                    {
+                        source.Impressions = 0;
+                    }
+
                     var target = db.Set<SearchDailySummary2>().Find(pk1, pk2, pk3, pk4, pk5);
                     if (target == null)
                     {
@@ -56,7 +63,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     else
                     {
-                        AutoMapper.Mapper.Map(source, target);
+                        db.Entry(target).State = EntityState.Detached;
+                        target = AutoMapper.Mapper.Map(source, target);
                         db.Entry(target).State = EntityState.Modified;
                         updatedCount++;
                     }
