@@ -47,15 +47,12 @@
             this._loopCheckBox = new System.Windows.Forms.CheckBox();
             this._activeCampaignsCheckBox = new System.Windows.Forms.CheckBox();
             this._updateABCheckBox = new System.Windows.Forms.CheckBox();
-            this._extractConversionsFromCakeInBatches = new System.Windows.Forms.CheckBox();
             this._groupItemsToFirstDayOfMonthCheckBox = new System.Windows.Forms.CheckBox();
             this.loggerBox1 = new Mainn.Controls.Logging.LoggerBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -224,16 +221,6 @@
             this._updateABCheckBox.Text = "Update AB";
             this._updateABCheckBox.UseVisualStyleBackColor = true;
             // 
-            // _extractConversionsFromCakeInBatches
-            // 
-            this._extractConversionsFromCakeInBatches.AutoSize = true;
-            this._extractConversionsFromCakeInBatches.Location = new System.Drawing.Point(179, 41);
-            this._extractConversionsFromCakeInBatches.Name = "_extractConversionsFromCakeInBatches";
-            this._extractConversionsFromCakeInBatches.Size = new System.Drawing.Size(112, 17);
-            this._extractConversionsFromCakeInBatches.TabIndex = 14;
-            this._extractConversionsFromCakeInBatches.Text = "Extract in Batches";
-            this._extractConversionsFromCakeInBatches.UseVisualStyleBackColor = true;
-            // 
             // _groupItemsToFirstDayOfMonthCheckBox
             // 
             this._groupItemsToFirstDayOfMonthCheckBox.AutoSize = true;
@@ -255,17 +242,6 @@
             this.loggerBox1.TabIndex = 14;
             this.loggerBox1.Load += new System.EventHandler(this.loggerBox1_Load);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(286, 44);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(16, 16);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 15;
-            this.pictureBox1.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBox1, "Check this box if there are more than 100,000 conversions.");
-            // 
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
@@ -284,14 +260,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(372, 404);
             this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.loggerBox1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.toDayTextBox);
             this.Controls.Add(this.fromDayTextBox);
             this.Controls.Add(this._groupItemsToFirstDayOfMonthCheckBox);
-            this.Controls.Add(this._extractConversionsFromCakeInBatches);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.CampaignPrepareForStatsButton);
             this.MaximizeBox = false;
@@ -301,7 +275,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -329,8 +302,6 @@
         private System.Windows.Forms.TextBox _loopEveryTextBox;
         private Mainn.Controls.Logging.LoggerBox loggerBox1;
         private System.Windows.Forms.CheckBox _groupItemsToFirstDayOfMonthCheckBox;
-        private System.Windows.Forms.CheckBox _extractConversionsFromCakeInBatches;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.ToolTip toolTip1;
     }
