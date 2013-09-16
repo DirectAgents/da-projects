@@ -30,31 +30,39 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CampaignsUC));
-            this.campaignDataSet = new EomApp1.Screens.Campaign.CampaignDataSet();
-            this.campaignBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.campaignTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.CampaignTableAdapter();
-            this.tableAdapterManager = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.TableAdapterManager();
             this.campaignBindingNavigator = new System.Windows.Forms.BindingNavigator(this.components);
             this.bindingNavigatorAddNewItem = new System.Windows.Forms.ToolStripButton();
+            this.campaignBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.campaignDataSet = new EomApp1.Screens.Campaign.CampaignDataSet();
             this.bindingNavigatorDeleteItem = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.campaignBindingNavigatorSaveItem = new System.Windows.Forms.ToolStripButton();
             this.campaignDataGridView = new EomAppControls.ExtendedDataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.accountManagerBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.campaignDataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.adManagerBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.advertiserBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.campaignStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dTCampaignStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dTCampaignTypeBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.campaignTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.CampaignTableAdapter();
+            this.tableAdapterManager = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.TableAdapterManager();
+            this.accountManagerTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.AccountManagerTableAdapter();
+            this.campaignStatusTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.CampaignStatusTableAdapter();
+            this.adManagerTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.AdManagerTableAdapter();
+            this.advertiserTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.AdvertiserTableAdapter();
+            this.dTCampaignStatusTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.DTCampaignStatusTableAdapter();
+            this.dTCampaignTypeTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.DTCampaignTypeTableAdapter();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colAccountManager = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.colAdManager = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.colAdvertiser = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.campaignStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.dTCampaignStatusBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -65,17 +73,13 @@
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dTCampaignTypeBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.accountManagerTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.AccountManagerTableAdapter();
-            this.campaignStatusTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.CampaignStatusTableAdapter();
-            this.adManagerTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.AdManagerTableAdapter();
-            this.advertiserTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.AdvertiserTableAdapter();
-            this.dTCampaignStatusTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.DTCampaignStatusTableAdapter();
-            this.dTCampaignTypeTableAdapter = new EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.DTCampaignTypeTableAdapter();
-            ((System.ComponentModel.ISupportInitialize)(this.campaignDataSet)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).BeginInit();
+            this.colAccountManagerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colAdManagerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colAdvertiserName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingNavigator)).BeginInit();
             this.campaignBindingNavigator.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.campaignDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountManagerBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignDataSetBindingSource)).BeginInit();
@@ -85,34 +89,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dTCampaignStatusBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dTCampaignTypeBindingSource)).BeginInit();
             this.SuspendLayout();
-            // 
-            // campaignDataSet
-            // 
-            this.campaignDataSet.DataSetName = "CampaignDataSet";
-            this.campaignDataSet.EnforceConstraints = false;
-            this.campaignDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // campaignBindingSource
-            // 
-            this.campaignBindingSource.DataMember = "Campaign";
-            this.campaignBindingSource.DataSource = this.campaignDataSet;
-            // 
-            // campaignTableAdapter
-            // 
-            this.campaignTableAdapter.ClearBeforeFill = true;
-            // 
-            // tableAdapterManager
-            // 
-            this.tableAdapterManager.AccountManagerTableAdapter = null;
-            this.tableAdapterManager.AdManagerTableAdapter = null;
-            this.tableAdapterManager.AdvertiserTableAdapter = null;
-            this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
-            this.tableAdapterManager.CampaignStatusTableAdapter = null;
-            this.tableAdapterManager.CampaignTableAdapter = this.campaignTableAdapter;
-            this.tableAdapterManager.DTCampaignAllowedCountriesTableAdapter = null;
-            this.tableAdapterManager.DTCampaignStatusTableAdapter = null;
-            this.tableAdapterManager.DTCampaignTypeTableAdapter = null;
-            this.tableAdapterManager.UpdateOrder = EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
             // 
             // campaignBindingNavigator
             // 
@@ -146,6 +122,17 @@
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
             this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(23, 22);
             this.bindingNavigatorAddNewItem.Text = "Add new";
+            // 
+            // campaignBindingSource
+            // 
+            this.campaignBindingSource.DataMember = "Campaign";
+            this.campaignBindingSource.DataSource = this.campaignDataSet;
+            // 
+            // campaignDataSet
+            // 
+            this.campaignDataSet.DataSetName = "CampaignDataSet";
+            this.campaignDataSet.EnforceConstraints = false;
+            this.campaignDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // bindingNavigatorDeleteItem
             // 
@@ -184,9 +171,9 @@
             this.campaignDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.campaignDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn4,
-            this.dataGridViewTextBoxColumn5,
+            this.colAccountManager,
+            this.colAdManager,
+            this.colAdvertiser,
             this.dataGridViewTextBoxColumn6,
             this.dataGridViewTextBoxColumn7,
             this.dataGridViewTextBoxColumn3,
@@ -200,7 +187,10 @@
             this.dataGridViewTextBoxColumn15,
             this.dataGridViewTextBoxColumn9,
             this.dataGridViewTextBoxColumn10,
-            this.dataGridViewTextBoxColumn16});
+            this.dataGridViewTextBoxColumn16,
+            this.colAccountManagerName,
+            this.colAdManagerName,
+            this.colAdvertiserName});
             this.campaignDataGridView.ColumnSelectorEnabled = true;
             this.campaignDataGridView.DataSource = this.campaignBindingSource;
             this.campaignDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -208,29 +198,7 @@
             this.campaignDataGridView.Name = "campaignDataGridView";
             this.campaignDataGridView.Size = new System.Drawing.Size(1143, 580);
             this.campaignDataGridView.TabIndex = 1;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "id";
-            this.dataGridViewTextBoxColumn1.HeaderText = "id";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.dataGridViewTextBoxColumn1.Visible = false;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "account_manager_id";
-            this.dataGridViewTextBoxColumn2.DataSource = this.accountManagerBindingSource;
-            this.dataGridViewTextBoxColumn2.DisplayMember = "name";
-            this.dataGridViewTextBoxColumn2.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.dataGridViewTextBoxColumn2.DisplayStyleForCurrentCellOnly = true;
-            this.dataGridViewTextBoxColumn2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.dataGridViewTextBoxColumn2.HeaderText = "Account Manager";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.dataGridViewTextBoxColumn2.ValueMember = "id";
+            this.campaignDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.campaignDataGridView_ColumnHeaderMouseClick);
             // 
             // accountManagerBindingSource
             // 
@@ -242,43 +210,129 @@
             this.campaignDataSetBindingSource.DataSource = this.campaignDataSet;
             this.campaignDataSetBindingSource.Position = 0;
             // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "ad_manager_id";
-            this.dataGridViewTextBoxColumn4.DataSource = this.adManagerBindingSource;
-            this.dataGridViewTextBoxColumn4.DisplayMember = "name";
-            this.dataGridViewTextBoxColumn4.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.dataGridViewTextBoxColumn4.DisplayStyleForCurrentCellOnly = true;
-            this.dataGridViewTextBoxColumn4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.dataGridViewTextBoxColumn4.HeaderText = "Ad Manager";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.dataGridViewTextBoxColumn4.ValueMember = "id";
-            // 
             // adManagerBindingSource
             // 
             this.adManagerBindingSource.DataMember = "AdManager";
             this.adManagerBindingSource.DataSource = this.campaignDataSetBindingSource;
             // 
-            // dataGridViewTextBoxColumn5
-            // 
-            this.dataGridViewTextBoxColumn5.DataPropertyName = "advertiser_id";
-            this.dataGridViewTextBoxColumn5.DataSource = this.advertiserBindingSource;
-            this.dataGridViewTextBoxColumn5.DisplayMember = "name";
-            this.dataGridViewTextBoxColumn5.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.dataGridViewTextBoxColumn5.DisplayStyleForCurrentCellOnly = true;
-            this.dataGridViewTextBoxColumn5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.dataGridViewTextBoxColumn5.HeaderText = "Advertiser";
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
-            this.dataGridViewTextBoxColumn5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.dataGridViewTextBoxColumn5.ValueMember = "id";
-            // 
             // advertiserBindingSource
             // 
             this.advertiserBindingSource.DataMember = "Advertiser";
             this.advertiserBindingSource.DataSource = this.campaignDataSetBindingSource;
+            // 
+            // campaignStatusBindingSource
+            // 
+            this.campaignStatusBindingSource.DataMember = "CampaignStatus";
+            this.campaignStatusBindingSource.DataSource = this.campaignDataSetBindingSource;
+            // 
+            // dTCampaignStatusBindingSource
+            // 
+            this.dTCampaignStatusBindingSource.DataMember = "DTCampaignStatus";
+            this.dTCampaignStatusBindingSource.DataSource = this.campaignDataSetBindingSource;
+            // 
+            // dTCampaignTypeBindingSource
+            // 
+            this.dTCampaignTypeBindingSource.DataMember = "DTCampaignType";
+            this.dTCampaignTypeBindingSource.DataSource = this.campaignDataSetBindingSource;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "AdManagerName";
+            this.dataGridViewTextBoxColumn2.HeaderText = "AdManagerName";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.Visible = false;
+            // 
+            // campaignTableAdapter
+            // 
+            this.campaignTableAdapter.ClearBeforeFill = true;
+            // 
+            // tableAdapterManager
+            // 
+            this.tableAdapterManager.AccountManagerTableAdapter = null;
+            this.tableAdapterManager.AdManagerTableAdapter = null;
+            this.tableAdapterManager.AdvertiserTableAdapter = null;
+            this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
+            this.tableAdapterManager.CampaignStatusTableAdapter = null;
+            this.tableAdapterManager.CampaignTableAdapter = this.campaignTableAdapter;
+            this.tableAdapterManager.DTCampaignAllowedCountriesTableAdapter = null;
+            this.tableAdapterManager.DTCampaignStatusTableAdapter = null;
+            this.tableAdapterManager.DTCampaignTypeTableAdapter = null;
+            this.tableAdapterManager.UpdateOrder = EomApp1.Screens.Campaign.CampaignDataSetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
+            // 
+            // accountManagerTableAdapter
+            // 
+            this.accountManagerTableAdapter.ClearBeforeFill = true;
+            // 
+            // campaignStatusTableAdapter
+            // 
+            this.campaignStatusTableAdapter.ClearBeforeFill = true;
+            // 
+            // adManagerTableAdapter
+            // 
+            this.adManagerTableAdapter.ClearBeforeFill = true;
+            // 
+            // advertiserTableAdapter
+            // 
+            this.advertiserTableAdapter.ClearBeforeFill = true;
+            // 
+            // dTCampaignStatusTableAdapter
+            // 
+            this.dTCampaignStatusTableAdapter.ClearBeforeFill = true;
+            // 
+            // dTCampaignTypeTableAdapter
+            // 
+            this.dTCampaignTypeTableAdapter.ClearBeforeFill = true;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "id";
+            this.dataGridViewTextBoxColumn1.HeaderText = "id";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.dataGridViewTextBoxColumn1.Visible = false;
+            // 
+            // colAccountManager
+            // 
+            this.colAccountManager.DataPropertyName = "account_manager_id";
+            this.colAccountManager.DataSource = this.accountManagerBindingSource;
+            this.colAccountManager.DisplayMember = "name";
+            this.colAccountManager.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.colAccountManager.DisplayStyleForCurrentCellOnly = true;
+            this.colAccountManager.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.colAccountManager.HeaderText = "Account Manager";
+            this.colAccountManager.Name = "colAccountManager";
+            this.colAccountManager.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colAccountManager.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colAccountManager.ValueMember = "id";
+            // 
+            // colAdManager
+            // 
+            this.colAdManager.DataPropertyName = "ad_manager_id";
+            this.colAdManager.DataSource = this.adManagerBindingSource;
+            this.colAdManager.DisplayMember = "name";
+            this.colAdManager.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.colAdManager.DisplayStyleForCurrentCellOnly = true;
+            this.colAdManager.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.colAdManager.HeaderText = "Ad Manager";
+            this.colAdManager.Name = "colAdManager";
+            this.colAdManager.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colAdManager.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colAdManager.ValueMember = "id";
+            // 
+            // colAdvertiser
+            // 
+            this.colAdvertiser.DataPropertyName = "advertiser_id";
+            this.colAdvertiser.DataSource = this.advertiserBindingSource;
+            this.colAdvertiser.DisplayMember = "name";
+            this.colAdvertiser.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.colAdvertiser.DisplayStyleForCurrentCellOnly = true;
+            this.colAdvertiser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.colAdvertiser.HeaderText = "Advertiser";
+            this.colAdvertiser.Name = "colAdvertiser";
+            this.colAdvertiser.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colAdvertiser.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colAdvertiser.ValueMember = "id";
             // 
             // dataGridViewTextBoxColumn6
             // 
@@ -308,11 +362,6 @@
             this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn3.ValueMember = "id";
             // 
-            // campaignStatusBindingSource
-            // 
-            this.campaignStatusBindingSource.DataMember = "CampaignStatus";
-            this.campaignStatusBindingSource.DataSource = this.campaignDataSetBindingSource;
-            // 
             // dataGridViewTextBoxColumn11
             // 
             this.dataGridViewTextBoxColumn11.DataPropertyName = "dt_campaign_status";
@@ -326,11 +375,6 @@
             this.dataGridViewTextBoxColumn11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.dataGridViewTextBoxColumn11.ValueMember = "name";
-            // 
-            // dTCampaignStatusBindingSource
-            // 
-            this.dTCampaignStatusBindingSource.DataMember = "DTCampaignStatus";
-            this.dTCampaignStatusBindingSource.DataSource = this.campaignDataSetBindingSource;
             // 
             // dataGridViewTextBoxColumn12
             // 
@@ -399,34 +443,28 @@
             this.dataGridViewTextBoxColumn16.Name = "dataGridViewTextBoxColumn16";
             this.dataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
-            // dTCampaignTypeBindingSource
+            // colAccountManagerName
             // 
-            this.dTCampaignTypeBindingSource.DataMember = "DTCampaignType";
-            this.dTCampaignTypeBindingSource.DataSource = this.campaignDataSetBindingSource;
+            this.colAccountManagerName.DataPropertyName = "AccountManagerName";
+            this.colAccountManagerName.HeaderText = "AccountManagerName";
+            this.colAccountManagerName.Name = "colAccountManagerName";
+            this.colAccountManagerName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colAccountManagerName.Visible = false;
             // 
-            // accountManagerTableAdapter
+            // colAdManagerName
             // 
-            this.accountManagerTableAdapter.ClearBeforeFill = true;
+            this.colAdManagerName.DataPropertyName = "AdManagerName";
+            this.colAdManagerName.HeaderText = "AdManagerName";
+            this.colAdManagerName.Name = "colAdManagerName";
+            this.colAdManagerName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colAdManagerName.Visible = false;
             // 
-            // campaignStatusTableAdapter
+            // colAdvertiserName
             // 
-            this.campaignStatusTableAdapter.ClearBeforeFill = true;
-            // 
-            // adManagerTableAdapter
-            // 
-            this.adManagerTableAdapter.ClearBeforeFill = true;
-            // 
-            // advertiserTableAdapter
-            // 
-            this.advertiserTableAdapter.ClearBeforeFill = true;
-            // 
-            // dTCampaignStatusTableAdapter
-            // 
-            this.dTCampaignStatusTableAdapter.ClearBeforeFill = true;
-            // 
-            // dTCampaignTypeTableAdapter
-            // 
-            this.dTCampaignTypeTableAdapter.ClearBeforeFill = true;
+            this.colAdvertiserName.DataPropertyName = "AdvertiserName";
+            this.colAdvertiserName.HeaderText = "AdvertiserName";
+            this.colAdvertiserName.Name = "colAdvertiserName";
+            this.colAdvertiserName.Visible = false;
             // 
             // CampaignsUC
             // 
@@ -437,11 +475,11 @@
             this.Name = "CampaignsUC";
             this.Size = new System.Drawing.Size(1143, 605);
             this.Load += new System.EventHandler(this.CampaignsUC_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.campaignDataSet)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignBindingNavigator)).EndInit();
             this.campaignBindingNavigator.ResumeLayout(false);
             this.campaignBindingNavigator.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.campaignBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.campaignDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountManagerBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.campaignDataSetBindingSource)).EndInit();
@@ -480,10 +518,12 @@
         private CampaignDataSetTableAdapters.DTCampaignTypeTableAdapter dTCampaignTypeTableAdapter;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private EomAppControls.ExtendedDataGridView campaignDataGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colAccountManager;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colAdManager;
+        private System.Windows.Forms.DataGridViewComboBoxColumn colAdvertiser;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn3;
@@ -498,7 +538,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn16;
-        private EomAppControls.ExtendedDataGridView campaignDataGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAccountManagerName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAdManagerName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAdvertiserName;
 
     }
 }
