@@ -23,6 +23,7 @@ namespace LTWeb.Controllers
             try
             {
                 FixupSsn(data);
+                FixupDob(data);
 
                 var appId = SendToTree(data);
 
@@ -34,9 +35,9 @@ namespace LTWeb.Controllers
                                  new XElement("LendingTreeGuid", appId)));
 
                 return new HttpResponseMessage
-                    {
-                        Content = new StringContent(responseData.ToString(), Encoding.UTF8, "application/xml")
-                    };
+                {
+                    Content = new StringContent(responseData.ToString(), Encoding.UTF8, "application/xml")
+                };
             }
             catch (Exception e)
             {
@@ -48,6 +49,45 @@ namespace LTWeb.Controllers
                 }
                 var response = Request.CreateResponse(HttpStatusCode.BadRequest, message.ToString());
                 return response;
+            }
+        }
+
+        private static void FixupDob(LeadPostWithCallerInfo data)
+        {
+            if (string.IsNullOrWhiteSpace(data.DOB) || (DateTime.Parse(data.DOB) == new DateTime(1980, 10, 10)))
+            {
+                int randomYears = RandomGenerator.Next(25);
+                int randomDays = RandomGenerator.Next(365);
+                data.DOB = DateTime.Today
+                                   .AddYears(-25)
+                                   .AddYears(randomYears * -1)
+                                   .AddDays(randomDays * -1)
+                                   .ToShortDateString();
+            }
+        }
+
+        private static class RandomGenerator
+        {
+            private static Random GlobalSeedGenerator = new Random();
+
+            [ThreadStatic]
+            private static Random ThreadLocalRandomNumberGenerator;
+
+            public static int Next(int i)
+            {
+                var random = ThreadLocalRandomNumberGenerator;
+
+                if (random == null)
+                {
+                    int seed;
+
+                    lock (GlobalSeedGenerator)
+                        seed = GlobalSeedGenerator.Next();
+
+                    ThreadLocalRandomNumberGenerator = random = new Random(seed);
+                }
+
+                return random.Next(i);
             }
         }
 

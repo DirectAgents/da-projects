@@ -35,6 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Google.Ads.Common, Version=1.8.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ClientPortal.Web\packages\Google.Ads.Common.1.8.0\lib\net20\Google.Ads.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.AdWords, Version=16.1.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ClientPortal.Web\packages\Google.AdWords.16.1.0\lib\net20\Google.AdWords.dll</HintPath>
+    </Reference>
     <Reference Include="ManyConsole, Version=0.4.2.16, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ClientPortal.Web\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>
@@ -48,6 +56,9 @@
       <HintPath>..\ClientPortal.Web\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
@@ -68,6 +79,10 @@
     <Compile Include="UnitTest2.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BingAds\BingAds.csproj">
+      <Project>{e2ea8ab5-abaf-4007-a446-09624cb159e6}</Project>
+      <Name>BingAds</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>

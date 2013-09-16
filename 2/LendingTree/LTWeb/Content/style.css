@@ -51,12 +51,13 @@ Body
     color: rgb(69, 85, 96);
     margin: 0pt;
     padding: 0pt;
-    background: url('images/bg-repeat.jpg') repeat-y scroll center top transparent;
+    background: url('images/new/lendingtree-bg.jpg') no-repeat;
 }
 .website-wrapper
 {
     margin: 0pt auto;
     width: 809px;
+      
 }
 
 #topheader
@@ -94,21 +95,21 @@ Body
 }
 .disclosure
 {
-    color: rgb(36, 94, 145);
+    color: #7ac142;
     text-decoration: none;
-    font-size: 10px;
+    font-size: 14px;
 }
 .disclosure a
 {
-    color: rgb(36, 94, 145);
+    color: #7ac142;
     text-decoration: none;
-    font-size: 10px;
+    font-size: 14px;
 }
 .disclosure a:hover
 {
-    color: rgb(36, 94, 145);
+    color: #7ac142;
     text-decoration: underline;
-    font-size: 10px;
+    font-size: 14px;
 }
 h2
 {
@@ -157,9 +158,11 @@ h2
 }
 #step1 .form-content
 {
-    background: url('images/bg-narrow-repeat.png') repeat-y scroll left top transparent;
+    background: url('images/new/bg-narrow-repeat.png') repeat-y scroll left top transparent;
     padding: 0pt;
     overflow:hidden;
+    float:left;
+    margin-top:0px;
 
    
 }
@@ -174,8 +177,9 @@ h2
 #step1 .form-fields-end
 {
     width: 461px;
-    height: 28px;
-    background: url('images/bg-narrowgreen-end.png') repeat-y scroll right top transparent;
+    height: 45px;
+    background: url('images/new/bg-narrowgreen-end.png') repeat-y scroll right top transparent;
+    float:left;
 }
 #step1 .left-rail
 {
@@ -185,14 +189,27 @@ h2
 {
     padding: 20px 0pt;
 }
+#step1 #page1RailRates h2
+{
+    position:absolute;
+    line-height: 17px;
+    margin:10px 0 0 50px;
+    color:#fff;
+    font-size:21px;
+}
 #step1 #payments
 {
+    margin-top:50px;
+    margin-left:20px;
     padding: 20px 0pt;
 }
 #step1 #payments h2
 {
+    text-align:left;
     margin-bottom: 5px;
     line-height: 17px;
+    color:#484e41;
+
 }
 
 
@@ -325,7 +342,7 @@ input[type=radio], input.radio
 }
 .stroke
 {
-    border-bottom: 1px solid rgb(229, 229, 229);
+    border-bottom: 0px solid rgb(229, 229, 229);
 }
 .leftRailImage
 {
@@ -370,6 +387,239 @@ input[type=radio], input.radio
     width: 53px !important;
 }
 
+input {
+padding:5px;
+}
+
+#CreditRating {
+float: left; width: 100px; margin-left: 0px;
+}
+
+.CreditRating-label {
+    float: left;
+    margin-left: 30px;
+    width: 130px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right:15px;
+}
+
+
+
+
+.LoanType-label {
+    float: left;
+    margin-left: 0px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#PropertyState {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyState-label {
+    float: left;
+    margin-left: 0px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+
+#PropertyType {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyType-label {
+    float: left;
+    margin-left: -25px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+#PropertyUse {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyUse-label {
+    float: left;
+    margin-left: -5px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#PropertyZip {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyZip-label {
+    float: left;
+    margin-left: 15px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#PropertyApproximateValue {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PropertyApproximateValue-label {
+    float: left;
+    margin-left: 0px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+#EstimatedMortgageBalance {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.EstimatedMortgageBalance-label {
+    float: left;
+    margin-left: 0px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#CashOut {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.CashOut-label {
+    float: left;
+    margin-left: 20px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#MonthlyPayment {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.MonthlyPayment-label {
+    float: left;
+    margin-left: 20px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#BankruptcyDischarged {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.BankruptcyDischarged-label {
+    float: left;
+    margin-left: -10px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#ForeclosureDischarged {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.ForeclosureDischarged-label {
+    float: left;
+    margin-left: -5px;
+    width: 120px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#IsVetran {
+float: left; width: 80px; margin-left: 0px; margin-top:5px;
+}
+
+.IsVetran-label {
+    float: left;
+    margin-left: 50px;
+    width: 170px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+
+#FirstName, #LastName, #Address, #ApplicantZipCode, #Email, #DOB, #HomePhone,
+#WorkPhone, #SSN {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.FirstName-label, .LastName-label, .Address-label, .ApplicantZipCode-label, .Email-label,
+.DOB-label, .HomePhone-label, .WorkPhone-label, .SSN-label  {
+    float: left;
+    margin-left: 20px;
+    width: 100px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+#PurchasePrice, #DownPayment, #PropertyCity {
+float: left; width: 200px; margin-left: 0px;
+}
+
+.PurchasePrice-label, .DownPayment-label, .PropertyCity-label {
+    float: left;
+    margin-left: 20px;
+    width: 100px;
+    text-align:right;
+    margin-top: 4px;
+    margin-right: 15px;
+}
+
+#progressbarcontainer {
+  background: url('images/new/bg-narrow-repeat.png') repeat-y scroll left top transparent;
+  width:461px;
+  overflow:hidden;
+  float:left; 
+  padding-left: 125px; 
+  padding-top: 15px; 
+  padding-bottom:3px;
+  margin-left:-10px;
+}
+
+#progressbar-label {
+position:absolute; color:black; margin:115px 0 0 45px;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#progressbar-label {
+position:absolute; color:black; margin:115px 0 0 45px;
+}
+}
+
+
 .bottom-description
 {
     margin: 20px auto 0px;
@@ -406,7 +656,7 @@ input[type=radio], input.radio
 }
 #footer-wrapper
 {
-    margin-top: 35px;
+    margin-top: 165px;
     padding: 30px;
     clear: both;
     float: none;
@@ -421,7 +671,7 @@ input[type=radio], input.radio
 .footer-text
 {
     float: left;
-    width: 490px;
+    width: 540px;
 }
 .footer-logo
 {
@@ -430,7 +680,7 @@ input[type=radio], input.radio
 }
 #footer a
 {
-    color: rgb(0, 90, 123);
+    color: #7ac142;
     font-weight: bold;
     text-decoration: none;
 }
@@ -472,6 +722,16 @@ div.smartTipWindow
 {
     color: rgb(85, 173, 27);
 }
+
+.green-final-step {
+    color: rgb(85, 173, 27);
+    width:300px;
+    float:left;
+    text-align:center;
+    font-size:16px;
+    margin-left:20px;
+    margin-bottom:20px;
+}
 .smallLabel
 {
     font-size: 10px;
@@ -480,10 +740,19 @@ div.smartTipWindow
 {
     float: left;
     width: 15px;
+    margin-top:2px;
+    margin-left:3px;
 }
 .ssn-input {
     float:left;
 }
+
+.ssn-input input[type="text"] {
+   
+    padding:5px;
+    width:140px;
+}
+
 .smallLabel_blurb
 {
     float: left;
@@ -524,10 +793,10 @@ div.smartTipWindow
 
 #topheader
 {
-    background-image: url('images/logo.png');
-    margin: 0pt auto;
+    background-image: url('images/new/logo.png');
+    margin: 20pt auto;
     width: 770px;
-    height: 50px;
+    height: 60px;
     background-repeat: no-repeat;
     text-align: right;
     font-size: 17px;
@@ -547,30 +816,128 @@ div.smartTipWindow
     margin-top: 5px;
     padding-right: 7px;
 }
+
+
+
+
+select  {
+   
+  font-size:15px;
+  padding:5px;
+  /*background:url(images/new/down_arrow_select.jpg) no-repeat right #ddd;*/
+  margin-top:-2px;
+  z-index:999999
+}
+
+
+
+
+#lenny-first {
+position:absolute;
+background: url('images/new/lenny-new-first.png') no-repeat scroll right top transparent;
+width:494px;
+height:207px;
+margin:-190px 0 0 -10px;
+display:block;
+z-index:-1;
+}
+
+#lenny-second {
+position:absolute;
+background: url('images/new/lenny-new-second.png') no-repeat scroll right top transparent;
+width:402px;
+height:160px;
+margin:-121px 0 0 -10px;
+display:block;
+}
+
+#lenny-three {
+position:absolute;
+background: url('images/new/lenny-new-three.png') no-repeat scroll right top transparent;
+width:282px;
+height:310px;
+margin:270px 0 0 325px;
+display:block;
+}
+
+#lenny-four {
+position:absolute;
+background: url('images/new/lenny-new-four.png') no-repeat scroll right top transparent;
+width:208px;
+height:287px;
+margin:210px 0 0 360px;
+display:block;
+}
+
+#lenny-five-option1 {
+position:absolute;
+background: url('images/new/lenny-new-five-option1.png') no-repeat scroll right top transparent;
+width:282px;
+height:310px;
+margin:270px 0 0 325px;
+display:block;
+}
+
+
+#lenny-five-option2 {
+position:absolute;
+background: url('images/new/lenny-new-five-option2.png') no-repeat scroll right top transparent;
+width:360px;
+height:310px;
+margin:280px 0 0 345px;
+display:block;
+}
+
+
+#lenny-six {
+position:absolute;
+background: url('images/new/lenny-new-six.png') no-repeat scroll right top transparent;
+width:402px;
+height:160px;
+margin:-121px 0 0 -10px;
+display:block;
+}
+
+#lenny-seven {
+position:absolute;
+background: url('images/new/lenny-new-seven.png') no-repeat scroll right top transparent;
+width:428px;
+height:297px;
+margin:320px 0 0 125px;
+display:block;
+z-index:0;
+}
+
 #page1RailHeader, #page2RailHeader, #page3RailHeader, #page2FormHeader, #page3FormHeader, #page2RailChecklist, #page3RailChecklist
 {
     padding: 20px 0pt;
 }
-#page1RailHeader h2 cufon
+#page1RailHeader h2
 {
     margin-bottom: 4px;
+    font-size:23px;
 }
 #page1FormHeader
 {
-    background: url('images/bg-narrowgreen.png') no-repeat scroll right top transparent;
+   
+    background: url('images/new/bg-narrowgreen.png') no-repeat scroll right top transparent;
     color: rgb(255, 255, 255);
     text-align: center;
-    padding: 30px 40px 0px 10px;
-    height: 102px;
+    padding: 38px 40px 0px 10px;
+   
+    
+   
 }
 #page1FormHeader h2
 {
     font-size: 20px;
+    color:#484e41;
 }
 #page1FormHeader h3
 {
     font-size: 16px;
     margin-top: 8px;
+    color:#484e41;
 }
 #page2RailHeader h2
 {
@@ -604,27 +971,34 @@ div.smartTipWindow
 {
     font-size: 22px;
 }
-.security, .security2
+.security, .security2, .security3
 {
-    background: url('images/icon-lock.png') no-repeat scroll left top transparent;
-    width: 30px;
+    background: url('images/new/icon-lock.png') no-repeat scroll left top transparent;
+    width: 34px;
     height: 70px;
     position: relative;
     float: left;
 
 }
+
+
 #step1 .security
 {
     float:left;
-    margin: 10px 0px 0px 10px;
+    margin: 10px 0px 0px 0px;
 }
 #step1 .security2
 {
-    margin: 10px 0pt 0pt 50px;
+    margin: 10px 0pt 0pt 45px;
 }
 #step2 .security
 {
     margin: 20px 0pt 0pt 150px;
+}
+
+.security3
+{
+    margin: 10px 0pt 0pt 40px;
 }
 
 
@@ -677,7 +1051,7 @@ a.tip:hover span:after {
 
 
 .explain-this{ background:url("https://mortgage-rate-offers.com/images/question-mark.gif") no-repeat; height:12px; width:100px; float:left; 
-margin-left:10px; padding-left:15px; padding-top:4px;}
+margin-left:10px; margin-top:10px; padding-left:15px; padding-top:4px;}
 
 
 
@@ -690,9 +1064,9 @@ margin-left:10px; padding-left:15px; padding-top:4px;}
 }
 .btnPage1
 {
-    width: 324px;
-    height: 72px;
-    background-image: url('images/btn-getquotes.jpg');
+    width: 279px;
+    height: 59px;
+    background-image: url('images/new/get-free-quotes-now.jpg');
     margin-top: 30px;
     margin-left:10px;
     border: 0px;
@@ -700,18 +1074,19 @@ margin-left:10px; padding-left:15px; padding-top:4px;}
 }
 .btnPage2
 {
-    width: 201px;
-    height: 72px;
-    background-image: url('images/btn-continue.jpg');
+    width: 169px;
+    height: 54px;
+    background-image: url('images/new/btn-continue.jpg');
     margin-top: 30px;
+    margin-left:10px;
     border: 0px;
     cursor: pointer;
 }
 .btnPage3
 {
-    width: 259px;
-    height: 72px;
-    background-image: url('images/btn-showresults.jpg');
+    width: 229px;
+    height: 54px;
+    background-image: url('images/new/btn-showresults.jpg');
     margin-top: 30px;
     border: 0px;
     cursor: pointer;
@@ -766,8 +1141,10 @@ margin-left:10px; padding-left:15px; padding-top:4px;}
 }
 .rate
 {
-    color: rgb(85, 173, 27);
-    font-size: 48px;
+    position:absolute;
+    margin:25px 0 0 50px;
+    color:#fff;
+    font-size: 28px;
     font-weight: bold;
     line-height: 48px;
 }
@@ -777,6 +1154,52 @@ margin-left:10px; padding-left:15px; padding-top:4px;}
     clear: both;
     padding-top: 10px;
 }
+
+.orange-bar {
+    position:absolute;
+    height:79px;
+    z-index:0px !important;
+    margin-top:-3px;
+}
+
+
+.orange-bar-left {
+    position:absolute;
+    background: url('images/new/orange-bar-left.png') no-repeat;
+    width:47px;
+    height:79px;
+    z-index:0px;
+    margin-left:5px;
+}
+
+.orange-bar-continue{
+    position:absolute;
+    background: url('images/new/orange-bar-continue.png') repeat-x;
+    width:300px;
+    height:79px;
+    margin-left:52px;
+    z-index:0px;
+}
+
+.orange-bar-right {
+    position:absolute;
+    height:79px;
+    width:100px;
+    z-index:0px !important;
+    margin:145px 0 0 726px;
+
+}
+
+.orange-bar-continue-right{
+    
+    /*background: url('images/new/oranddge-bar-continue.png') repeat-x;*/
+    width:100%;
+    height:79px;
+    margin-left:47px;
+    z-index:0px;
+}
+
+
 #rLendingTreeOptInNo
 {
     margin-right: 5px;

@@ -1,0 +1,42 @@
+﻿<div class="row">
+    <div class="twelve columns">
+        <div class="searchpanel" id="monthsumOuter">
+            <b>Monthly Summary</b>
+            <a class="button paddedbutton" style="float: right" href="#" onclick="ExportMonthSumCSV(); return false">Export CSV</a>
+            <div id="monthsumGrid" style="margin-top: 10px"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="six columns">
+        <div id="monthrevChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="monthrevChart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="six columns">
+        <div id="monthorderChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="monthorderChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var monthsumDS = CreateSummaryDataSource('@Url.Action("MonthSumData", "SearchReports")', null, false);
+        CreateSummaryGrid(monthsumDS, $('#monthsumGrid'), 300, 'Month', 10, 0, true, false, false, null);
+
+        CreateRevROASChart(monthsumDS, 'monthrevChart', 'Monthly Revenue vs. ROAS Performance');
+        CreateOrderCPOChart(monthsumDS, 'monthorderChart', 'Monthly Orders vs. CPO Performance');
+
+        monthsumDS.read();
+    });
+
+    function ExportMonthSumCSV() {
+        window.location.href = '@Url.Action("MonthSumExport", "SearchReports")';
+    }
+</script>

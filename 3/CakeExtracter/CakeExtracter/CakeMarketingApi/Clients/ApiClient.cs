@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using RestSharp;
 using RestSharp.Deserializers;
 

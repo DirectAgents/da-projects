@@ -59,9 +59,6 @@
     <Compile Include="Contexts\AdvertiserContact.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contexts\Click.cs">
-      <DependentUpon>ClientPortal.tt</DependentUpon>
-    </Compile>
     <Compile Include="Contexts\ClientPortal.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -101,8 +98,14 @@
     <Compile Include="Contexts\ConversionData.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\ConversionsByRegion.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\DeviceClicks.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\DimAdvertiser.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
@@ -110,10 +113,16 @@
     <Compile Include="Contexts\DimAffiliate.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\DimBrowser.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\DimCountry.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\DimDate.cs">
+      <DependentUpon>ClientPortalDW.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\DimDevice.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\DimOffer.cs">
@@ -179,16 +188,23 @@
     <Compile Include="Contexts\SearchDailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\SearchDailySummary2.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\UserProfile.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contracts\IClientPortalRepository.cs" />
     <Compile Include="DTOs\AffiliateSummary.cs" />
+    <Compile Include="DTOs\CalenderWeek.cs" />
     <Compile Include="DTOs\DateRangeSummary.cs" />
     <Compile Include="DTOs\ConversionInfo.cs" />
     <Compile Include="DTOs\ConversionSummary.cs" />
-    <Compile Include="DTOs\DeviceClicks.cs" />
     <Compile Include="DTOs\MonthlyInfo.cs" />
     <Compile Include="DTOs\DailyInfo.cs" />
     <Compile Include="DTOs\OfferInfo.cs" />
     <Compile Include="DTOs\SearchStat.cs" />
+    <Compile Include="DTOs\WeeklySearchStat.cs" />
     <Compile Include="Entities\Advertiser.cs" />
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

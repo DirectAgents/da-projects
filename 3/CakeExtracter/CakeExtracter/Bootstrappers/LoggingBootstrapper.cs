@@ -8,7 +8,8 @@ namespace CakeExtracter.Bootstrappers
     {
         public void Run()
         {
-            Logger.Instance = new EnterpriseLibraryLogger();            
+            Logger.Instance = new EnterpriseLibraryLogger();
+            //Logger.Instance = new ConsoleLogger();                   
         }
     }
 }

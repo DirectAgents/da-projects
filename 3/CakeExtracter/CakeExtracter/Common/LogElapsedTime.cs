@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace CakeExtracter.Common
 {
-    public class LogElapsedTime : IDisposable
+    public sealed class LogElapsedTime : IDisposable
     {
         private readonly Stopwatch stopWatch;
 

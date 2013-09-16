@@ -14,6 +14,23 @@ namespace ClientPortal.Web.Controllers
     {
         protected IClientPortalRepository cpRepo;
 
+        protected ActionResult CheckLogout(UserInfo userInfo)
+        {
+            ActionResult result = null;
+            if (!userInfo.HasUserProfile)
+            {
+                try
+                {
+                    WebSecurity.Logout();
+                }
+                catch
+                {
+                }
+                result = RedirectToAction("Login", "Account");
+            }
+            return result;
+        }
+
         public UserInfo GetUserInfo()
         {
             var userProfile = GetUserProfile();
@@ -26,9 +43,9 @@ namespace ClientPortal.Web.Controllers
             return userInfo;
         }
 
-        public static UserProfile GetUserProfile()
+        public static ClientPortal.Web.Models.UserProfile GetUserProfile()
         {
-            UserProfile userProfile = null;
+            ClientPortal.Web.Models.UserProfile userProfile = null;
 
             if (WebSecurity.Initialized)
             {
@@ -38,6 +55,9 @@ namespace ClientPortal.Web.Controllers
                     userProfile = usersContext.UserProfiles.FirstOrDefault(c => c.UserId == userID);
                 }
             }
+            else 
+                throw new Exception("web security not initialized");
+
             return userProfile;
         }
 

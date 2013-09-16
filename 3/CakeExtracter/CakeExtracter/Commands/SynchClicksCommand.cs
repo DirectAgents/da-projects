@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
+using CakeExtracter.Common;
+using CakeExtracter.Etl.CakeMarketing.Extracters;
+using CakeExtracter.Etl.CakeMarketing.Loaders;
+
+namespace CakeExtracter.Commands
+{
+    [Export(typeof(ConsoleCommand))]
+    public class SynchClicksCommand : ConsoleCommand
+    {
+        public int AdvertiserId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool SynchConversionsAlso { get; set; }
+
+        public SynchClicksCommand()
+        {
+            AdvertiserId = 0;
+            StartDate = DateTime.Today.AddDays(-1);
+            EndDate = DateTime.Today.AddDays(-1);
+
+            IsCommand("synchClicks", "synch Clicks for an advertisers offers in a date range");
+            HasOption("a|advertiserId=", "Advertiser Id (0 = all)", c => AdvertiserId = int.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is yesterday)", c => StartDate = DateTime.Parse(c));
+            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
+            HasOption("c|conversions=", "synch Conversions also (default is false)", c => SynchConversionsAlso = bool.Parse(c));
+        }
+
+        public override int Execute(string[] remainingArguments)
+        {
+            var dateRange = new DateRange(StartDate, EndDate);
+            foreach (var date in dateRange.Dates)
+            {
+                try
+                {
+                    ExtractAndLoadClicksForDate(date);
+                    if (SynchConversionsAlso)
+                        ExtractAndLoadConversionsForDate(date);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex.Message);
+                    Logger.Warn(ex.StackTrace);
+                    Logger.Error(ex);
+                }
+            }
+            return 0;
+        }
+
+        private void ExtractAndLoadClicksForDate(DateTime date)
+        {
+            foreach (var advertiserId in GetAdvertiserIds())
+            {
+                Logger.Info("Extracting clicks for {0}..", date.ToShortDateString());
+                var dateRange = new DateRange(date, date.AddDays(1));
+                var extracter = new ClicksExtracter(dateRange, advertiserId);
+                var loader = new ClicksLoader();
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+                Logger.Info("Finished extracting clicks for {0}.", date.ToShortDateString());
+            }
+        }
+
+        private void ExtractAndLoadConversionsForDate(DateTime date)
+        {
+            Logger.Info("Extracting conversions for {0}..", date.ToShortDateString());
+            var dateRange = new DateRange(date, date.AddDays(1));
+            var extracter = new ConversionsExtracter(dateRange, AdvertiserId);
+            var loader = new ConversionsLoader();
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
+            Logger.Info("Finished extracting conversions for {0}.", date.ToShortDateString());
+        }
+
+        private IEnumerable<int> GetAdvertiserIds()
+        {
+            if (AdvertiserId == 0)
+            {
+                using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
+                {
+                    var advertiserIds = db.UserProfiles
+                                          .Where(c => c.CakeAdvertiserId.HasValue && c.CakeAdvertiserId > 0 && c.CakeAdvertiserId < 90000)
+                                          .Select(c => c.CakeAdvertiserId.Value)
+                                          .OrderBy(c => c)
+                                          .ToList();
+                    return advertiserIds;
+                }
+            }
+            return new[] { AdvertiserId };
+        }
+    }
+}

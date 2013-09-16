@@ -1,11 +1,23 @@
-﻿<div id="channelperfGrid"></div>
+﻿<div class="row">
+    <div class="twelve columns">
+        <div class="searchpanel" id="channelperfOuter">
+            <b>Channel Performance</b>
+            <a class="button paddedbutton" style="float: right" href="#" onclick="ExportChannelPerfCSV(); return false">Export CSV</a>
+            <div id="channelperfGrid" style="margin-top: 10px"></div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(function () {
-        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData")', null, true);
-        CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 350, 'Channel', 20, 2, function (e) {
-            DetailInit(e, '@Url.Action("CampaignPerfData")');
+        var channelperfDS = CreateSummaryDataSource('@Url.Action("ChannelPerfData", "SearchReports")', null, true);
+        CreateSummaryGrid(channelperfDS, $('#channelperfGrid'), 550, 'Channel', 20, 2, false, false, false, function (e) {
+            DetailInit(e, '@Url.Action("CampaignPerfData", "SearchReports")');
         });
         channelperfDS.read();
     });
+
+    function ExportChannelPerfCSV() {
+        window.location.href = '@Url.Action("ChannelPerfExport", "SearchReports")';
+    }
 </script>

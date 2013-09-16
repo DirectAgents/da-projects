@@ -7,6 +7,9 @@ using System.Web;
 using System.Web.Mvc;
 using ClientPortal.Data.Contexts;
 using System.Web.Helpers;
+using WebMatrix.WebData;
+using System.Web.Configuration;
+using ClientPortal.Web.Controllers;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
@@ -18,9 +21,29 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         //
         // GET: /Admin/Advertisers/
 
-        public ActionResult Index()
+        public ActionResult Index(string sort)
         {
-            return View(db.Advertisers.ToList());
+            var advertisers = db.Advertisers.AsQueryable();
+            switch (sort)
+            {
+                case "AdvertiserName":
+                    advertisers = advertisers.OrderBy(a => a.AdvertiserName);
+                    break;
+                default:
+                    advertisers = advertisers.OrderBy(a => a.AdvertiserId);
+                    break;
+            }
+            var advList = advertisers.ToList();
+
+            // fill in the user profiles for the advertisers
+            // TODO: do a join on the db
+            var userProfiles = db.UserProfiles.ToList();
+            foreach (var advertiser in advList)
+            {
+                advertiser.UserProfiles = userProfiles.Where(u => u.CakeAdvertiserId == advertiser.AdvertiserId);
+            }
+
+            return View(advList);
         }
 
         //
@@ -152,6 +175,51 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             db.SaveChanges();
 
             return null;
+        }
+
+        public ActionResult CreateUserProfile(int id = 0)
+        {
+            Advertiser advertiser = db.Advertisers.Find(id);
+            if (advertiser == null)
+            {
+                return HttpNotFound();
+            }
+            return View(advertiser);
+        }
+
+        [HttpPost]
+        public ActionResult CreateUserProfile(int id, string username, string password, bool sendemail, string email)
+        {
+            Advertiser advertiser = db.Advertisers.Find(id);
+            if (advertiser != null)
+            {
+                WebSecurity.CreateUserAndAccount(
+                    username, password,
+                    new { CakeAdvertiserId = advertiser.AdvertiserId });
+
+                if (sendemail && !String.IsNullOrWhiteSpace(email))
+                    SendUserProfileEmail(username, password, email);
+            }
+            return RedirectToAction("Index");
+        }
+
+        void SendUserProfileEmail(string username, string password, string email)
+        {
+            string from = WebConfigurationManager.AppSettings["EmailFromDefault"];
+            string subject = "Direct Agents Client Portal account created";
+            string url = WebConfigurationManager.AppSettings["PortalUrl"];
+            string body = (@"Congratulations! Your Direct Agents Client Portal account has been created:
+<p>
+Username: [[Username]]<br/>
+Password: [[Password]]<br/>
+<br/>
+Portal URL: [[Url]]
+</p>")
+               .Replace("[[Username]]", username)
+               .Replace("[[Password]]", password)
+               .Replace("[[Url]]", url);
+
+            ControllerHelpers.SendEmail(from, new string[] { email }, new string[] { }, subject, body, true);
         }
 
         //

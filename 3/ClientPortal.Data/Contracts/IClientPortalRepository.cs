@@ -23,11 +23,11 @@ namespace ClientPortal.Data.Contracts
         IQueryable<AffiliateSummary> GetAffiliateSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
         IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId);
 
-        IQueryable<Click> GetClicks(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
         IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId);
         IQueryable<Conversion> GetConversions(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
 
-        IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+        IList<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
+        IList<ConversionsByRegion> GetConversionCountsByRegion(DateTime start, DateTime end, int advertiserId);
 
         IQueryable<Advertiser> Advertisers { get; }
         IQueryable<Contact> Contacts { get; }
@@ -53,5 +53,15 @@ namespace ClientPortal.Data.Contracts
         Goal GetGoal(int id);
         void AddGoal(Goal goal, bool saveChanges = false);
         bool DeleteGoal(int id, int? advertiserId);
+
+        // Search
+        IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, string channel, DateTime? start, DateTime? end, bool includeToday = false);
+        IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? numWeeks, string channel = null);
+        IQueryable<SearchStat> GetCampaignWeekStats(int? advertiserId, DateTime start, DateTime end, string channel = null);
+        IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime start, DateTime end, DayOfWeek startDayOfWeek);
+        IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths);
+        IQueryable<SearchStat> GetChannelStats(int? advertiserId);
+        IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end, bool breakdown);
+        IQueryable<SearchStat> GetAdgroupStats();
     }
 }

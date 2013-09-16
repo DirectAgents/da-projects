@@ -2,79 +2,127 @@
 
 @section head {
     <style>
-        body
-        {
-            background-color: rgb(47,141,231);
+        h4 {
+            font-size: 20px;
         }
 
-        .dalogo2
-        {
+        form {
+            margin: 0;
+        }
+
+        .icondiv {
+            padding: 30px;
+        }
+
+        .icon {
+            float: left;
+            margin-right: 5px;
+        }
+
+        .icontext {
+            padding-top: 15px;
+            line-height: 1.3;
+        }
+
+        .dalogo2 {
             width: 10%;
         }
 
-        .logindiv
-        {
-            display: none;
-            width: 300px;
-            margin: 100px auto auto auto;
-            text-align: center;
-            border: 10px solid rgb(107,172,236);
-            background-color: white;
+        .logindiv {
+            border: 1px solid rgb(107,172,236);
+            margin-top: 30px;
         }
 
-        .loginfieldset
-        {
-            margin: 0px;
+        .loginfieldset {
+            margin: 0;
+            padding: 15px;
+            background-color: #f3f3f3;
+        }
+
+        .labeldiv {
+            text-align: center;
         }
     </style>
 }
 
 <div style="background-color: white; width: 100%">
     <img style="margin-top: 15px; margin-left: 15px" src="~/Images/logo1.png" />
-    <h5 style="margin: 15px; float: right; color: rgb(218, 221, 221)">Direct Agents Client Portal</h5>
 </div>
 
-<div class="logindiv">
-    <div style="background-color: rgb(243,243,243); padding-top: 10px">
-    </div>
-    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
-
-        <fieldset class="loginfieldset">
-            <legend>Log in Form</legend>
-            <ul>
-                <li>
-                    @Html.LabelFor(m => m.UserName)
-                    @Html.TextBoxFor(m => m.UserName)
-                    @Html.ValidationMessageFor(m => m.UserName)
-                </li>
-                <li>
-                    @Html.LabelFor(m => m.Password)
-                    @Html.PasswordFor(m => m.Password)
-                    @Html.ValidationMessageFor(m => m.Password)
-                </li>
-                <li>
-                    @Html.CheckBoxFor(m => m.RememberMe)
-                    @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
-                </li>
-            </ul>
-        </fieldset>
-        <div style="background-color: rgb(243,243,243); padding: 10px">
-            <input type="submit" class="button" value="LOG IN" style="width: 200px" />
+<div class="row">
+    <div class="eight columns" style="padding: 40px">
+        <h4>Direct Agents Client Portal</h4>
+        <div class="row" style="border: 4px solid #f7f7f7">
+            <div class="six columns icondiv">
+                <img src="~/Images/icon_reports.gif" class="icon" />
+                <div class="icontext">Access real-time reports showing campaign effectiveness and spend</div>
+                <br style="clear: both" /><br /><br />
+                <img src="~/Images/icon_mobile.gif" class="icon" />
+                <div class="icontext">See details on devices and demographics instantly</div>
+            </div>
+            <div class="six columns icondiv">
+                <img src="~/Images/icon_track.gif" class="icon" />
+                <div class="icontext">Track your top performing affiliates and creatives</div>
+                <br style="clear: both" /><br /><br />
+                <img src="~/Images/icon_metrics.gif" class="icon" />
+                <div class="icontext">Gain insight with our unique dashboard with visualizations of key metrics, custom goals and more</div>
+            </div>
         </div>
-@*<div style="position: relative; left: 0px; top: 0px;">
-            <img class="dalogo2" src="~/Images/da.jpeg" />
-        </div>*@
-    }
+    </div>
+    <div class="four columns" style="padding: 40px">
+        <div class="logindiv">
+
+        @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <fieldset class="loginfieldset">
+                <legend>Sign In</legend>
+                <div class="row">
+                    <div class="twelve columns" style="text-align: center">
+                        <h5>SIGN IN</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="four columns labeldiv">
+                        @Html.LabelFor(m => m.UserName, new { @class = "inline" } )
+                    </div>
+                    <div class="eight columns" style="padding-right: 25px">
+                        @Html.TextBoxFor(m => m.UserName)
+                        @Html.ValidationMessageFor(m => m.UserName)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="four columns labeldiv">
+                        @Html.LabelFor(m => m.Password)
+                    </div>
+                    <div class="eight columns" style="padding-right: 25px">
+                        @Html.PasswordFor(m => m.Password)
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="four columns">
+                    </div>
+                    <div class="eight columns">
+                        @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                    </div>
+                </div>
+            </fieldset>
+            <div class="row">
+                <div class="twelve columns" style="text-align: center; margin: 20px 0px">
+                    <input type="submit" class="button" value="LOG IN" style="width: 200px" />
+                </div>
+            </div>
+        }
+        </div>
+    </div>
 </div>
 
 @section scripts {
     <script>
         $(function () {
-            //$('.logindiv').slideDown();
-            $('.logindiv').fadeIn();
             $('#UserName').focus();
         });
     </script>

@@ -4,11 +4,10 @@ using System.Linq;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs;
-using System.Data;
 
 namespace ClientPortal.Data.Services
 {
-    public class ClientPortalRepository : IClientPortalRepository
+    public partial class ClientPortalRepository : IClientPortalRepository
     {
         ClientPortalContext context;
 
@@ -42,7 +41,9 @@ namespace ClientPortal.Data.Services
         public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency)
         {
             var dailySummaries = context.DailySummaries.AsQueryable();
+
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+
             if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
 
             var offers = Offers(advertiserId);
@@ -257,25 +258,6 @@ namespace ClientPortal.Data.Services
         }
         #endregion
 
-        // get clicks through 23:59:59 on the "end" date
-        public IQueryable<Click> GetClicks(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
-        {
-            var clicks = context.Clicks.AsQueryable();
-            if (start.HasValue)
-                clicks = clicks.Where(c => c.click_date >= start.Value);
-            if (end.HasValue)
-            {
-                DateTime endOfDay = new DateTime(end.Value.Year, end.Value.Month, end.Value.Day, 23, 59, 59);
-                clicks = clicks.Where(c => c.click_date <= endOfDay);
-            }
-            if (advertiserId.HasValue)
-                clicks = clicks.Where(c => c.advertiser_id == advertiserId.Value);
-            if (offerId.HasValue)
-                clicks = clicks.Where(c => c.offer_id == offerId.Value);
-
-            return clicks;
-        }
-
         // get conversions through 23:59:59 on the "end" date
         public IQueryable<Conversion> GetConversions(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
@@ -304,34 +286,28 @@ namespace ClientPortal.Data.Services
                 return null;
         }
 
-        public IEnumerable<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        public IList<DeviceClicks> GetClicksByDeviceName(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
-            var offers = Offers(advertiserId);
-            if (offerId.HasValue)
-                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+            using (var db = new ClientPortalDWContext())
+            {
+                var result = db.ClicksByDevice(advertiserId, start, end)
+                    .OrderByDescending(c => c.ClickCount)
+                    .ToList();
 
-            var offerIds = offers.Select(o => o.Offer_Id).ToList();
+                return result;
+            }
+        }
 
-            var metricCounts = context.MetricCounts.Where(mc => offerIds.Contains(mc.offer_id));
-            if (start.HasValue)
-                metricCounts = metricCounts.Where(mc => mc.date >= start.Value);
-            if (end.HasValue)
-                metricCounts = metricCounts.Where(mc => mc.date <= end.Value);
+        public IList<ConversionsByRegion> GetConversionCountsByRegion(DateTime start, DateTime end, int advertiserId)
+        {
+            using (var db = new ClientPortalDWContext())
+            {
+                var result = db.ConversionsByRegion(advertiserId, start, end)
+                               .OrderBy(c => c.ClickCount)
+                               .ToList();
 
-            var result = metricCounts.GroupBy(mc => mc.MetricValue)
-                .Select(g => new
-                {
-                    Device = g.Key.name,
-                    Count = g.Sum(mc => mc.count)
-                })
-                .OrderByDescending(c => c.Count)
-                .AsEnumerable().Select(c => new DeviceClicks
-                {
-                    DeviceName = string.IsNullOrWhiteSpace(c.Device) ? "Other" : c.Device,
-                    ClickCount = c.Count
-                })
-                .AsEnumerable();
-            return result;
+                return result;
+            }
         }
 
         #region Advertisers & Contacts

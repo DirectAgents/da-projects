@@ -26,13 +26,17 @@ namespace ClientPortal.Data.Contexts
         public int AdvertiserKey { get; set; }
         public int OfferKey { get; set; }
         public int AffiliateKey { get; set; }
+        public int BrowserKey { get; set; }
+        public int DeviceKey { get; set; }
     
         public virtual DimCountry DimCountry { get; set; }
         public virtual DimRegion DimRegion { get; set; }
-        public virtual ICollection<FactConversion> FactConversions { get; set; }
         public virtual DimDate DimDate { get; set; }
         public virtual DimAdvertiser DimAdvertiser { get; set; }
         public virtual DimAffiliate DimAffiliate { get; set; }
         public virtual DimOffer DimOffer { get; set; }
+        public virtual DimBrowser DimBrowser { get; set; }
+        public virtual DimDevice DimDevice { get; set; }
+        public virtual ICollection<FactConversion> FactConversions { get; set; }
     }
 }

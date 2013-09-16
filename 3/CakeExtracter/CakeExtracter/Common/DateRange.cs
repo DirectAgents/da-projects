@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CakeExtracter.Common
 {
     public struct DateRange
     {
-        //private readonly Func<DateTime, DateTime> step;
+        private readonly Func<DateTime, DateTime> step;
 
         public DateTime FromDate { get; set; }
 
@@ -13,7 +14,7 @@ namespace CakeExtracter.Common
         public DateRange(DateTime fromDate, DateTime toDate)
             : this()
         {
-            //step = x => x.AddDays(1);
+            step = x => x.AddDays(1);
             FromDate = fromDate.Date;
             ToDate = toDate.Date;
         }
@@ -56,13 +57,13 @@ namespace CakeExtracter.Common
         //    }
         //}
 
-        //public IEnumerable<DateTime> Dates
-        //{
-        //    get
-        //    {
-        //        for (var i = FromDate; i <= ToDate; i = step(i))
-        //            yield return i;
-        //    }
-        //}
+        public IEnumerable<DateTime> Dates
+        {
+            get
+            {
+                for (var i = FromDate; i <= ToDate; i = step(i))
+                    yield return i;
+            }
+        }
     }
 }

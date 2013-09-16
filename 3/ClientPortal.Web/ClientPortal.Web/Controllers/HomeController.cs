@@ -24,26 +24,16 @@ namespace ClientPortal.Web.Controllers
         public ActionResult Index()
         {
             var userInfo = GetUserInfo();
-            if (!userInfo.HasUserProfile)
-            {
-                try
-                {
-                    WebSecurity.Logout();
-                }
-                catch
-                {
-                }
-                return RedirectToAction("Login", "Account");
-            }
+            var result = CheckLogout(userInfo);
+            if (result != null) return result;
+
+            if (userInfo.HasSearch)
+                return RedirectToAction("Index", "SearchHome");
+
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Index"))
             {
-                var model = new IndexModel()
-                {
-                    CultureInfo = userInfo.CultureInfo,
-                    HasLogo = (userInfo.Logo != null),
-                    ShowCPMRep = userInfo.ShowCPMRep
-                };
+                var model = new IndexModel(userInfo);
                 return View(model);
             }
         }

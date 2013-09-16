@@ -1,14 +1,11 @@
-﻿using ClientPortal.Data.Contracts;
-using ClientPortal.Data.DTOs;
-using ClientPortal.Data.Services;
-using DirectAgents.Mvc.KendoGridBinder;
+﻿using System;
 using System.Web.Mvc;
-using System.Linq;
-using System;
+using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
 
 namespace ClientPortal.Web.Controllers
 {
+    [Authorize]
     public class SearchHomeController : CPController
     {
         public SearchHomeController(IClientPortalRepository cpRepository)
@@ -18,10 +15,23 @@ namespace ClientPortal.Web.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var userInfo = GetUserInfo();
+            var result = CheckLogout(userInfo);
+            if (result != null) return result;
+
+            if (!userInfo.HasSearch)
+                return RedirectToAction("Index", "Home");
+
+            var model = new IndexModel(userInfo);
+            return View(model);
         }
 
         public PartialViewResult Dashboard()
+        {
+            return PartialView();
+        }
+
+        public PartialViewResult Monthly()
         {
             return PartialView();
         }
@@ -35,8 +45,9 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var start = new DateTime(2013, 5, 27);
-            var end = new DateTime(2013, 6, 2);
+            var today = DateTime.Today;
+            var start = new DateTime(today.Year, today.Month, 1);
+            var end = today;
             var model = new SearchReportModel()
             {
                 StartDate = start.ToString("d", userInfo.CultureInfo),
@@ -45,84 +56,31 @@ namespace ClientPortal.Web.Controllers
             return PartialView(model);
         }
 
-        [HttpPost]
-        public JsonResult WeekSumData(KendoGridRequest request, string startdate, string enddate)
+        // (add a report tab) 4. Add action method for partial view to generate tab content
+        public PartialViewResult CampaignWeekly()
         {
-            var sRepo = new SearchRepository();
-            //var userInfo = GetUserInfo();
-            //DateTime? start, end;
-            //if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
-            //    return Json(new { });
+            var userInfo = GetUserInfo();
 
-            //if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-
-            var weekStats = sRepo.GetWeekStats();
-            var kgrid = new KendoGrid<SearchStat>(request, weekStats);
-            if (weekStats.Any())
-                kgrid.aggregates = Aggregates(weekStats);
-
-            var json = Json(kgrid);
-            return json;
-        }
-
-        private object Aggregates(IQueryable<SearchStat> stats)
-        {
-            var sumRevenue = stats.Sum(s => s.Revenue);
-            var sumCost = stats.Sum(s => s.Cost);
-            var sumOrders = stats.Sum(s => s.Orders);
-            var aggregates = new
+            return PartialView(new SearchReportModel
             {
-                Revenue = new { sum = sumRevenue },
-                Cost = new { sum = sumCost },
-                ROAS = new { agg = (int)Math.Round(100 * sumRevenue / sumCost) },
-                Orders = new { sum = sumOrders },
-                CPO = new { agg = Math.Round( sumCost / sumOrders, 2) },
-                Clicks = new { sum = stats.Sum(s => s.Clicks) },
-                Impressions = new { sum = stats.Sum(s => s.Impressions) },
+                StartDate = new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(-2).Month, 1).ToString("d", userInfo.CultureInfo),
+                EndDate = DateTime.Today.ToString("d", userInfo.CultureInfo)
+            });
+        }
+
+        public PartialViewResult AdgroupPerf()
+        {
+            var userInfo = GetUserInfo();
+
+            var start = new DateTime(2013, 6, 17);
+            var end = new DateTime(2013, 6, 23);
+            var model = new SearchReportModel()
+            {
+                StartDate = start.ToString("d", userInfo.CultureInfo),
+                EndDate = end.ToString("d", userInfo.CultureInfo)
             };
-            return aggregates;
+            return PartialView(model);
         }
 
-        [HttpPost]
-        public JsonResult MonthSumData(KendoGridRequest request, string startdate, string enddate)
-        {
-            var sRepo = new SearchRepository();
-
-            var monthStats = sRepo.GetMonthStats();
-            var kgrid = new KendoGrid<SearchStat>(request, monthStats);
-            if (monthStats.Any())
-                kgrid.aggregates = Aggregates(monthStats);
-
-            var json = Json(kgrid);
-            return json;
-        }
-
-        [HttpPost]
-        public JsonResult ChannelPerfData(KendoGridRequest request, string startdate, string enddate)
-        {
-            var sRepo = new SearchRepository();
-
-            var channelStats = sRepo.GetChannelStats();
-            var kgrid = new KendoGrid<SearchStat>(request, channelStats);
-            if (channelStats.Any())
-                kgrid.aggregates = Aggregates(channelStats);
-
-            var json = Json(kgrid);
-            return json;
-        }
-
-        [HttpPost]
-        public JsonResult CampaignPerfData(KendoGridRequest request, string channel)
-        {
-            var sRepo = new SearchRepository();
-
-            var stats = sRepo.GetCampaignStats(channel);
-            var kgrid = new KendoGrid<SearchStat>(request, stats);
-            if (stats.Any())
-                kgrid.aggregates = Aggregates(stats);
-
-            var json = Json(kgrid);
-            return json;
-        }
     }
 }

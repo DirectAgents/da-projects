@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Globalization;
 
 namespace ClientPortal.Web.Models
 {
@@ -31,6 +27,8 @@ namespace ClientPortal.Web.Models
         public int? CakeAdvertiserId { get; set; }
         public int? QuickBooksCompanyId { get; set; }
         public int? QuickBooksAdvertiserId { get; set; }
+        public int SearchWeekStartDay { get; set; }
+        public int SearchWeekEndDay { get; set; }
     }
 
     [Table("ConversionData")]

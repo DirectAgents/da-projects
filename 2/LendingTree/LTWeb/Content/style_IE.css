@@ -1,0 +1,18 @@
+﻿
+#progressbarcontainer {
+  background: url('images/new/bg-narrow-repeat.png') repeat-y scroll left top transparent;
+  width:461px;
+  overflow:hidden;
+  float:left; 
+  padding-left: 120px; 
+  padding-top: 15px; 
+  padding-bottom:3px;
+  margin-left:-10px;
+}
+
+#progressbar-label {
+position:absolute; color:black; margin:110px 0 0 40px;
+}
+
+
+

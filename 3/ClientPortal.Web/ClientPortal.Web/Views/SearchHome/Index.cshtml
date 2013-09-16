@@ -1,4 +1,6 @@
-﻿<style>
+﻿@model ClientPortal.Web.Models.IndexModel
+
+<style>
     .searchdiv {
         padding: 10px;
     }
@@ -15,11 +17,11 @@
         <img src="~/Images/logo1a.png" />
     </div>
     <div class="two columns topinfo">
-        @*Html.Partial("_HelloPartial")*@
+        @Html.Partial("_HelloPartial")
     </div>
     <div class="five columns logout">
         <div style="float: right">
-            @*Html.Partial("_LoginPartial")*@
+            @Html.Partial("_LoginPartial")
         </div>
     </div>
 </div>
@@ -34,9 +36,12 @@
               | Top Tabs      |
               +---------------+-->*@
         <dl class="tabs">
-            <dd class="active"><a href="#navDashboard" id="nav_Dashboard">Dashboard</a></dd>
-            <dd><a href="#navChannelPerf" id="nav_ChannelPerf">Channel Perf</a></dd>
-            <dd><a href="#navCampaignPerf" id="nav_CampaignPerf">Campaign Perf</a></dd>
+            <dd class="active"><a href="#navDashboard" id="nav_Dashboard">Weekly</a></dd>
+            <dd><a href="#navMonthly" id="nav_Monthly">Monthly</a></dd>
+            <dd><a href="#navChannelPerf" id="nav_ChannelPerf">Channel Performance</a></dd>
+            <dd><a href="#navCampaignPerf" id="nav_CampaignPerf">Campaign Performance</a></dd>
+            @* (add a report tab) 1. Add top tab *@
+            <dd><a href="#navCampaignWeekly" id="nav_CampaignWeekly">Campaign Weekly</a></dd>
             <dd><a href="#navContact" id="nav_Contact">Contact</a></dd>
         </dl>
         <!-- /Tabs -->
@@ -57,11 +62,18 @@
         <li id="navDashboardTab" class="active">
             <div id="divDashboard" class="searchdiv"></div>
         </li>
+        <li id="navMonthlyTab">
+            <div id="divMonthly" class="searchdiv"></div>
+        </li>
         <li id="navChannelPerfTab">
             <div id="divChannelPerf" class="searchdiv"></div>
         </li>
         <li id="navCampaignPerfTab">
             <div id="divCampaignPerf" class="searchdiv"></div>
+        </li>
+        @* (add a report tab) 2. Add tab content (giving the li tag id the same value as the top tab's a tag, adding 'Tab' to it) *@
+        <li id="navCampaignWeeklyTab">
+            <div id="divCampaignWeekly" class="searchdiv"></div>
         </li>
         <li id="navContactTab">
             <div id="divContact" class="searchdiv"></div>
@@ -107,11 +119,15 @@
 }
 
 @section scripts {
+
     <script src="~/Scripts/kendo/2013.1.514/kendo.all.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.de-DE.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-AU.min.js"></script>
     <script src="~/Scripts/search_grids_charts.js"></script>
+
+    @Html.Partial("_DateFuncs")
+
     <script>
         // ready function
         $(function () {
@@ -130,10 +146,16 @@
 
         function SetupTabs() {
 
-            // Dashboard
-            //$('#nav_Dashboard').click(function () {
-            //    LoadDashboard();
-            //});
+            // Monthly
+            $('#nav_Monthly').one('click', function () {
+                $('#divMonthly').html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("Monthly")',
+                    cache: false
+                }).done(function (html) {
+                    $('#divMonthly').html(html);
+                });
+            });
 
             // Channel Perf
             $('#nav_ChannelPerf').one('click', function () {
@@ -157,6 +179,18 @@
                 });
             });
 
+            // Campaign Weekly
+            // (add a report tab) 3. Add one-time click handler to load content
+            $('#nav_CampaignWeekly').one('click', function () {
+                $('#divCampaignWeekly').html('Loading...');
+                $.ajax({
+                    url: '@Url.Action("CampaignWeekly")',
+                    cache: false
+                }).done(function (html) {
+                    $('#divCampaignWeekly').html(html);
+                });
+            });
+
             // Contacts
             $('#nav_Contact').one('click', function () {
                 $('#divContact').html('Loading...');
@@ -168,10 +202,6 @@
                 });
             });
 
-        }
-
-        function RefreshGrid() {
-            alert('Coming Soon');
         }
     </script>
 }

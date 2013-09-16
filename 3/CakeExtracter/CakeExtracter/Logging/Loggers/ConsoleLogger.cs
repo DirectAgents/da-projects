@@ -2,7 +2,7 @@
 
 namespace CakeExtracter.Logging.Loggers
 {
-    class ConsoleLogger : ILogger
+    public class ConsoleLogger : ILogger
     {
         public void Info(string format, params object[] args)
         {

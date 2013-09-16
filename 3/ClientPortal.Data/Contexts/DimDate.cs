@@ -18,6 +18,7 @@ namespace ClientPortal.Data.Contexts
         {
             this.FactClicks = new HashSet<FactClick>();
             this.FactConversions = new HashSet<FactConversion>();
+            this.FactConversions1 = new HashSet<FactConversion>();
         }
     
         public System.DateTime PK_Date { get; set; }
@@ -35,5 +36,6 @@ namespace ClientPortal.Data.Contexts
     
         public virtual ICollection<FactClick> FactClicks { get; set; }
         public virtual ICollection<FactConversion> FactConversions { get; set; }
+        public virtual ICollection<FactConversion> FactConversions1 { get; set; }
     }
 }
