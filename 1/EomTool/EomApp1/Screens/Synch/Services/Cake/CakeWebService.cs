@@ -144,59 +144,91 @@ namespace EomApp1.Screens.Synch.Services.Cake
             return affiliate;
         }
 
-
-        public List<EomApp1.Cake.WebServices._4.Reports.conversion> Conversions(int offerID, DateTime fromDate, DateTime toDate, bool enableBatches)
+        public List<EomApp1.Cake.WebServices._4.Reports.conversion> Conversions(int offerID, DateTime fromDate, DateTime toDate)
         {
-            this.logger.Log(string.Format("Calling Cake web service to get Conversions for OfferID={0} from {1} to {2}.", offerID, fromDate, toDate));
+            // Cake treats the to-date as exclusive, so we go one day past it
+            toDate = toDate.AddDays(1);
 
+            var result = new List<EomApp1.Cake.WebServices._4.Reports.conversion>();
+            bool success = false;
+
+            try
+            {
+                result.AddRange(ConversionsLocal(offerID, fromDate, toDate));
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                // Rethrow unless timeout
+                if (!ex.Message.Contains("timeout"))
+                    throw;
+            }
+
+            if (!success) // timeout, try splitting date range
+            {
+                const int daysAtATime = 3;
+
+                logger.Log("Timeout occured, trying again " + daysAtATime + " days at a time..");
+
+                result.Clear();
+                foreach (var dateRange in SplitDateRange(fromDate, toDate, daysAtATime))
+                {
+                    logger.Log("Current date range is " + dateRange.Item1.ToShortDateString() + " to " + dateRange.Item2.ToShortDateString());
+
+                    result.AddRange(ConversionsLocal(offerID, dateRange.Item1, dateRange.Item2));
+                }
+            }
+
+            return result;
+        }
+
+        public static IEnumerable<Tuple<DateTime, DateTime>> SplitDateRange(DateTime start, DateTime end, int dayChunkSize)
+        {
+            DateTime chunkEnd;
+
+            while ((chunkEnd = start.AddDays(dayChunkSize)) < end)
+            {
+                yield return Tuple.Create(start, chunkEnd);
+                start = chunkEnd;
+            }
+
+            yield return Tuple.Create(start, end);
+        }
+
+        private List<EomApp1.Cake.WebServices._4.Reports.conversion> ConversionsLocal(int offerID, DateTime fromDate, DateTime toDate)
+        {
+            const int batchSize = 5000;
             var client = GetReportsServiceV4();
-            List<EomApp1.Cake.WebServices._4.Reports.conversion> conversions;
-            EomApp1.Cake.WebServices._4.Reports.conversion_report_response response = null;
-            EomApp1.Cake.WebServices._4.Reports.conversion_report_response response2 = null;
 
-            Func<DateTime, DateTime, EomApp1.Cake.WebServices._4.Reports.conversion_report_response> getConversions = (from, to) =>
-                client.Conversions(
-                            api_key: ApiKey,
-                            start_date: from,
-                            end_date: to,
-                            affiliate_id: 0,
-                            advertiser_id: 0,
-                            offer_id: offerID,
-                            campaign_id: 0,
-                            creative_id: 0,
-                            include_tests: false,
-                            start_at_row: 0,
-                            row_limit: 0,
-                            sort_field: EomApp1.Cake.WebServices._4.Reports.ConversionsSortFields.conversion_id,
-                            sort_descending: false);
-
-            if (enableBatches && toDate.Day > 1)
+            Func<int, EomApp1.Cake.WebServices._4.Reports.conversion_report_response> getResponse = (start) =>
             {
-                int midPoint = toDate.Day / 2;
+                logger.Log("Extracting conversions, starting at row " + start);
 
-                response = getConversions(fromDate, fromDate.AddDays(midPoint));
-                if (!response.success)
-                    throw new Exception(response.message);
+                var resp = client.Conversions(api_key: ApiKey, start_date: fromDate, end_date: toDate,
+                                              affiliate_id: 0, advertiser_id: 0, offer_id: offerID, campaign_id: 0,
+                                              creative_id: 0, include_tests: false, start_at_row: start, row_limit: batchSize,
+                                              sort_field: EomApp1.Cake.WebServices._4.Reports.ConversionsSortFields.conversion_id,
+                                              sort_descending: false);
 
-                response2 = getConversions(fromDate.AddDays(midPoint), toDate.AddDays(1));
-                if (!response2.success)
-                    throw new Exception(response.message);
-            }
-            else
+                if (!resp.success)
+                    throw new Exception("conversions client failed");
+
+                return resp;
+            };
+
+            EomApp1.Cake.WebServices._4.Reports.conversion_report_response response;
+            var result = new List<EomApp1.Cake.WebServices._4.Reports.conversion>();
+            int startRow = 1;
+
+            do
             {
-                response = getConversions(fromDate, toDate.AddDays(1));
-
-                if (!response.success)
-                    throw new Exception(response.message);
+                response = getResponse(startRow);
+                result.AddRange(response.conversions.ToList());
+                startRow += batchSize;
             }
+            while (result.Count % batchSize == 0);
 
-            conversions = response.conversions.ToList();
-            if (response2 != null)
-                conversions.AddRange(response2.conversions);
-
-            this.logger.Log(string.Format("Got {0} conversions.", conversions.Count));
-
-            return conversions;
+            return result;
         }
 
         private static EomApp1.Cake.WebServices._3.Export.exportSoap GetExportServiceV3()

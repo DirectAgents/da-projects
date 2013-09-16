@@ -308,7 +308,6 @@ namespace EomApp1.Screens.Synch
                 Month = Properties.Settings.Default.StatsMonth,
                 FromDay = startDay,
                 ToDay = endDay,
-                ExtractInBatches = _extractConversionsFromCakeInBatches.Checked,
                 GroupItemsToFirstDayOfMonth = _groupItemsToFirstDayOfMonthCheckBox.Checked
             };
             var cakeSyncher = new CakeSyncher(this.Logger, parameters);

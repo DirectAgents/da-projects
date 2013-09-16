@@ -58,11 +58,6 @@ namespace EomApp1.Screens.Synch
             public DateTime ToDate { get { return new DateTime(this.Year, this.Month, this.ToDay); } }
 
             /// <summary>
-            /// If true, ignore FromDay and ToDay, and instead synch the whole month
-            /// </summary>
-            public bool ExtractInBatches { get; set; }
-
-            /// <summary>
             /// If true, create all items as a summary of the items for the month instead of
             /// an item for each day with stats.
             /// </summary>
@@ -164,8 +159,7 @@ namespace EomApp1.Screens.Synch
 
             var extracted = this.cakeService.Conversions(this.parameters.CampaignExternalId,
                                                          this.parameters.FromDate,
-                                                         this.parameters.ToDate,
-                                                         this.parameters.ExtractInBatches).ToList();
+                                                         this.parameters.ToDate).ToList();
 
             var validations = new Func<conversion, bool>[] { 
                  c => (c.affiliate != null) && (c.affiliate.affiliate_id > 0),
