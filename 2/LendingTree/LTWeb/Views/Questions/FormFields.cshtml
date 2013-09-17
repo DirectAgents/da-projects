@@ -122,12 +122,12 @@ else if (Model.DependencyValue == "PURCHASE")
                             }
                         }
                     </div>
-                </div>
-                <br />
-                <br /> 
-                <br />                                               
+                </div>                                              
                 if (Model.Key != "Complete")
                 {
+                    <br />
+                    <br /> 
+                    <br /> 
                     <div>
                         <div style="float: left; width: 400px; margin-left: 20px">
                             @*-------------*@
@@ -161,10 +161,11 @@ else if (Model.DependencyValue == "PURCHASE")
                     </div>
                 }
                 else if (ViewBag.ShouldFirePixel)
-                {
+                {          
+                    @Html.Partial("FreeCreditScore")       
                     <iframe src="https://smarttrk.com/p.ashx?o=30253&t=@ViewBag.AppID" height="1" width="1" frameborder="0"></iframe>
                     <iframe width='1' height='1' frameborder='0' src='http://www.securepaths.com/pixel.cgi?rt=3_saleJS&org=66wonlov5fxm7m2hjj2j&s=@ViewBag.AppID&p=6122566&a=@ViewBag.SubID'></iframe>
-<noscript> <img src="http://www.securepaths.com/pixel.cgi?rt=5_saleIMG&org=66wonlov5fxm7m2hjj2j&s=@ViewBag.AppID&p=6113036&a=@ViewBag.SubID"></noscript>
+                    <noscript><img src="http://www.securepaths.com/pixel.cgi?rt=5_saleIMG&org=66wonlov5fxm7m2hjj2j&s=@ViewBag.AppID&p=6113036&a=@ViewBag.SubID"></noscript>
                 }
             }
         </div>

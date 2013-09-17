@@ -1,126 +1,208 @@
 ﻿@model LTWeb.Models.AdminVM
+
 @{
-    ViewBag.Title = "Admin";
-    Layout = "~/Views/Shared/_Layout.cshtml";    
+	ViewBag.Title = "Admin";
+	Layout = "~/Views/Shared/_Layout.cshtml";    
 }
+
+@section head  {
+	<style>
+		div.pixel textarea.multi-line
+		{
+			height: 80px;
+			width: 500px;
+		}
+		fieldset
+		{
+			width: 95%;
+			margin-left: auto;
+			margin-right: auto;
+		}
+	</style>
+	<link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
+	<link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
+}
+
+@*Fix Lead Modal*@
 <div id="example" class="k-content">
-    <div id="fixWindow"></div>
+	<div id="fixWindow"></div>
 </div>
+
+@*Export and Filter Form*@
+@using (Html.BeginForm("Export", "Admin", FormMethod.Post, new { id = "export-form" }))
+{
+	<fieldset>
+		<legend>Filter</legend>
+		<table>
+			<tr>
+				<td>From: 
+				</td>
+				<td>
+					<input id="datetimepickerFromDate" name="fromDate" value="@Model.FromDate.ToShortDateString()" />
+				</td>
+			</tr>
+			<tr>
+				<td>To: 
+				</td>
+				<td>
+					<input id="datetimepickerToDate" name="toDate" value="@Model.ToDate.ToShortDateString()" />
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<a href="#" class="k-button" id="filter">Filter</a>
+					<button class="k-button" type="submit">Export</button>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+}
+
+@*Leads Grid*@
 <fieldset>
-    <legend>Leads</legend>
-    <div id="leadsGrid"></div>
+	<legend>Leads</legend>
+	<div id="leadsGrid"></div>
 </fieldset>
+
+@*Setting Form*@
 @using (Html.BeginForm())
 {    
-    @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>Settings</legend>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Rate1)
-        </div>
-        <div class="editor-field">
-            @Html.TextAreaFor(m => m.Rate1, 5, 80, new object { })
-            @Html.ValidationMessageFor(model => model.Rate1)
-        </div>
+	@Html.ValidationSummary(true)
+	<fieldset>
+		<legend>Settings</legend>
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Rate1)
+		</div>
+		<div class="editor-field">
+			@Html.TextAreaFor(m => m.Rate1, 5, 80, new object { })
+			@Html.ValidationMessageFor(model => model.Rate1)
+		</div>
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Rate2)
-        </div>
-        <div class="editor-field">
-            @Html.TextAreaFor(m => m.Rate2, 5, 80, new object { })
-            @Html.ValidationMessageFor(model => model.Rate2)
-        </div>
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
+		<div class="editor-label">
+			@Html.LabelFor(model => model.Rate2)
+		</div>
+		<div class="editor-field">
+			@Html.TextAreaFor(m => m.Rate2, 5, 80, new object { })
+			@Html.ValidationMessageFor(model => model.Rate2)
+		</div>
+		<p>
+			<input type="submit" value="Save" />
+		</p>
+	</fieldset>
 }
-@section head  {
-    <style>
-        div.pixel textarea.multi-line {
-            height: 80px;
-            width: 500px;
-        }
-    </style>
-    <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
-    <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
-}
+
+
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    @*Kendo UI*@
-    <script src="~/Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
-    @*Fix Leads*@
-    <script type="text/x-kendo-template" id="fixLeadTemplate">
-        #if(IsError) {#
-            <a href="javascript:fixLead('#=AppId#')">Fix</a>
-        #}#
-    </script>
-    <script>
-        // Open window with FixLead is clicked
-        function fixLead(appID) {
-            $("#fixWindow")
-                .data("kendoWindow")
-                .refresh("@Url.Action("Fix")" + "?appID=" + appID)
-                .title("Fix " + appID)
-                .open();
-        }
-        // Create window when page loads
-        $(function () {
-            if (!$("#fixWindow").data("kendoWindow")) {
-                $("#fixWindow").kendoWindow({
-                    width: "800px",
-                    visible: false,
-                    modal: true,
-                });
-                // Set initial window position
-                var windowWrapper = $("#fixWindow").closest(".k-window");
-                var horizontalCenter = Math.floor(window.innerWidth / 2);
-                windowWrapper.css({
-                    top: 50,
-                    left: horizontalCenter - (Math.floor(windowWrapper.width() / 2))
-                });
-            }
-        });
-    </script>
-    <script>
-        $(function () {
-            var url = '@Url.Action("LeadsGrid")';
-            var dataSource = new kendo.data.DataSource({
-                serverPaging: true, serverSorting: true, serverFiltering: true, pageSize: 20,
-                transport: { read: { type: 'post', dataType: 'json', url: url } },
-                schema: {
-                    data: 'data', total: 'total',
-                    model: {
-                        id: 'Id',
-                        fields: {
-                            Timestamp: { type: 'string' },
-                            AppId: { type: 'string' },
-                            AffiliateId: { type: 'string' },
-                            IPAddress: { type: 'string' },
-                            IsError: { type: 'boolean' }
-                        }
-                    }
-                }
-            });
-            $('#leadsGrid').kendoGrid({
-                dataSource: dataSource,
-                height: 400,
-                columns: [
-                    { field: 'Timestamp' },
-                    { field: 'AppId' },
-                    { field: 'AffiliateId' },
-                    { field: 'IPAddress' },
-                    {
-                        field: 'IsError',
-                        template: $("#fixLeadTemplate").html()
-                    }
-                ],
-                filterable: true,
-                sortable: {
-                    mode: 'multiple'
-                },
-                pageable: true
-            });
-        });
-    </script>
+
+	@Scripts.Render("~/bundles/jqueryval")
+
+	@*Kendo UI*@
+	<script src="~/Scripts/kendo/2012.3.1114/kendo.web.min.js"></script>
+
+	@*Fix Leads Template *@
+	<script type="text/x-kendo-template" id="fixLeadTemplate">
+		#if(IsError) {#
+			<a href="javascript:fixLead('#=AppId#')">Fix</a>
+		#}#
+	</script>
+
+	<script type="text/javascript">
+
+		// Click handler for Filter button
+		$("#filter").on("click", function () {
+			ApplyFilter();
+		});
+
+		// Open window when FixLead is clicked
+		function fixLead(appID) {
+			$("#fixWindow")
+				.data("kendoWindow")
+				.refresh("@Url.Action("Fix")" + "?appID=" + appID)
+				.title("Fix " + appID)
+				.open();
+		}
+
+		// Apply the current values of the filter to the data source
+		function ApplyFilter() {
+			var fromDate = $('#datetimepickerFromDate').data("kendoDatePicker").value();
+			var toDate = $('#datetimepickerToDate').data("kendoDatePicker").value();
+			var condition = {
+				logic: "and",
+				filters: [
+					{ field: "Timestamp", operator: "gt", value: kendo.toString(fromDate, "MM/dd/yyyy") },
+					{ field: "Timestamp", operator: "lt", value: kendo.toString(toDate, "MM/dd/yyyy") }
+				]
+			};
+			dataSource.filter(condition); // Referencing global var: dataSource
+		}
+
+		// On load
+		$(function () {
+
+			// Create Kendo UI popup winfow for "Fix" modal dialog
+			if (!$("#fixWindow").data("kendoWindow")) {
+				// Create window
+				$("#fixWindow").kendoWindow({
+					width: "800px",
+					visible: false,
+					modal: true,
+				});
+				// Set initial window position
+				var windowWrapper = $("#fixWindow").closest(".k-window");
+				var horizontalCenter = Math.floor(window.innerWidth / 2);
+				windowWrapper.css({
+					top: 50,
+					left: horizontalCenter - (Math.floor(windowWrapper.width() / 2))
+				});
+			}
+
+			// Init datetimepickers for filter
+			$("#datetimepickerFromDate").kendoDatePicker();
+			$("#datetimepickerToDate").kendoDatePicker();
+
+			// Get the url to the LeadsGrid action method
+			var url = '@Url.Action("LeadsGrid")';
+
+			// Create Kendo UI data source.
+			dataSource = new kendo.data.DataSource({ // Instantiating global var: dataSource
+				serverPaging: true, serverSorting: true, serverFiltering: true, pageSize: 20,
+				transport: { read: { type: 'post', dataType: 'json', url: url } },
+				schema: {
+					data: 'data', total: 'total',
+					model: {
+						id: 'Id',
+						fields: {
+							Timestamp: { type: 'string' },
+							AppId: { type: 'string' },
+							AffiliateId: { type: 'string' },
+							IPAddress: { type: 'string' },
+							LoanType: { type: 'string' },
+							IsError: { type: 'boolean' }
+						}
+					}
+				}
+			});
+
+			ApplyFilter();
+
+			// Create Kendo UI grid
+			$('#leadsGrid').kendoGrid({
+				dataSource: dataSource,
+				height: 400,
+				columns: [
+					{ field: 'Timestamp' },
+					{ field: 'AppId' },
+					{ field: 'AffiliateId' },
+					{ field: 'IPAddress' },
+					{ field: 'LoanType' },
+					{ field: 'IsError', template: $("#fixLeadTemplate").html() }
+				],
+				filterable: true,
+				sortable: { mode: 'multiple' },
+				pageable: true
+			});
+		});
+
+	</script>
 }

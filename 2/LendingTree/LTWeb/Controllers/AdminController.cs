@@ -1,12 +1,15 @@
-﻿using KendoGridBinder;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity.Migrations;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
+using CsvHelper;
+using KendoGridBinder;
 using LTWeb.Common;
 using LTWeb.DataAccess;
 using LTWeb.Models;
 using LTWeb.Service;
-using System;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Web.Mvc;
 
 namespace LTWeb.Controllers
 {
@@ -20,6 +23,41 @@ namespace LTWeb.Controllers
             get { return AppSettings.AdminIps.Contains(Request.UserHostAddress); }
         }
 
+        FileResult CsvFile<T>(IEnumerable<T> rows, string downloadFileName)
+            where T : class
+        {
+            return File(CsvStream(rows), "application/CSV", downloadFileName);
+        }
+
+        string DateStamp()
+        {
+            return DateTime.Now.ToString("yyyyMMdd");
+        }
+
+        MemoryStream CsvStream<T>(IEnumerable<T> rows)
+            where T : class
+        {
+            var output = new MemoryStream();
+            var writer = new StreamWriter(output);
+            var csv = new CsvWriter(writer);
+            csv.WriteRecords<T>(rows);
+            writer.Flush();
+            output.Position = 0;
+            return output;
+        }
+
+        [HttpPost]
+        public ActionResult Export(DateTime fromDate, DateTime toDate)
+        {
+            if (!IsAllowedAdminAccess)
+                return null;
+
+            var rows = this.context.Leads
+                                   .Where(c => c.Timestamp > fromDate && c.Timestamp < toDate);
+
+            return CsvFile(rows, string.Format("leads{0}.csv", DateStamp()));
+        }
+
         [HttpPost]
         public ActionResult LeadsGrid(KendoGridRequest request)
         {
@@ -27,6 +65,7 @@ namespace LTWeb.Controllers
                 return null;
 
             var grid = new KendoGrid<Lead>(request, this.context.Leads);
+
             return new JsonDotNetResult(grid); // default json serializer had trouble with XML content, switched to Json.NET
         }
 
@@ -66,6 +105,9 @@ namespace LTWeb.Controllers
 
                 var setting = repo.Single<AdminSetting>(c => c.Name == "Pixel");
                 model.Pixel = setting == null ? string.Empty : setting.Value;
+
+                model.ToDate = DateTime.Today.AddDays(1);
+                model.FromDate = model.ToDate.AddDays(-7);
 
                 return View(model);
             }

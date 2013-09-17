@@ -44,6 +44,9 @@
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.2.2.1\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="CsvHelper">
+      <HintPath>..\packages\CsvHelper.2.2.2\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Dynamic">
       <HintPath>..\packages\DynamicQuery.1.0\lib\35\Dynamic.dll</HintPath>
     </Reference>
@@ -211,6 +214,7 @@
     <Content Include="Content\images\btn-getquotes.jpg" />
     <Content Include="Content\images\btn-processing.jpg" />
     <Content Include="Content\images\btn-showresults.jpg" />
+    <Content Include="Content\images\get-scores-now-blue-button.jpg" />
     <Content Include="Content\images\graphic-review.gif" />
     <Content Include="Content\images\house-logo.gif" />
     <Content Include="Content\images\icon-lock.png" />
@@ -940,6 +944,7 @@
     <Content Include="Views\Questions\TermsConsent.cshtml" />
     <Content Include="Views\Admin\Fix.cshtml" />
     <Content Include="Views\Test\PostToServiceExample.cshtml" />
+    <Content Include="Views\Shared\FreeCreditScore.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LTWeb.Common\LTWeb.Common.csproj">

@@ -23,6 +23,7 @@ namespace LTWeb.Service
                     AppId = request.AppID,
                     AffiliateId = request.AffiliateSiteID,
                     IPAddress = request.VisitorIPAddress,
+                    LoanType = request.LoanType ?? "unknown"
                 };
 
             using (var writer = new StreamWriter(webRequest.GetRequestStream()))

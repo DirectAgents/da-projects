@@ -22,6 +22,8 @@ namespace LTWeb
 
         public int IsError { get; set; }
 
+        public string LoanType { get; set; }
+
         [NotMapped]
         public XElement RequestContentXml
         {
