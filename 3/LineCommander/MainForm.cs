@@ -39,7 +39,7 @@ namespace LineCommander
         private void ComposeThisObject()
         {
             var catalog = new DirectoryCatalog(@".", "CakeExtracter.dll");
-            var composistionContainer = new CompositionContainer(catalog);
+            var composistionContainer = new CompositionContainer(catalog, true);
             composistionContainer.ComposeParts(this);
         }
 

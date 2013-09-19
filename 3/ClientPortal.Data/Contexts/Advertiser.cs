@@ -36,6 +36,8 @@ namespace ClientPortal.Data.Contexts
         public string AutomatedReportsDestinationEmail { get; set; }
         public int AutomatedReportsPeriodDays { get; set; }
         public Nullable<System.DateTime> AutomatedReportsNextSendAfter { get; set; }
+        public string AdWordsAccountId { get; set; }
+        public string BingAdsAccountId { get; set; }
     
         public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }

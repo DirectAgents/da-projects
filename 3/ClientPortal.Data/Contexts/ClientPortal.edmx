@@ -96,6 +96,8 @@
           <Property Name="ConversionValueName" Type="nvarchar(max)" />
           <Property Name="ConversionValueIsNumber" Type="bit" Nullable="false" />
           <Property Name="HasSearch" Type="bit" Nullable="false" />
+          <Property Name="AdWordsAccountId" Type="nvarchar" MaxLength="255" />
+          <Property Name="BingAdsAccountId" Type="nvarchar" MaxLength="255" />
           <Property Name="AutomatedReportsEnabled" Type="bit" Nullable="false" />
           <Property Name="AutomatedReportsDestinationEmail" Type="nvarchar(max)" />
           <Property Name="AutomatedReportsPeriodDays" Type="int" Nullable="false" />
@@ -981,6 +983,8 @@
           <NavigationProperty Name="FileUploads" Relationship="ClientPortalModel.FK_FileUpload_Advertiser" FromRole="Advertiser" ToRole="FileUpload" />
           <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Advertiser" ToRole="Goal" />
           <NavigationProperty Name="SearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="Advertiser" ToRole="SearchCampaign" />
+          <Property Type="String" Name="AdWordsAccountId" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="BingAdsAccountId" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -1286,6 +1290,8 @@
           <EntitySetMapping Name="Advertisers">
             <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
               <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="BingAdsAccountId" ColumnName="BingAdsAccountId" />
+                <ScalarProperty Name="AdWordsAccountId" ColumnName="AdWordsAccountId" />
                 <ScalarProperty Name="AutomatedReportsNextSendAfter" ColumnName="AutomatedReportsNextSendAfter" />
                 <ScalarProperty Name="AutomatedReportsPeriodDays" ColumnName="AutomatedReportsPeriodDays" />
                 <ScalarProperty Name="AutomatedReportsDestinationEmail" ColumnName="AutomatedReportsDestinationEmail" />

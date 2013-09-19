@@ -94,10 +94,28 @@
             @Html.ValidationMessageFor(model => model.AutomatedReportsPeriodDays)
         </div>
 
+        <div class="editor-label">
+            @Html.LabelFor(model => model.AdWordsAccountId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.AdWordsAccountId)
+            @Html.ValidationMessageFor(model => model.AdWordsAccountId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.BingAdsAccountId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.BingAdsAccountId)
+            @Html.ValidationMessageFor(model => model.BingAdsAccountId)
+        </div>
+
         <p>
             <input type="submit" value="Save" />
         </p>
-    </fieldset>
+    </fieldset>   
+    @Html.HiddenFor(model => model.HasSearch)
+    @Html.HiddenFor(model => model.AutomatedReportsNextSendAfter)
 }
 
 <div>

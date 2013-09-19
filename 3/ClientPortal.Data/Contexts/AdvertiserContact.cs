@@ -18,7 +18,7 @@ namespace ClientPortal.Data.Contexts
         public int ContactId { get; set; }
         public Nullable<int> Order { get; set; }
     
-        public virtual Advertiser Advertiser { get; set; }
         public virtual Contact Contact { get; set; }
+        public virtual Advertiser Advertiser { get; set; }
     }
 }

@@ -181,6 +181,10 @@
       <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
       <Name>CakeExtracter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ClientPortal.Data\ClientPortal.Data.csproj">
+      <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
+      <Name>ClientPortal.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\DataSources\" />
