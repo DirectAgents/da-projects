@@ -41,6 +41,9 @@ namespace EomToolWeb
         public static IEnumerable<SelectListItem> ChooseMonthListItems(this IDAMain1Repository daMain1Repository)
         {
             var listItems = from c in daMain1Repository.DADatabases
+                                .Where(d => d.initialized)
+                                .OrderByDescending(d => d.effective_date)
+                                .ToList()
                             select new SelectListItem
                             {
                                 Text = c.name,

@@ -60,7 +60,7 @@ namespace EomToolWeb.Infrastructure
             var eomToolConfig = EomToolWebConfigSection.GetConfigSection();
             if (eomToolConfig.DebugMode) return true;
 
-            string query = "select top 1 connection_string from DADatabase where effective_date = @eomDate";
+            string query = "select top 1 connection_string from DADatabase where effective_date = @eomDate and initialized=1";
             var connectionString = SqlUtility.ExecuteScalar<string>(eomToolConfig.MasterConnectionString, query, eomDate);
             return (connectionString != null);
         }

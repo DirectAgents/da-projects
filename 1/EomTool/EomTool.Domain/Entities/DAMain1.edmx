@@ -12,7 +12,8 @@
       [DADatabase].[name] AS [name], 
       [DADatabase].[connection_string] AS [connection_string], 
       [DADatabase].[effective_date] AS [effective_date], 
-      [DADatabase].[am_view_name] AS [am_view_name]
+      [DADatabase].[am_view_name] AS [am_view_name], 
+      [DADatabase].[initialized] AS [initialized]
       FROM [dbo].[DADatabase] AS [DADatabase]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="PublisherNotes" EntityType="DAMain1Model.Store.PublisherNotes" store:Type="Tables" Schema="dbo" />
@@ -26,12 +27,14 @@
             <PropertyRef Name="name" />
             <PropertyRef Name="connection_string" />
             <PropertyRef Name="am_view_name" />
+            <PropertyRef Name="initialized" />
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="connection_string" Type="varchar" Nullable="false" MaxLength="500" />
           <Property Name="effective_date" Type="datetime" />
           <Property Name="am_view_name" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="initialized" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PublisherNotes">
           <Key>
@@ -57,12 +60,14 @@
             <PropertyRef Name="name" />
             <PropertyRef Name="connection_string" />
             <PropertyRef Name="am_view_name" />
+            <PropertyRef Name="initialized" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
           <Property Name="connection_string" Type="String" Nullable="false" MaxLength="500" Unicode="false" FixedLength="false" />
           <Property Name="effective_date" Type="DateTime" Precision="3" />
           <Property Name="am_view_name" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Type="Boolean" Name="initialized" Nullable="false" />
         </EntityType>
         <EntityType Name="PublisherNote">
           <Key>
@@ -81,7 +86,8 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="DAMain1ModelStoreContainer" CdmEntityContainer="DAMain1Entities">
           <EntitySetMapping Name="DADatabases"><EntityTypeMapping TypeName="DAMain1Model.DADatabase"><MappingFragment StoreEntitySet="DADatabase">
-            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="initialized" ColumnName="initialized" />
+                <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
             <ScalarProperty Name="connection_string" ColumnName="connection_string" />
             <ScalarProperty Name="effective_date" ColumnName="effective_date" />

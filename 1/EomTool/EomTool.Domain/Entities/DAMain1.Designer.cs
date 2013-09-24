@@ -142,13 +142,15 @@ namespace EomTool.Domain.Entities
         /// <param name="name">Initial value of the name property.</param>
         /// <param name="connection_string">Initial value of the connection_string property.</param>
         /// <param name="am_view_name">Initial value of the am_view_name property.</param>
-        public static DADatabase CreateDADatabase(global::System.Int32 id, global::System.String name, global::System.String connection_string, global::System.String am_view_name)
+        /// <param name="initialized">Initial value of the initialized property.</param>
+        public static DADatabase CreateDADatabase(global::System.Int32 id, global::System.String name, global::System.String connection_string, global::System.String am_view_name, global::System.Boolean initialized)
         {
             DADatabase dADatabase = new DADatabase();
             dADatabase.id = id;
             dADatabase.name = name;
             dADatabase.connection_string = connection_string;
             dADatabase.am_view_name = am_view_name;
+            dADatabase.initialized = initialized;
             return dADatabase;
         }
 
@@ -287,6 +289,33 @@ namespace EomTool.Domain.Entities
         private global::System.String _am_view_name;
         partial void Onam_view_nameChanging(global::System.String value);
         partial void Onam_view_nameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean initialized
+        {
+            get
+            {
+                return _initialized;
+            }
+            set
+            {
+                if (_initialized != value)
+                {
+                    OninitializedChanging(value);
+                    ReportPropertyChanging("initialized");
+                    _initialized = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("initialized");
+                    OninitializedChanged();
+                }
+            }
+        }
+        private global::System.Boolean _initialized;
+        partial void OninitializedChanging(global::System.Boolean value);
+        partial void OninitializedChanged();
 
         #endregion
 
