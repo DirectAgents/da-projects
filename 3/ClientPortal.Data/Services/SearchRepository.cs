@@ -137,7 +137,7 @@ namespace ClientPortal.Data.Services
         public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek)
         {
             var weeks = CalenderWeek.Generate(startDate, endDate, startDayOfWeek);
-            var stats = GetSearchDailySummaries(90001, null, startDate, endDate)
+            var stats = GetSearchDailySummaries(advertiserId, null, startDate, endDate)
                             .Select(c => new
                             {
                                 c.Date,
