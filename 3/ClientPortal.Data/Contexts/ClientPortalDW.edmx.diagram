@@ -22,10 +22,10 @@
         <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimBrowser" />
         <EntityTypeShape EntityType="ClientPortalDWModel.DimDevice" Width="1.5" PointX="8.375" PointY="4.25" />
         <AssociationConnector Association="ClientPortalDWModel.FK_FactClick_DimDevice" />
-        <EntityTypeShape EntityType="ClientPortalDWModel.FactConversion" Width="1.5" PointX="3.75" PointY="0.625" />
+        <EntityTypeShape EntityType="ClientPortalDWModel.FactConversion" Width="1.5" PointX="3.625" PointY="0.625" />
         <AssociationConnector Association="ClientPortalDWModel.FK_FactConversion_DimDate" />
-        <AssociationConnector Association="ClientPortalDWModel.FK_FactConversion_FactClick" />
         <AssociationConnector Association="ClientPortalDWModel.FK_FactConversion_DimDateClick" />
+        <AssociationConnector Association="ClientPortalDWModel.FK_FactConversion_FactClick" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

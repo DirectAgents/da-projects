@@ -14,13 +14,13 @@ namespace ClientPortal.Data.Contexts
     
     public partial class FactConversion
     {
-        public int ConversionKey { get; set; }
+        public string ConversionKey { get; set; }
         public Nullable<int> ClickKey { get; set; }
         public System.DateTime DateKey { get; set; }
         public Nullable<System.DateTime> ClickDateKey { get; set; }
     
         public virtual DimDate DimDate { get; set; }
-        public virtual FactClick FactClick { get; set; }
         public virtual DimDate DimDate1 { get; set; }
+        public virtual FactClick FactClick { get; set; }
     }
 }

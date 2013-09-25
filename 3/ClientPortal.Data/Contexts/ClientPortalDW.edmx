@@ -145,7 +145,7 @@
           <Key>
             <PropertyRef Name="ConversionKey" />
           </Key>
-          <Property Name="ConversionKey" Type="int" Nullable="false" />
+          <Property Name="ConversionKey" Type="nvarchar" Nullable="false" MaxLength="128" />
           <Property Name="ClickKey" Type="int" />
           <Property Name="DateKey" Type="datetime" Nullable="false" />
           <Property Name="ClickDateKey" Type="datetime" />
@@ -338,19 +338,6 @@
             <End Role="DimDevice" EntitySet="DimDevices" />
             <End Role="FactClick" EntitySet="FactClicks" />
           </AssociationSet>
-          <EntitySet Name="FactConversions" EntityType="ClientPortalDWModel.FactConversion" />
-          <AssociationSet Name="FK_FactConversion_DimDate" Association="ClientPortalDWModel.FK_FactConversion_DimDate">
-            <End Role="DimDate" EntitySet="DimDates" />
-            <End Role="FactConversion" EntitySet="FactConversions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FactConversion_FactClick" Association="ClientPortalDWModel.FK_FactConversion_FactClick">
-            <End Role="FactClick" EntitySet="FactClicks" />
-            <End Role="FactConversion" EntitySet="FactConversions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_FactConversion_DimDateClick" Association="ClientPortalDWModel.FK_FactConversion_DimDateClick">
-            <End Role="DimDate" EntitySet="DimDates" />
-            <End Role="FactConversion" EntitySet="FactConversions" />
-          </AssociationSet>
           <FunctionImport Name="ClicksByDevice" ReturnType="Collection(ClientPortalDWModel.DeviceClicks)">
             <Parameter Name="advertiserId" Mode="In" Type="Int32" />
             <Parameter Name="date1" Mode="In" Type="DateTime" />
@@ -361,6 +348,19 @@
             <Parameter Name="date1" Mode="In" Type="DateTime" />
             <Parameter Name="date2" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="FactConversions" EntityType="ClientPortalDWModel.FactConversion" />
+          <AssociationSet Name="FK_FactConversion_DimDate" Association="ClientPortalDWModel.FK_FactConversion_DimDate">
+            <End Role="DimDate" EntitySet="DimDates" />
+            <End Role="FactConversion" EntitySet="FactConversions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FactConversion_DimDateClick" Association="ClientPortalDWModel.FK_FactConversion_DimDateClick">
+            <End Role="DimDate" EntitySet="DimDates" />
+            <End Role="FactConversion" EntitySet="FactConversions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FactConversion_FactClick" Association="ClientPortalDWModel.FK_FactConversion_FactClick">
+            <End Role="FactClick" EntitySet="FactClicks" />
+            <End Role="FactConversion" EntitySet="FactConversions" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="DimCountry">
           <Key>
@@ -444,7 +444,7 @@
           <NavigationProperty Name="FactClicks" Relationship="ClientPortalDWModel.FK_FactClick_DimDate" FromRole="DimDate" ToRole="FactClick" />
           <NavigationProperty Name="FactConversions" Relationship="ClientPortalDWModel.FK_FactConversion_DimDate" FromRole="DimDate" ToRole="FactConversion" />
           <NavigationProperty Name="FactConversions1" Relationship="ClientPortalDWModel.FK_FactConversion_DimDateClick" FromRole="DimDate" ToRole="FactConversion" />
-        </EntityType>
+          </EntityType>
         <Association Name="FK_FactClick_DimDate">
           <End Type="ClientPortalDWModel.DimDate" Role="DimDate" Multiplicity="1" />
           <End Type="ClientPortalDWModel.FactClick" Role="FactClick" Multiplicity="*" />
@@ -557,17 +557,25 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="DeviceClicks">
+          <Property Type="String" Name="DeviceName" Nullable="false" MaxLength="250" />
+          <Property Type="Int32" Name="ClickCount" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="ConversionsByRegion">
+          <Property Type="String" Name="RegionCode" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="ClickCount" Nullable="false" />
+        </ComplexType>
         <EntityType Name="FactConversion">
           <Key>
             <PropertyRef Name="ConversionKey" />
           </Key>
-          <Property Type="Int32" Name="ConversionKey" Nullable="false" />
+          <Property Type="String" Name="ConversionKey" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ClickKey" />
           <Property Type="DateTime" Name="DateKey" Nullable="false" Precision="3" />
-          <NavigationProperty Name="DimDate" Relationship="ClientPortalDWModel.FK_FactConversion_DimDate" FromRole="FactConversion" ToRole="DimDate" />
-          <NavigationProperty Name="FactClick" Relationship="ClientPortalDWModel.FK_FactConversion_FactClick" FromRole="FactConversion" ToRole="FactClick" />
           <Property Type="DateTime" Name="ClickDateKey" Precision="3" />
+          <NavigationProperty Name="DimDate" Relationship="ClientPortalDWModel.FK_FactConversion_DimDate" FromRole="FactConversion" ToRole="DimDate" />
           <NavigationProperty Name="DimDate1" Relationship="ClientPortalDWModel.FK_FactConversion_DimDateClick" FromRole="FactConversion" ToRole="DimDate" />
+          <NavigationProperty Name="FactClick" Relationship="ClientPortalDWModel.FK_FactConversion_FactClick" FromRole="FactConversion" ToRole="FactClick" />
         </EntityType>
         <Association Name="FK_FactConversion_DimDate">
           <End Type="ClientPortalDWModel.DimDate" Role="DimDate" Multiplicity="1" />
@@ -578,18 +586,6 @@
             </Principal>
             <Dependent Role="FactConversion">
               <PropertyRef Name="DateKey" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_FactConversion_FactClick">
-          <End Type="ClientPortalDWModel.FactClick" Role="FactClick" Multiplicity="0..1" />
-          <End Type="ClientPortalDWModel.FactConversion" Role="FactConversion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="FactClick">
-              <PropertyRef Name="ClickKey" />
-            </Principal>
-            <Dependent Role="FactConversion">
-              <PropertyRef Name="ClickKey" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -605,14 +601,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="DeviceClicks">
-          <Property Type="String" Name="DeviceName" Nullable="false" MaxLength="250" />
-          <Property Type="Int32" Name="ClickCount" Nullable="false" />
-        </ComplexType>
-        <ComplexType Name="ConversionsByRegion">
-          <Property Type="String" Name="RegionCode" Nullable="false" MaxLength="10" />
-          <Property Type="Int32" Name="ClickCount" Nullable="false" />
-        </ComplexType>
+        <Association Name="FK_FactConversion_FactClick">
+          <End Type="ClientPortalDWModel.FactClick" Role="FactClick" Multiplicity="0..1" />
+          <End Type="ClientPortalDWModel.FactConversion" Role="FactConversion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FactClick">
+              <PropertyRef Name="ClickKey" />
+            </Principal>
+            <Dependent Role="FactConversion">
+              <PropertyRef Name="ClickKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -708,16 +708,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="FactConversions">
-            <EntityTypeMapping TypeName="ClientPortalDWModel.FactConversion">
-              <MappingFragment StoreEntitySet="FactConversion">
-                <ScalarProperty Name="ClickDateKey" ColumnName="ClickDateKey" />
-                <ScalarProperty Name="DateKey" ColumnName="DateKey" />
-                <ScalarProperty Name="ClickKey" ColumnName="ClickKey" />
-                <ScalarProperty Name="ConversionKey" ColumnName="ConversionKey" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="ClicksByDevice" FunctionName="ClientPortalDWModel.Store.spClicksByDevice">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ClientPortalDWModel.DeviceClicks">
@@ -734,6 +724,16 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="FactConversions">
+            <EntityTypeMapping TypeName="ClientPortalDWModel.FactConversion">
+              <MappingFragment StoreEntitySet="FactConversion">
+                <ScalarProperty Name="ClickDateKey" ColumnName="ClickDateKey" />
+                <ScalarProperty Name="DateKey" ColumnName="DateKey" />
+                <ScalarProperty Name="ClickKey" ColumnName="ClickKey" />
+                <ScalarProperty Name="ConversionKey" ColumnName="ConversionKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

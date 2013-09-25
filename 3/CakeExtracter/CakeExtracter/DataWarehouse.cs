@@ -132,10 +132,8 @@ namespace CakeExtracter
             {
                 foreach (var conversion in conversions)
                 {
-                    int conversionKey = int.Parse(conversion.conversion_id);
-
                     // if the conversion fact does not exist
-                    if (db.FactConversions.FirstOrDefault(c => c.ConversionKey == conversionKey) == null)
+                    if (db.FactConversions.FirstOrDefault(c => c.ConversionKey == conversion.conversion_id) == null)
                     {
                         int? clickKey = conversion.click_id;
 
@@ -146,7 +144,7 @@ namespace CakeExtracter
                             {
                                 factConversionsToLoad.Add(new FactConversion
                                 {
-                                    ConversionKey = conversionKey,
+                                    ConversionKey = conversion.conversion_id,
                                     ClickKey = clickKey.Value,
                                     DateKey = conversion.conversion_date.Date,
                                 });
@@ -158,7 +156,7 @@ namespace CakeExtracter
                         }
                         else
                         {
-                            Console.WriteLine("Conversion id {0} has null click id.", conversionKey);
+                            Console.WriteLine("Conversion id {0} has null click id.", conversion.conversion_id);
                         }
                     }
                 }
