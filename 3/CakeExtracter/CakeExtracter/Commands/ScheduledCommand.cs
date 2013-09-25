@@ -23,7 +23,7 @@ namespace CakeExtracter.Commands
             this.scheduler = scheduler;
             this.consoleCommandToExecute = consoleCommandToExecute;
 
-            IsCommand(this.consoleCommandToExecute.Command, "scheduled command: " + this.consoleCommandToExecute.Command);
+            IsCommand(this.consoleCommandToExecute.Command, "scheduled command: " + this.consoleCommandToExecute.Command); // need this?
         }
 
         public override int Execute(string[] remainingArguments)

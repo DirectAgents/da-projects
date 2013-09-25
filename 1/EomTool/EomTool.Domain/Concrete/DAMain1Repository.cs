@@ -13,19 +13,9 @@ namespace EomTool.Domain.Concrete
             this.db = new DAMain1Entities();
         }
 
-        private List<DADatabase> daDatabases;
-        public List<DADatabase> DADatabases
+        public IQueryable<DADatabase> DADatabases
         {
-            get
-            {
-                if (this.daDatabases == null)
-                {
-                    this.daDatabases = db.DADatabases
-                                         .OrderByDescending(c => c.effective_date)
-                                         .ToList();
-                }
-                return this.daDatabases;
-            }
+            get { return db.DADatabases; }
         }
 
         // --- PublisherNotes ---

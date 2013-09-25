@@ -35,8 +35,9 @@ SELECT id, name, connection_string, effective_date FROM DADatabase WHERE (id = S
                 </InsertCommand>
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT        id, name, connection_string, effective_date
-FROM            DADatabase
+                    <CommandText>SELECT     id, name, connection_string, effective_date
+FROM         DADatabase
+WHERE     (initialized = 1)
 ORDER BY effective_date</CommandText>
                     <Parameters />
                   </DbCommand>
@@ -76,7 +77,7 @@ SELECT id, name, connection_string, effective_date FROM DADatabase WHERE (id = @
   <xs:element name="SettingsDataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="SettingsDataSet1" msprop:Generator_UserDSName="SettingsDataSet1">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="DADatabase" msprop:Generator_TableClassName="DADatabaseDataTable" msprop:Generator_TableVarName="tableDADatabase" msprop:Generator_TablePropName="DADatabase" msprop:Generator_RowDeletingName="DADatabaseRowDeleting" msprop:Generator_UserTableName="DADatabase" msprop:Generator_RowChangingName="DADatabaseRowChanging" msprop:Generator_RowEvHandlerName="DADatabaseRowChangeEventHandler" msprop:Generator_RowDeletedName="DADatabaseRowDeleted" msprop:Generator_RowEvArgName="DADatabaseRowChangeEvent" msprop:Generator_RowChangedName="DADatabaseRowChanged" msprop:Generator_RowClassName="DADatabaseRow">
+        <xs:element name="DADatabase" msprop:Generator_TableClassName="DADatabaseDataTable" msprop:Generator_TableVarName="tableDADatabase" msprop:Generator_RowChangedName="DADatabaseRowChanged" msprop:Generator_TablePropName="DADatabase" msprop:Generator_RowDeletingName="DADatabaseRowDeleting" msprop:Generator_RowChangingName="DADatabaseRowChanging" msprop:Generator_RowEvHandlerName="DADatabaseRowChangeEventHandler" msprop:Generator_RowDeletedName="DADatabaseRowDeleted" msprop:Generator_RowClassName="DADatabaseRow" msprop:Generator_UserTableName="DADatabase" msprop:Generator_RowEvArgName="DADatabaseRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:int" />

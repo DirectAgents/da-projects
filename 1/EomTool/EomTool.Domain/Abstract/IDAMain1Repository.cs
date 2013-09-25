@@ -6,7 +6,7 @@ namespace EomTool.Domain.Abstract
 {
     public interface IDAMain1Repository
     {
-        List<DADatabase> DADatabases { get; }
+        IQueryable<DADatabase> DADatabases { get; }
 
         IQueryable<PublisherNote> PublisherNotes { get; }
         IQueryable<PublisherNote> PublisherNotesForPublisher(string pubName);
