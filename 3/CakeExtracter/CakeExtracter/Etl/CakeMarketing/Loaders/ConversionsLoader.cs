@@ -103,10 +103,12 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                             continue;
                         }
 
-                        factConversion = new ClientPortal.Data.Contexts.FactConversion
-                        {
-                            ConversionKey = conversionFromSource.ConversionId
-                        };
+                        factConversion = new ClientPortal.Data.Contexts.FactConversion();
+                        int conversionKey;
+                        bool parsed = int.TryParse(conversionFromSource.ConversionId, out conversionKey);
+                        if (!parsed)
+                            continue;
+                        factConversion.ConversionKey = conversionKey;
 
                         // DateKey
                         factConversion.DateKey = conversionFromSource.ConversionDate.Date;

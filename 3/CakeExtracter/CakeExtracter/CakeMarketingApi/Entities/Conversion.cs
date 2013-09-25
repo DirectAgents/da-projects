@@ -4,7 +4,7 @@ namespace CakeExtracter.CakeMarketingApi.Entities
 {
     public class Conversion
     {
-        public int ConversionId { get; set; }
+        public string ConversionId { get; set; }
         public DateTime ConversionDate { get; set; }
         public DateTime ClickDate { get; set; }
         public int ClickId { get; set; }
