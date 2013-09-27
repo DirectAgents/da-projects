@@ -3,6 +3,7 @@ using System.Linq;
 using CakeExtracter.CakeMarketingApi;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
+using System.Collections.Generic;
 
 namespace CakeExtracter.Etl.CakeMarketing.Extracters
 {
@@ -31,8 +32,20 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
 
             foreach (var offerId in offerIds)
             {
-                var conversions = RetryUtility.Retry(3, 10000, new[] { typeof(Exception) }, () =>
-                        CakeMarketingUtility.Conversions(dateRange, advertiserId, offerId));
+                List<Conversion> conversions;
+                try
+                {
+                    conversions = RetryUtility.Retry(3, 10000, new[] { typeof(Exception) }, () =>
+                            CakeMarketingUtility.Conversions(dateRange, advertiserId, offerId));
+                }
+                catch (Exception ex)
+                {
+                    Logger.Info("Exception while extracting Conversions for offerid={0} between {1} and {2}",
+                                offerId,
+                                dateRange.FromDate.ToShortDateString(),
+                                dateRange.ToDate.ToShortDateString());
+                    throw ex;
+                }
 
                 foreach (var batch in conversions.InBatches(1000))
                 {
