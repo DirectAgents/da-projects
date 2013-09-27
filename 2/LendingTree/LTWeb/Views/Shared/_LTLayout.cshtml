@@ -36,20 +36,12 @@
                  
                     <h2>Refinance Rates From</h2>
                     <div class="rate">
-                        <!--@LTWeb.Session.Admin["Rate1"]%-->
-                        3.00%
-                        
-                        <!--(@LTWeb.Session.Admin["Rate2"]% APR)*-->
-                        (3.16% APR)*
+                        @Html.Raw(LTWeb.Session.Admin["Rate1"])
                     </div>
-            
-                   
-                    
+
                 </div>
                 <div id="payments">
-                    <h2 class="green">$200,000 mortgage for $843/month</h2>
-                    <h2 class="green">$300,000 mortgage for $1,265/month</h2>
-                    <h2 class="green">$400,000 mortgage for $1,686/month</h2>
+                    @Html.Raw(LTWeb.Session.Admin["Rate2"])
                     <div class="disclosure">
                         <a href="javascript:STMRCWindow('https://www.lendingtree.com/legal/advertising-disclosures')">Full Advertising Disclosures
                         </a>
