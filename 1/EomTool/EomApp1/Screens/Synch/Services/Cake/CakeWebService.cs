@@ -226,7 +226,7 @@ namespace EomApp1.Screens.Synch.Services.Cake
                 result.AddRange(response.conversions.ToList());
                 startRow += batchSize;
             }
-            while (result.Count % batchSize == 0);
+            while (response.conversions.Length == batchSize);
 
             return result;
         }
