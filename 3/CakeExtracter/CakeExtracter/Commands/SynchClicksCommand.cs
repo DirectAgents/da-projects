@@ -12,15 +12,13 @@ namespace CakeExtracter.Commands
     public class SynchClicksCommand : ConsoleCommand
     {
         public int AdvertiserId { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public bool SynchConversionsAlso { get; set; }
 
         public SynchClicksCommand()
         {
             AdvertiserId = 0;
-            StartDate = DateTime.Today.AddDays(-1);
-            EndDate = DateTime.Today.AddDays(-1);
 
             IsCommand("synchClicks", "synch Clicks for an advertisers offers in a date range");
             HasOption("a|advertiserId=", "Advertiser Id (0 = all)", c => AdvertiserId = int.Parse(c));
@@ -31,7 +29,8 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var dateRange = new DateRange(StartDate, EndDate);
+            var yesterday = DateTime.Today.AddDays(-1);
+            var dateRange = new DateRange(StartDate ?? yesterday, EndDate ?? yesterday);
             foreach (var date in dateRange.Dates)
             {
                 try

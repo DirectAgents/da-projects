@@ -10,18 +10,25 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesBingCommand : ConsoleCommand
     {
+        public int AdvertiserId { get; set; }
+        public int AccountId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
         public SynchSearchDailySummariesBingCommand()
         {
             IsCommand("synchSearchDailySummariesBing", "synch SearchDailySummaries for Bing API Report");
             HasRequiredOption<int>("v|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
             HasOption<int>("a|accountId=", "Account Id", c => AccountId = c);
-            HasRequiredOption<DateTime>("s|startDate=", "Start Date", c => StartDate = c);
-            HasRequiredOption<DateTime>("e|endDate=", "End Date", c => EndDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
+            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var extracter = new BingDailySummaryExtracter(GetAccountId(), StartDate, EndDate);
+            var oneMonthAgo = DateTime.Today.AddMonths(-1);
+            var yesterday = DateTime.Today.AddDays(-1);
+            var extracter = new BingDailySummaryExtracter(GetAccountId(), StartDate ?? oneMonthAgo, EndDate ?? yesterday);
             var loader = new BingLoader(AdvertiserId);
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -48,9 +55,5 @@ namespace CakeExtracter.Commands
             }
         }
 
-        public int AdvertiserId { get; set; }
-        public int AccountId { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
     }
 }

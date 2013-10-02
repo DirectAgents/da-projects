@@ -10,18 +10,24 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesAdWordsCommand : ConsoleCommand
     {
+        public int AdvertiserId { get; set; }
+        public string ClientCustomerId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
         public SynchSearchDailySummariesAdWordsCommand()
         {
             IsCommand("synchSearchDailySummariesAdWords", "synch SearchDailySummaries for AdWords");
             HasRequiredOption<int>("aid|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
             HasOption<string>("v|clientCustomerId=", "Client Customer Id", c => ClientCustomerId = c);
-            HasRequiredOption<DateTime>("s|startDate=", "Start Date", c => StartDate = c);
-            HasRequiredOption<DateTime>("e|endDate=", "End Date", c => EndDate = c);
+            HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
+            HasOption<DateTime>("e|endDate=", "End Date (default is today)", c => EndDate = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var extracter = new AdWordsApiExtracter(GetClientCustomerId(), StartDate, EndDate);
+            var oneMonthAgo = DateTime.Today.AddMonths(-1);
+            var extracter = new AdWordsApiExtracter(GetClientCustomerId(), StartDate ?? oneMonthAgo, EndDate ?? DateTime.Today);
             var loader = new AdWordsApiLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -48,9 +54,5 @@ namespace CakeExtracter.Commands
             }
         }
 
-        public int AdvertiserId { get; set; }
-        public string ClientCustomerId { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
     }
 }

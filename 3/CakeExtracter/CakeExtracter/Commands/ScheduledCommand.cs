@@ -26,11 +26,16 @@ namespace CakeExtracter.Commands
             IsCommand(this.consoleCommandToExecute.Command, "scheduled command: " + this.consoleCommandToExecute.Command); // need this?
         }
 
-        public override int Execute(string[] remainingArguments)
+        public override int Run(string[] remainingArguments)
         {
             return this.IntervalCount > 0
                             ? RunSchedule()
-                            : this.consoleCommandToExecute.Execute(null);
+                            : this.consoleCommandToExecute.Run(remainingArguments);
+        }
+
+        public override int Execute(string[] remainingArguments)
+        {
+            throw new Exception("ScheduledCommand.Execute() should never be called.");
         }
 
         private int RunSchedule()

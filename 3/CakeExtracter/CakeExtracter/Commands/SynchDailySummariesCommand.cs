@@ -11,9 +11,13 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchDailySummariesCommand : ConsoleCommand
     {
+        public string Advertiser { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
         public SynchDailySummariesCommand()
         {
-            StartDate = new DateTime(2013, 1, 1);
+            StartDate = new DateTime(2013, 1, 1); // default value
             EndDate = DateTime.Today.AddDays(1);
 
             RunBefore(new SynchAdvertisersCommand());
@@ -27,9 +31,11 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
+            var tomorrow = DateTime.Today.AddDays(1);
+            var dateRange = new DateRange(StartDate, EndDate ?? tomorrow);
+
             foreach (var advertiserId in GetAdvertiserIds())
             {
-                var dateRange = new DateRange(StartDate, EndDate);
                 var extracter = new DailySummariesExtracter(dateRange, advertiserId);
                 var loader = new DailySummariesLoader();
                 var extracterThread = extracter.Start();
@@ -42,7 +48,7 @@ namespace CakeExtracter.Commands
 
         private IEnumerable<int> GetAdvertiserIds()
         {
-            if (string.IsNullOrEmpty(this.advertiser) || advertiser == "*")
+            if (string.IsNullOrWhiteSpace(Advertiser) || Advertiser == "*")
             {
                 List<int> advertiserIds;
                 using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
@@ -59,19 +65,9 @@ namespace CakeExtracter.Commands
             }
             else
             {
-                yield return int.Parse(advertiser);
+                yield return int.Parse(Advertiser);
             }
         }
 
-        private string advertiser;
-        public string Advertiser
-        {
-            get { return this.advertiser; }
-            set { this.advertiser = value; }
-        }
-
-        public DateTime StartDate { get; set; }
-
-        public DateTime EndDate { get; set; }
     }
 }

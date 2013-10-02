@@ -34,7 +34,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                 foreach (var item in items)
                 {
                     var campaignName = item["CampaignName"];
-                    var campaignId = int.Parse(item["campaignID"]);
+                    var campaignId = int.Parse(item["CampaignId"]);
                     var pk1 = db.SearchCampaigns.Single(c => c.Channel == bingChannel && c.SearchCampaignName == campaignName).SearchCampaignId;
                     var pk2 = DateTime.Parse(item["GregorianDate"]);
                     var pk3 = ".";
@@ -78,7 +78,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             using (var db = new ClientPortalContext())
             {
-                foreach (var tuple in items.Select(c => Tuple.Create(c["CampaignName"], c["CampaignID"])).Distinct())
+                foreach (var tuple in items.Select(c => Tuple.Create(c["CampaignName"], c["CampaignId"])).Distinct())
                 {
                     var campaignName = tuple.Item1;
                     var campaignId = int.Parse(tuple.Item2);
@@ -91,7 +91,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         {
                             AdvertiserId = advertiserId,
                             SearchCampaignName = campaignName,
-                            Channel = "google",
+                            Channel = bingChannel,
                             ExternalId = campaignId
                         });
                         Logger.Info("Saving new SearchCampaign: {0}", campaignName);

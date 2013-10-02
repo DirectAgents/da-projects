@@ -72,10 +72,10 @@ namespace LineCommander
             commandParametersDataGridView.EndEdit();
             commandParametersBindingSource.EndEdit();
 
-            ExecuteSelectedConsoleCommand();
+            RunSelectedConsoleCommand();
         }
 
-        private void ExecuteSelectedConsoleCommand()
+        private void RunSelectedConsoleCommand()
         {
             var commandsRow = GetCommandsRow();
             var consoleCommand = GetConsoleCommand(commandsRow);
