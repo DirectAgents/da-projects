@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace LineCommander
 {
@@ -7,6 +8,12 @@ namespace LineCommander
         public object Parse(string typeName, string textValue)
         {
             object result;
+            if (typeName.StartsWith("System.Nullable"))
+            {
+                var match = Regex.Match(typeName.Substring(15), @"System.\w*");
+                if (match.Success)
+                    typeName = match.Value;
+            }
             switch (typeName)
             {
                 case "System.DateTime":

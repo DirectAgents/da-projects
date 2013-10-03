@@ -12,27 +12,25 @@ namespace CakeExtracter.Commands
     public class SynchDailySummariesCommand : ConsoleCommand
     {
         public string Advertiser { get; set; }
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
         public SynchDailySummariesCommand()
         {
-            StartDate = new DateTime(2013, 1, 1); // default value
-            EndDate = DateTime.Today.AddDays(1);
-
             RunBefore(new SynchAdvertisersCommand());
             RunBefore(new SynchOffersCommand());
 
             IsCommand("synchDailySummaries", "synch DailySummaries for an advertisers offers in a date range");
             HasOption("a|advertiserId=", "Advertiser Id (* = all advertisers)", c => Advertiser = c);
-            HasOption("s|startDate=", "Start Date (default is 1/1/2013)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is two months ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is today)", c => EndDate = DateTime.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
         {
+            var twoMonthAgo = DateTime.Today.AddMonths(-2);
             var tomorrow = DateTime.Today.AddDays(1);
-            var dateRange = new DateRange(StartDate, EndDate ?? tomorrow);
+            var dateRange = new DateRange(StartDate ?? twoMonthAgo, EndDate ?? tomorrow);
 
             foreach (var advertiserId in GetAdvertiserIds())
             {

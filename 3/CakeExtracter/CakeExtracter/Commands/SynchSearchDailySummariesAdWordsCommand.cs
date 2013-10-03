@@ -21,13 +21,14 @@ namespace CakeExtracter.Commands
             HasRequiredOption<int>("aid|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
             HasOption<string>("v|clientCustomerId=", "Client Customer Id", c => ClientCustomerId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
-            HasOption<DateTime>("e|endDate=", "End Date (default is today)", c => EndDate = c);
+            HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
             var oneMonthAgo = DateTime.Today.AddMonths(-1);
-            var extracter = new AdWordsApiExtracter(GetClientCustomerId(), StartDate ?? oneMonthAgo, EndDate ?? DateTime.Today);
+            var yesterday = DateTime.Today.AddDays(-1);
+            var extracter = new AdWordsApiExtracter(GetClientCustomerId(), StartDate ?? oneMonthAgo, EndDate ?? yesterday);
             var loader = new AdWordsApiLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

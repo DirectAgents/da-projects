@@ -8,6 +8,9 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesXmlCommand : ConsoleCommand
     {
+        public string XmlFile { get; set; }
+        public string AccountName { get; set; }
+
         public SynchSearchDailySummariesXmlCommand()
         {
             IsCommand("synchSearchDailySummariesXml",
@@ -27,8 +30,5 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public string XmlFile { get; set; }
-
-        public string AccountName { get; set; }
     }
 }

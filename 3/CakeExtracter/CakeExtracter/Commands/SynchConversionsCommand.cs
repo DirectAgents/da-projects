@@ -9,6 +9,10 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchConversionsCommand : ConsoleCommand
     {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int AdvertiserId { get; set; }
+
         public SynchConversionsCommand()
         {
             IsCommand("synchConversions", "synch Conversions for an advertisers offers in a date range");
@@ -49,8 +53,5 @@ namespace CakeExtracter.Commands
             Logger.Info("Finished extracting conversions for {0}.", date.ToShortDateString());
         }
 
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int AdvertiserId { get; set; }
     }
 }

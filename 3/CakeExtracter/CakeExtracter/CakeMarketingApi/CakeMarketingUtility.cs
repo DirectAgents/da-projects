@@ -75,9 +75,9 @@ namespace CakeExtracter.CakeMarketingApi
                 if (!response.Success)
                     throw new Exception("ClicksClient failed");
 
-                total += response.RowCount;
+                total += response.Clicks.Count;
                 result.AddRange(response.Clicks);
-                if (response.RowCount < rowLimitForOneCall)
+                if (total >= response.RowCount)
                 {
                     Logger.Info("Extracted a total of {0}, returning result..", total);
                     break;
@@ -101,8 +101,6 @@ namespace CakeExtracter.CakeMarketingApi
             int total = 0;
             while (!done)
             {
-                Logger.Info("Extracted a total of {0} rows, checking for more, starting at row {1}..", total, startAtRow);
-
                 // prepare the request
                 var request = new ClicksRequest
                 {
@@ -138,7 +136,7 @@ namespace CakeExtracter.CakeMarketingApi
                 }
 
                 // update the running total
-                total += response.RowCount;
+                total += response.Clicks.Count;
 
                 // return result
                 foreach (var click in response.Clicks)
@@ -146,11 +144,13 @@ namespace CakeExtracter.CakeMarketingApi
                     yield return click;
                 }
 
-                // update stopping condition for loop
-                done = (response.RowCount < rowLimitForOneCall);
-
-                // increment start row for next iteration
-                startAtRow += rowLimitForOneCall;
+                if (total >= response.RowCount)
+                    done = true;
+                else
+                {
+                    startAtRow += rowLimitForOneCall;
+                    Logger.Info("Extracted a total of {0} rows, checking for more, starting at row {1}..", total, startAtRow);
+                }
             }
 
             Logger.Info("Extracted a total of {0}, done.", total);

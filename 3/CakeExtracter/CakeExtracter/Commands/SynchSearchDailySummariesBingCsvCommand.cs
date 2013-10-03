@@ -8,6 +8,9 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchSearchDailySummariesBingCsvCommand : ConsoleCommand
     {
+        public string CsvFile { get; set; }
+        public int AdvertiserId { get; set; }
+
         public SynchSearchDailySummariesBingCsvCommand()
         {
             IsCommand("synchSearchDailySummariesBingCsv",
@@ -27,7 +30,5 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        public string CsvFile { get; set; }
-        public int AdvertiserId { get; set; }
     }
 }
