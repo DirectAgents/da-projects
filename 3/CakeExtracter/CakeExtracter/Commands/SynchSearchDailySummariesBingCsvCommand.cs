@@ -16,7 +16,7 @@ namespace CakeExtracter.Commands
             IsCommand("synchSearchDailySummariesBingCsv",
                       "synch SearchDailySummaries for Bing CSV Report");
             HasRequiredOption("f|csvFile=", "CSV File", c => CsvFile = c);
-            HasRequiredOption<int>("v|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
+            HasRequiredOption<int>("aid|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
         }
 
         public override int Execute(string[] remainingArguments)

@@ -16,7 +16,7 @@ namespace CakeExtracter
         private IEnumerable<IBootstrapper> bootstrappers;
 
         [ImportMany]
-        private IEnumerable<ConsoleCommand> commands; 
+        private IEnumerable<ConsoleCommand> Commands;
 
         private Program()
         {
@@ -26,16 +26,18 @@ namespace CakeExtracter
             bootstrappers.ToList().ForEach(c => c.Run()); 
         }
 
+        private int Run(string[] args)
+        {
+            return ManyConsole.ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
+        }
+
+        // --- static methods ---
+
         public static int Main(string[] args)
         {
             var program = new Program();
             var result = program.Run(args);
             return result;
-        }
-
-        private int Run(string[] args)
-        {
-            return ManyConsole.ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
         }
     }
 }
