@@ -19,6 +19,19 @@ namespace BingAds
 
         private static ReportingServiceClient _service;
 
+        private Action<string> _LogInfo;
+        private Action<string> _LogError;
+
+        // --- Constructors ---
+        public Reports()
+        {
+        }
+        public Reports(Action<string> logInfo, Action<string> logError)
+        {
+            _LogInfo = logInfo;
+            _LogError = logError;
+        }
+
         public string GetKeywordPerformance(long accountId, long campaignId)
         {
             ReportRequest reportRequest = GetReportRequest_KeywordPerf(accountId, campaignId);
@@ -30,6 +43,22 @@ namespace BingAds
             ReportRequest reportRequest = GetReportRequest_DailySums(accountId, startDate, endDate);
             var filepath = GetReport(reportRequest);
             return filepath;
+        }
+
+        private void LogInfo(string message)
+        {
+            if (_LogInfo == null)
+                Console.WriteLine(message);
+            else
+                _LogInfo("[BingAds.Reports] " + message);
+        }
+
+        private void LogError(string message)
+        {
+            if (_LogError == null)
+                Console.WriteLine(message);
+            else
+                _LogError("[BingAds.Reports] " + message);
         }
 
         private string GetReport(ReportRequest reportRequest)
@@ -45,7 +74,7 @@ namespace BingAds
 
                 if (null != reportId)
                 {
-                    Console.WriteLine("Report ID: " + reportId);
+                    LogInfo("Report ID: " + reportId);
 
                     response = GetDownloadUrl(reportId);
 
@@ -62,13 +91,13 @@ namespace BingAds
                         }
                         else if (ReportRequestStatusType.Error == response.Status)
                         {
-                            Console.WriteLine("The request failed. Try requesting the report " +
+                            LogError("The request failed. Try requesting the report " +
                                 "later.\nIf the request continues to fail, contact support.");
                         }
                         else  // Pending
                         {
-                            Console.WriteLine("The request is taking longer than expected.\n " +
-                                "Save the report ID ({0}) and try again later.", reportId);
+                            LogError(String.Format("The request is taking longer than expected.\n " +
+                                "Save the report ID ({0}) and try again later.", reportId));
                         }
                     }
                 }
@@ -77,11 +106,11 @@ namespace BingAds
             }
             catch (CommunicationException e)
             {
-                Console.WriteLine(e.Message);
+                LogError(e.Message);
 
                 if (null != e.InnerException)
                 {
-                    Console.WriteLine("\n" + e.InnerException.Message);
+                    LogError(e.InnerException.Message);
                 }
 
                 if (_service != null)
@@ -91,7 +120,7 @@ namespace BingAds
             }
             catch (TimeoutException e)
             {
-                Console.WriteLine(e.Message);
+                LogError(e.Message);
 
                 if (_service != null)
                 {
@@ -100,15 +129,13 @@ namespace BingAds
             }
             catch (WebException e)
             {
-                Console.WriteLine("Failed to access the report using the following URL.");
-                Console.WriteLine("HTTP status code: " + ((HttpWebResponse)e.Response).StatusCode);
-                if (response != null) Console.WriteLine("\n\n" + response.ReportDownloadUrl);
+                LogError("Failed to access the report using the following URL: " + (response != null ? response.ReportDownloadUrl : ""));
+                LogError("HTTP status code: " + ((HttpWebResponse)e.Response).StatusCode);
             }
             catch (IOException e)
             {
-                Console.WriteLine("There was an error reading the data from the HTTP " +
-                    "response or writing the data to the report file.\n");
-                Console.WriteLine(e.Message);
+                LogError("There was an error reading the data from the HTTP response or writing the data to the report file.");
+                LogError(e.Message);
             }
             catch (Exception e)
             {
@@ -116,7 +143,7 @@ namespace BingAds
 
                 if (!(e.InnerException is FaultException))
                 {
-                    Console.WriteLine(e.Message);
+                    LogError(e.Message);
                 }
 
                 if (_service != null)
@@ -258,13 +285,12 @@ namespace BingAds
             {
                 // Log this fault.
 
-                Console.WriteLine("The operation failed with the following faults:\n");
+                LogError("The operation failed with the following faults:");
 
                 // If the AdApiError array is not null, the following are examples of error codes that may be found.
                 foreach (AdApiError error in fault.Detail.Errors)
                 {
-                    Console.WriteLine("AdApiError");
-                    Console.WriteLine("Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message);
+                    LogError(String.Format("AdApiError. Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message));
 
                     switch (error.Code)
                     {
@@ -273,7 +299,7 @@ namespace BingAds
                         case 105:   // InvalidCredentials
                             break;
                         default:
-                            Console.WriteLine("Please see MSDN documentation for more details about the error code output above.");
+                            LogError("Please see MSDN documentation for more details about the error code output above.");
                             break;
                     }
                 }
@@ -285,20 +311,20 @@ namespace BingAds
             {
                 // Log this fault.
 
-                Console.WriteLine("The operation failed with the following faults:\n");
+                LogError("The operation failed with the following faults:");
 
                 // If the BatchError array is not null, the following are examples of error codes that may be found.
                 foreach (BatchError error in fault.Detail.BatchErrors)
                 {
-                    Console.WriteLine("BatchError at Index: {0}", error.Index);
-                    Console.WriteLine("Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message);
+                    LogError(String.Format("BatchError at Index: {0}", error.Index));
+                    LogError(String.Format("Code: {0}  Error Code: {1}  Message: {2}", error.Code, error.ErrorCode, error.Message));
 
                     switch (error.Code)
                     {
                         case 0:     // InternalError
                             break;
                         default:
-                            Console.WriteLine("Please see MSDN documentation for more details about the error code output above.");
+                            LogError("Please see MSDN documentation for more details about the error code output above.");
                             break;
                     }
                 }
@@ -306,8 +332,7 @@ namespace BingAds
                 // If the OperationError array is not null, the following are examples of error codes that may be found.
                 foreach (OperationError error in fault.Detail.OperationErrors)
                 {
-                    Console.WriteLine("OperationError");
-                    Console.WriteLine("Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message);
+                    LogError(String.Format("OperationError. Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message));
 
                     switch (error.Code)
                     {
@@ -338,7 +363,7 @@ namespace BingAds
                         case 2034:  // ReportingServiceInvalidTimePeriodColumnForSummaryReport
                             break;
                         default:
-                            Console.WriteLine("Please see MSDN documentation for more details about the error code output above.");
+                            LogError("Please see MSDN documentation for more details about the error code output above.");
                             break;
                     }
                 }
@@ -387,13 +412,12 @@ namespace BingAds
             {
                 // Log this fault.
 
-                Console.WriteLine("The operation failed with the following faults:\n");
+                LogError("The operation failed with the following faults:");
 
                 // If the AdApiError array is not null, the following are examples of error codes that may be found.
                 foreach (AdApiError error in fault.Detail.Errors)
                 {
-                    Console.WriteLine("AdApiError");
-                    Console.WriteLine("Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message);
+                    LogError(String.Format("AdApiError. Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message));
 
                     switch (error.Code)
                     {
@@ -402,7 +426,7 @@ namespace BingAds
                         case 105:   // InvalidCredentials
                             break;
                         default:
-                            Console.WriteLine("Please see MSDN documentation for more details about the error code output above.");
+                            LogError("Please see MSDN documentation for more details about the error code output above.");
                             break;
                     }
                 }
@@ -414,20 +438,20 @@ namespace BingAds
             {
                 // Log this fault.
 
-                Console.WriteLine("The operation failed with the following faults:\n");
+                LogError("The operation failed with the following faults:");
 
                 // If the BatchError array is not null, the following are examples of error codes that may be found.
                 foreach (BatchError error in fault.Detail.BatchErrors)
                 {
-                    Console.WriteLine("BatchError at Index: {0}", error.Index);
-                    Console.WriteLine("Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message);
+                    LogError(String.Format("BatchError at Index: {0}", error.Index));
+                    LogError(String.Format("Code: {0}  Error Code: {1}  Message: {2}\n", error.Code, error.ErrorCode, error.Message));
 
                     switch (error.Code)
                     {
                         case 0:     // InternalError
                             break;
                         default:
-                            Console.WriteLine("Please see MSDN documentation for more details about the error code output above.");
+                            LogError("Please see MSDN documentation for more details about the error code output above.");
                             break;
                     }
                 }
@@ -435,8 +459,8 @@ namespace BingAds
                 // If the OperationError array is not null, the following are examples of error codes that may be found.
                 foreach (OperationError error in fault.Detail.OperationErrors)
                 {
-                    Console.WriteLine("OperationError");
-                    Console.WriteLine("Code: {0}\nError Code: {1}\nMessage: {2}\n", error.Code, error.ErrorCode, error.Message);
+                    LogError("OperationError");
+                    LogError(String.Format("Code: {0}  Error Code: {1}  Message: {2}\n", error.Code, error.ErrorCode, error.Message));
 
                     switch (error.Code)
                     {
@@ -447,7 +471,7 @@ namespace BingAds
                         case 2100:  // ReportingServiceInvalidReportId
                             break;
                         default:
-                            Console.WriteLine("Please see MSDN documentation for more details about the error code output above.");
+                            LogError("Please see MSDN documentation for more details about the error code output above.");
                             break;
                     }
                 }

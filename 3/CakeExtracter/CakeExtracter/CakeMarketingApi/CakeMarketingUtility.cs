@@ -14,7 +14,13 @@ namespace CakeExtracter.CakeMarketingApi
             var client = new AdvertisersClient();
             var request = new AdvertisersRequest();
             var response = client.Advertisers(request);
-            return response.Advertisers;
+            if (response != null)
+                return response.Advertisers;
+            else
+            {
+                Logger.Error(new Exception("Could not retrieve Advertisers."));
+                return new List<Advertiser>();
+            }
         }
 
         public static List<int> OfferIds(int advertiserId)
