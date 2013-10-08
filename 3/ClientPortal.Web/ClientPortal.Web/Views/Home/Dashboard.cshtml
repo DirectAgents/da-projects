@@ -108,7 +108,7 @@
             </div>
             <div class="six columns">
                 <div id="topStatesOuter">
-                    <b>Top <span id="topNStatesNumLabel" />States</b>
+                    <b>Top <span id="topNStatesNumLabel" /> States</b>
                     <div id="divTopStates"></div>
                 </div>
             </div>
@@ -193,7 +193,7 @@
             UpdateSpendLineChart();
         });
 
-        drawHeatMap();
+        DrawHeatMap();
         FillClicksByDevice();
 
         CreateGoalCharts(); @* //defined in DashboardGoals *@
@@ -211,6 +211,7 @@
         $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
         $('#spendLineChart').data('kendoChart').dataSource.read();
         $('#projChart').data('kendoChart').dataSource.read();
+        DrawHeatMap();
         UpdateClicksByDevice();
     }
 

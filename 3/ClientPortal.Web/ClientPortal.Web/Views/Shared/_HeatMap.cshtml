@@ -1,8 +1,9 @@
 ﻿<div id="divHeatMap"></div>
 
 <script type='text/javascript'>
-    function drawHeatMap() {
-        $.get('@Url.Action("HeatMapData", "Reports")', function (result) {
+    function DrawHeatMap() {
+        var args = { startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() };
+        $.get('@Url.Action("HeatMapData", "Reports")', args, function (result) {
 
             // display US map
             var data = google.visualization.arrayToDataTable(result);

@@ -134,11 +134,11 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var now = DateTime.Now;
+            var latest = DateTime.Now.AddDays(-1);
             var model = new ReportModel()
             {
-                StartDate = now.ToString("d", userInfo.CultureInfo),
-                EndDate = now.ToString("d", userInfo.CultureInfo),
+                StartDate = latest.ToString("d", userInfo.CultureInfo),
+                EndDate = latest.ToString("d", userInfo.CultureInfo),
                 ShowConVal = userInfo.ShowConversionData,
                 ConValName = userInfo.ConversionValueName,
                 ConValIsNum = userInfo.ConversionValueIsNumber
@@ -228,11 +228,11 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var now = DateTime.Now;
+            var latest = DateTime.Now.AddDays(-1);
             var model = new ReportModel()
             {
-                StartDate = now.ToString("d", userInfo.CultureInfo),
-                EndDate = now.ToString("d", userInfo.CultureInfo)
+                StartDate = latest.ToString("d", userInfo.CultureInfo),
+                EndDate = latest.ToString("d", userInfo.CultureInfo)
             };
             return PartialView("_AffiliateReportPartial", model);
         }
@@ -267,15 +267,21 @@ namespace ClientPortal.Web.Controllers
             return PartialView("_HeatMap");
         }
 
-        public JsonResult HeatMapData()
+        public JsonResult HeatMapData(string startdate, string enddate)
         {
-            var fromDate = new DateTime(2013, 7, 1);
-            var toDate = new DateTime(2013, 7, 30);
+            var userInfo = GetUserInfo();
+            DateTime? start, end;
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
+                return Json(new { });
+
+            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (!end.HasValue) end = DateTime.Today;
+
             var advertiserId = GetAdvertiserId();
             var profiler = MiniProfiler.Current;
             using (profiler.Step("HeatMapData"))
             {
-                var results = cpRepo.GetConversionCountsByRegion(fromDate, toDate, advertiserId.Value)
+                var results = cpRepo.GetConversionCountsByRegion(start.Value, end.Value, advertiserId.Value)
                     .Select(c => new object[]
                 {
                     "US-" + c.RegionCode,

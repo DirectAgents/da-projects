@@ -84,4 +84,45 @@ namespace ClientPortal.Web.Controllers
             SmtpMailer.Send(message);
         }
     }
+
+    internal class Dates
+    {
+        public DateTime Today { get; set; }
+        public DateTime Yesterday { get; set; }
+        public DateTime Latest { get; set; } // the most recent day with stats (e.g. yesterday)
+        public DateTime FirstOfWeek { get; set; }
+        public DateTime FirstOfLastWeek { get; set; }
+        public DateTime LastOfLastWeek { get; set; }
+        public DateTime FirstOfMonth { get; set; }
+        public DateTime FirstOfLastMonth { get; set; }
+        public DateTime LastOfLastMonth { get; set; }
+        public DateTime FirstOfYear { get; set; }
+
+        // will be the last day of last month if today's "day" is greater than the number of days in last month
+        public DateTime OneMonthAgo { get; set; }
+
+        // note: if (useYesterdayAsLatest==true) and it's the first of the month, we still act as if it's the last day of last month
+        //       "first", "last", etc are relative to Latest
+        public Dates(bool useYesterdayAsLatest)
+        {
+            Today = DateTime.Now;
+            Yesterday = Today.AddDays(-1);
+            Latest = useYesterdayAsLatest ? Yesterday : Today;
+
+            FirstOfWeek = new DateTime(Latest.Year, Latest.Month, Latest.Day);
+            while (FirstOfWeek.DayOfWeek != DayOfWeek.Sunday)
+            {
+                FirstOfWeek = FirstOfWeek.AddDays(-1);
+            }
+            FirstOfLastWeek = FirstOfWeek.AddDays(-7);
+            LastOfLastWeek = FirstOfWeek.AddDays(-1);
+
+            FirstOfMonth = new DateTime(Latest.Year, Latest.Month, 1);
+            FirstOfLastMonth = FirstOfMonth.AddMonths(-1);
+            LastOfLastMonth = FirstOfMonth.AddDays(-1);
+
+            FirstOfYear = new DateTime(Latest.Year, 1, 1);
+            OneMonthAgo = new DateTime(FirstOfLastMonth.Year, FirstOfLastMonth.Month, (Latest.Day < LastOfLastMonth.Day) ? Latest.Day : LastOfLastMonth.Day);
+        }
+    }
 }

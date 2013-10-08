@@ -110,6 +110,7 @@ namespace ClientPortal.Web.Controllers
         }
         private DateTime? GetDashboardDateRangeEnd()
         {
+            // TODO: use today/yesterday depending on config / user setting ?
             DateTime now = DateTime.Now;
             string type = GetDashboardDateRangeType();
             switch (type)
@@ -134,7 +135,7 @@ namespace ClientPortal.Web.Controllers
                 int? advId = userInfo.AdvertiserId;
                 bool showConversionData = userInfo.ShowConversionData;
 
-                var dates = new Dates();
+                var dates = new Dates(false);
 
                 DateRangeSummary summaryWTD = null;
                 DateRangeSummary summaryMTD = null;
@@ -143,7 +144,7 @@ namespace ClientPortal.Web.Controllers
 
                 using (profiler.Step("summaryWTD"))
                 {
-                    summaryWTD = cpRepo.GetDateRangeSummary(dates.FirstOfWeek, dates.Now, advId, null, showConversionData);
+                    summaryWTD = cpRepo.GetDateRangeSummary(dates.FirstOfWeek, dates.Latest, advId, null, showConversionData);
                     summaryWTD.Name = "Week-to-Date";
                     summaryWTD.Link = "javascript: jumpToOffSumRep('wtd')";
                 }
@@ -157,7 +158,7 @@ namespace ClientPortal.Web.Controllers
 
                 using (profiler.Step("summaryMTD"))
                 {
-                    summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, null, showConversionData);
+                    summaryMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Latest, advId, null, showConversionData);
                     summaryMTD.Name = "Month-to-Date";
                     summaryMTD.Link = "javascript: jumpToOffSumRep('mtd')";
                     summaryMTD.PctChg_Clicks = DateRangeSummary.ComputePercentChange(summaryLMTD.Clicks, summaryMTD.Clicks);
@@ -203,7 +204,7 @@ namespace ClientPortal.Web.Controllers
             if (userInfo.AdvertiserId == null)
                 return null;
 
-            var dates = new Dates();
+            var dates = new Dates(false);
             var offerGoalSummaries = CreateOfferGoalSummaries(userInfo.AdvertiserId.Value, dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalCharts = true;
@@ -223,7 +224,7 @@ namespace ClientPortal.Web.Controllers
             else
                 goals = offer.Goals.ToList();
 
-            var dates = new Dates();
+            var dates = new Dates(false);
             var offerGoalSummary = CreateOfferGoalSummary(userInfo.AdvertiserId, offer, goals, dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalChart = true;
@@ -264,7 +265,7 @@ namespace ClientPortal.Web.Controllers
             List<DateRangeSummary> summaries;
             if (!goals.Any() || goals[0].IsMonthly) // assume all goals are the same type
             {
-                var offsumMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Now, advId, offer.Offer_Id, includeConversionData);
+                var offsumMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Latest, advId, offer.Offer_Id, includeConversionData);
                 offsumMTD.Name = "Month-to-Date";
                 var offsumLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, offer.Offer_Id, includeConversionData);
                 offsumLMTD.Name = "Last MTD";
@@ -276,7 +277,7 @@ namespace ClientPortal.Web.Controllers
             {
                 var goal0 = goals[0];
                 var sumActual = cpRepo.GetDateRangeSummary(goal0.StartDate, goal0.EndDate, advId, offer.Offer_Id, includeConversionData);
-                sumActual.Name = (dates.Now.Date > goal0.EndDate) ? "Results" : "Results to-Date";
+                sumActual.Name = (dates.Today.Date > goal0.EndDate) ? "Results" : "Results to-Date";
                 var sumGoal = new DateRangeSummary() { Name = "Goal", Culture = OfferInfo.CurrencyToCulture(offer.Currency) };
                 foreach (var goal in goals)
                 {
@@ -306,32 +307,4 @@ namespace ClientPortal.Web.Controllers
         }
     }
 
-    public class Dates
-    {
-        public DateTime Now { get; set; }
-        public DateTime FirstOfWeek { get; set; }
-        public DateTime FirstOfMonth { get; set; }
-        public DateTime FirstOfLastMonth { get; set; }
-        public DateTime LastOfLastMonth { get; set; }
-        public DateTime FirstOfYear { get; set; }
-
-        public DateTime OneMonthAgo { get; set; }
-        // will be the last day of last month if today's "day" is greater than the number of days in last month
-
-        public Dates()
-        {
-            Now = DateTime.Now;
-
-            FirstOfWeek = new DateTime(Now.Year, Now.Month, Now.Day);
-            while (FirstOfWeek.DayOfWeek != DayOfWeek.Sunday)
-            {
-                FirstOfWeek = FirstOfWeek.AddDays(-1);
-            }
-            FirstOfMonth = new DateTime(Now.Year, Now.Month, 1);
-            FirstOfLastMonth = FirstOfMonth.AddMonths(-1);
-            LastOfLastMonth = FirstOfMonth.AddDays(-1);
-            FirstOfYear = new DateTime(Now.Year, 1, 1);
-            OneMonthAgo = new DateTime(FirstOfLastMonth.Year, FirstOfLastMonth.Month, (Now.Day < LastOfLastMonth.Day) ? Now.Day : LastOfLastMonth.Day);
-        }
-    }
 }
