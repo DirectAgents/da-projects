@@ -19,31 +19,9 @@ namespace BingAds
 
         private static ReportingServiceClient _service;
 
+        // --- Logging ---
         private Action<string> _LogInfo;
         private Action<string> _LogError;
-
-        // --- Constructors ---
-        public Reports()
-        {
-        }
-        public Reports(Action<string> logInfo, Action<string> logError)
-        {
-            _LogInfo = logInfo;
-            _LogError = logError;
-        }
-
-        public string GetKeywordPerformance(long accountId, long campaignId)
-        {
-            ReportRequest reportRequest = GetReportRequest_KeywordPerf(accountId, campaignId);
-            var filepath = GetReport(reportRequest);
-            return filepath;
-        }
-        public string GetDailySummaries(long accountId, DateTime startDate, DateTime endDate)
-        {
-            ReportRequest reportRequest = GetReportRequest_DailySums(accountId, startDate, endDate);
-            var filepath = GetReport(reportRequest);
-            return filepath;
-        }
 
         private void LogInfo(string message)
         {
@@ -61,99 +39,31 @@ namespace BingAds
                 _LogError("[BingAds.Reports] " + message);
         }
 
-        private string GetReport(ReportRequest reportRequest)
+        // --- Constructors ---
+        public Reports()
         {
-            ReportRequestStatus response = null;
-            string filepath = null;
+        }
+        public Reports(Action<string> logInfo, Action<string> logError)
+        {
+            _LogInfo = logInfo;
+            _LogError = logError;
+        }
 
-            try
-            {
-                _service = new ReportingServiceClient();
-
-                var reportId = RequestReport(reportRequest);
-
-                if (null != reportId)
-                {
-                    LogInfo("Report ID: " + reportId);
-
-                    response = GetDownloadUrl(reportId);
-
-                    if (null != response)
-                    {
-                        if (ReportRequestStatusType.Success == response.Status)
-                        {
-                            string zipfileLocation = _folder + "\\" + _filename;
-                            DownloadReport(response.ReportDownloadUrl, zipfileLocation);
-                            ZipFile.ExtractToDirectory(zipfileLocation, _folder);
-
-                            if (reportRequest.Format == ReportFormat.Csv)
-                                filepath = _folder + "\\" + reportId + ".csv";
-                        }
-                        else if (ReportRequestStatusType.Error == response.Status)
-                        {
-                            LogError("The request failed. Try requesting the report " +
-                                "later.\nIf the request continues to fail, contact support.");
-                        }
-                        else  // Pending
-                        {
-                            LogError(String.Format("The request is taking longer than expected.\n " +
-                                "Save the report ID ({0}) and try again later.", reportId));
-                        }
-                    }
-                }
-
-                _service.Close();
-            }
-            catch (CommunicationException e)
-            {
-                LogError(e.Message);
-
-                if (null != e.InnerException)
-                {
-                    LogError(e.InnerException.Message);
-                }
-
-                if (_service != null)
-                {
-                    _service.Abort();
-                }
-            }
-            catch (TimeoutException e)
-            {
-                LogError(e.Message);
-
-                if (_service != null)
-                {
-                    _service.Abort();
-                }
-            }
-            catch (WebException e)
-            {
-                LogError("Failed to access the report using the following URL: " + (response != null ? response.ReportDownloadUrl : ""));
-                LogError("HTTP status code: " + ((HttpWebResponse)e.Response).StatusCode);
-            }
-            catch (IOException e)
-            {
-                LogError("There was an error reading the data from the HTTP response or writing the data to the report file.");
-                LogError(e.Message);
-            }
-            catch (Exception e)
-            {
-                // Ignore fault exceptions that we already caught.
-
-                if (!(e.InnerException is FaultException))
-                {
-                    LogError(e.Message);
-                }
-
-                if (_service != null)
-                {
-                    _service.Abort();
-                }
-            }
+        // --- public methods ---
+        public string GetKeywordPerformance(long accountId, long campaignId)
+        {
+            ReportRequest reportRequest = GetReportRequest_KeywordPerf(accountId, campaignId);
+            var filepath = GetReport(reportRequest);
+            return filepath;
+        }
+        public string GetDailySummaries(long accountId, DateTime startDate, DateTime endDate)
+        {
+            ReportRequest reportRequest = GetReportRequest_DailySums(accountId, startDate, endDate);
+            var filepath = GetReport(reportRequest);
             return filepath;
         }
 
+        // --- ReportRequest generators ---
         private ReportRequest GetReportRequest_DailySums(long accountId, DateTime startDate, DateTime endDate)
         {
             var reportRequest = new ConversionPerformanceReportRequest
@@ -261,6 +171,102 @@ namespace BingAds
             return reportRequest;
         }
 
+        // --- the main method ---
+        private string GetReport(ReportRequest reportRequest)
+        {
+            ReportRequestStatus response = null;
+            string filepath = null;
+
+            try
+            {
+                _service = new ReportingServiceClient();
+
+                LogInfo("Requesting Report");
+                var reportId = RequestReport(reportRequest);
+
+                if (null != reportId)
+                {
+                    LogInfo("Report ID: " + reportId);
+
+                    response = GetDownloadUrl(reportId);
+
+                    if (null != response)
+                    {
+                        if (ReportRequestStatusType.Success == response.Status)
+                        {
+                            string zipfileLocation = _folder + "\\" + _filename;
+                            DownloadReport(response.ReportDownloadUrl, zipfileLocation);
+                            ZipFile.ExtractToDirectory(zipfileLocation, _folder);
+
+                            if (reportRequest.Format == ReportFormat.Csv)
+                                filepath = _folder + "\\" + reportId + ".csv";
+                        }
+                        else if (ReportRequestStatusType.Error == response.Status)
+                        {
+                            LogError("The request failed. Try requesting the report " +
+                                "later.\nIf the request continues to fail, contact support.");
+                        }
+                        else  // Pending
+                        {
+                            LogError(String.Format("The request is taking longer than expected.\n " +
+                                "Save the report ID ({0}) and try again later.", reportId));
+                        }
+                    }
+                }
+
+                _service.Close();
+            }
+            catch (CommunicationException e)
+            {
+                LogError("CommunicationException: " + e.Message);
+
+                if (null != e.InnerException)
+                {
+                    LogError(e.InnerException.Message);
+                }
+
+                if (_service != null)
+                {
+                    _service.Abort();
+                }
+            }
+            catch (TimeoutException e)
+            {
+                LogError("TimeoutException: " + e.Message);
+
+                if (_service != null)
+                {
+                    _service.Abort();
+                }
+            }
+            catch (WebException e)
+            {
+                LogError("Failed to access the report using the following URL: " + (response != null ? response.ReportDownloadUrl : ""));
+                LogError("HTTP status code: " + ((HttpWebResponse)e.Response).StatusCode);
+            }
+            catch (IOException e)
+            {
+                LogError("There was an error reading the data from the HTTP response or writing the data to the report file.");
+                LogError(e.Message);
+            }
+            catch (Exception e)
+            {
+                // Ignore fault exceptions that we already caught.
+
+                if (!(e.InnerException is FaultException))
+                {
+                    LogError(e.Message);
+                }
+
+                if (_service != null)
+                {
+                    _service.Abort();
+                }
+            }
+            return filepath;
+        }
+
+        // Called by GetReport...
         private string RequestReport(ReportRequest reportRequest)
         {
             var request = new SubmitGenerateReportRequest();
