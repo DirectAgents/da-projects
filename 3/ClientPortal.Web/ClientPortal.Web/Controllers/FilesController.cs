@@ -122,9 +122,6 @@ namespace ClientPortal.Web.Controllers
         {
             var advId = GetAdvertiserId();
 
-            //var start = new DateTime(2013, 5, 1);
-            var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-
             var fileUploads = cpRepo.GetFileUploads(advId);
             if (id.HasValue)
                 fileUploads = fileUploads.Where(f => f.Id == id.Value);
@@ -137,11 +134,14 @@ namespace ClientPortal.Web.Controllers
             var csv = new CsvReader(reader);
             var csvRows = csv.GetRecords<TreeRow>().ToList();
 
-            var conversions = cpRepo.GetConversions(start, null, advId, null).ToList();
+            var start = csvRows.Min(c => c.QFormCompleteDate);
+            var end = csvRows.Max(c => c.QFormCompleteDate);
+
+            var conversions = cpRepo.GetConversions(start, end, advId, null).ToList();
             var qry = from conv in conversions
                       from csvRow in csvRows
                       where conv.transaction_id == csvRow.QFormUID.ToLower()
-                      select new { Conversion = conv, CPA = csvRow.CPA };
+                      select new { Conversion = conv, CPA = csvRow.CPA.Trim() };
 
             var conversionData = cpRepo.ConversionData;
             foreach (var item in qry)

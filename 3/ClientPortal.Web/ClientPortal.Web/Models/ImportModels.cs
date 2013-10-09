@@ -14,6 +14,7 @@ namespace ClientPortal.Web.Models
     public class TreeRow
     {
         public string QFormUID { get; set; }
+        public DateTime QFormCompleteDate { get; set; }
         public string CPA { get; set; }
     }
 }
