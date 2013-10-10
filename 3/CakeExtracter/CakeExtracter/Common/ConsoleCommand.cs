@@ -14,13 +14,20 @@ namespace CakeExtracter.Common
 
         public override int Run(string[] remainingArguments)
         {
-            foreach (var consoleCommand in this.commandsToRunBeforeThisCommand)
+            string commandName = this.GetType().Name;
+            if (this.commandsToRunBeforeThisCommand.Count > 0)
             {
-                Logger.Info("Running before command: {0}..", consoleCommand.GetType().Name);
-                consoleCommand.Run(null);
+                Logger.Info("{0} has prerequisites..", commandName);
+                foreach (var consoleCommand in this.commandsToRunBeforeThisCommand)
+                {
+                    consoleCommand.Run(null);
+                }
+                Logger.Info("Completed prerequisites for {0}", commandName);
             }
 
-            using (new LogElapsedTime())
+            Logger.Info("Executing command: {0}", commandName);
+
+            using (new LogElapsedTime("for " + commandName))
             {
                 var retCode = Execute(remainingArguments);
                 return retCode;

@@ -42,6 +42,8 @@ namespace CakeExtracter.Commands
         public PrintIt2()
         {
             Iterations = 1;
+            RunBefore(new PrintIt() { Message = "dummy prerequisite" });
+
             IsCommand("printIt2", "fake it");
             HasOption("t|Pause=", "ms to pause between prints", c => this.Pause = int.Parse(c));
             HasOption("i|Iterations=", "number times to execute", c => this.Iterations = int.Parse(c));

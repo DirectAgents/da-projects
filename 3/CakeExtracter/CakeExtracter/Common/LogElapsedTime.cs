@@ -6,9 +6,11 @@ namespace CakeExtracter.Common
     public sealed class LogElapsedTime : IDisposable
     {
         private readonly Stopwatch stopWatch;
+        private string _message;
 
-        public LogElapsedTime()
+        public LogElapsedTime(string message = null)
         {
+            _message = message;
             stopWatch = new Stopwatch();
             stopWatch.Start();
         }
@@ -23,7 +25,9 @@ namespace CakeExtracter.Common
                                                ts.Hours, ts.Minutes, ts.Seconds,
                                                ts.Milliseconds / 10);
 
-            Logger.Info("Elapsed Time: {0}", elapsedTime);
+            string extra = String.IsNullOrWhiteSpace(_message) ? "" : " " + _message;
+
+            Logger.Info("Elapsed Time: {0}{1}", elapsedTime, extra);
         }
     }
 }
