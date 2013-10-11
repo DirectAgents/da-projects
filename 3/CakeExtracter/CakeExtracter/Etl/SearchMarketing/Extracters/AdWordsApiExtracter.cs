@@ -16,11 +16,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         private readonly DateTime beginDate;
         private readonly DateTime endDate;
 
-        public AdWordsApiExtracter(string clientCustomerId, DateTime beginDate, DateTime endDate)
+        public AdWordsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange)
         {
             this.clientCustomerId = clientCustomerId;
-            this.beginDate = beginDate;
-            this.endDate = endDate;
+            this.beginDate = dateRange.FromDate;
+            this.endDate = dateRange.ToDate;
         }
 
         protected override void Extract()
