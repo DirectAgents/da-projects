@@ -9,21 +9,29 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchConversionsCommand : ConsoleCommand
     {
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
         public int AdvertiserId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
+        public override void ResetProperties()
+        {
+            AdvertiserId = 0;
+            StartDate = null;
+            EndDate = null;
+        }
 
         public SynchConversionsCommand()
         {
             IsCommand("synchConversions", "synch Conversions for an advertisers offers in a date range");
             HasRequiredOption("a|advertiserId=", "Advertiser Id", c => AdvertiserId = int.Parse(c));
-            HasRequiredOption("s|startDate=", "Start Date", c => StartDate = DateTime.Parse(c));
-            HasRequiredOption("e|endDate=", "End Date", c => EndDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is yesterday)", c => StartDate = DateTime.Parse(c));
+            HasOption("e|endDate=", "End Date (default is yesterday)", c => EndDate = DateTime.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var dateRange = new DateRange(StartDate, EndDate);
+            var yesterday = DateTime.Today.AddDays(-1);
+            var dateRange = new DateRange(StartDate ?? yesterday, EndDate ?? yesterday);
             foreach (var date in dateRange.Dates)
             {
                 try

@@ -9,6 +9,10 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchOffersCommand : ConsoleCommand
     {
+        public override void ResetProperties()
+        {
+        }
+
         public SynchOffersCommand()
         {
             IsCommand("synchOffers", "synch Offers");
@@ -16,7 +20,6 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            Logger.Info("Synching Daily Summaries");
             var extracter = new OffersExtracter();
             var loader = new OffersLoader();
             var extracterThread = extracter.Start();

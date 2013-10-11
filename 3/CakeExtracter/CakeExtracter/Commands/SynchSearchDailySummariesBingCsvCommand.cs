@@ -11,6 +11,12 @@ namespace CakeExtracter.Commands
         public string CsvFile { get; set; }
         public int AdvertiserId { get; set; }
 
+        public override void ResetProperties()
+        {
+            CsvFile = null;
+            AdvertiserId = 0;
+        }
+
         public SynchSearchDailySummariesBingCsvCommand()
         {
             IsCommand("synchSearchDailySummariesBingCsv",

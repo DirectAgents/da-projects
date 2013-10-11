@@ -15,6 +15,14 @@ namespace CakeExtracter.Commands
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        public override void ResetProperties()
+        {
+            AdvertiserId = 0;
+            AccountId = 0;
+            StartDate = null;
+            EndDate = null;
+        }
+
         public SynchSearchDailySummariesBingCommand()
         {
             IsCommand("synchSearchDailySummariesBing", "synch SearchDailySummaries for Bing API Report");

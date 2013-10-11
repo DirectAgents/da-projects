@@ -11,6 +11,12 @@ namespace CakeExtracter.Commands
         public string XmlFile { get; set; }
         public string AccountName { get; set; }
 
+        public override void ResetProperties()
+        {
+            XmlFile = null;
+            AccountName = null;
+        }
+
         public SynchSearchDailySummariesXmlCommand()
         {
             IsCommand("synchSearchDailySummariesXml",

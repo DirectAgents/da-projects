@@ -34,6 +34,7 @@ namespace CakeExtracter.Common
             }
         }
 
+        public abstract void ResetProperties();
         public abstract int Execute(string[] remainingArguments);
 
         public virtual IEnumerable<PropertyInfo> GetArgumentProperties()

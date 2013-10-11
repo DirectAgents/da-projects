@@ -16,10 +16,16 @@ namespace CakeExtracter.Commands
         public DateTime? EndDate { get; set; }
         public bool SynchConversionsAlso { get; set; }
 
-        public SynchClicksCommand()
+        public override void ResetProperties()
         {
             AdvertiserId = 0;
+            StartDate = null;
+            EndDate = null;
+            SynchConversionsAlso = false;
+        }
 
+        public SynchClicksCommand()
+        {
             IsCommand("synchClicks", "synch Clicks for an advertisers offers in a date range");
             HasOption("a|advertiserId=", "Advertiser Id (0 = all)", c => AdvertiserId = int.Parse(c));
             HasOption("s|startDate=", "Start Date (default is yesterday)", c => StartDate = DateTime.Parse(c));

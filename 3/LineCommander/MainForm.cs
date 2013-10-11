@@ -92,6 +92,8 @@ namespace LineCommander
         private CakeExtracter.Common.ConsoleCommand GetConsoleCommand(DataSet1.CommandsRow commandsRow)
         {
             var consoleCommand = Commands.Single(c => c.Command == commandsRow.CommandName);
+            consoleCommand.ResetProperties();
+
             foreach (var commandParametersRow in commandsRow.GetCommandParametersRows())
             {
                 if (!string.IsNullOrWhiteSpace(commandParametersRow.ParameterValue))

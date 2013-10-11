@@ -11,12 +11,19 @@ namespace CakeExtracter.Commands
         public int Iterations { get; set; }
         public string Message { get; set; }
 
+        public override void ResetProperties()
+        {
+            Pause = 0;
+            Iterations = 1;
+            Message = null;
+        }
+
         public PrintIt()
         {
-            Iterations = 1;
+            ResetProperties();
             IsCommand("printIt", "fake it");
-            HasOption("t|Pause=", "ms to pause between prints", c => this.Pause = int.Parse(c));
-            HasOption("i|Iterations=", "number times to execute", c => this.Iterations = int.Parse(c));
+            HasOption("t|Pause=", "ms to pause between prints (default is 0)", c => this.Pause = int.Parse(c));
+            HasOption("i|Iterations=", "number times to execute (default is 1)", c => this.Iterations = int.Parse(c));
             HasOption("m|Message=", "message to print", c => this.Message = c);
         }
 
@@ -39,14 +46,21 @@ namespace CakeExtracter.Commands
         public int Iterations { get; set; }
         public string Message { get; set; }
 
+        public override void ResetProperties()
+        {
+            Pause = 0;
+            Iterations = 1;
+            Message = null;
+        }
+
         public PrintIt2()
         {
-            Iterations = 1;
+            ResetProperties();
             RunBefore(new PrintIt() { Message = "dummy prerequisite" });
 
             IsCommand("printIt2", "fake it");
-            HasOption("t|Pause=", "ms to pause between prints", c => this.Pause = int.Parse(c));
-            HasOption("i|Iterations=", "number times to execute", c => this.Iterations = int.Parse(c));
+            HasOption("t|Pause=", "ms to pause between prints (default is 0)", c => this.Pause = int.Parse(c));
+            HasOption("i|Iterations=", "number times to execute (default is 1)", c => this.Iterations = int.Parse(c));
             HasOption("m|Message=", "message to print", c => this.Message = c);
         }
 

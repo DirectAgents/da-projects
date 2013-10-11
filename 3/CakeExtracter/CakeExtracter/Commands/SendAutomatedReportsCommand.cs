@@ -9,6 +9,10 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SendAutomatedReportsCommand : ConsoleCommand
     {
+        public override void ResetProperties()
+        {
+        }
+
         public SendAutomatedReportsCommand()
         {
             IsCommand("sendAutomatedReports", "send automated reports");

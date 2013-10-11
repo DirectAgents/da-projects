@@ -18,6 +18,15 @@ namespace CakeExtracter.Commands
         private IScheduler scheduler;
         private ConsoleCommand consoleCommandToExecute;
 
+        public override void ResetProperties()
+        {
+            IntervalCount = 0;
+            IntervalUnit = ' ';
+            StartHoursFromNow = 0;
+
+            consoleCommandToExecute.ResetProperties();
+        }
+
         public ScheduledCommand(IScheduler scheduler, ConsoleCommand consoleCommandToExecute)
         {
             this.scheduler = scheduler;

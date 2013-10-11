@@ -15,6 +15,13 @@ namespace CakeExtracter.Commands
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        public override void ResetProperties()
+        {
+            Advertiser = null;
+            StartDate = null;
+            EndDate = null;
+        }
+
         public SynchDailySummariesCommand()
         {
             RunBefore(new SynchAdvertisersCommand());

@@ -15,6 +15,14 @@ namespace CakeExtracter.Commands
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        public override void ResetProperties()
+        {
+            AdvertiserId = 0;
+            ClientCustomerId = null;
+            StartDate = null;
+            EndDate = null;
+        }
+
         public SynchSearchDailySummariesAdWordsCommand()
         {
             IsCommand("synchSearchDailySummariesAdWords", "synch SearchDailySummaries for AdWords");

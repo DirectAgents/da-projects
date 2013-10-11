@@ -8,6 +8,10 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchAdvertisersCommand : ConsoleCommand
     {
+        public override void ResetProperties()
+        {
+        }
+
         public SynchAdvertisersCommand()
         {
             IsCommand("synchAdvertisers", "synch Advertisers");
