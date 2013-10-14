@@ -18,7 +18,7 @@ namespace CakeExtracter.Reports
         public string Generate()
         {
             var toDate = advertiser.AutomatedReportsNextSendAfter.Value;
-            var fromDate = toDate.AddDays(advertiser.AutomatedReportsPeriodDays * -1);
+            var fromDate = toDate.AddDays(-1 * advertiser.AutomatedReportsPeriodDays + 1);
             var dateRangeSummary = this.cpRepo.GetDateRangeSummary(fromDate, toDate, advertiser.AdvertiserId, null, advertiser.ShowConversionData);
             if (dateRangeSummary == null)
             {

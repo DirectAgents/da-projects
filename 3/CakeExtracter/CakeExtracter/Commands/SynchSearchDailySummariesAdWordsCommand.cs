@@ -75,7 +75,7 @@ namespace CakeExtracter.Commands
 
         private string GetClientIdFromAdvertiserId(int advertiserId)
         {
-            Logger.Info("Getting AdWords id for advertiser id {0}", this.AdvertiserId);
+            Logger.Info("Getting AdWords id for advertiser id {0}", advertiserId);
 
             using (var db = new ClientPortalContext())
             {

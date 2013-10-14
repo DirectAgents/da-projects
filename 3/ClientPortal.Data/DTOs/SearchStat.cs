@@ -161,11 +161,13 @@ namespace ClientPortal.Data.DTOs
 
         // --- Constructors ---
 
+        // call this when using one of the above initializers
         public SearchStat() { }
 
-        public SearchStat(bool isWeekly, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string title = null)
+        // use for one day's stats, or for a week- ending on the specified date
+        public SearchStat(bool isWeekly, int year, int month, int day, int impressions, int clicks, int orders, decimal revenue, decimal cost, string title = null)
         {
-            this.EndDate = new DateTime(2013, month, day);
+            this.EndDate = new DateTime(year, month, day);
             this.Range = ToRangeName(this.EndDate, isWeekly, true);
             this.Title = title ?? ToRangeName(this.EndDate, isWeekly);
 

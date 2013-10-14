@@ -29,7 +29,7 @@
         <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;Revenue</td>
         <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;Cost</td>
         <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;ROAS</td>
-        <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;Margins</td>
+        <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;Margin</td>
         <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;Orders</td>
         <td height="30" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">&nbsp;&nbsp;CPO</td>
       </tr>
@@ -37,10 +37,10 @@
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Week#></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Revenue#></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Cost#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.ROAS#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000;  border-right:1px solid #c7c3c7;font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Margin#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.ROAS#>%</td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Margin#></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Orders#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-align: center; font-weight: bold;"><#=this.CPO#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.CPO#></td>
       </tr>
     </table>
 </td>

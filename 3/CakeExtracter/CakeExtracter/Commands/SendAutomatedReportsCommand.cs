@@ -25,7 +25,6 @@ namespace CakeExtracter.Commands
             {
                 // TODO: put credential into in config/IoC
                 var reportManager = new ReportManager(
-                                            db,
                                             new ClientPortalRepository(db),
                                             new GmailEmailer(new System.Net.NetworkCredential("portal@directagents.com", "dAp9rt@l")),
                                             "portal@directagents.com",

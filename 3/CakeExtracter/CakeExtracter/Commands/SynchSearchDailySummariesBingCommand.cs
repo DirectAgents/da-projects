@@ -4,6 +4,8 @@ using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
 using ClientPortal.Data.Contexts;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CakeExtracter.Commands
 {
@@ -36,31 +38,53 @@ namespace CakeExtracter.Commands
         {
             var oneMonthAgo = DateTime.Today.AddMonths(-1);
             var yesterday = DateTime.Today.AddDays(-1);
-            var extracter = new BingDailySummaryExtracter(GetAccountId(), StartDate ?? oneMonthAgo, EndDate ?? yesterday);
-            var loader = new BingLoader(AdvertiserId);
-            var extracterThread = extracter.Start();
-            var loaderThread = loader.Start(extracter);
-            extracterThread.Join();
-            loaderThread.Join();
+            var dates = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
+
+            foreach (var advertiser in GetAdvertisers())
+            {
+                int accountId = Int32.Parse(advertiser.BingAdsAccountId);
+                var extracter = new BingDailySummaryExtracter(accountId, dates.FromDate, dates.ToDate);
+                var loader = new BingLoader(advertiser.AdvertiserId);
+                var extracterThread = extracter.Start();
+                var loaderThread = loader.Start(extracter);
+                extracterThread.Join();
+                loaderThread.Join();
+            }
             return 0;
         }
 
-        private int GetAccountId()
+        private IEnumerable<Advertiser> GetAdvertisers()
         {
-            if (this.AccountId != 0)
-                return AccountId;
-
-            Logger.Info("Getting Bing id for advertiser id {0}", this.AdvertiserId);
-
+            List<Advertiser> advertisers = new List<Advertiser>();
             using (var db = new ClientPortalContext())
             {
-                var idString = db.Advertisers.Find(this.AdvertiserId).BingAdsAccountId;
+                if (this.AdvertiserId != 0) // get specified advertiser
+                {
+                    var adv = db.Advertisers.Where(a => a.AdvertiserId == AdvertiserId).FirstOrDefault();
+                    if (adv == null)
+                        Logger.Warn("Could not find advertiser with advertiserId {0}", AdvertiserId);
+                    else if (String.IsNullOrWhiteSpace(adv.BingAdsAccountId))
+                        Logger.Warn("No Bing id is set for advertiserId {0}", AdvertiserId);
+                    else
+                        advertisers.Add(adv);
+                }
+                else if (this.AccountId == 0) // get all advertisers with a bing id
+                {
+                    var advs = db.Advertisers.Where(a => a.BingAdsAccountId != null);
+                    advertisers.AddRange(advs);
+                }
 
-                if (string.IsNullOrWhiteSpace(idString))
-                    throw new Exception(string.Format("No Bing id is set for advertiser id {0}", this.AdvertiserId));
-
-                return int.Parse(idString);
+                if (this.AccountId != 0) // get advertiser with specified bing id
+                {
+                    var accountIdString = AccountId.ToString();
+                    var advertiser = db.Advertisers.Where(a => a.BingAdsAccountId == accountIdString).FirstOrDefault();
+                    if (advertiser == null)
+                        Logger.Warn("Could not find advertiser with BingAdsAccountId {0}", AccountId);
+                    else
+                        advertisers.Add(advertiser);
+                }
             }
+            return advertisers;
         }
 
     }

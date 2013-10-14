@@ -18,24 +18,19 @@ namespace CakeExtracter.Reports
 
         public string Generate()
         {
-            var stats = this.cpRepo.GetWeekStats(advertiser.AdvertiserId, 2);
-            var row = stats.ToList().FirstOrDefault();
-            if (row == null)
-            {
-                var msg = "Cannot generate report for advertiser id {0}, stats not synched?";
-                Logger.Warn(msg);
-                throw new Exception(msg);
-            }
+            var toDate = advertiser.AutomatedReportsNextSendAfter.Value;
+            var fromDate = toDate.AddDays(-1 * advertiser.AutomatedReportsPeriodDays + 1);
+            var stat = this.cpRepo.GetSearchStats(advertiser.AdvertiserId, fromDate, toDate);
 
             var template = new SearchReportRuntimeTextTemplate();
             template.AdvertiserName = advertiser.AdvertiserName;
-            template.Week = row.Title;
-            template.Revenue = row.Revenue;
-            template.Cost = row.Cost;
-            template.ROAS = row.ROAS;
-            template.Margin = row.Margin;
-            template.Orders = row.Orders;
-            template.CPO = row.CPO;
+            template.Week = stat.Range;
+            template.Revenue = stat.Revenue;
+            template.Cost = stat.Cost;
+            template.ROAS = stat.ROAS;
+            template.Margin = stat.Margin;
+            template.Orders = stat.Orders;
+            template.CPO = stat.CPO;
             string content = template.TransformText();
 
             return content;

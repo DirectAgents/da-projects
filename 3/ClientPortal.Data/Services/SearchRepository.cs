@@ -9,6 +9,28 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
+        public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = false)
+        {
+            if (!start.HasValue)
+                start = new DateTime(DateTime.Today.Year, 1, 1);
+            if (!end.HasValue)
+                end = DateTime.Today.AddDays(-1);
+
+            var summaries = GetSearchDailySummaries(advertiserId, null, start, end, includeToday);
+            var searchStat = new SearchStat
+            {
+                EndDate = end.Value,
+                CustomByStartDate = start.Value,
+                Impressions = summaries.Sum(s => s.Impressions),
+                Clicks = summaries.Sum(s => s.Clicks),
+                Orders = summaries.Sum(s => s.Orders),
+                Revenue = summaries.Sum(s => s.Revenue),
+                Cost = summaries.Sum(s => s.Cost)
+            };
+
+            return searchStat;
+        }
+
         public IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, string channel, DateTime? start, DateTime? end, bool includeToday = false)
         {
             // All SearchDailySummary2 rows
@@ -134,6 +156,7 @@ namespace ClientPortal.Data.Services
             //}
         }
 
+        // (used for Campaign Weekly report)
         public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek)
         {
             var weeks = CalenderWeek.Generate(startDate, endDate, startDayOfWeek);
@@ -261,10 +284,10 @@ namespace ClientPortal.Data.Services
         {
             var stats = new List<SearchStat>
             {
-                new SearchStat(true, 6, 2, 1281, 34, 2, 230m, 31.49m, "Apple Computer Ram"),
-                new SearchStat(true, 6, 2, 1002, 23, 0, 0m, 14.13m, "Apple Memory"),
-                new SearchStat(true, 6, 2, 1819, 20, 1, 80m, 15.96m, "Apple Memory Module"),
-                new SearchStat(true, 6, 2, 1295, 11, 0, 0m, 17.31m, "Apple RAM"),
+                new SearchStat(true, 2013, 6, 2, 1281, 34, 2, 230m, 31.49m, "Apple Computer Ram"),
+                new SearchStat(true, 2013, 6, 2, 1002, 23, 0, 0m, 14.13m, "Apple Memory"),
+                new SearchStat(true, 2013, 6, 2, 1819, 20, 1, 80m, 15.96m, "Apple Memory Module"),
+                new SearchStat(true, 2013, 6, 2, 1295, 11, 0, 0m, 17.31m, "Apple RAM"),
             };
             return stats.AsQueryable();
         }

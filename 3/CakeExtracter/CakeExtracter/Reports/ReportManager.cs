@@ -12,15 +12,13 @@ namespace CakeExtracter.Reports
     {
         private readonly IClientPortalRepository cpRepo;
         private readonly GmailEmailer emailer;
-        private readonly DbContext dbContext;
         private readonly string reportEmailFromAddress;
         private readonly string reportEmailSubject;
 
-        public ReportManager(DbContext db, IClientPortalRepository cpRepo, GmailEmailer emailer, string reportEmailFromAddress, string reportEmailSubject)
+        public ReportManager(IClientPortalRepository cpRepo, GmailEmailer emailer, string reportEmailFromAddress, string reportEmailSubject)
         {
             this.cpRepo = cpRepo;
             this.emailer = emailer;
-            this.dbContext = db;
             this.reportEmailFromAddress = reportEmailFromAddress;
             this.reportEmailSubject = reportEmailSubject;
         }
@@ -32,11 +30,17 @@ namespace CakeExtracter.Reports
         /// </summary>
         public void CatchUp()
         {
-            foreach (var advertiser in GetAutoReportingAdvertisers())
+            var advertisers = GetAutoReportingAdvertisers();
+            while (advertisers.Count() > 0)
             {
-                var report = this.SelectReport(advertiser);
-                this.SendReport(advertiser, report);
-                this.UpdateAdvertiser(advertiser);
+                foreach (var advertiser in GetAutoReportingAdvertisers())
+                {
+                    var report = this.SelectReport(advertiser);
+                    this.SendReport(advertiser, report);
+                    this.UpdateAdvertiser(advertiser);
+                }
+                advertisers = GetAutoReportingAdvertisers();
+                // in case more reports need to be generated for an advertiser
             }
         }
 
@@ -46,24 +50,6 @@ namespace CakeExtracter.Reports
                          .Where(c => c.AutomatedReportsEnabled)
                          .ToList()
                          .Where(c => DateTime.Now > c.AutomatedReportsNextSendAfter);
-        }
-
-        // TODO: switch to a day of the week instead of a constant period
-        private void UpdateAdvertiser(Advertiser advertiser)
-        {
-            advertiser.AutomatedReportsNextSendAfter = advertiser.AutomatedReportsNextSendAfter.Value.AddDays(advertiser.AutomatedReportsPeriodDays);
-            this.dbContext.SaveChanges();
-        }
-
-        private void SendReport(Advertiser advertiser, IReport report)
-        {
-            this.emailer.SendEmail(
-                            this.reportEmailFromAddress,
-                            new[] { advertiser.AutomatedReportsDestinationEmail },
-                            null,
-                            this.reportEmailSubject,
-                            report.Generate(),
-                            true);
         }
 
         private IReport SelectReport(Advertiser advertiser)
@@ -79,5 +65,24 @@ namespace CakeExtracter.Reports
             }
             return report;
         }
+
+        private void SendReport(Advertiser advertiser, IReport report)
+        {
+            this.emailer.SendEmail(
+                            this.reportEmailFromAddress,
+                            new[] { advertiser.AutomatedReportsDestinationEmail },
+                            null,
+                            this.reportEmailSubject,
+                            report.Generate(),
+                            true);
+        }
+
+        // TODO: switch to a day of the week instead of a constant period
+        private void UpdateAdvertiser(Advertiser advertiser)
+        {
+            advertiser.AutomatedReportsNextSendAfter = advertiser.AutomatedReportsNextSendAfter.Value.AddDays(advertiser.AutomatedReportsPeriodDays);
+            cpRepo.SaveChanges();
+        }
+
     }
 }

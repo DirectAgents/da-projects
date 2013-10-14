@@ -27,7 +27,8 @@ namespace CakeExtracter.UnitTests
         {
             var file = @"C:\Downloads\adwordsrep.xml";
             File.Delete(file);
-            var extracter = new CakeExtracter.Etl.SearchMarketing.Extracters.AdWordsApiExtracter("999-213-1770", new DateTime(2013, 8, 1), new DateTime(2013, 8, 7));
+            var dateRange = new DateRange(new DateTime(2013, 8, 1), new DateTime(2013, 8, 7));
+            var extracter = new CakeExtracter.Etl.SearchMarketing.Extracters.AdWordsApiExtracter("999-213-1770", dateRange);
             var thread = extracter.Start();
             thread.Join();
             Console.WriteLine(File.ReadAllText(file));
@@ -37,7 +38,8 @@ namespace CakeExtracter.UnitTests
         public void Integration_AdWordsApi_Extracter_And_Loader()
         {
             Logger.Instance = new CakeExtracter.Logging.Loggers.ConsoleLogger();
-            var extracter = new CakeExtracter.Etl.SearchMarketing.Extracters.AdWordsApiExtracter("999-213-1770", new DateTime(2013, 8, 1), new DateTime(2013, 8, 7));
+            var dateRange = new DateRange(new DateTime(2013, 8, 1), new DateTime(2013, 8, 7));
+            var extracter = new CakeExtracter.Etl.SearchMarketing.Extracters.AdWordsApiExtracter("999-213-1770", dateRange);
             var loader = new CakeExtracter.Etl.SearchMarketing.Loaders.AdWordsApiLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

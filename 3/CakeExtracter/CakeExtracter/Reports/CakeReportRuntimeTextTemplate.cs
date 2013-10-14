@@ -18,7 +18,7 @@ namespace CakeExtracter.Reports
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+    #line 1 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "11.0.0.0")]
     public partial class CakeReportRuntimeTextTemplate : CakeReportRuntimeTextTemplateBase
     {
@@ -39,7 +39,7 @@ namespace CakeExtracter.Reports
   <tr>
     <td width=""399"" align=""right"" valign=""top""><strong style=""font-family: Arial, Helvetica, sans-serif; text-align: center; font-size: 18px;"">Weekly Summary Report for ");
             
-            #line 15 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 15 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.AdvertiserName));
             
             #line default
@@ -67,12 +67,12 @@ namespace CakeExtracter.Reports
                     "ht:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px" +
                     ";\">&nbsp;&nbsp;Rates</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" " +
                     "bgcolor=\"#e5e5e5\" style=\"color: #000; border-right:1px solid #c7c3c7; font-famil" +
-                    "y: Arial, Helvetica, sans-serif; font-size: 13px;\">&nbsp;&nbsp;Spends</td>\r\n    " +
-                    "    <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"color:" +
-                    " #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif" +
-                    "; font-size: 13px;\">&nbsp;&nbsp;");
+                    "y: Arial, Helvetica, sans-serif; font-size: 13px;\">&nbsp;&nbsp;Spend</td>\r\n     " +
+                    "   <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"color: " +
+                    "#000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif;" +
+                    " font-size: 13px;\">&nbsp;&nbsp;");
             
-            #line 33 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 33 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.ConversionValueName));
             
             #line default
@@ -83,7 +83,7 @@ namespace CakeExtracter.Reports
       <tr>
         <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#FFFFFF"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"">");
             
-            #line 37 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 37 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Week));
             
             #line default
@@ -92,7 +92,7 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 38 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 38 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Clicks));
             
             #line default
@@ -101,7 +101,7 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 39 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 39 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Leads));
             
             #line default
@@ -110,7 +110,7 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 40 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 40 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Rate));
             
             #line default
@@ -119,7 +119,7 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 41 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 41 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Spend));
             
             #line default
@@ -128,7 +128,7 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
-            #line 42 "C:\GitHub\da-projects\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 42 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Conv));
             
             #line default
