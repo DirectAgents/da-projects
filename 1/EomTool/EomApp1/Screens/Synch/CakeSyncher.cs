@@ -117,7 +117,7 @@ namespace EomApp1.Screens.Synch
         // step 1
         private void DeleteExistingConversions()
         {
-            this.logger.Log("Deleting existing conversions...");
+            this.logger.Log("Deleting existing conversions for offer " + this.parameters.CampaignExternalId + "...");
 
             var existingConversions = this.cakeEntities.CakeConversions.ByOfferIdAndDateRange(this.parameters.CampaignExternalId,
                                                                                               this.parameters.FromDate,
