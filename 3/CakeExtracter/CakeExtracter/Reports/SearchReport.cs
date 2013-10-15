@@ -24,13 +24,24 @@ namespace CakeExtracter.Reports
 
             var template = new SearchReportRuntimeTextTemplate();
             template.AdvertiserName = advertiser.AdvertiserName;
-            template.Week = stat.Range;
+            template.Week = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
             template.Revenue = stat.Revenue;
             template.Cost = stat.Cost;
             template.ROAS = stat.ROAS;
             template.Margin = stat.Margin;
             template.Orders = stat.Orders;
             template.CPO = stat.CPO;
+
+            template.AcctMgrName = "";
+            template.AcctMgrEmail = "";
+
+            var advContact = advertiser.AdvertiserContactsOrdered.FirstOrDefault();
+            if (advContact != null)
+            {
+                template.AcctMgrName = advContact.Contact.FullName;
+                template.AcctMgrEmail = advContact.Contact.Email;
+            }
+
             string content = template.TransformText();
 
             return content;

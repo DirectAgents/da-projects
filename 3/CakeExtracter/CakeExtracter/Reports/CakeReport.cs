@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 
@@ -34,8 +35,24 @@ namespace CakeExtracter.Reports
             template.Leads = dateRangeSummary.Conversions;
             template.Rate = dateRangeSummary.ConversionRate;
             template.Spend = dateRangeSummary.Revenue;
-            template.Conv = "0";
-            template.ConversionValueName = advertiser.ConversionValueName;
+
+            template.ConversionValueName = "";
+            template.Conv = "";
+            template.AcctMgrName = "";
+            template.AcctMgrEmail = "";
+
+            if (advertiser.ShowConversionData)
+            {
+                template.ConversionValueName = advertiser.ConversionValueName;
+                template.Conv = (dateRangeSummary.ConVal != null) ? dateRangeSummary.ConVal.Value.ToString("#,0.##") : "";
+            }
+            var advContact = advertiser.AdvertiserContactsOrdered.FirstOrDefault();
+            if (advContact != null)
+            {
+                template.AcctMgrName = advContact.Contact.FullName;
+                template.AcctMgrEmail = advContact.Contact.Email;
+            }
+
             string content = template.TransformText();
 
             return content;

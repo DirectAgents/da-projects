@@ -35,12 +35,12 @@
       </tr>
       <tr>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Week#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Revenue#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Cost#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Revenue)#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Cost)#></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.ROAS#>%</td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Margin#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(Margin)#></td>
         <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Orders#></td>
-        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.CPO#></td>
+        <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"><#=this.Currency(CPO)#></td>
       </tr>
     </table>
 </td>
@@ -48,6 +48,11 @@
   <tr>
     <td width="13" align="left" valign="top">&nbsp;</td>
     <td colspan="2" align="left" valign="top" ><span style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;" ><br>The Direct Agents Client Portal provides access to real-time reports showing campaign effectiveness and spend across all search channels. You can easily view a breakdown by individual campaign and visualize key metrics your campaign performance with interactive charts. <a href="http://portal.directagents.com/" style="color:#37A5F2;"><strong>View reports now</strong></a></span></td>
+    <td width="13" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="13" align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" ><span style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;" ><br>Questions? Contact your account manager, <#=this.AcctMgrName#>: <a href="mailto:<#=this.AcctMgrEmail#>" style="color:#37A5F2;"><#=this.AcctMgrEmail#></a></span></td>
     <td width="13" align="left" valign="top">&nbsp;</td>
   </tr>
   <tr>

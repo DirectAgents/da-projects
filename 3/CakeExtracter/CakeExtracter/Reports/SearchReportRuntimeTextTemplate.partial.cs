@@ -17,5 +17,14 @@
         public int Orders { get; set; }
 
         public decimal CPO { get; set; }
+
+        public string AcctMgrName { get; set; }
+
+        public string AcctMgrEmail { get; set; }
+
+        public string Currency(decimal val)
+        {
+            return val.ToString("C");
+        }
     }
 }

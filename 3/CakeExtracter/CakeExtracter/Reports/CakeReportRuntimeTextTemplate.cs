@@ -65,25 +65,24 @@ namespace CakeExtracter.Reports
                     "ica, sans-serif; font-size: 13px;\">&nbsp;&nbsp;Leads</td>\r\n        <td height=\"3" +
                     "0\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"color: #000; border-rig" +
                     "ht:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px" +
-                    ";\">&nbsp;&nbsp;Rates</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" " +
-                    "bgcolor=\"#e5e5e5\" style=\"color: #000; border-right:1px solid #c7c3c7; font-famil" +
-                    "y: Arial, Helvetica, sans-serif; font-size: 13px;\">&nbsp;&nbsp;Spend</td>\r\n     " +
-                    "   <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"color: " +
-                    "#000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif;" +
-                    " font-size: 13px;\">&nbsp;&nbsp;");
+                    ";\">&nbsp;&nbsp;Rate</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" b" +
+                    "gcolor=\"#e5e5e5\" style=\"color: #000; border-right:1px solid #c7c3c7; font-family" +
+                    ": Arial, Helvetica, sans-serif; font-size: 13px;\">&nbsp;&nbsp;Spend</td>\r\n      " +
+                    "  <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#e5e5e5\" style=\"color: #" +
+                    "000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; " +
+                    "font-size: 13px;\">&nbsp;&nbsp;");
             
             #line 33 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.ConversionValueName));
             
             #line default
             #line hidden
-            this.Write(@"</td>
-        
-      </tr>
-      <tr>
-        <td height=""30"" align=""left"" valign=""middle"" bgcolor=""#FFFFFF"" style=""color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-weight: bold;"">");
+            this.Write("</td>\r\n      </tr>\r\n      <tr>\r\n        <td height=\"30\" align=\"left\" valign=\"midd" +
+                    "le\" bgcolor=\"#FFFFFF\" style=\"color: #000; border-right:1px solid #c7c3c7; font-f" +
+                    "amily: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; font-w" +
+                    "eight: bold;\">");
             
-            #line 37 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            #line 36 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Week));
             
             #line default
@@ -92,8 +91,17 @@ namespace CakeExtracter.Reports
                     "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
+            #line 37 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Number(Clicks)));
+            
+            #line default
+            #line hidden
+            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
+                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
+                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            
             #line 38 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Clicks));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Number(Leads)));
             
             #line default
             #line hidden
@@ -102,16 +110,16 @@ namespace CakeExtracter.Reports
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
             #line 39 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Leads));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Rate));
             
             #line default
             #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
-                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
+            this.Write("%</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" st" +
+                    "yle=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica," +
+                    " sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
             #line 40 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Rate));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Spend)));
             
             #line default
             #line hidden
@@ -120,40 +128,63 @@ namespace CakeExtracter.Reports
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
             #line 41 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Spend));
-            
-            #line default
-            #line hidden
-            this.Write("</td>\r\n        <td height=\"30\" align=\"left\" valign=\"middle\" bgcolor=\"#FFFFFF\" sty" +
-                    "le=\"color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, " +
-                    "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
-            
-            #line 42 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Conv));
             
             #line default
             #line hidden
-            this.Write("</td>\r\n       \r\n      </tr>\r\n    </table></td>\r\n  </tr>\r\n  <tr>\r\n    <td width=\"1" +
-                    "3\" align=\"left\" valign=\"top\">&nbsp;</td>\r\n    <td colspan=\"2\" align=\"left\" valig" +
-                    "n=\"top\"><span style=\"font-family: Arial, Helvetica, sans-serif; font-size: 14px;" +
-                    "\"><br />The Direct Agents Client Portal provides access to real-time reports sho" +
-                    "wing campaign effectiveness and spend across all of your campaigns. Gain insight" +
-                    " with our unique dashboard with visualizations of key metrics, custom goals and " +
-                    "more. <a href=\"https://portal.directagents.com/\" style=\"color:#37A5F2;\"><strong>" +
-                    "View reports now</strong></a></span></td>\r\n    <td width=\"13\" align=\"left\" valig" +
-                    "n=\"top\">&nbsp;</td>\r\n  </tr>\r\n  <tr>\r\n    <td height=\"13\" colspan=\"4\" align=\"lef" +
-                    "t\" valign=\"top\">&nbsp;</td>\r\n  </tr>\r\n  <tr>\r\n    <td width=\"13\" align=\"left\" va" +
-                    "lign=\"top\">&nbsp;</td>\r\n    <td height=\"80\" colspan=\"2\" align=\"left\" valign=\"mid" +
-                    "dle\"><table width=\"540\" border=\"0\" align=\"left\" cellpadding=\"0\" cellspacing=\"0\">" +
-                    "\r\n        <tr>\r\n          <td width=\"68\" align=\"center\" valign=\"middle\"><img src" +
-                    "=\"https://portal.directagents.com/Images/icon_reports.gif\" alt=\"\" style=\"width:6" +
-                    "5%; height:auto;\" /></td>\r\n          <td width=\"450\" align=\"left\" valign=\"middle" +
-                    "\"><span style=\"font-family: Arial, Helvetica, sans-serif; font-size: 14px;\"><str" +
-                    "ong>Top Tip: Your dashboard provides detailed information about mobile devices r" +
-                    "esponding to your campaign. </strong><a href=\"https://portal.directagents.com/\" " +
-                    "style=\"color:#37A5F2;\"><strong>Log in</strong></a></span></td>\r\n        </tr>\r\n " +
-                    "   </table></td>\r\n    <td width=\"13\" align=\"right\" valign=\"top\">&nbsp;</td>\r\n  <" +
-                    "/tr>\r\n</table>\r\n</td>\r\n</tr>\r\n</table>\r\n");
+            this.Write(@"</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+    <td colspan=""2"" align=""left"" valign=""top""><span style=""font-family: Arial, Helvetica, sans-serif; font-size: 14px;""><br />The Direct Agents Client Portal provides access to real-time reports showing campaign effectiveness and spend across all of your campaigns. Gain insight with our unique dashboard with visualizations of key metrics, custom goals and more. <a href=""https://portal.directagents.com/"" style=""color:#37A5F2;""><strong>View reports now</strong></a></span></td>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+    <td colspan=""2"" align=""left"" valign=""top"" ><span style=""font-family: Arial, Helvetica, sans-serif; font-size: 14px;"" ><br>Questions? Contact your account manager, ");
+            
+            #line 52 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrName));
+            
+            #line default
+            #line hidden
+            this.Write(": <a href=\"mailto:");
+            
+            #line 52 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrEmail));
+            
+            #line default
+            #line hidden
+            this.Write("\" style=\"color:#37A5F2;\">");
+            
+            #line 52 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\CakeReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrEmail));
+            
+            #line default
+            #line hidden
+            this.Write(@"</a></span></td>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height=""13"" colspan=""4"" align=""left"" valign=""top"">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+    <td height=""80"" colspan=""2"" align=""left"" valign=""middle""><table width=""540"" border=""0"" align=""left"" cellpadding=""0"" cellspacing=""0"">
+        <tr>
+          <td width=""68"" align=""center"" valign=""middle""><img src=""https://portal.directagents.com/Images/icon_reports.gif"" alt="""" style=""width:65%; height:auto;"" /></td>
+          <td width=""450"" align=""left"" valign=""middle""><span style=""font-family: Arial, Helvetica, sans-serif; font-size: 14px;""><strong>Top Tip: Your dashboard provides detailed information about mobile devices responding to your campaign. </strong><a href=""https://portal.directagents.com/"" style=""color:#37A5F2;""><strong>Log in</strong></a></span></td>
+        </tr>
+    </table></td>
+    <td width=""13"" align=""right"" valign=""top"">&nbsp;</td>
+  </tr>
+</table>
+</td>
+</tr>
+</table>
+");
             return this.GenerationEnvironment.ToString();
         }
     }

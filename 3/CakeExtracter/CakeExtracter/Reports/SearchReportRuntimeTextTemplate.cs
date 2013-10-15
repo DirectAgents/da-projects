@@ -87,7 +87,7 @@ namespace CakeExtracter.Reports
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
             #line 38 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Revenue));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Revenue)));
             
             #line default
             #line hidden
@@ -96,7 +96,7 @@ namespace CakeExtracter.Reports
                     "sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
             #line 39 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Cost));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Cost)));
             
             #line default
             #line hidden
@@ -114,7 +114,7 @@ namespace CakeExtracter.Reports
                     " sans-serif; font-size: 13px; text-align: center; font-weight: bold;\">");
             
             #line 41 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Margin));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(Margin)));
             
             #line default
             #line hidden
@@ -132,31 +132,64 @@ namespace CakeExtracter.Reports
                     "t-align: center; font-weight: bold;\">");
             
             #line 43 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.CPO));
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.Currency(CPO)));
             
             #line default
             #line hidden
-            this.Write("</td>\r\n      </tr>\r\n    </table>\r\n</td>\r\n  </tr>\r\n  <tr>\r\n    <td width=\"13\" alig" +
-                    "n=\"left\" valign=\"top\">&nbsp;</td>\r\n    <td colspan=\"2\" align=\"left\" valign=\"top\"" +
-                    " ><span style=\"font-family: Arial, Helvetica, sans-serif; font-size: 14px;\" ><br" +
-                    ">The Direct Agents Client Portal provides access to real-time reports showing ca" +
-                    "mpaign effectiveness and spend across all search channels. You can easily view a" +
-                    " breakdown by individual campaign and visualize key metrics your campaign perfor" +
-                    "mance with interactive charts. <a href=\"http://portal.directagents.com/\" style=\"" +
-                    "color:#37A5F2;\"><strong>View reports now</strong></a></span></td>\r\n    <td width" +
-                    "=\"13\" align=\"left\" valign=\"top\">&nbsp;</td>\r\n  </tr>\r\n  <tr>\r\n    <td height=\"13" +
-                    "\" colspan=\"4\" align=\"left\" valign=\"top\">&nbsp;</td>\r\n  </tr>\r\n  <tr>\r\n    <td wi" +
-                    "dth=\"13\" align=\"left\" valign=\"top\">&nbsp;</td>\r\n    <td height=\"80\" colspan=\"2\" " +
-                    "align=\"left\" valign=\"middle\"><table width=\"593\" border=\"0\" align=\"left\" cellpadd" +
-                    "ing=\"0\" cellspacing=\"0\">\r\n        <tr>\r\n          <td width=\"68\" align=\"center\" " +
-                    "valign=\"top\"><img src=\"https://portal.directagents.com/Images/icon_reports.gif\" " +
-                    "alt=\"\" style=\"width:60%; height:auto;\" /></td>\r\n          <td width=\"450\" align=" +
-                    "\"left\" valign=\"middle\"><span style=\"font-family: Arial, Helvetica, sans-serif; f" +
-                    "ont-size: 14px;\"><strong>Top Tip: You can export your data from your reports in " +
-                    "CSV format. </strong><a href=\"http://portal.directagents.com/\" style=\"color:#37A" +
-                    "5F2;\"><strong>Log in</strong></a></span></td>\r\n        </tr>\r\n    </table></td>\r" +
-                    "\n    <td width=\"13\" align=\"right\" valign=\"top\">&nbsp;</td>\r\n  </tr>\r\n</table>\r\n<" +
-                    "/td>\r\n</tr>\r\n</table>\r\n");
+            this.Write(@"</td>
+      </tr>
+    </table>
+</td>
+  </tr>
+  <tr>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+    <td colspan=""2"" align=""left"" valign=""top"" ><span style=""font-family: Arial, Helvetica, sans-serif; font-size: 14px;"" ><br>The Direct Agents Client Portal provides access to real-time reports showing campaign effectiveness and spend across all search channels. You can easily view a breakdown by individual campaign and visualize key metrics your campaign performance with interactive charts. <a href=""http://portal.directagents.com/"" style=""color:#37A5F2;""><strong>View reports now</strong></a></span></td>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+    <td colspan=""2"" align=""left"" valign=""top"" ><span style=""font-family: Arial, Helvetica, sans-serif; font-size: 14px;"" ><br>Questions? Contact your account manager, ");
+            
+            #line 55 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrName));
+            
+            #line default
+            #line hidden
+            this.Write(": <a href=\"mailto:");
+            
+            #line 55 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrEmail));
+            
+            #line default
+            #line hidden
+            this.Write("\" style=\"color:#37A5F2;\">");
+            
+            #line 55 "C:\GitHub\da-projects-kevin\3\CakeExtracter\CakeExtracter\Reports\SearchReportRuntimeTextTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.AcctMgrEmail));
+            
+            #line default
+            #line hidden
+            this.Write(@"</a></span></td>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height=""13"" colspan=""4"" align=""left"" valign=""top"">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width=""13"" align=""left"" valign=""top"">&nbsp;</td>
+    <td height=""80"" colspan=""2"" align=""left"" valign=""middle""><table width=""593"" border=""0"" align=""left"" cellpadding=""0"" cellspacing=""0"">
+        <tr>
+          <td width=""68"" align=""center"" valign=""top""><img src=""https://portal.directagents.com/Images/icon_reports.gif"" alt="""" style=""width:60%; height:auto;"" /></td>
+          <td width=""450"" align=""left"" valign=""middle""><span style=""font-family: Arial, Helvetica, sans-serif; font-size: 14px;""><strong>Top Tip: You can export your data from your reports in CSV format. </strong><a href=""http://portal.directagents.com/"" style=""color:#37A5F2;""><strong>Log in</strong></a></span></td>
+        </tr>
+    </table></td>
+    <td width=""13"" align=""right"" valign=""top"">&nbsp;</td>
+  </tr>
+</table>
+</td>
+</tr>
+</table>
+");
             return this.GenerationEnvironment.ToString();
         }
     }
