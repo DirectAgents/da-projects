@@ -41,6 +41,7 @@ else if (Model.Key == "FirstName" || Model.Key == "Address" || Model.Key == "Ema
 {
     <div id="lenny-four"></div>
     <div id="progressbar-label">Progress:&nbsp;</div>
+    
 }
 
 
@@ -156,8 +157,14 @@ else if (Model.DependencyValue == "PURCHASE")
                         </div>
                         @if (Model.Key == "SSN")
                         {
+                            /*Html.RenderPartial("TermsConsent");*/
+                        }
+
+                        @if (Model.Key == "HomePhone")
+                        {
                             Html.RenderPartial("TermsConsent");
                         }
+
                     </div>
                 }
                 else if (ViewBag.ShouldFirePixel)

@@ -1050,8 +1050,62 @@ a.tip:hover span:after {
 }
 
 
+
+
+
+a.tip2 {
+   position: absolute;
+   margin-top:18px;
+   margin-left:-80px;
+  text-decoration: none;
+  font-size:11px;
+}
+a.tip2 span {display: none;}
+a.tip2:hover span {
+  display: block;
+  position: relative; 
+  padding: 1.0em;
+  content: attr(title);
+  text-align: left;
+  width: 325px;
+  height: 190px;
+  white-space: nowrap;
+  top: -235px;
+  left:-30px;
+  background:#55ad1b;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;    
+  color: #fff;
+  font-size: 12px;
+  letter-spacing:0px;
+  line-height:16px;
+  -moz-box-shadow:    1px -1px 4px 4px #ccc;
+  -webkit-box-shadow: 1px -1px 4px 4px #ccc;
+  box-shadow:         1px -1px 4px 4px #ccc;
+  z-index:1 !important;
+}
+a.tip2:hover span:after {
+  position: absolute;
+  display: block;
+  content: "";  
+  border-color: #55ad1b transparent transparent transparent;
+  border-style: solid;
+  border-width: 10px;
+  height:0;
+  width:0;
+  position:absolute;
+  bottom: -16px;
+  left:1em;
+  z-index:301 !important;
+}
+
+
+
 .explain-this{ background:url("https://mortgage-rate-offers.com/images/question-mark.gif") no-repeat; height:12px; width:100px; float:left; 
 margin-left:10px; margin-top:10px; padding-left:15px; padding-top:4px;}
+
+
 
 
 
