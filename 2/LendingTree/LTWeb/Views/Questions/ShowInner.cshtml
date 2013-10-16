@@ -66,8 +66,17 @@
         case "phone":
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[phone]]" data-prompt-position="@promptPosition" />
          
-   
-    
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+     
+<script>
+    $(document).ready(function () {
+        $(".do-not-call").click(function () {
+            window.open ("http://www.lendingtree.com/legal/do-not-call", '_blank');
+        });
+    });
+
+</script>
     
      <a href="#" class="tip2">
 
@@ -83,7 +92,7 @@
                         You may continue with our<br /> services without providing a phone number by calling <br />
                         1-888-272-1355 or by visiting LendingTree LoanExplorer. 
                         <br />You may opt-out of receiving calls at any time by <br />clicking 
-                        Do-Not-Call.
+                        <div class="do-not-call" style="display:inline">Do-Not-Call</div>.
 
        
 
@@ -99,10 +108,10 @@
        
     
     
-            break;   
+            break;
         case "phone2":
         <input name="@Model.Key" type="text" value="@Model.Answer" data-prompt-position="@promptPosition" />
-            break;   
+            break;
         case "ssn":
         <div class="ssn-input">
         <input name="@Model.Key" type="text" value="@Model.Answer" class="validate[required,custom[ssnumber]]" data-prompt-position="@promptPosition" placeholder="XXX-XX-XXXX" />   
