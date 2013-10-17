@@ -1,10 +1,10 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using CakeExtracter.Common;
+﻿using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
 using CakeExtracter.Etl.SearchMarketing.Loaders;
 using ClientPortal.Data.Contexts;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 
 namespace CakeExtracter.Commands
@@ -28,7 +28,7 @@ namespace CakeExtracter.Commands
         public SynchSearchDailySummariesAdWordsCommand()
         {
             IsCommand("synchSearchDailySummariesAdWords", "synch SearchDailySummaries for AdWords");
-            HasOption<int>("aid|advertiserId=", "Advertiser Id (default is 0, meaning all search advertisers)", c => AdvertiserId = c);
+            HasOption<int>("aid|advertiserId=", "Advertiser Id (default is 0, meaning all search advertisers, unless Client Customer Id specified)", c => AdvertiserId = c);
             HasOption<string>("v|clientCustomerId=", "Client Customer Id", c => ClientCustomerId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
@@ -40,7 +40,7 @@ namespace CakeExtracter.Commands
             var yesterday = DateTime.Today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
 
-            foreach (var clientId in GetClientCustomerIds())
+            foreach (var clientId in GetClientCustomerIds(this.AdvertiserId, this.ClientCustomerId))
             {
                 var extracter = new AdWordsApiExtracter(clientId, dateRange);
                 var loader = new AdWordsApiLoader();
@@ -51,14 +51,17 @@ namespace CakeExtracter.Commands
             }
             return 0;
         }
-        private IEnumerable<string> GetClientCustomerIds()
+
+        internal static IEnumerable<string> GetClientCustomerIds(int advertiserId, string clientCustomerId)
         {
             List<string> clientIds = new List<string>();
-            if (!string.IsNullOrWhiteSpace(this.ClientCustomerId))
-                clientIds.Add(ClientCustomerId);
-
-            if (AdvertiserId == 0)
+            if (advertiserId != 0)
             {
+                clientIds.Add(GetClientIdFromAdvertiserId(advertiserId));
+            }
+            else if (string.IsNullOrWhiteSpace(clientCustomerId))
+            {   // no advertiserid or adwords accountid specified
+                // get all adwords ids that exist in the advertisers table
                 using (var db = new ClientPortalContext())
                 {
                     var ids = db.Advertisers.AsQueryable().Where(a => a.AdWordsAccountId != null)
@@ -66,14 +69,14 @@ namespace CakeExtracter.Commands
                     clientIds.AddRange(ids);
                 }
             }
-            else
-            {
-                clientIds.Add(GetClientIdFromAdvertiserId(AdvertiserId));
-            }
+
+            if (!string.IsNullOrWhiteSpace(clientCustomerId))
+                clientIds.Add(clientCustomerId);
+
             return clientIds;
         }
 
-        private string GetClientIdFromAdvertiserId(int advertiserId)
+        internal static string GetClientIdFromAdvertiserId(int advertiserId)
         {
             Logger.Info("Getting AdWords id for advertiser id {0}", advertiserId);
 

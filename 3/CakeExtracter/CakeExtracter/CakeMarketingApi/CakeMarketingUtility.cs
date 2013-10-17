@@ -125,7 +125,7 @@ namespace CakeExtracter.CakeMarketingApi
                 {
                     response = client.Clicks(request);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Logger.Warn("Caught an exception while extracting clicks, bailing out..");
                     yield break;
