@@ -165,7 +165,7 @@
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(35, 22);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(36, 22);
             this.bindingNavigatorCountItem.Text = "of {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
             // 
@@ -288,6 +288,7 @@
             this.itemsGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellEnter);
             this.itemsGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_CellValueChanged);
             this.itemsGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.itemsGrid_ColumnHeaderMouseClick);
+            this.itemsGrid.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsGrid_RowEnter);
             this.itemsGrid.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.itemsGrid_RowPostPaint);
             // 
             // colID
@@ -443,7 +444,7 @@
             this.dataGridViewTextBoxColumn7.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.dataGridViewTextBoxColumn7.ValueMember = "id";
-            this.dataGridViewTextBoxColumn7.Width = 39;
+            this.dataGridViewTextBoxColumn7.Width = 38;
             // 
             // currencyBindingSource
             // 
@@ -493,7 +494,7 @@
             this.dataGridViewTextBoxColumn8.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.dataGridViewTextBoxColumn8.ValueMember = "id";
-            this.dataGridViewTextBoxColumn8.Width = 39;
+            this.dataGridViewTextBoxColumn8.Width = 38;
             // 
             // dataGridViewTextBoxColumn10
             // 

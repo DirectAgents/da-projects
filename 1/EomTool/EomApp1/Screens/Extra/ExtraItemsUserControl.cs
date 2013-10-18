@@ -33,8 +33,14 @@ namespace EomApp1.Screens.Extra
         // Security
         void itemsGrid_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyValue == 46 && itemsGrid.CurrentRow.ReadOnly)
+            // disable Delete key on readonly rows
+            if (e.KeyValue == 46 && itemsGrid.CurrentRow.ReadOnly)
                 e.Handled = true;
+        }
+
+        private void itemsGrid_RowEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            bindingNavigatorDeleteItem.Enabled = !itemsGrid.Rows[e.RowIndex].ReadOnly;
         }
 
         // Security
