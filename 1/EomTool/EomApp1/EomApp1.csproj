@@ -31,7 +31,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>227</ApplicationRevision>
+    <ApplicationRevision>228</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -59,11 +59,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>BD9083A4A9E99796A11868FB636B153272925DF1</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>2896778C66C11AB469D9F445399A11D00CBBDD2C</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>
-    </ManifestKeyFile>
+    <ManifestKeyFile>kevinEOM2.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -919,6 +918,7 @@
     <None Include="app.config.aaron">
       <SubType>Designer</SubType>
     </None>
+    <None Include="kevinEOM2.pfx" />
     <None Include="Screens\PubRep1\MVP\Publisher.cd" />
     <None Include="DADatabaseR1DataSet.xsc">
       <DependentUpon>DADatabaseR1DataSet.xsd</DependentUpon>
