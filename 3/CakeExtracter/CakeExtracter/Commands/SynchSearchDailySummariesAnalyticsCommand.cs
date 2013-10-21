@@ -1,4 +1,5 @@
 ﻿using CakeExtracter.Common;
+using CakeExtracter.Etl.SearchMarketing.Extracters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -41,11 +42,11 @@ namespace CakeExtracter.Commands
 
             foreach (var clientId in SynchSearchDailySummariesAdWordsCommand.GetClientCustomerIds(this.AdvertiserId, this.ClientCustomerId))
             {
-                //var extracter = new AdWordsApiExtracter(clientId, dateRange);
+                var extracter = new AnalyticsApiExtracter(clientId, dateRange);
                 //var loader = new AdWordsApiLoader();
-                //var extracterThread = extracter.Start();
+                var extracterThread = extracter.Start();
                 //var loaderThread = loader.Start(extracter);
-                //extracterThread.Join();
+                extracterThread.Join();
                 //loaderThread.Join();
             }
             return 0;

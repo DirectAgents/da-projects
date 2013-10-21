@@ -321,6 +321,9 @@
     <Compile Include="Common\RetryUtility.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="271266501f61f25ee49c19a3c5cf3bb9a769ba00-privatekey.p12">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
