@@ -52,6 +52,7 @@ namespace EomApp1.Screens.Final
                 colReview.Visible = false;
                 ApprovalCol.Visible = false;
                 mbApprovalButton.Visible = false;
+                finalizedRevenueButton.Visible = false;
             }
         }
 
