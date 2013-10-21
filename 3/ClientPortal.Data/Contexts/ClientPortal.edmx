@@ -16,6 +16,7 @@
           <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="GeneratedReport" EntityType="ClientPortalModel.Store.GeneratedReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Goal" EntityType="ClientPortalModel.Store.Goal" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="GoogleAnalyticsSummary" EntityType="ClientPortalModel.Store.GoogleAnalyticsSummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Metric" EntityType="ClientPortalModel.Store.Metric" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MetricCount" EntityType="ClientPortalModel.Store.MetricCount" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MetricValue" EntityType="ClientPortalModel.Store.MetricValue" store:Type="Tables" Schema="dbo" />
@@ -53,6 +54,10 @@
           <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.Store.FK_Goal_Offer">
             <End Role="Offer" EntitySet="Offer" />
             <End Role="Goal" EntitySet="Goal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GoogleAnalyticsSummary_SearchCampaign" Association="ClientPortalModel.Store.FK_GoogleAnalyticsSummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+            <End Role="GoogleAnalyticsSummary" EntitySet="GoogleAnalyticsSummary" />
           </AssociationSet>
           <AssociationSet Name="FK_MetricCount_MetricValue" Association="ClientPortalModel.Store.FK_MetricCount_MetricValue">
             <End Role="MetricValue" EntitySet="MetricValue" />
@@ -210,6 +215,16 @@
           <Property Name="Target" Type="decimal" Nullable="false" Scale="2" />
           <Property Name="StartDate" Type="datetime" />
           <Property Name="EndDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="GoogleAnalyticsSummary">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="SearchCampaignId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Transactions" Type="int" Nullable="false" />
+          <Property Name="Revenue" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="Metric">
           <Key>
@@ -415,6 +430,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_GoogleAnalyticsSummary_SearchCampaign">
+          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="1" />
+          <End Role="GoogleAnalyticsSummary" Type="ClientPortalModel.Store.GoogleAnalyticsSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCampaign">
+              <PropertyRef Name="SearchCampaignId" />
+            </Principal>
+            <Dependent Role="GoogleAnalyticsSummary">
+              <PropertyRef Name="SearchCampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_MetricCount_MetricValue">
           <End Role="MetricValue" Type="ClientPortalModel.Store.MetricValue" Multiplicity="1" />
           <End Role="MetricCount" Type="ClientPortalModel.Store.MetricCount" Multiplicity="*" />
@@ -579,6 +606,11 @@
           <AssociationSet Name="FK_SearchCampaign_Advertiser" Association="ClientPortalModel.FK_SearchCampaign_Advertiser">
             <End Role="Advertiser" EntitySet="Advertisers" />
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
+          </AssociationSet>
+          <EntitySet Name="GoogleAnalyticsSummaries" EntityType="ClientPortalModel.GoogleAnalyticsSummary" />
+          <AssociationSet Name="FK_GoogleAnalyticsSummary_SearchCampaign" Association="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign">
+            <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
+            <End Role="GoogleAnalyticsSummary" EntitySet="GoogleAnalyticsSummaries" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -880,6 +912,7 @@
           <NavigationProperty Name="SearchDailySummaries" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary" />
           <Property Type="Int32" Name="ExternalId" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
+          <NavigationProperty Name="GoogleAnalyticsSummaries" Relationship="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign" FromRole="SearchCampaign" ToRole="GoogleAnalyticsSummary" />
         </EntityType>
         <Association Name="FK_SearchDailySummary_SearchCampaign">
           <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
@@ -1045,6 +1078,29 @@
             </Principal>
             <Dependent Role="SearchCampaign">
               <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GoogleAnalyticsSummary">
+          <Key>
+            <PropertyRef Name="SearchCampaignId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Type="Int32" Name="SearchCampaignId" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="0" />
+          <Property Type="Int32" Name="Transactions" Nullable="false" />
+          <Property Type="Decimal" Name="Revenue" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="SearchCampaign" Relationship="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign" FromRole="GoogleAnalyticsSummary" ToRole="SearchCampaign" />
+        </EntityType>
+        <Association Name="FK_GoogleAnalyticsSummary_SearchCampaign">
+          <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
+          <End Type="ClientPortalModel.GoogleAnalyticsSummary" Role="GoogleAnalyticsSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchCampaign">
+              <PropertyRef Name="SearchCampaignId" />
+            </Principal>
+            <Dependent Role="GoogleAnalyticsSummary">
+              <PropertyRef Name="SearchCampaignId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1305,6 +1361,16 @@
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="AdvertiserName" ColumnName="AdvertiserName" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GoogleAnalyticsSummaries">
+            <EntityTypeMapping TypeName="ClientPortalModel.GoogleAnalyticsSummary">
+              <MappingFragment StoreEntitySet="GoogleAnalyticsSummary">
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="Transactions" ColumnName="Transactions" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

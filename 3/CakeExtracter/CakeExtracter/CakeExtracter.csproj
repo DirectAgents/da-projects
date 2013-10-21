@@ -281,6 +281,7 @@
     <Compile Include="Etl\SearchMarketing\Extracters\BingCsvReportExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\BingDailySummaryExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsApiLoader.cs" />
+    <Compile Include="Etl\SearchMarketing\Loaders\AnalyticsApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsXmlReportExtracter.cs" />

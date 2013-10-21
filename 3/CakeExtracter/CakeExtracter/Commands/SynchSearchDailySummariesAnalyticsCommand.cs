@@ -1,5 +1,7 @@
 ﻿using CakeExtracter.Common;
 using CakeExtracter.Etl.SearchMarketing.Extracters;
+using CakeExtracter.Etl.SearchMarketing.Loaders;
+using ClientPortal.Data.Contexts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -40,16 +42,49 @@ namespace CakeExtracter.Commands
             var yesterday = DateTime.Today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
 
-            foreach (var clientId in SynchSearchDailySummariesAdWordsCommand.GetClientCustomerIds(this.AdvertiserId, this.ClientCustomerId))
+            foreach (var advertiser in GetAdvertisers())
             {
-                var extracter = new AnalyticsApiExtracter(clientId, dateRange);
-                //var loader = new AdWordsApiLoader();
+                var extracter = new AnalyticsApiExtracter(advertiser.AdWordsAccountId, dateRange);
+                var loader = new AnalyticsApiLoader(advertiser.AdvertiserId);
                 var extracterThread = extracter.Start();
-                //var loaderThread = loader.Start(extracter);
+                var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
-                //loaderThread.Join();
+                loaderThread.Join();
             }
             return 0;
+        }
+
+        private IEnumerable<Advertiser> GetAdvertisers()
+        {
+            List<Advertiser> advertisers = new List<Advertiser>();
+            using (var db = new ClientPortalContext())
+            {
+                if (this.AdvertiserId != 0) // get specified advertiser
+                {
+                    var adv = db.Advertisers.Where(a => a.AdvertiserId == AdvertiserId).FirstOrDefault();
+                    if (adv == null)
+                        Logger.Warn("Could not find advertiser with advertiserId {0}", AdvertiserId);
+                    else if (String.IsNullOrWhiteSpace(adv.AdWordsAccountId))
+                        Logger.Warn("No AdWords id is set for advertiserId {0}", AdvertiserId);
+                    else
+                        advertisers.Add(adv);
+                }
+                else if (this.ClientCustomerId == null) // get all advertisers with an adwords id
+                {
+                    var advs = db.Advertisers.Where(a => a.AdWordsAccountId != null);
+                    advertisers.AddRange(advs);
+                }
+
+                if (this.ClientCustomerId != null) // get advertiser with specified adwords id
+                {
+                    var advertiser = db.Advertisers.Where(a => a.AdWordsAccountId == ClientCustomerId).FirstOrDefault();
+                    if (advertiser == null)
+                        Logger.Warn("Could not find advertiser with AdWordsAccountId {0}", ClientCustomerId);
+                    else
+                        advertisers.Add(advertiser);
+                }
+            }
+            return advertisers;
         }
     }
 }

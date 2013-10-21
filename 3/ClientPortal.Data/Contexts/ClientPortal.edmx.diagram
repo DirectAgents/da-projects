@@ -24,7 +24,7 @@
         <EntityTypeShape EntityType="ClientPortalModel.MetricValue" Width="1.5" PointX="0.5" PointY="8.125" />
         <AssociationConnector Association="ClientPortalModel.FK_MetricValue_Metric" />
         <AssociationConnector Association="ClientPortalModel.FK_MetricCount_MetricValue" />
-        <EntityTypeShape EntityType="ClientPortalModel.SearchDailySummary" Width="2" PointX="5" PointY="8.875" />
+        <EntityTypeShape EntityType="ClientPortalModel.SearchDailySummary" Width="1.875" PointX="4.375" PointY="8.875" />
         <EntityTypeShape EntityType="ClientPortalModel.Conversion" Width="2" PointX="0.5" PointY="0.5" />
         <EntityTypeShape EntityType="ClientPortalModel.SearchCampaign" Width="2.25" PointX="4.875" PointY="5.875" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" />
@@ -39,6 +39,8 @@
         <AssociationConnector Association="ClientPortalModel.FK_FileUpload_Advertiser" />
         <AssociationConnector Association="ClientPortalModel.FK_Goal_Advertiser" />
         <AssociationConnector Association="ClientPortalModel.FK_SearchCampaign_Advertiser" />
+        <EntityTypeShape EntityType="ClientPortalModel.GoogleAnalyticsSummary" Width="2.125" PointX="6.375" PointY="9.25" />
+        <AssociationConnector Association="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

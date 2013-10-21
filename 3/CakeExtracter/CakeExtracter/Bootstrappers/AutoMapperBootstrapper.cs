@@ -11,6 +11,7 @@ namespace CakeExtracter.Bootstrappers
         {
             Mapper.CreateMap<SearchDailySummary, SearchDailySummary>();
             Mapper.CreateMap<DailySummary, DailySummary>();
+            Mapper.CreateMap<GoogleAnalyticsSummary, GoogleAnalyticsSummary>();
         }
     }
 }
