@@ -22,7 +22,7 @@ namespace ClientPortal.Web.Controllers
             if (!userInfo.HasSearch)
                 return RedirectToAction("Index", "Home");
 
-            var model = new IndexModel(userInfo);
+            var model = new IndexModel(userInfo, true);
             return View(model);
         }
 

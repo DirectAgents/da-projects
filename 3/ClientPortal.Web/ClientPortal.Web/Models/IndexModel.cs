@@ -10,13 +10,13 @@ namespace ClientPortal.Web.Models
         public bool HasLogo { get; set; }
         public bool ShowCPMRep { get; set; }
 
-        public IndexModel(UserInfo userInfo)
+        public IndexModel(UserInfo userInfo, bool useYesterdayAsLatest)
         {
             CultureInfo = userInfo.CultureInfo;
             HasLogo = (userInfo.Logo != null);
             ShowCPMRep = userInfo.ShowCPMRep;
 
-            Dt = new Dates(false);
+            Dt = new Dates(useYesterdayAsLatest);
         }
 
         private Dates Dt { get; set; }

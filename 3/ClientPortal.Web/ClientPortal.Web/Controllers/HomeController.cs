@@ -33,7 +33,7 @@ namespace ClientPortal.Web.Controllers
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Index"))
             {
-                var model = new IndexModel(userInfo);
+                var model = new IndexModel(userInfo, false);
                 return View(model);
             }
         }

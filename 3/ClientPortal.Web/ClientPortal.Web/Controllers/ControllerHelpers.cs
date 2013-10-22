@@ -110,7 +110,7 @@ namespace ClientPortal.Web.Controllers
             Latest = useYesterdayAsLatest ? Yesterday : Today;
 
             FirstOfWeek = new DateTime(Latest.Year, Latest.Month, Latest.Day);
-            while (FirstOfWeek.DayOfWeek != DayOfWeek.Sunday)
+            while (FirstOfWeek.DayOfWeek != DayOfWeek.Monday)
             {
                 FirstOfWeek = FirstOfWeek.AddDays(-1);
             }
