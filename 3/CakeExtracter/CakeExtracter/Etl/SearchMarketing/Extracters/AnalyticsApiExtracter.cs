@@ -14,24 +14,21 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
     public class AnalyticsApiExtracter : Extracter<AnalyticsRow>
     {
-        private readonly string clientCustomerId;
+        private readonly string profileId;
         private readonly DateTime startDate;
         private readonly DateTime endDate;
 
-        public AnalyticsApiExtracter(string clientCustomerId, CakeExtracter.Common.DateRange dateRange)
+        public AnalyticsApiExtracter(string profileId, CakeExtracter.Common.DateRange dateRange)
         {
-            this.clientCustomerId = clientCustomerId;
+            this.profileId = profileId;
             this.startDate = dateRange.FromDate;
             this.endDate = dateRange.ToDate;
         }
 
         protected override void Extract()
         {
-            if (this.clientCustomerId == "334-498-7340") // SherrillTree
-            {
-                var rows = EnumerateAnalyticsRows("14958389");
-                Add(rows);
-            }
+            var rows = EnumerateAnalyticsRows(profileId); // SherrillTree: 14958389
+            Add(rows);
             End();
         }
 
@@ -75,9 +72,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 }
                 catch (Exception) { }
 
-                // note: 'total' rows will be ignored because their CampaignId is "(not set)" and won't be int.Parsed
+                // note: 'total' rows will be skipped because their CampaignId is "(not set)" and won't be int.Parsed
+                // also skip rows where transactions and revenue are both 0
 
-                if (aRow != null)
+                if (aRow != null && (aRow.Transactions != 0 || aRow.Revenue != 0))
                     yield return aRow;
             }
         }

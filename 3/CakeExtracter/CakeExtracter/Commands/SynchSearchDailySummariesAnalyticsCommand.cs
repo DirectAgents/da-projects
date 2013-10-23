@@ -15,14 +15,14 @@ namespace CakeExtracter.Commands
     public class SynchSearchDailySummariesAnalyticsCommand : ConsoleCommand
     {
         public int AdvertiserId { get; set; }
-        public string ClientCustomerId { get; set; }
+        public string ClientProfileId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
         public override void ResetProperties()
         {
             AdvertiserId = 0;
-            ClientCustomerId = null;
+            ClientProfileId = null;
             StartDate = null;
             EndDate = null;
         }
@@ -31,7 +31,7 @@ namespace CakeExtracter.Commands
         {
             IsCommand("synchSearchDailySummariesAnalytics", "synch SearchDailySummaries for Google Analytics");
             HasOption<int>("aid|advertiserId=", "Advertiser Id (default is 0, meaning all search advertisers, unless Client Customer Id specified)", c => AdvertiserId = c);
-            HasOption<string>("v|clientCustomerId=", "Client Customer Id", c => ClientCustomerId = c);
+            HasOption<string>("v|clientProfileId=", "Client Profile Id", c => ClientProfileId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);
         }
@@ -44,7 +44,7 @@ namespace CakeExtracter.Commands
 
             foreach (var advertiser in GetAdvertisers())
             {
-                var extracter = new AnalyticsApiExtracter(advertiser.AdWordsAccountId, dateRange);
+                var extracter = new AnalyticsApiExtracter(advertiser.AnalyticsProfileId, dateRange);
                 var loader = new AnalyticsApiLoader(advertiser.AdvertiserId);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
@@ -64,22 +64,22 @@ namespace CakeExtracter.Commands
                     var adv = db.Advertisers.Where(a => a.AdvertiserId == AdvertiserId).FirstOrDefault();
                     if (adv == null)
                         Logger.Warn("Could not find advertiser with advertiserId {0}", AdvertiserId);
-                    else if (String.IsNullOrWhiteSpace(adv.AdWordsAccountId))
-                        Logger.Warn("No AdWords id is set for advertiserId {0}", AdvertiserId);
+                    else if (String.IsNullOrWhiteSpace(adv.AnalyticsProfileId))
+                        Logger.Warn("AnalyticsProfileId is not set for advertiserId {0}", AdvertiserId);
                     else
                         advertisers.Add(adv);
                 }
-                else if (this.ClientCustomerId == null) // get all advertisers with an adwords id
+                else if (this.ClientProfileId == null) // get all advertisers with a GA profile id
                 {
-                    var advs = db.Advertisers.Where(a => a.AdWordsAccountId != null);
+                    var advs = db.Advertisers.Where(a => a.AnalyticsProfileId != null);
                     advertisers.AddRange(advs);
                 }
 
-                if (this.ClientCustomerId != null) // get advertiser with specified adwords id
+                if (this.ClientProfileId != null) // get advertiser with specified GA profile id
                 {
-                    var advertiser = db.Advertisers.Where(a => a.AdWordsAccountId == ClientCustomerId).FirstOrDefault();
+                    var advertiser = db.Advertisers.Where(a => a.AnalyticsProfileId == ClientProfileId).FirstOrDefault();
                     if (advertiser == null)
-                        Logger.Warn("Could not find advertiser with AdWordsAccountId {0}", ClientCustomerId);
+                        Logger.Warn("Could not find advertiser with AnalyticsProfileId {0}", ClientProfileId);
                     else
                         advertisers.Add(advertiser);
                 }

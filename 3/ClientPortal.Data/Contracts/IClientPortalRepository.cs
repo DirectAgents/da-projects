@@ -56,8 +56,8 @@ namespace ClientPortal.Data.Contracts
 
         // Search
         SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = false);
-        IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, string channel, DateTime? start, DateTime? end, bool includeToday = false);
-        IQueryable<SearchStat> GetWeekStats(int? advertiserId, int? numWeeks, string channel = null);
+        IQueryable<SearchCampaign> GetSearchCampaigns(int? advertiserId, string channel);
+        IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? numWeeks, bool useAnalytics = false);
         IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime start, DateTime end, DayOfWeek startDayOfWeek);
         IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths);
         IQueryable<SearchStat> GetChannelStats(int? advertiserId);

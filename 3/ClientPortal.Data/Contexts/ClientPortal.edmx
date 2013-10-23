@@ -103,6 +103,7 @@
           <Property Name="HasSearch" Type="bit" Nullable="false" />
           <Property Name="AdWordsAccountId" Type="nvarchar" MaxLength="255" />
           <Property Name="BingAdsAccountId" Type="nvarchar" MaxLength="255" />
+          <Property Name="AnalyticsProfileId" Type="nvarchar" MaxLength="255" />
           <Property Name="AutomatedReportsEnabled" Type="bit" Nullable="false" />
           <Property Name="AutomatedReportsDestinationEmail" Type="nvarchar(max)" />
           <Property Name="AutomatedReportsPeriodDays" Type="int" Nullable="false" />
@@ -913,6 +914,7 @@
           <Property Type="Int32" Name="ExternalId" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
           <NavigationProperty Name="GoogleAnalyticsSummaries" Relationship="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign" FromRole="SearchCampaign" ToRole="GoogleAnalyticsSummary" />
+          <NavigationProperty Name="SearchDailySummaries2" Relationship="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary2" />
         </EntityType>
         <Association Name="FK_SearchDailySummary_SearchCampaign">
           <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
@@ -1018,6 +1020,7 @@
           <NavigationProperty Name="SearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="Advertiser" ToRole="SearchCampaign" />
           <Property Type="String" Name="AdWordsAccountId" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="BingAdsAccountId" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AnalyticsProfileId" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -1346,6 +1349,7 @@
           <EntitySetMapping Name="Advertisers">
             <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
               <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="AnalyticsProfileId" ColumnName="AnalyticsProfileId" />
                 <ScalarProperty Name="BingAdsAccountId" ColumnName="BingAdsAccountId" />
                 <ScalarProperty Name="AdWordsAccountId" ColumnName="AdWordsAccountId" />
                 <ScalarProperty Name="AutomatedReportsNextSendAfter" ColumnName="AutomatedReportsNextSendAfter" />

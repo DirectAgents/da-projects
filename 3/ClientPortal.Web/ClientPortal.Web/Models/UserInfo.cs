@@ -30,12 +30,7 @@ namespace ClientPortal.Web.Models
 
         public string Culture
         {
-            get 
-            {
-                if (Advertiser == null)
-                    return "en-US";
-                return Advertiser.Culture; 
-            }
+            get { return (Advertiser == null) ? "en-US" : Advertiser.Culture; }
         }
         public CultureInfo CultureInfo
         {
@@ -43,57 +38,34 @@ namespace ClientPortal.Web.Models
         }
         public bool ShowCPMRep
         {
-            get 
-            {
-                if (Advertiser == null)
-                    return false;
-                return Advertiser.ShowCPMRep;
-            }
+            get { return (Advertiser == null) ? false : Advertiser.ShowCPMRep; }
         }
         public bool ShowConversionData
         {
-            get 
-            {
-                if (Advertiser == null)
-                    return false;
-                return Advertiser.ShowConversionData; 
-            }
+            get { return (Advertiser == null) ? false : Advertiser.ShowConversionData; }
         }
         public string ConversionValueName
         {
-            get
-            {
-                if (Advertiser == null)
-                    return null;
-                return Advertiser.ConversionValueName;
-            }
+            get { return (Advertiser == null) ? null : Advertiser.ConversionValueName; }
         }
         public bool ConversionValueIsNumber
         {
-            get
-            {
-                if (Advertiser == null)
-                    return false;
-                return Advertiser.ConversionValueIsNumber; 
-            }
+            get { return (Advertiser == null) ? false : Advertiser.ConversionValueIsNumber; }
         }
 
         public bool HasSearch
         {
-            get 
-            {
-                if (Advertiser == null)
-                    return false;
-                return Advertiser.HasSearch; 
-            }
+            get { return (Advertiser == null) ? false : Advertiser.HasSearch; }
+        }
+
+        public bool UseAnalytics
+        {
+            get { return (Advertiser == null) ? false : !String.IsNullOrWhiteSpace(Advertiser.AnalyticsProfileId); }
         }
 
         public byte[] Logo
         {
-            get 
-            { 
-                return Advertiser == null ? null : Advertiser.Logo; 
-            }
+            get { return Advertiser == null ? null : Advertiser.Logo; }
         }
 
         public Tuple<DayOfWeek, DayOfWeek> SearchWeekDays
