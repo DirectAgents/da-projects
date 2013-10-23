@@ -53,7 +53,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths)
+            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths, userInfo.UseAnalytics)
                 .ToList()
                 .OrderBy(s => s.StartDate)
                 .AsQueryable();
@@ -69,7 +69,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths);
+            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths, userInfo.UseAnalytics);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(monthStats);
 
             string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";
@@ -81,7 +81,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var channelStats = cpRepo.GetChannelStats(userInfo.AdvertiserId);
+            var channelStats = cpRepo.GetChannelStats(userInfo.AdvertiserId, userInfo.UseAnalytics);
             var kgrid = new KendoGrid<SearchStat>(request, channelStats);
             if (channelStats.Any())
                 kgrid.aggregates = Aggregates(channelStats);
@@ -94,7 +94,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var stats = cpRepo.GetChannelStats(userInfo.AdvertiserId);
+            var stats = cpRepo.GetChannelStats(userInfo.AdvertiserId, userInfo.UseAnalytics);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
 
             string filename = "ChannelPerformance" + ControllerHelpers.DateStamp() + ".csv";
@@ -110,9 +110,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });
 
-            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end, breakdown)
-                .ToList()
-                .AsQueryable();
+            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end, breakdown, userInfo.UseAnalytics);
 
             var kgrid = new KendoGrid<SearchStat>(request, stats);
             if (stats.Any())
@@ -120,6 +118,22 @@ namespace ClientPortal.Web.Controllers
 
             var json = Json(kgrid);
             return json;
+        }
+
+        public FileResult CampaignPerfExport(string startdate, string enddate, string channel, bool breakdown = false)
+        {
+            var userInfo = GetUserInfo();
+            var cultureInfo = userInfo.CultureInfo;
+            DateTime? start, end;
+            if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
+                return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
+
+            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end, breakdown, userInfo.UseAnalytics)
+                .OrderByDescending(s => s.Channel).ThenBy(s => s.Title);
+            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
+
+            string filename = "CampaignPerformance" + ControllerHelpers.DateStamp() + ".csv";
+            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
         }
 
         public JsonResult CampaignPerfWeeklyData(string startdate, string enddate)
@@ -132,7 +146,7 @@ namespace ClientPortal.Web.Controllers
                 return Json(new { });
 
             // Get weekly search stats
-            var rows = cpRepo.GetCampaignWeekStats2(userInfo.AdvertiserId, start.Value, end.Value, userInfo.SearchWeekDays.Item1);
+            var rows = cpRepo.GetCampaignWeekStats2(userInfo.AdvertiserId, start.Value, end.Value, userInfo.SearchWeekDays.Item1, userInfo.UseAnalytics);
 
             // Create DataTable
             var dataTable = new DataTable("data");
@@ -193,22 +207,6 @@ namespace ClientPortal.Web.Controllers
             json.Data = new { data = dataTable };
 
             return json;
-        }
-
-        public FileResult CampaignPerfExport(string startdate, string enddate, string channel, bool breakdown = false)
-        {
-            var userInfo = GetUserInfo();
-            var cultureInfo = userInfo.CultureInfo;
-            DateTime? start, end;
-            if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
-                return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
-
-            var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end, breakdown)
-                .OrderByDescending(s => s.Channel).ThenBy(s => s.Title);
-            var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
-
-            string filename = "CampaignPerformance" + ControllerHelpers.DateStamp() + ".csv";
-            return File(ControllerHelpers.CsvStream(rows), "application/CSV", filename);
         }
 
         // ? unused ?

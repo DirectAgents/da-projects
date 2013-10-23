@@ -7,22 +7,6 @@ using System.Linq;
 
 namespace ClientPortal.Data.Services
 {
-    class SummaryPair
-    {
-        public SearchDailySummary2 Summary { get; set; }
-        public GoogleAnalyticsSummary GaSummary { get; set; }
-    }
-
-    class SearchSummary
-    {
-        public DateTime Date { get; set; }
-        public int Impressions { get; set; }
-        public int Clicks { get; set; }
-        public int Orders { get; set; }
-        public decimal Revenue { get; set; }
-        public decimal Cost { get; set; }
-    }
-
     public partial class ClientPortalRepository
     {
         public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = false)
@@ -150,7 +134,7 @@ namespace ClientPortal.Data.Services
         //        });
         //    return stats;
         //}
-        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? numWeeks, bool useAnalytics = false)
+        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? numWeeks, bool useAnalytics)
         {
             DateTime start;
 
@@ -187,10 +171,10 @@ namespace ClientPortal.Data.Services
             {
                 var gaSums = GetGoogleAnalyticsSummaries(advertiserId, channel, start, null, false)
                     .GroupBy(s => s.Date)
-                    .Select(g => new SearchSummary
+                    .Select(g => new AnalyticsSummary
                     {
                         Date = g.Key,
-                        Orders = g.Sum(x => x.Transactions),
+                        Transactions = g.Sum(x => x.Transactions),
                         Revenue = g.Sum(x => x.Revenue)
                     }).ToList();
                 // note: can we do this without ToList'ing?
@@ -203,7 +187,7 @@ namespace ClientPortal.Data.Services
                                Date = daySum.Date,
                                Impressions = daySum.Impressions,
                                Clicks = daySum.Clicks,
-                               Orders = (gaSum == null) ? 0 : gaSum.Orders,
+                               Orders = (gaSum == null) ? 0 : gaSum.Transactions,
                                Revenue = (gaSum == null) ? 0 : gaSum.Revenue,
                                Cost = daySum.Cost
                            }).ToList();
@@ -254,48 +238,86 @@ namespace ClientPortal.Data.Services
         }
 
         // (used for Campaign Weekly report)
-        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek)
+        public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek, bool useAnalytics)
         {
             var weeks = CalenderWeek.Generate(startDate, endDate, startDayOfWeek);
-            var stats = GetSearchDailySummaries(advertiserId, null, startDate, endDate, false)
-                            .Select(c => new
-                            {
-                                c.Date,
-                                c.SearchCampaign.Channel,
-                                c.SearchCampaign.SearchCampaignName,
-                                c.Orders,
-                                c.Revenue,
-                                c.Cost
-                            })
-                            .AsEnumerable()
-                            .GroupBy(c => new
-                            {
-                                Week = weeks.First(w => w.EndDate >= c.Date), 
-                                c.Channel,
-                                c.SearchCampaignName
-                            })
-                            .OrderBy(c => c.Key.Week.StartDate)
-                            .ThenBy(c => c.Key.SearchCampaignName)
-                            .Select(c => new
-                            {
-                                c.Key,
-                                TotalOrders = c.Sum(o => o.Orders),
-                                TotalRevenue = c.Sum(r => r.Revenue),
-                                TotalCost = c.Sum(co => co.Cost)
-                            })
-                            .Select(c => new WeeklySearchStat
-                            {
-                                StartDate = c.Key.Week.StartDate,
-                                EndDate = c.Key.Week.EndDate,
-                                Channel = c.Key.Channel,
-                                Campaign = c.Key.SearchCampaignName,
-                                ROAS = c.TotalCost == 0 ? 0 : (int)Math.Round(100 * c.TotalRevenue / c.TotalCost),
-                                CPO = c.TotalOrders == 0 ? 0 : Math.Round(c.TotalCost / c.TotalOrders, 2)
-                            });
+            var sums = GetSearchDailySummaries(advertiserId, null, startDate, endDate, false)
+                .Select(s => new
+                {
+                    s.Date,
+                    s.SearchCampaign.Channel,
+                    s.SearchCampaignId,
+                    s.SearchCampaign.SearchCampaignName,
+                    s.Orders,
+                    s.Revenue,
+                    s.Cost
+                })
+                .AsEnumerable()
+                .GroupBy(s => new
+                {
+                    Week = weeks.First(w => w.EndDate >= s.Date),
+                    s.Channel,
+                    s.SearchCampaignId,
+                    s.SearchCampaignName
+                })
+                .Select(g => new SearchSummary
+                {
+                    Week = g.Key.Week,
+                    Channel = g.Key.Channel,
+                    CampaignId = g.Key.SearchCampaignId,
+                    CampaignName = g.Key.SearchCampaignName,
+                    Orders = g.Sum(s => s.Orders),
+                    Revenue = g.Sum(s => s.Revenue),
+                    Cost = g.Sum(s => s.Cost)
+                });
+
+            if (useAnalytics)
+            {
+                var gaStats = GetGoogleAnalyticsSummaries(advertiserId, null, startDate, endDate, false)
+                    .AsEnumerable()
+                    .GroupBy(s => new
+                    {
+                        Week = weeks.First(w => w.EndDate >= s.Date),
+                        s.SearchCampaignId
+                    })
+                    .Select(g => new AnalyticsSummary
+                    {
+                        CampaignId = g.Key.SearchCampaignId,
+                        Week = g.Key.Week,
+                        Transactions = g.Sum(s => s.Transactions),
+                        Revenue = g.Sum(s => s.Revenue)
+                    });
+                sums = (from sum in sums
+                         join ga in gaStats on new { sum.CampaignId, sum.Week.StartDate } equals new { ga.CampaignId, ga.Week.StartDate } into gj_stats
+                         from gaStat in gj_stats.DefaultIfEmpty() // left join to gaStats
+                         select new SearchSummary
+                         {
+                             Week = sum.Week,
+                             Channel = sum.Channel,
+                             CampaignId = sum.CampaignId,
+                             CampaignName = sum.CampaignName,
+                             Orders = (gaStat == null) ? 0 : gaStat.Transactions,
+                             Revenue = (gaStat == null) ? 0 : gaStat.Revenue,
+                             Cost = sum.Cost
+                         });
+            }
+
+            var stats = sums
+                .OrderBy(s => s.Week.StartDate)
+                .ThenBy(s => s.CampaignName)
+                .Select(s => new WeeklySearchStat
+                {
+                    StartDate = s.Week.StartDate,
+                    EndDate = s.Week.EndDate,
+                    Channel = s.Channel,
+                    Campaign = s.CampaignName,
+                    ROAS = s.Cost == 0 ? 0 : (int)Math.Round(100 * s.Revenue / s.Cost),
+                    CPO = s.Orders == 0 ? 0 : Math.Round(s.Cost / s.Orders, 2)
+                });
             return stats.AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths)
+        public IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths, bool useAnalytics)
         {
             DateTime start;
             if (numMonths.HasValue)
@@ -307,7 +329,6 @@ namespace ClientPortal.Data.Services
 
             var stats = GetSearchDailySummaries(advertiserId, null, start, null, false)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
-                .OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month)
                 .Select(g =>
                 new SearchStat
                 {
@@ -317,28 +338,57 @@ namespace ClientPortal.Data.Services
                     Orders = g.Sum(s => s.Orders),
                     Revenue = g.Sum(s => s.Revenue),
                     Cost = g.Sum(s => s.Cost)
-                });
-            return stats;
+                })
+                .ToList().AsQueryable();
+
+            if (useAnalytics)
+            {
+                var gaStats = GetGoogleAnalyticsSummaries(advertiserId, null, start, null, false)
+                    .GroupBy(s => new { s.Date.Year, s.Date.Month })
+                    .ToList()
+                    .Select(g => new SearchSummary
+                    {
+                        Date = new DateTime(g.Key.Year, g.Key.Month, 1),
+                        Orders = g.Sum(s => s.Transactions),
+                        Revenue = g.Sum(s => s.Revenue)
+                    });
+
+                stats = (from stat in stats
+                         join ga in gaStats on stat.StartDate equals ga.Date into gj_stats
+                         from gaStat in gj_stats.DefaultIfEmpty() // left join to gaStats
+                         select new SearchStat
+                         {
+                             MonthByMaxDate = stat.EndDate,
+                             Impressions = stat.Impressions,
+                             Clicks = stat.Clicks,
+                             Orders = gaStat.Orders,
+                             Revenue = gaStat.Revenue,
+                             Cost = stat.Cost
+                         });
+            }
+            return stats.OrderBy(s => s.StartDate);
         }
 
-        public IQueryable<SearchStat> GetChannelStats(int? advertiserId)
+        public IQueryable<SearchStat> GetChannelStats(int? advertiserId, bool useAnalytics)
         {
-            var googleStats = GetWeekStats(advertiserId, "google", null);
-            var bingStats = GetWeekStats(advertiserId, "bing", null);
+            var googleStats = GetWeekStats(advertiserId, "google", null, useAnalytics);
+            var bingStats = GetWeekStats(advertiserId, "bing", null, useAnalytics);
             return googleStats.Concat(bingStats).AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end, bool breakdown)
+        public IQueryable<SearchStat> GetCampaignStats(int? advertiserId, string channel, DateTime? start, DateTime? end, bool breakdown, bool useAnalytics)
         {
             if (!start.HasValue)
                 start = new DateTime(DateTime.Today.Year, 1, 1);
             if (!end.HasValue)
                 end = DateTime.Today.AddDays(-1);
 
-            var summaries = GetSearchDailySummaries(advertiserId, channel, start, end, false);
+            var summaries = GetSearchDailySummaries(advertiserId, channel, start, end, false).ToList();
             IQueryable<SearchStat> stats;
             if (breakdown)
             {
+                // TODO: figure out how to join to gaStats if useAnalytics==true
+
                 stats = summaries.GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaign.SearchCampaignName, s.Network, s.Device, s.ClickType })
                     .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
                     .Select(g => new SearchStat
@@ -355,24 +405,64 @@ namespace ClientPortal.Data.Services
                         Orders = g.Sum(s => s.Orders),
                         Revenue = g.Sum(s => s.Revenue),
                         Cost = g.Sum(s => s.Cost)
-                    });
+                    }).AsQueryable();
             }
             else
             {
-                stats = summaries.GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaign.SearchCampaignName })
-                    .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
-                    .Select(g => new SearchStat
+                var sums = summaries.GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaignId, s.SearchCampaign.SearchCampaignName })
+                    .Select(g => new SearchSummary
                     {
-                        EndDate = end.Value,
-                        CustomByStartDate = start.Value,
                         Channel = g.Key.Channel,
-                        Title = g.Key.SearchCampaignName,
+                        CampaignId = g.Key.SearchCampaignId,
+                        CampaignName = g.Key.SearchCampaignName,
                         Impressions = g.Sum(s => s.Impressions),
                         Clicks = g.Sum(s => s.Clicks),
                         Orders = g.Sum(s => s.Orders),
                         Revenue = g.Sum(s => s.Revenue),
                         Cost = g.Sum(s => s.Cost)
                     });
+                if (!useAnalytics)
+                {
+                    stats = sums.OrderBy(s => s.Channel).ThenBy(s => s.CampaignName)
+                        .Select(s => new SearchStat
+                        {
+                            EndDate = end.Value,
+                            CustomByStartDate = start.Value,
+                            Channel = s.Channel,
+                            Title = s.CampaignName,
+                            Impressions = s.Impressions,
+                            Clicks = s.Clicks,
+                            Orders = s.Orders,
+                            Revenue = s.Revenue,
+                            Cost = s.Cost
+                        }).AsQueryable();
+                }
+                else // using Analytics...
+                {
+                    var gaSums = GetGoogleAnalyticsSummaries(advertiserId, channel, start, end, false)
+                        .GroupBy(s => s.SearchCampaignId)
+                        .Select(g => new AnalyticsSummary
+                        {
+                            CampaignId = g.Key,
+                            Transactions = g.Sum(s => s.Transactions),
+                            Revenue = g.Sum(s => s.Revenue)
+                        }).ToList();
+                    stats = (from sum in sums
+                             join ga in gaSums on sum.CampaignId equals ga.CampaignId into gj_sums
+                             from gaSum in gj_sums.DefaultIfEmpty() // left join to gaSums
+                             select new SearchStat
+                             {
+                                 EndDate = end.Value,
+                                 CustomByStartDate = start.Value,
+                                 Channel = sum.Channel,
+                                 Title = sum.CampaignName,
+                                 Impressions = sum.Impressions,
+                                 Clicks = sum.Clicks,
+                                 Orders = (gaSum == null) ? 0 : gaSum.Transactions,
+                                 Revenue = (gaSum == null) ? 0 : gaSum.Revenue,
+                                 Cost = sum.Cost
+                             }).AsQueryable();
+                }
             }
             return stats;
         }
@@ -389,4 +479,33 @@ namespace ClientPortal.Data.Services
             return stats.AsQueryable();
         }
     }
+
+    class AnalyticsSummary
+    {
+        public int CampaignId { get; set; }
+        public DateTime Date { get; set; }
+        public CalenderWeek Week { get; set; }
+        public int Transactions { get; set; }
+        public decimal Revenue { get; set; }
+    }
+
+    class SearchSummary
+    {
+        public string Channel { get; set; }
+        public int CampaignId { get; set; }
+        public string CampaignName { get; set; }
+        public DateTime Date { get; set; }
+        public CalenderWeek Week { get; set; }
+        public int Impressions { get; set; }
+        public int Clicks { get; set; }
+        public int Orders { get; set; }
+        public decimal Revenue { get; set; }
+        public decimal Cost { get; set; }
+    }
+
+    //class SummaryPair
+    //{
+    //    public SearchDailySummary2 Summary { get; set; }
+    //    public GoogleAnalyticsSummary GaSummary { get; set; }
+    //}
 }

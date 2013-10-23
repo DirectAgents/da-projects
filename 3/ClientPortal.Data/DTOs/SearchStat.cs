@@ -57,6 +57,8 @@ namespace ClientPortal.Data.DTOs
                         return "Headline";
                     case "S":
                         return "Sitelink";
+                    case "O":
+                        return "Offer";
                     default:
                         return _clickType;
                 }
