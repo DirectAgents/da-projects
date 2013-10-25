@@ -3,6 +3,7 @@ using CakeExtracter.Common;
 using CakeExtracter.Reports;
 using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Services;
+using System.Configuration;
 
 namespace CakeExtracter.Commands
 {
@@ -21,13 +22,16 @@ namespace CakeExtracter.Commands
         // TODO: IoC
         public override int Execute(string[] remainingArguments)
         {
+            var gmailUsername = ConfigurationManager.AppSettings["GmailEmailer_Username"];
+            var gmailPassword = ConfigurationManager.AppSettings["GmailEmailer_Password"];
+            var portalEmail = ConfigurationManager.AppSettings["PortalEmail"];
+
             using (var db = new ClientPortalContext())
             {
-                // TODO: put credential into in config/IoC
                 var reportManager = new ReportManager(
                                             new ClientPortalRepository(db),
-                                            new GmailEmailer(new System.Net.NetworkCredential("portal@directagents.com", "dAp9rt@l")),
-                                            "portal@directagents.com",
+                                            new GmailEmailer(new System.Net.NetworkCredential(gmailUsername, gmailPassword)),
+                                            portalEmail,
                                             "Direct Agents Client Portal Automated Report"
                                         );
                 reportManager.CatchUp();

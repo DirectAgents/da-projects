@@ -35,9 +35,10 @@ namespace CakeExtracter.Reports
             template.AcctMgrName = "";
             template.AcctMgrEmail = "";
 
-            var advContact = advertiser.AdvertiserContactsOrdered.FirstOrDefault();
-            if (advContact != null)
+            var advContacts = advertiser.AdvertiserContactsOrdered.ToList();
+            if (advContacts.Count > 0)
             {
+                var advContact = (advContacts.Count > 1) ? advContacts[1] : advContacts[0];
                 template.AcctMgrName = advContact.Contact.FullName;
                 template.AcctMgrEmail = advContact.Contact.Email;
             }

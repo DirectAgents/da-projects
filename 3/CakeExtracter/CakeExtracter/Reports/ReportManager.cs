@@ -33,7 +33,7 @@ namespace CakeExtracter.Reports
             var advertisers = GetAutoReportingAdvertisers();
             while (advertisers.Count() > 0)
             {
-                foreach (var advertiser in GetAutoReportingAdvertisers())
+                foreach (var advertiser in advertisers)
                 {
                     var report = this.SelectReport(advertiser);
                     this.SendReport(advertiser, report);
