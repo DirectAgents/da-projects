@@ -22,7 +22,7 @@ namespace ClientPortal.Web.Controllers
             if (!userInfo.HasSearch)
                 return RedirectToAction("Index", "Home");
 
-            var model = new IndexModel(userInfo, true);
+            var model = new IndexModel(userInfo);
             return View(model);
         }
 
@@ -45,29 +45,26 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var today = DateTime.Today;
-            var start = new DateTime(today.Year, today.Month, 1);
-            var end = today;
             var model = new SearchReportModel()
             {
-                StartDate = start.ToString("d", userInfo.CultureInfo),
-                EndDate = end.ToString("d", userInfo.CultureInfo)
+                StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
+                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo)
             };
             return PartialView(model);
         }
 
-        // (add a report tab) 4. Add action method for partial view to generate tab content
         public PartialViewResult CampaignWeekly()
         {
             var userInfo = GetUserInfo();
 
             return PartialView(new SearchReportModel
             {
-                StartDate = new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(-2).Month, 1).ToString("d", userInfo.CultureInfo),
-                EndDate = DateTime.Today.ToString("d", userInfo.CultureInfo)
+                StartDate = userInfo.Dates.FirstOfMonth.AddMonths(-2).ToString("d", userInfo.CultureInfo),
+                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo)
             });
         }
 
+        // UNDER CONSTRUCTION (TODO:)
         public PartialViewResult AdgroupPerf()
         {
             var userInfo = GetUserInfo();

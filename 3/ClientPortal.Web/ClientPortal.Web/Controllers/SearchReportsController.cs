@@ -28,7 +28,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var weekStats = cpRepo.GetWeekStats(userInfo.AdvertiserId, null, numweeks, userInfo.UseAnalytics);
+            var weekStats = cpRepo.GetWeekStats(userInfo.AdvertiserId, null, numweeks, userInfo.UseAnalytics, !userInfo.UseYesterdayAsLatest);
             var kgrid = new KendoGrid<SearchStat>(request, weekStats);
             if (weekStats.Any())
                 kgrid.aggregates = Aggregates(weekStats);
@@ -41,7 +41,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var weekStats = cpRepo.GetWeekStats(userInfo.AdvertiserId, null, numweeks, userInfo.UseAnalytics);
+            var weekStats = cpRepo.GetWeekStats(userInfo.AdvertiserId, null, numweeks, userInfo.UseAnalytics, !userInfo.UseYesterdayAsLatest);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(weekStats);
 
             string filename = "WeeklySummary" + ControllerHelpers.DateStamp() + ".csv";
@@ -53,7 +53,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths, userInfo.UseAnalytics)
+            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths, userInfo.UseAnalytics, !userInfo.UseYesterdayAsLatest)
                 .ToList()
                 .OrderBy(s => s.StartDate)
                 .AsQueryable();
@@ -69,7 +69,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths, userInfo.UseAnalytics);
+            var monthStats = cpRepo.GetMonthStats(userInfo.AdvertiserId, nummonths, userInfo.UseAnalytics, !userInfo.UseYesterdayAsLatest);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(monthStats);
 
             string filename = "MonthlySummary" + ControllerHelpers.DateStamp() + ".csv";
@@ -77,11 +77,11 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult ChannelPerfData(KendoGridRequest request, string startdate, string enddate)
+        public JsonResult ChannelPerfData(KendoGridRequest request) //, string startdate, string enddate)
         {
             var userInfo = GetUserInfo();
 
-            var channelStats = cpRepo.GetChannelStats(userInfo.AdvertiserId, userInfo.UseAnalytics);
+            var channelStats = cpRepo.GetChannelStats(userInfo.AdvertiserId, userInfo.UseAnalytics, !userInfo.UseYesterdayAsLatest);
             var kgrid = new KendoGrid<SearchStat>(request, channelStats);
             if (channelStats.Any())
                 kgrid.aggregates = Aggregates(channelStats);
@@ -94,7 +94,7 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var stats = cpRepo.GetChannelStats(userInfo.AdvertiserId, userInfo.UseAnalytics);
+            var stats = cpRepo.GetChannelStats(userInfo.AdvertiserId, userInfo.UseAnalytics, !userInfo.UseYesterdayAsLatest);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
 
             string filename = "ChannelPerformance" + ControllerHelpers.DateStamp() + ".csv";
@@ -109,6 +109,8 @@ namespace ClientPortal.Web.Controllers
             DateTime? start, end;
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });
+
+            if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
             var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end, breakdown, userInfo.UseAnalytics);
 
@@ -128,6 +130,8 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return File("Error parsing dates: " + startdate + " and " + enddate, "text/plain");
 
+            if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
+
             var stats = cpRepo.GetCampaignStats(userInfo.AdvertiserId, channel, start, end, breakdown, userInfo.UseAnalytics)
                 .OrderByDescending(s => s.Channel).ThenBy(s => s.Title);
             var rows = Mapper.Map<IEnumerable<SearchStat>, IEnumerable<SearchStatExportRow>>(stats);
@@ -144,6 +148,8 @@ namespace ClientPortal.Web.Controllers
 
             if (!ControllerHelpers.ParseDates(startdate, enddate, cultureInfo, out start, out end))
                 return Json(new { });
+
+            if (!start.HasValue) start = userInfo.Dates.FirstOfYear;
 
             // Get weekly search stats
             var rows = cpRepo.GetCampaignWeekStats2(userInfo.AdvertiserId, start.Value, end.Value, userInfo.SearchWeekDays.Item1, userInfo.UseAnalytics);

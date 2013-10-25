@@ -31,7 +31,7 @@ namespace ClientPortal.Web.Controllers
             return result;
         }
 
-        public UserInfo GetUserInfo()
+        protected UserInfo GetUserInfo()
         {
             var userProfile = GetUserProfile();
 

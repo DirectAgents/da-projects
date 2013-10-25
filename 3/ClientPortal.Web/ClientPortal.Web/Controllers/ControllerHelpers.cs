@@ -85,7 +85,7 @@ namespace ClientPortal.Web.Controllers
         }
     }
 
-    internal class Dates
+    public class Dates
     {
         public DateTime Today { get; set; }
         public DateTime Yesterday { get; set; }
@@ -98,8 +98,17 @@ namespace ClientPortal.Web.Controllers
         public DateTime LastOfLastMonth { get; set; }
         public DateTime FirstOfYear { get; set; }
 
-        // will be the last day of last month if today's "day" is greater than the number of days in last month
+        // will be the last day of last month if "Latest" (today or yesterday) is greater than the number of days in last month
         public DateTime OneMonthAgo { get; set; }
+
+        public DateTime FirstOfLatestCompleteMonth
+        {
+            get
+            {
+                var previous = DateTime.Today.AddMonths(-1);
+                return new DateTime(previous.Year, previous.Month, 1);
+            }
+        }
 
         // note: if (useYesterdayAsLatest==true) and it's the first of the month, we still act as if it's the last day of last month
         //       "first", "last", etc are relative to Latest

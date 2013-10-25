@@ -33,7 +33,7 @@ namespace ClientPortal.Web.Controllers
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Index"))
             {
-                var model = new IndexModel(userInfo, false);
+                var model = new IndexModel(userInfo);
                 return View(model);
             }
         }
@@ -96,28 +96,28 @@ namespace ClientPortal.Web.Controllers
 
         private DateTime? GetDashboardDateRangeStart()
         {
-            DateTime now = DateTime.Now;
+            var userInfo = GetUserInfo();
             string type = GetDashboardDateRangeType();
             switch (type)
             {
                 case "ytd":
-                    return new DateTime(now.Year, 1, 1);
+                    return userInfo.Dates.FirstOfYear;
                 case "mtd":
-                    return new DateTime(now.Year, now.Month, 1);
+                    return userInfo.Dates.FirstOfMonth;
                 default:
                     return (DateTime?)Session["DashboardStart"];
             }
         }
         private DateTime? GetDashboardDateRangeEnd()
         {
-            // TODO: use today/yesterday depending on config / user setting ?
-            DateTime now = DateTime.Now;
+            var userInfo = GetUserInfo();
+
             string type = GetDashboardDateRangeType();
             switch (type)
             {
                 case "ytd":
                 case "mtd":
-                    return new DateTime(now.Year, now.Month, now.Day);
+                    return userInfo.Dates.Latest;
                 default:
                     return (DateTime?)Session["DashboardEnd"];
             }
@@ -135,7 +135,7 @@ namespace ClientPortal.Web.Controllers
                 int? advId = userInfo.AdvertiserId;
                 bool showConversionData = userInfo.ShowConversionData;
 
-                var dates = new Dates(false);
+                var dates = userInfo.Dates;
 
                 DateRangeSummary summaryWTD = null;
                 DateRangeSummary summaryMTD = null;
@@ -174,7 +174,7 @@ namespace ClientPortal.Web.Controllers
                     summaryLM.Name = "Last Month";
                     summaryLM.Link = "javascript: jumpToOffSumRep('lmt')";
                 }
-                //            var summaryYTD = cpRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Now, advId, null);
+                //            var summaryYTD = cpRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Latest, advId, null);
                 //            summaryYTD.Name = "Year-to-Date";
 
                 List<OfferGoalSummary> offerGoalSummaries;
@@ -204,8 +204,7 @@ namespace ClientPortal.Web.Controllers
             if (userInfo.AdvertiserId == null)
                 return null;
 
-            var dates = new Dates(false);
-            var offerGoalSummaries = CreateOfferGoalSummaries(userInfo.AdvertiserId.Value, dates, userInfo.ShowConversionData);
+            var offerGoalSummaries = CreateOfferGoalSummaries(userInfo.AdvertiserId.Value, userInfo.Dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalCharts = true;
             return PartialView(offerGoalSummaries);
@@ -224,8 +223,7 @@ namespace ClientPortal.Web.Controllers
             else
                 goals = offer.Goals.ToList();
 
-            var dates = new Dates(false);
-            var offerGoalSummary = CreateOfferGoalSummary(userInfo.AdvertiserId, offer, goals, dates, userInfo.ShowConversionData);
+            var offerGoalSummary = CreateOfferGoalSummary(userInfo.AdvertiserId, offer, goals, userInfo.Dates, userInfo.ShowConversionData);
 
             ViewBag.CreateGoalChart = true;
             return PartialView(offerGoalSummary);

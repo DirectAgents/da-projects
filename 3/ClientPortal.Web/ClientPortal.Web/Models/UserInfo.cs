@@ -1,4 +1,5 @@
 ﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Web.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -78,5 +79,19 @@ namespace ClientPortal.Web.Models
             }
         }
 
+        private Dates _dates;
+        internal Dates Dates
+        {
+            get
+            {
+                if (_dates == null) _dates = new Dates(this.UseYesterdayAsLatest);
+                return _dates;
+            }
+        }
+
+        public bool UseYesterdayAsLatest
+        {
+            get { return true; } // TODO: use config or settings in db
+        }
     }
 }

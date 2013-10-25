@@ -5,11 +5,11 @@
     <select style="width: 140px" id="campaignperf_dateRangeSel" onchange="ChangeDateRange('campaignperf')">
         <option value="yesterday">Yesterday</option>
         <option value="wtd">Week to Date</option>
-        <option value="mtd">Month to Date</option>
+        <option value="mtd" selected="selected">Month to Date</option>
         <option value="ytd">Year to Date</option>
         <option value="lastweek">Last Week</option>
         <option value="lastmonth">Last Month</option>
-        <option value="custom" selected="selected">- custom -</option>
+        <option value="custom">- custom -</option>
     </select>
     <span class="paddedlabel">Start:</span>
     <input id="campaignperf_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('campaignperf')" />

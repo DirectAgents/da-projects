@@ -36,8 +36,9 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             var twoMonthAgo = DateTime.Today.AddMonths(-2);
-            var tomorrow = DateTime.Today.AddDays(1);
-            var dateRange = new DateRange(StartDate ?? twoMonthAgo, EndDate ?? tomorrow);
+            var dateRange = new DateRange(StartDate ?? twoMonthAgo, EndDate ?? DateTime.Today);
+
+            dateRange.ToDate = dateRange.ToDate.AddDays(1); // cake requires the date _after_ the last date you want stats for
 
             foreach (var advertiserId in GetAdvertiserIds())
             {

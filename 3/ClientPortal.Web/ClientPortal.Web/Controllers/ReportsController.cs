@@ -25,8 +25,8 @@ namespace ClientPortal.Web.Controllers
             var now = DateTime.Now;
             var model = new ReportModel()
             {
-                StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userInfo.CultureInfo),
-                EndDate = now.ToString("d", userInfo.CultureInfo),
+                StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
+                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
                 ShowConVal = userInfo.ShowConversionData,
                 ConValName = userInfo.ConversionValueName,
                 ConValIsNum = userInfo.ConversionValueIsNumber
@@ -42,7 +42,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
             var offerInfos = cpRepo.GetOfferInfos(start, end, userInfo.AdvertiserId);
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
@@ -63,11 +63,10 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var now = DateTime.Now;
             var model = new ReportModel()
             {
-                StartDate = new DateTime(now.Year, now.Month, 1).ToString("d", userInfo.CultureInfo),
-                EndDate = now.ToString("d", userInfo.CultureInfo)
+                StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
+                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo)
             };
             return PartialView("_DailySummaryPartial", model);
         }
@@ -80,7 +79,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
             var dailyInfos = cpRepo.GetDailyInfos(start, end, userInfo.AdvertiserId);
 
@@ -134,11 +133,10 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var latest = DateTime.Now.AddDays(-1);
             var model = new ReportModel()
             {
-                StartDate = latest.ToString("d", userInfo.CultureInfo),
-                EndDate = latest.ToString("d", userInfo.CultureInfo),
+                StartDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
+                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
                 ShowConVal = userInfo.ShowConversionData,
                 ConValName = userInfo.ConversionValueName,
                 ConValIsNum = userInfo.ConversionValueIsNumber
@@ -155,7 +153,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
             var conversionInfos = cpRepo.GetConversionInfos(start, end, userInfo.AdvertiserId, offerid);
 
@@ -180,7 +178,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
             var conversionSummaries = cpRepo.GetConversionSummaries(start, end, userInfo.AdvertiserId, offerid);
 
@@ -193,12 +191,12 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult CPMSummaryPartial()
         {
-            var now = DateTime.Now;
-            var firstOfMonth = new DateTime(now.Year, now.Month, 1);
+            var userInfo = GetUserInfo();
+            var firstOfLatest = userInfo.Dates.FirstOfLatestCompleteMonth;
             var model = new ReportModel()
             {
-                StartDate = firstOfMonth.AddMonths(-3).ToString("MM/yyyy"),
-                EndDate = firstOfMonth.AddMonths(-1).ToString("MM/yyyy")
+                StartDate = firstOfLatest.AddMonths(-2).ToString("MM/yyyy"),
+                EndDate = firstOfLatest.ToString("MM/yyyy")
             };
             return PartialView("_CPMSummaryPartial", model);
         }
@@ -206,10 +204,12 @@ namespace ClientPortal.Web.Controllers
         [HttpPost]
         public JsonResult CPMSummaryData(KendoGridRequest request, DateTime? startdate, DateTime? enddate)
         {
-            int? advertiserId = GetAdvertiserId();
+            var userInfo = GetUserInfo();
+
+            // TODO: ParseDates ?? ...& if (!start.HasValue) start = userInfo.Dates.FirstOfYear
 
             var monthlyInfos = cpRepo
-                .GetMonthlyInfos("CPM", startdate, enddate, advertiserId)
+                .GetMonthlyInfos("CPM", startdate, enddate, userInfo.AdvertiserId)
                 .Where(i => i.CampaignStatusId == CampaignStatus.Verified); // TODO: filter by AccountingStatus (or combine into one row)
 
             var kgrid = new KendoGrid<MonthlyInfo>(request, monthlyInfos);
@@ -228,11 +228,10 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
 
-            var latest = DateTime.Now.AddDays(-1);
             var model = new ReportModel()
             {
-                StartDate = latest.ToString("d", userInfo.CultureInfo),
-                EndDate = latest.ToString("d", userInfo.CultureInfo)
+                StartDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
+                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo)
             };
             return PartialView("_AffiliateReportPartial", model);
         }
@@ -245,7 +244,7 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
             var affiliateSummaries = cpRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
 
@@ -274,8 +273,8 @@ namespace ClientPortal.Web.Controllers
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                 return Json(new { });
 
-            if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            if (!end.HasValue) end = DateTime.Today;
+            if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
+            if (!end.HasValue) end = userInfo.Dates.Latest;
 
             var advertiserId = GetAdvertiserId();
             var profiler = MiniProfiler.Current;
@@ -310,7 +309,7 @@ namespace ClientPortal.Web.Controllers
                 if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
                     return Json(new { });
 
-                if (!start.HasValue) start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
                 var clicksByDevice = this.cpRepo.GetClicksByDeviceName(
                                                         start: start,

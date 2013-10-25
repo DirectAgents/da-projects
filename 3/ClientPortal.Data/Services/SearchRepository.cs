@@ -9,13 +9,8 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
-        public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = false)
+        public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true)
         {
-            if (!start.HasValue)
-                start = new DateTime(DateTime.Today.Year, 1, 1);
-            if (!end.HasValue)
-                end = DateTime.Today.AddDays(-1);
-
             var summaries = GetSearchDailySummaries(advertiserId, null, start, end, includeToday);
             var searchStat = new SearchStat
             {
@@ -134,7 +129,7 @@ namespace ClientPortal.Data.Services
         //        });
         //    return stats;
         //}
-        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? numWeeks, bool useAnalytics)
+        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? numWeeks, bool useAnalytics, bool includeToday)
         {
             DateTime start;
 
@@ -148,7 +143,7 @@ namespace ClientPortal.Data.Services
                 start = start.AddDays(-1);
 
             var daySums =
-                GetSearchDailySummaries(advertiserId, channel, start, null, false)
+                GetSearchDailySummaries(advertiserId, channel, start, null, includeToday)
 
                     // Group by the Date
                     .GroupBy(s => s.Date)
@@ -169,7 +164,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaSums = GetGoogleAnalyticsSummaries(advertiserId, channel, start, null, false)
+                var gaSums = GetGoogleAnalyticsSummaries(advertiserId, channel, start, null, includeToday)
                     .GroupBy(s => s.Date)
                     .Select(g => new AnalyticsSummary
                     {
@@ -241,7 +236,7 @@ namespace ClientPortal.Data.Services
         public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek, bool useAnalytics)
         {
             var weeks = CalenderWeek.Generate(startDate, endDate, startDayOfWeek);
-            var sums = GetSearchDailySummaries(advertiserId, null, startDate, endDate, false)
+            var sums = GetSearchDailySummaries(advertiserId, null, startDate, endDate, true)
                 .Select(s => new
                 {
                     s.Date,
@@ -273,7 +268,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaStats = GetGoogleAnalyticsSummaries(advertiserId, null, startDate, endDate, false)
+                var gaStats = GetGoogleAnalyticsSummaries(advertiserId, null, startDate, endDate, true)
                     .AsEnumerable()
                     .GroupBy(s => new
                     {
@@ -317,7 +312,7 @@ namespace ClientPortal.Data.Services
             return stats.AsQueryable();
         }
 
-        public IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths, bool useAnalytics)
+        public IQueryable<SearchStat> GetMonthStats(int? advertiserId, int? numMonths, bool useAnalytics, bool includeToday)
         {
             DateTime start;
             if (numMonths.HasValue)
@@ -327,7 +322,7 @@ namespace ClientPortal.Data.Services
 
             start = new DateTime(start.Year, start.Month, 1);
 
-            var stats = GetSearchDailySummaries(advertiserId, null, start, null, false)
+            var stats = GetSearchDailySummaries(advertiserId, null, start, null, includeToday)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
                 .Select(g =>
                 new SearchStat
@@ -343,7 +338,7 @@ namespace ClientPortal.Data.Services
 
             if (useAnalytics)
             {
-                var gaStats = GetGoogleAnalyticsSummaries(advertiserId, null, start, null, false)
+                var gaStats = GetGoogleAnalyticsSummaries(advertiserId, null, start, null, includeToday)
                     .GroupBy(s => new { s.Date.Year, s.Date.Month })
                     .ToList()
                     .Select(g => new SearchSummary
@@ -369,10 +364,10 @@ namespace ClientPortal.Data.Services
             return stats.OrderBy(s => s.StartDate);
         }
 
-        public IQueryable<SearchStat> GetChannelStats(int? advertiserId, bool useAnalytics)
+        public IQueryable<SearchStat> GetChannelStats(int? advertiserId, bool useAnalytics, bool includeToday)
         {
-            var googleStats = GetWeekStats(advertiserId, "google", null, useAnalytics);
-            var bingStats = GetWeekStats(advertiserId, "bing", null, useAnalytics);
+            var googleStats = GetWeekStats(advertiserId, "google", null, useAnalytics, includeToday);
+            var bingStats = GetWeekStats(advertiserId, "bing", null, useAnalytics, includeToday);
             return googleStats.Concat(bingStats).AsQueryable();
         }
 
@@ -380,10 +375,8 @@ namespace ClientPortal.Data.Services
         {
             if (!start.HasValue)
                 start = new DateTime(DateTime.Today.Year, 1, 1);
-            if (!end.HasValue)
-                end = DateTime.Today.AddDays(-1);
 
-            var summaries = GetSearchDailySummaries(advertiserId, channel, start, end, false).ToList();
+            var summaries = GetSearchDailySummaries(advertiserId, channel, start, end, true).ToList();
             IQueryable<SearchStat> stats;
             if (breakdown)
             {
@@ -439,7 +432,7 @@ namespace ClientPortal.Data.Services
                 }
                 else // using Analytics...
                 {
-                    var gaSums = GetGoogleAnalyticsSummaries(advertiserId, channel, start, end, false)
+                    var gaSums = GetGoogleAnalyticsSummaries(advertiserId, channel, start, end, true)
                         .GroupBy(s => s.SearchCampaignId)
                         .Select(g => new AnalyticsSummary
                         {
