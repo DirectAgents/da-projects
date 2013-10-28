@@ -28,7 +28,7 @@ namespace CakeExtracter.Commands
         public SynchSearchDailySummariesBingCommand()
         {
             IsCommand("synchSearchDailySummariesBing", "synch SearchDailySummaries for Bing API Report");
-            HasRequiredOption<int>("aid|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
+            HasOption<int>("aid|advertiserId=", "Advertiser Id", c => AdvertiserId = c);
             HasOption<int>("v|accountId=", "Account Id", c => AccountId = c);
             HasOption<DateTime>("s|startDate=", "Start Date (default is one month ago)", c => StartDate = c);
             HasOption<DateTime>("e|endDate=", "End Date (default is yesterday)", c => EndDate = c);

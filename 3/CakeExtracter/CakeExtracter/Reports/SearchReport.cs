@@ -23,7 +23,7 @@ namespace CakeExtracter.Reports
             var stat = this.cpRepo.GetSearchStats(advertiser.AdvertiserId, fromDate, toDate);
 
             var template = new SearchReportRuntimeTextTemplate();
-            template.AdvertiserName = advertiser.AdvertiserName;
+            template.AdvertiserName = advertiser.AdvertiserName ?? "";
             template.Week = string.Format("{0} - {1}", fromDate.ToShortDateString(), toDate.ToShortDateString());
             template.Revenue = stat.Revenue;
             template.Cost = stat.Cost;
@@ -39,8 +39,8 @@ namespace CakeExtracter.Reports
             if (advContacts.Count > 0)
             {
                 var advContact = (advContacts.Count > 1) ? advContacts[1] : advContacts[0];
-                template.AcctMgrName = advContact.Contact.FullName;
-                template.AcctMgrEmail = advContact.Contact.Email;
+                template.AcctMgrName = advContact.Contact.FullName ?? "";
+                template.AcctMgrEmail = advContact.Contact.Email ?? "";
             }
 
             string content = template.TransformText();

@@ -51,7 +51,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             string endDate = this.endDate.ToString("yyyy-MM-dd");
             string metrics = "ga:transactions,ga:transactionRevenue";
             DataResource.GaResource.GetRequest request = service.Data.Ga.Get("ga:" + profileId, startDate, endDate, metrics);
-            request.Dimensions = "ga:date,ga:adwordsCampaignID";
+            request.Dimensions = "ga:date,ga:adwordsCampaignID,ga:campaign";
+            request.Filters = "ga:source==google;ga:campaign=~^[a-z]+";
             //request.MaxResults = 
 
             GaData gaData = request.Execute();
@@ -65,10 +66,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                     aRow = new AnalyticsRow()
                     {
                         Date = DateTime.ParseExact(row[0], "yyyyMMdd", CultureInfo.InvariantCulture),
-                        CampaignId = int.Parse(row[1]),
-                        Transactions = int.Parse(row[2]),
-                        Revenue = decimal.Parse(row[3])
+                        //CampaignId = int.Parse(row[1]),
+                        CampaignName = row[2],
+                        Transactions = int.Parse(row[3]),
+                        Revenue = decimal.Parse(row[4])
                     };
+                    int campaignId;
+                    if (int.TryParse(row[1], out campaignId))
+                        aRow.CampaignId = campaignId;
                 }
                 catch (Exception) { }
 
@@ -85,7 +90,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
     public class AnalyticsRow
     {
         public DateTime Date { get; set; }
-        public int CampaignId { get; set; }
+        public int? CampaignId { get; set; }
+        public string CampaignName { get; set; }
         public int Transactions { get; set; }
         public decimal Revenue { get; set; }
     }
