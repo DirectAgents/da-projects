@@ -1,7 +1,7 @@
 ﻿@model ClientPortal.Web.Models.ReportModel
 
 <div style="height: 35px">
-    <select style="width: 140px" id="daysum_dateRangeSel" onchange="ChangeDateRange('daysum')">
+    <select style="width: 140px" id="daysum_dateRangeSel" onchange="ChangeDateRange('daysum', true)">@* show all in USD for now *@
         <option value="mtd">Month to Date</option>
         <option value="ytd">Year to Date</option>
         <option value="lastmonth">Last Month</option>
@@ -10,8 +10,8 @@
     <span class="paddedlabel">Start:</span>
     <input id="daysum_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('daysum')" />
     <span class="paddedlabel">End:</span>
-    <input id="daysum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('daysum')" />
-    <a class="button paddedbutton" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum'); return false">Filter</a>
+    <input id="daysum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('daysum')" />  @* show all in USD for now *@
+    <a class="button paddedbutton" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum', true); return false">Filter</a>
     <a class="button paddedbutton" style="float: right" href="#" onclick="ExportDaySumCSV(); return false">Export CSV</a>
 </div>
 <div id="daysumChartSection" class="k-content">
@@ -105,9 +105,12 @@
     }
 
     function SetupDailySummaryGrid() {
+        kendo.culture(cultureGlobal);
         $('#daysum_dateRangeSel').kendoDropDownList();
         $('#daysum_startdate').kendoDatePicker({ footer: ' ' });
         $('#daysum_enddate').kendoDatePicker({ footer: ' ' });
+
+        kendo.culture('en-US');@* show all in USD for now *@
 
         var dataSource = CreateDailySummaryDataSource();
 

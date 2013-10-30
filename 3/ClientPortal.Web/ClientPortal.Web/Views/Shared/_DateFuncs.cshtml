@@ -6,7 +6,7 @@
         $('#' + grid + '_filterBtn').attr('disabled', false);
     }
 
-    function ChangeDateRange(grid) {
+    function ChangeDateRange(grid, useUS) {
         var startId = '#' + grid + '_startdate';
         var endId = '#' + grid + '_enddate';
         var refresh = true;
@@ -44,7 +44,7 @@
                 refresh = false;
         }
         if (refresh)
-            RefreshGrid(grid);
+            RefreshGrid(grid, useUS);
     }
 
     function ChangeDateRangeMY(grid) {
@@ -72,7 +72,12 @@
             RefreshGrid(grid);
     }
 
-    function RefreshGrid(grid) {
+    function RefreshGrid(grid, useUS) {
+        if (useUS)
+            kendo.culture('en-US');@* show all in USD for now *@
+        else
+            kendo.culture(cultureGlobal);
+
         var gridDataSource = $('#' + grid + 'Grid').data('kendoGrid').dataSource;
         gridDataSource.read();
         if ($('#' + grid + 'Chart').length > 0) {

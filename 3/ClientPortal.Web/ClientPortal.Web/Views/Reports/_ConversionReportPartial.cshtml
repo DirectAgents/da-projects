@@ -34,6 +34,7 @@
     }
 
     function SetupConversionReportGrid() {
+        kendo.culture(cultureGlobal);
         $('#conrep_dateRangeSel').kendoDropDownList();
         $('#conrep_startdate').kendoDatePicker({ footer: ' ' });
         $('#conrep_enddate').kendoDatePicker({ footer: ' ' });

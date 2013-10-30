@@ -1,7 +1,7 @@
 ﻿@model ClientPortal.Web.Models.ReportModel
 
 <div style="height: 35px;">
-    <select style="width: 140px" id="offsum_dateRangeSel" onchange="ChangeDateRange('offsum')">
+    <select style="width: 140px" id="offsum_dateRangeSel" onchange="ChangeDateRange('offsum', true)">@* show all in USD for now *@
         <option value="today">Today</option>
         <option value="yesterday">Yesterday</option>
         <option value="wtd">Week to Date</option>
@@ -14,8 +14,8 @@
     <span class="paddedlabel">Start:</span>
     <input id="offsum_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('offsum')" />
     <span class="paddedlabel">End:</span>
-    <input id="offsum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('offsum')" />
-    <a class="button paddedbutton" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum'); return false">Filter</a>
+    <input id="offsum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('offsum')" />  @* show all in USD for now *@
+    <a class="button paddedbutton" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum', true); return false">Filter</a>
     <a class="button paddedbutton" style="float: right" href="#" onclick="ExportOffSumCSV(); return false">Export CSV</a>
 </div>
 <div id="offsumChartSection" class="k-content">
@@ -91,9 +91,12 @@
     }
 
     function SetupOfferSummaryGrid() {
+        kendo.culture(cultureGlobal);
         $('#offsum_dateRangeSel').kendoDropDownList();
         $('#offsum_startdate').kendoDatePicker({ footer: ' ' });
         $('#offsum_enddate').kendoDatePicker({ footer: ' ' });
+
+        kendo.culture('en-US');@* show all in USD for now *@
 
         var dataSource = CreateOfferSummaryDataSource();
 

@@ -29,6 +29,7 @@
     }
 
     function SetupAffiliateReportGrid() {
+        kendo.culture(cultureGlobal);
         $('#affrep_dateRangeSel').kendoDropDownList();
         $('#affrep_startdate').kendoDatePicker({ footer: ' ' });
         $('#affrep_enddate').kendoDatePicker({ footer: ' ' });

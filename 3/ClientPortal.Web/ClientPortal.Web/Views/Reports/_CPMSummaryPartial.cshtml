@@ -69,6 +69,7 @@
     }
 
     function SetupCPMSummaryGrid(url) {
+        kendo.culture(cultureGlobal);
         $('#cpmsum_dateRangeSel').kendoDropDownList();
         $('#cpmsum_startdate').kendoDatePicker({ start: "year", depth: "year", format: "MM/yyyy", footer: " " });
         $('#cpmsum_enddate').kendoDatePicker({ start: "year", depth: "year", format: "MM/yyyy", footer: " " });

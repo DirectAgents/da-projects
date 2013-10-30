@@ -162,13 +162,13 @@
 
 <script>
     $(function () {
-        kendo.culture('@Model.Culture');
+        cultureGlobal = '@Model.Culture';
+        kendo.culture(cultureGlobal);
         $('#dash_dateRangeSel').kendoDropDownList({ value: '@Model.DateRangeType' });
         $('#dash_startdate').kendoDatePicker({ footer: ' ' });
         $('#dash_enddate').kendoDatePicker({ footer: ' ' });
 
-        CreatePerformanceChart([''], [0], 'N0', '@Model.Culture', 173);
-        CreateSpendChart(0, 'C0', '@Model.Culture', 'Spend', 75);
+        CreatePerformanceChart([''], [0], 'N0', 173);
 
         var projDS = CreateProjectionDataSource('@Html.Raw(Url.Action("DailySummaryData", "Reports", new { cumulative = true, projection = true }))');
         CreateProjectionChart(projDS, 180);
@@ -179,6 +179,9 @@
             $('#projNote').html(projNote);
             UpdateProjectionChart();
         });
+
+        //CreateSpendChart(0, 'C0', cultureGlobal, 'Spend', 75);
+        CreateSpendChart(0, 'C0', 'en-US', 'Spend', 75);@* show all in USD for now *@
 
         var spendDS = CreateDailySpendDataSource('@Url.Action("DailySummaryData", "Reports")');
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
@@ -292,7 +295,7 @@
     }
     function CreateGoalChart(categories, values, chartid, metric, valueFormat, culture, heading, subheading) {
         $('#goal' + chartid + 'ChartHeading').html('<b>' + heading + '</b> ' + subheading);
-        kendo.culture(culture);
+        //kendo.culture(culture);@* show all in USD for now; note: having different cultures for different offers (goals) might not work, it might have to be the same for the whole page *@
         $('#goal' + chartid + 'Chart').kendoChart({
             chartArea: {
                 height: 186

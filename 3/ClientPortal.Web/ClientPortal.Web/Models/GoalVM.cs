@@ -192,7 +192,8 @@ namespace ClientPortal.Web.Models
         private string FormatSomeTarget(decimal someTarget) // ...based on this goal's metric
         {
             if (MetricId == GoalMetric.Spend)
-                return String.Format(new CultureInfo(Culture), "{0:c}", someTarget);
+//                return String.Format(new CultureInfo(Culture), "{0:c}", someTarget);
+                return String.Format(new CultureInfo("en-US"), "{0:c}", someTarget); // show all in USD for now
             else
                 return String.Format("{0:n0}", someTarget);
         }

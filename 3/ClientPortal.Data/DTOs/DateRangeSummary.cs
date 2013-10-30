@@ -25,11 +25,13 @@ namespace ClientPortal.Data.DTOs
 
         public string RevenueFormatted
         {
-            get { return String.Format(new CultureInfo(Culture), "{0:c}", Revenue); }
+            //get { return String.Format(new CultureInfo(Culture), "{0:c}", Revenue); }
+            get { return String.Format(new CultureInfo("en-US"), "{0:c}", Revenue); } // show all in USD for now
         }
         public string ConValFormatted(string format = "c")
         {
-            return String.Format(new CultureInfo(Culture), "{0:" + format +"}", ConVal);
+            //return String.Format(new CultureInfo(Culture), "{0:" + format + "}", ConVal);
+            return String.Format(new CultureInfo("en-US"), "{0:" + format + "}", ConVal); // show all in USD for now
         }
 
         public string Currency
