@@ -31,8 +31,10 @@
         // Common width of both the grid and the pie chart
         var widgetHeight = 198;
 
-        var url = '@Url.Action("MobileDevicesData", "Reports")?startdate=@Html.FormatDate(Model.Start, Model.CultureInfo)&enddate=@Html.FormatDate(Model.End, Model.CultureInfo)&take=5';
-        $.get(url, function (result) {
+        var url = '@Url.Action("MobileDevicesData", "Reports")';
+        var data = { startdate: '@Html.FormatDate(Model.Start, Model.CultureInfo)', enddate: '@Html.FormatDate(Model.End, Model.CultureInfo)', take: 5 };
+
+        $.get(url, data, function (result) {
 
             // Grid of click counts by device name
             $("#divClicksByDevice").kendoGrid({

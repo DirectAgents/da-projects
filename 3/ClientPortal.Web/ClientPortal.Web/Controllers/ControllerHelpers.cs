@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using CsvHelper;
+using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -82,6 +83,16 @@ namespace ClientPortal.Web.Controllers
             };
             SmtpMailer.Credentials = new System.Net.NetworkCredential("reporting@directagents.com", "1423qrwe");
             SmtpMailer.Send(message);
+        }
+
+        internal static JsonResult CreateJson(object data = null, Boolean allowGet = true)
+        {
+            if (data == null)
+                data = new { };
+            var json = new JsonResult { Data = data };
+            if (allowGet)
+                json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return json;
         }
     }
 

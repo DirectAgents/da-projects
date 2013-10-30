@@ -271,7 +271,7 @@ namespace ClientPortal.Web.Controllers
             var userInfo = GetUserInfo();
             DateTime? start, end;
             if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
-                return Json(new { });
+                return ControllerHelpers.CreateJson();
 
             if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
             if (!end.HasValue) end = userInfo.Dates.Latest;
@@ -289,12 +289,7 @@ namespace ClientPortal.Web.Controllers
 
                 results.Insert(0, new[] { "State", "Conversions" });
 
-                var json = new JsonResult
-                {
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                    Data = results
-                };
-
+                var json = ControllerHelpers.CreateJson(results);
                 return json;
             }
         }
@@ -307,7 +302,7 @@ namespace ClientPortal.Web.Controllers
                 var userInfo = GetUserInfo();
                 DateTime? start, end;
                 if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end))
-                    return Json(new { });
+                    return ControllerHelpers.CreateJson();
 
                 if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
@@ -327,15 +322,11 @@ namespace ClientPortal.Web.Controllers
                     value = c.ClickCount / totalClicks
                 });
 
-                var json = new JsonResult
-                {
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                    Data = new
-                    {
-                        data = data,
-                        chart = chartData
-                    }
+                var jsonData = new {
+                    data = data,
+                    chart = chartData
                 };
+                var json = ControllerHelpers.CreateJson(jsonData);
                 return json;
             }
         }
