@@ -364,6 +364,7 @@
             // CPM
             @if (Model.ShowCPMRep)
             {
+                @* need this? if ($('#cpmsumGrid').length == 0) ...? *@
             <text>
             $("#repNav_CPM").one("click", function () {
                 $.ajax({
@@ -379,13 +380,17 @@
 
             // Affiliates
             $("#repNav_Aff").click(function () {
-                $.ajax({
-                    url: '@Url.Action("AffiliateReportPartial", "Reports")',
-                    cache: false
-                }).done(function (html) {
-                    $("#repAffTab").html(html);
-                    SetupAffiliateReportGrid();
-                });
+                if ($('#affrepGrid').length == 0) {
+                    $.ajax({
+                        url: '@Url.Action("AffiliateReportPartial", "Reports")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#repAffTab").html(html);
+                        SetupAffiliateReportGrid();
+                    });
+                } else {
+                    setTimeout(function () { ResizeChart('affrep', true); }, 100);@* note: there's no affrep grid but keep this for future use *@
+                }
             });
 
             // Scheduled Reports
@@ -402,7 +407,12 @@
 
         // Returns val as a culture formatted string.
         function FormatCurr(val, culture) {
-            //kendo.culture(culture);@* show all in USD for now *@
+            //kendo.culture(culture);
+            kendo.culture('en-US');@* show all in USD for now *@
+            return kendo.toString(val, "c");
+        }
+        function FormatCurrTemp(val, culture) {@* temporarily used by the aff drilldown on offsum rep, affrep & convrep *@
+            kendo.culture(culture);
             return kendo.toString(val, "c");
         }
 

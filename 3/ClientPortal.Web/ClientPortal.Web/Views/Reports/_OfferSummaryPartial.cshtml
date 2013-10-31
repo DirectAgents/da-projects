@@ -183,7 +183,7 @@
                     field: 'PriceReceived',
                     title: 'Price',
                     width: 100,
-                    template: '#= FormatCurr(PriceReceived, Culture) #',
+                    template: '#= FormatCurrTemp(PriceReceived, Culture) #',
                     attributes: { style: "text-align: right" },
                     footerTemplate: "#= kendo.toString(sum, 'c') #",
                     footerAttributes: { style: "font-weight: bold; text-align: right" }

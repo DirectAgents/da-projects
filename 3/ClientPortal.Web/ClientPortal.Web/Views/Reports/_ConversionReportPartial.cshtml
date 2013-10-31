@@ -56,9 +56,9 @@
                 { field: 'OfferId', title: 'OffID', width: 60 },
                 { field: 'Offer' },
                 { field: 'AffId', title: 'SubID', width: 62 },
-                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurr(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'PriceReceived', title: 'Price', width: 100, template: '#= FormatCurrTemp(PriceReceived, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
 @if (Model.ShowConVal) {
-    var templ = Model.ConValIsNum ? "kendo.toString(ConVal, 'n0')" : "FormatCurr(ConVal, Culture)";
+    var templ = Model.ConValIsNum ? "kendo.toString(ConVal, 'n0')" : "FormatCurrTemp(ConVal, Culture)";
     var footerTempl = Model.ConValIsNum ? "kendo.toString(sum, 'n0')" : "kendo.toString(sum, 'c')";
           <text>{ field: 'ConVal', title: '@Model.ConValName', width: 100, template: "#= @Html.Raw(templ) #", attributes: { style: "text-align: right" }, footerTemplate: "#= @Html.Raw(footerTempl) #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
 }
