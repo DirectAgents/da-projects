@@ -185,6 +185,7 @@ namespace ClientPortal.Web.Controllers
 
                 var model = new DashboardModel
                 {
+                    Culture = userInfo.Culture,
                     AdvertiserSummaries = new List<DateRangeSummary> { summaryWTD, summaryMTD, summaryLMTD, summaryLM },
                     OfferGoalSummaries = offerGoalSummaries,
                     DateRangeType = GetDashboardDateRangeType(),

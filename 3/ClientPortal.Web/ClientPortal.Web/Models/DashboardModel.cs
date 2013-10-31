@@ -17,7 +17,8 @@ namespace ClientPortal.Web.Models
         public DateRangeSummary SummaryLMTD { get { return (AdvertiserSummaries.Count >= 3) ? AdvertiserSummaries[2] : null; } }
         public DateRangeSummary SummaryLM { get { return (AdvertiserSummaries.Count >= 4) ? AdvertiserSummaries[3] : null; } }
 
-        public string Culture { get { return (AdvertiserSummaries.Count > 0) ? AdvertiserSummaries[0].Culture : null; } }
+        //public string Culture { get { return (AdvertiserSummaries.Count > 0) ? AdvertiserSummaries[0].Culture : null; } }
+        public string Culture { get; set; }
         public CultureInfo CultureInfo { get { return string.IsNullOrWhiteSpace(Culture) ? CultureInfo.InvariantCulture : CultureInfo.CreateSpecificCulture(Culture); } }
 
         public string DateRangeType { get; set; }
