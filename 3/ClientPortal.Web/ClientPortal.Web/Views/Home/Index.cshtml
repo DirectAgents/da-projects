@@ -44,7 +44,7 @@
             <dd class="active"><a href="#vertical1" id="vertNav_Dashboard">Dashboard</a></dd>
             <dd><a href="#vertical2" id="vertNav_Reports">Reports</a></dd>
             <dd><a href="#vertical3" data-bind="click: loadMyAccount">My Account</a></dd>
-            <dd><a href="#vertical4" id="vertNav_Notifications">Notifications</a></dd>
+            @*<dd><a href="#vertical4" id="vertNav_Notifications">Notifications</a></dd>*@
         </dl>
         <!-- /VTabs -->
 
@@ -127,8 +127,8 @@
             <div class="ten columns portaltabs-h">
                 <dl class="tabs">
                     <dd class="active"><a href="#goals" id="navGoals">Goals</a></dd>
-                    <dd><a href="#files" id="navFiles">Files</a></dd>
-                    <dd><a href="#invoices" id="navInvoices">Invoices</a></dd>
+                    @*<dd><a href="#files" id="navFiles">Files</a></dd>
+                    <dd><a href="#invoices" id="navInvoices">Invoices</a></dd>*@
                     <dd><a href="#contact" id="navContact">Contact</a></dd>
                 </dl>
                 <!-- /MyAccountTabs  -->
@@ -285,7 +285,7 @@
             $("#vertNav_Dashboard").click(function () {
                 LoadDashboard();
             });
-
+@*
             // Files
             $("#navFiles").one("click", function () {
                 $.ajax({
@@ -305,7 +305,7 @@
                     $("#divInvoices").html(html);
                 });
             });
-
+*@
             // Contacts
             $("#navContact").one("click", function () {
                 $("#divContact").html('Loading...');
