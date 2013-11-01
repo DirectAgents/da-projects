@@ -94,7 +94,7 @@
     <TargetDatabase />
     <TreatTSqlWarningsAsErrors>False</TreatTSqlWarningsAsErrors>
     <SuppressTSqlWarnings />
-    <OutputPath>.\sql\Debug - Client Portal\</OutputPath>
+    <OutputPath>.\sql\Debug - EOM\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug - DADatabaseService|AnyCPU' ">
     <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
