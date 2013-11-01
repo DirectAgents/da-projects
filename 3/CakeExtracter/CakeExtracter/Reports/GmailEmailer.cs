@@ -32,9 +32,9 @@ namespace CakeExtracter.Reports
                 From = new MailAddress(fromAddress),
             };
 
-            foreach (var item in toAddresses.SelectMany(c => c.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)))
+            foreach (var item in toAddresses.SelectMany(c => c.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries)))
             {
-                message.To.Add(item);
+                message.To.Add(item.Trim());
             }
 
             if (ccAddresses != null)

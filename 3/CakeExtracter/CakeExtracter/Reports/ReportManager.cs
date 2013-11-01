@@ -35,6 +35,9 @@ namespace CakeExtracter.Reports
             {
                 foreach (var advertiser in advertisers)
                 {
+                    if (advertiser.AutomatedReportsNextSendAfter == null)
+                        advertiser.AutomatedReportsNextSendAfter = DateTime.Today.AddDays(-1);
+
                     var report = this.SelectReport(advertiser);
                     this.SendReport(advertiser, report);
                     this.UpdateAdvertiser(advertiser);
@@ -49,7 +52,7 @@ namespace CakeExtracter.Reports
             return cpRepo.Advertisers
                          .Where(c => c.AutomatedReportsEnabled)
                          .ToList()
-                         .Where(c => DateTime.Now > c.AutomatedReportsNextSendAfter);
+                         .Where(c => c.AutomatedReportsNextSendAfter == null || DateTime.Now > c.AutomatedReportsNextSendAfter);
         }
 
         private IReport SelectReport(Advertiser advertiser)
