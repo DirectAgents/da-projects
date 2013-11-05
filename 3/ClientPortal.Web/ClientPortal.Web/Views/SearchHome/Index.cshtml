@@ -105,32 +105,30 @@
     <link href="~/Content/kendo/2013.1.514/kendo.common.min.css" rel="stylesheet" />
     <link href="~/Content/kendo/2013.1.514/kendo.bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/index.css" rel="stylesheet" />
-
-<style>
-    .k-grid tbody .k-grid .k-grid-header, .k-detail-cell .k-pager-wrap, .k-detail-cell .k-grid-footer
-    {
-        display: none;
-    }
-    td.k-detail-cell > div.k-grid
-    {
-        border: 1px solid black;
-    }
-</style>
+    <style>
+        .k-grid tbody .k-grid .k-grid-header, .k-detail-cell .k-pager-wrap, .k-detail-cell .k-grid-footer
+        {
+            display: none;
+        }
+        td.k-detail-cell > div.k-grid
+        {
+            border: 1px solid black;
+        }
+    </style>
 }
 
 @section scripts {
-
     <script src="~/Scripts/kendo/2013.1.514/kendo.all.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.de-DE.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-AU.min.js"></script>
     <script src="~/Scripts/search_grids_charts.js"></script>
-
     @Html.Partial("_DateFuncs")
 
     <script>
         // ready function
         $(function () {
+            cultureGlobal = '@Model.Culture';
             LoadDashboard();
             SetupTabs();
         });

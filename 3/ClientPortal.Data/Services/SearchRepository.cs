@@ -356,8 +356,8 @@ namespace ClientPortal.Data.Services
                              MonthByMaxDate = stat.EndDate,
                              Impressions = stat.Impressions,
                              Clicks = stat.Clicks,
-                             Orders = gaStat.Orders,
-                             Revenue = gaStat.Revenue,
+                             Orders = (gaStat == null) ? 0 : gaStat.Orders,
+                             Revenue = (gaStat == null) ? 0 : gaStat.Revenue,
                              Cost = stat.Cost
                          });
             }

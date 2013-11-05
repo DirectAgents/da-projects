@@ -20,6 +20,7 @@ namespace ClientPortal.Web.Models
         //public string Culture { get { return (AdvertiserSummaries.Count > 0) ? AdvertiserSummaries[0].Culture : null; } }
         public string Culture { get; set; }
         public CultureInfo CultureInfo { get { return string.IsNullOrWhiteSpace(Culture) ? CultureInfo.InvariantCulture : CultureInfo.CreateSpecificCulture(Culture); } }
+        // TODO: make CultureInfo a singleton (on demand)
 
         public string DateRangeType { get; set; }
         public DateTime? Start { get; set; }
