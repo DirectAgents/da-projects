@@ -7,6 +7,7 @@ using Google.Apis.Util;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 
@@ -51,12 +52,14 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             string endDate = this.endDate.ToString("yyyy-MM-dd");
             string metrics = "ga:transactions,ga:transactionRevenue";
             DataResource.GaResource.GetRequest request = service.Data.Ga.Get("ga:" + profileId, startDate, endDate, metrics);
-            request.Dimensions = "ga:date,ga:adwordsCampaignID,ga:campaign";
-            request.Filters = "ga:source==google;ga:campaign=~^[a-z]+";
+            request.Dimensions = "ga:date,ga:adwordsCampaignID,ga:campaign,ga:source";
+            request.Filters = "ga:source=~^(bing|google)$;ga:medium!=organic;ga:campaign!@test";
             //request.MaxResults = 
 
             GaData gaData = request.Execute();
             // TODO: pagination
+
+            List<AnalyticsRow> nonAdWordsRows = new List<AnalyticsRow>();
 
             foreach (var row in gaData.Rows)
             {
@@ -66,10 +69,11 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                     aRow = new AnalyticsRow()
                     {
                         Date = DateTime.ParseExact(row[0], "yyyyMMdd", CultureInfo.InvariantCulture),
-                        //CampaignId = int.Parse(row[1]),
+                        //CampaignId = int.Parse(row[1]), // note: any 'total/other' rows will be skipped because their CampaignId is "(not set)" and won't be int.Parsed
                         CampaignName = row[2],
-                        Transactions = int.Parse(row[3]),
-                        Revenue = decimal.Parse(row[4])
+                        Source = row[3],
+                        Transactions = int.Parse(row[4]),
+                        Revenue = decimal.Parse(row[5])
                     };
                     int campaignId;
                     if (int.TryParse(row[1], out campaignId))
@@ -77,11 +81,41 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 }
                 catch (Exception) { }
 
-                // note: 'total' rows will be skipped because their CampaignId is "(not set)" and won't be int.Parsed
-                // also skip rows where transactions and revenue are both 0
-
+                // note: skip rows where transactions and revenue are both 0
                 if (aRow != null && (aRow.Transactions != 0 || aRow.Revenue != 0))
+                {
+                    if (aRow.CampaignId.HasValue)
+                        yield return aRow;
+                    else
+                        nonAdWordsRows.Add(aRow);
+                }
+            }
+
+            // Handle any rows without campaignIds
+            if (nonAdWordsRows.Count > 0)
+            {
+                var campaignGroups = nonAdWordsRows.GroupBy(r => new { name = r.CampaignName.ToLower(), date = r.Date});
+
+                foreach (var group in campaignGroups)
+                {
+                    // use the first row in the group for the CampaignName (non-ToLowered)
+                    var campaignName = group.First().CampaignName;
+
+                    var source = "bing"; // if multiple sources, call it bing
+                    var sources = group.Select(r => r.Source).Distinct();
+                    if (sources.Count() == 1)
+                        source = sources.First();
+
+                    var aRow = new AnalyticsRow()
+                    {
+                        Date = group.Key.date,
+                        CampaignName = campaignName,
+                        Source = source,
+                        Transactions = group.Sum(r => r.Transactions),
+                        Revenue = group.Sum(r => r.Revenue)
+                    };
                     yield return aRow;
+                }
             }
         }
 
@@ -92,6 +126,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
         public DateTime Date { get; set; }
         public int? CampaignId { get; set; }
         public string CampaignName { get; set; }
+        public string Source { get; set; }
         public int Transactions { get; set; }
         public decimal Revenue { get; set; }
     }

@@ -35,15 +35,20 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 foreach (var row in rows)
                 {
-                    var campaign = db.SearchCampaigns.SingleOrDefault(c => c.ExternalId == row.CampaignId && c.AdvertiserId == this.advertiserId && c.Channel == "google");
+                    SearchCampaign campaign = null;
+                    if (row.CampaignId.HasValue)
+                        campaign = db.SearchCampaigns.SingleOrDefault(c => c.ExternalId == row.CampaignId && c.AdvertiserId == this.advertiserId);
+
                     if (campaign == null)
-                    {   // try matching to a bing campaign
-                        var campaigns = db.SearchCampaigns.Where(c => c.AdvertiserId == this.advertiserId && c.Channel == "bing").ToList();
-                        campaigns = campaigns.Where(c => c.SearchCampaignName.Replace(" ", "").Contains(row.CampaignName)).ToList();
+                    {   // try matching by campaign name
+                        var channel = row.CampaignName.ToLower().StartsWith("bing") ? "bing" : row.Source;
+
+                        var campaigns = db.SearchCampaigns.Where(c => c.AdvertiserId == this.advertiserId && c.Channel == channel).ToList();
+                        campaigns = campaigns.Where(c => c.SearchCampaignName.Replace(" ", "").Contains(row.CampaignName.Replace(" ", ""))).ToList();
                         if (campaigns.Count > 0)
                             campaign = campaigns[0]; // TODO: if more than one, throw exception?
                         else
-                            Logger.Info("AnalyticsApiLoader - could not find a matching campaign for: {0}", row.CampaignName);
+                            Logger.Info("AnalyticsApiLoader.Upsert... could not find a matching campaign for: {0}", row.CampaignName);
                     }
                     if (campaign != null)
                     {
@@ -71,6 +76,27 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             updatedCount++;
                         }
                         itemCount++;
+
+                        // See if there's a search daily summary row for the same campaign & date...
+                        if (!db.Set<SearchDailySummary2>().Any(s => s.SearchCampaignId == pk1 && s.Date == pk2))
+                        {   // ...if not, add one, so that left-joining to it can happen later (when querying stats)
+                            Logger.Info("Creating empty search daily summary record for campaign {0} for {1}", pk1, pk2.ToShortDateString());
+                            var sds = new SearchDailySummary2()
+                            {
+                                SearchCampaignId = pk1,
+                                Date = pk2,
+                                Network = ".",
+                                Device = ".",
+                                ClickType = ".",
+                                Revenue = 0,
+                                Cost = 0,
+                                Orders = 0,
+                                Clicks = 0,
+                                Impressions = 0,
+                                CurrencyId = 1 // item["CurrencyCode"] == "USD" ? 1 : -1 // NOTE: non USD (if exists) -1 for now
+                            };
+                            db.SearchDailySummary2.Add(sds);
+                        }
                     }
                 }
                 Logger.Info("Saving {0} GoogleAnalyticsSummaries ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
@@ -83,28 +109,30 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         {
             using (var db = new ClientPortalContext())
             {
-                foreach (var tuple in rows.Select(r => Tuple.Create(r.CampaignId, r.CampaignName)).Distinct())
+                foreach (var tuple in rows.Select(r => Tuple.Create(r.CampaignId, r.CampaignName, r.Source)).Distinct())
                 {
                     var campaignId = tuple.Item1;
                     var campaignName = tuple.Item2;
-                    var channel = "google";
+
+                    var channel = campaignName.ToLower().StartsWith("bing") ? "bing" : tuple.Item3;
 
                     SearchCampaign existing = null;
 
                     if (campaignId.HasValue)
                     {
-                        existing = db.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId && c.AdvertiserId == this.advertiserId && c.Channel == "google");
+                        existing = db.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId && c.AdvertiserId == this.advertiserId && c.Channel == channel);
                     }
-                    else // no campaignId; must be bing... try to match it
+                    else // no (adwords) campaignId... try to match on the campaign name (removing spaces)
                     {
-                        channel = "bing";
-                        var campaigns = db.SearchCampaigns.Where(c => c.AdvertiserId == this.advertiserId && c.Channel == "bing").ToList();
-                        campaigns = campaigns.Where(c => c.SearchCampaignName.Replace(" ", "").Contains(campaignName)).ToList();
+                        var campaigns = db.SearchCampaigns.Where(c => c.AdvertiserId == this.advertiserId && c.Channel == channel).ToList();
+                        campaigns = campaigns.Where(c => c.SearchCampaignName.Replace(" ", "").Contains(campaignName.Replace(" ", ""))).ToList();
                         if (campaigns.Count > 0) // TODO: what to do if more than one?
                         {
                             existing = campaigns[0];
                             campaignName = existing.SearchCampaignName;
                         }
+                        else
+                            Logger.Info("AnalyticsApiLoader.AddDependentSearchCampaigns- could not find a matching campaign for: {0}", campaignName);
                     }
 
                     if (existing == null)
@@ -116,13 +144,13 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             Channel = channel,
                             ExternalId = campaignId
                         });
-                        Logger.Info("Saving new SearchCampaign: {0} [{1}] (advertiser {2})", campaignName, campaignId, this.advertiserId);
+                        Logger.Info("Saving new SearchCampaign: {0} [{1}] (channel {2}, advertiser {3})", campaignName, campaignId, channel, this.advertiserId);
                         db.SaveChanges();
                     }
                     else if (existing.SearchCampaignName != campaignName)
                     {
                         existing.SearchCampaignName = campaignName;
-                        Logger.Info("Saving updated SearchCampaign name: {0} (advertiser {1})", campaignName, this.advertiserId);
+                        Logger.Info("Saving updated SearchCampaign name: {0} [{1}] (channel {2}, advertiser {3})", campaignName, campaignId, channel, this.advertiserId);
                         db.SaveChanges();
                     }
                 }
