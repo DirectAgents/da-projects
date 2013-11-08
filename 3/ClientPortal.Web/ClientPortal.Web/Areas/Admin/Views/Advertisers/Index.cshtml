@@ -17,14 +17,14 @@
     <tr>
         <th></th>
         <th>@Ajax.ActionLink("Id", "Index", new { sort="AdvertiserId" }, ajaxOptions)</th>
-        <th>@Ajax.ActionLink("Name", "Index", new { sort="AdvertiserName" }, ajaxOptions)</th>
-        <th style="text-align:center">Profile</th>        
+        <th style="text-align:left; padding-left:10px">@Ajax.ActionLink("Advertiser", "Index", new { sort="AdvertiserName" }, ajaxOptions)</th>
+        <th>Login</th>
         <th>Culture</th>
         <th>ShowCPM?</th>
         <th>ConVal</th>
         <th>Show?</th>
         <th>IsNum?</th> 
-        <th style="text-align:center">Logo</th>
+        <th>Logo</th>
         <th>Reports<br />Enabled?</th>
     </tr>
 
@@ -36,7 +36,7 @@
             @Ajax.ActionLink("Details", "Details", new { id=item.AdvertiserId }, ajaxOptions) |
             @Ajax.ActionLink("Delete", "Delete", new { id=item.AdvertiserId }, ajaxOptions)
         </td>
-        <td>
+        <td style="text-align:center">
             @Html.DisplayFor(modelItem => item.AdvertiserId)
         </td>
         <td>

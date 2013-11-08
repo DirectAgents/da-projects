@@ -20,17 +20,42 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         //
         // GET: /Admin/Advertisers/
+        const string defaultSort = "AdvertiserId";
 
         public ActionResult Index(string sort)
         {
+            bool desc = false; // indicates whether the sort is descending
+
+            if (sort == null) // the user didn't specify a sort column; try get vals from session
+            {
+                sort = (string)Session["sort"]; //todo? if still null, set to defaultSort?
+                desc = Session["desc"] == null ? false : (bool)Session["desc"];
+            }
+            else // the user specified a sort column; see if need to reverse
+            {
+                string oldSort = Session["sort"] == null ? defaultSort : (string)Session["sort"];
+                Session["sort"] = sort;
+
+                bool oldDesc = Session["desc"] == null ? false : (bool)Session["desc"];
+                if (sort == oldSort)
+                    desc = !oldDesc; // clicked on the same header; reverse the sort
+                Session["desc"] = desc;
+            }
+
             var advertisers = db.Advertisers.AsQueryable();
             switch (sort)
             {
                 case "AdvertiserName":
-                    advertisers = advertisers.OrderBy(a => a.AdvertiserName);
+                    if (desc)
+                        advertisers = advertisers.OrderByDescending(a => a.AdvertiserName);
+                    else
+                        advertisers = advertisers.OrderBy(a => a.AdvertiserName);
                     break;
                 default:
-                    advertisers = advertisers.OrderBy(a => a.AdvertiserId);
+                    if (desc)
+                        advertisers = advertisers.OrderByDescending(a => a.AdvertiserId);
+                    else
+                        advertisers = advertisers.OrderBy(a => a.AdvertiserId);
                     break;
             }
             var advList = advertisers.ToList();
