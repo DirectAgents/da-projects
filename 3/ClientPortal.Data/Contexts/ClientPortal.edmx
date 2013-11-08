@@ -23,6 +23,7 @@
           <EntitySet Name="Offer" EntityType="ClientPortalModel.Store.Offer" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ScheduledReport" EntityType="ClientPortalModel.Store.ScheduledReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ScheduledReportRecipient" EntityType="ClientPortalModel.Store.ScheduledReportRecipient" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SearchAccount" EntityType="ClientPortalModel.Store.SearchAccount" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchCampaign" EntityType="ClientPortalModel.Store.SearchCampaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary" EntityType="ClientPortalModel.Store.SearchDailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
@@ -75,8 +76,16 @@
             <End Role="ScheduledReport" EntitySet="ScheduledReport" />
             <End Role="ScheduledReportRecipient" EntitySet="ScheduledReportRecipient" />
           </AssociationSet>
+          <AssociationSet Name="FK_SearchAccount_Advertiser" Association="ClientPortalModel.Store.FK_SearchAccount_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="SearchAccount" EntitySet="SearchAccount" />
+          </AssociationSet>
           <AssociationSet Name="FK_SearchCampaign_Advertiser" Association="ClientPortalModel.Store.FK_SearchCampaign_Advertiser">
             <End Role="Advertiser" EntitySet="Advertiser" />
+            <End Role="SearchCampaign" EntitySet="SearchCampaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCampaign_SearchAccount" Association="ClientPortalModel.Store.FK_SearchCampaign_SearchAccount">
+            <End Role="SearchAccount" EntitySet="SearchAccount" />
             <End Role="SearchCampaign" EntitySet="SearchCampaign" />
           </AssociationSet>
           <AssociationSet Name="FK_SearchDailySummary_SearchCampaign" Association="ClientPortalModel.Store.FK_SearchDailySummary_SearchCampaign">
@@ -287,15 +296,27 @@
           <Property Name="EmailAddress" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ScheduledReportId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="SearchAccount">
+          <Key>
+            <PropertyRef Name="SearchAccountId" />
+          </Key>
+          <Property Name="SearchAccountId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Channel" Type="nvarchar" MaxLength="50" />
+          <Property Name="AccountCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="ExternalId" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="SearchCampaign">
           <Key>
             <PropertyRef Name="SearchCampaignId" />
           </Key>
           <Property Name="SearchCampaignId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="SearchCampaignName" Type="nvarchar" Nullable="false" MaxLength="255" />
-          <Property Name="AdvertiserId" Type="int" Nullable="false" />
+          <Property Name="AdvertiserId" Type="int" />
           <Property Name="Channel" Type="nvarchar" MaxLength="255" />
           <Property Name="ExternalId" Type="int" />
+          <Property Name="SearchAccountId" Type="int" />
         </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
@@ -491,8 +512,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SearchCampaign_Advertiser">
+        <Association Name="FK_SearchAccount_Advertiser">
           <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
+          <End Role="SearchAccount" Type="ClientPortalModel.Store.SearchAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="SearchAccount">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCampaign_Advertiser">
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="0..1" />
           <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
@@ -500,6 +533,18 @@
             </Principal>
             <Dependent Role="SearchCampaign">
               <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCampaign_SearchAccount">
+          <End Role="SearchAccount" Type="ClientPortalModel.Store.SearchAccount" Multiplicity="0..1" />
+          <End Role="SearchCampaign" Type="ClientPortalModel.Store.SearchCampaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchAccount">
+              <PropertyRef Name="SearchAccountId" />
+            </Principal>
+            <Dependent Role="SearchCampaign">
+              <PropertyRef Name="SearchAccountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -612,6 +657,15 @@
           <AssociationSet Name="FK_GoogleAnalyticsSummary_SearchCampaign" Association="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
             <End Role="GoogleAnalyticsSummary" EntitySet="GoogleAnalyticsSummaries" />
+          </AssociationSet>
+          <EntitySet Name="SearchAccounts" EntityType="ClientPortalModel.SearchAccount" />
+          <AssociationSet Name="FK_SearchAccount_Advertiser" Association="ClientPortalModel.FK_SearchAccount_Advertiser">
+            <End Role="Advertiser" EntitySet="Advertisers" />
+            <End Role="SearchAccount" EntitySet="SearchAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SearchCampaign_SearchAccount" Association="ClientPortalModel.FK_SearchCampaign_SearchAccount">
+            <End Role="SearchAccount" EntitySet="SearchAccounts" />
+            <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -908,13 +962,15 @@
           </Key>
           <Property Type="Int32" Name="SearchCampaignId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="SearchCampaignName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="Int32" Name="AdvertiserId" />
           <Property Type="String" Name="Channel" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SearchDailySummaries" Relationship="ClientPortalModel.FK_SearchDailySummary_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary" />
           <Property Type="Int32" Name="ExternalId" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchCampaign_Advertiser" FromRole="SearchCampaign" ToRole="Advertiser" />
           <NavigationProperty Name="GoogleAnalyticsSummaries" Relationship="ClientPortalModel.FK_GoogleAnalyticsSummary_SearchCampaign" FromRole="SearchCampaign" ToRole="GoogleAnalyticsSummary" />
           <NavigationProperty Name="SearchDailySummaries2" Relationship="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign" FromRole="SearchCampaign" ToRole="SearchDailySummary2" />
+          <Property Type="Int32" Name="SearchAccountId" />
+          <NavigationProperty Name="SearchAccount" Relationship="ClientPortalModel.FK_SearchCampaign_SearchAccount" FromRole="SearchCampaign" ToRole="SearchAccount" />
         </EntityType>
         <Association Name="FK_SearchDailySummary_SearchCampaign">
           <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="1" />
@@ -1021,6 +1077,7 @@
           <Property Type="String" Name="AdWordsAccountId" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="BingAdsAccountId" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AnalyticsProfileId" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SearchAccounts" Relationship="ClientPortalModel.FK_SearchAccount_Advertiser" FromRole="Advertiser" ToRole="SearchAccount" />
         </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -1073,7 +1130,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SearchCampaign_Advertiser">
-          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="0..1" />
           <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Advertiser">
@@ -1104,6 +1161,43 @@
             </Principal>
             <Dependent Role="GoogleAnalyticsSummary">
               <PropertyRef Name="SearchCampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SearchAccount">
+          <Key>
+            <PropertyRef Name="SearchAccountId" />
+          </Key>
+          <Property Type="Int32" Name="SearchAccountId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="AdvertiserId" Nullable="false" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Channel" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="AccountCode" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ExternalId" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_SearchAccount_Advertiser" FromRole="SearchAccount" ToRole="Advertiser" />
+          <NavigationProperty Name="SearchCampaigns" Relationship="ClientPortalModel.FK_SearchCampaign_SearchAccount" FromRole="SearchAccount" ToRole="SearchCampaign" />
+        </EntityType>
+        <Association Name="FK_SearchAccount_Advertiser">
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
+          <End Type="ClientPortalModel.SearchAccount" Role="SearchAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Advertiser">
+              <PropertyRef Name="AdvertiserId" />
+            </Principal>
+            <Dependent Role="SearchAccount">
+              <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SearchCampaign_SearchAccount">
+          <End Type="ClientPortalModel.SearchAccount" Role="SearchAccount" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.SearchCampaign" Role="SearchCampaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchAccount">
+              <PropertyRef Name="SearchAccountId" />
+            </Principal>
+            <Dependent Role="SearchCampaign">
+              <PropertyRef Name="SearchAccountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1297,6 +1391,7 @@
           <EntitySetMapping Name="SearchCampaigns">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchCampaign">
               <MappingFragment StoreEntitySet="SearchCampaign">
+                <ScalarProperty Name="SearchAccountId" ColumnName="SearchAccountId" />
                 <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
                 <ScalarProperty Name="Channel" ColumnName="Channel" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
@@ -1375,6 +1470,18 @@
                 <ScalarProperty Name="Transactions" ColumnName="Transactions" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="SearchCampaignId" ColumnName="SearchCampaignId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchAccounts">
+            <EntityTypeMapping TypeName="ClientPortalModel.SearchAccount">
+              <MappingFragment StoreEntitySet="SearchAccount">
+                <ScalarProperty Name="ExternalId" ColumnName="ExternalId" />
+                <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
+                <ScalarProperty Name="Channel" ColumnName="Channel" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="SearchAccountId" ColumnName="SearchAccountId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

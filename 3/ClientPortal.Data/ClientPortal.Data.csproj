@@ -185,6 +185,9 @@
     <Compile Include="Contexts\ScheduledReportRecipient.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\SearchAccount.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\SearchCampaign.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>

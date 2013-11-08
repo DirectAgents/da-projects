@@ -21,6 +21,7 @@ namespace ClientPortal.Data.Contexts
             this.FileUploads = new HashSet<FileUpload>();
             this.Goals = new HashSet<Goal>();
             this.SearchCampaigns = new HashSet<SearchCampaign>();
+            this.SearchAccounts = new HashSet<SearchAccount>();
         }
     
         public int AdvertiserId { get; set; }
@@ -45,5 +46,6 @@ namespace ClientPortal.Data.Contexts
         public virtual ICollection<FileUpload> FileUploads { get; set; }
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<SearchCampaign> SearchCampaigns { get; set; }
+        public virtual ICollection<SearchAccount> SearchAccounts { get; set; }
     }
 }
