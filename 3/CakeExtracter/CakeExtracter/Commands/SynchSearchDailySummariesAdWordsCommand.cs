@@ -88,7 +88,7 @@ namespace CakeExtracter.Commands
                             };
                             db.SearchAccounts.Add(searchAccount);
                             db.SaveChanges();
-                            searchAccounts.Add(searchAccount); // Q: is the id filled in?
+                            searchAccounts.Add(searchAccount);
                         }
                         else
                         {

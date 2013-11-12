@@ -94,33 +94,26 @@ namespace ClientPortal.Web.Controllers
             return (string)Session["DashboardDateRangeType"] ?? "mtd";
         }
 
-        private DateTime? GetDashboardDateRangeStart()
+        private Tuple<DateTime?, DateTime?> GetDashboardDateRange(Dates dates)
         {
-            var userInfo = GetUserInfo();
-            string type = GetDashboardDateRangeType();
-            switch (type)
-            {
-                case "ytd":
-                    return userInfo.Dates.FirstOfYear;
-                case "mtd":
-                    return userInfo.Dates.FirstOfMonth;
-                default:
-                    return (DateTime?)Session["DashboardStart"];
-            }
-        }
-        private DateTime? GetDashboardDateRangeEnd()
-        {
-            var userInfo = GetUserInfo();
+            DateTime? start = null;
+            DateTime? end = dates.Latest;
 
             string type = GetDashboardDateRangeType();
             switch (type)
             {
                 case "ytd":
+                    start = dates.FirstOfYear;
+                    break;
                 case "mtd":
-                    return userInfo.Dates.Latest;
+                    start = dates.FirstOfMonth;
+                    break;
                 default:
-                    return (DateTime?)Session["DashboardEnd"];
+                    start = (DateTime?)Session["DashboardStart"];
+                    end = (DateTime?)Session["DashboardEnd"];
+                    break;
             }
+            return Tuple.Create(start, end);
         }
 
         public PartialViewResult Dashboard()
@@ -183,14 +176,16 @@ namespace ClientPortal.Web.Controllers
                     offerGoalSummaries = CreateOfferGoalSummaries(advId.Value, dates, showConversionData);
                 }
 
+                var dateRange = GetDashboardDateRange(dates);
+
                 var model = new DashboardModel
                 {
                     Culture = userInfo.Culture,
                     AdvertiserSummaries = new List<DateRangeSummary> { summaryWTD, summaryMTD, summaryLMTD, summaryLM },
                     OfferGoalSummaries = offerGoalSummaries,
                     DateRangeType = GetDashboardDateRangeType(),
-                    Start = GetDashboardDateRangeStart(),
-                    End = GetDashboardDateRangeEnd(),
+                    Start = dateRange.Item1,
+                    End = dateRange.Item2,
                     ShowConVal = showConversionData,
                     ConValName = userInfo.ConversionValueName,
                     ConValIsNum = userInfo.ConversionValueIsNumber

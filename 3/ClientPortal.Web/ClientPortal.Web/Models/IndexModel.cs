@@ -19,7 +19,7 @@ namespace ClientPortal.Web.Models
             HasLogo = (userInfo.Logo != null);
             ShowCPMRep = userInfo.ShowCPMRep;
 
-            Dt = new Dates(userInfo.UseYesterdayAsLatest);
+            Dt = new Dates(userInfo.UseYesterdayAsLatest, userInfo.WeekStartDay);
         }
 
         private Dates Dt { get; set; }

@@ -31,9 +31,9 @@ namespace ClientPortal.Data.Services
             var searchCampaigns = context.SearchCampaigns.AsQueryable();
 
             if (advertiserId.HasValue)
-                searchCampaigns = searchCampaigns.Where(c => c.AdvertiserId == advertiserId.Value);
+                searchCampaigns = searchCampaigns.Where(c => c.SearchAccount.AdvertiserId == advertiserId.Value);
             if (channel != null)
-                searchCampaigns = searchCampaigns.Where(c => c.Channel == channel);
+                searchCampaigns = searchCampaigns.Where(c => c.SearchAccount.Channel == channel);
 
             return searchCampaigns;
         }
@@ -129,7 +129,7 @@ namespace ClientPortal.Data.Services
         //        });
         //    return stats;
         //}
-        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? numWeeks, bool useAnalytics, bool includeToday)
+        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
         {
             DateTime start;
 
@@ -138,8 +138,8 @@ namespace ClientPortal.Data.Services
             else
                 start = DateTime.Today.AddYears(-1); // Otherwise set the start date to a year ago
 
-            // Now move start date back to the closest Monday
-            while (start.DayOfWeek != DayOfWeek.Monday)
+            // Now move start date back to the closest startDayOfWeek
+            while (start.DayOfWeek != startDayOfWeek)
                 start = start.AddDays(-1);
 
             var daySums =
@@ -194,7 +194,7 @@ namespace ClientPortal.Data.Services
                     {
                         Date = s.Date,
                         Year = s.Date.Year,
-                        Week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(s.Date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday),
+                        Week = CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(s.Date, CalendarWeekRule.FirstFourDayWeek, startDayOfWeek),
                         Impressions = s.Impressions,
                         Clicks = s.Clicks,
                         Orders = s.Orders,
@@ -212,6 +212,7 @@ namespace ClientPortal.Data.Services
                     // Finally select new SearchStat objects
                     .Select((g, i) => new SearchStat
                     {
+                        WeekStartDay = startDayOfWeek,
                         WeekByMaxDate = g.Max(s => s.Date), // Supply the latest date in the group of dates (which are all part of a week)
                         TitleIfNotNull = channel, // (if null, Title is "Range")
 
@@ -240,7 +241,7 @@ namespace ClientPortal.Data.Services
                 .Select(s => new
                 {
                     s.Date,
-                    s.SearchCampaign.Channel,
+                    s.SearchCampaign.SearchAccount.Channel,
                     s.SearchCampaignId,
                     s.SearchCampaign.SearchCampaignName,
                     s.Orders,
@@ -364,10 +365,10 @@ namespace ClientPortal.Data.Services
             return stats.OrderBy(s => s.StartDate);
         }
 
-        public IQueryable<SearchStat> GetChannelStats(int? advertiserId, bool useAnalytics, bool includeToday)
+        public IQueryable<SearchStat> GetChannelStats(int? advertiserId, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
         {
-            var googleStats = GetWeekStats(advertiserId, "google", null, useAnalytics, includeToday);
-            var bingStats = GetWeekStats(advertiserId, "bing", null, useAnalytics, includeToday);
+            var googleStats = GetWeekStats(advertiserId, "google", null, startDayOfWeek, useAnalytics, includeToday);
+            var bingStats = GetWeekStats(advertiserId, "bing", null, startDayOfWeek, useAnalytics, includeToday);
             return googleStats.Concat(bingStats).AsQueryable();
         }
 
@@ -382,7 +383,7 @@ namespace ClientPortal.Data.Services
             {
                 // TODO: figure out how to join to gaStats if useAnalytics==true
 
-                stats = summaries.GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaign.SearchCampaignName, s.Network, s.Device, s.ClickType })
+                stats = summaries.GroupBy(s => new { s.SearchCampaign.SearchAccount.Channel, s.SearchCampaign.SearchCampaignName, s.Network, s.Device, s.ClickType })
                     .OrderBy(g => g.Key.Channel).ThenBy(g => g.Key.SearchCampaignName)
                     .Select(g => new SearchStat
                     {
@@ -402,7 +403,7 @@ namespace ClientPortal.Data.Services
             }
             else
             {
-                var sums = summaries.GroupBy(s => new { s.SearchCampaign.Channel, s.SearchCampaignId, s.SearchCampaign.SearchCampaignName })
+                var sums = summaries.GroupBy(s => new { s.SearchCampaign.SearchAccount.Channel, s.SearchCampaignId, s.SearchCampaign.SearchCampaignName })
                     .Select(g => new SearchSummary
                     {
                         Channel = g.Key.Channel,

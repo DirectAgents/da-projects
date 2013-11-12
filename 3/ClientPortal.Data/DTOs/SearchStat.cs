@@ -106,11 +106,24 @@ namespace ClientPortal.Data.DTOs
 
         public int Days { get; set; }
 
-        public DateTime EndDate { get; set; }
         public DateTime StartDate
         {
             get { return EndDate.AddDays((Days - 1) * -1); }
         }
+
+        // --- Pre-initializers ---
+
+        // Set this first - unless using default value
+        public DayOfWeek WeekStartDay {
+            set { _weekStartDay = value; }
+            get { return _weekStartDay; }
+        }
+        private DayOfWeek _weekStartDay = DayOfWeek.Monday;
+
+        // Set this next, if required by initializer
+        public DateTime EndDate { get; set; }
+
+        // Then use one of the following...
 
         // --- Initializers (monthly, weekly or custom date range) ---
 
@@ -130,16 +143,15 @@ namespace ClientPortal.Data.DTOs
         {
             set
             {
-                var monday = value;
-                while (monday.DayOfWeek != DayOfWeek.Monday)
-                    monday = monday.AddDays(-1);
+                var startDay = value;
+                while (startDay.DayOfWeek != this.WeekStartDay)
+                    startDay = startDay.AddDays(-1);
 
-                this.Days = (value - monday).Days + 1;
-                //this.Date = monday.AddDays(6);
+                this.Days = (value - startDay).Days + 1;
                 this.EndDate = value;
 
-                this.Range = ToRangeName(monday, this.EndDate, true);
-                this.Title = ToRangeName(monday, this.EndDate);
+                this.Range = ToRangeName(startDay, this.EndDate, true);
+                this.Title = ToRangeName(startDay, this.EndDate);
             }
         }
 

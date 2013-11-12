@@ -123,14 +123,14 @@ namespace ClientPortal.Web.Controllers
 
         // note: if (useYesterdayAsLatest==true) and it's the first of the month, we still act as if it's the last day of last month
         //       "first", "last", etc are relative to Latest
-        public Dates(bool useYesterdayAsLatest)
+        public Dates(bool useYesterdayAsLatest, DayOfWeek weekStartDay)
         {
             Today = DateTime.Now;
             Yesterday = Today.AddDays(-1);
             Latest = useYesterdayAsLatest ? Yesterday : Today;
 
             FirstOfWeek = new DateTime(Latest.Year, Latest.Month, Latest.Day);
-            while (FirstOfWeek.DayOfWeek != DayOfWeek.Monday)
+            while (FirstOfWeek.DayOfWeek != weekStartDay)
             {
                 FirstOfWeek = FirstOfWeek.AddDays(-1);
             }

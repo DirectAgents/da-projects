@@ -69,22 +69,20 @@ namespace ClientPortal.Web.Models
             get { return Advertiser == null ? null : Advertiser.Logo; }
         }
 
-        public Tuple<DayOfWeek, DayOfWeek> SearchWeekDays
+        public DayOfWeek WeekStartDay
         {
-            get
-            {
-                var firstDayOfWeek = (DayOfWeek)this.UserProfile.SearchWeekStartDay;
-                var secondDayOfWeek = (DayOfWeek)this.UserProfile.SearchWeekEndDay;
-                return Tuple.Create(firstDayOfWeek, secondDayOfWeek);
-            }
+            get { return (DayOfWeek)UserProfile.SearchWeekStartDay; }
         }
+        //TODO: move Week start & end properties to Advertiser. change to WeekStartDay? (same for search & non-search?)
+
+        //public DayOfWeek SearchWeekEndDay // compute this from StartDay ?
 
         private Dates _dates;
         internal Dates Dates
         {
             get
             {
-                if (_dates == null) _dates = new Dates(this.UseYesterdayAsLatest);
+                if (_dates == null) _dates = new Dates(this.UseYesterdayAsLatest, this.WeekStartDay);
                 return _dates;
             }
         }
