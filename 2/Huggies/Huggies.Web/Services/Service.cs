@@ -9,7 +9,7 @@ namespace Huggies.Web.Services
     {
         public bool SendLead(ILead lead, out IProcessResult processResult)
         {
-            var service = GetService();
+            var service = GetService(lead.Test);
             bool exists;
             try
             {
@@ -55,11 +55,7 @@ namespace Huggies.Web.Services
                     Country = char.IsNumber(lead.Zip[0]) ? "US" : "CA",
                     BrandID = 6,
                     BrandIDSpecified = true,
-#if DEBUG
-                    SourceID = 451,
-#else
-                    SourceID = 637,
-#endif
+                    SourceID = (lead.Test ? 451 : 637), // if specified by user, will be overwritten below
                     SourceIDSpecified = true,
                     ConsumerChild = new[]
                         {
@@ -72,6 +68,10 @@ namespace Huggies.Web.Services
                                 }
                         },
                 };
+
+            if (lead.SourceId > 0)
+                consumer.SourceID = lead.SourceId;
+
             try
             {
                 processResult = service.ProcessConsumerInformation(consumer);
@@ -99,19 +99,24 @@ namespace Huggies.Web.Services
             }
         }
 
-        private static KimberlyClarkCoRegistrationRestService GetService()
+        private static KimberlyClarkCoRegistrationRestService GetService(bool test)
         {
-#if DEBUG
-            var service = new KimberlyClarkCoRegistrationRestService(
-                "https://www.qa.coregistrationservice.kimberly-clark.com/CoRegistrationRestService",
-                "kcinet\\inustcap04",
-                "Happy1234567");
-#else
-            var service = new KimberlyClarkCoRegistrationRestService(
-                "https://www.coregistrationservice.kimberly-clark.com/CoRegistrationRestService",
-                "kcinet\\inustcap08",
-                "BU784562qzp");
-#endif
+            KimberlyClarkCoRegistrationRestService service;
+            if (test)
+            {
+
+                service = new KimberlyClarkCoRegistrationRestService(
+                    "https://www.qa.coregistrationservice.kimberly-clark.com/CoRegistrationRestService",
+                    "kcinet\\inustcap04",
+                    "Happy1234567");
+            }
+            else
+            {
+                service = new KimberlyClarkCoRegistrationRestService(
+                    "https://www.coregistrationservice.kimberly-clark.com/CoRegistrationRestService",
+                    "kcinet\\inustcap08",
+                    "BU784562qzp");
+            }
             return service;
         }
     }

@@ -5,9 +5,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
-    <LastUsedPlatform>Any CPU</LastUsedPlatform>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAGMsx4/T/tUSFN47vIPFWSwAAAAACAAAAAAADZgAAwAAAABAAAABZ4ChH2BeLTlPjpNpIbm8dAAAAAASAAACgAAAAEAAAALpWTos0v7fm325yRj60O+wYAAAA7Jq3n9N+BLraiMsmwV6gf8Xs8oQQXa4sFAAAAIZzWdR8nK+PovVJsdn/oQD9c5pS</EncryptedPassword>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAGMsx4/T/tUSFN47vIPFWSwAAAAACAAAAAAADZgAAwAAAABAAAAC6AeHTqcrcwNB3+t0yOxylAAAAAASAAACgAAAAEAAAALfWbqGSCyoMtz15vahTXzAYAAAAw3+3fXRPx5EyPo0Qb2euJ5+0bU3ND+e/FAAAAER8IQ/NIekaAwSqDDlLco4ugggx</EncryptedPassword>
   </PropertyGroup>
 </Project>

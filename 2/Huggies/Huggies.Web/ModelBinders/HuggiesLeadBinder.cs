@@ -26,6 +26,7 @@ namespace Huggies.Web.ModelBinders
                 Language = GetQueryStringValue("fm_language"),
                 FirstChild = (GetQueryStringValue("fm_firstchild") == "true"),
                 Gender = GetQueryStringValue("fm_gender"),
+                Test = (GetQueryStringValue("fm_test") == "true"),
             };
 
             string dateTimeString = GetQueryStringValue("fm_duedate");
