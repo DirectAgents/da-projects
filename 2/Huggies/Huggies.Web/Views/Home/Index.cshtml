@@ -85,6 +85,7 @@
                     </div>
                     <!-- ****************FORM START **************** -->
                     <form method="post" action="" enctype="multipart/form-data" id="cForm" name="cForm" class="validate">
+                        <input type="hidden" name="fm_test" id="fm_test" value="@(Model.Test ? "true" : "false")" />
                         <table id="form_evaluation">
                             <tr>
                                 <td>
@@ -197,7 +198,7 @@
             </div>
         </div>
     </div>
-    @if (ViewBag.TestMode == true)
+    @if (ViewBag.Fill == true)
     {
         <script type="text/javascript">
             $(function() {

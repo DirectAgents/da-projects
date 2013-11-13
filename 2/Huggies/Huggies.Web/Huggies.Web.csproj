@@ -179,6 +179,10 @@
     <Compile Include="Migrations\201302250002478_validation_and_exception.Designer.cs">
       <DependentUpon>201302250002478_validation_and_exception.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201311132013032_AddSourceIdAndTest.cs" />
+    <Compile Include="Migrations\201311132013032_AddSourceIdAndTest.Designer.cs">
+      <DependentUpon>201311132013032_AddSourceIdAndTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ILead.cs" />
     <Compile Include="Models\IRepository.cs" />
     <Compile Include="Services\IService.cs" />
@@ -422,6 +426,7 @@
     <Content Include="js\customfade.js" />
     <Content Include="js\jquery.min.js" />
     <Content Include="js\validate.js" />
+    <None Include="Properties\PublishProfiles\Test.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />
@@ -871,6 +876,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201302250002478_validation_and_exception.resx">
       <DependentUpon>201302250002478_validation_and_exception.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311132013032_AddSourceIdAndTest.resx">
+      <DependentUpon>201311132013032_AddSourceIdAndTest.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

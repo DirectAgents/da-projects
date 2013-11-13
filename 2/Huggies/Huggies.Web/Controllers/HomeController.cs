@@ -22,22 +22,33 @@ namespace Huggies.Web.Controllers
             _service = ls;
         }
 
-        public ActionResult Index(int a = 0, int test = 0)
+        public ActionResult Index(bool? test, int a = 0, int s = 0, int fill = 0)
         {
             GetSession()["a"] = a;
+            GetSession()["s"] = s;
             var model = new Lead();
-            if (test == 1)
+            if (fill == 1)
             {
                 model.PopulateTestValues();
-                ViewBag.TestMode = true;
+                ViewBag.Fill = true;
             }
+            if (test.HasValue)
+                model.Test = test.Value;
+            else
+#if DEBUG
+                model.Test = true;
+#else
+                model.Test = false;
+#endif
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Index(Lead lead)
         {
+            lead.SourceId = GetSession()["s"] == null ? 0 : (int)GetSession()["s"];
             var model = new ThankYou();
+
             if (lead.Validate(ModelState))
             {
                 IProcessResult result;

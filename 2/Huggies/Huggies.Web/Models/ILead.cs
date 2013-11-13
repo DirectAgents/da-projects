@@ -22,5 +22,7 @@ namespace Huggies.Web.Models
         bool Validate(ModelStateDictionary modelState);
         string ValidationErrors { get; set; }
         string Exception { get; set; }
+        int SourceId { get; set; }
+        bool Test { get; set; }
     }
 }
