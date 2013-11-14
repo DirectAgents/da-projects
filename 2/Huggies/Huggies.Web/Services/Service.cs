@@ -2,6 +2,7 @@
 using Huggies.Web.Models;
 using KimberlyClark.Services.Abstract;
 using KimberlyClark.Services.Concrete;
+using RestSharp;
 
 namespace Huggies.Web.Services
 {
@@ -9,6 +10,16 @@ namespace Huggies.Web.Services
     {
         public bool SendLead(ILead lead, out IProcessResult processResult)
         {
+            IRestResponse<ProcessResult> restResponse;
+            IConsumer consumer;
+            bool retval = SendLead(lead, out restResponse, out consumer);
+
+            processResult = (restResponse == null) ? null : restResponse.Data;
+            return retval;
+        }
+        public bool SendLead(ILead lead, out IRestResponse<ProcessResult> restResponse, out IConsumer consumer)
+        {
+            consumer = null;
             var service = GetService(lead.Test);
             bool exists;
             try
@@ -18,16 +29,16 @@ namespace Huggies.Web.Services
             catch (Exception ex)
             {
                 lead.Exception = ex.Message;
-                processResult = null;
+                restResponse = null;
                 return false;
             }
             if (exists)
             {
-                processResult = null;
+                restResponse = null;
                 lead.ValidationErrors = "Email already exists.";
                 return false;
             }
-            var consumer = new Consumer
+            consumer = new Consumer
                 {
                     FirstName = lead.FirstName,
                     LastName = lead.LastName,
@@ -74,12 +85,12 @@ namespace Huggies.Web.Services
 
             try
             {
-                processResult = service.ProcessConsumerInformation(consumer);
+                service.ProcessConsumerInformation(consumer, out restResponse);
             }
             catch (Exception ex)
             {
                 lead.Exception = ex.Message;
-                processResult = null;
+                restResponse = null;
                 return false;
             }
             return true;
