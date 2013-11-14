@@ -61,8 +61,8 @@ namespace CakeExtracter.Commands
                 if (this.ClientId == null)
                 {
                     if (this.AdvertiserId > 0)
-                    {   // No ClientId specified; get all SearchAccounts for this Advertiser
-                        searchAccounts = db.SearchAccounts.Where(sa => sa.AdvertiserId == AdvertiserId).ToList();
+                    {   // No ClientId specified; get all google SearchAccounts for this Advertiser
+                        searchAccounts = db.SearchAccounts.Where(sa => sa.AdvertiserId == AdvertiserId && sa.Channel == "google").ToList();
                     }
                 }
                 else // ClientId specified

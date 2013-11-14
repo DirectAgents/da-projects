@@ -18,7 +18,6 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
-            //AddDependentAdvertisers(items);
             AddUpdateDependentSearchAccounts(items);
             AddUpdateDependentSearchCampaigns(items);
             var count = UpsertSearchDailySummaries(items);
