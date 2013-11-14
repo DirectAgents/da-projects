@@ -38,9 +38,14 @@ namespace KimberlyClark.Services.Concrete
             request.AddParameter("text/xml", element.ToString(), ParameterType.RequestBody);
 
             return Execute<bool>(request);
-        }   
+        }
 
         public IProcessResult ProcessConsumerInformation(IConsumer consumer)
+        {
+            IRestResponse<ProcessResult> restResponse;
+            return ProcessConsumerInformation(consumer, out restResponse);
+        }
+        public IProcessResult ProcessConsumerInformation(IConsumer consumer, out IRestResponse<ProcessResult> restResponse)
         {
             var request = new RestRequest(Method.POST)
                 {
@@ -49,10 +54,15 @@ namespace KimberlyClark.Services.Concrete
 
             request.AddParameter("text/xml", consumer.ToString(), ParameterType.RequestBody);
 
-            return Execute<ProcessResult>(request);
+            return Execute<ProcessResult>(request, out restResponse);
         }
 
         public T Execute<T>(RestRequest request) where T : new()
+        {
+            IRestResponse<T> restResponse;
+            return Execute<T>(request, out restResponse);
+        }
+        public T Execute<T>(RestRequest request, out IRestResponse<T> restResponse) where T : new()
         {
             var client = new RestClient
                 {
@@ -60,14 +70,14 @@ namespace KimberlyClark.Services.Concrete
                     Authenticator = new HttpBasicAuthenticator(UserName, Password)
                 };
 
-            var response = client.Execute<T>(request);
+            restResponse = client.Execute<T>(request);
 
-            if (response.ErrorException != null)
+            if (restResponse.ErrorException != null)
             {
-                throw response.ErrorException;
+                throw restResponse.ErrorException;
             }
 
-            return response.Data;
+            return restResponse.Data;
         }
     }
 }
