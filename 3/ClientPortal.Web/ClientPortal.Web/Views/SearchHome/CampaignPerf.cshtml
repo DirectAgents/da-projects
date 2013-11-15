@@ -47,7 +47,9 @@
                     breakdown: showBreakdown
                 };
             },
-            false);
+            false,
+            true,
+            0);
         CreateSummaryGrid(campaignperfDS, $('#campaignperfGrid'), 550, 'Campaign', 20, 2, true, true, showBreakdown, null);
         campaignperfDS.read();
     }

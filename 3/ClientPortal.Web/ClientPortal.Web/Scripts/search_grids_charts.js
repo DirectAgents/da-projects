@@ -1,26 +1,18 @@
-﻿function CreateSummaryDataSource(url, readData, group) {
+﻿function CreateSummaryDataSource(url, readData, group, sortByRevenue, pageSize) {
+    if (pageSize == 0) pageSize = 100; // default
+    if (pageSize == -1) pageSize = 1000; // "unlimited"
 
     var args = {
-
         serverAggregates: true,
-
-        pageSize: 100,
-
+        pageSize: pageSize,
         transport: {
-
             read: {
-
                 type: 'post', // hard coding transport to POST
-
                 dataType: 'json', // hard coding transport to JSON
-
                 url: url, // URL sent in
-
                 data: readData // func to read data sent in
-
             }
         },
-
         schema: {
             data: 'data',
             total: 'total',
@@ -74,10 +66,12 @@
                 { field: 'Orders', aggregate: 'sum' }
             ]
         };
-        args.sort = { field: 'Title', dir: 'desc' };
+        args.sort = { field: 'Title', dir: 'asc' };
     } else {
-        args.sort = { field: 'Channel', dir: 'desc' };
-//        args.sort = { field: 'StartDate', dir: 'asc' };
+        if (sortByRevenue)
+            args.sort = [{ field: 'Revenue', dir: 'desc' }, { field: 'Cost', dir: 'desc' }, { field: 'Impressions', dir: 'desc' }];
+        else
+            args.sort = { field: 'Channel', dir: 'asc' };
     }
     return new kendo.data.DataSource(args);
 }
@@ -106,7 +100,7 @@ function CreateSummaryGrid(dataSource, el, height, titleHeader, titleWidthPct, d
             { field: 'Clicks', format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'Impressions', format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             { field: 'CTR', format: '{0:n2}%', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n2') + '%' #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
-            { field: 'OrdersPerDay', title: 'Avg Orders/Day', format: '{0:n' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
+            { field: 'OrdersPerDay', title: 'Orders/Day', format: '{0:n' + decimals + '}', attributes: { style: "text-align: center" }, footerTemplate: "#= kendo.toString(agg, 'n" + decimals + "') #", footerAttributes: { style: "font-weight: bold; text-align: center" } },
         ],
         filterable: true,
         pageable: true,
@@ -131,11 +125,11 @@ function DetailInit(e, url) {
             enddate: e.data.EndDate.toLocaleDateString()
         };
     }
-    var dataSource = CreateSummaryDataSource(url, readData, false);
+    var dataSource = CreateSummaryDataSource(url, readData, false, true, -1);
     dataSource.read();
 
     var el = $("<div/>").appendTo(e.detailCell);
-    CreateSummaryGrid(dataSource, el, null, 'Campaign', 21, 2, true, false, false, null);
+    CreateSummaryGrid(dataSource, el, null, 'Campaign', 18, 2, true, false, false, null);
 }
 
 function CreateRevROASChart(dataSource, elId, title) {
