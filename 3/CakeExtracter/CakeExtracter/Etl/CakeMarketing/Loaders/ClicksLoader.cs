@@ -43,6 +43,14 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                         });
 
                         // Country
+                        source.Country = source.Country ?? new Country
+                        {
+                            CountryCode = "unknown",
+                            CountryName = "unknown"
+                        };
+                        source.Country.CountryCode = string.IsNullOrWhiteSpace(source.Country.CountryCode)
+                                                        ? "unknown"
+                                                        : source.Country.CountryCode;
                         target.DimCountry = db.FindOrCreateByPredicate(c => c.CountryCode == source.Country.CountryCode, () => new ClientPortal.Data.Contexts.DimCountry
                         {
                             CountryCode = source.Country.CountryCode,

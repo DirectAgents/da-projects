@@ -31,6 +31,11 @@ namespace CakeExtracter.CakeMarketingApi
                     advertiser_id = advertiserId
                 };
             var response = client.Offers(request);
+            if (response == null || response.Offers == null)
+            {
+                Logger.Info("Unable to retrieve offers. Trying again...");
+                response = client.Offers(request);
+            }
             var offerIds = response.Offers.Select(c => c.OfferId);
             return offerIds.ToList();
         }
