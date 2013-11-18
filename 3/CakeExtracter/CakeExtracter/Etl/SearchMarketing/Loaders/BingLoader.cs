@@ -8,7 +8,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class BingLoader : Loader<Dictionary<string, string>>
     {
-        private const string bingChannel = "bing";
+        private const string bingChannel = "Bing";
         private readonly int searchAccountId;
 
         public BingLoader(int searchAccountId)

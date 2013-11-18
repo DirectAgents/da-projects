@@ -8,6 +8,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class AdWordsApiLoader : Loader<Dictionary<string, string>>
     {
+        private const string googleChannel = "Google";
         private readonly int searchAccountId;
 
         public AdWordsApiLoader(int searchAccountId)
@@ -40,7 +41,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != accountId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == accountId && sa.Channel == "google");
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == accountId && sa.Channel == googleChannel);
 
                     var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
                     var pk2 = DateTime.Parse(item["day"].Replace('-', '/'));
@@ -110,9 +111,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                     }
                     else
                     {   // See if there are any sibling SearchAccounts that match by accountID... or finally, by name
-                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == accountID && sa.Channel == "google");
+                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == accountID && sa.Channel == googleChannel);
                         if (existing == null)
-                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == "google");
+                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == googleChannel);
                     }
 
                     if (existing == null)
@@ -120,7 +121,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         searchAccount.Advertiser.SearchAccounts.Add(new SearchAccount
                         {
                             Name = accountName,
-                            Channel = "google",
+                            Channel = googleChannel,
                             //AccountCode = , // todo: have extracter get client code
                             ExternalId = accountID
                         });
@@ -158,7 +159,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                     var searchAccount = passedInAccount;
                     if (searchAccount.ExternalId != accountId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == accountId && sa.Channel == "google");
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == accountId && sa.Channel == googleChannel);
 
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 

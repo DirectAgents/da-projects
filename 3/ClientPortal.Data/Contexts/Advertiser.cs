@@ -40,6 +40,7 @@ namespace ClientPortal.Data.Contexts
         public string AdWordsAccountId { get; set; }
         public string BingAdsAccountId { get; set; }
         public string AnalyticsProfileId { get; set; }
+        public bool ShowSearchChannels { get; set; }
     
         public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }

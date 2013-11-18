@@ -61,13 +61,13 @@ namespace CakeExtracter.Commands
                 if (this.ClientId == null)
                 {
                     if (this.AdvertiserId > 0)
-                    {   // No ClientId specified; get all google SearchAccounts for this Advertiser
-                        searchAccounts = db.SearchAccounts.Where(sa => sa.AdvertiserId == AdvertiserId && sa.Channel == "google").ToList();
+                    {   // No ClientId specified; get all Google SearchAccounts for this Advertiser
+                        searchAccounts = db.SearchAccounts.Where(sa => sa.AdvertiserId == AdvertiserId && sa.Channel == "Google").ToList();
                     }
                 }
                 else // ClientId specified
                 {
-                    var searchAccount = db.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == ClientId && sa.Channel == "google");
+                    var searchAccount = db.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == ClientId && sa.Channel == "Google");
                     if (searchAccount != null)
                     {
                         if (AdvertiserId > 0 && searchAccount.AdvertiserId != AdvertiserId)
@@ -82,7 +82,7 @@ namespace CakeExtracter.Commands
                             searchAccount = new SearchAccount()
                             {
                                 AdvertiserId = this.AdvertiserId,
-                                Channel = "google",
+                                Channel = "Google",
                                 AccountCode = ClientId
                                 // to fill in later: Name, ExternalId
                             };

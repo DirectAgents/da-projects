@@ -47,5 +47,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<Advertiser> Advertisers { get; set; }
         public DbSet<GoogleAnalyticsSummary> GoogleAnalyticsSummaries { get; set; }
         public DbSet<SearchAccount> SearchAccounts { get; set; }
+        public DbSet<SearchChannel> SearchChannels { get; set; }
     }
 }

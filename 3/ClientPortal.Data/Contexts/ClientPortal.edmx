@@ -25,6 +25,7 @@
           <EntitySet Name="ScheduledReportRecipient" EntityType="ClientPortalModel.Store.ScheduledReportRecipient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchAccount" EntityType="ClientPortalModel.Store.SearchAccount" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchCampaign" EntityType="ClientPortalModel.Store.SearchCampaign" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SearchChannel" EntityType="ClientPortalModel.Store.SearchChannel" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary" EntityType="ClientPortalModel.Store.SearchDailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
@@ -117,6 +118,7 @@
           <Property Name="AutomatedReportsDestinationEmail" Type="nvarchar(max)" />
           <Property Name="AutomatedReportsPeriodDays" Type="int" Nullable="false" />
           <Property Name="AutomatedReportsNextSendAfter" Type="datetime" />
+          <Property Name="ShowSearchChannels" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -317,6 +319,14 @@
           <Property Name="Channel" Type="nvarchar" MaxLength="255" />
           <Property Name="ExternalId" Type="int" />
           <Property Name="SearchAccountId" Type="int" />
+        </EntityType>
+        <EntityType Name="SearchChannel">
+          <Key>
+            <PropertyRef Name="SearchChannelId" />
+          </Key>
+          <Property Name="SearchChannelId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Prefix" Type="nvarchar" Nullable="false" MaxLength="5" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
@@ -667,6 +677,7 @@
             <End Role="SearchAccount" EntitySet="SearchAccounts" />
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
           </AssociationSet>
+          <EntitySet Name="SearchChannels" EntityType="ClientPortalModel.SearchChannel" />
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -1078,6 +1089,7 @@
           <Property Type="String" Name="BingAdsAccountId" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="AnalyticsProfileId" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SearchAccounts" Relationship="ClientPortalModel.FK_SearchAccount_Advertiser" FromRole="Advertiser" ToRole="SearchAccount" />
+          <Property Type="Boolean" Name="ShowSearchChannels" Nullable="false" />
         </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -1201,6 +1213,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SearchChannel">
+          <Key>
+            <PropertyRef Name="SearchChannelId" />
+          </Key>
+          <Property Type="Int32" Name="SearchChannelId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Prefix" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Name" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1444,6 +1464,7 @@
           <EntitySetMapping Name="Advertisers">
             <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
               <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="ShowSearchChannels" ColumnName="ShowSearchChannels" />
                 <ScalarProperty Name="AnalyticsProfileId" ColumnName="AnalyticsProfileId" />
                 <ScalarProperty Name="BingAdsAccountId" ColumnName="BingAdsAccountId" />
                 <ScalarProperty Name="AdWordsAccountId" ColumnName="AdWordsAccountId" />
@@ -1482,6 +1503,15 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="SearchAccountId" ColumnName="SearchAccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchChannels">
+            <EntityTypeMapping TypeName="ClientPortalModel.SearchChannel">
+              <MappingFragment StoreEntitySet="SearchChannel">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Prefix" ColumnName="Prefix" />
+                <ScalarProperty Name="SearchChannelId" ColumnName="SearchChannelId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

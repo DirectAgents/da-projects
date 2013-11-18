@@ -59,6 +59,11 @@ namespace ClientPortal.Web.Models
             get { return (Advertiser == null) ? false : Advertiser.HasSearch; }
         }
 
+        public bool ShowSearchChannels
+        {
+            get { return (Advertiser == null) ? false : Advertiser.ShowSearchChannels; }
+        }
+
         public bool UseAnalytics
         {
             get { return (Advertiser == null) ? false : !String.IsNullOrWhiteSpace(Advertiser.AnalyticsProfileId); }

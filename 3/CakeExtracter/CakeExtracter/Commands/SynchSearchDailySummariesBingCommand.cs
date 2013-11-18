@@ -62,14 +62,14 @@ namespace CakeExtracter.Commands
                 if (this.AccountId == 0)
                 {
                     if (this.AdvertiserId > 0)
-                    {   // No AccountId specified; get all bing SearchAccounts for this Advertiser
-                        searchAccounts = db.SearchAccounts.Where(sa => sa.AdvertiserId == AdvertiserId && sa.Channel == "bing").ToList();
+                    {   // No AccountId specified; get all Bing SearchAccounts for this Advertiser
+                        searchAccounts = db.SearchAccounts.Where(sa => sa.AdvertiserId == AdvertiserId && sa.Channel == "Bing").ToList();
                     }
                 }
                 else // AccountId specified
                 {
                     var accountIdString = AccountId.ToString();
-                    var searchAccount = db.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == accountIdString && sa.Channel == "bing");
+                    var searchAccount = db.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == accountIdString && sa.Channel == "Bing");
                     if (searchAccount != null)
                     {
                         if (AdvertiserId > 0 && searchAccount.AdvertiserId != AdvertiserId)
@@ -84,7 +84,7 @@ namespace CakeExtracter.Commands
                             searchAccount = new SearchAccount()
                             {
                                 AdvertiserId = this.AdvertiserId,
-                                Channel = "bing",
+                                Channel = "Bing",
                                 AccountCode = accountIdString
                                 // to fill in later: Name, ExternalId
                             };
