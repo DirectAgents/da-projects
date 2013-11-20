@@ -65,6 +65,19 @@ namespace Huggies.Web.Models
             this.DueDate = new DateTime(2013, 4, 10);
         }
 
+        public bool SetTest(bool? test)
+        {
+            if (test.HasValue)
+                this.Test = test.Value;
+            else
+#if DEBUG
+                this.Test = true;
+#else
+                this.Test = false;
+#endif
+            return this.Test;
+        }
+
         private string TicksAsString()
         {
             long ticks = DateTime.Now.Ticks;
