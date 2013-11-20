@@ -34,6 +34,16 @@ namespace Huggies.Web.ModelBinders
                                         ? default(DateTime?) 
                                         : DateTime.Parse(dateTimeString);
 
+            int affId;
+            var a = GetQueryStringValue("a");
+            if (Int32.TryParse(a, out affId))
+                model.AffiliateId = affId;
+
+            int sourceId;
+            var s = GetQueryStringValue("s");
+            if (Int32.TryParse(s, out sourceId))
+                model.SourceId = sourceId;
+
             return model;
         }
 

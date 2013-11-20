@@ -38,21 +38,35 @@ namespace Huggies.Web.Controllers
                 model.PopulateTestValues();
                 ViewBag.Fill = true;
             }
-            if (test.HasValue)
-                model.Test = test.Value;
-            else
-#if DEBUG
-                model.Test = true;
-#else
-                model.Test = false;
-#endif
+            model.SetTest(test);
+
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Index(Lead lead)
         {
+            lead.AffiliateId = GetSession()["a"] == null ? 0 : (int)GetSession()["a"];
             lead.SourceId = GetSession()["s"] == null ? 0 : (int)GetSession()["s"];
+            var model = SendAndSaveLead(lead);
+
+            return View(ViewNames.Home.ThankYou, model);
+        }
+
+        public JsonResult Submit(Lead lead, bool? test)
+        {
+            lead.SetTest(test);
+            if (lead.AffiliateId == 0)
+                lead.AffiliateId = -1;
+
+            var model = SendAndSaveLead(lead);
+
+            return Json(lead.Success, JsonRequestBehavior.AllowGet);
+        }
+
+        private ThankYou SendAndSaveLead(Lead lead)
+        {
+            lead.Success = false;
             var model = new ThankYou();
 
             if (lead.Validate(ModelState))
@@ -69,10 +83,10 @@ namespace Huggies.Web.Controllers
                 }
             }
             lead.Timestamp = DateTime.Now;
-            lead.AffiliateId = GetSession()["a"] == null ? 0 : (int) GetSession()["a"];
             lead.IpAddress = GetRequest().UserHostAddress;
             _service.SaveLead(lead, GetModelState()["ValidationErrors"].ToStringArray());
-            return View(ViewNames.Home.ThankYou, model);
+
+            return model;
         }
 
         public JsonResult Test(int? s, int x = 0, bool test = true)
