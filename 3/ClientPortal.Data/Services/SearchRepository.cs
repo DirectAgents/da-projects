@@ -11,7 +11,7 @@ namespace ClientPortal.Data.Services
     {
         public SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true)
         {
-            var summaries = GetSearchDailySummaries(advertiserId, null, null, null, start, end, includeToday);
+            var summaries = GetSearchDailySummaries(advertiserId, null, null, null, null, start, end, includeToday);
             var searchStat = new SearchStat
             {
                 EndDate = end.Value,
@@ -42,10 +42,13 @@ namespace ClientPortal.Data.Services
             return searchCampaigns;
         }
 
-        private IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, DateTime? start, DateTime? end, bool includeToday)
+        private IQueryable<SearchDailySummary2> GetSearchDailySummaries(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, string device, DateTime? start, DateTime? end, bool includeToday)
         {
             var searchCampaigns = GetSearchCampaigns(advertiserId, channel, searchAccountId, channelPrefix);
             var summaries = searchCampaigns.SelectMany(c => c.SearchDailySummaries2);
+
+            if (!String.IsNullOrEmpty(device))
+                summaries = summaries.Where(s => s.Device == device);
 
             // Filter to start date, if present
             if (start.HasValue)
@@ -100,10 +103,12 @@ namespace ClientPortal.Data.Services
         //        });
         //    return stats;
         //}
-        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
+        public IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, string device, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday)
         {
-            DateTime start;
+            if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
+                throw new Exception("specifying a device and useAnalytics not supported");
 
+            DateTime start;
             if (numWeeks.HasValue) // If the number of weeks is present
                 start = DateTime.Today.AddDays(-7 * numWeeks.Value + 6); // Then set start date to numWeeks weeks ago, plus 6 (works with leap year?)
             else
@@ -116,7 +121,7 @@ namespace ClientPortal.Data.Services
             var latestDate = includeToday ? DateTime.Today : DateTime.Today.AddDays(-1);
 
             var daySums =
-                GetSearchDailySummaries(advertiserId, channel, searchAccountId, channelPrefix, start, null, includeToday)
+                GetSearchDailySummaries(advertiserId, channel, searchAccountId, channelPrefix, device, start, null, includeToday)
 
                     // Group by the Date
                     .GroupBy(s => s.Date)
@@ -171,14 +176,14 @@ namespace ClientPortal.Data.Services
                     title += searchAccount.Name;
                 }
             }
-            if (!String.IsNullOrWhiteSpace(channelPrefix))
+            if (!String.IsNullOrWhiteSpace(channelPrefix) || !String.IsNullOrWhiteSpace(device))
             {
-                var searchChannel = GetSearchChannel(channelPrefix);
+                var searchChannel = GetSearchChannel(channelPrefix, device);
                 if (title == channel) // no "channel" or searchAccount was specified
                     title = "";       // (don't include "channel" because the searchChannel's name will have it)
                 else
                     title += " - "; // just in case both a searchAccount _and_ a searchChannel are specified
-                title += (searchChannel != null) ? searchChannel.Name : channelPrefix;
+                title += (searchChannel != null) ? searchChannel.Name : (channelPrefix ?? ".") + "/" + (device ?? ".");
             }
 
             var stats = daySums
@@ -231,7 +236,7 @@ namespace ClientPortal.Data.Services
         public IQueryable<WeeklySearchStat> GetCampaignWeekStats2(int? advertiserId, DateTime startDate, DateTime endDate, DayOfWeek startDayOfWeek, bool useAnalytics)
         {
             var weeks = CalenderWeek.Generate(startDate, endDate, startDayOfWeek);
-            var sums = GetSearchDailySummaries(advertiserId, null, null, null, startDate, endDate, true)
+            var sums = GetSearchDailySummaries(advertiserId, null, null, null, null, startDate, endDate, true)
                 .Select(s => new
                 {
                     s.Date,
@@ -317,7 +322,7 @@ namespace ClientPortal.Data.Services
 
             start = new DateTime(start.Year, start.Month, 1);
 
-            var stats = GetSearchDailySummaries(advertiserId, null, null, null, start, null, includeToday)
+            var stats = GetSearchDailySummaries(advertiserId, null, null, null, null, start, null, includeToday)
                 .GroupBy(s => new { s.Date.Year, s.Date.Month })
                 .Select(g =>
                 new SearchStat
@@ -361,8 +366,8 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<SearchStat> GetChannelStats(int? advertiserId, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday, bool includeAccountBreakdown, bool includeSearchChannels)
         {
-            var googleStats = GetWeekStats(advertiserId, "Google", null, null, null, startDayOfWeek, useAnalytics, includeToday);
-            var bingStats = GetWeekStats(advertiserId, "Bing", null, null, null, startDayOfWeek, useAnalytics, includeToday);
+            var googleStats = GetWeekStats(advertiserId, "Google", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
+            var bingStats = GetWeekStats(advertiserId, "Bing", null, null, null, null, startDayOfWeek, useAnalytics, includeToday);
             var stats = googleStats.Concat(bingStats).AsQueryable();
 
             if (advertiserId.HasValue)
@@ -378,7 +383,7 @@ namespace ClientPortal.Data.Services
                         {
                             foreach (var searchAccount in searchAccounts)
                             {
-                                var accountStats = GetWeekStats(advertiserId, channel, searchAccount.SearchAccountId, null, null, startDayOfWeek, useAnalytics, includeToday);
+                                var accountStats = GetWeekStats(advertiserId, channel, searchAccount.SearchAccountId, null, null, null, startDayOfWeek, useAnalytics, includeToday);
                                 stats = stats.Concat(accountStats);
                             }
                         }
@@ -388,7 +393,10 @@ namespace ClientPortal.Data.Services
                 {
                     foreach (var searchChannel in this.SearchChannels)
                     {
-                        var channelStats = GetWeekStats(advertiserId, null, null, searchChannel.Prefix, null, startDayOfWeek, useAnalytics, includeToday);
+                        if (!String.IsNullOrWhiteSpace(searchChannel.Device) && useAnalytics)
+                            continue; // specifying device and useAnalytics not supported; analytics summaries are not broken down by device
+
+                        var channelStats = GetWeekStats(advertiserId, null, null, searchChannel.Prefix, searchChannel.Device, null, startDayOfWeek, useAnalytics, includeToday);
                         if (channelStats.Count() > 0)
                             stats = stats.Concat(channelStats);
                     }
@@ -403,18 +411,30 @@ namespace ClientPortal.Data.Services
                 start = new DateTime(DateTime.Today.Year, 1, 1);
 
             string channelPrefix = null;
+            string device = null;
             int? searchAccountId = null;
             if (channel != null)
             {
                 if (channel.StartsWith("~")) // for a specific SearchChannel
                 {
                     var searchChannel = GetSearchChannelByName(channel);
-                    if (searchChannel != null)
-                        channelPrefix = searchChannel.Prefix;
-                    else
-                        throw new Exception("SearchChannel not found");
-
                     channel = null;
+                    if (searchChannel != null)
+                    {
+                        channelPrefix = searchChannel.Prefix;
+                        device = searchChannel.Device;
+                        if (channelPrefix == null)
+                        {
+                            if (searchChannel.Name.Contains("Google") && !searchChannel.Name.Contains("Bing"))
+                                channel = "Google";
+                            if (!searchChannel.Name.Contains("Google") && searchChannel.Name.Contains("Bing"))
+                                channel = "Bing";
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("SearchChannel not found");
+                    }
                 }
                 else if (channel.Contains(" - ")) // for a specific SearchAccount
                 {
@@ -427,7 +447,7 @@ namespace ClientPortal.Data.Services
                 }
             }
 
-            var summaries = GetSearchDailySummaries(advertiserId, channel, searchAccountId, channelPrefix, start, end, true).ToList();
+            var summaries = GetSearchDailySummaries(advertiserId, channel, searchAccountId, channelPrefix, device, start, end, true).ToList();
             IQueryable<SearchStat> stats;
             if (breakdown)
             {
@@ -521,9 +541,9 @@ namespace ClientPortal.Data.Services
                 return _searchChannels;
             }
         }
-        private SearchChannel GetSearchChannel(string prefix)
+        private SearchChannel GetSearchChannel(string prefix, string device)
         {
-            var searchChannel = this.SearchChannels.SingleOrDefault(sc => sc.Prefix == prefix);
+            var searchChannel = this.SearchChannels.SingleOrDefault(sc => sc.Prefix == prefix && sc.Device == device);
             return searchChannel;
         }
         private SearchChannel GetSearchChannelByName(string name)

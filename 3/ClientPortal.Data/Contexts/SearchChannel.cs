@@ -17,5 +17,6 @@ namespace ClientPortal.Data.Contexts
         public int SearchChannelId { get; set; }
         public string Prefix { get; set; }
         public string Name { get; set; }
+        public string Device { get; set; }
     }
 }

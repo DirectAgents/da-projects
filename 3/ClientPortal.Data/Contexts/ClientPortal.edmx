@@ -325,8 +325,9 @@
             <PropertyRef Name="SearchChannelId" />
           </Key>
           <Property Name="SearchChannelId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Prefix" Type="nvarchar" Nullable="false" MaxLength="5" />
+          <Property Name="Prefix" Type="nvarchar" MaxLength="5" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Device" Type="nvarchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="SearchDailySummary">
           <Key>
@@ -1218,8 +1219,9 @@
             <PropertyRef Name="SearchChannelId" />
           </Key>
           <Property Type="Int32" Name="SearchChannelId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Prefix" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Prefix" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Name" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Device" MaxLength="5" FixedLength="false" Unicode="true" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1509,6 +1511,7 @@
           <EntitySetMapping Name="SearchChannels">
             <EntityTypeMapping TypeName="ClientPortalModel.SearchChannel">
               <MappingFragment StoreEntitySet="SearchChannel">
+                <ScalarProperty Name="Device" ColumnName="Device" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Prefix" ColumnName="Prefix" />
                 <ScalarProperty Name="SearchChannelId" ColumnName="SearchChannelId" />
