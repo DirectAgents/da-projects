@@ -59,12 +59,13 @@ namespace CakeExtracter.Commands
 
             using (var db = new ClientPortalContext())
             {
-                if (this.AccountId == 0)
+                if (this.AccountId == 0) // AccountId not specified
                 {
+                    var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Bing"); // all bing SearchAccounts
                     if (this.AdvertiserId > 0)
-                    {   // No AccountId specified; get all Bing SearchAccounts for this Advertiser
-                        searchAccounts = db.SearchAccounts.Where(sa => sa.AdvertiserId == AdvertiserId && sa.Channel == "Bing").ToList();
-                    }
+                        searchAccountsQ = searchAccountsQ.Where(sa => sa.AdvertiserId == this.AdvertiserId); // ...for the specified advertiser
+
+                    searchAccounts = searchAccountsQ.ToList();
                 }
                 else // AccountId specified
                 {
