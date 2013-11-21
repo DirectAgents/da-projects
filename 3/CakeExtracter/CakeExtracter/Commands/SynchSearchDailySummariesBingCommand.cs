@@ -40,11 +40,11 @@ namespace CakeExtracter.Commands
             var yesterday = DateTime.Today.AddDays(-1);
             var dates = new DateRange(StartDate ?? oneMonthAgo, EndDate ?? yesterday);
 
-            foreach (var advertiser in GetAdvertisers())
+            foreach (var searchAccount in GetSearchAccounts())
             {
-                int accountId = Int32.Parse(advertiser.BingAdsAccountId);
+                int accountId = Int32.Parse(searchAccount.AccountCode);
                 var extracter = new BingDailySummaryExtracter(accountId, dates.FromDate, dates.ToDate);
-                var loader = new BingLoader(advertiser.AdvertiserId);
+                var loader = new BingLoader(searchAccount.SearchAccountId);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
@@ -53,38 +53,54 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        private IEnumerable<Advertiser> GetAdvertisers()
+        public IEnumerable<SearchAccount> GetSearchAccounts()
         {
-            List<Advertiser> advertisers = new List<Advertiser>();
+            var searchAccounts = new List<SearchAccount>();
+
             using (var db = new ClientPortalContext())
             {
-                if (this.AdvertiserId != 0) // get specified advertiser
+                if (this.AccountId == 0) // AccountId not specified
                 {
-                    var adv = db.Advertisers.Where(a => a.AdvertiserId == AdvertiserId).FirstOrDefault();
-                    if (adv == null)
-                        Logger.Warn("Could not find advertiser with advertiserId {0}", AdvertiserId);
-                    else if (String.IsNullOrWhiteSpace(adv.BingAdsAccountId))
-                        Logger.Warn("No Bing id is set for advertiserId {0}", AdvertiserId);
-                    else
-                        advertisers.Add(adv);
-                }
-                else if (this.AccountId == 0) // get all advertisers with a bing id
-                {
-                    var advs = db.Advertisers.Where(a => a.BingAdsAccountId != null);
-                    advertisers.AddRange(advs);
-                }
+                    var searchAccountsQ = db.SearchAccounts.Where(sa => sa.Channel == "Bing"); // all bing SearchAccounts
+                    if (this.AdvertiserId > 0)
+                        searchAccountsQ = searchAccountsQ.Where(sa => sa.AdvertiserId == this.AdvertiserId); // ...for the specified advertiser
 
-                if (this.AccountId != 0) // get advertiser with specified bing id
+                    searchAccounts = searchAccountsQ.ToList();
+                }
+                else // AccountId specified
                 {
                     var accountIdString = AccountId.ToString();
-                    var advertiser = db.Advertisers.Where(a => a.BingAdsAccountId == accountIdString).FirstOrDefault();
-                    if (advertiser == null)
-                        Logger.Warn("Could not find advertiser with BingAdsAccountId {0}", AccountId);
-                    else
-                        advertisers.Add(advertiser);
+                    var searchAccount = db.SearchAccounts.SingleOrDefault(sa => sa.AccountCode == accountIdString && sa.Channel == "Bing");
+                    if (searchAccount != null)
+                    {
+                        if (AdvertiserId > 0 && searchAccount.AdvertiserId != AdvertiserId)
+                            Logger.Info("AdvertiserId does not match that of SearchAccount specified by AccountId");
+
+                        searchAccounts.Add(searchAccount);
+                    }
+                    else // didn't find a matching SearchAccount; see about creating a new one
+                    {
+                        if (AdvertiserId > 0)
+                        {
+                            searchAccount = new SearchAccount()
+                            {
+                                AdvertiserId = this.AdvertiserId,
+                                Channel = "Bing",
+                                AccountCode = accountIdString
+                                // to fill in later: Name, ExternalId
+                            };
+                            db.SearchAccounts.Add(searchAccount);
+                            db.SaveChanges();
+                            searchAccounts.Add(searchAccount);
+                        }
+                        else
+                        {
+                            Logger.Info("SearchAccount with AccountCode {0} not found and no AdvertiserId specified", AccountId);
+                        }
+                    }
                 }
             }
-            return advertisers;
+            return searchAccounts;
         }
 
     }

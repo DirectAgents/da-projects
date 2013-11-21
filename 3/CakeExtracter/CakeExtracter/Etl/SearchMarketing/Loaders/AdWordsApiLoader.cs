@@ -8,28 +8,42 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 {
     public class AdWordsApiLoader : Loader<Dictionary<string, string>>
     {
+        private const string googleChannel = "Google";
+        private readonly int searchAccountId;
+
+        public AdWordsApiLoader(int searchAccountId)
+        {
+            this.searchAccountId = searchAccountId;
+        }
+
         protected override int Load(List<Dictionary<string, string>> items)
         {
             Logger.Info("Loading {0} SearchDailySummaries..", items.Count);
-            AddDependentAdvertisers(items);
-            AddDependentSearchCampaigns(items);
+            AddUpdateDependentSearchAccounts(items);
+            AddUpdateDependentSearchCampaigns(items);
             var count = UpsertSearchDailySummaries(items);
             return count;
         }
 
-        private static int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
+        private int UpsertSearchDailySummaries(List<Dictionary<string, string>> items)
         {
             var addedCount = 0;
             var updatedCount = 0;
             var itemCount = 0;
             using (var db = new ClientPortalContext())
             {
+                var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
+
                 foreach (var item in items)
                 {
-                    var advertiserName = item["account"];
-                    var advertiserId = db.Advertisers.Single(c => c.AdvertiserName == advertiserName).AdvertiserId;
+                    var accountId = item["accountID"];
                     var campaignId = int.Parse(item["campaignID"]);
-                    var pk1 = db.SearchCampaigns.Single(c => c.ExternalId == campaignId && c.AdvertiserId == advertiserId && c.Channel == "google").SearchCampaignId;
+
+                    var searchAccount = passedInAccount;
+                    if (searchAccount.ExternalId != accountId)
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == accountId && sa.Channel == googleChannel);
+
+                    var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
                     var pk2 = DateTime.Parse(item["day"].Replace('-', '/'));
                     var pk3 = item["network"].Substring(0, 1);
                     var pk4 = item["device"].Substring(0, 1);
@@ -76,73 +90,93 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             return itemCount;
         }
 
-        private static void AddDependentAdvertisers(List<Dictionary<string, string>> items)
+        private void AddUpdateDependentSearchAccounts(List<Dictionary<string, string>> items)
         {
             using (var db = new ClientPortalContext())
             {
-                foreach (var advertiserName in items.Select(c => c["account"]).Distinct())
+                var searchAccount = db.SearchAccounts.Find(this.searchAccountId);
+
+                var accountTuples = items.Select(i => Tuple.Create(i["account"], i["accountID"])).Distinct();
+                bool multipleAccounts = accountTuples.Count() > 1;
+
+                foreach (var tuple in accountTuples)
                 {
-                    if (!db.Advertisers.Any(c => c.AdvertiserName == advertiserName))
-                    {
-                        // Get next advertiser in range of low and high number
-                        const int lowAdvertiserId = 90000;
-                        const int highAdvertiserId = 100000;
-                        int advertiserId;
-                        var advertiserIdQuery = db.Advertisers.Select(c => c.AdvertiserId)
-                                                  .Where(c => c >= lowAdvertiserId && c <= highAdvertiserId);
-                        if (advertiserIdQuery.Any())
-                        {
-                            advertiserId = advertiserIdQuery.Max() + 1;
-                            if (advertiserId > highAdvertiserId)
-                                throw new Exception("too many advertisers");
-                        }
-                        else
-                        {
-                            advertiserId = lowAdvertiserId;
-                        }
-                        db.Advertisers.Add(new Advertiser
-                        {
-                            AdvertiserId = advertiserId,
-                            AdvertiserName = advertiserName,
-                            Culture = "en-US",
-                            HasSearch = true
-                        });
-                        Logger.Info("Saving new Advertiser: {0} ({1})", advertiserName, advertiserId);
-                        db.SaveChanges();
+                    var accountName = tuple.Item1;
+                    var accountID = tuple.Item2;
+                    SearchAccount existing = null;
+
+                    if (searchAccount.ExternalId == accountID || !multipleAccounts)
+                    {   // if the accountID matches or if there's only one account in the items-to-load, use the passed-in SearchAccount
+                        existing = searchAccount;
                     }
+                    else
+                    {   // See if there are any sibling SearchAccounts that match by accountID... or finally, by name
+                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == accountID && sa.Channel == googleChannel);
+                        if (existing == null)
+                            existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == googleChannel);
+                    }
+
+                    if (existing == null)
+                    {
+                        searchAccount.Advertiser.SearchAccounts.Add(new SearchAccount
+                        {
+                            Name = accountName,
+                            Channel = googleChannel,
+                            //AccountCode = , // todo: have extracter get client code
+                            ExternalId = accountID
+                        });
+                        Logger.Info("Saving new SearchAccount: {0} ({1})", accountName, accountID);
+                    }
+                    else
+                    {
+                        if (existing.Name != accountName)
+                        {
+                            existing.Name = accountName;
+                            Logger.Info("Saving updated SearchAccount name: {0} ({1})", accountName, existing.SearchAccountId);
+                        }
+                        if (existing.ExternalId != accountID)
+                        {
+                            existing.ExternalId = accountID;
+                            Logger.Info("Saving updated SearchAccount ExternalId: {0} ({1})", accountID, existing.SearchAccountId);
+                        }
+                    }
+                    db.SaveChanges();
                 }
             }
         }
 
-        private static void AddDependentSearchCampaigns(List<Dictionary<string, string>> items)
+        private void AddUpdateDependentSearchCampaigns(List<Dictionary<string, string>> items)
         {
             using (var db = new ClientPortalContext())
             {
-                foreach (var tuple in items.Select(c => Tuple.Create(c["account"], c["campaign"], c["campaignID"])).Distinct())
+                var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
+
+                foreach (var tuple in items.Select(c => Tuple.Create(c["accountID"], c["campaign"], c["campaignID"])).Distinct())
                 {
-                    var advertiserName = tuple.Item1;
-                    var advertiser = db.Advertisers.Single(c => c.AdvertiserName == advertiserName);
+                    var accountId = tuple.Item1;
                     var campaignName = tuple.Item2;
                     var campaignId = int.Parse(tuple.Item3);
 
-                    var existing = db.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId && c.AdvertiserId == advertiser.AdvertiserId && c.Channel == "google");
+                    var searchAccount = passedInAccount;
+                    if (searchAccount.ExternalId != accountId)
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == accountId && sa.Channel == googleChannel);
+
+                    var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 
                     if (existing == null)
                     {
-                        db.SearchCampaigns.Add(new SearchCampaign
+                        searchAccount.SearchCampaigns.Add(new SearchCampaign
                         {
-                            Advertiser = advertiser,
                             SearchCampaignName = campaignName,
-                            Channel = "google",
                             ExternalId = campaignId
                         });
-                        Logger.Info("Saving new SearchCampaign: {0} ({1})", campaignName, advertiserName);
+                        Logger.Info("Saving new SearchCampaign: {0} ({1})", campaignName, campaignId);
                         db.SaveChanges();
                     }
                     else if(existing.SearchCampaignName != campaignName)
                     {
                         existing.SearchCampaignName = campaignName;
-                        Logger.Info("Saving updated SearchCampaign name: {0} ({1})", campaignName, advertiserName);
+                        Logger.Info("Saving updated SearchCampaign name: {0} ({1})", campaignName, campaignId);
                         db.SaveChanges();
                     }
                 }
