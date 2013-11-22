@@ -145,4 +145,38 @@ namespace ClientPortal.Web.Controllers
             OneMonthAgo = new DateTime(FirstOfLastMonth.Year, FirstOfLastMonth.Month, (Latest.Day < LastOfLastMonth.Day) ? Latest.Day : LastOfLastMonth.Day);
         }
     }
+
+    public class DatesModel
+    {
+        private Dates Dates { get; set; }
+        private CultureInfo CultureInfo { get; set; }
+
+        public DatesModel(Dates dates, CultureInfo cultureInfo)
+        {
+            this.Dates = dates;
+            this.CultureInfo = cultureInfo;
+        }
+
+        private string DateString(DateTime dateTime)
+        {
+            return dateTime.ToString("d", this.CultureInfo);
+        }
+
+        public string Today { get { return DateString(Dates.Today); } }
+        public string Yesterday { get { return DateString(Dates.Yesterday); } }
+        public string Latest { get { return DateString(Dates.Latest); } }
+
+        public string FirstOfMonth { get { return DateString(Dates.FirstOfMonth); } }
+        public string FirstOfYear { get { return DateString(Dates.FirstOfYear); } }
+        public string FirstOfLastMonth { get { return DateString(Dates.FirstOfLastMonth); } }
+        public string LastOfLastMonth { get { return DateString(Dates.LastOfLastMonth); } }
+        public string FirstOfWeek { get { return DateString(Dates.FirstOfWeek); } }
+        public string FirstOfLastWeek { get { return DateString(Dates.FirstOfLastWeek); } }
+        public string LastOfLastWeek { get { return DateString(Dates.LastOfLastWeek); } }
+
+        public string TodayMY { get { return Dates.Today.ToString("MM/yyyy"); } }
+        public string LastMonthMY { get { return Dates.FirstOfLastMonth.ToString("MM/yyyy"); } }
+        public string ThreeMonthsAgoMY { get { return Dates.FirstOfMonth.AddMonths(-3).ToString("MM/yyyy"); } }
+        public string FirstOfYearMY { get { return Dates.FirstOfYear.ToString("MM/yyyy"); } }
+    }
 }

@@ -1,22 +1,15 @@
 ﻿@model ClientPortal.Web.Models.DashboardModel
-@{
-    var now = DateTime.Now;
-    var firstOfMonthDT = new DateTime(now.Year, now.Month, 1);
-
-    var today = now.ToString("d", Model.CultureInfo);
-    var firstOfMonth = firstOfMonthDT.ToString("d", Model.CultureInfo);
-    var firstOfYear = new DateTime(now.Year, 1, 1).ToString("d", Model.CultureInfo);
-            //var firstOfLastMonth = firstOfMonthDT.AddMonths(-1).ToString("d", Model.CultureInfo);
-            //var lastOfLastMonth = firstOfMonthDT.AddDays(-1).ToString("d", Model.CultureInfo);
-}
 
 <!-- Timeframe -->
 <div class="row">
     <div class="twelve columns" style="top: -35px; height: 15px">
         <span>Timeframe:</span>
         <select style="width: 125px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
-            <option value="mtd">Month to Date</option>
+            <option value="wtd">Week to Date</option>
+            <option value="mtd" selected="selected">Month to Date</option>
             <option value="ytd">Year to Date</option>
+            <option value="lastweek">Last Week</option>
+            <option value="lastmonth">Last Month</option>
             <option value="custom">- custom -</option>
         </select>
         <span class="paddedlabel">Start:</span>
@@ -226,13 +219,25 @@
         var refresh = true;
         var dateRange = $('#dash_dateRangeSel').val();
         switch (dateRange) {
+            case "wtd":
+                $(startId).val('@Model.Dates.FirstOfWeek');
+                $(endId).val('@Model.Dates.Latest');
+                break;
             case "mtd":
-                $(startId).val('@firstOfMonth');
-                $(endId).val('@today');
+                $(startId).val('@Model.Dates.FirstOfMonth');
+                $(endId).val('@Model.Dates.Latest');
                 break;
             case "ytd":
-                $(startId).val('@firstOfYear');
-                $(endId).val('@today');
+                $(startId).val('@Model.Dates.FirstOfYear');
+                $(endId).val('@Model.Dates.Latest');
+                break;
+            case "lastweek":
+                $(startId).val('@Model.Dates.FirstOfLastWeek');
+                $(endId).val('@Model.Dates.LastOfLastWeek');
+                break;
+            case "lastmonth":
+                $(startId).val('@Model.Dates.FirstOfLastMonth');
+                $(endId).val('@Model.Dates.LastOfLastMonth');
                 break;
             default:
                 refresh = false;

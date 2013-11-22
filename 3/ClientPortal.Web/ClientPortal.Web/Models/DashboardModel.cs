@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.DTOs;
+using ClientPortal.Web.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -29,6 +30,16 @@ namespace ClientPortal.Web.Models
         public bool ShowConVal { get; set; }
         public string ConValName { get; set; }
         public bool ConValIsNum { get; set; }
+
+        public DatesModel Dates { get; set; }
+
+        public DashboardModel(UserInfo userInfo)
+        {
+            Culture = userInfo.Culture;
+
+            var dates = new Dates(userInfo.UseYesterdayAsLatest, userInfo.WeekStartDay);
+            Dates = new DatesModel(dates, this.CultureInfo);
+        }
     }
 
     public class OfferGoalSummary

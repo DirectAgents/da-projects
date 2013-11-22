@@ -13,32 +13,32 @@
         var dateRange = $('#' + grid + '_dateRangeSel').val();
         switch (dateRange) {
             case "today":
-                $(startId).val('@Model.Today');
-                $(endId).val('@Model.Today');
+                $(startId).val('@Model.Dates.Today');
+                $(endId).val('@Model.Dates.Today');
                 break;
             case "yesterday":
-                $(startId).val('@Model.Yesterday');
-                $(endId).val('@Model.Yesterday');
+                $(startId).val('@Model.Dates.Yesterday');
+                $(endId).val('@Model.Dates.Yesterday');
                 break;
             case "wtd":
-                $(startId).val('@Model.FirstOfWeek');
-                $(endId).val('@Model.Latest');
+                $(startId).val('@Model.Dates.FirstOfWeek');
+                $(endId).val('@Model.Dates.Latest');
                 break;
             case "mtd":
-                $(startId).val('@Model.FirstOfMonth');
-                $(endId).val('@Model.Latest');
+                $(startId).val('@Model.Dates.FirstOfMonth');
+                $(endId).val('@Model.Dates.Latest');
                 break;
             case "ytd":
-                $(startId).val('@Model.FirstOfYear');
-                $(endId).val('@Model.Latest');
+                $(startId).val('@Model.Dates.FirstOfYear');
+                $(endId).val('@Model.Dates.Latest');
                 break;
             case "lastweek":
-                $(startId).val('@Model.FirstOfLastWeek');
-                $(endId).val('@Model.LastOfLastWeek');
+                $(startId).val('@Model.Dates.FirstOfLastWeek');
+                $(endId).val('@Model.Dates.LastOfLastWeek');
                 break;
             case "lastmonth":
-                $(startId).val('@Model.FirstOfLastMonth');
-                $(endId).val('@Model.LastOfLastMonth');
+                $(startId).val('@Model.Dates.FirstOfLastMonth');
+                $(endId).val('@Model.Dates.LastOfLastMonth');
                 break;
             default:
                 refresh = false;
@@ -54,16 +54,16 @@
         var dateRange = $('#' + grid + '_dateRangeSel').val();
         switch (dateRange) {
             case "prev3months":
-                $(startId).val('@Model.ThreeMonthsAgoMY');
-                $(endId).val('@Model.LastMonthMY');
+                $(startId).val('@Model.Dates.ThreeMonthsAgoMY');
+                $(endId).val('@Model.Dates.LastMonthMY');
                 break;
             case "lastmonth":
-                $(startId).val('@Model.LastMonthMY');
-                $(endId).val('@Model.LastMonthMY');
+                $(startId).val('@Model.Dates.LastMonthMY');
+                $(endId).val('@Model.Dates.LastMonthMY');
                 break;
             case "ytd":
-                $(startId).val('@Model.FirstOfYearMY');
-                $(endId).val('@Model.TodayMY');
+                $(startId).val('@Model.Dates.FirstOfYearMY');
+                $(endId).val('@Model.Dates.TodayMY');
                 break;
             default:
                 refresh = false;
