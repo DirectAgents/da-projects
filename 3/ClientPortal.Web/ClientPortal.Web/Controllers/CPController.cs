@@ -90,5 +90,18 @@ namespace ClientPortal.Web.Controllers
             else
                 return null;
         }
+
+        protected ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Go", "Home");
+            }
+        }
+
     }
 }

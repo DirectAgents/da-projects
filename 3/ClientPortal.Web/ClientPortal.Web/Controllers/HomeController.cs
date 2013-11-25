@@ -21,6 +21,20 @@ namespace ClientPortal.Web.Controllers
             this.cpRepo = cpRepository;
         }
 
+        public ActionResult Go()
+        {
+            var userInfo = GetUserInfo();
+            var result = CheckLogout(userInfo);
+            if (result != null) return result;
+
+            if (userInfo.IsAdmin)
+                return Redirect("/Admin");
+            else if (userInfo.HasSearch)
+                return RedirectToAction("Index", "SearchHome");
+            else
+                return RedirectToAction("Index");
+        }
+
         public ActionResult Index()
         {
             var userInfo = GetUserInfo();

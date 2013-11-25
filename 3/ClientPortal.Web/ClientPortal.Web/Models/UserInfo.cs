@@ -24,6 +24,15 @@ namespace ClientPortal.Web.Models
             get { return (UserProfile != null); }
         }
 
+        public bool IsAdmin
+        {
+            get { return !HasUserProfile ? false : CheckIsAdmin(UserProfile.UserName); }
+        }
+        public static bool CheckIsAdmin(string userName)
+        {
+            return (userName == "admin");
+        }
+
         public int? AdvertiserId
         {
             get { return UserProfile.CakeAdvertiserId; }

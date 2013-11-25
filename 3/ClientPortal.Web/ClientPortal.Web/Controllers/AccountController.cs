@@ -42,13 +42,13 @@ namespace ClientPortal.Web.Controllers
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {
                 cpRepo.AddUserEvent(model.UserName, "login", true);
-                if (model.UserName == "admin")
+                if (UserInfo.CheckIsAdmin(model.UserName))
                 {
-                    if (returnUrl != "/Admin") returnUrl = "/Admin";
+                    if (returnUrl == "/") returnUrl = null;
                 }
                 else
-                {
-                    if (returnUrl != null && returnUrl.ToLower() == "/admin") returnUrl = "/";
+                {   // Not Admin:
+                    if (returnUrl != null && returnUrl.ToLower() == "/admin") returnUrl = null;
                 }
                 return RedirectToLocal(returnUrl);
             }
@@ -69,7 +69,7 @@ namespace ClientPortal.Web.Controllers
         {
             LogoutAndRecordEvent();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //
@@ -99,7 +99,7 @@ namespace ClientPortal.Web.Controllers
                     AssociateUserToCakeAdvertiser(model.UserName, model.CakeAdvertiserId);
                     cpRepo.AddUserEvent(model.UserName, "login after register", true);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToLocal(null);
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -357,18 +357,6 @@ namespace ClientPortal.Web.Controllers
         }
 
         #region Helpers
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-        }
-
         public enum ManageMessageId
         {
             ChangePasswordSuccess,

@@ -20,6 +20,8 @@ else
     @Html.Partial("_SetPasswordPartial")
 }
 
+<p>@Html.ActionLink("Cancel", "Go", "Home")</p>
+
 <section id="externalLogins">
     @Html.Action("RemoveExternalLogins")
 
