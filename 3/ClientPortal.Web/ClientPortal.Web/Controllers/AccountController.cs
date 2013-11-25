@@ -1,20 +1,26 @@
-﻿using System;
+﻿using ClientPortal.Data.Contracts;
+using ClientPortal.Web.Models;
+using DotNetOpenAuth.AspNet;
+using Microsoft.Web.WebPages.OAuth;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 using System.Web.Mvc;
 using System.Web.Security;
-using ClientPortal.Web.Models;
-using DotNetOpenAuth.AspNet;
-using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 
 namespace ClientPortal.Web.Controllers
 {
     [Authorize]
     //[InitializeSimpleMembership]
-    public class AccountController : Controller
+    public class AccountController : CPController
     {
+        public AccountController(IClientPortalRepository cpRepository)
+        {
+            this.cpRepo = cpRepository;
+        }
+
         //
         // GET: /Account/Login
 
@@ -35,6 +41,7 @@ namespace ClientPortal.Web.Controllers
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {
+                cpRepo.AddUserEvent(model.UserName, "login", true);
                 if (model.UserName == "admin")
                 {
                     if (returnUrl != "/Admin") returnUrl = "/Admin";
@@ -47,6 +54,8 @@ namespace ClientPortal.Web.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            cpRepo.AddUserEvent(model.UserName, "login attempt", true);
+
             ModelState.AddModelError("", "The user name or password provided is incorrect.");
             return View(model);
         }
@@ -58,7 +67,7 @@ namespace ClientPortal.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            WebSecurity.Logout();
+            LogoutAndRecordEvent();
 
             return RedirectToAction("Index", "Home");
         }
@@ -88,6 +97,8 @@ namespace ClientPortal.Web.Controllers
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
                     WebSecurity.Login(model.UserName, model.Password);
                     AssociateUserToCakeAdvertiser(model.UserName, model.CakeAdvertiserId);
+                    cpRepo.AddUserEvent(model.UserName, "login after register", true);
+
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)

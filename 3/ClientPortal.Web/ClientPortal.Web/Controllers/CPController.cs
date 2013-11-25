@@ -21,7 +21,7 @@ namespace ClientPortal.Web.Controllers
             {
                 try
                 {
-                    WebSecurity.Logout();
+                    LogoutAndRecordEvent();
                 }
                 catch
                 {
@@ -29,6 +29,12 @@ namespace ClientPortal.Web.Controllers
                 result = RedirectToAction("Login", "Account");
             }
             return result;
+        }
+
+        protected void LogoutAndRecordEvent() // ? have an "int? userId" parameter ?
+        {
+            cpRepo.AddUserEvent(WebSecurity.CurrentUserId, "logout", true);
+            WebSecurity.Logout();
         }
 
         protected UserInfo GetUserInfo()

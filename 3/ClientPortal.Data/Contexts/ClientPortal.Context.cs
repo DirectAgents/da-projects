@@ -48,5 +48,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<GoogleAnalyticsSummary> GoogleAnalyticsSummaries { get; set; }
         public DbSet<SearchAccount> SearchAccounts { get; set; }
         public DbSet<SearchChannel> SearchChannels { get; set; }
+        public DbSet<UserEvent> UserEvents { get; set; }
     }
 }

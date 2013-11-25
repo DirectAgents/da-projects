@@ -200,6 +200,9 @@
     <Compile Include="Contexts\SearchDailySummary2.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\UserEvent.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\UserProfile.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>

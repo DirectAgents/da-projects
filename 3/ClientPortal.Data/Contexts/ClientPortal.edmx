@@ -28,6 +28,7 @@
           <EntitySet Name="SearchChannel" EntityType="ClientPortalModel.Store.SearchChannel" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary" EntityType="ClientPortalModel.Store.SearchDailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UserEvent" EntityType="ClientPortalModel.Store.UserEvent" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.Store.FK_AdvertiserScheduledReport">
             <End Role="Advertiser" EntitySet="Advertiser" />
@@ -96,6 +97,10 @@
           <AssociationSet Name="FK_SearchDailySummary2_SearchCampaign" Association="ClientPortalModel.Store.FK_SearchDailySummary2_SearchCampaign">
             <End Role="SearchCampaign" EntitySet="SearchCampaign" />
             <End Role="SearchDailySummary2" EntitySet="SearchDailySummary2" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserEvent_UserProfile" Association="ClientPortalModel.Store.FK_UserEvent_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserEvent" EntitySet="UserEvent" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Advertiser">
@@ -363,6 +368,15 @@
           <Property Name="Device" Type="nchar" Nullable="false" MaxLength="1" />
           <Property Name="ClickType" Type="nchar" Nullable="false" MaxLength="1" />
         </EntityType>
+        <EntityType Name="UserEvent">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="Event" Type="nvarchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="UserProfile">
           <Key>
             <PropertyRef Name="UserId" />
@@ -583,6 +597,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserEvent_UserProfile">
+          <End Role="UserProfile" Type="ClientPortalModel.Store.UserProfile" Multiplicity="0..1" />
+          <End Role="UserEvent" Type="ClientPortalModel.Store.UserEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserEvent">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -679,6 +705,11 @@
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
           </AssociationSet>
           <EntitySet Name="SearchChannels" EntityType="ClientPortalModel.SearchChannel" />
+          <EntitySet Name="UserEvents" EntityType="ClientPortalModel.UserEvent" />
+          <AssociationSet Name="FK_UserEvent_UserProfile" Association="ClientPortalModel.FK_UserEvent_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserEvent" EntitySet="UserEvents" />
+          </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -1030,6 +1061,7 @@
           <Property Type="Int32" Name="QuickBooksAdvertiserId" />
           <Property Type="Int32" Name="SearchWeekStartDay" Nullable="false" />
           <Property Type="Int32" Name="SearchWeekEndDay" Nullable="false" />
+          <NavigationProperty Name="UserEvents" Relationship="ClientPortalModel.FK_UserEvent_UserProfile" FromRole="UserProfile" ToRole="UserEvent" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -1223,6 +1255,28 @@
           <Property Type="String" Name="Name" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Device" MaxLength="5" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="UserEvent">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Type="Int32" Name="EventId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Int32" Name="UserId" />
+          <Property Type="String" Name="Event" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfile" Relationship="ClientPortalModel.FK_UserEvent_UserProfile" FromRole="UserEvent" ToRole="UserProfile" />
+        </EntityType>
+        <Association Name="FK_UserEvent_UserProfile">
+          <End Type="ClientPortalModel.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.UserEvent" Role="UserEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserEvent">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1515,6 +1569,16 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Prefix" ColumnName="Prefix" />
                 <ScalarProperty Name="SearchChannelId" ColumnName="SearchChannelId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserEvents">
+            <EntityTypeMapping TypeName="ClientPortalModel.UserEvent">
+              <MappingFragment StoreEntitySet="UserEvent">
+                <ScalarProperty Name="Event" ColumnName="Event" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

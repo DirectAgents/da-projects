@@ -454,5 +454,47 @@ namespace ClientPortal.Data.Services
             return deleted;
         }
         #endregion
+
+        #region UserEvents
+        public IQueryable<UserEvent> UserEvents
+        {
+            get { return context.UserEvents; }
+        }
+
+        public void AddUserEvent(UserEvent userEvent, bool saveChanges = false)
+        {
+            context.UserEvents.Add(userEvent);
+            if (saveChanges) SaveChanges();
+        }
+
+        public void AddUserEvent(string userName, string eventString, bool saveChanges = false)
+        {
+            var userProfile = context.UserProfiles.SingleOrDefault(up => up.UserName == userName);
+            if (userProfile != null)
+                AddUserEvent_NoCheck(userProfile.UserId, eventString, saveChanges);
+            else
+                AddUserEvent_NoCheck(null, eventString + " [" + userName + "]", saveChanges);
+        }
+
+        public void AddUserEvent(int userId, string eventString, bool saveChanges = false)
+        {
+            var userProfile = context.UserProfiles.SingleOrDefault(up => up.UserId == userId);
+            if (userProfile != null)
+                AddUserEvent_NoCheck(userProfile.UserId, eventString, saveChanges);
+            else
+                AddUserEvent_NoCheck(null, eventString + "[id: " + userId + "]", saveChanges);
+        }
+
+        private void AddUserEvent_NoCheck(int? userId, string eventString, bool saveChanges)
+        {
+            var userEvent = new UserEvent
+            {
+                UserId = userId,
+                Event = eventString
+            };
+            context.UserEvents.Add(userEvent);
+            if (saveChanges) SaveChanges();
+        }
+        #endregion
     }
 }

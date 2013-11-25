@@ -54,6 +54,11 @@ namespace ClientPortal.Data.Contracts
         void AddGoal(Goal goal, bool saveChanges = false);
         bool DeleteGoal(int id, int? advertiserId);
 
+        IQueryable<UserEvent> UserEvents { get; }
+        void AddUserEvent(UserEvent userEvent, bool saveChanges = false);
+        void AddUserEvent(string userName, string eventString, bool saveChanges = false);
+        void AddUserEvent(int userId, string eventString, bool saveChanges = false);
+
         // Search
         SearchStat GetSearchStats(int? advertiserId, DateTime? start, DateTime? end, bool includeToday = true);
         IQueryable<SearchStat> GetWeekStats(int? advertiserId, string channel, int? searchAccountId, string channelPrefix, string device, int? numWeeks, DayOfWeek startDayOfWeek, bool useAnalytics, bool includeToday);

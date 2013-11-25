@@ -14,6 +14,11 @@ namespace ClientPortal.Data.Contexts
     
     public partial class UserProfile
     {
+        public UserProfile()
+        {
+            this.UserEvents = new HashSet<UserEvent>();
+        }
+    
         public int UserId { get; set; }
         public string UserName { get; set; }
         public Nullable<int> CakeAdvertiserId { get; set; }
@@ -21,5 +26,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> QuickBooksAdvertiserId { get; set; }
         public int SearchWeekStartDay { get; set; }
         public int SearchWeekEndDay { get; set; }
+    
+        public virtual ICollection<UserEvent> UserEvents { get; set; }
     }
 }
