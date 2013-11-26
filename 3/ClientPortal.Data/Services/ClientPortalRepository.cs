@@ -35,7 +35,7 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<Offer> Offers(int? advertiserId)
         {
-            return context.Offers.Where(o => o.Advertiser_Id == advertiserId);
+            return context.Offers.Where(o => o.AdvertiserId == advertiserId);
         }
 
         public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency)
@@ -50,13 +50,13 @@ namespace ClientPortal.Data.Services
 
             if (offerId.HasValue)
             {
-                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+                offers = offers.Where(o => o.OfferId == offerId.Value);
                 dailySummaries = dailySummaries.Where(ds => ds.offer_id == offerId.Value);
             }
             else
             {
                 dailySummaries = from ds in dailySummaries
-                                 join o in offers on ds.offer_id equals o.Offer_Id
+                                 join o in offers on ds.offer_id equals o.OfferId
                                  select ds;
             }
             currency = null; // Assume all offers for the advertiser have the same currency
@@ -121,11 +121,11 @@ namespace ClientPortal.Data.Services
 
             var offers = Offers(advertiserId);
             var offerInfos = from offer in offers
-                             join sumGroup in summaryGroups on offer.Offer_Id equals sumGroup.Key
+                             join sumGroup in summaryGroups on offer.OfferId equals sumGroup.Key
                              select new OfferInfo()
                              {
-                                 OfferId = offer.Offer_Id,
-                                 AdvertiserId_Int = offer.Advertiser_Id,
+                                 OfferId = offer.OfferId,
+                                 AdvertiserId_Int = offer.AdvertiserId,
                                  Name = offer.OfferName,
                                  Format = offer.DefaultPriceFormat,
                                  Clicks = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.clicks),
@@ -139,7 +139,7 @@ namespace ClientPortal.Data.Services
         public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
             var offers = Offers(advertiserId);
-            var offerIds = offers.Select(o => o.Offer_Id).ToList();
+            var offerIds = offers.Select(o => o.OfferId).ToList();
 
             string currency = null; // Assume all offers for the advertiser have the same currency
             if (offers.Count() > 0) currency = offers.First().Currency;
@@ -167,7 +167,7 @@ namespace ClientPortal.Data.Services
 
             var conversionInfos =
                 from c in conversions
-                join offer in context.Offers on c.offer_id equals offer.Offer_Id into gj_offer
+                join offer in context.Offers on c.offer_id equals offer.OfferId into gj_offer
                 from o in gj_offer.DefaultIfEmpty() // left join to CakeOffers
                 join conv_data in context.ConversionDatas on c.conversion_id equals conv_data.conversion_id into gj_conv_data
                 from cd in gj_conv_data.DefaultIfEmpty() // left join to ConversionData
@@ -194,16 +194,16 @@ namespace ClientPortal.Data.Services
             var offers = Offers(advertiserId);
 
             if (offerId.HasValue)
-                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+                offers = offers.Where(o => o.OfferId == offerId.Value);
 
             var conversionSummaries =
                 from offer in offers
-                join conversionGroup in conversionGroups on offer.Offer_Id equals conversionGroup.Key into gj_convgroup
+                join conversionGroup in conversionGroups on offer.OfferId equals conversionGroup.Key into gj_convgroup
                 from convGroup in gj_convgroup.DefaultIfEmpty() // left join to conversionGroups
                 select new ConversionSummary()
                 {
-                    AdvertiserId = offer.Advertiser_Id,
-                    OfferId = offer.Offer_Id,
+                    AdvertiserId = offer.AdvertiserId,
+                    OfferId = offer.OfferId,
                     OfferName = offer.OfferName,
                     Format = offer.DefaultPriceFormat,
                     Currency = offer.Currency,
@@ -220,12 +220,12 @@ namespace ClientPortal.Data.Services
 
             var offers = Offers(advertiserId);
             if (offerId.HasValue)
-                offers = offers.Where(o => o.Offer_Id == offerId.Value);
+                offers = offers.Where(o => o.OfferId == offerId.Value);
 
             var affiliateInfos =
                 from conv in conversions
                 from offer in offers
-                where conv.offer_id == offer.Offer_Id
+                where conv.offer_id == offer.OfferId
                 select new
                 {
                     AffId = conv.affiliate_id,

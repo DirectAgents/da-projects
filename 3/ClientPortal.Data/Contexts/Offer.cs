@@ -19,9 +19,9 @@ namespace ClientPortal.Data.Contexts
             this.Goals = new HashSet<Goal>();
         }
     
-        public int Offer_Id { get; set; }
+        public int OfferId { get; set; }
         public string OfferName { get; set; }
-        public Nullable<int> Advertiser_Id { get; set; }
+        public Nullable<int> AdvertiserId { get; set; }
         public string DefaultPriceFormat { get; set; }
         public string Currency { get; set; }
     

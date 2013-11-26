@@ -104,7 +104,7 @@ namespace CakeExtracter
 
             using (var db = new ClientPortalContext())
             {
-                var offerIds = db.Offers.Where(o => o.Advertiser_Id == advertiserId).Select(o => o.Offer_Id).ToList();
+                var offerIds = db.Offers.Where(o => o.AdvertiserId == advertiserId).Select(o => o.OfferId).ToList();
 
                 var metricCounts = db.MetricCounts.Where(mc => offerIds.Contains(mc.offer_id) &&
                                                                mc.date >= date &&

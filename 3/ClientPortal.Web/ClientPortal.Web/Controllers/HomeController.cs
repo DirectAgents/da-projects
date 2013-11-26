@@ -225,7 +225,7 @@ namespace ClientPortal.Web.Controllers
             if (userInfo.AdvertiserId == null)
                 return null;
 
-            var offer = cpRepo.Offers(userInfo.AdvertiserId).Where(o => o.Offer_Id == offerId).FirstOrDefault();
+            var offer = cpRepo.Offers(userInfo.AdvertiserId).Where(o => o.OfferId == offerId).FirstOrDefault();
             List<Goal> goals;
             if (goalId.HasValue)
                 goals = offer.Goals.Where(g => g.Id == goalId).ToList();
@@ -241,7 +241,7 @@ namespace ClientPortal.Web.Controllers
         private List<OfferGoalSummary> CreateOfferGoalSummaries(int advId, Dates dates, bool includeConversionData)
         {
             var goals = cpRepo.GetGoals(advId);
-            var offers = goals.Where(g => g.Offer != null).Select(g => g.Offer).DistinctBy(o => o.Offer_Id).OrderBy(o => o.OfferName);
+            var offers = goals.Where(g => g.Offer != null).Select(g => g.Offer).DistinctBy(o => o.OfferId).OrderBy(o => o.OfferName);
             List<OfferGoalSummary> offerGoalSummaries = new List<OfferGoalSummary>();
             foreach (var offer in offers)
             {
@@ -272,18 +272,18 @@ namespace ClientPortal.Web.Controllers
             List<DateRangeSummary> summaries;
             if (!goals.Any() || goals[0].IsMonthly) // assume all goals are the same type
             {
-                var offsumMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Latest, advId, offer.Offer_Id, includeConversionData);
+                var offsumMTD = cpRepo.GetDateRangeSummary(dates.FirstOfMonth, dates.Latest, advId, offer.OfferId, includeConversionData);
                 offsumMTD.Name = "Month-to-Date";
-                var offsumLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, offer.Offer_Id, includeConversionData);
+                var offsumLMTD = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.OneMonthAgo, advId, offer.OfferId, includeConversionData);
                 offsumLMTD.Name = "Last MTD";
-                var offsumLM = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, offer.Offer_Id, includeConversionData);
+                var offsumLM = cpRepo.GetDateRangeSummary(dates.FirstOfLastMonth, dates.LastOfLastMonth, advId, offer.OfferId, includeConversionData);
                 offsumLM.Name = "Last Month";
                 summaries = new List<DateRangeSummary> { offsumMTD, offsumLMTD, offsumLM };
             }
             else
             {
                 var goal0 = goals[0];
-                var sumActual = cpRepo.GetDateRangeSummary(goal0.StartDate, goal0.EndDate, advId, offer.Offer_Id, includeConversionData);
+                var sumActual = cpRepo.GetDateRangeSummary(goal0.StartDate, goal0.EndDate, advId, offer.OfferId, includeConversionData);
                 sumActual.Name = (dates.Today.Date > goal0.EndDate) ? "Results" : "Results to-Date";
                 var sumGoal = new DateRangeSummary() { Name = "Goal", Culture = OfferInfo.CurrencyToCulture(offer.Currency) };
                 foreach (var goal in goals)

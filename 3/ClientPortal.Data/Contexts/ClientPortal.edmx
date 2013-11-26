@@ -274,11 +274,11 @@
         </EntityType>
         <EntityType Name="Offer">
           <Key>
-            <PropertyRef Name="Offer_Id" />
+            <PropertyRef Name="OfferId" />
           </Key>
-          <Property Name="Offer_Id" Type="int" Nullable="false" />
+          <Property Name="OfferId" Type="int" Nullable="false" />
           <Property Name="OfferName" Type="nvarchar" MaxLength="255" />
-          <Property Name="Advertiser_Id" Type="int" />
+          <Property Name="AdvertiserId" Type="int" />
           <Property Name="DefaultPriceFormat" Type="nvarchar" MaxLength="255" />
           <Property Name="Currency" Type="nchar" MaxLength="3" />
         </EntityType>
@@ -470,7 +470,7 @@
           <End Role="Goal" Type="ClientPortalModel.Store.Goal" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Offer">
-              <PropertyRef Name="Offer_Id" />
+              <PropertyRef Name="OfferId" />
             </Principal>
             <Dependent Role="Goal">
               <PropertyRef Name="OfferId" />
@@ -658,11 +658,6 @@
             <End Role="SearchCampaign" EntitySet="SearchCampaigns" />
             <End Role="SearchDailySummary" EntitySet="SearchDailySummaries" />
           </AssociationSet>
-          <EntitySet Name="Offers" EntityType="ClientPortalModel.Offer" />
-          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.FK_Goal_Offer">
-            <End Role="Offer" EntitySet="Offers" />
-            <End Role="Goal" EntitySet="Goals" />
-          </AssociationSet>
           <EntitySet Name="UserProfiles" EntityType="ClientPortalModel.UserProfile" />
           <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.SearchDailySummary2" />
           <AssociationSet Name="FK_SearchDailySummary2_SearchCampaign" Association="ClientPortalModel.FK_SearchDailySummary2_SearchCampaign">
@@ -709,6 +704,11 @@
           <AssociationSet Name="FK_UserEvent_UserProfile" Association="ClientPortalModel.FK_UserEvent_UserProfile">
             <End Role="UserProfile" EntitySet="UserProfiles" />
             <End Role="UserEvent" EntitySet="UserEvents" />
+          </AssociationSet>
+          <EntitySet Name="Offers" EntityType="ClientPortalModel.Offer" />
+          <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.FK_Goal_Offer">
+            <End Role="Offer" EntitySet="Offers" />
+            <End Role="Goal" EntitySet="Goals" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -769,8 +769,8 @@
           <Property Type="Decimal" Name="Target" Nullable="false" Precision="18" Scale="2" />
           <Property Type="DateTime" Name="StartDate" Precision="3" />
           <Property Type="DateTime" Name="EndDate" Precision="3" />
-          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Goal" ToRole="Offer" />
           <NavigationProperty Name="Advertiser" Relationship="ClientPortalModel.FK_Goal_Advertiser" FromRole="Goal" ToRole="Advertiser" />
+          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Goal" ToRole="Offer" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -1027,29 +1027,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Offer">
-          <Key>
-            <PropertyRef Name="Offer_Id" />
-          </Key>
-          <Property Type="Int32" Name="Offer_Id" Nullable="false" />
-          <Property Type="String" Name="OfferName" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="Advertiser_Id" />
-          <Property Type="String" Name="DefaultPriceFormat" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
-        </EntityType>
-        <Association Name="FK_Goal_Offer">
-          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
-          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Offer">
-              <PropertyRef Name="Offer_Id" />
-            </Principal>
-            <Dependent Role="Goal">
-              <PropertyRef Name="OfferId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="UserProfile">
           <Key>
             <PropertyRef Name="UserId" />
@@ -1277,6 +1254,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Offer">
+          <Key>
+            <PropertyRef Name="OfferId" />
+          </Key>
+          <Property Type="Int32" Name="OfferId" Nullable="false" />
+          <Property Type="String" Name="OfferName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="AdvertiserId" />
+          <Property Type="String" Name="DefaultPriceFormat" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
+        </EntityType>
+        <Association Name="FK_Goal_Offer">
+          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.Goal" Role="Goal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="OfferId" />
+            </Principal>
+            <Dependent Role="Goal">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1476,17 +1476,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Offers">
-            <EntityTypeMapping TypeName="ClientPortalModel.Offer">
-              <MappingFragment StoreEntitySet="Offer">
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />
-                <ScalarProperty Name="Advertiser_Id" ColumnName="Advertiser_Id" />
-                <ScalarProperty Name="OfferName" ColumnName="OfferName" />
-                <ScalarProperty Name="Offer_Id" ColumnName="Offer_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
@@ -1579,6 +1568,17 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Offers">
+            <EntityTypeMapping TypeName="ClientPortalModel.Offer">
+              <MappingFragment StoreEntitySet="Offer">
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />
+                <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
+                <ScalarProperty Name="OfferName" ColumnName="OfferName" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

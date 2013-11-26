@@ -47,7 +47,7 @@ namespace ClientPortal.Web.Models
         public string Id
         {
             get {
-                StringBuilder id = new StringBuilder(Offer.Offer_Id.ToString());
+                StringBuilder id = new StringBuilder(Offer.OfferId.ToString());
                 foreach (var goal in Goals)
                     id.Append("_" + goal.Id);
                 return id.ToString();

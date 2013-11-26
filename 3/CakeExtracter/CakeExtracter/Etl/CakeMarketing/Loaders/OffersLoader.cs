@@ -14,7 +14,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
             {
                 foreach (var item in items)
                 {
-                    var offer = db.Offers.Where(o => o.Offer_Id == item.OfferId)
+                    var offer = db.Offers.Where(o => o.OfferId == item.OfferId)
                                          .SingleOrFallback(() =>
                                          {
                                              var newOffer = new ClientPortal.Data.Contexts.Offer();
@@ -22,9 +22,9 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                                              return newOffer;
                                          });
 
-                    offer.Advertiser_Id = item.Advertiser.AdvertiserId;
+                    offer.AdvertiserId = item.Advertiser.AdvertiserId;
 
-                    offer.Offer_Id = item.OfferId;
+                    offer.OfferId = item.OfferId;
 
                     offer.OfferName = item.OfferName;
 
