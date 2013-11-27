@@ -190,6 +190,8 @@
     <Compile Include="Bootstrappers\LoggingBootstrapper.cs" />
     <Compile Include="Bootstrappers\ServicePointBootstrapper.cs" />
     <Compile Include="CakeMarketingApi\Clients\AdvertisersRequest.cs" />
+    <Compile Include="CakeMarketingApi\Clients\CampaignsClient.cs" />
+    <Compile Include="CakeMarketingApi\Clients\CampaignsRequest.cs" />
     <Compile Include="CakeMarketingApi\Entities\AdvertiserExportResponse.cs" />
     <Compile Include="CakeMarketingApi\Clients\AdvertisersClient.cs" />
     <Compile Include="CakeMarketingApi\Clients\ApiClient.cs" />
@@ -205,6 +207,8 @@
     <Compile Include="CakeMarketingApi\Entities\Affiliate.cs" />
     <Compile Include="CakeMarketingApi\Entities\ArrayOfTraffic.cs" />
     <Compile Include="CakeMarketingApi\Entities\Browser.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Campaign.cs" />
+    <Compile Include="CakeMarketingApi\Entities\CampaignExportResponse.cs" />
     <Compile Include="CakeMarketingApi\Entities\Click.cs" />
     <Compile Include="CakeMarketingApi\Entities\ClickReportResponse.cs" />
     <Compile Include="CakeMarketingApi\Entities\Conversion.cs" />
@@ -222,6 +226,7 @@
     <Compile Include="Commands\ScheduledJob.cs" />
     <Compile Include="Commands\SendAutomatedReportsCommand.cs" />
     <Compile Include="Commands\SynchAdvertisersCommand.cs" />
+    <Compile Include="Commands\SynchCampaignsCommand.cs" />
     <Compile Include="Commands\SynchClicksCommand2.cs" />
     <Compile Include="Commands\SynchConversionsCommand.cs" />
     <Compile Include="Commands\SynchCakeTrafficCommand.cs" />
@@ -262,6 +267,7 @@
     <Compile Include="CakeMarketingApi\CakeMarketingUtility.cs" />
     <Compile Include="Data\CakeTraffic\CakeTrafficContext.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\AdvertisersExtracter.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\CampaignsExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\ClicksExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\ConversionsExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\OffersExtracter.cs" />
@@ -269,6 +275,7 @@
     <Compile Include="Etl\CakeMarketing\Extracters\DailySummariesExtracter.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferDailySummary.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\AdvertisersLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\Loaders\CampaignsLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\ClicksLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\ClicksLoader2.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\ConversionsLoader.cs" />

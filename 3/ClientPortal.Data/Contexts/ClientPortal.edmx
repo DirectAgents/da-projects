@@ -8,6 +8,8 @@
         <EntityContainer Name="ClientPortalModelStoreContainer">
           <EntitySet Name="Advertiser" EntityType="ClientPortalModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="AdvertiserContact" EntityType="ClientPortalModel.Store.AdvertiserContact" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Affiliate" EntityType="ClientPortalModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Campaign" EntityType="ClientPortalModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
@@ -33,6 +35,14 @@
           <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.Store.FK_AdvertiserScheduledReport">
             <End Role="Advertiser" EntitySet="Advertiser" />
             <End Role="ScheduledReport" EntitySet="ScheduledReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_Affiliate" Association="ClientPortalModel.Store.FK_Campaign_Affiliate">
+            <End Role="Affiliate" EntitySet="Affiliate" />
+            <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_Offer" Association="ClientPortalModel.Store.FK_Campaign_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="Campaign" EntitySet="Campaign" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
             <End Role="Advertiser" EntitySet="Advertiser" />
@@ -133,6 +143,21 @@
           <Property Name="AdvertiserId" Type="int" Nullable="false" />
           <Property Name="ContactId" Type="int" Nullable="false" />
           <Property Name="Order" Type="int" />
+        </EntityType>
+        <EntityType Name="Affiliate">
+          <Key>
+            <PropertyRef Name="AffiliateId" />
+          </Key>
+          <Property Name="AffiliateId" Type="int" Nullable="false" />
+          <Property Name="AffiliateName" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="CampaignId" />
+          </Key>
+          <Property Name="CampaignId" Type="int" Nullable="false" />
+          <Property Name="OfferId" Type="int" Nullable="false" />
+          <Property Name="AffiliateId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -398,6 +423,30 @@
             </Principal>
             <Dependent Role="ScheduledReport">
               <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_Affiliate">
+          <End Role="Affiliate" Type="ClientPortalModel.Store.Affiliate" Multiplicity="1" />
+          <End Role="Campaign" Type="ClientPortalModel.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Affiliate">
+              <PropertyRef Name="AffiliateId" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="AffiliateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_Offer">
+          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="1" />
+          <End Role="Campaign" Type="ClientPortalModel.Store.Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="OfferId" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="OfferId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -709,6 +758,16 @@
           <AssociationSet Name="FK_Goal_Offer" Association="ClientPortalModel.FK_Goal_Offer">
             <End Role="Offer" EntitySet="Offers" />
             <End Role="Goal" EntitySet="Goals" />
+          </AssociationSet>
+          <EntitySet Name="Affiliates" EntityType="ClientPortalModel.Affiliate" />
+          <EntitySet Name="Campaigns" EntityType="ClientPortalModel.Campaign" />
+          <AssociationSet Name="FK_Campaign_Affiliate" Association="ClientPortalModel.FK_Campaign_Affiliate">
+            <End Role="Affiliate" EntitySet="Affiliates" />
+            <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Campaign_Offer" Association="ClientPortalModel.FK_Campaign_Offer">
+            <End Role="Offer" EntitySet="Offers" />
+            <End Role="Campaign" EntitySet="Campaigns" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1264,6 +1323,7 @@
           <Property Type="String" Name="DefaultPriceFormat" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
+          <NavigationProperty Name="Campaigns" Relationship="ClientPortalModel.FK_Campaign_Offer" FromRole="Offer" ToRole="Campaign" />
         </EntityType>
         <Association Name="FK_Goal_Offer">
           <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
@@ -1273,6 +1333,48 @@
               <PropertyRef Name="OfferId" />
             </Principal>
             <Dependent Role="Goal">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Affiliate">
+          <Key>
+            <PropertyRef Name="AffiliateId" />
+          </Key>
+          <Property Type="Int32" Name="AffiliateId" Nullable="false" />
+          <Property Type="String" Name="AffiliateName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Campaigns" Relationship="ClientPortalModel.FK_Campaign_Affiliate" FromRole="Affiliate" ToRole="Campaign" />
+        </EntityType>
+        <EntityType Name="Campaign">
+          <Key>
+            <PropertyRef Name="CampaignId" />
+          </Key>
+          <Property Type="Int32" Name="CampaignId" Nullable="false" />
+          <Property Type="Int32" Name="OfferId" Nullable="false" />
+          <Property Type="Int32" Name="AffiliateId" Nullable="false" />
+          <NavigationProperty Name="Affiliate" Relationship="ClientPortalModel.FK_Campaign_Affiliate" FromRole="Campaign" ToRole="Affiliate" />
+          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Campaign_Offer" FromRole="Campaign" ToRole="Offer" />
+        </EntityType>
+        <Association Name="FK_Campaign_Affiliate">
+          <End Type="ClientPortalModel.Affiliate" Role="Affiliate" Multiplicity="1" />
+          <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Affiliate">
+              <PropertyRef Name="AffiliateId" />
+            </Principal>
+            <Dependent Role="Campaign">
+              <PropertyRef Name="AffiliateId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Campaign_Offer">
+          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="1" />
+          <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="OfferId" />
+            </Principal>
+            <Dependent Role="Campaign">
               <PropertyRef Name="OfferId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1579,6 +1681,23 @@
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
                 <ScalarProperty Name="OfferName" ColumnName="OfferName" />
                 <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Affiliates">
+            <EntityTypeMapping TypeName="ClientPortalModel.Affiliate">
+              <MappingFragment StoreEntitySet="Affiliate">
+                <ScalarProperty Name="AffiliateName" ColumnName="AffiliateName" />
+                <ScalarProperty Name="AffiliateId" ColumnName="AffiliateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Campaigns">
+            <EntityTypeMapping TypeName="ClientPortalModel.Campaign">
+              <MappingFragment StoreEntitySet="Campaign">
+                <ScalarProperty Name="AffiliateId" ColumnName="AffiliateId" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="CampaignId" ColumnName="CampaignId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

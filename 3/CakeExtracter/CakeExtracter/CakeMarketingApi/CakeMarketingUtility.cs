@@ -48,6 +48,17 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Offers;
         }
 
+        public static List<Campaign> Campaigns(int offerId)
+        {
+            var client = new CampaignsClient();
+            var request = new CampaignsRequest
+            {
+                offer_id = offerId
+            };
+            var response = client.Campaigns(request);
+            return response.Campaigns;
+        }
+
         public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId)
         {
             var client = new DailySummariesClient();

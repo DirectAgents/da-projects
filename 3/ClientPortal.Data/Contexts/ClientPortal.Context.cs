@@ -41,7 +41,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<SearchDailySummary> SearchDailySummaries { get; set; }
         public DbSet<Conversion> Conversions { get; set; }
         public DbSet<SearchCampaign> SearchCampaigns { get; set; }
-        public DbSet<Offer> Offers { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<SearchDailySummary2> SearchDailySummary2 { get; set; }
         public DbSet<Advertiser> Advertisers { get; set; }
@@ -49,5 +48,8 @@ namespace ClientPortal.Data.Contexts
         public DbSet<SearchAccount> SearchAccounts { get; set; }
         public DbSet<SearchChannel> SearchChannels { get; set; }
         public DbSet<UserEvent> UserEvents { get; set; }
+        public DbSet<Offer> Offers { get; set; }
+        public DbSet<Affiliate> Affiliates { get; set; }
+        public DbSet<Campaign> Campaigns { get; set; }
     }
 }

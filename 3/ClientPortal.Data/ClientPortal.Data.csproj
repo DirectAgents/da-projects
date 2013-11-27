@@ -59,6 +59,12 @@
     <Compile Include="Contexts\AdvertiserContact.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\Affiliate.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\Campaign.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\ClientPortal.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
