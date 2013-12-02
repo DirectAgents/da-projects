@@ -125,7 +125,7 @@ namespace EomApp1.Screens.Synch
         private void ExtractIntegerItemsFromSpaceAndLineDelimitedList(string s, out List<int> list)
         {
             list = new List<int>();
-            var split = s.Split(' ', '\n');
+            var split = s.Split(new char[] {' ', '\n'}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var pid in split.Select(c => Convert.ToInt32(c)))
             {
                 list.Add(pid);
@@ -259,12 +259,16 @@ namespace EomApp1.Screens.Synch
 
         private void SynchStats(int pid, int redirectedPID)
         {
-            Log("synching stats..");
+            Log("SynchStats begin..");
             int startDay = Convert.ToInt32(fromDayTextBox.Text);
             int endDay = Convert.ToInt32(toDayTextBox.Text);
             try
             {
                 SynchStatsFromCake(pid, startDay, endDay);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                Logger.LogError("error for stats(pid=" + pid + ") - EntityNotFound: " + ex.Message);
             }
             catch (Exception ex)
             {
@@ -277,7 +281,7 @@ namespace EomApp1.Screens.Synch
                     }
                 }
             }
-            Log("synching stats.");
+            Log("SynchStats end.");
         }
 
         private void SynchStatsFromCake(int offerID, int startDay, int endDay)

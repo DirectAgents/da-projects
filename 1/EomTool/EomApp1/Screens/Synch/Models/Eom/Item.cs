@@ -37,10 +37,22 @@ namespace EomApp1.Screens.Synch.Models.Eom
                         throw new CannotChangePromotedItemException(this);
                 }
             }
+            var unitType = eomEntities.UnitTypes.Where(c => c.name == conversion.ConversionType).SingleOrDefault();
+            if (unitType == null)
+                throw new EntityNotFoundException("UnitType", conversion.ConversionType);
+
+            var revenueCurrency = eomEntities.Currencies.Where(c => c.name == conversion.PriceReceivedCurrency).SingleOrDefault();
+            if (revenueCurrency == null)
+                throw new EntityNotFoundException("Revenue Currency", conversion.PriceReceivedCurrency);
+
+            var costCurrency = eomEntities.Currencies.Where(c => c.name == conversion.PricePaidCurrency).SingleOrDefault();
+            if (costCurrency == null)
+                throw new EntityNotFoundException("Cost Currency", conversion.PricePaidCurrency);
+
             // since no exception was thrown, update the other fields
-            this.unit_type_id = eomEntities.UnitTypes.Where(c => c.name == conversion.ConversionType).Select(c => c.id).Single();
-            this.revenue_currency_id = eomEntities.Currencies.Where(c => c.name == conversion.PriceReceivedCurrency).Select(c => c.id).Single();
-            this.cost_currency_id = eomEntities.Currencies.Where(c => c.name == conversion.PricePaidCurrency).Select(c => c.id).Single();
+            this.unit_type_id = unitType.id;
+            this.revenue_currency_id = revenueCurrency.id;
+            this.cost_currency_id = costCurrency.id;
             this.num_units = conversion.Units ?? 0;
             this.revenue_per_unit = conversion.PriceReceived ?? 0;
             this.cost_per_unit = conversion.PricePaid ?? 0;

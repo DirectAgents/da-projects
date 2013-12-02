@@ -11,4 +11,12 @@ namespace EomApp1.Screens.Synch.Models.Eom
         {
         }
     }
+
+    public class EntityNotFoundException : Exception
+    {
+        public EntityNotFoundException(string entityTypeName, string notFoundName)
+            : base(string.Format("{0} \"{1}\" doesn't exist", entityTypeName, notFoundName))
+        {
+        }
+    }
 }
