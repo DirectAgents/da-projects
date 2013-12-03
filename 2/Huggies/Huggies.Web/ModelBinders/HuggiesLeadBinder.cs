@@ -29,10 +29,12 @@ namespace Huggies.Web.ModelBinders
                 Test = (GetQueryStringValue("fm_test") == "true"),
             };
 
+            DateTime dueDate;
             string dateTimeString = GetQueryStringValue("fm_duedate");
-            model.DueDate = string.IsNullOrWhiteSpace(dateTimeString) 
-                                        ? default(DateTime?) 
-                                        : DateTime.Parse(dateTimeString);
+            if (DateTime.TryParse(dateTimeString, out dueDate))
+                model.DueDate = dueDate;
+            else
+                model.DueDate = null;
 
             int affId;
             var a = GetQueryStringValue("a");

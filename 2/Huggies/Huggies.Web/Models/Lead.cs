@@ -35,18 +35,26 @@ namespace Huggies.Web.Models
                 modelState.AddModelError("ValidationErrors", Constants.ModelValidationError_must_be_first_child);
             }
 
+            if (!DueDate.HasValue)
+            {
+                modelState.AddModelError("ValidationErrors", Constants.ModelValidationError_duedate_must_be_specified);
+            }
+
+            var futureCutoff = DateTime.Now.AddMonths(11);
+            if (DueDate > futureCutoff)
+            {
+                modelState.AddModelError("ValidationErrors", Constants.ModelValidationError_duedate_too_far_out);
+            }
+
             var cutoff = DateTime.Now.AddMonths(-4);
             if (DueDate < cutoff)
             {
-                modelState.AddModelError("ValidationErrors",
-                                         Constants.ModelValidationError_child_must_be_lessthan_4_months_old_or_unborn);
+                modelState.AddModelError("ValidationErrors", Constants.ModelValidationError_child_must_be_lessthan_4_months_old_or_unborn);
             }
 
             if (DueDate < DateTime.Today && Gender == "N")
             {
-                modelState.AddModelError("ValidationErrors",
-                                         Constants
-                                             .ModelValidationError_gender_cannot_be_unknown_if_child_is_already_born);
+                modelState.AddModelError("ValidationErrors", Constants.ModelValidationError_gender_cannot_be_unknown_if_child_is_already_born);
             }
 
             return modelState.IsValid;
