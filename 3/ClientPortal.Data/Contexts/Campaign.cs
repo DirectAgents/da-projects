@@ -17,6 +17,7 @@ namespace ClientPortal.Data.Contexts
         public int CampaignId { get; set; }
         public int OfferId { get; set; }
         public int AffiliateId { get; set; }
+        public string CampaignName { get; set; }
     
         public virtual Affiliate Affiliate { get; set; }
         public virtual Offer Offer { get; set; }

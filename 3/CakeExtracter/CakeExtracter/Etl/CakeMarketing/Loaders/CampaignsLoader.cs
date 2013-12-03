@@ -3,6 +3,8 @@ using System.Linq;
 using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
 using MoreLinq;
+using System.Text;
+using System;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {
@@ -13,31 +15,47 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
             Logger.Info("Synching {0} campaigns...", items.Count);
             using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
             {
+                List<ClientPortal.Data.Contexts.Offer> newOffers = new List<ClientPortal.Data.Contexts.Offer>();
+                List<ClientPortal.Data.Contexts.Affiliate> newAffiliates = new List<ClientPortal.Data.Contexts.Affiliate>();
+
                 foreach (var item in items)
                 {
                     var offer = db.Offers.Where(o => o.OfferId == item.Offer.OfferId)
                                     .SingleOrFallback(() =>
                                         {
-                                            Logger.Info("Adding new offer: {0} ({1})", item.Offer.OfferName, item.Offer.OfferId);
-                                            var newOffer = new ClientPortal.Data.Contexts.Offer
+                                            var newOffer = newOffers.Where(o => o.OfferId == item.Offer.OfferId).SingleOrDefault();
+                                            if (newOffer == null)
                                             {
-                                                OfferId = item.Offer.OfferId,
-                                                OfferName = item.Offer.OfferName
-                                            };
+                                                Logger.Info("Adding new offer: {0} ({1})", item.Offer.OfferName, item.Offer.OfferId);
+                                                newOffer = new ClientPortal.Data.Contexts.Offer
+                                                {
+                                                    OfferId = item.Offer.OfferId,
+                                                    OfferName = item.Offer.OfferName
+                                                };
+                                                newOffers.Add(newOffer);
+                                            }
                                             return newOffer;
                                         });
+                    //note: offer properties are not updated here
 
                     var affiliate = db.Affiliates.Where(a => a.AffiliateId == item.Affiliate.AffiliateId)
                                         .SingleOrFallback(() =>
                                             {
-                                                Logger.Info("Adding new affiliate: {0} ({1})", item.Affiliate.AffiliateName, item.Affiliate.AffiliateId);
-                                                var newAffiliate = new ClientPortal.Data.Contexts.Affiliate
+                                                var newAffiliate = newAffiliates.Where(a => a.AffiliateId == item.Affiliate.AffiliateId).SingleOrDefault();
+                                                if (newAffiliate == null)
                                                 {
-                                                    AffiliateId = item.Affiliate.AffiliateId,
-                                                    AffiliateName = item.Affiliate.AffiliateName
-                                                };
+                                                    Logger.Info("Adding new affiliate: {0} ({1})", item.Affiliate.AffiliateName, item.Affiliate.AffiliateId);
+                                                    newAffiliate = new ClientPortal.Data.Contexts.Affiliate
+                                                    {
+                                                        AffiliateId = item.Affiliate.AffiliateId,
+                                                        AffiliateName = item.Affiliate.AffiliateName
+                                                    };
+                                                    newAffiliates.Add(newAffiliate);
+                                                }
                                                 return newAffiliate;
                                             });
+                    if (affiliate.AffiliateName != item.Affiliate.AffiliateName)
+                        affiliate.AffiliateName = item.Affiliate.AffiliateName;
 
                     var campaign = db.Campaigns.Where(c => c.CampaignId == item.CampaignId)
                                            .SingleOrFallback(() =>
@@ -50,6 +68,13 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
 
                     campaign.Offer = offer;
                     campaign.Affiliate = affiliate;
+
+                    StringBuilder campaignNameSB = new StringBuilder(offer.OfferName);
+                    if (item.OfferContract != null && !String.IsNullOrWhiteSpace(item.OfferContract.OfferContractName))
+                        campaignNameSB.Append(" - " + item.OfferContract.OfferContractName);
+                    campaignNameSB.Append(" - " + item.OfferContract.PriceFormat.PriceFormatName + " - " + item.Payout.FormattedAmount);
+
+                    campaign.CampaignName = campaignNameSB.ToString();
 
                     //offer.Currency = item.Currency.CurrencyAbbr;
 
