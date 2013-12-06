@@ -51,5 +51,7 @@ namespace ClientPortal.Data.Contexts
         public DbSet<Offer> Offers { get; set; }
         public DbSet<Affiliate> Affiliates { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
+        public DbSet<CampaignDrop> CampaignDrops { get; set; }
+        public DbSet<CreativeStat> CreativeStats { get; set; }
     }
 }

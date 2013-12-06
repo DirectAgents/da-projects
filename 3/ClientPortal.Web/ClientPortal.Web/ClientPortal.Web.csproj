@@ -201,8 +201,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AdvertisersController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CampaignDropsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContactsController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\OffersController.cs" />
     <Compile Include="Areas\Admin\Models\ContactVM.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CPController.cs" />
@@ -619,6 +622,19 @@
     <Content Include="Areas\Admin\Views\Advertisers\EditLogo.cshtml" />
     <Content Include="Areas\Admin\Views\Advertisers\CreateUserProfile.cshtml" />
     <Content Include="Controllers\Class Diagrams\Controllers.cd" />
+    <Content Include="Areas\Admin\Views\Campaigns\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Campaigns\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\Offers\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDrops\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Offers\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\DropReport.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDrops\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\CreativeStats\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDrops\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDrops\Show.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\DisplayTemplates\Int32.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\DisplayTemplates\Date.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\DisplayTemplates\Money.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -1562,7 +1578,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Filters\" />
   </ItemGroup>
   <PropertyGroup>

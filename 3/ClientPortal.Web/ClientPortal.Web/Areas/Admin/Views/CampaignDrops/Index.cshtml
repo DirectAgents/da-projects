@@ -1,0 +1,47 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>
+
+Drops:<br />
+<table border="1">
+    <tr>
+        <th>List</th>
+        <th>Date</th>
+        <th>Volume</th>
+        <th>Opens</th>
+        <th>Clicks</th>
+        <th>Leads</th>
+        <th>Total Cost</th>
+    </tr>
+@foreach (var drop in Model)
+{
+    <tr>
+        <td>@drop.Campaign.AffiliateId</td>
+        <td>@drop.Date.ToShortDateString()</td>
+        <td>@(drop.Volume.HasValue ? drop.Volume.Value.ToString("N0") : "")</td>
+        <td>@(drop.Opens.HasValue ? drop.Opens.Value.ToString("N0") : "")<br />
+            Open Rate: @(drop.OpenRate.HasValue ? String.Format("{0:0.00%}", drop.OpenRate.Value) : "")</td>
+        <td>@drop.CreativeStatTotals.Clicks.Value.ToString("N0")<br />
+            CTR: @(drop.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", drop.ClickThroughRate.Value) : "")
+        </td>
+        <td>@drop.CreativeStatTotals.Leads.Value.ToString("N0")<br />
+            eCPL: @(drop.CostPerLead.HasValue ? drop.CostPerLead.Value.ToString("C2") : "")
+        </td>
+        <td>@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")</td>
+        <td>@Html.ActionLink("Details", "Show", "CampaignDrops", new { id = drop.CampaignDropId }, null) |
+            @Html.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, null)</td>
+    </tr>
+    if (drop.CreativeStats.Count > 1)
+    {
+        foreach (var creative in drop.CreativeStats)
+        {
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2">Creative: @creative.Name</td>
+                <td>@(creative.Clicks.HasValue ? creative.Clicks.Value.ToString("N0") : "")<br />
+                    CTR: @(creative.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", creative.ClickThroughRate.Value) : "")</td>
+                <td>@(creative.Leads.HasValue ? creative.Leads.Value.ToString("N0") : "")</td>
+            </tr>
+        }
+    }
+}
+</table>

@@ -1,0 +1,70 @@
+﻿@model ClientPortal.Data.Contexts.CampaignDrop
+
+<h3>Edit Drop</h3>
+
+Campaign: @Model.Campaign.CampaignName
+<br />
+Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
+<br />
+
+@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Campaign Drop</legend>
+        @Html.HiddenFor(m => m.CampaignDropId)
+        @Html.HiddenFor(m => m.CampaignId)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.Date)</td>
+                <td>@Html.TextBoxFor(m => m.Date, "{0:d}")</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Subject)</td>
+                <td>@Html.TextBoxFor(m => m.Subject, new { size = 60 })</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Cost)</td>
+                <td>@Html.EditorFor(m => m.Cost)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Volume)</td>
+                <td>@Html.EditorFor(m => m.Volume)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Opens)</td>
+                <td>@Html.EditorFor(m => m.Opens)</td>
+            </tr>
+        </table>
+        @{ int i = 0; }
+        @foreach (var creative in Model.CreativeStats)
+        {
+            //Html.RenderPartial("../CreativeStats/Edit", creative);
+            <fieldset>
+                <legend>Creative</legend>
+                @Html.Hidden("CreativeStats[" + i + "].CreativeStatId", creative.CreativeStatId)
+                <table>
+                    <tr>
+                        <td>@Html.Label("Name")</td>
+                        <td>@Html.EditorFor(_ => creative.Name, null, "CreativeStats[" + i + "].Name")</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Clicks")</td>
+                        <td>@Html.EditorFor(_ => creative.Clicks, null, "CreativeStats[" + i + "].Clicks")</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Leads")</td>
+                        <td>@Html.EditorFor(_ => creative.Leads, null, "CreativeStats[" + i + "].Leads")</td>
+                    </tr>
+                </table>
+            </fieldset>
+            i++;
+        }
+        <br />
+        <input type="submit" value="Save" />
+        &nbsp;
+        @Html.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, null)
+    </fieldset>
+    
+}

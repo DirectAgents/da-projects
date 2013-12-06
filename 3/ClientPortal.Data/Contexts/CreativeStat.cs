@@ -12,20 +12,14 @@ namespace ClientPortal.Data.Contexts
     using System;
     using System.Collections.Generic;
     
-    public partial class Campaign
+    public partial class CreativeStat
     {
-        public Campaign()
-        {
-            this.CampaignDrops = new HashSet<CampaignDrop>();
-        }
+        public int CreativeStatId { get; set; }
+        public int CampaignDropId { get; set; }
+        public string Name { get; set; }
+        public Nullable<int> Clicks { get; set; }
+        public Nullable<int> Leads { get; set; }
     
-        public int CampaignId { get; set; }
-        public int OfferId { get; set; }
-        public int AffiliateId { get; set; }
-        public string CampaignName { get; set; }
-    
-        public virtual Affiliate Affiliate { get; set; }
-        public virtual Offer Offer { get; set; }
-        public virtual ICollection<CampaignDrop> CampaignDrops { get; set; }
+        public virtual CampaignDrop CampaignDrop { get; set; }
     }
 }

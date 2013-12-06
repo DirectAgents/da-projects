@@ -1,0 +1,63 @@
+﻿@model ClientPortal.Data.Contexts.CampaignDrop
+
+<h3>Drop Details</h3>
+
+Offer: @Model.Campaign.Offer.OfferName (@Model.Campaign.Offer.OfferId)
+<br />
+Campaign: @Model.Campaign.CampaignName
+<br />
+Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
+<br /><br />
+
+<fieldset>
+    <legend>Campaign Drop</legend>
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.Date)</td>
+            <td>@Html.DisplayFor(m => m.Date, "Date")</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Subject)</td>
+            <td>@Html.DisplayFor(m => m.Subject)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Cost)</td>
+            <td>@Html.DisplayFor(m => m.Cost, "Money")</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Volume)</td>
+            <td>@Html.DisplayFor(m => m.Volume)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Opens)</td>
+            <td>@Html.DisplayFor(m => m.Opens)</td>
+        </tr>
+    </table>
+    @{ int i = 0; }
+    @foreach (var creative in Model.CreativeStats)
+    {
+        //Html.RenderPartial("../CreativeStats/Show", creative);
+        <fieldset>
+            <legend>Creative</legend>
+            <table>
+                <tr>
+                    <td>@Html.Label("Name")</td>
+                    <td>@Html.DisplayFor(_ => creative.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Clicks")</td>
+                    <td>@Html.DisplayFor(_ => creative.Clicks)</td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Leads")</td>
+                    <td>@Html.DisplayFor(_ => creative.Leads)</td>
+                </tr>
+            </table>
+        </fieldset>
+        i++;
+    }
+    <br />
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CampaignDropId }) |
+    @Html.ActionLink("Back to Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null) |
+    @Html.ActionLink("Show all drops for offer " + Model.Campaign.OfferId, "Index", "CampaignDrops", new { offerid = Model.Campaign.OfferId }, null)
+</fieldset>

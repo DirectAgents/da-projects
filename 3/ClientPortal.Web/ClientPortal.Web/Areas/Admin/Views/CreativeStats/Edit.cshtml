@@ -1,0 +1,20 @@
+﻿@model ClientPortal.Data.Contexts.CreativeStat
+
+<fieldset>
+    <legend>Creative</legend>
+    @Html.HiddenFor(m => m.CreativeStatId)
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.Name)</td>
+            <td>@Html.EditorFor(m => m.Name)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Clicks)</td>
+            <td>@Html.EditorFor(m => m.Clicks)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Leads)</td>
+            <td>@Html.EditorFor(m => m.Leads)</td>
+        </tr>
+    </table>
+</fieldset>

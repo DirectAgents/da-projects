@@ -1,0 +1,9 @@
+﻿@model ClientPortal.Data.Contexts.Campaign
+
+Campaign: <b>@Model.CampaignName</b>
+<br /><br />
+Affiliate: @Model.Affiliate.AffiliateName
+
+<br /><br />
+
+@Html.Partial("../CampaignDrops/Index", Model.CampaignDrops.OrderBy(d => d.Date))

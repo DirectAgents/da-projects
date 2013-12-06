@@ -1,0 +1,27 @@
+﻿@model ClientPortal.Data.Contexts.Offer
+
+Offer: @Model.OfferName (@Model.OfferId)
+<br /><br />
+
+Campaigns:
+<table border="1">
+    <tr>
+        <th>Campaign</th>
+        <th>AffId</th>
+        <th>Affiliate</th>
+        <th>Drops</th>
+    </tr>
+@foreach (var campaign in Model.Campaigns.OrderBy(c => c.Affiliate.AffiliateName).ThenBy(c => c.CampaignName))
+{
+    <tr>
+        <td>@campaign.CampaignName</td>
+        <td>@campaign.AffiliateId</td>
+        <td>@campaign.Affiliate.AffiliateName</td>
+        <td>@campaign.CampaignDrops.Count</td>
+    </tr>
+}
+</table>
+
+<br />
+Drops:
+@Html.Partial("DropReport", @Model.DropReport)

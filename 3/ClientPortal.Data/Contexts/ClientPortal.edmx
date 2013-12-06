@@ -10,9 +10,11 @@
           <EntitySet Name="AdvertiserContact" EntityType="ClientPortalModel.Store.AdvertiserContact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Affiliate" EntityType="ClientPortalModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Campaign" EntityType="ClientPortalModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CampaignDrop" EntityType="ClientPortalModel.Store.CampaignDrop" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CreativeStat" EntityType="ClientPortalModel.Store.CreativeStat" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DailySummary" EntityType="ClientPortalModel.Store.DailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="EmailedReport" EntityType="ClientPortalModel.Store.EmailedReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
@@ -43,6 +45,14 @@
           <AssociationSet Name="FK_Campaign_Offer" Association="ClientPortalModel.Store.FK_Campaign_Offer">
             <End Role="Offer" EntitySet="Offer" />
             <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampaignDrop_Campaign" Association="ClientPortalModel.Store.FK_CampaignDrop_Campaign">
+            <End Role="Campaign" EntitySet="Campaign" />
+            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreativeStat_CampaignDrop" Association="ClientPortalModel.Store.FK_CreativeStat_CampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+            <End Role="CreativeStat" EntitySet="CreativeStat" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
             <End Role="Advertiser" EntitySet="Advertiser" />
@@ -160,6 +170,18 @@
           <Property Name="AffiliateId" Type="int" Nullable="false" />
           <Property Name="CampaignName" Type="nvarchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="CampaignDrop">
+          <Key>
+            <PropertyRef Name="CampaignDropId" />
+          </Key>
+          <Property Name="CampaignDropId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Cost" Type="decimal" Scale="2" />
+          <Property Name="Volume" Type="int" />
+          <Property Name="Opens" Type="int" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="Contact">
           <Key>
             <PropertyRef Name="ContactId" />
@@ -189,6 +211,16 @@
           </Key>
           <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
           <Property Name="value0" Type="decimal" Nullable="false" Scale="2" />
+        </EntityType>
+        <EntityType Name="CreativeStat">
+          <Key>
+            <PropertyRef Name="CreativeStatId" />
+          </Key>
+          <Property Name="CreativeStatId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignDropId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Clicks" Type="int" />
+          <Property Name="Leads" Type="int" />
         </EntityType>
         <EntityType Name="DailySummary">
           <Key>
@@ -448,6 +480,30 @@
             </Principal>
             <Dependent Role="Campaign">
               <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CampaignDrop_Campaign">
+          <End Role="Campaign" Type="ClientPortalModel.Store.Campaign" Multiplicity="1" />
+          <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaign">
+              <PropertyRef Name="CampaignId" />
+            </Principal>
+            <Dependent Role="CampaignDrop">
+              <PropertyRef Name="CampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreativeStat_CampaignDrop">
+          <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="1" />
+          <End Role="CreativeStat" Type="ClientPortalModel.Store.CreativeStat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignDrop">
+              <PropertyRef Name="CampaignDropId" />
+            </Principal>
+            <Dependent Role="CreativeStat">
+              <PropertyRef Name="CampaignDropId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -769,6 +825,16 @@
           <AssociationSet Name="FK_Campaign_Offer" Association="ClientPortalModel.FK_Campaign_Offer">
             <End Role="Offer" EntitySet="Offers" />
             <End Role="Campaign" EntitySet="Campaigns" />
+          </AssociationSet>
+          <EntitySet Name="CampaignDrops" EntityType="ClientPortalModel.CampaignDrop" />
+          <EntitySet Name="CreativeStats" EntityType="ClientPortalModel.CreativeStat" />
+          <AssociationSet Name="FK_CampaignDrop_Campaign" Association="ClientPortalModel.FK_CampaignDrop_Campaign">
+            <End Role="Campaign" EntitySet="Campaigns" />
+            <End Role="CampaignDrop" EntitySet="CampaignDrops" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreativeStat_CampaignDrop" Association="ClientPortalModel.FK_CreativeStat_CampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrops" />
+            <End Role="CreativeStat" EntitySet="CreativeStats" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1356,6 +1422,7 @@
           <NavigationProperty Name="Affiliate" Relationship="ClientPortalModel.FK_Campaign_Affiliate" FromRole="Campaign" ToRole="Affiliate" />
           <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Campaign_Offer" FromRole="Campaign" ToRole="Offer" />
           <Property Type="String" Name="CampaignName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CampaignDrops" Relationship="ClientPortalModel.FK_CampaignDrop_Campaign" FromRole="Campaign" ToRole="CampaignDrop" />
         </EntityType>
         <Association Name="FK_Campaign_Affiliate">
           <End Type="ClientPortalModel.Affiliate" Role="Affiliate" Multiplicity="1" />
@@ -1378,6 +1445,55 @@
             </Principal>
             <Dependent Role="Campaign">
               <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CampaignDrop">
+          <Key>
+            <PropertyRef Name="CampaignDropId" />
+          </Key>
+          <Property Type="Int32" Name="CampaignDropId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CampaignId" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
+          <Property Type="Decimal" Name="Cost" Precision="18" Scale="2" />
+          <Property Type="Int32" Name="Volume" />
+          <Property Type="Int32" Name="Opens" />
+          <Property Type="String" Name="Subject" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Campaign" Relationship="ClientPortalModel.FK_CampaignDrop_Campaign" FromRole="CampaignDrop" ToRole="Campaign" />
+          <NavigationProperty Name="CreativeStats" Relationship="ClientPortalModel.FK_CreativeStat_CampaignDrop" FromRole="CampaignDrop" ToRole="CreativeStat" />
+        </EntityType>
+        <EntityType Name="CreativeStat">
+          <Key>
+            <PropertyRef Name="CreativeStatId" />
+          </Key>
+          <Property Type="Int32" Name="CreativeStatId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CampaignDropId" Nullable="false" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Clicks" />
+          <Property Type="Int32" Name="Leads" />
+          <NavigationProperty Name="CampaignDrop" Relationship="ClientPortalModel.FK_CreativeStat_CampaignDrop" FromRole="CreativeStat" ToRole="CampaignDrop" />
+        </EntityType>
+        <Association Name="FK_CampaignDrop_Campaign">
+          <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="1" />
+          <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaign">
+              <PropertyRef Name="CampaignId" />
+            </Principal>
+            <Dependent Role="CampaignDrop">
+              <PropertyRef Name="CampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreativeStat_CampaignDrop">
+          <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="1" />
+          <End Type="ClientPortalModel.CreativeStat" Role="CreativeStat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignDrop">
+              <PropertyRef Name="CampaignDropId" />
+            </Principal>
+            <Dependent Role="CreativeStat">
+              <PropertyRef Name="CampaignDropId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1701,6 +1817,30 @@
                 <ScalarProperty Name="AffiliateId" ColumnName="AffiliateId" />
                 <ScalarProperty Name="OfferId" ColumnName="OfferId" />
                 <ScalarProperty Name="CampaignId" ColumnName="CampaignId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CampaignDrops">
+            <EntityTypeMapping TypeName="ClientPortalModel.CampaignDrop">
+              <MappingFragment StoreEntitySet="CampaignDrop">
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Opens" ColumnName="Opens" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="CampaignId" ColumnName="CampaignId" />
+                <ScalarProperty Name="CampaignDropId" ColumnName="CampaignDropId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CreativeStats">
+            <EntityTypeMapping TypeName="ClientPortalModel.CreativeStat">
+              <MappingFragment StoreEntitySet="CreativeStat">
+                <ScalarProperty Name="Leads" ColumnName="Leads" />
+                <ScalarProperty Name="Clicks" ColumnName="Clicks" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CampaignDropId" ColumnName="CampaignDropId" />
+                <ScalarProperty Name="CreativeStatId" ColumnName="CreativeStatId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
