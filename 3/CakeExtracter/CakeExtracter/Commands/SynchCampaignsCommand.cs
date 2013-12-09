@@ -12,16 +12,19 @@ namespace CakeExtracter.Commands
     public class SynchCampaignsCommand : ConsoleCommand
     {
         public int AdvertiserId { get; set; }
+        public int? OfferId { get; set; }
 
         public override void ResetProperties()
         {
             AdvertiserId = 0;
+            OfferId = null;
         }
 
         public SynchCampaignsCommand()
         {
             IsCommand("synchCampaigns", "synch Campaigns");
             HasOption<int>("a|advertiserId=", "Advertiser Id (0 = all (default))", c => AdvertiserId = c);
+            HasOption<int>("o|offerId=", "Offer Id (default = all)", c => OfferId = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -46,6 +49,8 @@ namespace CakeExtracter.Commands
                 var offers = db.Offers.AsQueryable();
                 if (this.AdvertiserId != 0)
                     offers = offers.Where(o => o.AdvertiserId == AdvertiserId);
+                if (this.OfferId.HasValue)
+                    offers = offers.Where(o => o.OfferId == OfferId.Value);
 
                 return offers.ToList();
             }

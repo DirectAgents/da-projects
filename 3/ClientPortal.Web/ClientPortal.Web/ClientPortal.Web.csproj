@@ -51,6 +51,10 @@
     <Reference Include="EntityFramework.Extended">
       <HintPath>..\packages\EntityFramework.Extended.5.0.0.73\lib\net45\EntityFramework.Extended.dll</HintPath>
     </Reference>
+    <Reference Include="ManyConsole, Version=0.4.2.16, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MiniProfiler">
       <HintPath>..\packages\MiniProfiler.2.1.0\lib\net40\MiniProfiler.dll</HintPath>
@@ -1568,6 +1572,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
+      <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
+      <Name>CakeExtracter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ClientPortal.Data\ClientPortal.Data.csproj">
       <Project>{2e621b59-9455-4fa5-b9bd-6bdc418ffbfa}</Project>
       <Name>ClientPortal.Data</Name>

@@ -25,3 +25,6 @@ Campaigns:
 <br />
 Drops:
 @Html.Partial("DropReport", @Model.DropReport)
+
+<br />
+@Html.ActionLink("Synch Campaigns", "SynchCampaigns", new { offerid = Model.OfferId })

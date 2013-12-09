@@ -1,4 +1,5 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using CakeExtracter.Commands;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
 using System.Linq;
@@ -30,6 +31,17 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             var offer = cpRepo.GetOffer(id);
 
             return View(offer);
+        }
+
+        public ActionResult SynchCampaigns(int offerid)
+        {
+            var cmd = new SynchCampaignsCommand
+            {
+                OfferId = offerid
+            };
+            cmd.Run(null);
+
+            return Content("okay");
         }
 
     }

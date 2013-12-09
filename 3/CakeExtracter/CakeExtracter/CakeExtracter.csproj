@@ -118,6 +118,10 @@
     <Reference Include="Microsoft.Threading.Tasks.Extensions">
       <HintPath>..\..\ClientPortal.Web\packages\Microsoft.Bcl.Async.1.0.16\lib\net45\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="MoreLinq, Version=1.0.16006.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\morelinq.1.0.16006\lib\net35\MoreLinq.dll</HintPath>
+    </Reference>
     <Reference Include="NDesk.Options">
       <HintPath>..\..\ClientPortal.Web\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
     </Reference>
@@ -368,10 +372,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\morelinq\MoreLinq\MoreLinq.csproj">
-      <Project>{8642e81b-3414-4c13-914f-05a4e600fe49}</Project>
-      <Name>MoreLinq</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\BingAds\BingAds.csproj">
       <Project>{e2ea8ab5-abaf-4007-a446-09624cb159e6}</Project>
       <Name>BingAds</Name>
