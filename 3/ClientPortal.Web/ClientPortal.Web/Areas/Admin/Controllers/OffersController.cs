@@ -9,8 +9,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     [Authorize(Users = "admin")]
     public class OffersController : CPController
     {
-        private ClientPortalContext db = new ClientPortalContext();
-
         public OffersController(IClientPortalRepository cpRepository)
         {
             this.cpRepo = cpRepository;
@@ -18,10 +16,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Index(int? mincampaigns)
         {
-            var offers = cpRepo.Offers(true);
-
-            if (mincampaigns.HasValue)
-                offers = offers.Where(o => o.Campaigns.Count >= mincampaigns.Value);
+            var offers = cpRepo.Offers(true, mincampaigns);
 
             offers = offers
                 .OrderBy(o => o.Advertiser.AdvertiserName)

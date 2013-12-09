@@ -30,11 +30,13 @@ namespace ClientPortal.Data.Services
         }
 
         // includes Advertisers
-        public IQueryable<Offer> Offers(bool cpmOnly)
+        public IQueryable<Offer> Offers(bool cpmOnly, int? minCampaigns = null)
         {
             var offers = context.Offers.AsQueryable();
             if (cpmOnly)
                 offers = offers.Where(o => o.OfferName.Contains("CPM"));
+            if (minCampaigns.HasValue)
+                offers = offers.Where(o => o.Campaigns.Count >= minCampaigns);
 
             var q = from o in offers
                     join a in context.Advertisers.AsQueryable()
@@ -56,11 +58,12 @@ namespace ClientPortal.Data.Services
         // use offerId==null for all campaigns
         public IQueryable<Campaign> Campaigns(int? offerId, bool cpmOnly)
         {
-            var offers = Offers(cpmOnly);
-            if (offerId.HasValue)
-                offers = offers.Where(o => o.OfferId == offerId.Value);
+            var campaigns = context.Campaigns.Include("Affiliate").AsQueryable();
 
-            var campaigns = offers.SelectMany(o => o.Campaigns);
+            if (offerId.HasValue)
+                campaigns = campaigns.Where(c => c.OfferId == offerId.Value);
+            if (cpmOnly)
+                campaigns = campaigns.Where(c => c.Offer.OfferName.Contains("CPM"));
 
             return campaigns;
         }
@@ -75,7 +78,7 @@ namespace ClientPortal.Data.Services
         #region CampaignDrops
         public IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId)
         {
-            var campaignDrops = context.CampaignDrops.AsQueryable();
+            var campaignDrops = context.CampaignDrops.Include("Campaign").Include("CreativeStats").AsQueryable();
             if (offerId.HasValue)
                 campaignDrops = campaignDrops.Where(cd => cd.Campaign.OfferId == offerId.Value);
             if (campaignId.HasValue)

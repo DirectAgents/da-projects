@@ -11,7 +11,7 @@ namespace ClientPortal.Data.Contracts
         void SaveChanges();
 
         IQueryable<Offer> Offers(int? advertiserId);
-        IQueryable<Offer> Offers(bool cpmOnly);
+        IQueryable<Offer> Offers(bool cpmOnly, int? minCampaigns = null);
         Offer GetOffer(int id);
         IQueryable<Campaign> Campaigns(int? offerId, bool cpmOnly);
         Campaign GetCampaign(int id);

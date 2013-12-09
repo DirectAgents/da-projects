@@ -9,8 +9,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     [Authorize(Users = "admin")]
     public class CampaignDropsController : CPController
     {
-        private ClientPortalContext db = new ClientPortalContext();
-
         public CampaignDropsController(IClientPortalRepository cpRepository)
         {
             this.cpRepo = cpRepository;

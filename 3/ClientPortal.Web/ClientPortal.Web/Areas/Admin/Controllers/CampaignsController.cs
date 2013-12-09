@@ -9,8 +9,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     [Authorize(Users = "admin")]
     public class CampaignsController : CPController
     {
-        private ClientPortalContext db = new ClientPortalContext();
-
         public CampaignsController(IClientPortalRepository cpRepository)
         {
             this.cpRepo = cpRepository;
@@ -21,7 +19,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             var campaigns = cpRepo.Campaigns(offerId, true)
                 .OrderBy(c => c.OfferId)
                 .ThenBy(c => c.CampaignName)
-                .ThenBy(c => c.Affiliate.AffiliateName);
+                .ThenBy(c => c.Affiliate.AffiliateName)
+                .ToList();
 
             return View(campaigns);
         }
