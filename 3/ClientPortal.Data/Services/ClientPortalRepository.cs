@@ -92,6 +92,30 @@ namespace ClientPortal.Data.Services
             return campaignDrop;
         }
 
+        public CampaignDrop AddCampaignDrop(int campaignId, DateTime date, int creativeId, bool saveChanges = false)
+        {
+            CampaignDrop campaignDrop = null;
+            var campaign = context.Campaigns.Find(campaignId);
+            var creative = context.Creatives.Find(creativeId);
+            if (campaign != null && creative != null)
+            {
+                campaignDrop = new CampaignDrop
+                {
+                    Campaign = campaign,
+                    Date = date
+                };
+                var creativeStat = new CreativeStat
+                {
+                    Creative = creative,
+                    CampaignDrop = campaignDrop
+                };
+                context.CreativeStats.Add(creativeStat);
+
+                if (saveChanges) SaveChanges();
+            }
+            return campaignDrop;
+        }
+
         public bool SaveCampaignDrop(CampaignDrop inDrop, bool saveChanges)
         {
             bool success = false;
@@ -135,7 +159,7 @@ namespace ClientPortal.Data.Services
             var stat = context.CreativeStats.Find(inStat.CreativeStatId);
             if (stat != null)
             {
-                //stat.Name = inStat.Name;
+                stat.Creative.CreativeName = inStat.Creative.CreativeName;
                 stat.Clicks = inStat.Clicks;
                 stat.Leads = inStat.Leads;
 

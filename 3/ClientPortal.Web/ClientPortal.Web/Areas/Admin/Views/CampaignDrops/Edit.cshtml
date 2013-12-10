@@ -38,24 +38,24 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
             </tr>
         </table>
         @{ int i = 0; }
-        @foreach (var creative in Model.CreativeStats)
+        @foreach (var creativeStat in Model.CreativeStats)
         {
-            //Html.RenderPartial("../CreativeStats/Edit", creative);
+            //Html.RenderPartial("../CreativeStats/Edit", creativeStat);
             <fieldset>
                 <legend>Creative</legend>
-                @Html.Hidden("CreativeStats[" + i + "].CreativeStatId", creative.CreativeStatId)
+                @Html.Hidden("CreativeStats[" + i + "].CreativeStatId", creativeStat.CreativeStatId)
                 <table>
                     <tr>
                         <td>@Html.Label("Name")</td>
-                        <td>@Html.EditorFor(_ => creative.Name, null, "CreativeStats[" + i + "].Name")</td>
+                        <td>@Html.EditorFor(_ => creativeStat.Creative.CreativeName, null, "CreativeStats[" + i + "].Creative.CreativeName")</td>
                     </tr>
                     <tr>
                         <td>@Html.Label("Clicks")</td>
-                        <td>@Html.EditorFor(_ => creative.Clicks, null, "CreativeStats[" + i + "].Clicks")</td>
+                        <td>@Html.EditorFor(_ => creativeStat.Clicks, null, "CreativeStats[" + i + "].Clicks")</td>
                     </tr>
                     <tr>
                         <td>@Html.Label("Leads")</td>
-                        <td>@Html.EditorFor(_ => creative.Leads, null, "CreativeStats[" + i + "].Leads")</td>
+                        <td>@Html.EditorFor(_ => creativeStat.Leads, null, "CreativeStats[" + i + "].Leads")</td>
                     </tr>
                 </table>
             </fieldset>

@@ -18,6 +18,7 @@ namespace ClientPortal.Data.Contracts
 
         IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId);
         CampaignDrop GetCampaignDrop(int id);
+        CampaignDrop AddCampaignDrop(int campaignId, DateTime date, int creativeId, bool saveChanges = false);
         bool SaveCampaignDrop(CampaignDrop campaignDrop, bool saveChanges);
         void FillExtended_CampaignDrop(CampaignDrop campaignDrop);
 

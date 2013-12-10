@@ -3,6 +3,10 @@
 Offer: @Model.OfferName (@Model.OfferId)
 <br /><br />
 
+Drops:
+@Html.Partial("DropReport", @Model.DropReport)
+
+<br />
 Campaigns:
 <table border="1">
     <tr>
@@ -23,8 +27,23 @@ Campaigns:
 </table>
 
 <br />
-Drops:
-@Html.Partial("DropReport", @Model.DropReport)
+Creatives:
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Created</th>
+    </tr>
+@foreach (var creative in Model.Creatives.OrderByDescending(c => c.DateCreated))
+{
+    <tr>
+        <td>@creative.DisplayName</td>
+        <td>@creative.CreativeType.CreativeTypeName</td>
+        <td>@creative.DateCreated.ToShortDateString()</td>
+    </tr>
+}
+</table>
 
 <br />
-@Html.ActionLink("Synch Campaigns", "SynchCampaigns", new { offerid = Model.OfferId })
+@Html.ActionLink("Synch Campaigns", "SynchCampaigns", new { offerid = Model.OfferId }) |
+@Html.ActionLink("Synch Creatives", "SynchCreatives", new { offerid = Model.OfferId })

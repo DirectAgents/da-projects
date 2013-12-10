@@ -1,6 +1,7 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -20,21 +21,47 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(drops.OrderBy(d => d.Date));
         }
 
-        public ActionResult Create()
+        public ActionResult Create(int campaignid)
         {
-            return View();
+            var drop = SetupForCreate(campaignid);
+            if (drop == null)
+                return HttpNotFound();
+
+            return View(drop);
+        }
+
+        private CampaignDrop SetupForCreate(int campaignId)
+        {
+            var campaign = cpRepo.GetCampaign(campaignId);
+            if (campaign == null)
+                return null;
+
+            ViewData["Creatives"] = campaign.Offer.Creatives;
+
+            var drop = new CampaignDrop
+            {
+                Date = DateTime.Today,
+                Campaign = campaign
+            };
+            return drop;
         }
 
         [HttpPost]
-        public ActionResult Create(CampaignDrop drop)
+        public ActionResult Create(int campaignid, DateTime? date, int creativeid)
         {
-            if (ModelState.IsValid)
+            if (date.HasValue)
             {
-                //db.Advertisers.Add(advertiser);
-                //db.SaveChanges();
-                //return RedirectToAction("Index");
-            }
+                var campaignDrop = cpRepo.AddCampaignDrop(campaignid, date.Value, creativeid, true);
+                if (campaignDrop != null)
+                    return RedirectToAction("Show", new { id = campaignDrop.CampaignDropId });
 
+                ModelState.AddModelError("", "Campaign Drop could not be saved");
+            }
+            else
+            {
+                ModelState.AddModelError("Date", "Date could not be parsed");
+            }
+            var drop = SetupForCreate(campaignid);
             return View(drop);
         }
 

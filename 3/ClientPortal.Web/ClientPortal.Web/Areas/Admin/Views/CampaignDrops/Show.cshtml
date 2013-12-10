@@ -34,23 +34,23 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
         </tr>
     </table>
     @{ int i = 0; }
-    @foreach (var creative in Model.CreativeStats)
+    @foreach (var creativeStat in Model.CreativeStats)
     {
-        //Html.RenderPartial("../CreativeStats/Show", creative);
+        //Html.RenderPartial("../CreativeStats/Show", creativeStat);
         <fieldset>
             <legend>Creative</legend>
             <table>
                 <tr>
                     <td>@Html.Label("Name")</td>
-                    <td>@Html.DisplayFor(_ => creative.Name)</td>
+                    <td>@Html.DisplayFor(_ => creativeStat.Creative.CreativeName)</td>
                 </tr>
                 <tr>
                     <td>@Html.Label("Clicks")</td>
-                    <td>@Html.DisplayFor(_ => creative.Clicks)</td>
+                    <td>@Html.DisplayFor(_ => creativeStat.Clicks)</td>
                 </tr>
                 <tr>
                     <td>@Html.Label("Leads")</td>
-                    <td>@Html.DisplayFor(_ => creative.Leads)</td>
+                    <td>@Html.DisplayFor(_ => creativeStat.Leads)</td>
                 </tr>
             </table>
         </fieldset>

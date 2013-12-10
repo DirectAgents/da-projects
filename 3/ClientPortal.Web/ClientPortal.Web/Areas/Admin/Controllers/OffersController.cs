@@ -44,5 +44,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return Content("okay");
         }
 
+        public ActionResult SynchCreatives(int offerid)
+        {
+            var cmd = new SynchCreativesCommand
+            {
+                OfferId = offerid
+            };
+            cmd.Run(null);
+
+            return Content("okay");
+        }
+
     }
 }

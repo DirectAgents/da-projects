@@ -639,6 +639,7 @@
     <Content Include="Areas\Admin\Views\Shared\DisplayTemplates\Int32.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\DisplayTemplates\Date.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\DisplayTemplates\Money.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\CreativeDropDown.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

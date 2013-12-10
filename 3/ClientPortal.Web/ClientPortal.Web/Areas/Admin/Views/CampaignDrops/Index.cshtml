@@ -31,15 +31,15 @@ Drops:<br />
     </tr>
     if (drop.CreativeStats.Count > 1)
     {
-        foreach (var creative in drop.CreativeStats)
+        foreach (var creativeStat in drop.CreativeStats)
         {
             <tr>
                 <td></td>
                 <td></td>
-                <td colspan="2">Creative: @creative.Name</td>
-                <td>@(creative.Clicks.HasValue ? creative.Clicks.Value.ToString("N0") : "")<br />
-                    CTR: @(creative.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", creative.ClickThroughRate.Value) : "")</td>
-                <td>@(creative.Leads.HasValue ? creative.Leads.Value.ToString("N0") : "")</td>
+                <td colspan="2">Creative: @creativeStat.Creative.CreativeName</td>
+                <td>@(creativeStat.Clicks.HasValue ? creativeStat.Clicks.Value.ToString("N0") : "")<br />
+                    CTR: @(creativeStat.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", creativeStat.ClickThroughRate.Value) : "")</td>
+                <td>@(creativeStat.Leads.HasValue ? creativeStat.Leads.Value.ToString("N0") : "")</td>
             </tr>
         }
     }
