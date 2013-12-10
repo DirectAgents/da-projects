@@ -14,7 +14,9 @@
           <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Creative" EntityType="ClientPortalModel.Store.Creative" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeStat" EntityType="ClientPortalModel.Store.CreativeStat" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CreativeType" EntityType="ClientPortalModel.Store.CreativeType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DailySummary" EntityType="ClientPortalModel.Store.DailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="EmailedReport" EntityType="ClientPortalModel.Store.EmailedReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
@@ -50,8 +52,20 @@
             <End Role="Campaign" EntitySet="Campaign" />
             <End Role="CampaignDrop" EntitySet="CampaignDrop" />
           </AssociationSet>
+          <AssociationSet Name="FK_Creative_CreativeType" Association="ClientPortalModel.Store.FK_Creative_CreativeType">
+            <End Role="CreativeType" EntitySet="CreativeType" />
+            <End Role="Creative" EntitySet="Creative" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Creative_Offer" Association="ClientPortalModel.Store.FK_Creative_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="Creative" EntitySet="Creative" />
+          </AssociationSet>
           <AssociationSet Name="FK_CreativeStat_CampaignDrop" Association="ClientPortalModel.Store.FK_CreativeStat_CampaignDrop">
             <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+            <End Role="CreativeStat" EntitySet="CreativeStat" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreativeStat_Creative" Association="ClientPortalModel.Store.FK_CreativeStat_Creative">
+            <End Role="Creative" EntitySet="Creative" />
             <End Role="CreativeStat" EntitySet="CreativeStat" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId" Association="ClientPortalModel.Store.FK_dbo_AdvertiserContact_dbo_Advertiser_AdvertiserId">
@@ -212,15 +226,32 @@
           <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
           <Property Name="value0" Type="decimal" Nullable="false" Scale="2" />
         </EntityType>
+        <EntityType Name="Creative">
+          <Key>
+            <PropertyRef Name="CreativeId" />
+          </Key>
+          <Property Name="CreativeId" Type="int" Nullable="false" />
+          <Property Name="OfferId" Type="int" Nullable="false" />
+          <Property Name="CreativeTypeId" Type="int" Nullable="false" />
+          <Property Name="CreativeName" Type="nvarchar" MaxLength="255" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="CreativeStat">
           <Key>
             <PropertyRef Name="CreativeStatId" />
           </Key>
           <Property Name="CreativeStatId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="CampaignDropId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreativeId" Type="int" />
           <Property Name="Clicks" Type="int" />
           <Property Name="Leads" Type="int" />
+        </EntityType>
+        <EntityType Name="CreativeType">
+          <Key>
+            <PropertyRef Name="CreativeTypeId" />
+          </Key>
+          <Property Name="CreativeTypeId" Type="int" Nullable="false" />
+          <Property Name="CreativeTypeName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="DailySummary">
           <Key>
@@ -495,6 +526,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Creative_CreativeType">
+          <End Role="CreativeType" Type="ClientPortalModel.Store.CreativeType" Multiplicity="1" />
+          <End Role="Creative" Type="ClientPortalModel.Store.Creative" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreativeType">
+              <PropertyRef Name="CreativeTypeId" />
+            </Principal>
+            <Dependent Role="Creative">
+              <PropertyRef Name="CreativeTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Creative_Offer">
+          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="1" />
+          <End Role="Creative" Type="ClientPortalModel.Store.Creative" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="OfferId" />
+            </Principal>
+            <Dependent Role="Creative">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CreativeStat_CampaignDrop">
           <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="1" />
           <End Role="CreativeStat" Type="ClientPortalModel.Store.CreativeStat" Multiplicity="*" />
@@ -504,6 +559,18 @@
             </Principal>
             <Dependent Role="CreativeStat">
               <PropertyRef Name="CampaignDropId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreativeStat_Creative">
+          <End Role="Creative" Type="ClientPortalModel.Store.Creative" Multiplicity="0..1" />
+          <End Role="CreativeStat" Type="ClientPortalModel.Store.CreativeStat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creative">
+              <PropertyRef Name="CreativeId" />
+            </Principal>
+            <Dependent Role="CreativeStat">
+              <PropertyRef Name="CreativeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -827,13 +894,27 @@
             <End Role="Campaign" EntitySet="Campaigns" />
           </AssociationSet>
           <EntitySet Name="CampaignDrops" EntityType="ClientPortalModel.CampaignDrop" />
-          <EntitySet Name="CreativeStats" EntityType="ClientPortalModel.CreativeStat" />
           <AssociationSet Name="FK_CampaignDrop_Campaign" Association="ClientPortalModel.FK_CampaignDrop_Campaign">
             <End Role="Campaign" EntitySet="Campaigns" />
             <End Role="CampaignDrop" EntitySet="CampaignDrops" />
           </AssociationSet>
+          <EntitySet Name="CreativeStats" EntityType="ClientPortalModel.CreativeStat" />
           <AssociationSet Name="FK_CreativeStat_CampaignDrop" Association="ClientPortalModel.FK_CreativeStat_CampaignDrop">
             <End Role="CampaignDrop" EntitySet="CampaignDrops" />
+            <End Role="CreativeStat" EntitySet="CreativeStats" />
+          </AssociationSet>
+          <EntitySet Name="Creatives" EntityType="ClientPortalModel.Creative" />
+          <EntitySet Name="CreativeTypes" EntityType="ClientPortalModel.CreativeType" />
+          <AssociationSet Name="FK_Creative_CreativeType" Association="ClientPortalModel.FK_Creative_CreativeType">
+            <End Role="CreativeType" EntitySet="CreativeTypes" />
+            <End Role="Creative" EntitySet="Creatives" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Creative_Offer" Association="ClientPortalModel.FK_Creative_Offer">
+            <End Role="Offer" EntitySet="Offers" />
+            <End Role="Creative" EntitySet="Creatives" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreativeStat_Creative" Association="ClientPortalModel.FK_CreativeStat_Creative">
+            <End Role="Creative" EntitySet="Creatives" />
             <End Role="CreativeStat" EntitySet="CreativeStats" />
           </AssociationSet>
           </EntityContainer>
@@ -1391,6 +1472,7 @@
           <Property Type="String" Name="Currency" MaxLength="3" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
           <NavigationProperty Name="Campaigns" Relationship="ClientPortalModel.FK_Campaign_Offer" FromRole="Offer" ToRole="Campaign" />
+          <NavigationProperty Name="Creatives" Relationship="ClientPortalModel.FK_Creative_Offer" FromRole="Offer" ToRole="Creative" />
         </EntityType>
         <Association Name="FK_Goal_Offer">
           <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
@@ -1462,17 +1544,6 @@
           <NavigationProperty Name="Campaign" Relationship="ClientPortalModel.FK_CampaignDrop_Campaign" FromRole="CampaignDrop" ToRole="Campaign" />
           <NavigationProperty Name="CreativeStats" Relationship="ClientPortalModel.FK_CreativeStat_CampaignDrop" FromRole="CampaignDrop" ToRole="CreativeStat" />
         </EntityType>
-        <EntityType Name="CreativeStat">
-          <Key>
-            <PropertyRef Name="CreativeStatId" />
-          </Key>
-          <Property Type="Int32" Name="CreativeStatId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="CampaignDropId" Nullable="false" />
-          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="Int32" Name="Clicks" />
-          <Property Type="Int32" Name="Leads" />
-          <NavigationProperty Name="CampaignDrop" Relationship="ClientPortalModel.FK_CreativeStat_CampaignDrop" FromRole="CreativeStat" ToRole="CampaignDrop" />
-        </EntityType>
         <Association Name="FK_CampaignDrop_Campaign">
           <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="1" />
           <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="*" />
@@ -1485,6 +1556,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CreativeStat">
+          <Key>
+            <PropertyRef Name="CreativeStatId" />
+          </Key>
+          <Property Type="Int32" Name="CreativeStatId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="CampaignDropId" Nullable="false" />
+          <Property Type="Int32" Name="CreativeId" />
+          <Property Type="Int32" Name="Clicks" />
+          <Property Type="Int32" Name="Leads" />
+          <NavigationProperty Name="CampaignDrop" Relationship="ClientPortalModel.FK_CreativeStat_CampaignDrop" FromRole="CreativeStat" ToRole="CampaignDrop" />
+          <NavigationProperty Name="Creative" Relationship="ClientPortalModel.FK_CreativeStat_Creative" FromRole="CreativeStat" ToRole="Creative" />
+        </EntityType>
         <Association Name="FK_CreativeStat_CampaignDrop">
           <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="1" />
           <End Type="ClientPortalModel.CreativeStat" Role="CreativeStat" Multiplicity="*" />
@@ -1494,6 +1577,63 @@
             </Principal>
             <Dependent Role="CreativeStat">
               <PropertyRef Name="CampaignDropId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Creative">
+          <Key>
+            <PropertyRef Name="CreativeId" />
+          </Key>
+          <Property Type="Int32" Name="CreativeId" Nullable="false" />
+          <Property Type="Int32" Name="OfferId" Nullable="false" />
+          <Property Type="Int32" Name="CreativeTypeId" Nullable="false" />
+          <Property Type="String" Name="CreativeName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="3" />
+          <NavigationProperty Name="CreativeType" Relationship="ClientPortalModel.FK_Creative_CreativeType" FromRole="Creative" ToRole="CreativeType" />
+          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Creative_Offer" FromRole="Creative" ToRole="Offer" />
+          <NavigationProperty Name="CreativeStats" Relationship="ClientPortalModel.FK_CreativeStat_Creative" FromRole="Creative" ToRole="CreativeStat" />
+        </EntityType>
+        <EntityType Name="CreativeType">
+          <Key>
+            <PropertyRef Name="CreativeTypeId" />
+          </Key>
+          <Property Type="Int32" Name="CreativeTypeId" Nullable="false" />
+          <Property Type="String" Name="CreativeTypeName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Creatives" Relationship="ClientPortalModel.FK_Creative_CreativeType" FromRole="CreativeType" ToRole="Creative" />
+        </EntityType>
+        <Association Name="FK_Creative_CreativeType">
+          <End Type="ClientPortalModel.CreativeType" Role="CreativeType" Multiplicity="1" />
+          <End Type="ClientPortalModel.Creative" Role="Creative" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CreativeType">
+              <PropertyRef Name="CreativeTypeId" />
+            </Principal>
+            <Dependent Role="Creative">
+              <PropertyRef Name="CreativeTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Creative_Offer">
+          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="1" />
+          <End Type="ClientPortalModel.Creative" Role="Creative" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="OfferId" />
+            </Principal>
+            <Dependent Role="Creative">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreativeStat_Creative">
+          <End Type="ClientPortalModel.Creative" Role="Creative" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.CreativeStat" Role="CreativeStat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creative">
+              <PropertyRef Name="CreativeId" />
+            </Principal>
+            <Dependent Role="CreativeStat">
+              <PropertyRef Name="CreativeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1838,9 +1978,28 @@
               <MappingFragment StoreEntitySet="CreativeStat">
                 <ScalarProperty Name="Leads" ColumnName="Leads" />
                 <ScalarProperty Name="Clicks" ColumnName="Clicks" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CreativeId" ColumnName="CreativeId" />
                 <ScalarProperty Name="CampaignDropId" ColumnName="CampaignDropId" />
                 <ScalarProperty Name="CreativeStatId" ColumnName="CreativeStatId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Creatives">
+            <EntityTypeMapping TypeName="ClientPortalModel.Creative">
+              <MappingFragment StoreEntitySet="Creative">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="CreativeName" ColumnName="CreativeName" />
+                <ScalarProperty Name="CreativeTypeId" ColumnName="CreativeTypeId" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="CreativeId" ColumnName="CreativeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CreativeTypes">
+            <EntityTypeMapping TypeName="ClientPortalModel.CreativeType">
+              <MappingFragment StoreEntitySet="CreativeType">
+                <ScalarProperty Name="CreativeTypeName" ColumnName="CreativeTypeName" />
+                <ScalarProperty Name="CreativeTypeId" ColumnName="CreativeTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

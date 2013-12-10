@@ -16,10 +16,11 @@ namespace ClientPortal.Data.Contexts
     {
         public int CreativeStatId { get; set; }
         public int CampaignDropId { get; set; }
-        public string Name { get; set; }
+        public Nullable<int> CreativeId { get; set; }
         public Nullable<int> Clicks { get; set; }
         public Nullable<int> Leads { get; set; }
     
         public virtual CampaignDrop CampaignDrop { get; set; }
+        public virtual Creative Creative { get; set; }
     }
 }

@@ -59,6 +59,17 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Campaigns;
         }
 
+        public static List<Creative> Creatives(int offerId)
+        {
+            var client = new CreativesClient();
+            var request = new CreativesRequest
+            {
+                offer_id = offerId
+            };
+            var response = client.Creatives(request);
+            return response.Creatives;
+        }
+
         public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId)
         {
             var client = new DailySummariesClient();

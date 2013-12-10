@@ -12,19 +12,21 @@ namespace ClientPortal.Data.Contexts
     using System;
     using System.Collections.Generic;
     
-    public partial class Goal
+    public partial class Creative
     {
-        public int Id { get; set; }
-        public int AdvertiserId { get; set; }
-        public Nullable<int> OfferId { get; set; }
-        public string Name { get; set; }
-        public GoalType TypeId { get; set; }
-        public GoalMetric MetricId { get; set; }
-        public decimal Target { get; set; }
-        public Nullable<System.DateTime> StartDate { get; set; }
-        public Nullable<System.DateTime> EndDate { get; set; }
+        public Creative()
+        {
+            this.CreativeStats = new HashSet<CreativeStat>();
+        }
     
-        public virtual Advertiser Advertiser { get; set; }
+        public int CreativeId { get; set; }
+        public int OfferId { get; set; }
+        public int CreativeTypeId { get; set; }
+        public string CreativeName { get; set; }
+        public System.DateTime DateCreated { get; set; }
+    
+        public virtual CreativeType CreativeType { get; set; }
         public virtual Offer Offer { get; set; }
+        public virtual ICollection<CreativeStat> CreativeStats { get; set; }
     }
 }

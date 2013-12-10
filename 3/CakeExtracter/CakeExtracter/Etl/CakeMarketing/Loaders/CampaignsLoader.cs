@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CakeExtracter.CakeMarketingApi.Entities;
+﻿using CakeExtracter.CakeMarketingApi.Entities;
 using CakeExtracter.Common;
 using MoreLinq;
-using System.Text;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {
@@ -23,7 +23,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     var offer = db.Offers.Where(o => o.OfferId == item.Offer.OfferId)
                                     .SingleOrFallback(() =>
                                         {
-                                            var newOffer = newOffers.Where(o => o.OfferId == item.Offer.OfferId).SingleOrDefault();
+                                            var newOffer = newOffers.SingleOrDefault(o => o.OfferId == item.Offer.OfferId);
                                             if (newOffer == null)
                                             {
                                                 Logger.Info("Adding new offer: {0} ({1})", item.Offer.OfferName, item.Offer.OfferId);

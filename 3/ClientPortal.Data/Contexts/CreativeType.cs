@@ -12,23 +12,16 @@ namespace ClientPortal.Data.Contexts
     using System;
     using System.Collections.Generic;
     
-    public partial class Offer
+    public partial class CreativeType
     {
-        public Offer()
+        public CreativeType()
         {
-            this.Goals = new HashSet<Goal>();
-            this.Campaigns = new HashSet<Campaign>();
             this.Creatives = new HashSet<Creative>();
         }
     
-        public int OfferId { get; set; }
-        public string OfferName { get; set; }
-        public Nullable<int> AdvertiserId { get; set; }
-        public string DefaultPriceFormat { get; set; }
-        public string Currency { get; set; }
+        public int CreativeTypeId { get; set; }
+        public string CreativeTypeName { get; set; }
     
-        public virtual ICollection<Goal> Goals { get; set; }
-        public virtual ICollection<Campaign> Campaigns { get; set; }
         public virtual ICollection<Creative> Creatives { get; set; }
     }
 }
