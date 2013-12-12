@@ -59,9 +59,11 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
         </fieldset>
         i++;
     }
-    @Html.ActionLink("Add Creative to drop", "Create", "CreativeStats", new { campaigndropid = Model.CampaignDropId }, null)
+    <br />
+    @Html.ActionLink("Edit Drop", "Edit", new { id = Model.CampaignDropId }) |
+    @Html.ActionLink("Add Creative to Drop", "Create", "CreativeStats", new { campaigndropid = Model.CampaignDropId }, null) |
+    @Html.ActionLink("Delete Drop", "Delete", "CampaignDrops", new { id = Model.CampaignDropId }, new { onclick = "return confirm('Are you sure you want to delete this drop?')" })
     <br /><br />
-    @Html.ActionLink("Edit", "Edit", new { id = Model.CampaignDropId }) |
     @Html.ActionLink("Back to Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null) |
     @Html.ActionLink("Show all drops for Offer " + Model.Campaign.OfferId, "Index", "CampaignDrops", new { offerid = Model.Campaign.OfferId }, null)
 </fieldset>

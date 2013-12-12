@@ -100,5 +100,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             cpRepo.FillExtended_CampaignDrop(drop); // for campaign/affiliate info
             return View(drop);
         }
+
+        public ActionResult Delete(int id)
+        {
+            int? campaignId = cpRepo.DeleteCampaignDrop(id, true);
+            if (campaignId == null)
+                return HttpNotFound();
+
+            return RedirectToAction("Show", "Campaigns", new { id = campaignId.Value });
+        }
     }
 }

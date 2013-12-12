@@ -155,6 +155,24 @@ namespace ClientPortal.Data.Services
             }
         }
 
+        // return campaignId, or null if the campaignDrop doesn't exist
+        public int? DeleteCampaignDrop(int dropId, bool saveChanges = false)
+        {
+            int? campaignId = null;
+            var drop = context.CampaignDrops.Find(dropId);
+            if (drop != null)
+            {
+                campaignId = drop.CampaignId;
+                foreach (var creativeStat in drop.CreativeStats.ToList())
+                {
+                    context.CreativeStats.Remove(creativeStat);
+                }
+                context.CampaignDrops.Remove(drop);
+                if (saveChanges) SaveChanges();
+            }
+            return campaignId;
+        }
+
         public void SaveCreativeStat(CreativeStat inStat, bool saveChanges = false)
         {
             var stat = context.CreativeStats.Find(inStat.CreativeStatId);
@@ -171,7 +189,7 @@ namespace ClientPortal.Data.Services
             if (saveChanges) SaveChanges();
         }
 
-        // return campaignDropId, or null if the creativeStat of the passed-in id doesn't exist
+        // return campaignDropId, or null if the creativeStat doesn't exist
         public int? DeleteCreativeStat(int statId, bool saveChanges = false)
         {
             int? dropId = null;

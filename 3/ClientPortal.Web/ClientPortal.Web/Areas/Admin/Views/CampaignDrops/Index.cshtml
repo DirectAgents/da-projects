@@ -27,7 +27,9 @@ Drops:<br />
         </td>
         <td>@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")</td>
         <td>@Html.ActionLink("Details", "Show", "CampaignDrops", new { id = drop.CampaignDropId }, null) |
-            @Html.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, null)</td>
+            @Html.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, null) |
+            @Html.ActionLink("Delete", "Delete", "CampaignDrops", new { id = drop.CampaignDropId }, new { onclick = "return confirm('Are you sure you want to delete this drop?')" })
+        </td>
     </tr>
     if (drop.CreativeStats.Count > 1)
     {
