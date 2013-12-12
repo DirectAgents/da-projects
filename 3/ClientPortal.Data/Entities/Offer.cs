@@ -20,6 +20,11 @@ namespace ClientPortal.Data.Contexts
             return this;
         }
 
+        public IOrderedEnumerable<Creative> CreativesByDate()
+        {
+            return this.Creatives.OrderByDescending(c => c.DateCreated);
+        }
+
         private DropReport dropReport;
         [NotMapped]
         public DropReport DropReport

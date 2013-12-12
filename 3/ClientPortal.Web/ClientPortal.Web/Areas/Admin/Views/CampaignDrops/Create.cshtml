@@ -1,6 +1,6 @@
 ﻿@model ClientPortal.Data.Contexts.CampaignDrop
 
-<h4>Create</h4>
+<h3>Create Drop</h3>
 
 @using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
 {
@@ -30,6 +30,8 @@
 
         <br />
         <input type="submit" value="Create Drop" />
+        &nbsp;
+        @Html.ActionLink("Cancel", "Show", "Campaigns", new { id = Model.CampaignId }, null)
 
     </fieldset>
 }

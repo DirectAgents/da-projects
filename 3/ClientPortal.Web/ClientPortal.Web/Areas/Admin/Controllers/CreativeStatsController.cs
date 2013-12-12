@@ -1,0 +1,57 @@
+﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Contracts;
+using ClientPortal.Web.Controllers;
+using System;
+using System.Linq;
+using System.Web.Mvc;
+
+namespace ClientPortal.Web.Areas.Admin.Controllers
+{
+    [Authorize(Users = "admin")]
+    public class CreativeStatsController : CPController
+    {
+        public CreativeStatsController(IClientPortalRepository cpRepository)
+        {
+            this.cpRepo = cpRepository;
+        }
+
+        public ActionResult Create(int campaigndropid)
+        {
+            var creativeStat = SetupForCreate(campaigndropid);
+            if (creativeStat.CampaignDrop == null)
+                return HttpNotFound();
+
+            return View(creativeStat);
+        }
+
+        private CreativeStat SetupForCreate(int campaigndropid)
+        {
+            var creativeStat = new CreativeStat
+            {
+                CampaignDropId = campaigndropid
+            };
+            SetupForCreate(creativeStat);
+            return creativeStat;
+        }
+        private void SetupForCreate(CreativeStat creativeStat)
+        {
+            creativeStat.CampaignDrop = cpRepo.GetCampaignDrop(creativeStat.CampaignDropId);
+            if (creativeStat.CampaignDrop == null)
+                return;
+
+            ViewData["Creatives"] = creativeStat.CampaignDrop.Campaign.Offer.CreativesByDate();
+        }
+
+        [HttpPost]
+        public ActionResult Create(CreativeStat stat)
+        {
+            if (ModelState.IsValid)
+            {
+                cpRepo.SaveCreativeStat(stat, true);
+                return RedirectToAction("Show", "CampaignDrops", new { id = stat.CampaignDropId });
+            }
+            SetupForCreate(stat);
+            return View(stat);
+        }
+    }
+}

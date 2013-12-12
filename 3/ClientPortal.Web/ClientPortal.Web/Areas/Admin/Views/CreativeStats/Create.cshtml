@@ -1,0 +1,29 @@
+﻿@model ClientPortal.Data.Contexts.CreativeStat
+
+<h3>Add Creative</h3>
+
+@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Choose Creative</legend>
+        @Html.HiddenFor(m => m.CampaignDropId)
+        <table>
+            <tr>
+                <td>Drop Date</td>
+                <td>@Html.DisplayFor(m => m.CampaignDrop.Date, "Date")</td>
+            </tr>
+            <tr>
+                <td>Creative</td>
+                <td>@Html.EditorFor(_ => ViewData["Creatives"], "CreativeDropDown", "CreativeId")</td>
+            </tr>
+        </table>
+
+        <br />
+        <input type="submit" value="Add Creative to Drop" />
+        &nbsp;
+        @Html.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, null)
+
+    </fieldset>
+}

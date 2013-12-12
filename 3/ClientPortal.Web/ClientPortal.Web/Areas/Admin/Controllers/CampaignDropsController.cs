@@ -36,11 +36,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (campaign == null)
                 return null;
 
-            ViewData["Creatives"] = campaign.Offer.Creatives.OrderByDescending(c => c.DateCreated);
+            ViewData["Creatives"] = campaign.Offer.CreativesByDate();
 
             var drop = new CampaignDrop
             {
                 Date = DateTime.Today,
+                CampaignId = campaign.CampaignId,
                 Campaign = campaign
             };
             return drop;
@@ -82,7 +83,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (campaignDrop == null)
                 return HttpNotFound();
 
-            ViewData["Creatives"] = campaignDrop.Campaign.Offer.Creatives.OrderByDescending(c => c.DateCreated);
+            ViewData["Creatives"] = campaignDrop.Campaign.Offer.CreativesByDate();
 
             return View(campaignDrop);
         }

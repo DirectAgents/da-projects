@@ -49,9 +49,14 @@ namespace ClientPortal.Data.Services
             return off.AsQueryable();
         }
 
+        // includes Advertiser
         public Offer GetOffer(int id)
         {
             var offer = context.Offers.Find(id);
+            if (offer != null && offer.AdvertiserId.HasValue)
+            {
+                offer.Advertiser = context.Advertisers.Find(offer.AdvertiserId.Value);
+            }
             return offer;
         }
 
@@ -116,14 +121,12 @@ namespace ClientPortal.Data.Services
             return campaignDrop;
         }
 
-        public bool SaveCampaignDrop(CampaignDrop inDrop, bool saveChanges)
+        public bool SaveCampaignDrop(CampaignDrop inDrop, bool saveChanges = false)
         {
             bool success = false;
             var drop = context.CampaignDrops.Find(inDrop.CampaignDropId);
             if (drop != null)
             {
-                success = true;
-
                 drop.Date = inDrop.Date;
                 drop.Subject = inDrop.Subject;
                 drop.Cost = inDrop.Cost;
@@ -131,11 +134,10 @@ namespace ClientPortal.Data.Services
                 drop.Opens = inDrop.Opens;
                 foreach(var creativeStat in inDrop.CreativeStats)
                 {
-                    bool saved = SaveCreativeStat(creativeStat);
-                    if (!saved)
-                        success = false;
+                    SaveCreativeStat(creativeStat);
                 }
-                if (success && saveChanges) SaveChanges();
+                if (saveChanges) SaveChanges();
+                success = true;
             }
             return success;
         }
@@ -153,19 +155,20 @@ namespace ClientPortal.Data.Services
             }
         }
 
-        private bool SaveCreativeStat(CreativeStat inStat)
+        public void SaveCreativeStat(CreativeStat inStat, bool saveChanges = false)
         {
-            bool success = false;
             var stat = context.CreativeStats.Find(inStat.CreativeStatId);
-            if (stat != null)
-            {
+            if (stat == null)
+            {   // Add
+                context.CreativeStats.Add(inStat);
+            }
+            else
+            {   // Edit
                 stat.CreativeId = inStat.CreativeId;
                 stat.Clicks = inStat.Clicks;
                 stat.Leads = inStat.Leads;
-
-                success = true;
             }
-            return success;
+            if (saveChanges) SaveChanges();
         }
         #endregion
 
