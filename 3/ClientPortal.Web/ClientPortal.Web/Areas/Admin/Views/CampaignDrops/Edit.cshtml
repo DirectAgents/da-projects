@@ -37,17 +37,21 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
                 <td>@Html.EditorFor(m => m.Opens)</td>
             </tr>
         </table>
-        @{ int i = 0; }
+@{
+    var creatives = (IEnumerable<ClientPortal.Data.Contexts.Creative>)ViewData["Creatives"];
+    int i = 0;
+}
         @foreach (var creativeStat in Model.CreativeStats)
         {
+            var selectList = new SelectList(creatives, "CreativeId", "DisplayName", creativeStat.CreativeId);
             //Html.RenderPartial("../CreativeStats/Edit", creativeStat);
             <fieldset>
                 <legend>Creative</legend>
                 @Html.Hidden("CreativeStats[" + i + "].CreativeStatId", creativeStat.CreativeStatId)
                 <table>
                     <tr>
-                        <td>@Html.Label("Name")</td>
-                        <td>@Html.EditorFor(_ => creativeStat.Creative.CreativeName, null, "CreativeStats[" + i + "].Creative.CreativeName")</td>
+                        <td></td>
+                        <td>@Html.DropDownList("CreativeStats[" + i + "].CreativeId", selectList)</td>
                     </tr>
                     <tr>
                         <td>@Html.Label("Clicks")</td>

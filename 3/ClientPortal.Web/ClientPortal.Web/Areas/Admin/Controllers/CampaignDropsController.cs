@@ -36,7 +36,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (campaign == null)
                 return null;
 
-            ViewData["Creatives"] = campaign.Offer.Creatives;
+            ViewData["Creatives"] = campaign.Offer.Creatives.OrderByDescending(c => c.DateCreated);
 
             var drop = new CampaignDrop
             {
@@ -81,6 +81,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
             if (campaignDrop == null)
                 return HttpNotFound();
+
+            ViewData["Creatives"] = campaignDrop.Campaign.Offer.Creatives.OrderByDescending(c => c.DateCreated);
 
             return View(campaignDrop);
         }

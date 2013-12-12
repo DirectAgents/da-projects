@@ -159,7 +159,7 @@ namespace ClientPortal.Data.Services
             var stat = context.CreativeStats.Find(inStat.CreativeStatId);
             if (stat != null)
             {
-                stat.Creative.CreativeName = inStat.Creative.CreativeName;
+                stat.CreativeId = inStat.CreativeId;
                 stat.Clicks = inStat.Clicks;
                 stat.Leads = inStat.Leads;
 
