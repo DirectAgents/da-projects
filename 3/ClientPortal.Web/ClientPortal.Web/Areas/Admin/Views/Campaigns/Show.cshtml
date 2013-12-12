@@ -7,3 +7,6 @@ Affiliate: @Model.Affiliate.AffiliateName
 <br /><br />
 
 @Html.Partial("../CampaignDrops/Index", Model.CampaignDrops.OrderBy(d => d.Date))
+
+<br />
+@Html.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = Model.CampaignId }, null)

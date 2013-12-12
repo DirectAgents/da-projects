@@ -78,7 +78,7 @@ namespace ClientPortal.Data.Services
         #region CampaignDrops
         public IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId)
         {
-            var campaignDrops = context.CampaignDrops.Include("Campaign").Include("CreativeStats").AsQueryable();
+            var campaignDrops = context.CampaignDrops.Include("Campaign").Include("CreativeStats.Creative").AsQueryable();
             if (offerId.HasValue)
                 campaignDrops = campaignDrops.Where(cd => cd.Campaign.OfferId == offerId.Value);
             if (campaignId.HasValue)

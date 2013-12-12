@@ -15,6 +15,10 @@
                 <td>@Html.DisplayFor(m => m.Campaign.CampaignName)</td>
             </tr>
             <tr>
+                <td>Affiliate</td>
+                <td>@Html.DisplayFor(m => m.Campaign.Affiliate.AffiliateName)</td>
+            </tr>
+            <tr>
                 <td>@Html.LabelFor(m => m.Date)</td>
                 <td>@Html.TextBoxFor(m => m.Date, "{0:d}")</td>
             </tr>
