@@ -22,6 +22,7 @@ namespace ClientPortal.Data.Contracts
         bool SaveCampaignDrop(CampaignDrop campaignDrop, bool saveChanges = false);
         void FillExtended_CampaignDrop(CampaignDrop campaignDrop);
         void SaveCreativeStat(CreativeStat creativeStat, bool saveChanges = false);
+        int? DeleteCreativeStat(int statId, bool saveChanges = false);
 
         IQueryable<Advertiser> Advertisers { get; }
         IQueryable<Contact> Contacts { get; }

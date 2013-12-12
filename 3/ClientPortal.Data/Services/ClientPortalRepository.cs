@@ -170,6 +170,20 @@ namespace ClientPortal.Data.Services
             }
             if (saveChanges) SaveChanges();
         }
+
+        // return campaignDropId, or null if the creativeStat of the passed-in id doesn't exist
+        public int? DeleteCreativeStat(int statId, bool saveChanges = false)
+        {
+            int? dropId = null;
+            var stat = context.CreativeStats.Find(statId);
+            if (stat != null)
+            {
+                dropId = stat.CampaignDropId;
+                context.CreativeStats.Remove(stat);
+                if (saveChanges) SaveChanges();
+            }
+            return dropId;
+        }
         #endregion
 
         #region Advertisers & Contacts

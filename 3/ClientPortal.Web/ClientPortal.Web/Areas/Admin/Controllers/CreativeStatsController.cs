@@ -53,5 +53,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             SetupForCreate(stat);
             return View(stat);
         }
+
+        public ActionResult Delete(int id)
+        {
+            int? campaignDropId = cpRepo.DeleteCreativeStat(id, true);
+            if (campaignDropId == null)
+                return HttpNotFound();
+
+            return RedirectToAction("Show", "CampaignDrops", new { id = campaignDropId.Value });
+        }
     }
 }

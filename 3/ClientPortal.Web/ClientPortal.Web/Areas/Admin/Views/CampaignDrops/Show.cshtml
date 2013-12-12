@@ -52,11 +52,14 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
                     <td>@Html.Label("Leads")</td>
                     <td>@Html.DisplayFor(_ => creativeStat.Leads)</td>
                 </tr>
+                <tr>
+                    <td colspan="2">@Html.ActionLink("Remove from drop", "Delete", "CreativeStats", new { id = creativeStat.CreativeStatId }, new { onclick = "return confirm('Are you sure you want to remove this creative?')" })</td>
+                </tr>
             </table>
         </fieldset>
         i++;
     }
-    @Html.ActionLink("Add Creative", "Create", "CreativeStats", new { campaigndropid = Model.CampaignDropId }, null)
+    @Html.ActionLink("Add Creative to drop", "Create", "CreativeStats", new { campaigndropid = Model.CampaignDropId }, null)
     <br /><br />
     @Html.ActionLink("Edit", "Edit", new { id = Model.CampaignDropId }) |
     @Html.ActionLink("Back to Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null) |
