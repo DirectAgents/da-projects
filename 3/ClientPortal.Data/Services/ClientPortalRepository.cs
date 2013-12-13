@@ -235,6 +235,21 @@ namespace ClientPortal.Data.Services
             }
             return dropId;
         }
+
+        public bool UpdateCreativeStatFromSummaries(int statId, bool saveChanges = false)
+        {
+            var creativeStat = context.CreativeStats.Find(statId);
+            if (creativeStat == null)
+                return false;
+
+            var creativeSummaries = context.CreativeSummaries.Where(cs => cs.CreativeId == creativeStat.CreativeId);
+
+            creativeStat.Clicks = creativeSummaries.Sum(cs => cs.Clicks);
+            creativeStat.Leads = creativeSummaries.Sum(cs => cs.Conversions);
+
+            if (saveChanges) SaveChanges();
+            return true;
+        }
         #endregion
 
         #region Advertisers & Contacts

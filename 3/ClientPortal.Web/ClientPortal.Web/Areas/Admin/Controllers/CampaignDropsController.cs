@@ -1,4 +1,5 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using CakeExtracter.Commands;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
 using System;
@@ -110,6 +111,26 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
 
             return RedirectToAction("Show", "Campaigns", new { id = campaignId.Value });
+        }
+
+        public ActionResult SynchStats(int id)
+        {
+            var drop = cpRepo.GetCampaignDrop(id);
+            if (drop == null)
+                return HttpNotFound();
+
+            foreach (var creativeStat in drop.CreativeStats)
+            {
+                var command = new SynchCreativeSummariesCommand
+                {
+                    CreativeId = creativeStat.CreativeId,
+                    StartDate = creativeStat.Creative.DateCreated.Date
+                };
+                command.Run(null);
+                cpRepo.UpdateCreativeStatFromSummaries(creativeStat.CreativeStatId, true);
+            }
+            return Content("okay");
+            //return RedirectToAction("Show", new { id = id });
         }
     }
 }
