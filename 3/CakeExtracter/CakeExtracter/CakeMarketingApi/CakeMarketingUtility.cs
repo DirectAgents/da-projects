@@ -70,13 +70,14 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Creatives;
         }
 
-        public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId)
+        public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId, int creativeId)
         {
             var client = new DailySummariesClient();
             var request = new DailySummariesRequest
             {
                 advertiser_id = advertiserId,
                 offer_id = offerId,
+                creative_id = creativeId,
                 start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
                 end_date = dateRange.ToDate.ToString("MM/dd/yyyy")
             };

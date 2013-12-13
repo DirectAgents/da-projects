@@ -55,5 +55,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<CreativeStat> CreativeStats { get; set; }
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<CreativeType> CreativeTypes { get; set; }
+        public DbSet<CreativeSummary> CreativeSummaries { get; set; }
     }
 }

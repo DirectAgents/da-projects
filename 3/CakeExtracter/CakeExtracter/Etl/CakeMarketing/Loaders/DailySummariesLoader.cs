@@ -1,6 +1,5 @@
-﻿using System;
+﻿using CakeExtracter.CakeMarketingApi.Entities;
 using System.Collections.Generic;
-using CakeExtracter.CakeMarketingApi.Entities;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {
@@ -17,7 +16,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                 {
                     var source = item.DailySummary;
                     var pk1 = item.OfferId;
-                    var pk2 = DateTime.Parse(source.Date);
+                    var pk2 = source.Date;
 
                     var target = db.Set<ClientPortal.Data.Contexts.DailySummary>().Find(pk1, pk2);
 

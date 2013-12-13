@@ -16,6 +16,7 @@
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Creative" EntityType="ClientPortalModel.Store.Creative" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeStat" EntityType="ClientPortalModel.Store.CreativeStat" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CreativeSummary" EntityType="ClientPortalModel.Store.CreativeSummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeType" EntityType="ClientPortalModel.Store.CreativeType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="DailySummary" EntityType="ClientPortalModel.Store.DailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="EmailedReport" EntityType="ClientPortalModel.Store.EmailedReport" store:Type="Tables" Schema="dbo" />
@@ -245,6 +246,17 @@
           <Property Name="CreativeId" Type="int" />
           <Property Name="Clicks" Type="int" />
           <Property Name="Leads" Type="int" />
+        </EntityType>
+        <EntityType Name="CreativeSummary">
+          <Key>
+            <PropertyRef Name="CreativeId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Name="CreativeId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Views" Type="int" Nullable="false" />
+          <Property Name="Clicks" Type="int" Nullable="false" />
+          <Property Name="Conversions" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="CreativeType">
           <Key>
@@ -917,6 +929,7 @@
             <End Role="Creative" EntitySet="Creatives" />
             <End Role="CreativeStat" EntitySet="CreativeStats" />
           </AssociationSet>
+          <EntitySet Name="CreativeSummaries" EntityType="ClientPortalModel.CreativeSummary" />
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -1637,6 +1650,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CreativeSummary">
+          <Key>
+            <PropertyRef Name="CreativeId" />
+            <PropertyRef Name="Date" />
+          </Key>
+          <Property Type="Int32" Name="CreativeId" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="Views" Nullable="false" />
+          <Property Type="Int32" Name="Clicks" Nullable="false" />
+          <Property Type="Int32" Name="Conversions" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2000,6 +2024,17 @@
               <MappingFragment StoreEntitySet="CreativeType">
                 <ScalarProperty Name="CreativeTypeName" ColumnName="CreativeTypeName" />
                 <ScalarProperty Name="CreativeTypeId" ColumnName="CreativeTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CreativeSummaries">
+            <EntityTypeMapping TypeName="ClientPortalModel.CreativeSummary">
+              <MappingFragment StoreEntitySet="CreativeSummary">
+                <ScalarProperty Name="Conversions" ColumnName="Conversions" />
+                <ScalarProperty Name="Clicks" ColumnName="Clicks" />
+                <ScalarProperty Name="Views" ColumnName="Views" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="CreativeId" ColumnName="CreativeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

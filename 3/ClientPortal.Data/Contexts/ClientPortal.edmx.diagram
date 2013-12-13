@@ -60,6 +60,7 @@
         <AssociationConnector Association="ClientPortalModel.FK_Creative_CreativeType" />
         <AssociationConnector Association="ClientPortalModel.FK_Creative_Offer" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeStat_Creative" />
+        <EntityTypeShape EntityType="ClientPortalModel.CreativeSummary" Width="1.5" PointX="15.875" PointY="2.5" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -222,6 +222,7 @@
     <Compile Include="CakeMarketingApi\Entities\Country.cs" />
     <Compile Include="CakeMarketingApi\Entities\Creative.cs" />
     <Compile Include="CakeMarketingApi\Entities\CreativeExportResponse.cs" />
+    <Compile Include="CakeMarketingApi\Entities\CreativeMonthlySummary.cs" />
     <Compile Include="CakeMarketingApi\Entities\CreativeType.cs" />
     <Compile Include="CakeMarketingApi\Entities\Currency.cs" />
     <Compile Include="CakeMarketingApi\Entities\DateRangeTraffic.cs" />
@@ -242,6 +243,7 @@
     <Compile Include="Commands\SynchCakeTrafficCommand.cs" />
     <Compile Include="Commands\SynchClicksCommand.cs" />
     <Compile Include="Commands\SynchCreativesCommand.cs" />
+    <Compile Include="Commands\SynchCreativeSummariesCommand.cs" />
     <Compile Include="Commands\SynchOffersCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesAdWordsCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesAnalyticsCommand.cs" />
@@ -281,6 +283,7 @@
     <Compile Include="Etl\CakeMarketing\Extracters\CampaignsExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\ClicksExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\ConversionsExtracter.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\CreativeMonthlySummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CreativesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\OffersExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\TrafficExtracter.cs" />
@@ -291,6 +294,7 @@
     <Compile Include="Etl\CakeMarketing\Loaders\ClicksLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\ClicksLoader2.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\ConversionsLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\Loaders\CreativeMonthlySummariesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CreativesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\OffersLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\TrafficLoader.cs" />

@@ -1,8 +1,9 @@
-﻿namespace CakeExtracter.CakeMarketingApi.Entities
+﻿using System;
+namespace CakeExtracter.CakeMarketingApi.Entities
 {
     public class DailySummary
     {
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
         public int Views { get; set; }
         public int Clicks { get; set; }
         public decimal ClickThru { get; set; }
