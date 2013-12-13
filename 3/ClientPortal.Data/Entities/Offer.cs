@@ -8,6 +8,12 @@ namespace ClientPortal.Data.Contexts
     public partial class Offer
     {
         [NotMapped]
+        public string DisplayName
+        {
+            get { return OfferName + " (" + OfferId + ")"; }
+        }
+
+        [NotMapped]
         public Advertiser Advertiser { get; set; }
 
         public Offer ThisWithAdvertiserInfo(int advertiserId, string advertiserName)

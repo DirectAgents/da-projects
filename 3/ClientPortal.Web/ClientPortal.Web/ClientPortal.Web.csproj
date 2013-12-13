@@ -208,6 +208,7 @@
     <Compile Include="Areas\Admin\Controllers\CampaignDropsController.cs" />
     <Compile Include="Areas\Admin\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContactsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CreativesController.cs" />
     <Compile Include="Areas\Admin\Controllers\CreativeStatsController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\OffersController.cs" />
@@ -642,6 +643,8 @@
     <Content Include="Areas\Admin\Views\Shared\DisplayTemplates\Money.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\CreativeDropDown.cshtml" />
     <Content Include="Areas\Admin\Views\CreativeStats\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Creatives\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Creatives\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

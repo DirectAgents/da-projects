@@ -23,7 +23,7 @@
         <td>@campaign.CampaignName</td>
         <td>@campaign.Affiliate.AffiliateName</td>
         <td>@campaign.CampaignDrops.Count</td>
-        <td>@Html.ActionLink("Campaign Summary", "Show", new { id = campaign.CampaignId })
+        <td>@Html.ActionLink("Campaign Summary", "Show", "Campaigns", new { id = campaign.CampaignId }, null)
             &nbsp;|&nbsp;&nbsp;@Html.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId }, null)
         </td>
     </tr>

@@ -1,0 +1,38 @@
+﻿@model ClientPortal.Data.Contexts.Creative
+
+<h3>Edit Creative</h3>
+
+Offer: @Model.Offer.DisplayName
+<br />
+
+@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Creative</legend>
+        @Html.HiddenFor(m => m.CreativeId)
+        @Html.HiddenFor(m => m.OfferId)
+
+        @Html.HiddenFor(m => m.DateCreated)
+        @Html.HiddenFor(m => m.CreativeTypeId)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.DateCreated, "Created")</td>
+                <td>@Html.DisplayFor(m => m.DateCreated, "Date")</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.CreativeType, "Type")</td>
+                <td>@Html.DisplayFor(m => m.CreativeType.CreativeTypeName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.CreativeName, "Name")</td>
+                <td>@Html.EditorFor(m => m.CreativeName)</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+        &nbsp;
+        @Html.ActionLink("Cancel", "Show", "Offers", new { id = Model.OfferId }, null)
+    </fieldset>
+}

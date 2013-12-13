@@ -4,7 +4,7 @@
 
 Advertiser: @Model.Advertiser.AdvertiserName
 <br />
-Offer: @Model.OfferName (@Model.OfferId)
+Offer: @Model.DisplayName
 <br /><br />
 
 Drops:
@@ -32,21 +32,7 @@ Campaigns:
 
 <br />
 Creatives:
-<table border="1">
-    <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Created</th>
-    </tr>
-@foreach (var creative in Model.Creatives.OrderByDescending(c => c.DateCreated))
-{
-    <tr>
-        <td>@creative.DisplayName</td>
-        <td>@creative.CreativeType.CreativeTypeName</td>
-        <td>@creative.DateCreated.ToShortDateString()</td>
-    </tr>
-}
-</table>
+@Html.Partial("../Creatives/Index", Model.CreativesByDate())
 
 <br />
 @Html.ActionLink("Synch Campaigns", "SynchCampaigns", new { offerid = Model.OfferId }) |

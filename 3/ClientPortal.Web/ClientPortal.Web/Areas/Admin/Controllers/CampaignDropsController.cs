@@ -96,6 +96,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 bool success = cpRepo.SaveCampaignDrop(drop, true);
                 if (success)
                     return RedirectToAction("Show", "CampaignDrops", new { id = drop.CampaignDropId });
+
+                ModelState.AddModelError("", "Campaign Drop could not be saved");
             }
             cpRepo.FillExtended_CampaignDrop(drop); // for campaign/affiliate info
             return View(drop);

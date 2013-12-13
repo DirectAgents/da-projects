@@ -23,7 +23,7 @@ namespace ClientPortal.Data.Services
 
         // ------
 
-        #region Offers, Campaigns, Affiliates
+        #region Offers, Campaigns, Affiliates, Creatives
         public IQueryable<Offer> Offers(int? advertiserId)
         {
             return context.Offers.Where(o => o.AdvertiserId == advertiserId);
@@ -78,9 +78,42 @@ namespace ClientPortal.Data.Services
             var campaign = context.Campaigns.Find(id);
             return campaign;
         }
+
+        public Creative GetCreative(int id)
+        {
+            var creative = context.Creatives.Find(id);
+            return creative;
+        }
+
+        public bool SaveCreative(Creative inCreative, bool saveChanges = false)
+        {
+            bool success = false;
+            var creative = context.Creatives.Find(inCreative.CreativeId);
+            if (creative != null)
+            {
+                creative.CreativeName = inCreative.CreativeName;
+                if (saveChanges) SaveChanges();
+                success = true;
+            }
+            return success;
+        }
+        public void FillExtended_Creative(Creative inCreative)
+        {
+            if (inCreative.Offer == null)
+            {
+                var creative = context.Creatives.Find(inCreative.CreativeId);
+                if (creative != null)
+                {
+                    inCreative.OfferId = creative.OfferId;
+                    inCreative.Offer = creative.Offer;
+                    inCreative.CreativeTypeId = creative.CreativeTypeId;
+                    inCreative.CreativeType = creative.CreativeType;
+                }
+            }
+        }
         #endregion
 
-        #region CampaignDrops
+        #region CampaignDrops, CreativeStats
         public IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId)
         {
             var campaignDrops = context.CampaignDrops.Include("Campaign").Include("CreativeStats.Creative").AsQueryable();

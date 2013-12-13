@@ -1,0 +1,18 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.Creative>
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Created</th>
+    </tr>
+@foreach (var creative in Model)
+{
+    <tr>
+        <td>@creative.DisplayName</td>
+        <td>@creative.CreativeType.CreativeTypeName</td>
+        <td>@creative.DateCreated.ToShortDateString()</td>
+        <td>@Html.ActionLink("Edit", "Edit", "Creatives", new { id = creative.CreativeId }, null)</td>
+    </tr>
+}
+</table>
