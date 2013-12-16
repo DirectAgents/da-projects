@@ -19,13 +19,12 @@
     </tr>
 @foreach (var campaign in Model)
 {
+    string viewText = "View (" + campaign.CampaignDrops.Count + ")";
     <tr>
         <td>@campaign.CampaignName</td>
         <td>@campaign.Affiliate.AffiliateName</td>
-        <td>@campaign.CampaignDrops.Count</td>
-        <td>@Html.ActionLink("Campaign Summary", "Show", "Campaigns", new { id = campaign.CampaignId }, null)
-            &nbsp;|&nbsp;&nbsp;@Html.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId }, null)
-        </td>
+        <td>@Html.ActionLink(viewText, "Show", "Campaigns", new { id = campaign.CampaignId }, null)</td>
+        <td>@Html.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId, from = "campaigns" }, null)</td>
     </tr>
 }
 </table>

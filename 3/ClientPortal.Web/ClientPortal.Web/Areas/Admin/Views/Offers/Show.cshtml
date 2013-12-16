@@ -8,9 +8,10 @@ Offer: @Model.DisplayName
 <br /><br />
 
 Drops:
+@Html.ActionLink("(edit drops)", "Index", "CampaignDrops", new { offerid = @Model.OfferId }, null)
 @Html.Partial("DropReport", @Model.DropReport)
 
-<br />
+<br /><br />
 Campaigns:
 <table border="1">
     <tr>
@@ -26,12 +27,12 @@ Campaigns:
         <td>@campaign.AffiliateId</td>
         <td>@campaign.Affiliate.AffiliateName</td>
         <td>@campaign.CampaignDrops.Count</td>
+        <td>@Html.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId, from = "offer" }, null)</td>
     </tr>
 }
 </table>
 
 <br />
-Creatives:
 @Html.Partial("../Creatives/Index", Model.CreativesByDate())
 
 <br />

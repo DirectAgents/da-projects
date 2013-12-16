@@ -15,6 +15,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             this.cpRepo = cpRepository;
         }
 
+        public ActionResult Index(int? offerid)
+        {
+            var creatives = cpRepo.Creatives(offerid);
+            return View(creatives);
+        }
+
         public ActionResult Edit(int id)
         {
             var creative = cpRepo.GetCreative(id);

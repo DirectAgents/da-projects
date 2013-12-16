@@ -15,6 +15,7 @@ namespace ClientPortal.Data.Contracts
         Offer GetOffer(int id);
         IQueryable<Campaign> Campaigns(int? offerId, bool cpmOnly);
         Campaign GetCampaign(int id);
+        IQueryable<Creative> Creatives(int? offerId);
         Creative GetCreative(int id);
         bool SaveCreative(Creative creative, bool saveChanges = false);
         void FillExtended_Creative(Creative creative);

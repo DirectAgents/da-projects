@@ -79,6 +79,16 @@ namespace ClientPortal.Data.Services
             return campaign;
         }
 
+        public IQueryable<Creative> Creatives(int? offerId)
+        {
+            var creatives = context.Creatives.Include("CreativeType").AsQueryable();
+
+            if (offerId.HasValue)
+                creatives = creatives.Where(c => c.OfferId == offerId.Value);
+
+            return creatives;
+        }
+
         public Creative GetCreative(int id)
         {
             var creative = context.Creatives.Find(id);

@@ -1,4 +1,7 @@
 ﻿@model ClientPortal.Data.Contexts.CampaignDrop
+@{
+    string from = ViewData["from"].ToString();
+}
 
 <h3>Create Drop</h3>
 
@@ -31,7 +34,12 @@
         <br />
         <input type="submit" value="Create Drop" />
         &nbsp;
-        @Html.ActionLink("Cancel", "Show", "Campaigns", new { id = Model.CampaignId }, null)
-
+        @if (from == "offer") {
+            @Html.ActionLink("Cancel", "Show", "Offers", new { id = Model.Campaign.OfferId }, null)
+        } else if (from == "campaigns") {
+            @Html.ActionLink("Cancel", "Index", "Campaigns", new { offerid = Model.Campaign.OfferId }, null)
+        } else {
+            @Html.ActionLink("Cancel", "Show", "Campaigns", new { id = Model.CampaignId }, null)
+        }
     </fieldset>
 }

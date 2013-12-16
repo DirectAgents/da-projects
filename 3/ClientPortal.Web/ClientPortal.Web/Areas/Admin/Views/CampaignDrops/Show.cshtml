@@ -65,6 +65,8 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
     @Html.ActionLink("Synch Creative Stats", "SynchStats", new { id = Model.CampaignDropId }) |
     @Html.ActionLink("Delete Drop", "Delete", "CampaignDrops", new { id = Model.CampaignDropId }, new { onclick = "return confirm('Are you sure you want to delete this drop?')" })
     <br /><br />
-    @Html.ActionLink("Back to Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null) |
+    Back to:
+    @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.Campaign.OfferId }, null ) |
+    @Html.ActionLink("Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null) |
     @Html.ActionLink("Show all drops for Offer " + Model.Campaign.OfferId, "Index", "CampaignDrops", new { offerid = Model.Campaign.OfferId }, null)
 </fieldset>

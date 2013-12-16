@@ -22,22 +22,23 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(drops.OrderBy(d => d.Date));
         }
 
-        public ActionResult Create(int campaignid)
+        public ActionResult Create(int campaignid, string from)
         {
-            var drop = SetupForCreate(campaignid);
+            var drop = SetupForCreate(campaignid, from);
             if (drop == null)
                 return HttpNotFound();
 
             return View(drop);
         }
 
-        private CampaignDrop SetupForCreate(int campaignId)
+        private CampaignDrop SetupForCreate(int campaignId, string from)
         {
             var campaign = cpRepo.GetCampaign(campaignId);
             if (campaign == null)
                 return null;
 
             ViewData["Creatives"] = campaign.Offer.CreativesByDate();
+            ViewData["from"] = from;
 
             var drop = new CampaignDrop
             {
@@ -49,21 +50,22 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(int campaignid, DateTime? date, int creativeid)
+        public ActionResult Create(int campaignid, DateTime? date, int creativeid, string from)
         {
             if (date.HasValue)
             {
                 var campaignDrop = cpRepo.AddCampaignDrop(campaignid, date.Value, creativeid, true);
                 if (campaignDrop != null)
+                {   // success
                     return RedirectToAction("Show", new { id = campaignDrop.CampaignDropId });
-
+                }
                 ModelState.AddModelError("", "Campaign Drop could not be saved");
             }
             else
             {
                 ModelState.AddModelError("Date", "Date could not be parsed");
             }
-            var drop = SetupForCreate(campaignid);
+            var drop = SetupForCreate(campaignid, from);
             return View(drop);
         }
 
