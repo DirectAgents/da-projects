@@ -8,6 +8,12 @@ namespace ClientPortal.Data.Contexts
     public partial class CampaignDrop
     {
         [NotMapped]
+        public string DisplayName
+        {
+            get { return string.Format("{0} Aff: {1} Vol: {2}", Date.ToShortDateString(), Campaign.AffiliateId, Volume.HasValue ? Volume.Value.ToString("N0") : ""); }
+        }
+
+        [NotMapped]
         public decimal? OpenRate
         {
             get

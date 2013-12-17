@@ -1,0 +1,32 @@
+﻿@model ClientPortal.Data.Contexts.CPMReport
+
+<h3>Create Report</h3>
+
+@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>CPM Report</legend>
+        @Html.HiddenFor(m => m.OfferId)
+        <table>
+            <tr>
+                <td>Advertiser</td>
+                <td>@Html.DisplayFor(m => m.Offer.Advertiser.AdvertiserName)</td>
+            </tr>
+            <tr>
+                <td>Offer</td>
+                <td>@Html.DisplayFor(m => m.Offer.OfferName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Name, "Report Name")</td>
+                <td>@Html.EditorFor(m => m.Name)</td>
+            </tr>
+        </table>
+
+        <br />
+        <input type="submit" value="Create Report" />
+        &nbsp;
+        @Html.ActionLink("Cancel", "Show", "Offers", new { id = Model.OfferId }, null)
+    </fieldset>
+}

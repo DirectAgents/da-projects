@@ -87,7 +87,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
 
             ViewData["Creatives"] = campaignDrop.Campaign.Offer.CreativesByDate();
-
             return View(campaignDrop);
         }
 
@@ -98,11 +97,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             {
                 bool success = cpRepo.SaveCampaignDrop(drop, true);
                 if (success)
-                    return RedirectToAction("Show", "CampaignDrops", new { id = drop.CampaignDropId });
+                    return RedirectToAction("Show", new { id = drop.CampaignDropId });
 
                 ModelState.AddModelError("", "Campaign Drop could not be saved");
             }
             cpRepo.FillExtended_CampaignDrop(drop); // for campaign/affiliate info
+            ViewData["Creatives"] = drop.Campaign.Offer.CreativesByDate();
             return View(drop);
         }
 

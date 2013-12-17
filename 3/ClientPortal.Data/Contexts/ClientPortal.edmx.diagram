@@ -51,16 +51,19 @@
         <EntityTypeShape EntityType="ClientPortalModel.Campaign" Width="1.5" PointX="12.125" PointY="3.125" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Affiliate" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Offer" />
-        <EntityTypeShape EntityType="ClientPortalModel.CampaignDrop" Width="1.5" PointX="14" PointY="5.625" />
+        <EntityTypeShape EntityType="ClientPortalModel.CampaignDrop" Width="1.5" PointX="14" PointY="5.75" />
         <AssociationConnector Association="ClientPortalModel.FK_CampaignDrop_Campaign" />
-        <EntityTypeShape EntityType="ClientPortalModel.CreativeStat" Width="1.5" PointX="14" PointY="3.125" />
+        <EntityTypeShape EntityType="ClientPortalModel.CreativeStat" Width="1.5" PointX="15.875" PointY="3.125" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeStat_CampaignDrop" />
         <EntityTypeShape EntityType="ClientPortalModel.Creative" Width="1.5" PointX="14" PointY="0.5" />
         <EntityTypeShape EntityType="ClientPortalModel.CreativeType" Width="1.5" PointX="15.875" PointY="0.5" />
         <AssociationConnector Association="ClientPortalModel.FK_Creative_CreativeType" />
         <AssociationConnector Association="ClientPortalModel.FK_Creative_Offer" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeStat_Creative" />
-        <EntityTypeShape EntityType="ClientPortalModel.CreativeSummary" Width="1.5" PointX="15.875" PointY="2.5" />
+        <EntityTypeShape EntityType="ClientPortalModel.CreativeSummary" Width="1.5" PointX="15.875" PointY="5.875" />
+        <EntityTypeShape EntityType="ClientPortalModel.CPMReport" Width="1.5" PointX="14" PointY="3" />
+        <AssociationConnector Association="ClientPortalModel.FK_CPMReport_Offer" />
+        <AssociationConnector Association="ClientPortalModel.CPMReportCampaignDrop" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -14,6 +14,8 @@
           <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Conversion" EntityType="ClientPortalModel.Store.Conversion" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ConversionData" EntityType="ClientPortalModel.Store.ConversionData" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CPMReport" EntityType="ClientPortalModel.Store.CPMReport" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CPMReportCampaignDrop" EntityType="ClientPortalModel.Store.CPMReportCampaignDrop" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Creative" EntityType="ClientPortalModel.Store.Creative" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeStat" EntityType="ClientPortalModel.Store.CreativeStat" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeSummary" EntityType="ClientPortalModel.Store.CreativeSummary" store:Type="Tables" Schema="dbo" />
@@ -52,6 +54,18 @@
           <AssociationSet Name="FK_CampaignDrop_Campaign" Association="ClientPortalModel.Store.FK_CampaignDrop_Campaign">
             <End Role="Campaign" EntitySet="Campaign" />
             <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CPMReport_Offer" Association="ClientPortalModel.Store.FK_CPMReport_Offer">
+            <End Role="Offer" EntitySet="Offer" />
+            <End Role="CPMReport" EntitySet="CPMReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CPMReportCampaignDrop_CampaignDrop" Association="ClientPortalModel.Store.FK_CPMReportCampaignDrop_CampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+            <End Role="CPMReportCampaignDrop" EntitySet="CPMReportCampaignDrop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CPMReportCampaignDrop_CPMReport" Association="ClientPortalModel.Store.FK_CPMReportCampaignDrop_CPMReport">
+            <End Role="CPMReport" EntitySet="CPMReport" />
+            <End Role="CPMReportCampaignDrop" EntitySet="CPMReportCampaignDrop" />
           </AssociationSet>
           <AssociationSet Name="FK_Creative_CreativeType" Association="ClientPortalModel.Store.FK_Creative_CreativeType">
             <End Role="CreativeType" EntitySet="CreativeType" />
@@ -226,6 +240,26 @@
           </Key>
           <Property Name="conversion_id" Type="nvarchar" Nullable="false" MaxLength="128" />
           <Property Name="value0" Type="decimal" Nullable="false" Scale="2" />
+        </EntityType>
+        <EntityType Name="CPMReport">
+          <Key>
+            <PropertyRef Name="CPMReportId" />
+          </Key>
+          <Property Name="CPMReportId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="OfferId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="DateSent" Type="datetime" />
+          <Property Name="Recipient" Type="nvarchar" MaxLength="255" />
+          <Property Name="Summary" Type="nvarchar(max)" />
+          <Property Name="Conclusion" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="CPMReportCampaignDrop">
+          <Key>
+            <PropertyRef Name="CPMReportId" />
+            <PropertyRef Name="CampaignDropId" />
+          </Key>
+          <Property Name="CPMReportId" Type="int" Nullable="false" />
+          <Property Name="CampaignDropId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Creative">
           <Key>
@@ -535,6 +569,42 @@
             </Principal>
             <Dependent Role="CampaignDrop">
               <PropertyRef Name="CampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CPMReport_Offer">
+          <End Role="Offer" Type="ClientPortalModel.Store.Offer" Multiplicity="1" />
+          <End Role="CPMReport" Type="ClientPortalModel.Store.CPMReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="OfferId" />
+            </Principal>
+            <Dependent Role="CPMReport">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CPMReportCampaignDrop_CampaignDrop">
+          <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="1" />
+          <End Role="CPMReportCampaignDrop" Type="ClientPortalModel.Store.CPMReportCampaignDrop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignDrop">
+              <PropertyRef Name="CampaignDropId" />
+            </Principal>
+            <Dependent Role="CPMReportCampaignDrop">
+              <PropertyRef Name="CampaignDropId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CPMReportCampaignDrop_CPMReport">
+          <End Role="CPMReport" Type="ClientPortalModel.Store.CPMReport" Multiplicity="1" />
+          <End Role="CPMReportCampaignDrop" Type="ClientPortalModel.Store.CPMReportCampaignDrop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CPMReport">
+              <PropertyRef Name="CPMReportId" />
+            </Principal>
+            <Dependent Role="CPMReportCampaignDrop">
+              <PropertyRef Name="CPMReportId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -929,6 +999,15 @@
           <AssociationSet Name="FK_CreativeStat_Creative" Association="ClientPortalModel.FK_CreativeStat_Creative">
             <End Role="Creative" EntitySet="Creatives" />
             <End Role="CreativeStat" EntitySet="CreativeStats" />
+          </AssociationSet>
+          <EntitySet Name="CPMReports" EntityType="ClientPortalModel.CPMReport" />
+          <AssociationSet Name="FK_CPMReport_Offer" Association="ClientPortalModel.FK_CPMReport_Offer">
+            <End Role="Offer" EntitySet="Offers" />
+            <End Role="CPMReport" EntitySet="CPMReports" />
+          </AssociationSet>
+          <AssociationSet Name="CPMReportCampaignDrop" Association="ClientPortalModel.CPMReportCampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrops" />
+            <End Role="CPMReport" EntitySet="CPMReports" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1486,6 +1565,7 @@
           <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
           <NavigationProperty Name="Campaigns" Relationship="ClientPortalModel.FK_Campaign_Offer" FromRole="Offer" ToRole="Campaign" />
           <NavigationProperty Name="Creatives" Relationship="ClientPortalModel.FK_Creative_Offer" FromRole="Offer" ToRole="Creative" />
+          <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="Offer" ToRole="CPMReport" />
         </EntityType>
         <Association Name="FK_Goal_Offer">
           <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
@@ -1556,6 +1636,7 @@
           <Property Type="String" Name="Subject" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Campaign" Relationship="ClientPortalModel.FK_CampaignDrop_Campaign" FromRole="CampaignDrop" ToRole="Campaign" />
           <NavigationProperty Name="CreativeStats" Relationship="ClientPortalModel.FK_CreativeStat_CampaignDrop" FromRole="CampaignDrop" ToRole="CreativeStat" />
+          <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CampaignDrop" ToRole="CPMReport" />
         </EntityType>
         <Association Name="FK_CampaignDrop_Campaign">
           <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="1" />
@@ -1660,6 +1741,36 @@
               <PropertyRef Name="CreativeId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CPMReport">
+          <Key>
+            <PropertyRef Name="CPMReportId" />
+          </Key>
+          <Property Type="Int32" Name="CPMReportId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="OfferId" Nullable="false" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="DateSent" Precision="3" />
+          <Property Type="String" Name="Recipient" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="CPMReport" ToRole="Offer" />
+          <NavigationProperty Name="CampaignDrops" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CPMReport" ToRole="CampaignDrop" />
+          <Property Type="String" Name="Summary" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Conclusion" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_CPMReport_Offer">
+          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="1" />
+          <End Type="ClientPortalModel.CPMReport" Role="CPMReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="OfferId" />
+            </Principal>
+            <Dependent Role="CPMReport">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CPMReportCampaignDrop">
+          <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="*" />
+          <End Type="ClientPortalModel.CPMReport" Role="CPMReport" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -2038,6 +2149,27 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CPMReports">
+            <EntityTypeMapping TypeName="ClientPortalModel.CPMReport">
+              <MappingFragment StoreEntitySet="CPMReport">
+                <ScalarProperty Name="Conclusion" ColumnName="Conclusion" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="CPMReportId" ColumnName="CPMReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CPMReportCampaignDrop" TypeName="ClientPortalModel.CPMReportCampaignDrop" StoreEntitySet="CPMReportCampaignDrop">
+            <EndProperty Name="CPMReport">
+              <ScalarProperty Name="CPMReportId" ColumnName="CPMReportId" />
+            </EndProperty>
+            <EndProperty Name="CampaignDrop">
+              <ScalarProperty Name="CampaignDropId" ColumnName="CampaignDropId" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

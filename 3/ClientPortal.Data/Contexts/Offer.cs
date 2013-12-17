@@ -19,6 +19,7 @@ namespace ClientPortal.Data.Contexts
             this.Goals = new HashSet<Goal>();
             this.Campaigns = new HashSet<Campaign>();
             this.Creatives = new HashSet<Creative>();
+            this.CPMReports = new HashSet<CPMReport>();
         }
     
         public int OfferId { get; set; }
@@ -30,5 +31,6 @@ namespace ClientPortal.Data.Contexts
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<Campaign> Campaigns { get; set; }
         public virtual ICollection<Creative> Creatives { get; set; }
+        public virtual ICollection<CPMReport> CPMReports { get; set; }
     }
 }

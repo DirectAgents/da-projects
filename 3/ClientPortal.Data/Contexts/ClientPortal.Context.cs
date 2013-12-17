@@ -52,9 +52,10 @@ namespace ClientPortal.Data.Contexts
         public DbSet<Affiliate> Affiliates { get; set; }
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<CampaignDrop> CampaignDrops { get; set; }
-        public DbSet<CreativeStat> CreativeStats { get; set; }
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<CreativeType> CreativeTypes { get; set; }
         public DbSet<CreativeSummary> CreativeSummaries { get; set; }
+        public DbSet<CreativeStat> CreativeStats { get; set; }
+        public DbSet<CPMReport> CPMReports { get; set; }
     }
 }

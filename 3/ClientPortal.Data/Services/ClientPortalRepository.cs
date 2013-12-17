@@ -30,9 +30,12 @@ namespace ClientPortal.Data.Services
         }
 
         // includes Advertisers
-        public IQueryable<Offer> Offers(bool cpmOnly, int? minCampaigns = null)
+        // pass in advertiserId==null for all advertisers
+        public IQueryable<Offer> Offers(int? advertiserId, bool cpmOnly, int? minCampaigns = null)
         {
             var offers = context.Offers.AsQueryable();
+            if (advertiserId.HasValue)
+                offers = offers.Where(o => o.AdvertiserId == advertiserId.Value);
             if (cpmOnly)
                 offers = offers.Where(o => o.OfferName.Contains("CPM"));
             if (minCampaigns.HasValue)
@@ -107,6 +110,7 @@ namespace ClientPortal.Data.Services
             }
             return success;
         }
+
         public void FillExtended_Creative(Creative inCreative)
         {
             if (inCreative.Offer == null)
@@ -123,7 +127,91 @@ namespace ClientPortal.Data.Services
         }
         #endregion
 
-        #region CampaignDrops, CreativeStats
+        #region CPMReports, CampaignDrops, CreativeStats
+        public IQueryable<CPMReport> CPMReports(int? offerId)
+        {
+            var cpmReports = context.CPMReports.Include("CampaignDrops").AsQueryable();
+            if (offerId.HasValue)
+                cpmReports = cpmReports.Where(c => c.OfferId == offerId.Value);
+            return cpmReports;
+        }
+
+        public CPMReport GetCPMReport(int id, bool includeAdvertiser = false)
+        {
+            var report = context.CPMReports.Find(id);
+            if (report != null && includeAdvertiser)
+            {
+                report.Offer.Advertiser = GetAdvertiser(report.Offer.AdvertiserId);
+            }
+            return report;
+        }
+
+        public void SaveCPMReport(CPMReport inReport, bool saveChanges = false)
+        {
+            var report = GetCPMReport(inReport.CPMReportId);
+            if (report == null)
+            {   // Add
+                context.CPMReports.Add(inReport);
+            }
+            else
+            {   // Edit
+                report.Name = inReport.Name;
+                report.Recipient = inReport.Recipient;
+                report.Summary = inReport.Summary;
+                report.Conclusion = inReport.Conclusion;
+            }
+            if (saveChanges) SaveChanges();
+        }
+
+        public bool AddDropToCPMReport(int cpmReportId, int campaignDropId, bool saveChanges = false)
+        {
+            bool success = false;
+            var report = GetCPMReport(cpmReportId);
+            var drop = GetCampaignDrop(campaignDropId);
+            if (report != null && drop != null)
+            {
+                if (!report.CampaignDrops.Select(cd => cd.CampaignDropId).Contains(drop.CampaignDropId))
+                {
+                    report.CampaignDrops.Add(drop);
+                    if (saveChanges) SaveChanges();
+                    success = true;
+                }
+            }
+            return success;
+        }
+
+        public bool RemoveDropFromCPMReport(int cpmReportId, int campaignDropId, bool saveChanges = false)
+        {
+            bool success = false;
+            var report = GetCPMReport(cpmReportId);
+            var drop = GetCampaignDrop(campaignDropId);
+            if (report != null && drop != null)
+            {
+                if (report.CampaignDrops.Select(cd => cd.CampaignDropId).Contains(drop.CampaignDropId))
+                {
+                    report.CampaignDrops.Remove(drop);
+                    if (saveChanges) SaveChanges();
+                    success = true;
+                }
+            }
+            return success;
+        }
+
+        public void FillExtended_CPMReport(CPMReport inReport)
+        {
+            if (inReport.Offer == null || inReport.CampaignDrops == null)
+            {
+                var report = GetCPMReport(inReport.CPMReportId);
+                if (report != null)
+                {
+                    inReport.OfferId = report.OfferId;
+                    inReport.Offer = report.Offer;
+                    inReport.CampaignDrops = report.CampaignDrops;
+                    inReport.Offer.Advertiser = GetAdvertiser(inReport.Offer.AdvertiserId);
+                }
+            }
+        }
+
         public IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId)
         {
             var campaignDrops = context.CampaignDrops.Include("Campaign").Include("CreativeStats.Creative").AsQueryable();
@@ -279,6 +367,13 @@ namespace ClientPortal.Data.Services
         public void AddContact(Contact entity)
         {
             context.Contacts.Add(entity);
+        }
+
+        private Advertiser GetAdvertiser(int? id)
+        {
+            if (!id.HasValue)
+                return null;
+            return GetAdvertiser(id.Value);
         }
 
         public Advertiser GetAdvertiser(int id)

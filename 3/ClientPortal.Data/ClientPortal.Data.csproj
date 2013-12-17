@@ -110,6 +110,9 @@
     <Compile Include="Contexts\ConversionsByRegion.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\CPMReport.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\Creative.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>

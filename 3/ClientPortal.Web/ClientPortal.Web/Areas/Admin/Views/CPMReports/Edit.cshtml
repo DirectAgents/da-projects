@@ -1,0 +1,51 @@
+﻿@model ClientPortal.Data.Contexts.CPMReport
+
+<h3>Edit Report</h3>
+
+Advertiser: @Model.Offer.Advertiser.AdvertiserName
+<br />
+Offer: @Model.Offer.DisplayName
+<br />
+
+@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>CPM Report</legend>
+        @Html.HiddenFor(m => m.CPMReportId)
+        @Html.HiddenFor(m => m.OfferId)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.Name)</td>
+                <td>@Html.EditorFor(m => m.Name)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Recipient, "Recipient(s)")</td>
+                <td>@Html.EditorFor(m => m.Recipient)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Summary)</td>
+                <td>@Html.TextAreaFor(m => m.Summary, 8, 100, null)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Conclusion)</td>
+                <td>@Html.TextAreaFor(m => m.Conclusion, 8, 100, null)</td>
+            </tr>
+        </table>
+@{
+    //var drops = (IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>)ViewData["CampaignDrops"];
+}
+        @foreach(var drop in Model.CampaignDrops)
+        {
+        <fieldset>
+            <legend>Drop</legend>
+            @drop.DisplayName
+        </fieldset>
+        }
+        <br />
+        <input type="submit" value="Save" />
+        &nbsp;
+        @Html.ActionLink("Cancel", "Show", "CPMReports", new { id = Model.CPMReportId }, null)
+    </fieldset>
+}

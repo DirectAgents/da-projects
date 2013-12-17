@@ -12,18 +12,20 @@
     </tr>
 @foreach (var offer in Model)
 {
-    int numCampaigns = offer.Campaigns.Count;
-    var campaignsText = "campaigns (" + numCampaigns + ")";
+    var reportsText = "reports (" + offer.CPMReports.Count + ")";
     int numDrops = offer.Campaigns.Sum(c => c.CampaignDrops.Count);//.SelectMany(c => c.CampaignDrops).Count();
     var dropsText = "drops (" + numDrops + ")";
+    int numCampaigns = offer.Campaigns.Count;
+    var campaignsText = "campaigns (" + numCampaigns + ")";
     var creativesText = "creatives (" + offer.Creatives.Count + ")";
     <tr>
         <td>@offer.AdvertiserId</td>
         <td>@offer.Advertiser.AdvertiserName</td>
         <td>@offer.OfferId</td>
         <td>@Html.ActionLink(offer.OfferName, "Show", new { id = offer.OfferId })</td>
-        <td>@Html.ActionLink(campaignsText, "Index", "Campaigns", new { offerid = offer.OfferId }, null)
+        <td>@Html.ActionLink(reportsText, "Index", "CPMReports", new { offerid = offer.OfferId }, null)
             &nbsp; | &nbsp; @Html.ActionLink(dropsText, "Index", "CampaignDrops", new { offerid = offer.OfferId }, null)
+            &nbsp; | &nbsp; @Html.ActionLink(campaignsText, "Index", "Campaigns", new { offerid = offer.OfferId }, null)
             &nbsp; | &nbsp; @Html.ActionLink(creativesText, "Index", "Creatives", new { offerid = offer.OfferId }, null)
         </td>
     </tr>

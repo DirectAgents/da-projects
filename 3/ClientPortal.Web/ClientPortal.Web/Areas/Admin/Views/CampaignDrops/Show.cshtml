@@ -2,7 +2,7 @@
 
 <h3>Drop Details</h3>
 
-Offer: @Model.Campaign.Offer.OfferName (@Model.Campaign.Offer.OfferId)
+Offer: @Model.Campaign.Offer.DisplayName
 <br />
 Campaign: @Model.Campaign.CampaignName
 <br />
@@ -33,7 +33,6 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
             <td>@Html.DisplayFor(m => m.Opens)</td>
         </tr>
     </table>
-    @{ int i = 0; }
     @foreach (var creativeStat in Model.CreativeStats)
     {
         //Html.RenderPartial("../CreativeStats/Show", creativeStat);
@@ -41,15 +40,15 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
             <legend>Creative</legend>
             <table>
                 <tr>
-                    <td>@Html.Label("Name")</td>
-                    <td>@Html.DisplayFor(_ => creativeStat.Creative.CreativeName)</td>
+                    <td>@Html.LabelFor(_ => creativeStat.Creative.CreativeName, "Name")</td>
+                    <td>@Html.DisplayFor(_ => creativeStat.Creative.DisplayName)</td>
                 </tr>
                 <tr>
-                    <td>@Html.Label("Clicks")</td>
+                    <td>@Html.LabelFor(_ => creativeStat.Clicks)</td>
                     <td>@Html.DisplayFor(_ => creativeStat.Clicks)</td>
                 </tr>
                 <tr>
-                    <td>@Html.Label("Leads")</td>
+                    <td>@Html.LabelFor(_ => creativeStat.Leads)</td>
                     <td>@Html.DisplayFor(_ => creativeStat.Leads)</td>
                 </tr>
                 <tr>
@@ -57,16 +56,15 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
                 </tr>
             </table>
         </fieldset>
-        i++;
     }
     <br />
     @Html.ActionLink("Edit Drop", "Edit", new { id = Model.CampaignDropId }) |
     @Html.ActionLink("Add Creative to Drop", "Create", "CreativeStats", new { campaigndropid = Model.CampaignDropId }, null) |
     @Html.ActionLink("Synch Creative Stats", "SynchStats", new { id = Model.CampaignDropId }) |
     @Html.ActionLink("Delete Drop", "Delete", "CampaignDrops", new { id = Model.CampaignDropId }, new { onclick = "return confirm('Are you sure you want to delete this drop?')" })
-    <br /><br />
-    Back to:
-    @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.Campaign.OfferId }, null ) |
-    @Html.ActionLink("Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null) |
-    @Html.ActionLink("Show all drops for Offer " + Model.Campaign.OfferId, "Index", "CampaignDrops", new { offerid = Model.Campaign.OfferId }, null)
 </fieldset>
+<br />
+Back to:
+@Html.ActionLink("Offer", "Show", "Offers", new { id = Model.Campaign.OfferId }, null ) |
+@Html.ActionLink("Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null) |
+@Html.ActionLink("Show all drops for Offer " + Model.Campaign.OfferId, "Index", "CampaignDrops", new { offerid = Model.Campaign.OfferId }, null)

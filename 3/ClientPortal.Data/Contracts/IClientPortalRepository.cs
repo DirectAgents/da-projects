@@ -11,7 +11,7 @@ namespace ClientPortal.Data.Contracts
         void SaveChanges();
 
         IQueryable<Offer> Offers(int? advertiserId);
-        IQueryable<Offer> Offers(bool cpmOnly, int? minCampaigns = null);
+        IQueryable<Offer> Offers(int? advertiserId, bool cpmOnly, int? minCampaigns = null);
         Offer GetOffer(int id);
         IQueryable<Campaign> Campaigns(int? offerId, bool cpmOnly);
         Campaign GetCampaign(int id);
@@ -19,6 +19,13 @@ namespace ClientPortal.Data.Contracts
         Creative GetCreative(int id);
         bool SaveCreative(Creative creative, bool saveChanges = false);
         void FillExtended_Creative(Creative creative);
+
+        IQueryable<CPMReport> CPMReports(int? offerId);
+        CPMReport GetCPMReport(int id, bool includeAdvertiser = false);
+        void SaveCPMReport(CPMReport inReport, bool saveChanges = false);
+        bool AddDropToCPMReport(int cpmReportId, int campaignDropId, bool saveChanges = false);
+        bool RemoveDropFromCPMReport(int cpmReportId, int campaignDropId, bool saveChanges = false);
+        void FillExtended_CPMReport(CPMReport inReport);
 
         IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId);
         CampaignDrop GetCampaignDrop(int id);

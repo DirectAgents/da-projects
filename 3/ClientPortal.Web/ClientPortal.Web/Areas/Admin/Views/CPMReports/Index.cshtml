@@ -1,0 +1,18 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.CPMReport>
+
+CPM Reports:
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Drops</th>
+        <th>Date Sent</th>
+    </tr>
+@foreach (var report in Model)
+{
+    <tr>
+        <td>@Html.ActionLink(report.Name, "Show", "CPMReports", new { id = report.CPMReportId }, null)</td>
+        <td>@report.CampaignDrops.Count</td>
+        <td>@report.DateSent</td>
+    </tr>
+}
+</table>

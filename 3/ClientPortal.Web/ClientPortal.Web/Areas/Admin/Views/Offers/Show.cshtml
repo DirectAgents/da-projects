@@ -2,16 +2,20 @@
 
 <h3>Offer Summary</h3>
 
-Advertiser: @Model.Advertiser.AdvertiserName
+Advertiser: @Html.ActionLink(Model.Advertiser.AdvertiserName, "Index", new { advertiserid = Model.AdvertiserId })
 <br />
 Offer: @Model.DisplayName
 <br /><br />
 
+@Html.Partial("../CPMReports/Index", Model.CPMReports)
+@Html.ActionLink("(new report)", "Create", "CPMReports", new { offerid = Model.OfferId }, null)
+
+<br /><br />
 Drops:
 @Html.ActionLink("(edit drops)", "Index", "CampaignDrops", new { offerid = @Model.OfferId }, null)
 @Html.Partial("DropReport", @Model.DropReport)
 
-<br /><br />
+<br />
 Campaigns:
 <table border="1">
     <tr>

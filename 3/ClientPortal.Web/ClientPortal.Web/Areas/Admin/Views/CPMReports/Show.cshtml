@@ -1,0 +1,77 @@
+﻿@model ClientPortal.Data.Contexts.CPMReport
+
+<h3>Report Details</h3>
+
+Advertiser: @Model.Offer.Advertiser.AdvertiserName
+<br />
+Offer: @Model.Offer.DisplayName
+<br /><br />
+
+<fieldset>
+    <legend>CPM Report</legend>
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.Name)</td>
+            <td>@Html.DisplayFor(m => m.Name)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Recipient, "Recipient(s)")</td>
+            <td>@Html.DisplayFor(m => m.Recipient)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.DateSent, "Date Sent")</td>
+            <td>@Html.DisplayFor(m => m.DateSent)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Summary)</td>
+            <td>@Html.DisplayFor(m => m.Summary)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Conclusion)</td>
+            <td>@Html.DisplayFor(m => m.Conclusion)</td>
+        </tr>
+    </table>
+    @foreach (var drop in Model.CampaignDrops)
+    {
+        <fieldset>
+            <legend>Drop</legend>
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(_ => drop.Date)</td>
+                    <td>@Html.DisplayFor(_ => drop.Date, "Date")</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(_ => drop.Subject)</td>
+                    <td>@Html.DisplayFor(_ => drop.Subject)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(_ => drop.Volume)</td>
+                    <td>@Html.DisplayFor(_ => drop.Volume)</td>
+                </tr>
+                <tr>
+                    <td colspan="2">@Html.ActionLink("Remove from report", "RemoveDrop", new { cpmreportid = Model.CPMReportId, campaigndropid = drop.CampaignDropId },
+                                                        new { onclick = "return confirm('Are you sure you want to remove this drop from the report?')" })</td>
+                </tr>
+            </table>
+        </fieldset>
+    }
+    <br />
+    @Html.ActionLink("Edit Report", "Edit", new { id = Model.CPMReportId })
+    <br /><br />
+@{
+    var drops = (IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>)ViewData["CampaignDrops"];
+    if (drops.Count() > 0) {
+        using (Ajax.BeginForm("AddDrop", new AjaxOptions { })) //UpdateTargetId =
+        {
+            var dropSelectList = new SelectList(drops, "CampaignDropId", "DisplayName");
+            <text>Add Drop:</text>
+            @Html.DropDownList("CampaignDropId", dropSelectList)
+            <input type="submit" value="Add" />
+            @Html.HiddenFor(m => m.CPMReportId)
+        }
+    }
+}
+</fieldset>
+<br />
+Back to:
+@Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId }, null)

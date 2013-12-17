@@ -17,6 +17,7 @@ namespace ClientPortal.Data.Contexts
         public CampaignDrop()
         {
             this.CreativeStats = new HashSet<CreativeStat>();
+            this.CPMReports = new HashSet<CPMReport>();
         }
     
         public int CampaignDropId { get; set; }
@@ -29,5 +30,6 @@ namespace ClientPortal.Data.Contexts
     
         public virtual Campaign Campaign { get; set; }
         public virtual ICollection<CreativeStat> CreativeStats { get; set; }
+        public virtual ICollection<CPMReport> CPMReports { get; set; }
     }
 }
