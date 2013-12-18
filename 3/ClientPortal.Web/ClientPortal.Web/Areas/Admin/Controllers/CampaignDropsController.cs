@@ -19,7 +19,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         public ActionResult Index(int? offerid, int? campaignid)
         {
             var drops = cpRepo.CampaignDrops(offerid, campaignid);
-            return View(drops.OrderBy(d => d.Date));
+            return View(drops.OrderByDescending(d => d.Date));
         }
 
         public ActionResult Create(int campaignid, string from)
@@ -50,20 +50,20 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(int campaignid, DateTime? date, int creativeid, string from)
+        public ActionResult Create(int campaignid, DateTime? date, string subject, decimal? cost, int creativeid, string from)
         {
-            if (date.HasValue)
+            if (!date.HasValue)
+                ModelState.AddModelError("Date", "Date could not be parsed");
+            //else if (!cost.HasValue) //TODO: make cost a string and see if it can be parsed
+            //    ModelState.AddModelError("Cost", "Cost could not be parsed");
+            else
             {
-                var campaignDrop = cpRepo.AddCampaignDrop(campaignid, date.Value, creativeid, true);
+                var campaignDrop = cpRepo.AddCampaignDrop(campaignid, date.Value, subject, cost, creativeid, true);
                 if (campaignDrop != null)
                 {   // success
                     return RedirectToAction("Show", new { id = campaignDrop.CampaignDropId });
                 }
                 ModelState.AddModelError("", "Campaign Drop could not be saved");
-            }
-            else
-            {
-                ModelState.AddModelError("Date", "Date could not be parsed");
             }
             var drop = SetupForCreate(campaignid, from);
             return View(drop);
@@ -108,11 +108,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Delete(int id)
         {
-            int? campaignId = cpRepo.DeleteCampaignDrop(id, true);
-            if (campaignId == null)
+            //TODO: check to see if drop exists in any reports first
+            Campaign campaign = cpRepo.DeleteCampaignDrop(id, true);
+            if (campaign == null)
                 return HttpNotFound();
 
-            return RedirectToAction("Show", "Campaigns", new { id = campaignId.Value });
+            return RedirectToAction("Show", "Offers", new { id = campaign.OfferId });
         }
 
         public ActionResult SynchStats(int id)

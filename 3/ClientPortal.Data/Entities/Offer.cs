@@ -31,17 +31,31 @@ namespace ClientPortal.Data.Contexts
             return this.Creatives.OrderByDescending(c => c.DateCreated);
         }
 
-        private DropReport dropReport;
-        [NotMapped]
-        public DropReport DropReport
+        // chronological: true==oldest-to-newest, false==newest-to-oldest, null==not-ordered
+        public IEnumerable<CampaignDrop> AllCampaignDrops(bool? chronological)
         {
-            get
+            var drops = Campaigns.SelectMany(c => c.CampaignDrops);
+            if (chronological.HasValue)
             {
-                if (dropReport == null)
-                    dropReport = new DropReport(Campaigns.SelectMany(c => c.CampaignDrops));
-                return dropReport;
+                if (chronological.Value)
+                    drops = drops.OrderBy(cd => cd.Date);
+                else
+                    drops = drops.OrderByDescending(cd => cd.Date);
             }
+            return drops;
         }
+
+        //private DropReport dropReport;
+        //[NotMapped]
+        //public DropReport DropReport
+        //{
+        //    get
+        //    {
+        //        if (dropReport == null)
+        //            dropReport = new DropReport(Campaigns.SelectMany(c => c.CampaignDrops));
+        //        return dropReport;
+        //    }
+        //}
     }
 
     public class DropReport

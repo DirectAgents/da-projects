@@ -244,6 +244,7 @@
     <Compile Include="Entities\Advertiser.cs" />
     <Compile Include="Entities\CampaignDrop.cs" />
     <Compile Include="Entities\Contact.cs" />
+    <Compile Include="Entities\CPMReport.cs" />
     <Compile Include="Entities\Creative.cs" />
     <Compile Include="Entities\CreativeStat.cs" />
     <Compile Include="Entities\Goal.cs" />

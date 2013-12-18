@@ -29,10 +29,10 @@ namespace ClientPortal.Data.Contracts
 
         IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId);
         CampaignDrop GetCampaignDrop(int id);
-        CampaignDrop AddCampaignDrop(int campaignId, DateTime date, int creativeId, bool saveChanges = false);
+        CampaignDrop AddCampaignDrop(int campaignId, DateTime date, string subject, decimal? cost, int creativeId, bool saveChanges = false);
         bool SaveCampaignDrop(CampaignDrop campaignDrop, bool saveChanges = false);
         void FillExtended_CampaignDrop(CampaignDrop campaignDrop);
-        int? DeleteCampaignDrop(int campaignDropId, bool saveChanges = false);
+        Campaign DeleteCampaignDrop(int campaignDropId, bool saveChanges = false);
 
         void SaveCreativeStat(CreativeStat creativeStat, bool saveChanges = false);
         int? DeleteCreativeStat(int creativeStatId, bool saveChanges = false);

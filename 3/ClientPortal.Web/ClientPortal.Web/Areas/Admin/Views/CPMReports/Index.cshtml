@@ -10,9 +10,11 @@ CPM Reports:
 @foreach (var report in Model)
 {
     <tr>
-        <td>@Html.ActionLink(report.Name, "Show", "CPMReports", new { id = report.CPMReportId }, null)</td>
+        <td>@report.Name</td>
         <td>@report.CampaignDrops.Count</td>
         <td>@report.DateSent</td>
+        <td>@Html.ActionLink("View/Edit", "Show", "CPMReports", new { id = report.CPMReportId }, null)</td>
+        <td>@Html.ActionLink("Preview", "Preview", "CPMReports", new { id = report.CPMReportId }, null)</td>
     </tr>
 }
 </table>

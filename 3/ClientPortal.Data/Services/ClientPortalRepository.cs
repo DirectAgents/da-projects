@@ -228,7 +228,7 @@ namespace ClientPortal.Data.Services
             return campaignDrop;
         }
 
-        public CampaignDrop AddCampaignDrop(int campaignId, DateTime date, int creativeId, bool saveChanges = false)
+        public CampaignDrop AddCampaignDrop(int campaignId, DateTime date, string subject, decimal? cost, int creativeId, bool saveChanges = false)
         {
             CampaignDrop campaignDrop = null;
             var campaign = context.Campaigns.Find(campaignId);
@@ -238,7 +238,9 @@ namespace ClientPortal.Data.Services
                 campaignDrop = new CampaignDrop
                 {
                     Campaign = campaign,
-                    Date = date
+                    Date = date,
+                    Subject = subject,
+                    Cost = cost
                 };
                 var creativeStat = new CreativeStat
                 {
@@ -286,14 +288,14 @@ namespace ClientPortal.Data.Services
             }
         }
 
-        // return campaignId, or null if the campaignDrop doesn't exist
-        public int? DeleteCampaignDrop(int dropId, bool saveChanges = false)
+        // return Campaign, or null if the campaignDrop doesn't exist
+        public Campaign DeleteCampaignDrop(int dropId, bool saveChanges = false)
         {
-            int? campaignId = null;
+            Campaign campaign = null;
             var drop = context.CampaignDrops.Find(dropId);
             if (drop != null)
             {
-                campaignId = drop.CampaignId;
+                campaign = drop.Campaign;
                 foreach (var creativeStat in drop.CreativeStats.ToList())
                 {
                     context.CreativeStats.Remove(creativeStat);
@@ -301,7 +303,7 @@ namespace ClientPortal.Data.Services
                 context.CampaignDrops.Remove(drop);
                 if (saveChanges) SaveChanges();
             }
-            return campaignId;
+            return campaign;
         }
 
         public void SaveCreativeStat(CreativeStat inStat, bool saveChanges = false)

@@ -6,7 +6,10 @@ Advertiser: @Model.Offer.Advertiser.AdvertiserName
 <br />
 Offer: @Model.Offer.DisplayName
 <br /><br />
-
+@Html.ActionLink("Edit Report", "Edit", new { id = Model.CPMReportId }) |
+@Html.ActionLink("Preview", "Preview", new { id = Model.CPMReportId }) |
+Back to: @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId }, null)
+<br /><br />
 <fieldset>
     <legend>CPM Report</legend>
     <table>
@@ -31,7 +34,7 @@ Offer: @Model.Offer.DisplayName
             <td>@Html.DisplayFor(m => m.Conclusion)</td>
         </tr>
     </table>
-    @foreach (var drop in Model.CampaignDrops)
+    @foreach (var drop in Model.CampaignDropsOrdered)
     {
         <fieldset>
             <legend>Drop</legend>
@@ -49,6 +52,10 @@ Offer: @Model.Offer.DisplayName
                     <td>@Html.DisplayFor(_ => drop.Volume)</td>
                 </tr>
                 <tr>
+                    <td>@Html.LabelFor(_ => drop.Cost)</td>
+                    <td>@Html.DisplayFor(_ => drop.Cost, "Money")</td>
+                </tr>
+                <tr>
                     <td colspan="2">@Html.ActionLink("Remove from report", "RemoveDrop", new { cpmreportid = Model.CPMReportId, campaigndropid = drop.CampaignDropId },
                                                         new { onclick = "return confirm('Are you sure you want to remove this drop from the report?')" })</td>
                 </tr>
@@ -56,8 +63,6 @@ Offer: @Model.Offer.DisplayName
         </fieldset>
     }
     <br />
-    @Html.ActionLink("Edit Report", "Edit", new { id = Model.CPMReportId })
-    <br /><br />
 @{
     var drops = (IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>)ViewData["CampaignDrops"];
     if (drops.Count() > 0) {
@@ -72,6 +77,3 @@ Offer: @Model.Offer.DisplayName
     }
 }
 </fieldset>
-<br />
-Back to:
-@Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId }, null)

@@ -1,6 +1,6 @@
 ﻿@model ClientPortal.Data.Contexts.CampaignDrop
 @{
-    string from = ViewData["from"].ToString();
+    string from = (string)ViewData["from"];
 }
 
 <h3>Create Drop</h3>
@@ -14,11 +14,11 @@
         @Html.HiddenFor(m => m.CampaignId)
         <table>
             <tr>
-                <td>Campaign</td>
+                <td>@Html.Label("Campaign")</td>
                 <td>@Html.DisplayFor(m => m.Campaign.CampaignName)</td>
             </tr>
             <tr>
-                <td>Affiliate</td>
+                <td>@Html.Label("Affiliate")</td>
                 <td>@Html.DisplayFor(m => m.Campaign.Affiliate.AffiliateName)</td>
             </tr>
             <tr>
@@ -26,8 +26,16 @@
                 <td>@Html.TextBoxFor(m => m.Date, "{0:d}")</td>
             </tr>
             <tr>
-                <td>Creative</td>
+                <td>@Html.Label("Creative")</td>
                 <td>@Html.EditorFor(_ => ViewData["Creatives"], "CreativeDropDown", "CreativeId")</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Subject)</td>
+                <td>@Html.EditorFor(m => m.Subject)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Cost)</td>
+                <td>@Html.EditorFor(m => m.Cost)</td>
             </tr>
         </table>
 

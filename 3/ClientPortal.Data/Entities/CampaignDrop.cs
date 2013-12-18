@@ -1,6 +1,4 @@
-﻿using ClientPortal.Data.Contexts;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace ClientPortal.Data.Contexts
@@ -10,7 +8,7 @@ namespace ClientPortal.Data.Contexts
         [NotMapped]
         public string DisplayName
         {
-            get { return string.Format("{0} Aff: {1} Vol: {2}", Date.ToShortDateString(), Campaign.AffiliateId, Volume.HasValue ? Volume.Value.ToString("N0") : ""); }
+            get { return string.Format("{0} Aff: {1} Vol: {2} Cost: {3}", Date.ToShortDateString(), Campaign.AffiliateId, Volume.HasValue ? Volume.Value.ToString("N0") : "", Cost.HasValue ? Cost.Value.ToString("C2") : ""); }
         }
 
         [NotMapped]

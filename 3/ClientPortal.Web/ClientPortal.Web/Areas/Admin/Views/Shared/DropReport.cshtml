@@ -1,5 +1,7 @@
 ﻿@model ClientPortal.Data.Contexts.DropReport
 
+<h3>Report Preview</h3>
+
 <table border="1">
     <tr>
         <th>List</th>
@@ -10,7 +12,7 @@
         <th>Leads</th>
         <th>Total Cost</th>
     </tr>
-@foreach (var drop in Model.CampaignDrops.OrderBy(d => d.Date))
+@foreach (var drop in Model.CampaignDrops)
 {
     <tr>
         <td>@drop.Campaign.AffiliateId</td>

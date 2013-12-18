@@ -36,7 +36,7 @@ Offer: @Model.Offer.DisplayName
 @{
     //var drops = (IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>)ViewData["CampaignDrops"];
 }
-        @foreach(var drop in Model.CampaignDrops)
+        @foreach(var drop in Model.CampaignDropsOrdered)
         {
         <fieldset>
             <legend>Drop</legend>

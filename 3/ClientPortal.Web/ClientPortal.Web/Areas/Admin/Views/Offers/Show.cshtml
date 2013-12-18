@@ -11,11 +11,10 @@ Offer: @Model.DisplayName
 @Html.ActionLink("(new report)", "Create", "CPMReports", new { offerid = Model.OfferId }, null)
 
 <br /><br />
-Drops:
-@Html.ActionLink("(edit drops)", "Index", "CampaignDrops", new { offerid = @Model.OfferId }, null)
-@Html.Partial("DropReport", @Model.DropReport)
+@Html.Partial("../CampaignDrops/Index", Model.AllCampaignDrops(false))
+(To create a new drop, click the "New Drop" link next to one of the Campaigns below.)
 
-<br />
+<br /><br />
 Campaigns:
 <table border="1">
     <tr>

@@ -75,7 +75,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return null;
 
             var dropIds = report.CampaignDrops.Select(cd => cd.CampaignDropId).ToList();
-            ViewData["CampaignDrops"] = cpRepo.CampaignDrops(report.OfferId, null).Where(cd => !dropIds.Contains(cd.CampaignDropId));
+            ViewData["CampaignDrops"] = cpRepo.CampaignDrops(report.OfferId, null)
+                                                .Where(cd => !dropIds.Contains(cd.CampaignDropId))
+                                                .OrderByDescending(cd => cd.Date);
             return report;
         }
 
@@ -115,6 +117,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             bool success = cpRepo.RemoveDropFromCPMReport(cpmreportid, campaigndropid, true);
 
             return RedirectToAction("Show", new { id = cpmreportid });
+        }
+
+        public ActionResult Preview(int id)
+        {
+            var report = cpRepo.GetCPMReport(id, true);
+            if (report == null)
+                return HttpNotFound();
+
+            var dropReport = new DropReport(report.CampaignDropsOrdered);
+            return View("DropReport", dropReport);
         }
     }
 }
