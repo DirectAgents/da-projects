@@ -70,9 +70,19 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     campaign.Affiliate = affiliate;
 
                     StringBuilder campaignNameSB = new StringBuilder(offer.OfferName);
-                    if (item.OfferContract != null && !String.IsNullOrWhiteSpace(item.OfferContract.OfferContractName))
-                        campaignNameSB.Append(" - " + item.OfferContract.OfferContractName);
-                    campaignNameSB.Append(" - " + item.OfferContract.PriceFormat.PriceFormatName + " - " + item.Payout.FormattedAmount);
+                    if (item.OfferContract != null)
+                    {
+                        if (!String.IsNullOrWhiteSpace(item.OfferContract.OfferContractName))
+                            campaignNameSB.Append(" - " + item.OfferContract.OfferContractName);
+                        if (item.OfferContract.PriceFormat != null)
+                        {
+                            campaignNameSB.Append(" - " + item.OfferContract.PriceFormat.PriceFormatName);
+
+                            campaign.PriceFormatName = item.OfferContract.PriceFormat.PriceFormatName;
+                        }
+                    }
+                    if (item.Payout != null)
+                        campaignNameSB.Append(" - " + item.Payout.FormattedAmount);
 
                     campaign.CampaignName = campaignNameSB.ToString();
 

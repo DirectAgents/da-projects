@@ -47,7 +47,7 @@
         <AssociationConnector Association="ClientPortalModel.FK_UserEvent_UserProfile" />
         <EntityTypeShape EntityType="ClientPortalModel.Offer" Width="1.5" PointX="12.125" PointY="0.5" />
         <AssociationConnector Association="ClientPortalModel.FK_Goal_Offer" />
-        <EntityTypeShape EntityType="ClientPortalModel.Affiliate" Width="1.5" PointX="12.125" PointY="5.625" />
+        <EntityTypeShape EntityType="ClientPortalModel.Affiliate" Width="1.5" PointX="12.125" PointY="5.75" />
         <EntityTypeShape EntityType="ClientPortalModel.Campaign" Width="1.5" PointX="12.125" PointY="3.125" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Affiliate" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Offer" />

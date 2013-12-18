@@ -198,6 +198,7 @@
           <Property Name="OfferId" Type="int" Nullable="false" />
           <Property Name="AffiliateId" Type="int" Nullable="false" />
           <Property Name="CampaignName" Type="nvarchar" MaxLength="255" />
+          <Property Name="PriceFormatName" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CampaignDrop">
           <Key>
@@ -1598,6 +1599,7 @@
           <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Campaign_Offer" FromRole="Campaign" ToRole="Offer" />
           <Property Type="String" Name="CampaignName" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CampaignDrops" Relationship="ClientPortalModel.FK_CampaignDrop_Campaign" FromRole="Campaign" ToRole="CampaignDrop" />
+          <Property Type="String" Name="PriceFormatName" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Campaign_Affiliate">
           <End Type="ClientPortalModel.Affiliate" Role="Affiliate" Multiplicity="1" />
@@ -2088,6 +2090,7 @@
           <EntitySetMapping Name="Campaigns">
             <EntityTypeMapping TypeName="ClientPortalModel.Campaign">
               <MappingFragment StoreEntitySet="Campaign">
+                <ScalarProperty Name="PriceFormatName" ColumnName="PriceFormatName" />
                 <ScalarProperty Name="CampaignName" ColumnName="CampaignName" />
                 <ScalarProperty Name="AffiliateId" ColumnName="AffiliateId" />
                 <ScalarProperty Name="OfferId" ColumnName="OfferId" />
