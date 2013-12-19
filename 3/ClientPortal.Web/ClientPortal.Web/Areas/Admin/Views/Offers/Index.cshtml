@@ -1,6 +1,14 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.Offer>
+@{
+    var accountManagers = Model.Select(o => o.Advertiser).Distinct().Where(a => a.AccountManagerId != null).Select(a => a.AccountManager).Distinct().OrderBy(am => am.FullName);
+}
 
 <h2>Offers</h2>
+
+@if (accountManagers.Count() == 1)
+{
+    <text>Account Manager: </text>@accountManagers.First().FullName
+}
 
 <table border="1">
     <tr>
@@ -31,3 +39,15 @@
     </tr>
 }
 </table>
+<br />Show:
+@Html.ActionLink("all offers", "Index", "Offers") |
+@Html.ActionLink("all offers with campaigns", "Index", "Offers", new { mincampaigns = 1 }, null)
+@if (accountManagers.Count() > 1)
+{
+    <br /><br />
+    <text>Filter by Account Manager:</text><br />
+    foreach (var am in accountManagers)
+    {
+        @Html.ActionLink(am.FullName, "Index", "Offers", new { am = am.CakeContactId }, null)<br />
+    }
+}

@@ -14,6 +14,11 @@ namespace ClientPortal.Data.Contexts
     
     public partial class CakeContact
     {
+        public CakeContact()
+        {
+            this.Advertisers = new HashSet<Advertiser>();
+        }
+    
         public int CakeContactId { get; set; }
         public int CakeRoleId { get; set; }
         public string FirstName { get; set; }
@@ -25,5 +30,6 @@ namespace ClientPortal.Data.Contexts
         public string PhoneFax { get; set; }
     
         public virtual CakeRole CakeRole { get; set; }
+        public virtual ICollection<Advertiser> Advertisers { get; set; }
     }
 }

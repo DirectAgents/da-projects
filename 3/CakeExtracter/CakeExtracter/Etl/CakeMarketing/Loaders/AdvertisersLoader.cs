@@ -44,6 +44,16 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
 
                     advertiser.AdvertiserName = item.AdvertiserName;
 
+                    if (item.AccountManagers != null && item.AccountManagers.Count > 0)
+                    {
+                        int accountManagerId = item.AccountManagers[0].ContactId;
+                        var cakeContact = db.CakeContacts.SingleOrDefault(c => c.CakeContactId == accountManagerId);
+                        if (cakeContact != null)
+                            advertiser.AccountManagerId = cakeContact.CakeContactId;
+                        else
+                            Logger.Info("Advertiser {0}'s AccountManager (CakeContactId {1}) doesn't exist. Leaving AccountManagerId unchanged.", advertiser.AdvertiserId, accountManagerId);
+                    }
+
                     if (includeContacts)
                     {
                         Logger.Info("Synching {0} contacts...", item.Contacts.Count);

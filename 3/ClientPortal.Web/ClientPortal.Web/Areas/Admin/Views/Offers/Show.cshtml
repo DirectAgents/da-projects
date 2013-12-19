@@ -1,7 +1,14 @@
 ﻿@model ClientPortal.Data.Contexts.Offer
-
+@{
+    var am = Model.Advertiser.AccountManager;
+}
 <h3>Offer Summary</h3>
 
+@if (am != null)
+{
+    <text>Account Manager: </text>@Html.ActionLink(am.FullName, "Index", "Offers", new { am = am.CakeContactId }, null)
+    <br />
+}
 Advertiser: @Html.ActionLink(Model.Advertiser.AdvertiserName, "Index", new { advertiserid = Model.AdvertiserId })
 <br />
 Offer: @Model.DisplayName

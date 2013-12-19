@@ -31,7 +31,7 @@ namespace ClientPortal.Data.Services
 
         // includes Advertisers
         // pass in advertiserId==null for all advertisers
-        public IQueryable<Offer> Offers(int? advertiserId, bool cpmOnly, int? minCampaigns = null)
+        public IQueryable<Offer> Offers(int? accountManagerId, int? advertiserId, bool cpmOnly, int? minCampaigns = null)
         {
             var offers = context.Offers.AsQueryable();
             if (advertiserId.HasValue)
@@ -44,12 +44,15 @@ namespace ClientPortal.Data.Services
             var q = from o in offers
                     join a in context.Advertisers.AsQueryable()
                     on o.AdvertiserId equals a.AdvertiserId
-                    select new { Offer = o, AdvertiserId = a.AdvertiserId, AdvertiserName = a.AdvertiserName };
+                    select new { Offer = o, AdvertiserId = a.AdvertiserId, AdvertiserName = a.AdvertiserName, AccountManager = a.AccountManager };
 
-            var off = from row in q.AsEnumerable()
-                      select row.Offer.ThisWithAdvertiserInfo(row.AdvertiserId, row.AdvertiserName);
+            var offersDetached = from row in q.AsEnumerable()
+                                 select row.Offer.ThisWithAdvertiserInfo(row.AdvertiserId, row.AdvertiserName, row.AccountManager);
 
-            return off.AsQueryable();
+            if (accountManagerId.HasValue)
+                offersDetached = offersDetached.Where(o => o.Advertiser.AccountManagerId == accountManagerId.Value);
+
+            return offersDetached.AsQueryable();
         }
 
         // includes Advertiser

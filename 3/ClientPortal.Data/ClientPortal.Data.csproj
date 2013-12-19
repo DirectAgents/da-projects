@@ -248,6 +248,7 @@
     <Compile Include="DTOs\SearchStat.cs" />
     <Compile Include="DTOs\WeeklySearchStat.cs" />
     <Compile Include="Entities\Advertiser.cs" />
+    <Compile Include="Entities\CakeContact.cs" />
     <Compile Include="Entities\CampaignDrop.cs" />
     <Compile Include="Entities\Contact.cs" />
     <Compile Include="Entities\CPMReport.cs" />

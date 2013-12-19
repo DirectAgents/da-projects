@@ -41,6 +41,10 @@
           <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserEvent" EntityType="ClientPortalModel.Store.UserEvent" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Advertiser_CakeContact" Association="ClientPortalModel.Store.FK_Advertiser_CakeContact">
+            <End Role="CakeContact" EntitySet="CakeContact" />
+            <End Role="Advertiser" EntitySet="Advertiser" />
+          </AssociationSet>
           <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.Store.FK_AdvertiserScheduledReport">
             <End Role="Advertiser" EntitySet="Advertiser" />
             <End Role="ScheduledReport" EntitySet="ScheduledReport" />
@@ -179,6 +183,7 @@
           <Property Name="AutomatedReportsPeriodDays" Type="int" Nullable="false" />
           <Property Name="AutomatedReportsNextSendAfter" Type="datetime" />
           <Property Name="ShowSearchChannels" Type="bit" Nullable="false" />
+          <Property Name="AccountManagerId" Type="int" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -552,6 +557,18 @@
           <Property Name="SearchWeekStartDay" Type="int" Nullable="false" />
           <Property Name="SearchWeekEndDay" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Advertiser_CakeContact">
+          <End Role="CakeContact" Type="ClientPortalModel.Store.CakeContact" Multiplicity="0..1" />
+          <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CakeContact">
+              <PropertyRef Name="CakeContactId" />
+            </Principal>
+            <Dependent Role="Advertiser">
+              <PropertyRef Name="AccountManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Role="Advertiser" Type="ClientPortalModel.Store.Advertiser" Multiplicity="1" />
           <End Role="ScheduledReport" Type="ClientPortalModel.Store.ScheduledReport" Multiplicity="*" />
@@ -1055,6 +1072,10 @@
             <End Role="CakeRole" EntitySet="CakeRoles" />
             <End Role="CakeContact" EntitySet="CakeContacts" />
           </AssociationSet>
+          <AssociationSet Name="FK_Advertiser_CakeContact" Association="ClientPortalModel.FK_Advertiser_CakeContact">
+            <End Role="CakeContact" EntitySet="CakeContacts" />
+            <End Role="Advertiser" EntitySet="Advertisers" />
+          </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -1445,6 +1466,8 @@
           <Property Type="String" Name="AnalyticsProfileId" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="SearchAccounts" Relationship="ClientPortalModel.FK_SearchAccount_Advertiser" FromRole="Advertiser" ToRole="SearchAccount" />
           <Property Type="Boolean" Name="ShowSearchChannels" Nullable="false" />
+          <Property Type="Int32" Name="AccountManagerId" />
+          <NavigationProperty Name="AccountManager" Relationship="ClientPortalModel.FK_Advertiser_CakeContact" FromRole="Advertiser" ToRole="CakeContact" />
         </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -1833,6 +1856,7 @@
           <Property Type="String" Name="PhoneCell" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="PhoneFax" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CakeRole" Relationship="ClientPortalModel.FK_CakeContact_CakeRole" FromRole="CakeContact" ToRole="CakeRole" />
+          <NavigationProperty Name="Advertisers" Relationship="ClientPortalModel.FK_Advertiser_CakeContact" FromRole="CakeContact" ToRole="Advertiser" />
         </EntityType>
         <EntityType Name="CakeRole">
           <Key>
@@ -1851,6 +1875,18 @@
             </Principal>
             <Dependent Role="CakeContact">
               <PropertyRef Name="CakeRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Advertiser_CakeContact">
+          <End Type="ClientPortalModel.CakeContact" Role="CakeContact" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CakeContact">
+              <PropertyRef Name="CakeContactId" />
+            </Principal>
+            <Dependent Role="Advertiser">
+              <PropertyRef Name="AccountManagerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2086,6 +2122,7 @@
           <EntitySetMapping Name="Advertisers">
             <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
               <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="AccountManagerId" ColumnName="AccountManagerId" />
                 <ScalarProperty Name="ShowSearchChannels" ColumnName="ShowSearchChannels" />
                 <ScalarProperty Name="AnalyticsProfileId" ColumnName="AnalyticsProfileId" />
                 <ScalarProperty Name="BingAdsAccountId" ColumnName="BingAdsAccountId" />

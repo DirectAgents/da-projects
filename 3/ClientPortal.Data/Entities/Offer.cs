@@ -16,12 +16,14 @@ namespace ClientPortal.Data.Contexts
         [NotMapped]
         public Advertiser Advertiser { get; set; }
 
-        public Offer ThisWithAdvertiserInfo(int advertiserId, string advertiserName)
+        public Offer ThisWithAdvertiserInfo(int advertiserId, string advertiserName, CakeContact accountManager)
         {
             this.Advertiser = new Advertiser
             {
                 AdvertiserId = advertiserId,
-                AdvertiserName = advertiserName
+                AdvertiserName = advertiserName,
+                AccountManagerId = accountManager.CakeContactId,
+                AccountManager = accountManager
             };
             return this;
         }

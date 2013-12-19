@@ -217,6 +217,7 @@
     <Compile Include="CakeMarketingApi\Entities\CampaignExportResponse.cs" />
     <Compile Include="CakeMarketingApi\Entities\Click.cs" />
     <Compile Include="CakeMarketingApi\Entities\ClickReportResponse.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Contact.cs" />
     <Compile Include="CakeMarketingApi\Entities\ContactInfo.cs" />
     <Compile Include="CakeMarketingApi\Entities\Conversion.cs" />
     <Compile Include="CakeMarketingApi\Entities\ConversionReportResponse.cs" />

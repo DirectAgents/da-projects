@@ -15,9 +15,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             this.cpRepo = cpRepository;
         }
 
-        public ActionResult Index(int? advertiserid, int? mincampaigns)
+        public ActionResult Index(int? am, int? advertiserid, int? mincampaigns)
         {
-            var offers = cpRepo.Offers(advertiserid, true, mincampaigns);
+            var offers = cpRepo.Offers(am, advertiserid, true, mincampaigns);
 
             offers = offers
                 .OrderBy(o => o.Advertiser.AdvertiserName)

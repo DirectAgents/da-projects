@@ -41,6 +41,7 @@ namespace ClientPortal.Data.Contexts
         public string BingAdsAccountId { get; set; }
         public string AnalyticsProfileId { get; set; }
         public bool ShowSearchChannels { get; set; }
+        public Nullable<int> AccountManagerId { get; set; }
     
         public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }
@@ -48,5 +49,6 @@ namespace ClientPortal.Data.Contexts
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<SearchCampaign> SearchCampaigns { get; set; }
         public virtual ICollection<SearchAccount> SearchAccounts { get; set; }
+        public virtual CakeContact AccountManager { get; set; }
     }
 }
