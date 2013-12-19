@@ -9,10 +9,13 @@ namespace CakeExtracter.CakeMarketingApi
 {
     public static class CakeMarketingUtility
     {
-        public static List<Advertiser> Advertisers()
+        public static List<Advertiser> Advertisers(int advertiserId = 0)
         {
             var client = new AdvertisersClient();
-            var request = new AdvertisersRequest();
+            var request = new AdvertisersRequest
+            {
+                advertiser_id = advertiserId
+            };
             var response = client.Advertisers(request);
             if (response != null)
                 return response.Advertisers;

@@ -217,6 +217,7 @@
     <Compile Include="CakeMarketingApi\Entities\CampaignExportResponse.cs" />
     <Compile Include="CakeMarketingApi\Entities\Click.cs" />
     <Compile Include="CakeMarketingApi\Entities\ClickReportResponse.cs" />
+    <Compile Include="CakeMarketingApi\Entities\ContactInfo.cs" />
     <Compile Include="CakeMarketingApi\Entities\Conversion.cs" />
     <Compile Include="CakeMarketingApi\Entities\ConversionReportResponse.cs" />
     <Compile Include="CakeMarketingApi\Entities\Country.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="CakeMarketingApi\Entities\PriceFormat.cs" />
     <Compile Include="CakeMarketingApi\Entities\Received.cs" />
     <Compile Include="CakeMarketingApi\Entities\Region.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="Commands\PrintItCommand.cs" />
     <Compile Include="Commands\ScheduledCommand.cs" />
     <Compile Include="Commands\ScheduledJob.cs" />

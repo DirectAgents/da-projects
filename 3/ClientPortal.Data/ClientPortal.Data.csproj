@@ -62,6 +62,12 @@
     <Compile Include="Contexts\Affiliate.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\CakeContact.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\CakeRole.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
     <Compile Include="Contexts\Campaign.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>

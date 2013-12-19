@@ -9,6 +9,8 @@
           <EntitySet Name="Advertiser" EntityType="ClientPortalModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="AdvertiserContact" EntityType="ClientPortalModel.Store.AdvertiserContact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Affiliate" EntityType="ClientPortalModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CakeContact" EntityType="ClientPortalModel.Store.CakeContact" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CakeRole" EntityType="ClientPortalModel.Store.CakeRole" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Campaign" EntityType="ClientPortalModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CampaignDrop" EntityType="ClientPortalModel.Store.CampaignDrop" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Contact" EntityType="ClientPortalModel.Store.Contact" store:Type="Tables" Schema="dbo" />
@@ -42,6 +44,10 @@
           <AssociationSet Name="FK_AdvertiserScheduledReport" Association="ClientPortalModel.Store.FK_AdvertiserScheduledReport">
             <End Role="Advertiser" EntitySet="Advertiser" />
             <End Role="ScheduledReport" EntitySet="ScheduledReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CakeContact_CakeRole" Association="ClientPortalModel.Store.FK_CakeContact_CakeRole">
+            <End Role="CakeRole" EntitySet="CakeRole" />
+            <End Role="CakeContact" EntitySet="CakeContact" />
           </AssociationSet>
           <AssociationSet Name="FK_Campaign_Affiliate" Association="ClientPortalModel.Store.FK_Campaign_Affiliate">
             <End Role="Affiliate" EntitySet="Affiliate" />
@@ -189,6 +195,27 @@
           </Key>
           <Property Name="AffiliateId" Type="int" Nullable="false" />
           <Property Name="AffiliateName" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CakeContact">
+          <Key>
+            <PropertyRef Name="CakeContactId" />
+          </Key>
+          <Property Name="CakeContactId" Type="int" Nullable="false" />
+          <Property Name="CakeRoleId" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="100" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="100" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="100" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" />
+          <Property Name="PhoneWork" Type="nvarchar" MaxLength="100" />
+          <Property Name="PhoneCell" Type="nvarchar" MaxLength="100" />
+          <Property Name="PhoneFax" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="CakeRole">
+          <Key>
+            <PropertyRef Name="CakeRoleId" />
+          </Key>
+          <Property Name="CakeRoleId" Type="int" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
         <EntityType Name="Campaign">
           <Key>
@@ -534,6 +561,18 @@
             </Principal>
             <Dependent Role="ScheduledReport">
               <PropertyRef Name="AdvertiserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CakeContact_CakeRole">
+          <End Role="CakeRole" Type="ClientPortalModel.Store.CakeRole" Multiplicity="1" />
+          <End Role="CakeContact" Type="ClientPortalModel.Store.CakeContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CakeRole">
+              <PropertyRef Name="CakeRoleId" />
+            </Principal>
+            <Dependent Role="CakeContact">
+              <PropertyRef Name="CakeRoleId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1009,6 +1048,12 @@
           <AssociationSet Name="CPMReportCampaignDrop" Association="ClientPortalModel.CPMReportCampaignDrop">
             <End Role="CampaignDrop" EntitySet="CampaignDrops" />
             <End Role="CPMReport" EntitySet="CPMReports" />
+          </AssociationSet>
+          <EntitySet Name="CakeContacts" EntityType="ClientPortalModel.CakeContact" />
+          <EntitySet Name="CakeRoles" EntityType="ClientPortalModel.CakeRole" />
+          <AssociationSet Name="FK_CakeContact_CakeRole" Association="ClientPortalModel.FK_CakeContact_CakeRole">
+            <End Role="CakeRole" EntitySet="CakeRoles" />
+            <End Role="CakeContact" EntitySet="CakeContacts" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1774,6 +1819,41 @@
           <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="*" />
           <End Type="ClientPortalModel.CPMReport" Role="CPMReport" Multiplicity="*" />
         </Association>
+        <EntityType Name="CakeContact">
+          <Key>
+            <PropertyRef Name="CakeContactId" />
+          </Key>
+          <Property Type="Int32" Name="CakeContactId" Nullable="false" />
+          <Property Type="Int32" Name="CakeRoleId" Nullable="false" />
+          <Property Type="String" Name="FirstName" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="LastName" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EmailAddress" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Title" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PhoneWork" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PhoneCell" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PhoneFax" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CakeRole" Relationship="ClientPortalModel.FK_CakeContact_CakeRole" FromRole="CakeContact" ToRole="CakeRole" />
+        </EntityType>
+        <EntityType Name="CakeRole">
+          <Key>
+            <PropertyRef Name="CakeRoleId" />
+          </Key>
+          <Property Type="Int32" Name="CakeRoleId" Nullable="false" />
+          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CakeContacts" Relationship="ClientPortalModel.FK_CakeContact_CakeRole" FromRole="CakeRole" ToRole="CakeContact" />
+        </EntityType>
+        <Association Name="FK_CakeContact_CakeRole">
+          <End Type="ClientPortalModel.CakeRole" Role="CakeRole" Multiplicity="1" />
+          <End Type="ClientPortalModel.CakeContact" Role="CakeContact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CakeRole">
+              <PropertyRef Name="CakeRoleId" />
+            </Principal>
+            <Dependent Role="CakeContact">
+              <PropertyRef Name="CakeRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2173,6 +2253,29 @@
               <ScalarProperty Name="CampaignDropId" ColumnName="CampaignDropId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="CakeContacts">
+            <EntityTypeMapping TypeName="ClientPortalModel.CakeContact">
+              <MappingFragment StoreEntitySet="CakeContact">
+                <ScalarProperty Name="PhoneFax" ColumnName="PhoneFax" />
+                <ScalarProperty Name="PhoneCell" ColumnName="PhoneCell" />
+                <ScalarProperty Name="PhoneWork" ColumnName="PhoneWork" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="CakeRoleId" ColumnName="CakeRoleId" />
+                <ScalarProperty Name="CakeContactId" ColumnName="CakeContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CakeRoles">
+            <EntityTypeMapping TypeName="ClientPortalModel.CakeRole">
+              <MappingFragment StoreEntitySet="CakeRole">
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="CakeRoleId" ColumnName="CakeRoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
