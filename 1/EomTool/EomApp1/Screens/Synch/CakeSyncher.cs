@@ -384,7 +384,7 @@ namespace EomApp1.Screens.Synch
         public Item MatchingItem(EomDatabaseEntities eomEntities)
         {
             string name = this.Name;
-            string keyPart = name.Substring(0, name.IndexOf("/paycur"));
+            string keyPart = name.Substring(0, name.IndexOf("/type"));
 
             var matchingItem = from c in eomEntities.Items
                                where c.name.StartsWith(keyPart)
