@@ -224,6 +224,7 @@
     <Compile Include="CakeMarketingApi\Entities\Country.cs" />
     <Compile Include="CakeMarketingApi\Entities\Creative.cs" />
     <Compile Include="CakeMarketingApi\Entities\CreativeExportResponse.cs" />
+    <Compile Include="CakeMarketingApi\Entities\CreativeFile.cs" />
     <Compile Include="CakeMarketingApi\Entities\CreativeMonthlySummary.cs" />
     <Compile Include="CakeMarketingApi\Entities\CreativeType.cs" />
     <Compile Include="CakeMarketingApi\Entities\Currency.cs" />

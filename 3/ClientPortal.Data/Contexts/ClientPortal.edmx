@@ -19,6 +19,7 @@
           <EntitySet Name="CPMReport" EntityType="ClientPortalModel.Store.CPMReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CPMReportCampaignDrop" EntityType="ClientPortalModel.Store.CPMReportCampaignDrop" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Creative" EntityType="ClientPortalModel.Store.Creative" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CreativeFile" EntityType="ClientPortalModel.Store.CreativeFile" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeStat" EntityType="ClientPortalModel.Store.CreativeStat" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeSummary" EntityType="ClientPortalModel.Store.CreativeSummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeType" EntityType="ClientPortalModel.Store.CreativeType" store:Type="Tables" Schema="dbo" />
@@ -84,6 +85,10 @@
           <AssociationSet Name="FK_Creative_Offer" Association="ClientPortalModel.Store.FK_Creative_Offer">
             <End Role="Offer" EntitySet="Offer" />
             <End Role="Creative" EntitySet="Creative" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CreativeFile_Creative" Association="ClientPortalModel.Store.FK_CreativeFile_Creative">
+            <End Role="Creative" EntitySet="Creative" />
+            <End Role="CreativeFile" EntitySet="CreativeFile" />
           </AssociationSet>
           <AssociationSet Name="FK_CreativeStat_CampaignDrop" Association="ClientPortalModel.Store.FK_CreativeStat_CampaignDrop">
             <End Role="CampaignDrop" EntitySet="CampaignDrop" />
@@ -302,6 +307,21 @@
           <Property Name="OfferId" Type="int" Nullable="false" />
           <Property Name="CreativeTypeId" Type="int" Nullable="false" />
           <Property Name="CreativeName" Type="nvarchar" MaxLength="255" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="CreativeStatusId" Type="int" Nullable="false" />
+          <Property Name="OfferLinkOverride" Type="nvarchar" MaxLength="255" />
+          <Property Name="Width" Type="int" />
+          <Property Name="Height" Type="int" />
+        </EntityType>
+        <EntityType Name="CreativeFile">
+          <Key>
+            <PropertyRef Name="CreativeFileId" />
+          </Key>
+          <Property Name="CreativeFileId" Type="int" Nullable="false" />
+          <Property Name="CreativeId" Type="int" Nullable="false" />
+          <Property Name="CreativeFileName" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreativeFileLink" Type="nvarchar" MaxLength="255" />
+          <Property Name="Preview" Type="bit" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="CreativeStat">
@@ -686,6 +706,18 @@
             </Principal>
             <Dependent Role="Creative">
               <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CreativeFile_Creative">
+          <End Role="Creative" Type="ClientPortalModel.Store.Creative" Multiplicity="1" />
+          <End Role="CreativeFile" Type="ClientPortalModel.Store.CreativeFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creative">
+              <PropertyRef Name="CreativeId" />
+            </Principal>
+            <Dependent Role="CreativeFile">
+              <PropertyRef Name="CreativeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1075,6 +1107,11 @@
           <AssociationSet Name="FK_Advertiser_CakeContact" Association="ClientPortalModel.FK_Advertiser_CakeContact">
             <End Role="CakeContact" EntitySet="CakeContacts" />
             <End Role="Advertiser" EntitySet="Advertisers" />
+          </AssociationSet>
+          <EntitySet Name="CreativeFiles" EntityType="ClientPortalModel.CreativeFile" />
+          <AssociationSet Name="FK_CreativeFile_Creative" Association="ClientPortalModel.FK_CreativeFile_Creative">
+            <End Role="Creative" EntitySet="Creatives" />
+            <End Role="CreativeFile" EntitySet="CreativeFiles" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1732,6 +1769,11 @@
           <NavigationProperty Name="CreativeType" Relationship="ClientPortalModel.FK_Creative_CreativeType" FromRole="Creative" ToRole="CreativeType" />
           <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Creative_Offer" FromRole="Creative" ToRole="Offer" />
           <NavigationProperty Name="CreativeStats" Relationship="ClientPortalModel.FK_CreativeStat_Creative" FromRole="Creative" ToRole="CreativeStat" />
+          <Property Type="Int32" Name="CreativeStatusId" Nullable="false" />
+          <Property Type="String" Name="OfferLinkOverride" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Width" />
+          <Property Type="Int32" Name="Height" />
+          <NavigationProperty Name="CreativeFiles" Relationship="ClientPortalModel.FK_CreativeFile_Creative" FromRole="Creative" ToRole="CreativeFile" />
         </EntityType>
         <EntityType Name="CreativeType">
           <Key>
@@ -1887,6 +1929,30 @@
             </Principal>
             <Dependent Role="Advertiser">
               <PropertyRef Name="AccountManagerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CreativeFile">
+          <Key>
+            <PropertyRef Name="CreativeFileId" />
+          </Key>
+          <Property Type="Int32" Name="CreativeFileId" Nullable="false" />
+          <Property Type="Int32" Name="CreativeId" Nullable="false" />
+          <Property Type="String" Name="CreativeFileName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CreativeFileLink" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Preview" Nullable="false" />
+          <Property Type="DateTime" Name="DateCreated" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Creative" Relationship="ClientPortalModel.FK_CreativeFile_Creative" FromRole="CreativeFile" ToRole="Creative" />
+        </EntityType>
+        <Association Name="FK_CreativeFile_Creative">
+          <End Type="ClientPortalModel.Creative" Role="Creative" Multiplicity="1" />
+          <End Type="ClientPortalModel.CreativeFile" Role="CreativeFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Creative">
+              <PropertyRef Name="CreativeId" />
+            </Principal>
+            <Dependent Role="CreativeFile">
+              <PropertyRef Name="CreativeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2231,6 +2297,10 @@
           <EntitySetMapping Name="Creatives">
             <EntityTypeMapping TypeName="ClientPortalModel.Creative">
               <MappingFragment StoreEntitySet="Creative">
+                <ScalarProperty Name="Height" ColumnName="Height" />
+                <ScalarProperty Name="Width" ColumnName="Width" />
+                <ScalarProperty Name="OfferLinkOverride" ColumnName="OfferLinkOverride" />
+                <ScalarProperty Name="CreativeStatusId" ColumnName="CreativeStatusId" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="CreativeName" ColumnName="CreativeName" />
                 <ScalarProperty Name="CreativeTypeId" ColumnName="CreativeTypeId" />
@@ -2310,6 +2380,18 @@
               <MappingFragment StoreEntitySet="CakeRole">
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
                 <ScalarProperty Name="CakeRoleId" ColumnName="CakeRoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CreativeFiles">
+            <EntityTypeMapping TypeName="ClientPortalModel.CreativeFile">
+              <MappingFragment StoreEntitySet="CreativeFile">
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Preview" ColumnName="Preview" />
+                <ScalarProperty Name="CreativeFileLink" ColumnName="CreativeFileLink" />
+                <ScalarProperty Name="CreativeFileName" ColumnName="CreativeFileName" />
+                <ScalarProperty Name="CreativeId" ColumnName="CreativeId" />
+                <ScalarProperty Name="CreativeFileId" ColumnName="CreativeFileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

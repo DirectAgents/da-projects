@@ -59,5 +59,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<CPMReport> CPMReports { get; set; }
         public DbSet<CakeContact> CakeContacts { get; set; }
         public DbSet<CakeRole> CakeRoles { get; set; }
+        public DbSet<CreativeFile> CreativeFiles { get; set; }
     }
 }

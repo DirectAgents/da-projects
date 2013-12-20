@@ -17,6 +17,7 @@ namespace ClientPortal.Data.Contexts
         public Creative()
         {
             this.CreativeStats = new HashSet<CreativeStat>();
+            this.CreativeFiles = new HashSet<CreativeFile>();
         }
     
         public int CreativeId { get; set; }
@@ -24,9 +25,14 @@ namespace ClientPortal.Data.Contexts
         public int CreativeTypeId { get; set; }
         public string CreativeName { get; set; }
         public System.DateTime DateCreated { get; set; }
+        public int CreativeStatusId { get; set; }
+        public string OfferLinkOverride { get; set; }
+        public Nullable<int> Width { get; set; }
+        public Nullable<int> Height { get; set; }
     
         public virtual CreativeType CreativeType { get; set; }
         public virtual Offer Offer { get; set; }
         public virtual ICollection<CreativeStat> CreativeStats { get; set; }
+        public virtual ICollection<CreativeFile> CreativeFiles { get; set; }
     }
 }

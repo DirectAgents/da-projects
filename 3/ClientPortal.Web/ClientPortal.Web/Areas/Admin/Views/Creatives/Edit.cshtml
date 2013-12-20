@@ -22,12 +22,28 @@ Offer: @Model.Offer.DisplayName
                 <td>@Html.DisplayFor(m => m.DateCreated, "Date")</td>
             </tr>
             <tr>
+                <td>@Html.LabelFor(m => m.CreativeName, "Name")</td>
+                <td>@Html.TextBoxFor(m => m.CreativeName, new { size = 60 })</td>
+            </tr>
+            <tr>
                 <td>@Html.LabelFor(m => m.CreativeType, "Type")</td>
                 <td>@Html.DisplayFor(m => m.CreativeType.CreativeTypeName)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(m => m.CreativeName, "Name")</td>
-                <td>@Html.EditorFor(m => m.CreativeName)</td>
+                <td>@Html.LabelFor(m => m.CreativeStatusId, "Status")</td>
+                <td>@Html.DisplayFor(m => m.CreativeStatusId)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.OfferLinkOverride)</td>
+                <td>@Html.DisplayFor(m => m.OfferLinkOverride)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Width)</td>
+                <td>@Html.DisplayFor(m => m.Width)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Height)</td>
+                <td>@Html.DisplayFor(m => m.Height)</td>
             </tr>
         </table>
         <br />

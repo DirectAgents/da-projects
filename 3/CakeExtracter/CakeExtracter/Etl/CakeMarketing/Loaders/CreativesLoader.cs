@@ -19,10 +19,10 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
 
         protected override int Load(List<Creative> items)
         {
-            Logger.Info("Synching {0} creatives...", items.Count);
+            Logger.Info("Synching {0} Creatives...", items.Count);
             using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
             {
-                List<ClientPortal.Data.Contexts.CreativeType> newCreativeTypes = new List<ClientPortal.Data.Contexts.CreativeType>();
+                var newCreativeTypes = new List<ClientPortal.Data.Contexts.CreativeType>();
                 foreach (var item in items)
                 {
                     var creativeType = db.CreativeTypes.Where(ct => ct.CreativeTypeId == item.CreativeType.CreativeTypeId)
@@ -55,8 +55,33 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     creative.CreativeName = item.CreativeName;
                     creative.CreativeType = creativeType;
                     creative.DateCreated = item.DateCreated;
+                    creative.CreativeStatusId = item.CreativeStatusId;
+                    creative.OfferLinkOverride = item.OfferLinkOverride;
+                    creative.Width = item.Width;
+                    creative.Height = item.Height;
+
+                    if (item.CreativeFiles.Count > 0)
+                        Logger.Info("Synching {0} CreativeFiles for Creative {1}...", item.CreativeFiles.Count, item.CreativeId);
+                    foreach (var file in item.CreativeFiles)
+                    {
+                        var creativeFile = db.CreativeFiles.Where(cf => cf.CreativeFileId == file.CreativeFileId)
+                                            .SingleOrFallback(() =>
+                                                {
+                                                    var newCreativeFile = new ClientPortal.Data.Contexts.CreativeFile();
+                                                    newCreativeFile.CreativeFileId = file.CreativeFileId;
+                                                    db.CreativeFiles.Add(newCreativeFile);
+                                                    return newCreativeFile;
+                                                });
+
+                        creativeFile.CreativeFileName = file.CreativeFileName;
+                        creativeFile.CreativeFileLink = file.CreativeFileLink;
+                        creativeFile.Preview = file.Preview;
+                        creativeFile.DateCreated = file.DateCreated;
+
+                        creativeFile.CreativeId = creative.CreativeId;
+                    }
                 }
-                Logger.Info("Creatives/CreativeTypes: " + db.ChangeCountsAsString());
+                Logger.Info("Creatives/CreativeTypes/CreativeFiles: " + db.ChangeCountsAsString());
                 db.SaveChanges();
             }
             return items.Count;

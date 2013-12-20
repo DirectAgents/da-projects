@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="99e99fb864104972af0fae305d39025c" Name="Diagram1" ZoomLevel="79">
         <EntityTypeShape EntityType="ClientPortalModel.ConversionData" Width="1.625" PointX="0.5" PointY="8.125" />
-        <EntityTypeShape EntityType="ClientPortalModel.DailySummary" Width="1.5" PointX="12.125" PointY="7.5" />
+        <EntityTypeShape EntityType="ClientPortalModel.DailySummary" Width="1.5" PointX="12.125" PointY="8.25" />
         <EntityTypeShape EntityType="ClientPortalModel.Goal" Width="1.5" PointX="10.125" PointY="0.5" />
         <EntityTypeShape EntityType="ClientPortalModel.AdvertiserContact" Width="1.75" PointX="2.75" PointY="3" />
         <EntityTypeShape EntityType="ClientPortalModel.Contact" Width="1.5" PointX="0.625" PointY="3.25" />
@@ -47,27 +47,29 @@
         <AssociationConnector Association="ClientPortalModel.FK_UserEvent_UserProfile" />
         <EntityTypeShape EntityType="ClientPortalModel.Offer" Width="1.5" PointX="12.125" PointY="0.5" />
         <AssociationConnector Association="ClientPortalModel.FK_Goal_Offer" />
-        <EntityTypeShape EntityType="ClientPortalModel.Affiliate" Width="1.5" PointX="12.125" PointY="5.75" />
-        <EntityTypeShape EntityType="ClientPortalModel.Campaign" Width="1.5" PointX="12.125" PointY="3.125" />
+        <EntityTypeShape EntityType="ClientPortalModel.Affiliate" Width="1.5" PointX="12.125" PointY="6.625" />
+        <EntityTypeShape EntityType="ClientPortalModel.Campaign" Width="1.5" PointX="12.125" PointY="4" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Affiliate" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Offer" />
-        <EntityTypeShape EntityType="ClientPortalModel.CampaignDrop" Width="1.5" PointX="14" PointY="5.75" />
+        <EntityTypeShape EntityType="ClientPortalModel.CampaignDrop" Width="1.5" PointX="14" PointY="6.75" />
         <AssociationConnector Association="ClientPortalModel.FK_CampaignDrop_Campaign" />
-        <EntityTypeShape EntityType="ClientPortalModel.CreativeStat" Width="1.5" PointX="15.875" PointY="3.125" />
+        <EntityTypeShape EntityType="ClientPortalModel.CreativeStat" Width="1.5" PointX="15.75" PointY="4.25" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeStat_CampaignDrop" />
         <EntityTypeShape EntityType="ClientPortalModel.Creative" Width="1.5" PointX="14" PointY="0.5" />
         <EntityTypeShape EntityType="ClientPortalModel.CreativeType" Width="1.5" PointX="15.875" PointY="0.5" />
         <AssociationConnector Association="ClientPortalModel.FK_Creative_CreativeType" />
         <AssociationConnector Association="ClientPortalModel.FK_Creative_Offer" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeStat_Creative" />
-        <EntityTypeShape EntityType="ClientPortalModel.CreativeSummary" Width="1.5" PointX="15.875" PointY="5.875" />
-        <EntityTypeShape EntityType="ClientPortalModel.CPMReport" Width="1.5" PointX="14" PointY="3" />
+        <EntityTypeShape EntityType="ClientPortalModel.CreativeSummary" Width="1.5" PointX="15.875" PointY="6.75" />
+        <EntityTypeShape EntityType="ClientPortalModel.CPMReport" Width="1.5" PointX="14" PointY="3.875" />
         <AssociationConnector Association="ClientPortalModel.FK_CPMReport_Offer" />
         <AssociationConnector Association="ClientPortalModel.CPMReportCampaignDrop" />
         <EntityTypeShape EntityType="ClientPortalModel.CakeRole" Width="1.5" PointX="10.125" PointY="3.5" />
         <EntityTypeShape EntityType="ClientPortalModel.CakeContact" Width="1.5" PointX="8.25" PointY="3.375" />
         <AssociationConnector Association="ClientPortalModel.FK_CakeContact_CakeRole" />
         <AssociationConnector Association="ClientPortalModel.FK_Advertiser_CakeContact" />
+        <EntityTypeShape EntityType="ClientPortalModel.CreativeFile" Width="1.5" PointX="15.875" PointY="2" />
+        <AssociationConnector Association="ClientPortalModel.FK_CreativeFile_Creative" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

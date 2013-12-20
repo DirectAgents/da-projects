@@ -23,7 +23,7 @@ namespace ClientPortal.Data.Services
 
         // ------
 
-        #region Offers, Campaigns, Affiliates, Creatives
+        #region Offers, Campaigns
         public IQueryable<Offer> Offers(int? advertiserId)
         {
             return context.Offers.Where(o => o.AdvertiserId == advertiserId);
@@ -84,10 +84,12 @@ namespace ClientPortal.Data.Services
             var campaign = context.Campaigns.Find(id);
             return campaign;
         }
+        #endregion
 
+        #region Creatives, CreativeFiles
         public IQueryable<Creative> Creatives(int? offerId)
         {
-            var creatives = context.Creatives.Include("CreativeType").AsQueryable();
+            var creatives = context.Creatives.Include("CreativeType").Include("CreativeFiles").AsQueryable();
 
             if (offerId.HasValue)
                 creatives = creatives.Where(c => c.OfferId == offerId.Value);
@@ -127,6 +129,14 @@ namespace ClientPortal.Data.Services
                     inCreative.CreativeType = creative.CreativeType;
                 }
             }
+        }
+
+        public IQueryable<CreativeFile> CreativeFiles(int? creativeId)
+        {
+            var creativeFiles = context.CreativeFiles.AsQueryable();
+            if (creativeId.HasValue)
+                creativeFiles = creativeFiles.Where(cf => cf.CreativeId == creativeId.Value);
+            return creativeFiles;
         }
         #endregion
 

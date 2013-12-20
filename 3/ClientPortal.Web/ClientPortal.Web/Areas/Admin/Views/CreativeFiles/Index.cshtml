@@ -1,0 +1,20 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.CreativeFile>
+
+Creative Files:
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>File</th>
+        <th>Preview</th>
+        <th>Date Added</th>
+    </tr>
+    @foreach (var file in Model)
+    {
+        <tr>
+            <td>@file.CreativeFileId</td>
+            <td><a href="@file.CreativeFileLink">@file.CreativeFileName</a></td>
+            <td>@file.Preview</td>
+            <td>@file.DateCreated</td>
+        </tr>
+    }
+</table>

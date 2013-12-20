@@ -6,6 +6,9 @@ Creatives:
         <th>Name</th>
         <th>Type</th>
         <th>Created</th>
+        <th>Width</th>
+        <th>Height</th>
+        <th>Files</th>
     </tr>
 @foreach (var creative in Model)
 {
@@ -13,6 +16,9 @@ Creatives:
         <td>@creative.DisplayName</td>
         <td>@creative.CreativeType.CreativeTypeName</td>
         <td>@creative.DateCreated.ToShortDateString()</td>
+        <td>@creative.Width</td>
+        <td>@creative.Height</td>
+        <td>@Html.ActionLink(creative.CreativeFiles.Count.ToString(), "Index", "CreativeFiles", new { creativeid = creative.CreativeId }, null)</td>
         <td>@Html.ActionLink("Edit", "Edit", "Creatives", new { id = creative.CreativeId }, null)</td>
     </tr>
 }

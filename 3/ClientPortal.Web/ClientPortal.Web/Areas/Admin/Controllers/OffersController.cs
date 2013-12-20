@@ -41,7 +41,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             };
             cmd.Run(null);
 
-            return Content("okay");
+            return Content("Synch complete. Click 'back' and refresh.");
         }
 
         public ActionResult SynchCreatives(int offerid)
@@ -52,7 +52,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             };
             cmd.Run(null);
 
-            return Content("okay");
+            return Content("Synch complete. Click 'back' and refresh.");
         }
 
     }

@@ -39,7 +39,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (creativeStat.CampaignDrop == null)
                 return;
 
-            ViewData["Creatives"] = creativeStat.CampaignDrop.Campaign.Offer.CreativesByDate();
+            var creativeIds = creativeStat.CampaignDrop.CreativeStats.Select(cs => cs.CreativeId).ToList();
+            ViewData["Creatives"] = creativeStat.CampaignDrop.Campaign.Offer.Creatives
+                                            .Where(c => !creativeIds.Contains(c.CreativeId))
+                                            .OrderByDescending(c => c.DateCreated);
         }
 
         [HttpPost]

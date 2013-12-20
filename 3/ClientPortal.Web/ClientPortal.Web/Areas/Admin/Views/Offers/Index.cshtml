@@ -17,6 +17,7 @@
         <th>OfferId</th>
         <th>Offer (click for summary)</th>
         <th>Drilldown</th>
+        <th>Creatives</th>
     </tr>
 @foreach (var offer in Model)
 {
@@ -26,6 +27,9 @@
     int numCampaigns = offer.Campaigns.Count;
     var campaignsText = "campaigns (" + numCampaigns + ")";
     var creativesText = "creatives (" + offer.Creatives.Count + ")";
+    var linksText = "links (" + offer.Creatives.Where(c => c.CreativeTypeId == 1).Count() + ")";
+    var emailsText = "emails (" + offer.Creatives.Where(c => c.CreativeTypeId == 2).Count() + ")";
+    var imagesText = "images (" + offer.Creatives.Where(c => c.CreativeTypeId == 3).Count() + ")";
     <tr>
         <td>@offer.AdvertiserId</td>
         <td>@offer.Advertiser.AdvertiserName</td>
@@ -35,6 +39,11 @@
             &nbsp; | &nbsp; @Html.ActionLink(dropsText, "Index", "CampaignDrops", new { offerid = offer.OfferId }, null)
             &nbsp; | &nbsp; @Html.ActionLink(campaignsText, "Index", "Campaigns", new { offerid = offer.OfferId }, null)
             &nbsp; | &nbsp; @Html.ActionLink(creativesText, "Index", "Creatives", new { offerid = offer.OfferId }, null)
+        </td>
+        <td>
+            &nbsp; @linksText
+            &nbsp; | &nbsp; @emailsText
+            &nbsp; | &nbsp; @imagesText
         </td>
     </tr>
 }

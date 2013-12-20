@@ -132,7 +132,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 command.Run(null);
                 cpRepo.UpdateCreativeStatFromSummaries(creativeStat.CreativeStatId, true);
             }
-            return Content("okay");
+            return Content("Synch complete. Click 'back' and refresh.");
             //return RedirectToAction("Show", new { id = id });
         }
     }
