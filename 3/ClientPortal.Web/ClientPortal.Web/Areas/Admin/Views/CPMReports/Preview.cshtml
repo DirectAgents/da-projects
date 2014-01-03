@@ -1,6 +1,10 @@
-﻿@model ClientPortal.Data.Contexts.DropReport
+﻿@model ClientPortal.Data.Contexts.CPMReport
 
 <h3>Report Preview</h3>
+
+<b>Summary:</b><br />
+@Model.Summary
+<br /><br />
 
 <table border="1">
     <tr>
@@ -12,7 +16,7 @@
         <th>Leads</th>
         <th>Total Cost</th>
     </tr>
-@foreach (var drop in Model.CampaignDrops)
+@foreach (var drop in Model.CampaignDropsOrdered)
 {
     <tr>
         <td>@drop.Campaign.AffiliateId</td>
@@ -73,3 +77,7 @@
         <td>@String.Format("{0:0.00%}", Model.ConversionRate)</td>
     </tr>
 </table>
+
+<br />
+<b>Next Steps:</b><br />
+@Model.Conclusion

@@ -30,7 +30,7 @@ Back to: @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId },
             <td>@Html.DisplayFor(m => m.Summary)</td>
         </tr>
         <tr>
-            <td>@Html.LabelFor(m => m.Conclusion)</td>
+            <td>@Html.LabelFor(m => m.Conclusion, "Next Steps")</td>
             <td>@Html.DisplayFor(m => m.Conclusion)</td>
         </tr>
     </table>

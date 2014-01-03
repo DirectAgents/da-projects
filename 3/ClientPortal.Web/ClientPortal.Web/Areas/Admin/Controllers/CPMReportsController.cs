@@ -125,8 +125,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (report == null)
                 return HttpNotFound();
 
-            var dropReport = new DropReport(report.CampaignDropsOrdered);
-            return View("DropReport", dropReport);
+            return View(report);
         }
     }
 }
