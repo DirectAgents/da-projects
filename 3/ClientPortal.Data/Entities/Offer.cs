@@ -36,7 +36,7 @@ namespace ClientPortal.Data.Contexts
         // chronological: true==oldest-to-newest, false==newest-to-oldest, null==not-ordered
         public IEnumerable<CampaignDrop> AllCampaignDrops(bool? chronological)
         {
-            var drops = Campaigns.SelectMany(c => c.CampaignDrops);
+            var drops = Campaigns.SelectMany(c => c.CampaignDrops_Originals);
             if (chronological.HasValue)
             {
                 if (chronological.Value)

@@ -17,5 +17,23 @@ namespace ClientPortal.Data.Contexts
             }
         }
 
+        public void SetPropertiesFrom(CreativeStat inStat)
+        {
+            this.CreativeId = inStat.CreativeId;
+            this.Clicks = inStat.Clicks;
+            this.Leads = inStat.Leads;
+        }
+
+        public bool AnyChanges(CreativeStat inStat)
+        {
+            bool anyChanges = false;
+
+            if (this.CreativeId != inStat.CreativeId ||
+                this.Clicks != inStat.Clicks ||
+                this.Leads != inStat.Leads)
+                anyChanges = true;
+
+            return anyChanges;
+        }
     }
 }

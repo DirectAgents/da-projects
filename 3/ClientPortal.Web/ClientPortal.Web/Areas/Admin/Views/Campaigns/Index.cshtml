@@ -19,7 +19,7 @@
     </tr>
 @foreach (var campaign in Model)
 {
-    string viewText = "View Drops (" + campaign.CampaignDrops.Count + ")";
+    string viewText = "View Drops (" + campaign.CampaignDrops_Originals.Count() + ")";
     <tr>
         <td>@campaign.CampaignName</td>
         <td>@campaign.Affiliate.AffiliateName</td>

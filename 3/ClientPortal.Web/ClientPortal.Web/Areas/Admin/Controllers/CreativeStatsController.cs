@@ -50,8 +50,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                cpRepo.SaveCreativeStat(stat, true);
-                return RedirectToAction("Show", "CampaignDrops", new { id = stat.CampaignDropId });
+                if (cpRepo.AddCreativeStat(stat, true))
+                    return RedirectToAction("Show", "CampaignDrops", new { id = stat.CampaignDropId });
+
+                ModelState.AddModelError("", "CreativeStat could not be saved");
             }
             SetupForCreate(stat);
             return View(stat);

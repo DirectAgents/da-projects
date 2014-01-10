@@ -55,5 +55,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return Content("Synch complete. Click 'back' and refresh.");
         }
 
+        public ActionResult DropDebug(int id)
+        {
+            var offer = cpRepo.GetOffer(id);
+            return View(offer);
+        }
+
+        public ActionResult ReportDebug(int id)
+        {
+            var offer = cpRepo.GetOffer(id);
+            return View(offer);
+        }
     }
 }

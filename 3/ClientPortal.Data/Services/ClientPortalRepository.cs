@@ -225,9 +225,59 @@ namespace ClientPortal.Data.Services
             }
         }
 
+        // return Offer, or null if the report can't be deleted
+        public Offer DeleteCPMReport(int reportId, bool saveChanges = false)
+        {
+            Offer offer = null;
+            var report = context.CPMReports.Find(reportId);
+            if (report != null && report.CampaignDrops.Count == 0)
+            {
+                offer = report.Offer;
+                context.CPMReports.Remove(report);
+                if (saveChanges) SaveChanges();
+            }
+            return offer;
+        }
+
+        public bool CopyCPMReportDrops(int id, bool saveChanges = false)
+        {
+            var report = GetCPMReport(id);
+            if (report == null) return false;
+
+            foreach (var drop in report.CampaignDrops.Where(cd => cd.CopyOf == null).ToList())
+            {
+                var dropCopy = new CampaignDrop
+                {
+                    CampaignId = drop.CampaignId,
+                    Date = drop.Date,
+                    Cost = drop.Cost,
+                    Volume = drop.Volume,
+                    Opens = drop.Opens,
+                    Subject = drop.Subject,
+                    CopyOf = drop.CampaignDropId
+                };
+                foreach (var cStat in drop.CreativeStats)
+                {
+                    var cStatCopy = new CreativeStat
+                    {
+                        CreativeId = cStat.CreativeId,
+                        Clicks = cStat.Clicks,
+                        Leads = cStat.Leads
+                    };
+                    dropCopy.CreativeStats.Add(cStatCopy);
+                }
+                report.CampaignDrops.Remove(drop);
+                report.CampaignDrops.Add(dropCopy);
+            }
+            if (saveChanges) SaveChanges();
+            return true;
+        }
+
         public IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId)
         {
-            var campaignDrops = context.CampaignDrops.Include("Campaign").Include("CreativeStats.Creative").AsQueryable();
+            var campaignDrops = context.CampaignDrops.Include("Campaign").Include("CreativeStats.Creative").Include("CPMReports").Include("CampaignDropCopies").AsQueryable();
+            campaignDrops = campaignDrops.Where(cd => cd.CopyOf == null);
+
             if (offerId.HasValue)
                 campaignDrops = campaignDrops.Where(cd => cd.Campaign.OfferId == offerId.Value);
             if (campaignId.HasValue)
@@ -267,23 +317,29 @@ namespace ClientPortal.Data.Services
             return campaignDrop;
         }
 
+        // save an existing drop
         public bool SaveCampaignDrop(CampaignDrop inDrop, bool saveChanges = false)
         {
             bool success = false;
             var drop = context.CampaignDrops.Find(inDrop.CampaignDropId);
             if (drop != null)
             {
+                success = true;
+                DuplicateDropIfNecessary(drop);
+
+                // Now save any changes (in the original)
                 drop.Date = inDrop.Date;
                 drop.Subject = inDrop.Subject;
                 drop.Cost = inDrop.Cost;
                 drop.Volume = inDrop.Volume;
                 drop.Opens = inDrop.Opens;
-                foreach(var creativeStat in inDrop.CreativeStats)
+                foreach (var creativeStat in inDrop.CreativeStats)
                 {
-                    SaveCreativeStat(creativeStat);
+                    if (!SaveCreativeStat(creativeStat))
+                        success = false;
                 }
+
                 if (saveChanges) SaveChanges();
-                success = true;
             }
             return success;
         }
@@ -319,30 +375,83 @@ namespace ClientPortal.Data.Services
             return campaign;
         }
 
-        public void SaveCreativeStat(CreativeStat inStat, bool saveChanges = false)
+        public void DeleteCampaignDropCopy(int dropId)
         {
+            var drop = context.CampaignDrops.Find(dropId);
+            if (drop.CopyOf.HasValue)
+            {
+                var dropOrig = drop.CampaignDropOriginal;
+                foreach (var report in drop.CPMReports)
+                {
+                    report.CampaignDrops.Remove(drop);
+                    report.CampaignDrops.Add(dropOrig);
+                }
+                DeleteCampaignDrop(drop.CampaignDropId);
+                SaveChanges();
+            }
+        }
+
+        public bool DuplicateDropIfNecessary(CampaignDrop drop)
+        {
+            var sentReports = drop.CPMReports.Where(r => r.DateSent != null);
+            if (!sentReports.Any())
+                return false;
+
+            // drop exists in sent report(s); need to make a copy for them
+            var dropCopy = drop.Duplicate();
+
+            foreach (var report in sentReports)
+            {
+                report.CampaignDrops.Remove(drop);
+                report.CampaignDrops.Add(dropCopy);
+            }
+            return true;
+        }
+
+        // save an existing creativeStat; only called via editing a CampaignDrop
+        private bool SaveCreativeStat(CreativeStat inStat)
+        {
+            bool success = false;
             var stat = context.CreativeStats.Find(inStat.CreativeStatId);
-            if (stat == null)
-            {   // Add
-                context.CreativeStats.Add(inStat);
+            if (stat != null)
+            {
+                stat.SetPropertiesFrom(inStat);
+                success = true;
             }
-            else
-            {   // Edit
-                stat.CreativeId = inStat.CreativeId;
-                stat.Clicks = inStat.Clicks;
-                stat.Leads = inStat.Leads;
-            }
+            return success;
+        }
+
+        public bool AddCreativeStat(CreativeStat inStat, bool saveChanges = false)
+        {
+            // First check if drop is in any sent reports
+            var drop = GetCampaignDrop(inStat.CampaignDropId);
+            if (drop == null) return false;
+
+            DuplicateDropIfNecessary(drop);
+
+            // Now add the creativeStat (to the original drop)
+            context.CreativeStats.Add(inStat);
+
             if (saveChanges) SaveChanges();
+            return true;
         }
 
         // return campaignDropId, or null if the creativeStat doesn't exist
         public int? DeleteCreativeStat(int statId, bool saveChanges = false)
         {
-            int? dropId = null;
             var stat = context.CreativeStats.Find(statId);
-            if (stat != null)
+            if (stat == null) return null;
+
+            int? dropId = null;
+            // check if drop is in any sent reports
+            var drop = GetCampaignDrop(stat.CampaignDropId);
+            if (drop != null)
             {
                 dropId = stat.CampaignDropId;
+
+                DuplicateDropIfNecessary(drop);
+
+                // Now remove the original; the dropCopies will preserve a copy of the creativeStat
                 context.CreativeStats.Remove(stat);
                 if (saveChanges) SaveChanges();
             }

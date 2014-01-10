@@ -14,7 +14,7 @@ Advertiser: @Html.ActionLink(Model.Advertiser.AdvertiserName, "Index", new { adv
 Offer: @Model.DisplayName
 <br /><br />
 
-@Html.Partial("../CPMReports/Index", Model.CPMReports)
+@Html.Partial("../CPMReports/Index", Model.CPMReports.OrderByDescending(r => r.CPMReportId))
 @Html.ActionLink("(new report)", "Create", "CPMReports", new { offerid = Model.OfferId }, null)
 
 <br /><br />

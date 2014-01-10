@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>
+
+<table border="1">
+    <tr>
+        <th>Drop</th>
+        <th>CStats</th>
+    </tr>
+@foreach (var drop in Model)
+{
+    <tr>
+        <td>
+            @drop.CampaignDropId
+            @if (drop.CopyOf.HasValue)
+            {
+                <text>(copy of: @drop.CopyOf.Value)</text>
+            }
+        </td>
+        <td>
+            @foreach (var cstat in drop.CreativeStats)
+            {
+                @cstat.CreativeStatId<text> </text>
+            }
+        </td>
+        @if (drop.CopyOf.HasValue)
+        {
+            <td>
+                @Html.ActionLink("Delete Copy", "DeleteCopy", "CampaignDrops", new { id = drop.CampaignDropId }, null)
+            </td>
+        }
+    </tr>
+}
+</table>

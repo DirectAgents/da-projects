@@ -116,11 +116,19 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return RedirectToAction("Show", "Offers", new { id = campaign.OfferId });
         }
 
+        public ActionResult DeleteCopy(int id)
+        {
+            cpRepo.DeleteCampaignDropCopy(id);
+            return Content("Drop Copy deleted. Click 'back' and refresh.");
+        }
+
         public ActionResult SynchStats(int id)
         {
             var drop = cpRepo.GetCampaignDrop(id);
             if (drop == null)
                 return HttpNotFound();
+
+            cpRepo.DuplicateDropIfNecessary(drop);
 
             foreach (var creativeStat in drop.CreativeStats)
             {

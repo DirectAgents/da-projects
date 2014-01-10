@@ -652,6 +652,9 @@
     <Content Include="Areas\Admin\Views\CPMReports\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\CreativeFiles\Index.cshtml" />
     <Content Include="Areas\Admin\Views\CPMReports\Preview.cshtml" />
+    <Content Include="Areas\Admin\Views\Offers\DropDebug.cshtml" />
+    <Content Include="Areas\Admin\Views\Offers\ReportDebug.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDrops\IndexDebug.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

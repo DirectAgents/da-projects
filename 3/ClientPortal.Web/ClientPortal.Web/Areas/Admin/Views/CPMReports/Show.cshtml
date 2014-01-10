@@ -1,4 +1,7 @@
 ﻿@model ClientPortal.Data.Contexts.CPMReport
+@{
+    bool reportSent = Model.DateSent != null;
+}
 
 <h3>Report Details</h3>
 
@@ -6,8 +9,15 @@ Advertiser: @Model.Offer.Advertiser.AdvertiserName
 <br />
 Offer: @Model.Offer.DisplayName
 <br /><br />
-@Html.ActionLink("Edit Report", "Edit", new { id = Model.CPMReportId }) |
+@if (!reportSent)
+{
+    @Html.ActionLink("Edit Report", "Edit", new { id = Model.CPMReportId })<text> |</text>
+}
 @Html.ActionLink("Preview", "Preview", new { id = Model.CPMReportId }) |
+@if (!reportSent)
+{
+    @Html.ActionLink("Simulate Send", "SimulateSend", new { id = Model.CPMReportId })<text> |</text>
+}
 Back to: @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId }, null)
 <br /><br />
 <fieldset>
@@ -55,15 +65,18 @@ Back to: @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId },
                     <td>@Html.LabelFor(_ => drop.Cost)</td>
                     <td>@Html.DisplayFor(_ => drop.Cost, "Money")</td>
                 </tr>
+                @if (!reportSent) {
                 <tr>
                     <td colspan="2">@Html.ActionLink("Remove from report", "RemoveDrop", new { cpmreportid = Model.CPMReportId, campaigndropid = drop.CampaignDropId },
                                                         new { onclick = "return confirm('Are you sure you want to remove this drop from the report?')" })</td>
                 </tr>
+                }
             </table>
         </fieldset>
     }
     <br />
-@{
+@if (!reportSent)
+{
     var drops = (IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>)ViewData["CampaignDrops"];
     if (drops.Count() > 0) {
         using (Ajax.BeginForm("AddDrop", new AjaxOptions { })) //UpdateTargetId =

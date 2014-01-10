@@ -66,6 +66,10 @@
             <End Role="Campaign" EntitySet="Campaign" />
             <End Role="CampaignDrop" EntitySet="CampaignDrop" />
           </AssociationSet>
+          <AssociationSet Name="FK_CampaignDrop_CampaignDrop" Association="ClientPortalModel.Store.FK_CampaignDrop_CampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrop" />
+            <End Role="CampaignDrop1" EntitySet="CampaignDrop" />
+          </AssociationSet>
           <AssociationSet Name="FK_CPMReport_Offer" Association="ClientPortalModel.Store.FK_CPMReport_Offer">
             <End Role="Offer" EntitySet="Offer" />
             <End Role="CPMReport" EntitySet="CPMReport" />
@@ -248,6 +252,7 @@
           <Property Name="Volume" Type="int" />
           <Property Name="Opens" Type="int" />
           <Property Name="Subject" Type="nvarchar" MaxLength="255" />
+          <Property Name="CopyOf" Type="int" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -646,6 +651,18 @@
             </Principal>
             <Dependent Role="CampaignDrop">
               <PropertyRef Name="CampaignId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CampaignDrop_CampaignDrop">
+          <End Role="CampaignDrop" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="0..1" />
+          <End Role="CampaignDrop1" Type="ClientPortalModel.Store.CampaignDrop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignDrop">
+              <PropertyRef Name="CampaignDropId" />
+            </Principal>
+            <Dependent Role="CampaignDrop1">
+              <PropertyRef Name="CopyOf" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1112,6 +1129,10 @@
           <AssociationSet Name="FK_CreativeFile_Creative" Association="ClientPortalModel.FK_CreativeFile_Creative">
             <End Role="Creative" EntitySet="Creatives" />
             <End Role="CreativeFile" EntitySet="CreativeFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CampaignDrop_CampaignDrop" Association="ClientPortalModel.FK_CampaignDrop_CampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrops" />
+            <End Role="CampaignDrop1" EntitySet="CampaignDrops" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1744,6 +1765,9 @@
           <NavigationProperty Name="Campaign" Relationship="ClientPortalModel.FK_CampaignDrop_Campaign" FromRole="CampaignDrop" ToRole="Campaign" />
           <NavigationProperty Name="CreativeStats" Relationship="ClientPortalModel.FK_CreativeStat_CampaignDrop" FromRole="CampaignDrop" ToRole="CreativeStat" />
           <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CampaignDrop" ToRole="CPMReport" />
+          <Property Type="Int32" Name="CopyOf" />
+          <NavigationProperty Name="CampaignDropCopies" Relationship="ClientPortalModel.FK_CampaignDrop_CampaignDrop" FromRole="CampaignDrop" ToRole="CampaignDrop1" />
+          <NavigationProperty Name="CampaignDropOriginal" Relationship="ClientPortalModel.FK_CampaignDrop_CampaignDrop" FromRole="CampaignDrop1" ToRole="CampaignDrop" />
         </EntityType>
         <Association Name="FK_CampaignDrop_Campaign">
           <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="1" />
@@ -1953,6 +1977,18 @@
             </Principal>
             <Dependent Role="CreativeFile">
               <PropertyRef Name="CreativeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CampaignDrop_CampaignDrop">
+          <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CampaignDrop">
+              <PropertyRef Name="CampaignDropId" />
+            </Principal>
+            <Dependent Role="CampaignDrop1">
+              <PropertyRef Name="CopyOf" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2284,6 +2320,7 @@
           <EntitySetMapping Name="CampaignDrops">
             <EntityTypeMapping TypeName="ClientPortalModel.CampaignDrop">
               <MappingFragment StoreEntitySet="CampaignDrop">
+                <ScalarProperty Name="CopyOf" ColumnName="CopyOf" />
                 <ScalarProperty Name="Subject" ColumnName="Subject" />
                 <ScalarProperty Name="Opens" ColumnName="Opens" />
                 <ScalarProperty Name="Volume" ColumnName="Volume" />

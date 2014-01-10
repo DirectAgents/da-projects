@@ -28,6 +28,7 @@ namespace ClientPortal.Data.Contracts
         bool AddDropToCPMReport(int cpmReportId, int campaignDropId, bool saveChanges = false);
         bool RemoveDropFromCPMReport(int cpmReportId, int campaignDropId, bool saveChanges = false);
         void FillExtended_CPMReport(CPMReport inReport);
+        Offer DeleteCPMReport(int reportId, bool saveChanges = false);
 
         IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId);
         CampaignDrop GetCampaignDrop(int id);
@@ -35,8 +36,10 @@ namespace ClientPortal.Data.Contracts
         bool SaveCampaignDrop(CampaignDrop campaignDrop, bool saveChanges = false);
         void FillExtended_CampaignDrop(CampaignDrop campaignDrop);
         Campaign DeleteCampaignDrop(int campaignDropId, bool saveChanges = false);
+        void DeleteCampaignDropCopy(int campaignDropId);
+        bool DuplicateDropIfNecessary(CampaignDrop drop);
 
-        void SaveCreativeStat(CreativeStat creativeStat, bool saveChanges = false);
+        bool AddCreativeStat(CreativeStat creativeStat, bool saveChanges = false);
         int? DeleteCreativeStat(int creativeStatId, bool saveChanges = false);
         bool UpdateCreativeStatFromSummaries(int creativeStatId, bool saveChanges = false);
 

@@ -44,7 +44,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             cpmReport.Offer = cpRepo.GetOffer(cpmReport.OfferId);
             //if (cpmReport.Offer == null)
             //    return;
-            //ViewData["CampaignDrops"] = cpmReport.Offer.Campaigns.SelectMany(c => c.CampaignDrops);
+            //ViewData["CampaignDrops"] = cpmReport.Offer.AllCampaignDrops(false);
         }
 
         [HttpPost]
@@ -74,7 +74,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (report == null)
                 return null;
 
-            var dropIds = report.CampaignDrops.Select(cd => cd.CampaignDropId).ToList();
+            var dropIds_nonCopies = report.CampaignDrops.Where(cd => cd.CopyOf == null).Select(cd => cd.CampaignDropId);
+            var dropIds_original = report.CampaignDrops.Where(cd => cd.CopyOf != null).Select(cd => cd.CampaignDropOriginal).Select(cd => cd.CampaignDropId);
+            var dropIds = dropIds_nonCopies.Union(dropIds_original).ToList();
+
             ViewData["CampaignDrops"] = cpRepo.CampaignDrops(report.OfferId, null)
                                                 .Where(cd => !dropIds.Contains(cd.CampaignDropId))
                                                 .OrderByDescending(cd => cd.Date);
@@ -104,6 +107,15 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(report);
         }
 
+        public ActionResult Delete(int id)
+        {
+            Offer offer = cpRepo.DeleteCPMReport(id, true);
+            if (offer == null)
+                return HttpNotFound();
+
+            return RedirectToAction("Show", "Offers", new { id = offer.OfferId });
+        }
+
         [HttpPost]
         public ActionResult AddDrop(int cpmreportid, int campaigndropid)
         {
@@ -126,6 +138,30 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return HttpNotFound();
 
             return View(report);
+        }
+
+        public ActionResult SimulateSend(int id)
+        {
+            var report = cpRepo.GetCPMReport(id);
+            if (report == null)
+                return HttpNotFound();
+
+            report.DateSent = DateTime.Now;
+            cpRepo.SaveChanges();
+
+            return RedirectToAction("Show", new { id = id });
+        }
+
+        public ActionResult Unsend(int id)
+        {
+            var report = cpRepo.GetCPMReport(id);
+            if (report == null)
+                return HttpNotFound();
+
+            report.DateSent = null;
+            cpRepo.SaveChanges();
+
+            return Content("Report changed to unsent. Click 'back' and refresh.");
         }
     }
 }

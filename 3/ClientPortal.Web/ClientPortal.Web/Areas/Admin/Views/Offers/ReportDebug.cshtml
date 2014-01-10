@@ -1,0 +1,16 @@
+﻿@model ClientPortal.Data.Contexts.Offer
+
+@foreach (var report in Model.CPMReports.OrderByDescending(r => r.CPMReportId))
+{
+    <text>Report: </text>
+    if (report.DateSent.HasValue)
+    {
+        <text>(sent) </text>
+        @Html.ActionLink("Unsend", "Unsend", "CPMReports", new { id = report.CPMReportId }, null)
+    }
+    @Html.Partial("../CampaignDrops/IndexDebug", report.CampaignDropsOrdered)
+    <br />
+}
+
+Not in a report:
+@Html.Partial("../CampaignDrops/IndexDebug", Model.Campaigns.SelectMany(c => c.CampaignDrops.Where(cd => !cd.CPMReports.Any()).OrderBy(cd => cd.CampaignDropId)))

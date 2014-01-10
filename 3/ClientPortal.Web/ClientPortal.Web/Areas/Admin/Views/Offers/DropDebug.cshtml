@@ -1,0 +1,51 @@
+﻿@model ClientPortal.Data.Contexts.Offer
+@{
+    var drops = Model.AllCampaignDrops(false);
+}
+
+@foreach (var drop in drops)
+{
+    <b>Drop:</b> @drop.CampaignDropId
+    <text>(in reports:</text>
+    foreach (var report in drop.CPMReports)
+    {
+        @report.CPMReportId<text> </text>
+    }
+    <text>)</text>
+    <br />
+    <b>Date:</b>
+    @drop.Date
+    <br />
+    <b>CreativeStats:</b>
+    foreach (var cstat in drop.CreativeStats)
+    {
+        @cstat.CreativeStatId<text> </text>
+    }
+    <br />
+    if (drop.CampaignDropCopies.Count > 0)
+    {
+        <b>num copies:</b> @drop.CampaignDropCopies.Count
+        <br />
+        <table border="1">
+        @foreach (var dropCopy in drop.CampaignDropCopies)
+        {
+            <tr>
+                <td>@dropCopy.CampaignDropId</td>
+                <td>cstats:
+                    @foreach (var cstat in dropCopy.CreativeStats)
+                    {
+                        @cstat.CreativeStatId<text> </text>
+                    }
+                </td>
+                <td>in reports:
+                    @foreach (var report in dropCopy.CPMReports)
+                    {
+                        @report.CPMReportId<text> </text>
+                    }
+                </td>
+            </tr>
+        }
+        </table>
+    }
+    <br />
+}

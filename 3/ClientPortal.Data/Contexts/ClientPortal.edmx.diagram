@@ -70,6 +70,7 @@
         <AssociationConnector Association="ClientPortalModel.FK_Advertiser_CakeContact" />
         <EntityTypeShape EntityType="ClientPortalModel.CreativeFile" Width="1.5" PointX="15.875" PointY="2" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeFile_Creative" />
+        <AssociationConnector Association="ClientPortalModel.FK_CampaignDrop_CampaignDrop" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
