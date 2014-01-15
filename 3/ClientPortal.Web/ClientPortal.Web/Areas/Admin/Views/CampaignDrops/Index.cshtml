@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab", "navCPMDrops");
+    var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Get", "Are you sure you want to delete this drop?");
+}
 
 Drops:<br />
 <table border="1">
@@ -10,28 +14,31 @@ Drops:<br />
         <th>Clicks</th>
         <th>Leads</th>
         <th>Total Cost</th>
+        <th></th>
     </tr>
 @foreach (var drop in Model)
 {
     <tr>
-        <td>@drop.Campaign.AffiliateId</td>
-        <td>@drop.Date.ToShortDateString()</td>
-        <td>@(drop.Volume.HasValue ? drop.Volume.Value.ToString("N0") : "")</td>
-        <td>@(drop.Opens.HasValue ? drop.Opens.Value.ToString("N0") : "")<br />
+        <td style="text-align:center">@drop.Campaign.AffiliateId</td>
+        <td style="text-align:center">@drop.Date.ToShortDateString()</td>
+        <td style="text-align:center">@(drop.Volume.HasValue ? drop.Volume.Value.ToString("N0") : "")</td>
+        <td style="text-align:center">@(drop.Opens.HasValue ? drop.Opens.Value.ToString("N0") : "")<br />
             Open Rate: @(drop.OpenRate.HasValue ? String.Format("{0:0.00%}", drop.OpenRate.Value) : "")</td>
-        <td>@drop.CreativeStatTotals.Clicks.Value.ToString("N0")<br />
+        <td style="text-align:center">@drop.CreativeStatTotals.Clicks.Value.ToString("N0")<br />
             CTR: @(drop.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", drop.ClickThroughRate.Value) : "")
         </td>
-        <td>@drop.CreativeStatTotals.Leads.Value.ToString("N0")<br />
+        <td style="text-align:center">@drop.CreativeStatTotals.Leads.Value.ToString("N0")<br />
             eCPL: @(drop.CostPerLead.HasValue ? drop.CostPerLead.Value.ToString("C2") : "")
         </td>
-        <td>@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")</td>
-        <td>@Html.ActionLink("Details", "Show", "CampaignDrops", new { id = drop.CampaignDropId }, null)
-            | @Html.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, null)
+        <td style="text-align:center">@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")</td>
+        <td>@Ajax.ActionLink("View/Edit", "Show", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)
+            @*| @Ajax.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)*@
             @if (!drop.IsInCPMReport) {
-                <text>| </text>@Html.ActionLink("Delete", "Delete", "CampaignDrops", new { id = drop.CampaignDropId }, new { onclick = "return confirm('Are you sure you want to delete this drop?')" })
+                <text>| </text>@Ajax.ActionLink("Delete", "Delete", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOpts_Confirm)
             }
         </td>
+        @* for testing! *@
+        @*<td>@drop.CampaignDropId</td>*@
     </tr>
     if (drop.CreativeStats.Count > 1)
     {
@@ -41,9 +48,9 @@ Drops:<br />
                 <td></td>
                 <td></td>
                 <td colspan="2">Creative: @creativeStat.Creative.CreativeName</td>
-                <td>@(creativeStat.Clicks.HasValue ? creativeStat.Clicks.Value.ToString("N0") : "")<br />
+                <td style="text-align:center">@(creativeStat.Clicks.HasValue ? creativeStat.Clicks.Value.ToString("N0") : "")<br />
                     CTR: @(creativeStat.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", creativeStat.ClickThroughRate.Value) : "")</td>
-                <td>@(creativeStat.Leads.HasValue ? creativeStat.Leads.Value.ToString("N0") : "")</td>
+                <td style="text-align:center">@(creativeStat.Leads.HasValue ? creativeStat.Leads.Value.ToString("N0") : "")</td>
             </tr>
         }
     }

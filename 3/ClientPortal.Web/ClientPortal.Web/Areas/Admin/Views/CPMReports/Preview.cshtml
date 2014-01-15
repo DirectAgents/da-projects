@@ -1,9 +1,15 @@
 ﻿@model ClientPortal.Data.Contexts.CPMReport
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+}
 
 <h3>Report Preview</h3>
 
+@Ajax.ActionLink("View/Edit", "Show", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)
+<br /><br />
+
 <b>Summary:</b><br />
-@Model.Summary
+@Html.DisplayWithBreaksFor(m => m.Summary)
 <br /><br />
 
 <table border="1">
@@ -80,4 +86,4 @@
 
 <br />
 <b>Next Steps:</b><br />
-@Model.Conclusion
+@Html.DisplayWithBreaksFor(m => m.Conclusion)

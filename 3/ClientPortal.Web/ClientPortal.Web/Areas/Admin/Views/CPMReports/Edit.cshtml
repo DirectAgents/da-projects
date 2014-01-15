@@ -1,13 +1,17 @@
 ﻿@model ClientPortal.Data.Contexts.CPMReport
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Post");
+}
 
-<h3>Edit Report</h3>
+@if (!IsAjax)
+{
+    <h3>Edit Report</h3>
+}
+Advertiser: <b>@Model.Offer.Advertiser.AdvertiserName</b><br />
+Offer: <b>@Model.Offer.DisplayName</b><br />
 
-Advertiser: @Model.Offer.Advertiser.AdvertiserName
-<br />
-Offer: @Model.Offer.DisplayName
-<br />
-
-@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     @Html.ValidationSummary()
 
@@ -46,6 +50,6 @@ Offer: @Model.Offer.DisplayName
         <br />
         <input type="submit" value="Save" />
         &nbsp;
-        @Html.ActionLink("Cancel", "Show", "CPMReports", new { id = Model.CPMReportId }, null)
+        @Ajax.ActionLink("Cancel", "Show", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)
     </fieldset>
 }

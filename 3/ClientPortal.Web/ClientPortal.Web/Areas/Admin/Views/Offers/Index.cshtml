@@ -1,13 +1,30 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.Offer>
 @{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmOffersTab");
+    var ajaxOpts_Sum = RazorHelpers.GetAjaxOptions("cpmSummaryTab", "navCPMSummary");
     var accountManagers = Model.Select(o => o.Advertiser).Distinct().Where(a => a.AccountManagerId != null).Select(a => a.AccountManager).Distinct().OrderBy(am => am.FullName);
+    var advertisers = Model.Select(o => o.Advertiser).Distinct(new ClientPortal.Data.Contexts.AdvertiserComparer()).OrderBy(a => a.AdvertiserName);
 }
 
-<h2>Offers</h2>
-
-@if (accountManagers.Count() == 1)
+@if (!Request.IsAjaxRequest())
 {
-    <text>Account Manager: </text>@accountManagers.First().FullName
+    <h3>CPM Offers</h3>
+}
+Show:
+@Ajax.ActionLink("all offers", "Index", "Offers", ajaxOptions) |
+@Ajax.ActionLink("filter by account manager", "Filter", "Offers", ajaxOptions)
+<br />
+
+@if (advertisers.Count() == 1)
+{
+    var adv = advertisers.First();
+    <text>Advertiser: </text>@adv.AdvertiserName
+    <text> </text>@Ajax.ActionLink("[refesh]", "Index", "Offers", new { advertiserid = adv.AdvertiserId }, ajaxOptions)
+} else if (accountManagers.Count() == 1)
+{
+    var am = accountManagers.First();
+    <text>Account Manager: </text>@am.FullName
+    <text> </text>@Ajax.ActionLink("[refresh]", "Index", "Offers", new { am = am.CakeContactId }, ajaxOptions)
 }
 
 <table border="1">
@@ -34,7 +51,7 @@
         <td>@offer.AdvertiserId</td>
         <td>@offer.Advertiser.AdvertiserName</td>
         <td>@offer.OfferId</td>
-        <td>@Html.ActionLink(offer.OfferName, "Show", new { id = offer.OfferId })</td>
+        <td>@Ajax.ActionLink(offer.OfferName, "Show", "Offers", new { id = offer.OfferId }, ajaxOpts_Sum)</td>
         <td>@Html.ActionLink(reportsText, "Index", "CPMReports", new { offerid = offer.OfferId }, null)
             &nbsp; | &nbsp; @Html.ActionLink(dropsText, "Index", "CampaignDrops", new { offerid = offer.OfferId }, null)
             &nbsp; | &nbsp; @Html.ActionLink(campaignsText, "Index", "Campaigns", new { offerid = offer.OfferId }, null)
@@ -48,15 +65,3 @@
     </tr>
 }
 </table>
-<br />Show:
-@Html.ActionLink("all offers", "Index", "Offers") |
-@Html.ActionLink("all offers with campaigns", "Index", "Offers", new { mincampaigns = 1 }, null)
-@if (accountManagers.Count() > 1)
-{
-    <br /><br />
-    <text>Filter by Account Manager:</text><br />
-    foreach (var am in accountManagers)
-    {
-        @Html.ActionLink(am.FullName, "Index", "Offers", new { am = am.CakeContactId }, null)<br />
-    }
-}

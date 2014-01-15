@@ -655,6 +655,7 @@
     <Content Include="Areas\Admin\Views\Offers\DropDebug.cshtml" />
     <Content Include="Areas\Admin\Views\Offers\ReportDebug.cshtml" />
     <Content Include="Areas\Admin\Views\CampaignDrops\IndexDebug.cshtml" />
+    <Content Include="Areas\Admin\Views\Offers\Filter.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

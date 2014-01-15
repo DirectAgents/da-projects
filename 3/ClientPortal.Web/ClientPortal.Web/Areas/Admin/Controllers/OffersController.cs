@@ -15,6 +15,14 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             this.cpRepo = cpRepository;
         }
 
+        public ActionResult Filter()
+        {
+            var offers = cpRepo.Offers(null, null, true);
+            var accountManagers = offers.Select(o => o.Advertiser).Distinct().Where(a => a.AccountManagerId != null).Select(a => a.AccountManager).Distinct().OrderBy(am => am.FullName);
+
+            return View(accountManagers);
+        }
+
         public ActionResult Index(int? am, int? advertiserid, int? mincampaigns)
         {
             var offers = cpRepo.Offers(am, advertiserid, true, mincampaigns);

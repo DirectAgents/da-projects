@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.CPMReport>
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab", "navCPMReports");
+    var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Get", "Are you sure you want to delete this report?");
+}
 
 CPM Reports:
 <table border="1">
@@ -6,19 +10,21 @@ CPM Reports:
         <th>Name</th>
         <th>Drops</th>
         <th>Date Sent</th>
+        <th></th>
     </tr>
 @foreach (var report in Model)
 {
     <tr>
         <td>@report.Name</td>
-        <td>@report.CampaignDrops.Count</td>
+        <td style="text-align:center">@report.CampaignDrops.Count</td>
         <td>@report.DateSent</td>
-        <td>@Html.ActionLink("View/Edit", "Show", "CPMReports", new { id = report.CPMReportId }, null)</td>
-        <td>@Html.ActionLink("Preview", "Preview", "CPMReports", new { id = report.CPMReportId }, null)</td>
-        @if (report.CampaignDrops.Count == 0)
-        {
-            <td>@Html.ActionLink("Delete", "Delete", "CPMReports", new { id = report.CPMReportId }, new { onclick = "return confirm('Are you sure you want to delete this report?')" })</td>
-        }
+        <td>@Ajax.ActionLink("View/Edit", "Show", "CPMReports", new { id = report.CPMReportId }, ajaxOptions) |
+            @Ajax.ActionLink("Preview", "Preview", "CPMReports", new { id = report.CPMReportId }, ajaxOptions)
+            @if (report.CampaignDrops.Count == 0)
+            {
+                <text> | </text>@Ajax.ActionLink("Delete", "Delete", "CPMReports", new { id = report.CPMReportId }, ajaxOpts_Confirm)
+            }
+        </td>
     </tr>
 }
 </table>

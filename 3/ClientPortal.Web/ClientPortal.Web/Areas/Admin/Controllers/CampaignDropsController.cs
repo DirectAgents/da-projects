@@ -31,7 +31,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(drop);
         }
 
-        private CampaignDrop SetupForCreate(int campaignId, string from)
+        private CampaignDrop SetupForCreate(int campaignId, string from, CampaignDrop drop = null)
         {
             var campaign = cpRepo.GetCampaign(campaignId);
             if (campaign == null)
@@ -40,32 +40,32 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             ViewData["Creatives"] = campaign.Offer.CreativesByDate();
             ViewData["from"] = from;
 
-            var drop = new CampaignDrop
+            if (drop == null)
             {
-                Date = DateTime.Today,
-                CampaignId = campaign.CampaignId,
-                Campaign = campaign
-            };
+                drop = new CampaignDrop
+                {
+                    Date = DateTime.Today,
+                };
+            }
+            drop.CampaignId = campaign.CampaignId;
+            drop.Campaign = campaign;
+
             return drop;
         }
 
         [HttpPost]
-        public ActionResult Create(int campaignid, DateTime? date, string subject, decimal? cost, int creativeid, string from)
+        public ActionResult Create(CampaignDrop drop, int creativeid, string from)
         {
-            if (!date.HasValue)
-                ModelState.AddModelError("Date", "Date could not be parsed");
-            //else if (!cost.HasValue) //TODO: make cost a string and see if it can be parsed
-            //    ModelState.AddModelError("Cost", "Cost could not be parsed");
-            else
+            if (ModelState.IsValid)
             {
-                var campaignDrop = cpRepo.AddCampaignDrop(campaignid, date.Value, subject, cost, creativeid, true);
+                var campaignDrop = cpRepo.AddCampaignDrop(drop, creativeid, true);
                 if (campaignDrop != null)
                 {   // success
                     return RedirectToAction("Show", new { id = campaignDrop.CampaignDropId });
                 }
                 ModelState.AddModelError("", "Campaign Drop could not be saved");
             }
-            var drop = SetupForCreate(campaignid, from);
+            SetupForCreate(drop.CampaignId, from, drop);
             return View(drop);
         }
 
@@ -140,8 +140,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 command.Run(null);
                 cpRepo.UpdateCreativeStatFromSummaries(creativeStat.CreativeStatId, true);
             }
-            return Content("Synch complete. Click 'back' and refresh.");
-            //return RedirectToAction("Show", new { id = id });
+            if (Request.IsAjaxRequest())
+                return RedirectToAction("Show", new { id = id });
+            else
+                return Content("Synch complete. Click 'back' and refresh.");
         }
     }
 }

@@ -1,21 +1,28 @@
 ﻿@model ClientPortal.Data.Contexts.Offer
 @{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmSummaryTab");
+    var ajaxOpts_Off = RazorHelpers.GetAjaxOptions("cpmOffersTab", "navCPMOffers");
+    var ajaxOpts_Rep = RazorHelpers.GetAjaxOptions("cpmReportsTab", "navCPMReports");
+    var ajaxOpts_Drop = RazorHelpers.GetAjaxOptions("cpmDropsTab", "navCPMDrops");
     var am = Model.Advertiser.AccountManager;
 }
-<h3>Offer Summary</h3>
-
+@if (!Request.IsAjaxRequest())
+{
+    <h3>Offer Summary</h3>
+}
+Offer: <b>@Model.DisplayName</b> @Ajax.ActionLink("[refresh]", "Show", "Offers", new { id = Model.OfferId }, ajaxOptions)
+<br />
+Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offers]", "Index", "Offers", new { advertiserid = Model.AdvertiserId }, ajaxOpts_Off)
+<br />
 @if (am != null)
 {
-    <text>Account Manager: </text>@Html.ActionLink(am.FullName, "Index", "Offers", new { am = am.CakeContactId }, null)
+    <text>Account Manager: </text><b>@am.FullName</b> @Ajax.ActionLink("[show offers]", "Index", "Offers", new { am = am.CakeContactId }, ajaxOpts_Off)
     <br />
 }
-Advertiser: @Html.ActionLink(Model.Advertiser.AdvertiserName, "Index", new { advertiserid = Model.AdvertiserId })
 <br />
-Offer: @Model.DisplayName
-<br /><br />
 
 @Html.Partial("../CPMReports/Index", Model.CPMReports.OrderByDescending(r => r.CPMReportId))
-@Html.ActionLink("(new report)", "Create", "CPMReports", new { offerid = Model.OfferId }, null)
+@Ajax.ActionLink("[new report]", "Create", "CPMReports", new { offerid = Model.OfferId }, ajaxOpts_Rep)
 
 <br /><br />
 @Html.Partial("../CampaignDrops/Index", Model.AllCampaignDrops(false))
@@ -29,6 +36,7 @@ Campaigns:
         <th>AffId</th>
         <th>Affiliate</th>
         <th>Drops</th>
+        <th></th>
     </tr>
 @foreach (var campaign in Model.Campaigns.OrderBy(c => c.Affiliate.AffiliateName).ThenBy(c => c.CampaignName))
 {
@@ -37,7 +45,7 @@ Campaigns:
         <td>@campaign.AffiliateId</td>
         <td>@campaign.Affiliate.AffiliateName</td>
         <td>@campaign.CampaignDrops.Count</td>
-        <td>@Html.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId, from = "offer" }, null)</td>
+        <td>@Ajax.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId, from = "offer" }, ajaxOpts_Drop)</td>
     </tr>
 }
 </table>
@@ -48,3 +56,4 @@ Campaigns:
 <br />
 @Html.ActionLink("Synch Campaigns", "SynchCampaigns", new { offerid = Model.OfferId }) |
 @Html.ActionLink("Synch Creatives", "SynchCreatives", new { offerid = Model.OfferId })
+<br /><br />

@@ -7,9 +7,6 @@ fieldset ul, .validation-summary-errors ul {
 .validation-summary-errors {
     color: red;
 }
-fieldset legend {
-    display: none;
-}
 label.checkbox {
     display: inline;
 }
@@ -23,6 +20,16 @@ label.checkbox {
 }
 .k-datepicker {
     width: 110px;
+}
+
+table {
+    margin: 0px;
+}
+table tbody tr td {
+    padding: 2px 5px;
+}
+fieldset {
+    margin: 10px 0px;
 }
 
 .summarytable {

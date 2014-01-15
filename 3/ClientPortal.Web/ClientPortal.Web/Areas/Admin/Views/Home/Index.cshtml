@@ -48,6 +48,7 @@
               +---------------+-->*@
         <dl class="vertical tabs">
             <dd class="active"><a href="#vertical1" id="vertNav_Home">Admin</a></dd>
+            <dd><a href="#cpm" id="vertNav_CPM">CPM Reports</a></dd>
         </dl>
         <!-- /VTabs -->
 
@@ -87,6 +88,29 @@
         </li>
         <!-- /Home -->
 
+        <li id="cpmTab">
+            <div class="ten columns portaltabs-h">
+                @*<!--+---------------+
+                      | CPM HTabs     |
+                      +---------------+-->*@
+                <dl class="tabs">
+                    <dd class="active"><a href="#cpmOffers" id="navCPMOffers">CPM Offers</a></dd>
+                    <dd><a href="#cpmSummary" id="navCPMSummary">Summary</a></dd>
+                    <dd><a href="#cpmReports" id="navCPMReports">Report</a></dd>
+                    <dd><a href="#cpmDrops" id="navCPMDrops">Drop</a></dd>
+                </dl>
+                @*<!--+-----------------------+
+                      | CPM HTabs Content     |
+                      +-----------------------+-->*@
+                <ul class="tabs-content">
+                    <li id="cpmOffersTab" class="active"></li>
+                    <li id="cpmSummaryTab">Please select an offer</li>
+                    <li id="cpmReportsTab">Please select an offer and a report</li>
+                    <li id="cpmDropsTab">Please select an offer and a drop</li>
+                </ul>
+            </div>
+        </li>
+
     </ul>
     <!-- /VTabs -->
 
@@ -100,7 +124,7 @@
     <div class="twelve columns">
         <div class="row">
             <div class="six columns">
-                <p>&copy; 2013 Direct Agents</p>
+                <p>&copy; 2014 Direct Agents</p>
             </div>
             <div class="six columns">
             </div>
@@ -151,6 +175,14 @@
                     cache: false
                 }).done(function (html) {
                     $("#contactsTab").html(html);
+                });
+            });
+            $("#vertNav_CPM").one("click", function () {
+                $.ajax({
+                    url: '@Url.Action("Filter", "Offers")',
+                    cache: false
+                }).done(function (html) {
+                    $("#cpmOffersTab").html(html);
                 });
             });
         }

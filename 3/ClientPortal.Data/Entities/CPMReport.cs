@@ -1,9 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace ClientPortal.Data.Contexts
 {
+    public class CPMReport_Validation
+    {
+        [Required]
+        public string Name { get; set; }
+    }
+
+    [MetadataType(typeof(CPMReport_Validation))]
     public partial class CPMReport
     {
         [NotMapped]

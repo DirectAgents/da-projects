@@ -1,25 +1,36 @@
 ﻿@model ClientPortal.Data.Contexts.CPMReport
 @{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+    var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Get", "Are you sure you want to remove this drop from the report?");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Post");
     bool reportSent = Model.DateSent != null;
 }
 
-<h3>Report Details</h3>
+@if (!IsAjax)
+{
+    <h3>Report Details</h3>
+}
+Offer: <b>@Model.Offer.DisplayName</b><br />
+Advertiser: <b>@Model.Offer.Advertiser.AdvertiserName</b><br />
 
-Advertiser: @Model.Offer.Advertiser.AdvertiserName
-<br />
-Offer: @Model.Offer.DisplayName
-<br /><br />
 @if (!reportSent)
 {
-    @Html.ActionLink("Edit Report", "Edit", new { id = Model.CPMReportId })<text> |</text>
+    @Ajax.ActionLink("Edit", "Edit", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)<text> | </text>
 }
-@Html.ActionLink("Preview", "Preview", new { id = Model.CPMReportId }) |
+
+@Ajax.ActionLink("Preview", "Preview", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions) |
+
 @if (!reportSent)
 {
-    @Html.ActionLink("Simulate Send", "SimulateSend", new { id = Model.CPMReportId })<text> |</text>
+    @Ajax.ActionLink("Simulate Send", "SimulateSend", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)<text> | </text>
 }
-Back to: @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId }, null)
-<br /><br />
+
+@Ajax.ActionLink("Refresh", "Show", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)
+
+@if (!IsAjax)
+{
+    <text> | Back to: </text>@Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId }, null)
+}
 <fieldset>
     <legend>CPM Report</legend>
     <table>
@@ -37,11 +48,11 @@ Back to: @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId },
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.Summary)</td>
-            <td>@Html.DisplayFor(m => m.Summary)</td>
+            <td>@Html.DisplayWithBreaksFor(m => m.Summary)</td>
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.Conclusion, "Next Steps")</td>
-            <td>@Html.DisplayFor(m => m.Conclusion)</td>
+            <td>@Html.DisplayWithBreaksFor(m => m.Conclusion)</td>
         </tr>
     </table>
     @foreach (var drop in Model.CampaignDropsOrdered)
@@ -67,8 +78,8 @@ Back to: @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId },
                 </tr>
                 @if (!reportSent) {
                 <tr>
-                    <td colspan="2">@Html.ActionLink("Remove from report", "RemoveDrop", new { cpmreportid = Model.CPMReportId, campaigndropid = drop.CampaignDropId },
-                                                        new { onclick = "return confirm('Are you sure you want to remove this drop from the report?')" })</td>
+                    <td colspan="2">@Ajax.ActionLink("Remove from report", "RemoveDrop", "CPMReports", new { cpmreportid = Model.CPMReportId, campaigndropid = drop.CampaignDropId },
+                                                     ajaxOpts_Confirm)</td>
                 </tr>
                 }
             </table>
@@ -79,7 +90,7 @@ Back to: @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.OfferId },
 {
     var drops = (IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>)ViewData["CampaignDrops"];
     if (drops.Count() > 0) {
-        using (Ajax.BeginForm("AddDrop", new AjaxOptions { })) //UpdateTargetId =
+        using (Ajax.BeginForm("AddDrop", ajaxOpts_Post))
         {
             var dropSelectList = new SelectList(drops, "CampaignDropId", "DisplayName");
             <text>Add Drop:</text>

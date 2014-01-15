@@ -1,13 +1,17 @@
 ﻿@model ClientPortal.Data.Contexts.CampaignDrop
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
+}
 
-<h3>Edit Drop</h3>
+@if (!IsAjax)
+{
+    <h3>Edit Drop</h3>
+}
+Campaign: <b>@Model.Campaign.CampaignName</b><br />
+Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)</b><br />
 
-Campaign: @Model.Campaign.CampaignName
-<br />
-Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
-<br />
-
-@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     @Html.ValidationSummary()
 
@@ -68,7 +72,7 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
         <br />
         <input type="submit" value="Save" />
         &nbsp;
-        @Html.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, null)
+        @Ajax.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, ajaxOptions)
     </fieldset>
     
 }

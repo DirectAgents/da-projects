@@ -15,4 +15,17 @@ namespace ClientPortal.Data.Contexts
         [NotMapped]
         public IEnumerable<UserProfile> UserProfiles { get; set; }
     }
+
+    public class AdvertiserComparer : EqualityComparer<Advertiser>
+    {
+        public override bool Equals(Advertiser x, Advertiser y)
+        {
+            return x.AdvertiserId == y.AdvertiserId;
+        }
+
+        public override int GetHashCode(Advertiser obj)
+        {
+            return obj.AdvertiserId;
+        }
+    }
 }

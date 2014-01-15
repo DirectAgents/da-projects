@@ -1,8 +1,14 @@
 ﻿@model ClientPortal.Data.Contexts.CreativeStat
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
+}
 
-<h3>Add Creative</h3>
-
-@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+@if (!IsAjax)
+{
+    <h3>Add Creative</h3>
+}
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     @Html.ValidationSummary()
 
@@ -23,7 +29,7 @@
         <br />
         <input type="submit" value="Add Creative to Drop" />
         &nbsp;
-        @Html.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, null)
+        @Ajax.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, ajaxOptions)
 
     </fieldset>
 }

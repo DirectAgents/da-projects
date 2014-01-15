@@ -1,14 +1,22 @@
 ﻿@model ClientPortal.Data.Contexts.CampaignDrop
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
+    var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Get", "Are you sure you want to remove this creative?");
+    var ajaxOpts_ConfirmSynch = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Get", "This will overwrite existing stats. Are you sure?");
+}
 
-<h3>Drop Details</h3>
+@if (!IsAjax)
+{
+    <h3>Drop Details</h3>
+}
+@*Offer: <b>@Model.Campaign.Offer.DisplayName</b><br />*@
+Campaign: <b>@Model.Campaign.CampaignName</b><br />
+Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)</b><br />
 
-Offer: @Model.Campaign.Offer.DisplayName
-<br />
-Campaign: @Model.Campaign.CampaignName
-<br />
-Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
-<br /><br />
-
+@Ajax.ActionLink("Edit", "Edit", "CampaignDrops", new { id = Model.CampaignDropId }, ajaxOptions) |
+@Ajax.ActionLink("Add Creative", "Create", "CreativeStats", new { campaigndropid = Model.CampaignDropId }, ajaxOptions) |
+@Ajax.ActionLink("Synch Creative Stats", "SynchStats", new { id = Model.CampaignDropId }, ajaxOpts_ConfirmSynch) |
+@Ajax.ActionLink("Refresh", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, ajaxOptions)
 <fieldset>
     <legend>Campaign Drop</legend>
     <table>
@@ -52,19 +60,16 @@ Affiliate: @Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)
                     <td>@Html.DisplayFor(_ => creativeStat.Leads)</td>
                 </tr>
                 <tr>
-                    <td colspan="2">@Html.ActionLink("Remove from drop", "Delete", "CreativeStats", new { id = creativeStat.CreativeStatId }, new { onclick = "return confirm('Are you sure you want to remove this creative?')" })</td>
+                    <td colspan="2">@Ajax.ActionLink("Remove from drop", "Delete", "CreativeStats", new { id = creativeStat.CreativeStatId }, ajaxOpts_Confirm)</td>
                 </tr>
             </table>
         </fieldset>
     }
-    <br />
-    @Html.ActionLink("Edit Drop", "Edit", new { id = Model.CampaignDropId }) |
-    @Html.ActionLink("Add Creative to Drop", "Create", "CreativeStats", new { campaigndropid = Model.CampaignDropId }, null) |
-    @Html.ActionLink("Synch Creative Stats", "SynchStats", new { id = Model.CampaignDropId }) |
-    @Html.ActionLink("Delete Drop", "Delete", "CampaignDrops", new { id = Model.CampaignDropId }, new { onclick = "return confirm('Are you sure you want to delete this drop?')" })
 </fieldset>
-<br />
-Back to:
-@Html.ActionLink("Offer", "Show", "Offers", new { id = Model.Campaign.OfferId }, null ) |
-@Html.ActionLink("Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null) |
-@Html.ActionLink("Show all drops for Offer " + Model.Campaign.OfferId, "Index", "CampaignDrops", new { offerid = Model.Campaign.OfferId }, null)
+@if (!IsAjax)
+{
+    <br /><text>Back to:</text>
+    @Html.ActionLink("Offer", "Show", "Offers", new { id = Model.Campaign.OfferId }, null )<text> | </text>
+    @Html.ActionLink("Campaign", "Show", "Campaigns", new { id = Model.CampaignId }, null)<text> | </text>
+    @Html.ActionLink("Show all drops for Offer " + Model.Campaign.OfferId, "Index", "CampaignDrops", new { offerid = Model.Campaign.OfferId }, null)
+}

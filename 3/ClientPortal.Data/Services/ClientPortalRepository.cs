@@ -291,6 +291,11 @@ namespace ClientPortal.Data.Services
             return campaignDrop;
         }
 
+        public CampaignDrop AddCampaignDrop(CampaignDrop drop, int creativeId, bool saveChanges = false)
+        {
+            return AddCampaignDrop(drop.CampaignId, drop.Date, drop.Subject, drop.Cost, creativeId, saveChanges);
+        }
+
         public CampaignDrop AddCampaignDrop(int campaignId, DateTime date, string subject, decimal? cost, int creativeId, bool saveChanges = false)
         {
             CampaignDrop campaignDrop = null;

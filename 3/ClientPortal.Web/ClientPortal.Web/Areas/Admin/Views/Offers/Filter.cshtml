@@ -1,0 +1,15 @@
+﻿@model IEnumerable<ClientPortal.Data.Contexts.CakeContact>
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmOffersTab");
+}
+
+Filter by Account Manager:<br />
+@foreach (var am in Model)
+{
+    @Ajax.ActionLink(am.FullName, "Index", "Offers", new { am = am.CakeContactId }, ajaxOptions)<br />
+}
+
+<br />
+@Ajax.ActionLink("Show all offers", "Index", "Offers", ajaxOptions)
+<br />
+@Ajax.ActionLink("Show all offers with campaigns", "Index", "Offers", new { mincampaigns = 1 }, ajaxOptions)

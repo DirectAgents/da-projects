@@ -1,11 +1,12 @@
 ﻿@model ClientPortal.Data.Contexts.CampaignDrop
 @{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
     string from = (string)ViewData["from"];
 }
 
 <h3>Create Drop</h3>
 
-@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+@using (Ajax.BeginForm(ajaxOptions))
 {
     @Html.ValidationSummary()
 
@@ -41,13 +42,16 @@
 
         <br />
         <input type="submit" value="Create Drop" />
-        &nbsp;
-        @if (from == "offer") {
-            @Html.ActionLink("Cancel", "Show", "Offers", new { id = Model.Campaign.OfferId }, null)
-        } else if (from == "campaigns") {
-            @Html.ActionLink("Cancel", "Index", "Campaigns", new { offerid = Model.Campaign.OfferId }, null)
-        } else {
-            @Html.ActionLink("Cancel", "Show", "Campaigns", new { id = Model.CampaignId }, null)
+        @if (!IsAjax)
+        {
+            <text>&nbsp;</text>
+            if (from == "offer") {
+                @Html.ActionLink("Cancel", "Show", "Offers", new { id = Model.Campaign.OfferId }, null)
+            } else if (from == "campaigns") {
+                @Html.ActionLink("Cancel", "Index", "Campaigns", new { offerid = Model.Campaign.OfferId }, null)
+            } else {
+                @Html.ActionLink("Cancel", "Show", "Campaigns", new { id = Model.CampaignId }, null)
+            }
         }
     </fieldset>
 }
