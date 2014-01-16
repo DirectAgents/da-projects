@@ -4,14 +4,14 @@
     ViewBag.Title = "Create";
 }
 
-<h4>Create</h4>
+<h4>Create Contact</h4>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "contactsTab" }))
 {
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>Contact</legend>
+        <legend style="display:none"></legend>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.FirstName)

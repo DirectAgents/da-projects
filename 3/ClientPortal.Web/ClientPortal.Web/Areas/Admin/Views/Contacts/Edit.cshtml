@@ -4,19 +4,19 @@
     ViewBag.Title = "Edit";
 }
 
-<h4>Edit</h4>
+<h4>Edit Contact</h4>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "contactsTab" }))
 {
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>Contact</legend>
+        <legend style="display:none"></legend>
 
         @Html.HiddenFor(model => model.ContactId)
 
         <div class="editor-label" style="margin-bottom: 12px">
-            ContactId: @Html.DisplayFor(model => model.ContactId)
+            <b>ContactId:</b> @Html.DisplayFor(model => model.ContactId)
         </div>
 
         <div class="editor-label">

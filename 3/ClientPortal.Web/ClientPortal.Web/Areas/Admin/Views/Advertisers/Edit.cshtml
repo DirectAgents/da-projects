@@ -4,22 +4,19 @@
     ViewBag.Title = "Edit";
 }
 
-<h4>Edit</h4>
+<h4>Edit Advertiser</h4>
 
 @using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "advertisersTab" }))
 {
     @Html.ValidationSummary(true)
 
     <fieldset>
-        <legend>Advertiser</legend>
+        <legend style="display:none"></legend>
 
         @Html.HiddenFor(model => model.AdvertiserId)
 
-        <div class="editor-label">
-            @Html.LabelFor(model => model.AdvertiserId)
-        </div>
-        <div class="display-field">
-            @Html.DisplayFor(model => model.AdvertiserId)
+        <div class="editor-label" style="margin-bottom: 12px">
+            <b>AdvertiserId:</b> @Html.DisplayFor(model => model.AdvertiserId)
         </div>
 
         <div class="editor-label">
@@ -123,6 +120,7 @@
         UpdateTargetId = "advertisersTab", HttpMethod = "Get"
     })
 </div>
+<br />
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
