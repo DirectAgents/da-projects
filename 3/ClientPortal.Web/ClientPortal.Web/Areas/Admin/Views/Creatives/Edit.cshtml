@@ -1,11 +1,17 @@
 ﻿@model ClientPortal.Data.Contexts.Creative
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmCreativesTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmCreativesTab", null, "Post");
+}
 
-<h3>Edit Creative</h3>
-
+@if (!IsAjax)
+{
+    <h3>Edit Creative</h3>
+}
 Offer: @Model.Offer.DisplayName
 <br />
 
-@using (Ajax.BeginForm(new AjaxOptions { })) //UpdateTargetId =
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     @Html.ValidationSummary()
 
@@ -49,6 +55,6 @@ Offer: @Model.Offer.DisplayName
         <br />
         <input type="submit" value="Save" />
         &nbsp;
-        @Html.ActionLink("Cancel", "Show", "Offers", new { id = Model.OfferId }, null)
+        @Ajax.ActionLink("Cancel", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOptions)
     </fieldset>
 }

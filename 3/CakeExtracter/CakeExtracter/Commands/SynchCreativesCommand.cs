@@ -13,11 +13,13 @@ namespace CakeExtracter.Commands
     {
         public int AdvertiserId { get; set; }
         public int? OfferId { get; set; }
+        public bool OverwriteNames { get; set; }
 
         public override void ResetProperties()
         {
             AdvertiserId = 0;
             OfferId = null;
+            OverwriteNames = true;
         }
 
         public SynchCreativesCommand()
@@ -25,6 +27,7 @@ namespace CakeExtracter.Commands
             IsCommand("synchCreatives", "synch Creatives");
             HasOption<int>("a|advertiserId=", "Advertiser Id (0 = all (default))", c => AdvertiserId = c);
             HasOption<int>("o|offerId=", "Offer Id (default = all)", c => OfferId = c);
+            HasOption("n|overwriteNames=", "overwrite names of existing Creatives (default is true)", c => OverwriteNames = bool.Parse(c));
         }
 
         public override int Execute(string[] remainingArguments)
@@ -33,7 +36,7 @@ namespace CakeExtracter.Commands
             foreach (var offer in offers)
             {
                 var extracter = new CreativesExtracter(offer.OfferId);
-                var loader = new CreativesLoader(offer.OfferId);
+                var loader = new CreativesLoader(offer.OfferId, this.OverwriteNames);
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();

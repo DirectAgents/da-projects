@@ -17,6 +17,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Index(int? creativeid)
         {
+            if (creativeid.HasValue)
+                ViewData["creative"] = cpRepo.GetCreative(creativeid.Value);
+
             var creativeFiles = cpRepo.CreativeFiles(creativeid);
             return View(creativeFiles.OrderBy(cf => cf.CreativeFileName));
         }

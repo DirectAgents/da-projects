@@ -18,7 +18,7 @@ CPM Reports:
         <td>@report.Name</td>
         <td style="text-align:center">@report.CampaignDrops.Count</td>
         <td>@report.DateSent</td>
-        <td>@Ajax.ActionLink("View/Edit", "Show", "CPMReports", new { id = report.CPMReportId }, ajaxOptions) |
+        <td>@Ajax.ActionLink("Manage", "Show", "CPMReports", new { id = report.CPMReportId }, ajaxOptions) |
             @Ajax.ActionLink("Preview", "Preview", "CPMReports", new { id = report.CPMReportId }, ajaxOptions)
             @if (report.CampaignDrops.Count == 0)
             {

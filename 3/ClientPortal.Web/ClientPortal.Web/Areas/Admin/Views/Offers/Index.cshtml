@@ -2,6 +2,7 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmOffersTab");
     var ajaxOpts_Sum = RazorHelpers.GetAjaxOptions("cpmSummaryTab", "navCPMSummary");
+    var ajaxOpts_Creative = RazorHelpers.GetAjaxOptions("cpmCreativesTab", "navCPMCreatives");
     var accountManagers = Model.Select(o => o.Advertiser).Distinct().Where(a => a.AccountManagerId != null).Select(a => a.AccountManager).Distinct().OrderBy(am => am.FullName);
     var advertisers = Model.Select(o => o.Advertiser).Distinct(new ClientPortal.Data.Contexts.AdvertiserComparer()).OrderBy(a => a.AdvertiserName);
 }
@@ -33,17 +34,15 @@ Show:
         <th>Advertiser</th>
         <th>OfferId</th>
         <th>Offer (click for summary)</th>
-        <th>Drilldown</th>
+        <th>Reports</th>
+        <th>Drops</th>
+        <th>Campaigns</th>
         <th>Creatives</th>
+        <th>Creative Types</th>
     </tr>
 @foreach (var offer in Model)
 {
-    var reportsText = "reports (" + offer.CPMReports.Count + ")";
-    int numDrops = offer.AllCampaignDrops(null).Count();
-    var dropsText = "drops (" + numDrops + ")";
-    int numCampaigns = offer.Campaigns.Count;
-    var campaignsText = "campaigns (" + numCampaigns + ")";
-    var creativesText = "creatives (" + offer.Creatives.Count + ")";
+    var creativesText = "show (" + offer.Creatives.Count + ")";
     var linksText = "links (" + offer.Creatives.Where(c => c.CreativeTypeId == 1).Count() + ")";
     var emailsText = "emails (" + offer.Creatives.Where(c => c.CreativeTypeId == 2).Count() + ")";
     var imagesText = "images (" + offer.Creatives.Where(c => c.CreativeTypeId == 3).Count() + ")";
@@ -52,11 +51,10 @@ Show:
         <td>@offer.Advertiser.AdvertiserName</td>
         <td>@offer.OfferId</td>
         <td>@Ajax.ActionLink(offer.OfferName, "Show", "Offers", new { id = offer.OfferId }, ajaxOpts_Sum)</td>
-        <td>@Html.ActionLink(reportsText, "Index", "CPMReports", new { offerid = offer.OfferId }, null)
-            &nbsp; | &nbsp; @Html.ActionLink(dropsText, "Index", "CampaignDrops", new { offerid = offer.OfferId }, null)
-            &nbsp; | &nbsp; @Html.ActionLink(campaignsText, "Index", "Campaigns", new { offerid = offer.OfferId }, null)
-            &nbsp; | &nbsp; @Html.ActionLink(creativesText, "Index", "Creatives", new { offerid = offer.OfferId }, null)
-        </td>
+        <td style="text-align:center">@offer.CPMReports.Count</td>
+        <td style="text-align:center">@offer.AllCampaignDrops(null).Count()</td>
+        <td style="text-align:center">@offer.Campaigns.Count</td>
+        <td>@Ajax.ActionLink(creativesText, "Index", "Creatives", new { offerid = offer.OfferId }, ajaxOpts_Creative)</td>
         <td>
             &nbsp; @linksText
             &nbsp; | &nbsp; @emailsText

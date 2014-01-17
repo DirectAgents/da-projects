@@ -49,18 +49,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             };
             cmd.Run(null);
 
-            return Content("Synch complete. Click 'back' and refresh.");
-        }
-
-        public ActionResult SynchCreatives(int offerid)
-        {
-            var cmd = new SynchCreativesCommand
-            {
-                OfferId = offerid
-            };
-            cmd.Run(null);
-
-            return Content("Synch complete. Click 'back' and refresh.");
+            if (Request.IsAjaxRequest())
+                return RedirectToAction("Show", new { id = offerid });
+            else
+                return Content("Synch complete. Click 'back' and refresh.");
         }
 
         public ActionResult DropDebug(int id)

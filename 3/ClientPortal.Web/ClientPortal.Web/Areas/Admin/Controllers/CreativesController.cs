@@ -1,4 +1,5 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using CakeExtracter.Commands;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
 using System;
@@ -17,7 +18,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Index(int? offerid)
         {
-            var creatives = cpRepo.Creatives(offerid);
+            if (offerid.HasValue)
+                ViewData["offer"] = cpRepo.GetOffer(offerid.Value);
+
+            var creatives = cpRepo.Creatives(offerid).OrderByDescending(c => c.DateCreated);
             return View(creatives);
         }
 
@@ -37,12 +41,24 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             {
                 bool success = cpRepo.SaveCreative(creative, true);
                 if (success)
-                    return RedirectToAction("Show", "Offers", new { id = creative.OfferId });
+                    return RedirectToAction("Index", "Creatives", new { offerid = creative.OfferId });
 
                 ModelState.AddModelError("", "Creative could not be saved");
             }
             cpRepo.FillExtended_Creative(creative);
             return View(creative);
+        }
+
+        public ActionResult Synch(int offerid, bool overwrite = false)
+        {
+            var cmd = new SynchCreativesCommand
+            {
+                OfferId = offerid,
+                OverwriteNames = overwrite
+            };
+            cmd.Run(null);
+
+            return RedirectToAction("Index", new { offerid = offerid });
         }
     }
 }

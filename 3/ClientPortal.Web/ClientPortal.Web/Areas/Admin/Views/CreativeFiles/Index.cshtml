@@ -1,6 +1,19 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.CreativeFile>
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmCreativesTab");
+    ClientPortal.Data.Contexts.Creative creative = (ClientPortal.Data.Contexts.Creative)ViewData["creative"];
+}
 
-Creative Files:
+@if (creative != null)
+{
+    <text>Offer: </text><b>@creative.Offer.DisplayName</b><br />
+    <text>Creative: </text><b>@creative.DisplayName</b><br />
+    @Ajax.ActionLink("Back to Creatives List", "Index", "Creatives", new { offerid = creative.OfferId }, ajaxOptions)<br />
+    <br />
+    <text>Creative Files: </text>@Ajax.ActionLink("[refresh]", "Index", "CreativeFiles", new { creativeid = creative.CreativeId }, ajaxOptions)
+} else {
+    <text>Creative Files:</text>
+}
 <table border="1">
     <tr>
         <th>Id</th>
@@ -12,7 +25,7 @@ Creative Files:
     {
         <tr>
             <td>@file.CreativeFileId</td>
-            <td><a href="@file.CreativeFileLink">@file.CreativeFileName</a></td>
+            <td><a href="@file.CreativeFileLink" target="_blank">@file.CreativeFileName</a></td>
             <td>@file.Preview</td>
             <td>@file.DateCreated</td>
         </tr>

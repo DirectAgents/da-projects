@@ -1,9 +1,24 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.Creative>
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmCreativesTab");
+    var ajaxOpts_ConfirmSynch = RazorHelpers.GetAjaxOptions("cpmCreativesTab", null, "Get", "Synch Creatives?");
+    var ajaxOpts_ConfirmOverwrite = RazorHelpers.GetAjaxOptions("cpmCreativesTab", null, "Get", "This will overwrite existing changes. Are you sure?");
+    ClientPortal.Data.Contexts.Offer offer = (ClientPortal.Data.Contexts.Offer)ViewData["offer"];
+}
 
-Creatives:
+@if (offer == null)
+{
+    @Ajax.ActionLink("Refresh", "Index", "Creatives", ajaxOptions)
+} else {
+    <text>Offer: </text><b>@offer.DisplayName</b><br />
+    @Ajax.ActionLink("Refresh", "Index", "Creatives", new { offerid = offer.OfferId }, ajaxOptions)<text> | </text>
+    @Ajax.ActionLink("Synch Creatives", "Synch", "Creatives", new { offerid = offer.OfferId }, ajaxOpts_ConfirmSynch)<text> | </text>
+    @Ajax.ActionLink("Synch With Overwrite", "Synch", "Creatives", new { offerid = offer.OfferId, overwrite = true }, ajaxOpts_ConfirmOverwrite)
+    <br />
+}
 <table border="1">
     <tr>
-        <th>Name</th>
+        <th>Creative Name</th>
         <th>Type</th>
         <th>Created</th>
         <th>Width</th>
@@ -19,8 +34,10 @@ Creatives:
         <td>@creative.DateCreated.ToShortDateString()</td>
         <td>@creative.Width</td>
         <td>@creative.Height</td>
-        <td>@Html.ActionLink(creative.CreativeFiles.Count.ToString(), "Index", "CreativeFiles", new { creativeid = creative.CreativeId }, null)</td>
-        <td>@Html.ActionLink("Edit", "Edit", "Creatives", new { id = creative.CreativeId }, null)</td>
+        <td>@Ajax.ActionLink(creative.CreativeFiles.Count.ToString(), "Index", "CreativeFiles", new { creativeid = creative.CreativeId }, ajaxOptions)</td>
+        <td>@Ajax.ActionLink("Edit", "Edit", "Creatives", new { id = creative.CreativeId }, ajaxOptions)</td>
     </tr>
 }
 </table>
+
+<br />

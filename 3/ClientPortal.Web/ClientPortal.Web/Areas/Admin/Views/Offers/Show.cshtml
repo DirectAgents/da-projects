@@ -4,6 +4,8 @@
     var ajaxOpts_Off = RazorHelpers.GetAjaxOptions("cpmOffersTab", "navCPMOffers");
     var ajaxOpts_Rep = RazorHelpers.GetAjaxOptions("cpmReportsTab", "navCPMReports");
     var ajaxOpts_Drop = RazorHelpers.GetAjaxOptions("cpmDropsTab", "navCPMDrops");
+    var ajaxOpts_Creative = RazorHelpers.GetAjaxOptions("cpmCreativesTab", "navCPMCreatives");
+    var ajaxOpts_ConfirmSynch = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Get", "Synch Campaigns?");
     var am = Model.Advertiser.AccountManager;
 }
 @if (!Request.IsAjaxRequest())
@@ -19,8 +21,9 @@ Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offe
     <text>Account Manager: </text><b>@am.FullName</b> @Ajax.ActionLink("[show offers]", "Index", "Offers", new { am = am.CakeContactId }, ajaxOpts_Off)
     <br />
 }
+@Ajax.ActionLink("Show Creatives", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOpts_Creative)
 <br />
-
+<br />
 @Html.Partial("../CPMReports/Index", Model.CPMReports.OrderByDescending(r => r.CPMReportId))
 @Ajax.ActionLink("[new report]", "Create", "CPMReports", new { offerid = Model.OfferId }, ajaxOpts_Rep)
 
@@ -51,9 +54,5 @@ Campaigns:
 </table>
 
 <br />
-@Html.Partial("../Creatives/Index", Model.CreativesByDate())
-
-<br />
-@Html.ActionLink("Synch Campaigns", "SynchCampaigns", new { offerid = Model.OfferId }) |
-@Html.ActionLink("Synch Creatives", "SynchCreatives", new { offerid = Model.OfferId })
+@Ajax.ActionLink("Synch Campaigns", "SynchCampaigns", new { offerid = Model.OfferId }, ajaxOpts_ConfirmSynch)
 <br /><br />

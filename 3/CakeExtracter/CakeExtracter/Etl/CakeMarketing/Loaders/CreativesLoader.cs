@@ -11,10 +11,12 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
     public class CreativesLoader : Loader<Creative>
     {
         private readonly int offerId;
+        private readonly bool overwriteNames;
 
-        public CreativesLoader(int offerId)
+        public CreativesLoader(int offerId, bool overwriteNames)
         {
             this.offerId = offerId;
+            this.overwriteNames = overwriteNames;
         }
 
         protected override int Load(List<Creative> items)
@@ -47,12 +49,14 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                                             {
                                                 var newCreative = new ClientPortal.Data.Contexts.Creative();
                                                 newCreative.CreativeId = item.CreativeId;
+                                                newCreative.CreativeName = item.CreativeName; // always set the name for a new creative
                                                 db.Creatives.Add(newCreative);
                                                 return newCreative;
                                             });
+                    if (overwriteNames)
+                        creative.CreativeName = item.CreativeName;
 
                     creative.OfferId = this.offerId;
-                    creative.CreativeName = item.CreativeName;
                     creative.CreativeType = creativeType;
                     creative.DateCreated = item.DateCreated;
                     creative.CreativeStatusId = item.CreativeStatusId;
