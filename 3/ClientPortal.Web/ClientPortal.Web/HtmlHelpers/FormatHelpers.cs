@@ -17,10 +17,11 @@ namespace ClientPortal.Web.HtmlHelpers
             return new HtmlString(text);
         }
 
-        public static MvcHtmlString DisplayWithBreaksFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
+        public static MvcHtmlString DisplayWithBreaksFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, bool encode = false)
         {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-            var model = html.Encode(metadata.Model).Replace("\r\n", "<br />\r\n");
+            var model = encode ? html.Encode(metadata.Model) : metadata.Model.ToString();
+            model = model.Replace("\r\n", "<br />\r\n");
 
             if (String.IsNullOrEmpty(model))
                 return MvcHtmlString.Empty;

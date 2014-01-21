@@ -214,7 +214,10 @@
     <Compile Include="Areas\Admin\Controllers\CreativeStatsController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\OffersController.cs" />
+    <Compile Include="Areas\Admin\Models\CampaignDropVM.cs" />
     <Compile Include="Areas\Admin\Models\ContactVM.cs" />
+    <Compile Include="Areas\Admin\Models\CPMReportVM.cs" />
+    <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CPController.cs" />
     <Compile Include="Controllers\ExportController.cs" />
@@ -584,14 +587,17 @@
     <Content Include="Images\arrow_down.jpg" />
     <Content Include="Images\arrow_up.jpg" />
     <Content Include="Images\avatar.png" />
+    <Content Include="Images\bullet_triangle.gif" />
     <Content Include="Images\icon_metrics.gif" />
     <Content Include="Images\icon_mobile.gif" />
     <Content Include="Images\icon_reports.gif" />
     <Content Include="Images\icon_track.gif" />
+    <Content Include="Images\line.gif" />
     <Content Include="Images\logo1a.png" />
     <Content Include="Images\da.jpeg" />
     <Content Include="Images\logo1.png" />
     <Content Include="Images\logoSelectQuote.png" />
+    <Content Include="Images\spacer.gif" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\blackbird.js" />
     <Content Include="Scripts\foundation\app.js" />
@@ -656,6 +662,7 @@
     <Content Include="Areas\Admin\Views\Offers\ReportDebug.cshtml" />
     <Content Include="Areas\Admin\Views\CampaignDrops\IndexDebug.cshtml" />
     <Content Include="Areas\Admin\Views\Offers\Filter.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReports\PreviewEmail.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

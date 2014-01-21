@@ -19,7 +19,7 @@ CPM Reports:
         <td style="text-align:center">@report.CampaignDrops.Count</td>
         <td>@report.DateSent</td>
         <td>@Ajax.ActionLink("Manage", "Show", "CPMReports", new { id = report.CPMReportId }, ajaxOptions) |
-            @Ajax.ActionLink("Preview", "Preview", "CPMReports", new { id = report.CPMReportId }, ajaxOptions)
+            @Html.ActionLink("Preview", "PreviewEmail", "CPMReports", new { id = report.CPMReportId }, new { target = "_blank" })
             @if (report.CampaignDrops.Count == 0)
             {
                 <text> | </text>@Ajax.ActionLink("Delete", "Delete", "CPMReports", new { id = report.CPMReportId }, ajaxOpts_Confirm)

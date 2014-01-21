@@ -1,8 +1,11 @@
-﻿using ClientPortal.Data.Contexts;
+﻿using CakeExtracter.Reports;
+using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
+using ClientPortal.Web.Areas.Admin.Models;
 using ClientPortal.Web.Controllers;
 using System;
 using System.Linq;
+using System.Web.Configuration;
 using System.Web.Mvc;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
@@ -131,13 +134,26 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return RedirectToAction("Show", new { id = cpmreportid });
         }
 
+        // old preview
         public ActionResult Preview(int id)
         {
             var report = cpRepo.GetCPMReport(id, true);
             if (report == null)
                 return HttpNotFound();
 
-            return View(report);
+            var model = new CPMReportVM(report);
+            return View(model);
+        }
+
+        public ActionResult PreviewEmail(int id)
+        {
+            var report = cpRepo.GetCPMReport(id, true);
+            if (report == null)
+                return HttpNotFound();
+
+            var model = new CPMReportVM(report);
+            ViewBag.PortalUrl = WebConfigurationManager.AppSettings["PortalUrl"];
+            return View(model);
         }
 
         public ActionResult SimulateSend(int id)

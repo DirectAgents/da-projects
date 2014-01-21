@@ -1,11 +1,11 @@
-﻿@model ClientPortal.Data.Contexts.CPMReport
+﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportVM
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
 }
 
 <h3>Report Preview</h3>
 
-@Ajax.ActionLink("View/Edit", "Show", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)
+@Ajax.ActionLink("Manage", "Show", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)
 <br /><br />
 
 <b>Summary:</b><br />
@@ -25,30 +25,30 @@
 @foreach (var drop in Model.CampaignDropsOrdered)
 {
     <tr>
-        <td>@drop.Campaign.AffiliateId</td>
-        <td>@drop.Date.ToShortDateString()</td>
-        <td>@(drop.Volume.HasValue ? drop.Volume.Value.ToString("N0") : "")</td>
-        <td>@(drop.Opens.HasValue ? drop.Opens.Value.ToString("N0") : "")<br />
-            Open Rate: @(drop.OpenRate.HasValue ? String.Format("{0:0.00%}", drop.OpenRate.Value) : "")</td>
-        <td>@drop.CreativeStatTotals.Clicks.Value.ToString("N0")<br />
-            CTR: @(drop.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", drop.ClickThroughRate.Value) : "")
+        <td>@drop.AffiliateId</td>
+        <td>@drop.Date</td>
+        <td>@drop.Volume</td>
+        <td>@drop.Opens<br />
+            Open Rate: @drop.OpenRate</td>
+        <td>@drop.TotalClicks<br />
+            CTR: @drop.ClickThroughRate
         </td>
-        <td>@drop.CreativeStatTotals.Leads.Value.ToString("N0")<br />
-            eCPL: @(drop.CostPerLead.HasValue ? drop.CostPerLead.Value.ToString("C2") : "")
+        <td>@drop.TotalLeads<br />
+            eCPL: @drop.CostPerLead
         </td>
-        <td>@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")</td>
+        <td>@drop.Cost</td>
     </tr>
-    if (drop.CreativeStats.Count > 1)
+    if (drop.CreativeStats.Count() > 1)
     {
         foreach (var creativeStat in drop.CreativeStats)
         {
             <tr>
                 <td></td>
                 <td></td>
-                <td colspan="2">Creative: @creativeStat.Creative.CreativeName</td>
-                <td>@(creativeStat.Clicks.HasValue ? creativeStat.Clicks.Value.ToString("N0") : "")<br />
-                    CTR: @(creativeStat.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", creativeStat.ClickThroughRate.Value) : "")</td>
-                <td>@(creativeStat.Leads.HasValue ? creativeStat.Leads.Value.ToString("N0") : "")</td>
+                <td colspan="2">Creative: @creativeStat.CreativeName</td>
+                <td>@creativeStat.Clicks<br />
+                    CTR: @creativeStat.ClickThroughRate</td>
+                <td>@creativeStat.Leads</td>
             </tr>
         }
     }
@@ -56,34 +56,35 @@
     @* Totals *@
     <tr>
         <td colspan="2">TOTAL:</td>
-        <td>@Model.TotalVolume.ToString("N0")</td>
-        <td>@Model.TotalOpens.ToString("N0")</td>
-        <td>@Model.TotalClicks.ToString("N0")</td>
-        <td>@Model.TotalLeads.ToString("N0")</td>
-        <td>@Model.TotalCost.ToString("C2")</td>
+        <td>@Model.TotalVolume</td>
+        <td>@Model.TotalOpens</td>
+        <td>@Model.TotalClicks</td>
+        <td>@Model.TotalLeads</td>
+        <td>@Model.TotalCost</td>
     </tr>
     <tr>
         <td colspan="5"></td>
         <td>CTR:</td>
-        <td>@String.Format("{0:0.00%}", Model.ClickThroughRate)</td>
+        <td>@Model.ClickThroughRate</td>
     </tr>
     <tr>
         <td colspan="5"></td>
         <td>Open Rate:</td>
-        <td>@String.Format("{0:0.00%}", Model.OpenRate)</td>
+        <td>@Model.OpenRate</td>
     </tr>
     <tr>
         <td colspan="5"></td>
         <td>eCPA:</td>
-        <td>@Model.CostPerLead.ToString("C2")</td>
+        <td>@Model.CostPerLead</td>
     </tr>
     <tr>
         <td colspan="5"></td>
         <td>Conversion:</td>
-        <td>@String.Format("{0:0.00%}", Model.ConversionRate)</td>
+        <td>@Model.ConversionRate</td>
     </tr>
 </table>
 
 <br />
 <b>Next Steps:</b><br />
 @Html.DisplayWithBreaksFor(m => m.Conclusion)
+<br />

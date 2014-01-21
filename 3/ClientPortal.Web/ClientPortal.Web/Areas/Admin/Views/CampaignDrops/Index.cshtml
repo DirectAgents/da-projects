@@ -32,7 +32,7 @@ Drops:<br />
         </td>
         <td style="text-align:center">@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")</td>
         <td>@Ajax.ActionLink("Manage", "Show", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)
-            @*| @Ajax.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)*@
+            | @Ajax.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)
             @if (!drop.IsInCPMReport) {
                 <text>| </text>@Ajax.ActionLink("Delete", "Delete", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOpts_Confirm)
             }
