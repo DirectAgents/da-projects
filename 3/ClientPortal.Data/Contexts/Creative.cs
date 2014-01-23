@@ -29,6 +29,7 @@ namespace ClientPortal.Data.Contexts
         public string OfferLinkOverride { get; set; }
         public Nullable<int> Width { get; set; }
         public Nullable<int> Height { get; set; }
+        public byte[] Thumbnail { get; set; }
     
         public virtual CreativeType CreativeType { get; set; }
         public virtual Offer Offer { get; set; }

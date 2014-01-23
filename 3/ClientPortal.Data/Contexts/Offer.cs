@@ -27,6 +27,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> AdvertiserId { get; set; }
         public string DefaultPriceFormat { get; set; }
         public string Currency { get; set; }
+        public byte[] Logo { get; set; }
     
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<Campaign> Campaigns { get; set; }

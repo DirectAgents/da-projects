@@ -1,0 +1,56 @@
+﻿@model ClientPortal.Data.Contexts.Creative
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmCreativesTab");
+    var header = "View/Edit Thumbnail";
+    if (Model.Thumbnail == null) {
+        header = "Add Thumbnail";
+    }
+}
+
+<h3>@header</h3>
+
+Creative: <b>@Model.CreativeName</b>
+
+@if (Model.Thumbnail != null)
+{
+    <br /><br />
+    <text>Current Thumbnail:</text><br/>
+    <img src="@Url.Action("Thumbnail", "Creatives", new { id = Model.CreativeId })" />
+}
+
+@using (Ajax.BeginForm(ajaxOptions))
+{
+    <input id="creativeThumbnailUpload" name="thumbnail" type="file" />
+}
+
+<div>
+    @Ajax.ActionLink("Back to Creatives List", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOptions)
+</div>
+
+<script>
+    $(function () {
+        $("#creativeThumbnailUpload").kendoUpload({
+            async: {
+                saveUrl: "@Url.Action("UploadThumbnail", "Creatives")",
+                autoUpload: false
+            },
+            upload: function(e) {
+                e.data = { id: @Model.CreativeId };
+            },
+            localization: {
+                uploadSelectedFiles: "Upload"
+            },
+            multiple: false,
+            complete: onUploadComplete
+        });
+    });
+
+    function onUploadComplete() {
+        $.ajax({
+            url: '@Url.Action("EditThumbnail", "Creatives")',
+            cache: false
+        }).done(function (html) {
+            $("#cpmCreativesTab").html(html);
+        });
+    }
+</script>

@@ -3,6 +3,7 @@ using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Controllers;
 using System.Linq;
+using System.Web.Helpers;
 using System.Web.Mvc;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
@@ -41,6 +42,39 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(offer);
         }
 
+        public FileResult Logo(int id)
+        {
+            var offer = cpRepo.GetOffer(id);
+            if (offer == null)
+                return null;
+
+            WebImage logo = new WebImage(offer.Logo);
+            return File(logo.GetBytes(), "image/" + logo.ImageFormat, logo.FileName);
+        }
+        public ActionResult EditLogo(int id)
+        {
+            var offer = cpRepo.GetOffer(id);
+            if (offer == null)
+            {
+                return HttpNotFound();
+            }
+            return View(offer);
+        }
+        [HttpPost]
+        public ActionResult UploadLogo(int id)
+        {
+            WebImage image = WebImage.GetImageFromRequest();
+            byte[] imageBytes = image.GetBytes();
+
+            var offer = cpRepo.GetOffer(id);
+            if (offer != null)
+            {
+                offer.Logo = imageBytes;
+                cpRepo.SaveChanges();
+            }
+            return null;
+        }
+
         public ActionResult SynchCampaigns(int offerid)
         {
             var cmd = new SynchCampaignsCommand
@@ -54,6 +88,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             else
                 return Content("Synch complete. Click 'back' and refresh.");
         }
+
+        // for testing...
 
         public ActionResult DropDebug(int id)
         {

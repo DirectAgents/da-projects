@@ -11,13 +11,14 @@
     @Ajax.ActionLink("Refresh", "Index", "Creatives", ajaxOptions)
 } else {
     <text>Offer: </text><b>@offer.DisplayName</b><br />
-    @Ajax.ActionLink("Refresh", "Index", "Creatives", new { offerid = offer.OfferId }, ajaxOptions)<text> | </text>
     @Ajax.ActionLink("Synch Creatives", "Synch", "Creatives", new { offerid = offer.OfferId }, ajaxOpts_ConfirmSynch)<text> | </text>
-    @Ajax.ActionLink("Synch With Overwrite", "Synch", "Creatives", new { offerid = offer.OfferId, overwrite = true }, ajaxOpts_ConfirmOverwrite)
+    @Ajax.ActionLink("Synch With Overwrite", "Synch", "Creatives", new { offerid = offer.OfferId, overwrite = true }, ajaxOpts_ConfirmOverwrite)<text> | </text>
+    @Ajax.ActionLink("Refresh", "Index", "Creatives", new { offerid = offer.OfferId }, ajaxOptions)
     <br />
 }
 <table border="1">
     <tr>
+        <th></th>
         <th>Creative Name</th>
         <th>Type</th>
         <th>Created</th>
@@ -29,13 +30,15 @@
 @foreach (var creative in Model)
 {
     <tr>
+        <td>@Ajax.ActionLink("Edit", "Edit", "Creatives", new { id = creative.CreativeId }, ajaxOptions)</td>
         <td>@creative.DisplayName</td>
         <td>@creative.CreativeType.CreativeTypeName</td>
         <td>@creative.DateCreated.ToShortDateString()</td>
         <td>@creative.Width</td>
         <td>@creative.Height</td>
         <td>@Ajax.ActionLink(creative.CreativeFiles.Count.ToString(), "Index", "CreativeFiles", new { creativeid = creative.CreativeId }, ajaxOptions)</td>
-        <td>@Ajax.ActionLink("Edit", "Edit", "Creatives", new { id = creative.CreativeId }, ajaxOptions)</td>
+        <td>@Ajax.ActionLink((creative.Thumbnail == null ? "Add Thumbnail" : "View/Edit Thumbnail"), "EditThumbnail", "Creatives", new { id = creative.CreativeId }, ajaxOptions)
+        </td>
     </tr>
 }
 </table>

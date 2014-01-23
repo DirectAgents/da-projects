@@ -3,6 +3,7 @@
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
     var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Get", "Are you sure you want to remove this creative?");
     var ajaxOpts_ConfirmSynch = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Get", "This will overwrite existing stats. Are you sure?");
+    var ajaxOpts_Creative = RazorHelpers.GetAjaxOptions("cpmCreativesTab", "navCPMCreatives");
 }
 
 @if (!IsAjax)
@@ -47,6 +48,17 @@ Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.Affiliate
         <fieldset>
             <legend>Creative</legend>
             <table>
+                <tr>
+                    <td colspan="2">
+                        @if (creativeStat.Creative.Thumbnail != null)
+                        {
+                            <img src="@Url.Action("Thumbnail", "Creatives", new { id = creativeStat.CreativeId })" />
+                            @Ajax.ActionLink("View/Edit Thumbnail", "EditThumbnail", "Creatives", new { id = creativeStat.CreativeId }, ajaxOpts_Creative)
+                        } else {
+                            @Ajax.ActionLink("[Add Thumbnail]", "EditThumbnail", "Creatives", new { id = creativeStat.CreativeId }, ajaxOpts_Creative)
+                        }
+                    </td>
+                </tr>
                 <tr>
                     <td>@Html.LabelFor(_ => creativeStat.Creative.CreativeName, "Name")</td>
                     <td>@Html.DisplayFor(_ => creativeStat.Creative.DisplayName)</td>

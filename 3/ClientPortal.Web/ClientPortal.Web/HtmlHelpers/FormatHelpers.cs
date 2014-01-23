@@ -20,11 +20,16 @@ namespace ClientPortal.Web.HtmlHelpers
         public static MvcHtmlString DisplayWithBreaksFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, bool encode = false)
         {
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-            var model = encode ? html.Encode(metadata.Model) : metadata.Model.ToString();
-            model = model.Replace("\r\n", "<br />\r\n");
+            string model;
+            if (encode)
+                model = html.Encode(metadata.Model);
+            else
+                model = (metadata.Model == null) ? null : metadata.Model.ToString();
 
             if (String.IsNullOrEmpty(model))
                 return MvcHtmlString.Empty;
+
+            model = model.Replace("\r\n", "<br />\r\n");
 
             return MvcHtmlString.Create(model);
         }

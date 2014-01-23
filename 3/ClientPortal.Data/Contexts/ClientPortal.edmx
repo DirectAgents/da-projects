@@ -317,6 +317,7 @@
           <Property Name="OfferLinkOverride" Type="nvarchar" MaxLength="255" />
           <Property Name="Width" Type="int" />
           <Property Name="Height" Type="int" />
+          <Property Name="Thumbnail" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="CreativeFile">
           <Key>
@@ -474,6 +475,7 @@
           <Property Name="AdvertiserId" Type="int" />
           <Property Name="DefaultPriceFormat" Type="nvarchar" MaxLength="255" />
           <Property Name="Currency" Type="nchar" MaxLength="3" />
+          <Property Name="Logo" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="ScheduledReport">
           <Key>
@@ -1693,6 +1695,7 @@
           <NavigationProperty Name="Campaigns" Relationship="ClientPortalModel.FK_Campaign_Offer" FromRole="Offer" ToRole="Campaign" />
           <NavigationProperty Name="Creatives" Relationship="ClientPortalModel.FK_Creative_Offer" FromRole="Offer" ToRole="Creative" />
           <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="Offer" ToRole="CPMReport" />
+          <Property Type="Binary" Name="Logo" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_Goal_Offer">
           <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
@@ -1798,6 +1801,7 @@
           <Property Type="Int32" Name="Width" />
           <Property Type="Int32" Name="Height" />
           <NavigationProperty Name="CreativeFiles" Relationship="ClientPortalModel.FK_CreativeFile_Creative" FromRole="Creative" ToRole="CreativeFile" />
+          <Property Type="Binary" Name="Thumbnail" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="CreativeType">
           <Key>
@@ -2290,6 +2294,7 @@
           <EntitySetMapping Name="Offers">
             <EntityTypeMapping TypeName="ClientPortalModel.Offer">
               <MappingFragment StoreEntitySet="Offer">
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="Currency" ColumnName="Currency" />
                 <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />
                 <ScalarProperty Name="AdvertiserId" ColumnName="AdvertiserId" />
@@ -2334,6 +2339,7 @@
           <EntitySetMapping Name="Creatives">
             <EntityTypeMapping TypeName="ClientPortalModel.Creative">
               <MappingFragment StoreEntitySet="Creative">
+                <ScalarProperty Name="Thumbnail" ColumnName="Thumbnail" />
                 <ScalarProperty Name="Height" ColumnName="Height" />
                 <ScalarProperty Name="Width" ColumnName="Width" />
                 <ScalarProperty Name="OfferLinkOverride" ColumnName="OfferLinkOverride" />

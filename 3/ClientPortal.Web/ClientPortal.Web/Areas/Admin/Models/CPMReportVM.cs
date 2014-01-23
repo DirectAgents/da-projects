@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace ClientPortal.Web.Areas.Admin.Models
 {
@@ -19,6 +18,11 @@ namespace ClientPortal.Web.Areas.Admin.Models
         public IEnumerable<CampaignDropVM> CampaignDropsOrdered
         {
             get { return Model.CampaignDropsOrdered.Select(cd => new CampaignDropVM(cd)); }
+        }
+
+        public Offer Offer
+        {
+            get { return Model.Offer; }
         }
 
         public int CPMReportId
@@ -73,6 +77,9 @@ namespace ClientPortal.Web.Areas.Admin.Models
 
         private string ReplaceSpecialChars(string text)
         {
+            if (text == null)
+                return null;
+
             string pattern = @"^>>(.*)$";
             string replacement = "<li>$1</li>";
             string result = Regex.Replace(text, pattern, replacement, RegexOptions.Multiline);

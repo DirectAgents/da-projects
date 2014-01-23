@@ -21,6 +21,7 @@ Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offe
     <text>Account Manager: </text><b>@am.FullName</b> @Ajax.ActionLink("[show offers]", "Index", "Offers", new { am = am.CakeContactId }, ajaxOpts_Off)
     <br />
 }
+@Ajax.ActionLink((Model.Logo == null ? "Add Logo" : "View/Edit Logo"), "EditLogo", "Offers", new { id = Model.OfferId }, ajaxOptions) |
 @Ajax.ActionLink("Show Creatives", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOpts_Creative)
 <br />
 <br />

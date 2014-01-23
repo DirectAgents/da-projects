@@ -15,6 +15,10 @@ namespace ClientPortal.Web.Areas.Admin.Models
             this.Model = creativeStat;
         }
 
+        public int CreativeId
+        {
+            get { return Model.CreativeId; }
+        }
         public string CreativeName
         {
             get { return Model.Creative.CreativeName; }
@@ -30,6 +34,11 @@ namespace ClientPortal.Web.Areas.Admin.Models
         public string ClickThroughRate
         {
             get { return (Model.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", Model.ClickThroughRate.Value) : ""); }
+        }
+
+        public byte[] Thumbnail
+        {
+            get { return Model.Creative.Thumbnail; }
         }
     }
 }

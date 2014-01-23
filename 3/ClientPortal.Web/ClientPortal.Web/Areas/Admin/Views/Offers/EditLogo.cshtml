@@ -1,0 +1,56 @@
+﻿@model ClientPortal.Data.Contexts.Offer
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmSummaryTab");
+    var header = "View/Edit Logo";
+    if (Model.Logo == null) {
+        header = "Add Logo";
+    }
+}
+
+<h3>@header</h3>
+
+Offer: <b>@Model.DisplayName</b>
+
+@if (Model.Logo != null)
+{
+    <br /><br />
+    <text>Current Logo:</text><br/>
+    <img src="@Url.Action("Logo", "Offers", new { id = Model.OfferId })" />
+}
+
+@using (Ajax.BeginForm(ajaxOptions))
+{
+    <input id="offerLogoUpload" name="logo" type="file" />
+}
+
+<div>
+    @Ajax.ActionLink("Back to Offer Summary", "Show", "Offers", new { id = Model.OfferId }, ajaxOptions)
+</div>
+
+<script>
+    $(function () {
+        $("#offerLogoUpload").kendoUpload({
+            async: {
+                saveUrl: "@Url.Action("UploadLogo", "Offers")",
+                autoUpload: false
+            },
+            upload: function(e) {
+                e.data = { id: @Model.OfferId };
+            },
+            localization: {
+                uploadSelectedFiles: "Upload"
+            },
+            multiple: false,
+            complete: onUploadComplete
+        });
+    });
+
+    function onUploadComplete() {
+        $.ajax({
+            url: '@Url.Action("EditLogo", "Offers")',
+            cache: false
+        }).done(function (html) {
+            $("#cpmSummaryTab").html(html);
+        });
+    }
+</script>
