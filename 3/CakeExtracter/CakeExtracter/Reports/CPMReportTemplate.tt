@@ -1,0 +1,255 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<table width="620" border="0" align="center" cellpadding="0" cellspacing="0" style="border:1px solid #c7c3c7;">
+<tr>
+  <td style="font-size:0px;">
+<table width="620" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="13" rowspan="2" align="left" valign="top">&nbsp;</td>
+    <td width="195" rowspan="2" align="left" valign="top"><img src="<#= this.PortalUrl #>Images/logo1.png" alt="" width="152" height="86" /></td>
+    <td height="24" colspan="2" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top" >
+    <table width="380" border="0" align="right" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="347" align="right" valign="middle"><strong style="font-family: Arial black, Helvetica, sans-serif; text-align: center; font-size: 28px;">CPM REVIEW&nbsp;</strong></td>
+    <td width="140" align="left" valign="middle"><strong style="font-family: Arial black, Helvetica, sans-serif; text-align: center; font-size: 28px;"><img src="images/pinchme.gif" alt="Pinch Me" width="139" height="46" /></strong></td>
+  </tr>
+</table>
+    </td>
+    <td width="13" align="right" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Summary</b><br /><img src="<#= this.PortalUrl #>Images/spacer.gif" width="18" height="18" /><br /></td>
+    <td align="right" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><#= this.Summary #><br><br /></td>
+    <td align="right" valign="top">&nbsp;</td>
+  </tr>
+   <tr>
+    <td align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Performance Stats</b><br /><img src="<#= this.PortalUrl #>Images/spacer.gif" width="18" height="18" /><br /></td>
+    <td align="right" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="4" height="80" align="center" valign="middle">
+   
+    <table width="620"  align="center" cellpadding="0" cellspacing="0" style="border-top:1px solid #c7c3c7; border-bottom:1px solid #c7c3c7; border-left:0px solid #c7c3c7; border-right:0px solid #c7c3c7;">
+      <tr>
+        <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>List</b></td>
+        <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Date</b></td>
+        <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Volume</b></td>
+        <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Opens</b></td>
+        <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Clicks</b></td>
+        <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Leads</b></td>
+        <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Total Cost</b></td>
+      </tr>
+<!-- foreach(var drop in this.Report.CampaignDropsOrdered) { -->
+      <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">40341</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">10.29.13</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">750,000</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">143,048
+<br />Open Rate: 19%</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">6,001
+<br />CTR: 4.1%</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#3399ff; font-weight: bold;"><b>1045 <br />
+eCPL:$1.44<b/></td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">$1,500.00</td>  
+      </tr>
+<!-- } -->
+       <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">40341</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">11.09.13</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">750,000</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">143,798
+<br />Open Rate: 19%</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">4,002
+<br />CTR: 4.1%</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#3399ff; font-weight: bold;"><b>407 <br />
+eCPL:$1.44<b/></td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">$1,500.00</td>  
+      </tr>
+      
+      <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">&nbsp;</td>
+        <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">&nbsp;</td>
+        <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">2,500.00</td>
+        <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">834,045</td>
+        <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">52,599</td>
+        <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666;">7132</td>
+        <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#000000; font-weight: bold;"><b>$8,000.00</b></td>  
+      </tr>
+    </table>
+</td>
+  </tr>
+  <tr>
+    <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="100" colspan="4" align="left" valign="top">
+    <table width="350" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="right" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 22px; color: #000000;"><b>ACCOUNT SUMMARY</b><br />      <br /></td>
+    <td width="15" align="right" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #000000;">&nbsp;</td>
+    <td>
+    <table width="180" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="9" rowspan="7" align="left" valign="top" bgcolor="#3399ff">&nbsp;</td>
+    <td width="13" align="left" valign="top">&nbsp;</td>
+    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color:#000000; font-weight: bold;">CTR</td>
+    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color:#3399ff; font-weight: bold;">6.31%</td>
+  </tr>
+  <tr>
+    <td height="1px" colspan="3" align="left" valign="top" bgcolor="#cccccc"><img src="<#= this.PortalUrl #>Images/line.gif" width="5" height="1" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color:#000000; font-weight: bold;">Open</td>
+    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000;  font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color:#3399ff; font-weight: bold;">33.36%</td>
+  </tr>
+  <tr>
+    <td height="1px" colspan="3" align="left" valign="top" bgcolor="#cccccc"><img src="<#= this.PortalUrl #>Images/line.gif" width="5" height="1" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color:#000000; font-weight: bold;">eCPA</td>
+    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000;  font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color:#3399ff; font-weight: bold;">$1.12</td>
+  </tr>
+  <tr>
+    <td height="1px" colspan="3" align="left" valign="top" bgcolor="#cccccc"><img src="<#= this.PortalUrl #>Images/line.gif" width="5" height="1" /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color:#000000; font-weight: bold;">Conversion</td>
+    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000;  font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color:#3399ff; font-weight: bold;">13.56%</td>
+  </tr>
+</table>
+</td>
+  </tr>
+</table>
+    
+    </td>
+  </tr>
+  <tr>
+    <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Creative Summary</b><br /><img src="<#= this.PortalUrl #>Images/spacer.gif" width="18" height="18" /><br /></td>
+    <td align="right" valign="top">&nbsp;</td>
+  </tr>
+    <tr>
+    <td height="80" colspan="4" align="center" valign="middle" bgcolor="#e5e5e5">
+   
+    <table width="620"  align="center" cellpadding="0" cellspacing="0" style="border-top:1px solid #c7c3c7; border-bottom:1px solid #c7c3c7; border-left:0px solid #c7c3c7; border-right:0px solid #c7c3c7;">
+      <tr>  
+        <td width="57" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Drop #</b></td>
+        <td width="118" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Date</b></td>
+        <td width="132" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>From</b></td>
+        <td width="193" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Subject</b></td>
+        <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Creative</b></td>
+      </tr>
+      <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Drop 1</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Tuesday, October<br /> 29th, 12AM EST</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">hello@pinchme.com</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Be the First to try new<br /> products for FREE</td>
+        <td width="118" height="0" align="left" valign="top" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#3399ff"><img src="images/c1.gif" width="117" height="53" border="0" align="top" /></td>
+      </tr>
+       <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Drop 2</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Tuesday, October<br /> 29th, 12AM EST</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">hello@pinchme.com</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Be the First to try new<br /> products for FREE</td>
+        <td width="118" height="0" align="left" valign="top" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#3399ff"><img src="images/c1.gif" width="117" height="53" border="0" /></td>
+      </tr>
+      <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Drop 3</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Tuesday, October<br /> 29th, 12AM EST</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">hello@pinchme.com</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Be the First to try new<br /> products for FREE</td>
+        <td width="118" height="0" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#3399ff"><img src="images/c2.gif" width="117" height="53" border="0" /></td>
+          
+      </tr>
+      
+      <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Drop 4</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Tuesday, October<br /> 29th, 12AM EST</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">hello@pinchme.com</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Be the First to try new<br /> products for FREE</td>
+        <td width="118" height="0" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#3399ff"><img src="images/c2.gif" width="117" height="53" border="0" /></td>
+          
+      </tr>
+      
+      <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Drop 5</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Tuesday, October<br /> 29th, 12AM EST</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">hello@pinchme.com</td>
+        <td height="45" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Be the First to try new<br /> products for FREE</td>
+        <td width="118" height="0" align="left" valign="middle" bgcolor="#e5e5e5" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#3399ff"><img src="images/c2.gif" width="117" height="53" border="0" /></td>
+          
+      </tr>
+      
+      <tr>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Drop 6</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Tuesday, October<br /> 29th, 12AM EST</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">hello@pinchme.com</td>
+        <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#666666">Be the First to try new<br /> products for FREE</td>
+        <td width="118" height="0" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right:1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color:#3399ff"><img src="images/c2.gif" width="117" height="53" border="0" /></td>
+          
+      </tr>
+    </table>
+</td>
+  </tr>
+  <tr>
+    <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
+  </tr>
+   <tr>
+    <td align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Optimization</b><br /><img src="<#= this.PortalUrl #>Images/spacer.gif" width="18" height="18" /><br /></td>
+    <td align="right" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><img src="<#= this.PortalUrl #>Images/bullet_triangle.gif" width="17" height="9" />Test <br />	
+      <img src="<#= this.PortalUrl #>Images/bullet_triangle.gif" alt="" width="17" height="9" />Landing page - Testing different Landing Pages to see which result in the best CTR and eCPL<br />
+    <a href="https://www.pinchme.com/signup" style="color:#37A5F2;" target="_blank">https://www.pinchme.com/signup</a> vs <a href="https://www.pinchme.com/" style="color:#37A5F2;" target="_blank">https://www.pinchme.com/</a><br><br /></td>
+    <td align="right" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
+  </tr>
+   <tr>
+    <td align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Next Steps</b><br /><img src="<#= this.PortalUrl #>Images/spacer.gif" width="18" height="18" /><br /></td>
+    <td align="right" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><#= this.NextSteps #></td>
+    <td align="right" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="13" align="left" valign="top">&nbsp;</td>
+    <td colspan="2" align="left" valign="top" ><p>&nbsp;<br /><br /></p></td>
+    <td width="13" align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
+  </tr>
+  
+</table>
+</td>
+</tr>
+</table>
