@@ -336,12 +336,6 @@
       <DependentUpon>CakeReportRuntimeTextTemplate.tt</DependentUpon>
     </Compile>
     <Compile Include="Reports\CakeReportRuntimeTextTemplate.partial.cs" />
-    <Compile Include="Reports\CPMReportTemplate.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CPMReportTemplate.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\CPMReportTemplate.partial.cs" />
     <Compile Include="Reports\GmailEmailer.cs" />
     <Compile Include="Reports\IReport.cs" />
     <Compile Include="Reports\ReportManager.cs" />
@@ -370,10 +364,6 @@
     <None Include="Reports\CakeReportRuntimeTextTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>CakeReportRuntimeTextTemplate.cs</LastGenOutput>
-    </None>
-    <None Include="Reports\CPMReportTemplate.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>CPMReportTemplate.cs</LastGenOutput>
     </None>
     <None Include="Reports\SearchReportRuntimeTextTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
