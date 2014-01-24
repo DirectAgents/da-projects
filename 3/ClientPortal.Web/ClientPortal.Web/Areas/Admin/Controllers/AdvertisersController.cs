@@ -244,7 +244,7 @@ Portal URL: [[Url]]
                .Replace("[[Password]]", password)
                .Replace("[[Url]]", url);
 
-            ControllerHelpers.SendEmail(from, new string[] { email }, new string[] { }, subject, body, true);
+            ControllerHelpers.SendEmail(from, email, null, subject, body, true);
         }
 
         //

@@ -62,6 +62,10 @@ namespace ClientPortal.Web.Controllers
             return output;
         }
 
+        internal static void SendEmail(string from, string to, string cc, string subject, string body, bool isHTML)
+        {
+            SendEmail(from, new string[] { to }, (cc == null) ? null : new string[] { cc }, subject, body, isHTML);
+        }
         internal static void SendEmail(string from, string[] to, string[] cc, string subject, string body, bool isHTML)
         {
             MailMessage message = new MailMessage
@@ -71,9 +75,15 @@ namespace ClientPortal.Web.Controllers
                 IsBodyHtml = isHTML,
                 From = new MailAddress(from),
             };
-            foreach (var item in to.SelectMany(c => c.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)))
-                message.To.Add(item);
-            Array.ForEach(cc, c => message.CC.Add(c));
+
+            foreach (var toItem in to.SelectMany(c => c.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)))
+                message.To.Add(toItem);
+
+            if (cc != null)
+            {
+                foreach (var ccItem in cc.SelectMany(c => c.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)))
+                    message.CC.Add(ccItem);
+            }
             SmtpClient SmtpMailer = new SmtpClient
             {
                 Host = "smtp.gmail.com",

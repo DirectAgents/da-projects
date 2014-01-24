@@ -156,11 +156,18 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult SimulateSend(int id)
+        public ActionResult Send(int id)
         {
             var report = cpRepo.GetCPMReport(id);
             if (report == null)
                 return HttpNotFound();
+
+            ViewBag.PortalUrl = WebConfigurationManager.AppSettings["PortalUrl"];
+            var body = RenderPartialViewToString("PreviewEmail", new CPMReportVM(report));
+
+            string cc = null;
+            string subject = "CPM Report test";
+            ControllerHelpers.SendEmail("from@from.com", report.Recipient, cc, subject, body, true);
 
             report.DateSent = DateTime.Now;
             cpRepo.SaveChanges();
