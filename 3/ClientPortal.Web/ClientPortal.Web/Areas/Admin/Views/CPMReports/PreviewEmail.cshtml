@@ -1,12 +1,13 @@
 ﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportVM
 @{
     string PortalUrl = (string)ViewBag.PortalUrl;
+    var acctMgr = Model.Offer.Advertiser.AccountManagerContact;
 }
 
-<table width="620" border="0" align="center" cellpadding="0" cellspacing="0" style="border: 1px solid #c7c3c7;">
+<table width="650" border="0" align="center" cellpadding="0" cellspacing="0" style="border: 1px solid #c7c3c7;">
 <tr>
     <td style="font-size: 0px;">
-        <table width="620" border="0" cellspacing="0" cellpadding="0">
+        <table width="650" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td width="13" rowspan="2" align="left" valign="top">&nbsp;</td>
             <td width="195" rowspan="2" align="left" valign="top">
@@ -15,7 +16,7 @@
         </tr>
         <tr>
             <td align="right" valign="top">
-                <table width="380" border="0" align="right" cellpadding="0" cellspacing="0">
+                <table width="410" border="0" align="right" cellpadding="0" cellspacing="0">
                 <tr>
                     <td width="347" align="right" valign="middle"><strong style="font-family: Arial black, Helvetica, sans-serif; text-align: center; font-size: 28px;">CPM REVIEW&nbsp;</strong></td>
                     <td width="140" align="left" valign="middle"><strong style="font-family: Arial black, Helvetica, sans-serif; text-align: center; font-size: 28px;">
@@ -29,7 +30,8 @@
             </td>
             <td width="13" align="right" valign="top">&nbsp;</td>
         </tr>
-        <tr>
+
+        <tr>@* Summary Text *@
             <td align="left" valign="top">&nbsp;</td>
             <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Summary</b><br />
                 <img src="@(PortalUrl)/Images/spacer.gif" width="18" height="18" /><br />
@@ -43,7 +45,51 @@
             </td>
             <td align="right" valign="top">&nbsp;</td>
         </tr>
+
+        <tr> @* Performance Summary *@
+            <td align="left" valign="top">&nbsp;</td>
+            <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>CPM Performance Summary</b><br />
+                <img src="@(PortalUrl)/Images/spacer.gif" width="18" height="18" /><br />
+            </td>
+            <td align="right" valign="top">&nbsp;</td>
+        </tr>
         <tr>
+            <td colspan="4" height="80" align="center" valign="middle">
+
+            <table width="650" align="center" cellpadding="0" cellspacing="0" style="border-top: 1px solid #c7c3c7; border-bottom: 1px solid #c7c3c7; border-left: 0px solid #c7c3c7; border-right: 0px solid #c7c3c7;">
+            <tr>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Volume</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Opens</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Clicks</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Leads</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Total Cost</b></td>
+            </tr>
+            <tr>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666"></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666"></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalVolume</td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalOpens
+                    <br />Open Rate: @Model.OpenRate</td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalClicks
+                    <br />CTR: @Model.ClickThroughRate</td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #3399ff; font-weight: bold;"><b>@Model.TotalLeads
+                    <br />Conv Rate: @Model.ConversionRate</b></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalCost
+                    <br />eCPA: @Model.CostPerLead</b></td>
+                </td>
+            </tr>
+            </table>
+
+            </td>
+        </tr>@* END: Performance Summary *@
+
+        <tr>
+            <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
+        </tr>
+
+        <tr> @* Performance Stats *@
             <td align="left" valign="top">&nbsp;</td>
             <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Performance Stats</b><br />
                 <img src="@(PortalUrl)/Images/spacer.gif" width="18" height="18" /><br />
@@ -53,8 +99,9 @@
         <tr>
             <td colspan="4" height="80" align="center" valign="middle">
 
-            <table width="620" align="center" cellpadding="0" cellspacing="0" style="border-top: 1px solid #c7c3c7; border-bottom: 1px solid #c7c3c7; border-left: 0px solid #c7c3c7; border-right: 0px solid #c7c3c7;">
+            <table width="650" align="center" cellpadding="0" cellspacing="0" style="border-top: 1px solid #c7c3c7; border-bottom: 1px solid #c7c3c7; border-left: 0px solid #c7c3c7; border-right: 0px solid #c7c3c7;">
             <tr>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Drop</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>List</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Date</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Volume</b></td>
@@ -65,11 +112,14 @@
             </tr>
             @{
                 string bgcolor = "ffffff";
+                int dropNum = 0;
             }
             @foreach(var drop in Model.CampaignDropsOrdered)
             {
                 bgcolor = (bgcolor == "ffffff") ? "e5e5e5" : "ffffff";
+                dropNum++;
                 <tr>
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@dropNum</td>
                     <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.AffiliateId</td>
                     <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.Date</td>
                     <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.Volume</td>
@@ -86,7 +136,7 @@
                     foreach (var creativeStat in drop.CreativeStats)
                     {
                     <tr>
-                        <td colspan="2" height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
+                        <td colspan="3" height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
                         <td colspan="2" height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">Creative: @creativeStat.CreativeName</td>
                         <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@creativeStat.Clicks
                             <br />CTR: @creativeStat.ClickThroughRate</td>
@@ -96,8 +146,8 @@
                     }
                 }
             }
-
             <tr>
+                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
                 <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
                 <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
                 <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalVolume</td>
@@ -109,65 +159,13 @@
             </table>
 
             </td>
-        </tr>
+        </tr>@* End Performance Stats *@
+
         <tr>
             <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
         </tr>
-        <tr>
-            <td height="100" colspan="4" align="left" valign="top">
 
-            <table width="350" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-                <td align="right" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 22px; color: #000000;"><b>ACCOUNT SUMMARY</b><br /><br /></td>
-                <td width="15" align="right" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #000000;">&nbsp;</td>
-                <td>
-
-                <table width="180" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td width="9" rowspan="7" align="left" valign="top" bgcolor="#3399ff">&nbsp;</td>
-                    <td width="13" align="left" valign="top">&nbsp;</td>
-                    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color: #000000; font-weight: bold;">CTR</td>
-                    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color: #3399ff; font-weight: bold;">@Model.ClickThroughRate</td>
-                </tr>
-                <tr>
-                    <td height="1px" colspan="3" align="left" valign="top" bgcolor="#cccccc">
-                        <img src="@(PortalUrl)/Images/line.gif" width="5" height="1" /></td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color: #000000; font-weight: bold;">Open Rate</td>
-                    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color: #3399ff; font-weight: bold;">@Model.OpenRate</td>
-                </tr>
-                <tr>
-                    <td height="1px" colspan="3" align="left" valign="top" bgcolor="#cccccc">
-                        <img src="@(PortalUrl)/Images/line.gif" width="5" height="1" /></td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color: #000000; font-weight: bold;">eCPA</td>
-                    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color: #3399ff; font-weight: bold;">@Model.CostPerLead</td>
-                </tr>
-                <tr>
-                    <td height="1px" colspan="3" align="left" valign="top" bgcolor="#cccccc">
-                        <img src="@(PortalUrl)/Images/line.gif" width="5" height="1" /></td>
-                </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color: #000000; font-weight: bold;">Conversion</td>
-                    <td height="25" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: left; color: #3399ff; font-weight: bold;">@Model.ConversionRate</td>
-                </tr>
-                </table>
-
-                </td>
-            </tr>
-            </table>
-
-            </td>
-        </tr>
-        <tr>
-            <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
-        </tr>
-        <tr>
+        <tr>@* Creative Summary *@
             <td align="left" valign="top">&nbsp;</td>
             <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Creative Summary</b><br />
                 <img src="@(PortalUrl)/Images/spacer.gif" width="18" height="18" /><br />
@@ -175,65 +173,43 @@
             <td align="right" valign="top">&nbsp;</td>
         </tr>
         <tr>
-            <td height="80" colspan="4" align="center" valign="middle" bgcolor="#e5e5e5">
-
-            <table width="620" align="center" cellpadding="0" cellspacing="0" style="border-top: 1px solid #c7c3c7; border-bottom: 1px solid #c7c3c7; border-left: 0px solid #c7c3c7; border-right: 0px solid #c7c3c7;">
-            <tr>
-                <td width="57" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Drop #</b></td>
-                <td width="118" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Date</b></td>
-                <td width="132" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>From</b></td>
-                <td width="193" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Subject</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #ffffff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Creative</b></td>
-            </tr>
-            @{
-                int dropNum = 0;
-                bgcolor = "ffffff";
-            }
-            @foreach(var drop in Model.CampaignDropsOrdered)
-            {
-                dropNum++;
-                bgcolor = (bgcolor == "ffffff") ? "e5e5e5" : "ffffff";
-                var creativeStat0 = drop.CreativeStats.First();
-            <tr>
-                <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@dropNum</td>
-                <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.Date</td>
-                <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">x@x.com</td>
-                <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.Subject</td>
-                <td width="118" height="0" align="left" valign="top" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #3399ff">
-                    @if (creativeStat0.Thumbnail != null)
-                    {
-                        <img src="@PortalUrl@Url.Action("Thumbnail", "Creatives", new { id = creativeStat0.CreativeId })" />
+            <td align="left" valign="top">&nbsp;</td>
+            <td colspan="2" align="left" valign="top" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+                <table border="0" cellspacing="7" cellpadding="0">
+                    <tr>
+                    @{
+                        dropNum = 0;
                     }
-                </td>
-            </tr>
-                if (drop.CreativeStats.Count() > 1)
-                {
-                    foreach (var creativeStat in drop.CreativeStats.Skip(1))
+                    @foreach(var drop in Model.CampaignDropsOrdered)
                     {
-                        <tr>
-                            <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666"></td>
-                            <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666"></td>
-                            <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666"></td>
-                            <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666"></td>
-                            <td width="118" height="0" align="left" valign="top" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #3399ff">
-                                @if (creativeStat.Thumbnail != null)
-                                {
-                                    <img src="@PortalUrl@Url.Action("Thumbnail", "Creatives", new { id = creativeStat.CreativeId })" />
-                                }
-                            </td>
-                        </tr>
-                    }
-                }
-            }
-            </table>
+                        if (dropNum % 3 == 0)
+                        {
+                            ViewContext.Writer.Write("</tr><tr>");
+                        }
+                        dropNum++;
+                        var creativeStat0 = drop.CreativeStats.First();
 
+                        <td align="left" valign="top" width="208" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+                            <b>Drop @dropNum:</b> @drop.Date<br />
+                            <b>From:</b> x@x.com<br />
+                            <b>Subject:</b> @drop.Subject<br />
+                            @if (creativeStat0.Thumbnail != null)
+                            {
+                                <img src="@PortalUrl@Url.Action("Thumbnail", "Creatives", new { id = creativeStat0.CreativeId })" />
+                            }
+                        </td>
+                    }
+                    </tr>
+                </table>
             </td>
-        </tr>
+            <td align="right" valign="top">&nbsp;</td>
+        </tr>@* END: Creative Summary *@
 
         <tr>
             <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
         </tr>
-        <tr>
+
+        <tr>@* Next Steps *@
             <td align="left" valign="top">&nbsp;</td>
             <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Next Steps</b><br />
                 <img src="@(PortalUrl)/Images/spacer.gif" width="18" height="18" /><br />
@@ -245,15 +221,18 @@
             <td colspan="2" align="left" valign="top" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;">@Html.DisplayWithBreaksFor(m => m.Conclusion)</td>
             <td align="right" valign="top">&nbsp;</td>
         </tr>
+
         <tr>
             <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
         </tr>
         <tr>
             <td width="13" align="left" valign="top">&nbsp;</td>
-            <td colspan="2" align="left" valign="top">
-                <p>&nbsp;<br />
-                    <br />
-                </p>
+            <td colspan="2" align="left" valign="top" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
+                <p>Questions? Contact your account manager, @(acctMgr != null ? acctMgr.FullName : ""):
+                    @if (acctMgr != null) {
+                        <a href="mailto:@(acctMgr.Email)">@acctMgr.Email</a>
+                    }
+                    <br /><br /></p>
             </td>
             <td width="13" align="left" valign="top">&nbsp;</td>
         </tr>

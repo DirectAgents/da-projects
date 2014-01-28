@@ -46,12 +46,16 @@ namespace CakeExtracter.Reports
                 template.ConversionValueName = advertiser.ConversionValueName ?? "";
                 template.Conv = (dateRangeSummary.ConVal != null) ? dateRangeSummary.ConVal.Value.ToString("#,0.##") : "";
             }
-            var advContacts = advertiser.AdvertiserContactsOrdered.ToList();
-            if (advContacts.Count > 0)
+            var acctManager = advertiser.AccountManagerContact;
+            if (acctManager != null)
             {
-                var advContact = (advContacts.Count > 1) ? advContacts[1] : advContacts[0];
-                template.AcctMgrName = advContact.Contact.FullName ?? "";
-                template.AcctMgrEmail = advContact.Contact.Email ?? "";
+                template.AcctMgrName = acctManager.FullName;
+                template.AcctMgrEmail = acctManager.Email;
+            }
+            else
+            {
+                template.AcctMgrName = "";
+                template.AcctMgrEmail = "";
             }
 
             string content = template.TransformText();

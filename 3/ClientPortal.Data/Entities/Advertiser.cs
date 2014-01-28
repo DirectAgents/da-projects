@@ -13,6 +13,21 @@ namespace ClientPortal.Data.Contexts
         }
 
         [NotMapped]
+        public Contact AccountManagerContact
+        {
+            get
+            {
+                var advContacts = this.AdvertiserContactsOrdered.ToList();
+                if (advContacts.Count >= 2)
+                    return advContacts[1].Contact;
+                else if (advContacts.Count == 1)
+                    return advContacts[0].Contact;
+                else
+                    return null;
+            }
+        }
+
+        [NotMapped]
         public IEnumerable<UserProfile> UserProfiles { get; set; }
     }
 
