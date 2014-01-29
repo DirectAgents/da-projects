@@ -22,7 +22,7 @@
                     <td width="140" align="left" valign="middle"><strong style="font-family: Arial black, Helvetica, sans-serif; text-align: center; font-size: 28px;">
                         @if (Model.Offer.Logo != null)
                         {
-                            <img src="@PortalUrl@Url.Action("Logo", "Offers", new { id = Model.Offer.OfferId })" />
+                            <img src="@(PortalUrl)@Url.Action("Logo", "Offers", new { id = Model.Offer.OfferId })" />
                         }
                         </strong></td>
                 </tr>
@@ -58,27 +58,26 @@
 
             <table width="650" align="center" cellpadding="0" cellspacing="0" style="border-top: 1px solid #c7c3c7; border-bottom: 1px solid #c7c3c7; border-left: 0px solid #c7c3c7; border-right: 0px solid #c7c3c7;">
             <tr>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Volume</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Opens</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Clicks</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Leads</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Total Cost</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Volume</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Opens</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Clicks</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Leads</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Total Cost</b></td>
             </tr>
             <tr>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666"></td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666"></td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalVolume</td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalOpens
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666"></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666"></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@Model.TotalVolume</td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@Model.TotalOpens
                     <br />Open Rate: @Model.OpenRate</td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalClicks
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@Model.TotalClicks
                     <br />CTR: @Model.ClickThroughRate</td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #3399ff; font-weight: bold;"><b>@Model.TotalLeads
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@Model.TotalLeads
                     <br />Conv Rate: @Model.ConversionRate</b></td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalCost
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@Model.TotalCost
                     <br />eCPA: @Model.CostPerLead</b></td>
-                </td>
             </tr>
             </table>
 
@@ -101,14 +100,14 @@
 
             <table width="650" align="center" cellpadding="0" cellspacing="0" style="border-top: 1px solid #c7c3c7; border-bottom: 1px solid #c7c3c7; border-left: 0px solid #c7c3c7; border-right: 0px solid #c7c3c7;">
             <tr>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Drop</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>List</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Date</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Volume</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Opens</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Clicks</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Leads</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;"><b>Total Cost</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Drop</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>List</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Date</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Volume</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Opens</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Clicks</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Leads</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Total Cost</b></td>
             </tr>
             @{
                 string bgcolor = "ffffff";
@@ -119,42 +118,42 @@
                 bgcolor = (bgcolor == "ffffff") ? "e5e5e5" : "ffffff";
                 dropNum++;
                 <tr>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@dropNum</td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.AffiliateId</td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.Date</td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.Volume</td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.Opens
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@dropNum</td>
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.AffiliateId</td>
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Date</td>
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Volume</td>
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Opens
                         <br />Open Rate: @drop.OpenRate</td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.TotalClicks
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.TotalClicks
                         <br />CTR: @drop.ClickThroughRate</td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #3399ff; font-weight: bold;"><b>@drop.TotalLeads
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@drop.TotalLeads
                         <br />eCPL: @drop.CostPerLead</b></td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@drop.Cost</td>
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Cost</td>
                 </tr>
                 if (drop.CreativeStats.Count() > 1)
                 {
                     foreach (var creativeStat in drop.CreativeStats)
                     {
                     <tr>
-                        <td colspan="3" height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
-                        <td colspan="2" height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">Creative: @creativeStat.CreativeName</td>
-                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@creativeStat.Clicks
+                        <td colspan="3" height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">&nbsp;</td>
+                        <td colspan="2" height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">Creative: @creativeStat.CreativeName</td>
+                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@creativeStat.Clicks
                             <br />CTR: @creativeStat.ClickThroughRate</td>
-                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #3399ff; font-weight: bold;"><b>@creativeStat.Leads</td>
-                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
+                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@creativeStat.Leads</td>
+                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">&nbsp;</td>
                     </tr>
                     }
                 }
             }
-            <tr>
-                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
-                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
-                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">&nbsp;</td>
-                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalVolume</td>
-                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalOpens</td>
-                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666">@Model.TotalClicks</td>
-                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #666666;">@Model.TotalLeads</td>
-                <td height="45" align="left" valign="middle" bgcolor="#deedfb" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 11px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalCost</b></td>
+            <tr>@* TOTALS row *@
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;">&nbsp;</td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;">&nbsp;</td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;">&nbsp;</td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalVolume</b></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalOpens</b></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalClicks</b></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalLeads</b></td>
+                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalCost</b></td>
             </tr>
             </table>
 
@@ -182,7 +181,7 @@
                     }
                     @foreach(var drop in Model.CampaignDropsOrdered)
                     {
-                        if (dropNum % 3 == 0)
+                        if (dropNum > 0 && dropNum % 3 == 0)
                         {
                             ViewContext.Writer.Write("</tr><tr>");
                         }
@@ -191,11 +190,11 @@
 
                         <td align="left" valign="top" width="208" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;">
                             <b>Drop @dropNum:</b> @drop.Date<br />
-                            <b>From:</b> x@x.com<br />
+                            <b>From:</b> @drop.FromEmail<br />
                             <b>Subject:</b> @drop.Subject<br />
                             @if (creativeStat0.Thumbnail != null)
                             {
-                                <img src="@PortalUrl@Url.Action("Thumbnail", "Creatives", new { id = creativeStat0.CreativeId })" />
+                                <img src="@(PortalUrl)@Url.Action("Thumbnail", "Creatives", new { id = creativeStat0.CreativeId })" />
                             }
                         </td>
                     }
@@ -238,6 +237,11 @@
         </tr>
         <tr>
             <td height="23" colspan="4" align="left" valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="4" height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
+                <b>Direct Agents</b> | 740 Broadway, Suite 701, New York, NY 10003 | P: 212.925.6558 | F: 212.412.9061 | directagents.com
+            </td>
         </tr>
 
         </table>

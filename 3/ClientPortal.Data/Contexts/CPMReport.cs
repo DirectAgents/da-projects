@@ -24,6 +24,7 @@ namespace ClientPortal.Data.Contexts
         public string Name { get; set; }
         public Nullable<System.DateTime> DateSent { get; set; }
         public string Recipient { get; set; }
+        public string RecipientCC { get; set; }
         public string Summary { get; set; }
         public string Conclusion { get; set; }
     

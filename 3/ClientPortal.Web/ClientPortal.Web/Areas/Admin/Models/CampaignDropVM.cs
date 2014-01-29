@@ -24,6 +24,10 @@ namespace ClientPortal.Web.Areas.Admin.Models
         {
             get { return Model.Campaign.AffiliateId; }
         }
+        public string FromEmail
+        {
+            get { return Model.FromEmail; }
+        }
         public string Subject
         {
             get { return Model.Subject; }

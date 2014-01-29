@@ -29,6 +29,7 @@ namespace ClientPortal.Data.Contexts
         public Nullable<int> Opens { get; set; }
         public string Subject { get; set; }
         public Nullable<int> CopyOf { get; set; }
+        public string FromEmail { get; set; }
     
         public virtual Campaign Campaign { get; set; }
         public virtual ICollection<CreativeStat> CreativeStats { get; set; }

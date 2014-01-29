@@ -31,12 +31,20 @@
                 <td>@Html.EditorFor(_ => ViewData["Creatives"], "CreativeDropDown", "CreativeId")</td>
             </tr>
             <tr>
+                <td>@Html.LabelFor(m => m.FromEmail)</td>
+                <td>@Html.EditorFor(m => m.FromEmail)</td>
+            </tr>
+            <tr>
                 <td>@Html.LabelFor(m => m.Subject)</td>
                 <td>@Html.EditorFor(m => m.Subject)</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.Cost)</td>
                 <td>@Html.EditorFor(m => m.Cost)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Volume)</td>
+                <td>@Html.EditorFor(m => m.Volume)</td>
             </tr>
         </table>
 

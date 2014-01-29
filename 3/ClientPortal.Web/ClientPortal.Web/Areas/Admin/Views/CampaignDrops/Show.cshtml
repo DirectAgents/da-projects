@@ -26,6 +26,10 @@ Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.Affiliate
             <td>@Html.DisplayFor(m => m.Date, "Date")</td>
         </tr>
         <tr>
+            <td>@Html.LabelFor(m => m.FromEmail)</td>
+            <td>@Html.DisplayFor(m => m.FromEmail)</td>
+        </tr>
+        <tr>
             <td>@Html.LabelFor(m => m.Subject)</td>
             <td>@Html.DisplayFor(m => m.Subject)</td>
         </tr>

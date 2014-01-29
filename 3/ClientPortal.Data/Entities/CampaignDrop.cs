@@ -1,8 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace ClientPortal.Data.Contexts
 {
+    public class CampaignDrop_Validation
+    {
+        [Range(typeof(DateTime), "1/1/2000", "1/1/3000")]
+        public DateTime Date { get; set; }
+
+        [DataType(DataType.EmailAddress)]
+        public string FromEmail { get; set; }
+    }
+
+    [MetadataType(typeof(CampaignDrop_Validation))]
     public partial class CampaignDrop
     {
         [NotMapped]
@@ -76,18 +88,25 @@ namespace ClientPortal.Data.Contexts
             }
         }
 
+        public void SetFieldsFrom(CampaignDrop inDrop)
+        {
+            Date = inDrop.Date;
+            FromEmail = inDrop.FromEmail;
+            Subject = inDrop.Subject;
+            Cost = inDrop.Cost;
+            Volume = inDrop.Volume;
+            Opens = inDrop.Opens;
+        }
+
         public CampaignDrop Duplicate()
         {
             var dropCopy = new CampaignDrop
             {
                 CampaignId = this.CampaignId,
-                Date = this.Date,
-                Cost = this.Cost,
-                Volume = this.Volume,
-                Opens = this.Opens,
-                Subject = this.Subject,
                 CopyOf = this.CampaignDropId
             };
+            dropCopy.SetFieldsFrom(this);
+
             foreach (var cStat in this.CreativeStats)
             {
                 var cStatCopy = new CreativeStat();

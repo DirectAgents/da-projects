@@ -25,6 +25,10 @@ Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.Affiliate
                 <td>@Html.TextBoxFor(m => m.Date, "{0:d}")</td>
             </tr>
             <tr>
+                <td>@Html.LabelFor(m => m.FromEmail)</td>
+                <td>@Html.EditorFor(m => m.FromEmail)</td>
+            </tr>
+            <tr>
                 <td>@Html.LabelFor(m => m.Subject)</td>
                 <td>@Html.TextBoxFor(m => m.Subject, new { size = 60 })</td>
             </tr>

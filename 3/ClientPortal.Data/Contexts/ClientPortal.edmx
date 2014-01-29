@@ -253,6 +253,7 @@
           <Property Name="Opens" Type="int" />
           <Property Name="Subject" Type="nvarchar" MaxLength="255" />
           <Property Name="CopyOf" Type="int" />
+          <Property Name="FromEmail" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -293,6 +294,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="255" />
           <Property Name="DateSent" Type="datetime" />
           <Property Name="Recipient" Type="nvarchar" MaxLength="255" />
+          <Property Name="RecipientCC" Type="nvarchar" MaxLength="255" />
           <Property Name="Summary" Type="nvarchar(max)" />
           <Property Name="Conclusion" Type="nvarchar(max)" />
         </EntityType>
@@ -1108,15 +1110,6 @@
             <End Role="Creative" EntitySet="Creatives" />
             <End Role="CreativeStat" EntitySet="CreativeStats" />
           </AssociationSet>
-          <EntitySet Name="CPMReports" EntityType="ClientPortalModel.CPMReport" />
-          <AssociationSet Name="FK_CPMReport_Offer" Association="ClientPortalModel.FK_CPMReport_Offer">
-            <End Role="Offer" EntitySet="Offers" />
-            <End Role="CPMReport" EntitySet="CPMReports" />
-          </AssociationSet>
-          <AssociationSet Name="CPMReportCampaignDrop" Association="ClientPortalModel.CPMReportCampaignDrop">
-            <End Role="CampaignDrop" EntitySet="CampaignDrops" />
-            <End Role="CPMReport" EntitySet="CPMReports" />
-          </AssociationSet>
           <EntitySet Name="CakeContacts" EntityType="ClientPortalModel.CakeContact" />
           <EntitySet Name="CakeRoles" EntityType="ClientPortalModel.CakeRole" />
           <AssociationSet Name="FK_CakeContact_CakeRole" Association="ClientPortalModel.FK_CakeContact_CakeRole">
@@ -1135,6 +1128,15 @@
           <AssociationSet Name="FK_CampaignDrop_CampaignDrop" Association="ClientPortalModel.FK_CampaignDrop_CampaignDrop">
             <End Role="CampaignDrop" EntitySet="CampaignDrops" />
             <End Role="CampaignDrop1" EntitySet="CampaignDrops" />
+          </AssociationSet>
+          <EntitySet Name="CPMReports" EntityType="ClientPortalModel.CPMReport" />
+          <AssociationSet Name="FK_CPMReport_Offer" Association="ClientPortalModel.FK_CPMReport_Offer">
+            <End Role="Offer" EntitySet="Offers" />
+            <End Role="CPMReport" EntitySet="CPMReports" />
+          </AssociationSet>
+          <AssociationSet Name="CPMReportCampaignDrop" Association="ClientPortalModel.CPMReportCampaignDrop">
+            <End Role="CampaignDrop" EntitySet="CampaignDrops" />
+            <End Role="CPMReport" EntitySet="CPMReports" />
           </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
@@ -1694,8 +1696,8 @@
           <NavigationProperty Name="Goals" Relationship="ClientPortalModel.FK_Goal_Offer" FromRole="Offer" ToRole="Goal" />
           <NavigationProperty Name="Campaigns" Relationship="ClientPortalModel.FK_Campaign_Offer" FromRole="Offer" ToRole="Campaign" />
           <NavigationProperty Name="Creatives" Relationship="ClientPortalModel.FK_Creative_Offer" FromRole="Offer" ToRole="Creative" />
-          <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="Offer" ToRole="CPMReport" />
           <Property Type="Binary" Name="Logo" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="Offer" ToRole="CPMReport" />
         </EntityType>
         <Association Name="FK_Goal_Offer">
           <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
@@ -1767,10 +1769,11 @@
           <Property Type="String" Name="Subject" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Campaign" Relationship="ClientPortalModel.FK_CampaignDrop_Campaign" FromRole="CampaignDrop" ToRole="Campaign" />
           <NavigationProperty Name="CreativeStats" Relationship="ClientPortalModel.FK_CreativeStat_CampaignDrop" FromRole="CampaignDrop" ToRole="CreativeStat" />
-          <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CampaignDrop" ToRole="CPMReport" />
           <Property Type="Int32" Name="CopyOf" />
           <NavigationProperty Name="CampaignDropCopies" Relationship="ClientPortalModel.FK_CampaignDrop_CampaignDrop" FromRole="CampaignDrop" ToRole="CampaignDrop1" />
           <NavigationProperty Name="CampaignDropOriginal" Relationship="ClientPortalModel.FK_CampaignDrop_CampaignDrop" FromRole="CampaignDrop1" ToRole="CampaignDrop" />
+          <Property Type="String" Name="FromEmail" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CampaignDrop" ToRole="CPMReport" />
         </EntityType>
         <Association Name="FK_CampaignDrop_Campaign">
           <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="1" />
@@ -1882,36 +1885,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="CPMReport">
-          <Key>
-            <PropertyRef Name="CPMReportId" />
-          </Key>
-          <Property Type="Int32" Name="CPMReportId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="OfferId" Nullable="false" />
-          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="DateSent" Precision="3" />
-          <Property Type="String" Name="Recipient" MaxLength="255" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="CPMReport" ToRole="Offer" />
-          <NavigationProperty Name="CampaignDrops" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CPMReport" ToRole="CampaignDrop" />
-          <Property Type="String" Name="Summary" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Conclusion" MaxLength="Max" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <Association Name="FK_CPMReport_Offer">
-          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="1" />
-          <End Type="ClientPortalModel.CPMReport" Role="CPMReport" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Offer">
-              <PropertyRef Name="OfferId" />
-            </Principal>
-            <Dependent Role="CPMReport">
-              <PropertyRef Name="OfferId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="CPMReportCampaignDrop">
-          <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="*" />
-          <End Type="ClientPortalModel.CPMReport" Role="CPMReport" Multiplicity="*" />
-        </Association>
         <EntityType Name="CakeContact">
           <Key>
             <PropertyRef Name="CakeContactId" />
@@ -1995,6 +1968,37 @@
               <PropertyRef Name="CopyOf" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CPMReport">
+          <Key>
+            <PropertyRef Name="CPMReportId" />
+          </Key>
+          <Property Type="Int32" Name="CPMReportId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="OfferId" Nullable="false" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="DateSent" Precision="3" />
+          <Property Type="String" Name="Recipient" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RecipientCC" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Summary" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Conclusion" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="CPMReport" ToRole="Offer" />
+          <NavigationProperty Name="CampaignDrops" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CPMReport" ToRole="CampaignDrop" />
+        </EntityType>
+        <Association Name="FK_CPMReport_Offer">
+          <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="1" />
+          <End Type="ClientPortalModel.CPMReport" Role="CPMReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Offer">
+              <PropertyRef Name="OfferId" />
+            </Principal>
+            <Dependent Role="CPMReport">
+              <PropertyRef Name="OfferId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CPMReportCampaignDrop">
+          <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="*" />
+          <End Type="ClientPortalModel.CPMReport" Role="CPMReport" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -2325,6 +2329,7 @@
           <EntitySetMapping Name="CampaignDrops">
             <EntityTypeMapping TypeName="ClientPortalModel.CampaignDrop">
               <MappingFragment StoreEntitySet="CampaignDrop">
+                <ScalarProperty Name="FromEmail" ColumnName="FromEmail" />
                 <ScalarProperty Name="CopyOf" ColumnName="CopyOf" />
                 <ScalarProperty Name="Subject" ColumnName="Subject" />
                 <ScalarProperty Name="Opens" ColumnName="Opens" />
@@ -2382,27 +2387,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CPMReports">
-            <EntityTypeMapping TypeName="ClientPortalModel.CPMReport">
-              <MappingFragment StoreEntitySet="CPMReport">
-                <ScalarProperty Name="Conclusion" ColumnName="Conclusion" />
-                <ScalarProperty Name="Summary" ColumnName="Summary" />
-                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
-                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
-                <ScalarProperty Name="CPMReportId" ColumnName="CPMReportId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="CPMReportCampaignDrop" TypeName="ClientPortalModel.CPMReportCampaignDrop" StoreEntitySet="CPMReportCampaignDrop">
-            <EndProperty Name="CPMReport">
-              <ScalarProperty Name="CPMReportId" ColumnName="CPMReportId" />
-            </EndProperty>
-            <EndProperty Name="CampaignDrop">
-              <ScalarProperty Name="CampaignDropId" ColumnName="CampaignDropId" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="CakeContacts">
             <EntityTypeMapping TypeName="ClientPortalModel.CakeContact">
               <MappingFragment StoreEntitySet="CakeContact">
@@ -2438,6 +2422,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CPMReports">
+            <EntityTypeMapping TypeName="ClientPortalModel.CPMReport">
+              <MappingFragment StoreEntitySet="CPMReport">
+                <ScalarProperty Name="Conclusion" ColumnName="Conclusion" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="RecipientCC" ColumnName="RecipientCC" />
+                <ScalarProperty Name="Recipient" ColumnName="Recipient" />
+                <ScalarProperty Name="DateSent" ColumnName="DateSent" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="CPMReportId" ColumnName="CPMReportId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="CPMReportCampaignDrop" TypeName="ClientPortalModel.CPMReportCampaignDrop" StoreEntitySet="CPMReportCampaignDrop">
+            <EndProperty Name="CPMReport">
+              <ScalarProperty Name="CPMReportId" ColumnName="CPMReportId" />
+            </EndProperty>
+            <EndProperty Name="CampaignDrop">
+              <ScalarProperty Name="CampaignDropId" ColumnName="CampaignDropId" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

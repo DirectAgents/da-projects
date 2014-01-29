@@ -41,8 +41,12 @@ Advertiser: <b>@Model.Offer.Advertiser.AdvertiserName</b><br />
             <td>@Html.DisplayFor(m => m.Name)</td>
         </tr>
         <tr>
-            <td>@Html.LabelFor(m => m.Recipient, "Recipient(s)")</td>
+            <td>@Html.LabelFor(m => m.Recipient)</td>
             <td>@Html.DisplayFor(m => m.Recipient)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.RecipientCC)</td>
+            <td>@Html.DisplayFor(m => m.RecipientCC)</td>
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.DateSent, "Date Sent")</td>

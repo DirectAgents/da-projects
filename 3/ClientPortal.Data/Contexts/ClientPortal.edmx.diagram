@@ -51,7 +51,7 @@
         <EntityTypeShape EntityType="ClientPortalModel.Campaign" Width="1.5" PointX="12.125" PointY="4" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Affiliate" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Offer" />
-        <EntityTypeShape EntityType="ClientPortalModel.CampaignDrop" Width="1.5" PointX="14" PointY="6.75" />
+        <EntityTypeShape EntityType="ClientPortalModel.CampaignDrop" Width="1.5" PointX="14" PointY="6.875" />
         <AssociationConnector Association="ClientPortalModel.FK_CampaignDrop_Campaign" />
         <EntityTypeShape EntityType="ClientPortalModel.CreativeStat" Width="1.5" PointX="15.75" PointY="4.25" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeStat_CampaignDrop" />
@@ -61,9 +61,6 @@
         <AssociationConnector Association="ClientPortalModel.FK_Creative_Offer" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeStat_Creative" />
         <EntityTypeShape EntityType="ClientPortalModel.CreativeSummary" Width="1.5" PointX="15.875" PointY="6.75" />
-        <EntityTypeShape EntityType="ClientPortalModel.CPMReport" Width="1.5" PointX="14" PointY="3.875" />
-        <AssociationConnector Association="ClientPortalModel.FK_CPMReport_Offer" />
-        <AssociationConnector Association="ClientPortalModel.CPMReportCampaignDrop" />
         <EntityTypeShape EntityType="ClientPortalModel.CakeRole" Width="1.5" PointX="10.125" PointY="3.5" />
         <EntityTypeShape EntityType="ClientPortalModel.CakeContact" Width="1.5" PointX="8.25" PointY="3.375" />
         <AssociationConnector Association="ClientPortalModel.FK_CakeContact_CakeRole" />
@@ -71,6 +68,9 @@
         <EntityTypeShape EntityType="ClientPortalModel.CreativeFile" Width="1.5" PointX="15.875" PointY="2" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeFile_Creative" />
         <AssociationConnector Association="ClientPortalModel.FK_CampaignDrop_CampaignDrop" />
+        <EntityTypeShape EntityType="ClientPortalModel.CPMReport" Width="1.5" PointX="14" PointY="4" />
+        <AssociationConnector Association="ClientPortalModel.FK_CPMReport_Offer" />
+        <AssociationConnector Association="ClientPortalModel.CPMReportCampaignDrop" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

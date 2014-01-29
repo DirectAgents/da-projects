@@ -9,6 +9,12 @@ namespace ClientPortal.Data.Contexts
     {
         [Required]
         public string Name { get; set; }
+
+        [Display(Name = "Recipient(s)")]
+        public string Recipient { get; set; }
+
+        [Display(Name = "CC")]
+        public string RecipientCC { get; set; }
     }
 
     [MetadataType(typeof(CPMReport_Validation))]
@@ -97,6 +103,16 @@ namespace ClientPortal.Data.Contexts
                 if (_totalCost == null) _totalCost = CampaignDrops.Sum(cd => cd.Cost ?? 0);
                 return _totalCost.Value;
             }
+        }
+
+        public void SetFieldsFrom(CPMReport inReport)
+        {
+            Name = inReport.Name;
+            //DateSent = inReport.DateSent;
+            Recipient = inReport.Recipient;
+            RecipientCC = inReport.RecipientCC;
+            Summary = inReport.Summary;
+            Conclusion = inReport.Conclusion;
         }
 
     }

@@ -158,16 +158,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Send(int id)
         {
-            var report = cpRepo.GetCPMReport(id);
+            var report = cpRepo.GetCPMReport(id, true);
             if (report == null)
                 return HttpNotFound();
 
             ViewBag.PortalUrl = WebConfigurationManager.AppSettings["PortalUrl"];
             var body = RenderPartialViewToString("PreviewEmail", new CPMReportVM(report));
 
-            string cc = null;
-            string subject = "CPM Report test";
-            ControllerHelpers.SendEmail("from@from.com", report.Recipient, cc, subject, body, true);
+            string cc = report.RecipientCC;
+            string subject = "CPM Report: " + report.Name;
+            ControllerHelpers.SendEmail("test@directagents.com", report.Recipient, cc, subject, body, true);
 
             report.DateSent = DateTime.Now;
             cpRepo.SaveChanges();

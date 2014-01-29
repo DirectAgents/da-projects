@@ -73,7 +73,7 @@ namespace ClientPortal.Web.Controllers
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = isHTML,
-                From = new MailAddress(from),
+                From = new MailAddress(from) // this seems to be ignored (it uses the NetworkCredential account address), but is still required
             };
 
             foreach (var toItem in to.SelectMany(c => c.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)))

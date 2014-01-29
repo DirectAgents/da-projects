@@ -25,8 +25,12 @@ Offer: <b>@Model.Offer.DisplayName</b><br />
                 <td>@Html.EditorFor(m => m.Name)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(m => m.Recipient, "Recipient(s)")</td>
+                <td>@Html.LabelFor(m => m.Recipient)</td>
                 <td>@Html.EditorFor(m => m.Recipient)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.RecipientCC)</td>
+                <td>@Html.EditorFor(m => m.RecipientCC)</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.Summary)</td>

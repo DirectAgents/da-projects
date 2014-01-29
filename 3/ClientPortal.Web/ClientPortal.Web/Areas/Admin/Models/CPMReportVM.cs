@@ -75,14 +75,23 @@ namespace ClientPortal.Web.Areas.Admin.Models
             get { return String.Format("{0:0.00%}", Model.ConversionRate); }
         }
 
+        const string style = "style = \"font-family: Arial, Helvetica, sans-serif; font-size: 14px;\"";
+        const string rowLeft = "<tr><td " + style + " valign=\"top\">&bull;</td><td " + style + ">";
+        const string rowRight = "</td></tr>";
+
         private string ReplaceSpecialChars(string text)
         {
             if (text == null)
                 return null;
 
-            string pattern = @"^>>(.*)$";
-            string replacement = "<li>$1</li>";
+            string pattern = @"^>>([^\r\n]*)(?:\r\n?|\n)?";
+            string replacement = rowLeft + "$1" + rowRight;
             string result = Regex.Replace(text, pattern, replacement, RegexOptions.Multiline);
+
+            pattern = "(?:" + rowLeft + ".*" + rowRight + ")+";
+            replacement = "<table>$&</table>";
+            result = Regex.Replace(result, pattern, replacement, RegexOptions.Multiline);
+
             return result;
         }
     }

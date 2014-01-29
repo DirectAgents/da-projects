@@ -168,10 +168,7 @@ namespace ClientPortal.Data.Services
             }
             else
             {   // Edit
-                report.Name = inReport.Name;
-                report.Recipient = inReport.Recipient;
-                report.Summary = inReport.Summary;
-                report.Conclusion = inReport.Conclusion;
+                report.SetFieldsFrom(inReport);
             }
             if (saveChanges) SaveChanges();
         }
@@ -291,35 +288,32 @@ namespace ClientPortal.Data.Services
             return campaignDrop;
         }
 
-        public CampaignDrop AddCampaignDrop(CampaignDrop drop, int creativeId, bool saveChanges = false)
+        // returns whether the drop was successfully created
+        public bool AddCampaignDrop(CampaignDrop drop, int creativeId, bool saveChanges = false)
         {
-            return AddCampaignDrop(drop.CampaignId, drop.Date, drop.Subject, drop.Cost, creativeId, saveChanges);
-        }
-
-        public CampaignDrop AddCampaignDrop(int campaignId, DateTime date, string subject, decimal? cost, int creativeId, bool saveChanges = false)
-        {
-            CampaignDrop campaignDrop = null;
-            var campaign = context.Campaigns.Find(campaignId);
+            var campaign = context.Campaigns.Find(drop.CampaignId);
             var creative = context.Creatives.Find(creativeId);
-            if (campaign != null && creative != null)
-            {
-                campaignDrop = new CampaignDrop
-                {
-                    Campaign = campaign,
-                    Date = date,
-                    Subject = subject,
-                    Cost = cost
-                };
-                var creativeStat = new CreativeStat
-                {
-                    Creative = creative,
-                    CampaignDrop = campaignDrop
-                };
-                context.CreativeStats.Add(creativeStat);
 
-                if (saveChanges) SaveChanges();
+            if (campaign == null || creative == null)
+                return false;
+
+            var creativeStat = new CreativeStat
+            {
+                Creative = creative,
+                CampaignDrop = drop
+            };
+            context.CreativeStats.Add(creativeStat);
+
+            try
+            {
+                if (saveChanges)
+                    SaveChanges();
             }
-            return campaignDrop;
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
 
         // save an existing drop
@@ -333,11 +327,8 @@ namespace ClientPortal.Data.Services
                 DuplicateDropIfNecessary(drop);
 
                 // Now save any changes (in the original)
-                drop.Date = inDrop.Date;
-                drop.Subject = inDrop.Subject;
-                drop.Cost = inDrop.Cost;
-                drop.Volume = inDrop.Volume;
-                drop.Opens = inDrop.Opens;
+                drop.SetFieldsFrom(inDrop);
+
                 foreach (var creativeStat in inDrop.CreativeStats)
                 {
                     if (!SaveCreativeStat(creativeStat))

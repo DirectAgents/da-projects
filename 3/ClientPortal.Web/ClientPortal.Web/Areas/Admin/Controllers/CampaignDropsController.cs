@@ -38,7 +38,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return null;
 
             ViewData["Creatives"] = campaign.Offer.CreativesByDate();
-            ViewData["from"] = from;
+            ViewData["from"] = from; // only used for non-ajax page
 
             if (drop == null)
             {
@@ -58,11 +58,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var campaignDrop = cpRepo.AddCampaignDrop(drop, creativeid, true);
-                if (campaignDrop != null)
-                {   // success
-                    return RedirectToAction("Show", new { id = campaignDrop.CampaignDropId });
-                }
+                bool success = cpRepo.AddCampaignDrop(drop, creativeid, true);
+                if (success)
+                    return RedirectToAction("Show", new { id = drop.CampaignDropId });
+
                 ModelState.AddModelError("", "Campaign Drop could not be saved");
             }
             SetupForCreate(drop.CampaignId, from, drop);
