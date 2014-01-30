@@ -12,28 +12,18 @@
             <td width="13" rowspan="2" align="left" valign="top">&nbsp;</td>
             <td width="195" rowspan="2" align="left" valign="top">
                 <img src="@(PortalUrl)/Images/logo1.png" alt="" width="152" height="86" /></td>
-            <td height="24" colspan="2" align="left" valign="top">&nbsp;</td>
+            <td height="13" colspan="2" align="left" valign="top"></td>
         </tr>
         <tr>
             <td align="right" valign="top">
-                <table width="410" border="0" align="right" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td width="347" align="right" valign="middle"><strong style="font-family: Arial black, Helvetica, sans-serif; text-align: center; font-size: 28px;">CPM REVIEW&nbsp;</strong></td>
-                    <td width="140" align="left" valign="middle"><strong style="font-family: Arial black, Helvetica, sans-serif; text-align: center; font-size: 28px;">
-                        @if (Model.Offer.Logo != null)
-                        {
-                            <img src="@(PortalUrl)@Url.Action("Logo", "Offers", new { id = Model.Offer.OfferId })" />
-                        }
-                        </strong></td>
-                </tr>
-                </table>
+                <img src="@(PortalUrl)@Url.Action("Logo", "Offers", new { id = Model.Offer.OfferId })" />
             </td>
             <td width="13" align="right" valign="top">&nbsp;</td>
         </tr>
 
         <tr>@* Summary Text *@
             <td align="left" valign="top">&nbsp;</td>
-            <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Summary</b><br />
+            <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Summary - CPM Review</b><br />
                 <img src="@(PortalUrl)/Images/spacer.gif" width="18" height="18" /><br />
             </td>
             <td align="right" valign="top">&nbsp;</td>
@@ -48,7 +38,7 @@
 
         <tr> @* Performance Summary *@
             <td align="left" valign="top">&nbsp;</td>
-            <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>CPM Performance Summary</b><br />
+            <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Performance Summary</b><br />
                 <img src="@(PortalUrl)/Images/spacer.gif" width="18" height="18" /><br />
             </td>
             <td align="right" valign="top">&nbsp;</td>
@@ -58,8 +48,6 @@
 
             <table width="650" align="center" cellpadding="0" cellspacing="0" style="border-top: 1px solid #c7c3c7; border-bottom: 1px solid #c7c3c7; border-left: 0px solid #c7c3c7; border-right: 0px solid #c7c3c7;">
             <tr>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Volume</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Opens</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Clicks</b></td>
@@ -67,8 +55,6 @@
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Total Cost</b></td>
             </tr>
             <tr>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666"></td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666"></td>
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@Model.TotalVolume</td>
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@Model.TotalOpens
                     <br />Open Rate: @Model.OpenRate</td>

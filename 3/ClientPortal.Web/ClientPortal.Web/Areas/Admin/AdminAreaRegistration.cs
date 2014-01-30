@@ -15,6 +15,20 @@ namespace ClientPortal.Web.Areas.Admin
         public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(
+                "OfferLogo",
+                "OfferLogo/{id}",
+                new { controller = "Offers", action = "Logo" },
+                new[] { "ClientPortal.Web.Areas.Admin.Controllers" }
+            );
+
+            context.MapRoute(
+                "CreativeThumbnail",
+                "CreativeThumbnail/{id}",
+                new { controller = "Creatives", action = "Thumbnail" },
+                new[] { "ClientPortal.Web.Areas.Admin.Controllers" }
+            );
+
+            context.MapRoute(
                 "Admin_default",
                 "Admin/{controller}/{action}/{id}",
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional },

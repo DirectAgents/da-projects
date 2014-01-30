@@ -19,8 +19,7 @@ Advertiser: <b>@Model.Offer.Advertiser.AdvertiserName</b><br />
     @Ajax.ActionLink("Edit", "Edit", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)<text> | </text>
 }
 
-@Html.ActionLink("Preview", "PreviewEmail", "CPMReports", new { id = Model.CPMReportId }, new { target = "_blank" })
-@Ajax.ActionLink("(old)", "Preview", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions) |
+@Html.ActionLink("Preview", "PreviewEmail", "CPMReports", new { id = Model.CPMReportId }, new { target = "_blank" }) |
 
 @if (!reportSent)
 {

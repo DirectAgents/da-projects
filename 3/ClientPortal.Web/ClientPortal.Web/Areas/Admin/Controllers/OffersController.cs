@@ -42,6 +42,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(offer);
         }
 
+        [AllowAnonymous]
         public FileResult Logo(int id)
         {
             var offer = cpRepo.GetOffer(id);
@@ -51,6 +52,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             WebImage logo = new WebImage(offer.Logo);
             return File(logo.GetBytes(), "image/" + logo.ImageFormat, logo.FileName);
         }
+
         public ActionResult EditLogo(int id)
         {
             var offer = cpRepo.GetOffer(id);

@@ -50,6 +50,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(creative);
         }
 
+        [AllowAnonymous]
         public FileResult Thumbnail(int id)
         {
             var creative = cpRepo.GetCreative(id);
@@ -59,6 +60,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             WebImage thumbnail = new WebImage(creative.Thumbnail);
             return File(thumbnail.GetBytes(), "image/" + thumbnail.ImageFormat, thumbnail.FileName);
         }
+
         public ActionResult EditThumbnail(int id)
         {
             var creative = cpRepo.GetCreative(id);
