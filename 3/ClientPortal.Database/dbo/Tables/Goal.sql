@@ -10,6 +10,8 @@
     [EndDate]      DATETIME        NULL,
     CONSTRAINT [PK_dbo.Goal] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_Goal_Advertiser] FOREIGN KEY ([AdvertiserId]) REFERENCES [dbo].[Advertiser] ([AdvertiserId]),
-    CONSTRAINT [FK_Goal_Offer] FOREIGN KEY ([OfferId]) REFERENCES [dbo].[Offer] ([Offer_Id])
+    CONSTRAINT [FK_Goal_Offer] FOREIGN KEY ([OfferId]) REFERENCES [dbo].[Offer] ([OfferId])
 );
+
+
 

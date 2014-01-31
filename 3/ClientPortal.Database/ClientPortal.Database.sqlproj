@@ -89,5 +89,23 @@
     <Build Include="dbo\Tables\webpages_OAuthMembership.sql" />
     <Build Include="dbo\Tables\webpages_Roles.sql" />
     <Build Include="dbo\Tables\webpages_UsersInRoles.sql" />
+    <Build Include="dbo\Tables\UserEvent.sql" />
+    <Build Include="dbo\Tables\SearchDailySummary2.sql" />
+    <Build Include="dbo\Tables\SearchChannel.sql" />
+    <Build Include="dbo\Tables\SearchAccount.sql" />
+    <Build Include="dbo\Tables\GoogleAnalyticsSummary.sql" />
+    <Build Include="dbo\Tables\CreativeType.sql" />
+    <Build Include="dbo\Tables\CreativeSummary.sql" />
+    <Build Include="dbo\Tables\CreativeStat.sql" />
+    <Build Include="dbo\Tables\CreativeFile.sql" />
+    <Build Include="dbo\Tables\Creative.sql" />
+    <Build Include="dbo\Tables\CPMReportCampaignDrop.sql" />
+    <Build Include="dbo\Tables\CPMReport.sql" />
+    <Build Include="dbo\Tables\Click.sql" />
+    <Build Include="dbo\Tables\CampaignDrop.sql" />
+    <Build Include="dbo\Tables\Campaign.sql" />
+    <Build Include="dbo\Tables\CakeRole.sql" />
+    <Build Include="dbo\Tables\CakeContact.sql" />
+    <Build Include="dbo\Tables\Affiliate.sql" />
   </ItemGroup>
 </Project>
