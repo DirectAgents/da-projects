@@ -27,7 +27,7 @@
 
         <tr>@* Summary Text *@
             <td align="left" valign="top">&nbsp;</td>
-            <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Summary - CPM Review</b><br />
+            <td colspan="2" align="left" valign="top" style="font-family: Arial, Gadget, sans-serif, Helvetica, sans-serif; font-size: 26px; color: #3b98f1;"><b>Summary - Campaign Review</b><br />
                 <img src="@(PortalUrl)/Images/spacer.gif" width="18" height="18" /><br />
             </td>
             <td align="right" valign="top">&nbsp;</td>
@@ -184,7 +184,13 @@
                             <b>Subject:</b> @drop.Subject<br />
                             @if (creativeStat0.Thumbnail != null)
                             {
-                                <img src="@(PortalUrl)@Url.Action("Thumbnail", "Creatives", new { id = creativeStat0.CreativeId })" />
+                                string imgUrl = PortalUrl + Url.Action("Thumbnail", "Creatives", new { id = creativeStat0.CreativeId });
+                                if (creativeStat0.Link != null)
+                                {
+                                    <a href="@creativeStat0.Link"><img src="@imgUrl" /></a>
+                                } else {
+                                    <img src="@imgUrl" />
+                                }
                             }
                         </td>
                     }

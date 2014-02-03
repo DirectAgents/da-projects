@@ -40,5 +40,16 @@ namespace ClientPortal.Web.Areas.Admin.Models
         {
             get { return Model.Creative.Thumbnail; }
         }
+
+        public string Link
+        {
+            get
+            {
+                if (Model.Creative.CreativeFiles.Count > 0)
+                    return Model.Creative.CreativeFiles.First().CreativeFileLink;
+                else
+                    return null;
+            }
+        }
     }
 }
