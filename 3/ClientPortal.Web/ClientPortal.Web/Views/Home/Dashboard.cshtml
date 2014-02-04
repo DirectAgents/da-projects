@@ -196,7 +196,7 @@
     });
 
     function Projection(value) {
-        var date = new Date();
+        var date = new Date(@(Model.Dates.LatestAsDateTime.Year +","+ (Model.Dates.LatestAsDateTime.Month - 1) +","+ Model.Dates.LatestAsDateTime.Day));
         var numDays = date.getDate(); // # days gone by
         var daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         return daysInMonth * value / numDays;

@@ -202,6 +202,9 @@ namespace ClientPortal.Data.Services
 
                     // Now group by Year and Week
                     .GroupBy(x => new { x.Year, x.Week })
+                    // NOTE / TODO: There's an issue when a week is part in one year and part in another
+                    // After constructing a SearchStat, we could group by Range (or StartDate,EndDate)
+                    // but maybe there's another way, like a projection where Year=Year+1 and Week=1 when Week=53 ?
 
                     // Order by Year then Week
                     .OrderBy(g => g.Key.Year)

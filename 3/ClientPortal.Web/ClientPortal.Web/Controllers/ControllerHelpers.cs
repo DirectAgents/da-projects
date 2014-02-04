@@ -176,6 +176,8 @@ namespace ClientPortal.Web.Controllers
         public string Yesterday { get { return DateString(Dates.Yesterday); } }
         public string Latest { get { return DateString(Dates.Latest); } }
 
+        public DateTime LatestAsDateTime { get { return this.Dates.Latest; } }
+
         public string FirstOfMonth { get { return DateString(Dates.FirstOfMonth); } }
         public string FirstOfYear { get { return DateString(Dates.FirstOfYear); } }
         public string FirstOfLastMonth { get { return DateString(Dates.FirstOfLastMonth); } }
