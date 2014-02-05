@@ -17,9 +17,13 @@
     [AutomatedReportsNextSendAfter]    DATETIME        NULL,
     [ShowSearchChannels]               BIT             CONSTRAINT [DF_Advertiser_ShowSearchChannels] DEFAULT ((0)) NOT NULL,
     [AccountManagerId]                 INT             NULL,
+    [LatestDaySums]                    DATETIME        NULL,
+    [LatestClicks]                     DATETIME        NULL,
     CONSTRAINT [PK_dbo.Advertiser] PRIMARY KEY CLUSTERED ([AdvertiserId] ASC),
     CONSTRAINT [FK_Advertiser_CakeContact] FOREIGN KEY ([AccountManagerId]) REFERENCES [dbo].[CakeContact] ([CakeContactId])
 );
+
+
 
 
 
