@@ -45,6 +45,10 @@ Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.Affiliate
             <td>@Html.LabelFor(m => m.Opens)</td>
             <td>@Html.DisplayFor(m => m.Opens)</td>
         </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.CombineCreatives)</td>
+            <td>@Html.DisplayFor(m => m.CombineCreatives)</td>
+        </tr>
     </table>
     @foreach (var creativeStat in Model.CreativeStats)
     {

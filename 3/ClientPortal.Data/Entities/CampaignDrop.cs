@@ -12,6 +12,9 @@ namespace ClientPortal.Data.Contexts
 
         [DataType(DataType.EmailAddress)]
         public string FromEmail { get; set; }
+
+        [Display(Name = "Combine Creatives?")]
+        public bool CombineCreatives { get; set; }
     }
 
     [MetadataType(typeof(CampaignDrop_Validation))]
@@ -96,6 +99,7 @@ namespace ClientPortal.Data.Contexts
             Cost = inDrop.Cost;
             Volume = inDrop.Volume;
             Opens = inDrop.Opens;
+            CombineCreatives = inDrop.CombineCreatives;
         }
 
         public CampaignDrop Duplicate()

@@ -3,6 +3,7 @@
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmCreativesTab");
     var ajaxOpts_ConfirmSynch = RazorHelpers.GetAjaxOptions("cpmCreativesTab", null, "Get", "Synch Creatives?");
     var ajaxOpts_ConfirmOverwrite = RazorHelpers.GetAjaxOptions("cpmCreativesTab", null, "Get", "This will overwrite existing changes. Are you sure?");
+    var ajaxOpts_ConfirmDeleteThumb = RazorHelpers.GetAjaxOptions("cpmCreativesTab", null, "Get", "Are you sure you want to delete this thumbnail?");
     ClientPortal.Data.Contexts.Offer offer = (ClientPortal.Data.Contexts.Offer)ViewData["offer"];
 }
 
@@ -25,7 +26,7 @@
         <th>Width</th>
         <th>Height</th>
         <th>Files</th>
-        <th></th>
+        <th>Thumbnail</th>
     </tr>
 @foreach (var creative in Model)
 {
@@ -37,7 +38,11 @@
         <td>@creative.Width</td>
         <td>@creative.Height</td>
         <td>@Ajax.ActionLink(creative.CreativeFiles.Count.ToString(), "Index", "CreativeFiles", new { creativeid = creative.CreativeId }, ajaxOptions)</td>
-        <td>@Ajax.ActionLink((creative.Thumbnail == null ? "Add Thumbnail" : "View/Edit Thumbnail"), "EditThumbnail", "Creatives", new { id = creative.CreativeId }, ajaxOptions)
+        <td>@Ajax.ActionLink((creative.Thumbnail == null ? "Add" : "View/Edit"), "EditThumbnail", "Creatives", new { id = creative.CreativeId }, ajaxOptions)
+        @if (creative.Thumbnail != null)
+        {
+            <text> | </text>@Ajax.ActionLink("Delete", "DeleteThumbnail", "Creatives", new { id = creative.CreativeId }, ajaxOpts_ConfirmDeleteThumb)
+        }
         </td>
     </tr>
 }

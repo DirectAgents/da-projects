@@ -85,6 +85,19 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return null;
         }
 
+        public ActionResult DeleteThumbnail(int id)
+        {
+            var creative = cpRepo.GetCreative(id);
+            if (creative == null)
+            {
+                return HttpNotFound();
+            }
+            creative.Thumbnail = null;
+            cpRepo.SaveChanges();
+
+            return RedirectToAction("Index", new { offerid = creative.OfferId });
+        }
+
         public ActionResult Synch(int offerid, bool overwrite = false)
         {
             var cmd = new SynchCreativesCommand

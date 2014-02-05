@@ -256,6 +256,7 @@
           <Property Name="Subject" Type="nvarchar" MaxLength="255" />
           <Property Name="CopyOf" Type="int" />
           <Property Name="FromEmail" Type="nvarchar" MaxLength="100" />
+          <Property Name="CombineCreatives" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -1778,6 +1779,7 @@
           <NavigationProperty Name="CampaignDropOriginal" Relationship="ClientPortalModel.FK_CampaignDrop_CampaignDrop" FromRole="CampaignDrop1" ToRole="CampaignDrop" />
           <Property Type="String" Name="FromEmail" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CampaignDrop" ToRole="CPMReport" />
+          <Property Type="Boolean" Name="CombineCreatives" Nullable="false" />
         </EntityType>
         <Association Name="FK_CampaignDrop_Campaign">
           <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="1" />
@@ -2335,6 +2337,7 @@
           <EntitySetMapping Name="CampaignDrops">
             <EntityTypeMapping TypeName="ClientPortalModel.CampaignDrop">
               <MappingFragment StoreEntitySet="CampaignDrop">
+                <ScalarProperty Name="CombineCreatives" ColumnName="CombineCreatives" />
                 <ScalarProperty Name="FromEmail" ColumnName="FromEmail" />
                 <ScalarProperty Name="CopyOf" ColumnName="CopyOf" />
                 <ScalarProperty Name="Subject" ColumnName="Subject" />

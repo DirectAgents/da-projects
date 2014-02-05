@@ -120,7 +120,7 @@
                         <br />eCPL: @drop.CostPerLead</b></td>
                     <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Cost</td>
                 </tr>
-                if (drop.CreativeStats.Count() > 1)
+                if (drop.CreativeStats.Count() > 1 && !drop.CombineCreatives)
                 {
                     foreach (var creativeStat in drop.CreativeStats)
                     {
@@ -183,13 +183,18 @@
                             <b>From:</b> @drop.FromEmail<br />
                             <b>Subject:</b> @drop.Subject<br />
                             @if (creativeStat0.Thumbnail != null)
-                            {
+                            {@* Have a thumbnail... *@
                                 string imgUrl = PortalUrl + Url.Action("Thumbnail", "Creatives", new { id = creativeStat0.CreativeId });
                                 if (creativeStat0.Link != null)
                                 {
                                     <a href="@creativeStat0.Link"><img src="@imgUrl" /></a>
                                 } else {
                                     <img src="@imgUrl" />
+                                }
+                            } else {@* No thumbnail... *@
+                                if (creativeStat0.Link != null)
+                                {
+                                    <a href="@creativeStat0.Link">View Creative</a>
                                 }
                             }
                         </td>

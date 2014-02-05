@@ -40,7 +40,7 @@ Drops:<br />
         @* for testing! *@
         @*<td>@drop.CampaignDropId</td>*@
     </tr>
-    if (drop.CreativeStats.Count > 1)
+    if (drop.CreativeStats.Count > 1 && !drop.CombineCreatives)
     {
         foreach (var creativeStat in drop.CreativeStats)
         {

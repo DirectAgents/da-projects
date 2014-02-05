@@ -19,6 +19,10 @@ namespace ClientPortal.Web.Areas.Admin.Models
         {
             get { return Model.CreativeStats.Select(cs => new CreativeStatVM(cs)); }
         }
+        public bool CombineCreatives
+        {
+            get { return Model.CombineCreatives; }
+        }
 
         public int AffiliateId
         {
