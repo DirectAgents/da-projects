@@ -1,7 +1,8 @@
 ﻿@model ClientPortal.Data.Contexts.CPMReport
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
-    var ajaxOpts_Send = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Get", "This will freeze the stats within this report. Send Report now?");
+    var ajaxOpts_Test = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Get", "This will email the report without setting 'Date Sent'. Continue?");
+    var ajaxOpts_Send = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Get", "This will freeze the stats within the report. Send Report now?");
     var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Get", "Are you sure you want to remove this drop from the report?");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Post");
     bool reportSent = Model.DateSent != null;
@@ -20,6 +21,7 @@ Advertiser: <b>@Model.Offer.Advertiser.AdvertiserName</b><br />
 }
 
 @Html.ActionLink("Preview", "PreviewEmail", "CPMReports", new { id = Model.CPMReportId }, new { target = "_blank" }) |
+@Ajax.ActionLink("Test Report", "Send", "CPMReports", new { id = Model.CPMReportId, test = true }, ajaxOpts_Test) |
 
 @if (!reportSent)
 {

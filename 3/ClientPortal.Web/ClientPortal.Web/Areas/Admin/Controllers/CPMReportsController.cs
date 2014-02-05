@@ -156,7 +156,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Send(int id)
+        public ActionResult Send(int id, bool test = false)
         {
             var report = cpRepo.GetCPMReport(id, true);
             if (report == null)
@@ -169,9 +169,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             string subject = "CPM Report: " + report.Name;
             ControllerHelpers.SendEmail("test@directagents.com", report.Recipient, cc, subject, body, true);
 
-            report.DateSent = DateTime.Now;
-            cpRepo.SaveChanges();
-
+            if (!test)
+            {
+                report.DateSent = DateTime.Now;
+                cpRepo.SaveChanges();
+            }
             return RedirectToAction("Show", new { id = id });
         }
 
