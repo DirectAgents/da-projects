@@ -42,6 +42,8 @@ namespace ClientPortal.Data.Contexts
         public string AnalyticsProfileId { get; set; }
         public bool ShowSearchChannels { get; set; }
         public Nullable<int> AccountManagerId { get; set; }
+        public Nullable<System.DateTime> LatestDaySums { get; set; }
+        public Nullable<System.DateTime> LatestClicks { get; set; }
     
         public virtual ICollection<ScheduledReport> ScheduledReports { get; set; }
         public virtual ICollection<AdvertiserContact> AdvertiserContacts { get; set; }

@@ -37,13 +37,28 @@ namespace CakeExtracter.Commands
         {
             var yesterday = DateTime.Today.AddDays(-1);
             var dateRange = new DateRange(StartDate ?? yesterday, EndDate ?? yesterday);
+            var advertiserIds = GetAdvertiserIds();
+
             foreach (var date in dateRange.Dates)
             {
                 try
                 {
-                    ExtractAndLoadClicksForDate(date);
+                    ExtractAndLoadClicksForDate(date, advertiserIds);
                     if (SynchConversionsAlso)
                         ExtractAndLoadConversionsForDate(date);
+
+                    // Set "LatestClicks" datetime
+                    using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
+                    {
+                        var now = DateTime.Now;
+                        foreach (var advertiserId in advertiserIds)
+                        {
+                            var advertiser = db.Advertisers.Where(a => a.AdvertiserId == AdvertiserId).FirstOrDefault();
+                            if (advertiser != null)
+                                advertiser.LatestClicks = now;
+                        }
+                        db.SaveChanges();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -55,9 +70,10 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        private void ExtractAndLoadClicksForDate(DateTime date)
+        private static void ExtractAndLoadClicksForDate(DateTime date, IEnumerable<int> advertiserIds)
         {
-            foreach (var advertiserId in GetAdvertiserIds())
+            // Does one advertiser at a time...
+            foreach (var advertiserId in advertiserIds)
             {
                 Logger.Info("Extracting clicks for {0}..", date.ToShortDateString());
                 var dateRange = new DateRange(date, date.AddDays(1));
@@ -73,6 +89,7 @@ namespace CakeExtracter.Commands
 
         private void ExtractAndLoadConversionsForDate(DateTime date)
         {
+            // Does all advertisers together (if AdvId 0 specified); just one if AdvId > 0
             Logger.Info("Extracting conversions for {0}..", date.ToShortDateString());
             var dateRange = new DateRange(date, date.AddDays(1));
             var extracter = new ConversionsExtracter(dateRange, AdvertiserId);

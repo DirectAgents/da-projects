@@ -48,6 +48,15 @@ namespace CakeExtracter.Commands
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
                 loaderThread.Join();
+
+                // Set "LatestDaySums" datetime
+                using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
+                {
+                    var advertiser = db.Advertisers.Where(a => a.AdvertiserId == advertiserId).FirstOrDefault();
+                    if (advertiser != null)
+                        advertiser.LatestDaySums = DateTime.Now;
+                    db.SaveChanges();
+                }
             }
             return 0;
         }

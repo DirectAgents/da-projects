@@ -44,18 +44,8 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
 
                     advertiser.AdvertiserName = item.AdvertiserName;
 
-                    if (item.AccountManagers != null && item.AccountManagers.Count > 0)
-                    {
-                        int accountManagerId = item.AccountManagers[0].ContactId;
-                        var cakeContact = db.CakeContacts.SingleOrDefault(c => c.CakeContactId == accountManagerId);
-                        if (cakeContact != null)
-                            advertiser.AccountManagerId = cakeContact.CakeContactId;
-                        else
-                            Logger.Info("Advertiser {0}'s AccountManager (CakeContactId {1}) doesn't exist. Leaving AccountManagerId unchanged.", advertiser.AdvertiserId, accountManagerId);
-                    }
-
                     if (includeContacts)
-                    {
+                    {   // NOTE: The account manager contacts are all in the 'Direct Agents' advertiser
                         Logger.Info("Synching {0} contacts...", item.Contacts.Count);
                         foreach (var ci in item.Contacts)
                         {
@@ -98,7 +88,24 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                             cakeContact.PhoneCell = ci.PhoneCell;
                             cakeContact.PhoneFax = ci.PhoneFax;
                         }
+
+                        if (item.AdvertiserId == 1) // Direct Agents -> do a save so that account manager contacts are in the db
+                        {
+                            Logger.Info("(DA found) Advertisers/CakeContacts/CakeRoles: " + db.ChangeCountsAsString());
+                            db.SaveChanges();
+                        }
                     }
+
+                    if (item.AccountManagers != null && item.AccountManagers.Count > 0)
+                    {
+                        int accountManagerId = item.AccountManagers[0].ContactId;
+                        var cakeContact = db.CakeContacts.SingleOrDefault(c => c.CakeContactId == accountManagerId);
+                        if (cakeContact != null)
+                            advertiser.AccountManagerId = cakeContact.CakeContactId;
+                        else
+                            Logger.Info("Advertiser {0}'s AccountManager (CakeContactId {1}) doesn't exist. Leaving AccountManagerId unchanged.", advertiser.AdvertiserId, accountManagerId);
+                    }
+
                 }
                 Logger.Info("Advertisers/CakeContacts/CakeRoles: " + db.ChangeCountsAsString());
                 db.SaveChanges();

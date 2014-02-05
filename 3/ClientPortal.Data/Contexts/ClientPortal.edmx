@@ -193,6 +193,8 @@
           <Property Name="AutomatedReportsNextSendAfter" Type="datetime" />
           <Property Name="ShowSearchChannels" Type="bit" Nullable="false" />
           <Property Name="AccountManagerId" Type="int" />
+          <Property Name="LatestDaySums" Type="datetime" />
+          <Property Name="LatestClicks" Type="datetime" />
         </EntityType>
         <EntityType Name="AdvertiserContact">
           <Key>
@@ -1530,6 +1532,8 @@
           <Property Type="Boolean" Name="ShowSearchChannels" Nullable="false" />
           <Property Type="Int32" Name="AccountManagerId" />
           <NavigationProperty Name="AccountManager" Relationship="ClientPortalModel.FK_Advertiser_CakeContact" FromRole="Advertiser" ToRole="CakeContact" />
+          <Property Type="DateTime" Name="LatestDaySums" Precision="3" />
+          <Property Type="DateTime" Name="LatestClicks" Precision="3" />
         </EntityType>
         <Association Name="FK_AdvertiserScheduledReport">
           <End Type="ClientPortalModel.Advertiser" Role="Advertiser" Multiplicity="1" />
@@ -2232,6 +2236,8 @@
           <EntitySetMapping Name="Advertisers">
             <EntityTypeMapping TypeName="ClientPortalModel.Advertiser">
               <MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="LatestClicks" ColumnName="LatestClicks" />
+                <ScalarProperty Name="LatestDaySums" ColumnName="LatestDaySums" />
                 <ScalarProperty Name="AccountManagerId" ColumnName="AccountManagerId" />
                 <ScalarProperty Name="ShowSearchChannels" ColumnName="ShowSearchChannels" />
                 <ScalarProperty Name="AnalyticsProfileId" ColumnName="AnalyticsProfileId" />
