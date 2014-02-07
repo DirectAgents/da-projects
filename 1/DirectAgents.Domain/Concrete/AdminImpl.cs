@@ -128,7 +128,8 @@ namespace DirectAgents.Domain.Concrete
                 var countryLookup = new CountryLookup(cake);
 
                 Log("Going through cake staged campaigns...");
-                foreach (var item in StagedCampaigns(cake))
+                var offerObjects = StagedOffers(cake);
+                foreach (var item in offerObjects)
                 {
                     var campaign = GetOrCreateCampaign(item);
 
@@ -166,18 +167,23 @@ namespace DirectAgents.Domain.Concrete
             campaign.StatusId = offer.StatusId;
 
             campaign.DefaultPriceFormat = offer.DefaultPriceFormat;
-            campaign.RevenueIsPercentage = offer.offer_contracts[0].received.is_percentage;
-            campaign.Revenue = offer.offer_contracts[0].received.amount;
 
-            if (offer.DefaultPriceFormat == "RevShare")
-                campaign.Cost = offer.offer_contracts[0].payout.amount;
-            else
-            {   // compute cost as 2/3 of revenue
-                if (campaign.Revenue < .375m) // computed cost will be less than .25
-                    campaign.Cost = decimal.Round(campaign.Revenue * (40m / 3m), 0) / 20; // round to nearest 0.05
-                    //campaign.Cost = decimal.Round(campaign.Revenue * (2m / 3m), 2); // round to nearest 0.01
+            offer_contract offer_contract = offer.offer_contracts.FirstOrDefault(oc => oc.offer_contract_id == offer.default_offer_contract_id);
+            if (offer_contract != null)
+            {
+                campaign.RevenueIsPercentage = offer_contract.received.is_percentage;
+                campaign.Revenue = offer_contract.received.amount;
+
+                if (offer.DefaultPriceFormat == "RevShare")
+                    campaign.Cost = offer_contract.payout.amount;
                 else
-                    campaign.Cost = decimal.Round(campaign.Revenue * (8m / 3m), 0) / 4; // round to nearest 0.25
+                {   // compute cost as 2/3 of revenue
+                    if (campaign.Revenue < 1.5m) // computed cost will be less than 1.00
+                        campaign.Cost = decimal.Round(campaign.Revenue * (40m / 3m), 0) / 20; // round to nearest 0.05
+                    //campaign.Cost = decimal.Round(campaign.Revenue * (2m / 3m), 2); // round to nearest 0.01
+                    else
+                        campaign.Cost = decimal.Round(campaign.Revenue * (8m / 3m), 0) / 4; // round to nearest 0.25
+                }
             }
             campaign.CostCurrency = offer.currency.currency_symbol;
             campaign.RevenueCurrency = offer.currency.currency_symbol;
@@ -186,13 +192,17 @@ namespace DirectAgents.Domain.Concrete
         private void UpdateVerticals(CakeStagingEntities cake)
         {
             var verticals = daDomain.Verticals.ToList();
-            var staged = cake.CakeOffers.Select(c => c.VerticalName).Distinct();
-            var current = verticals.Select(c => c.Name);
+            var currentVerticals = verticals.Select(c => c.Name);
 
-            foreach (var item in current.Except(staged).Select(c => verticals.Single(d => d.Name == c)))
+            var usedVerticalIds = daDomain.Campaigns.Select(c => c.Vertical.VerticalId).Distinct();
+            var currentUnusedVerticals = daDomain.Verticals.Where(v => !usedVerticalIds.Contains(v.VerticalId)).Select(v => v.Name).ToList();
+
+            var stagedVerticals = cake.CakeOffers.Select(o => o.VerticalName).Distinct();
+
+            foreach (var item in currentUnusedVerticals.Except(stagedVerticals).Select(vn => verticals.Single(v => v.Name == vn)))
                 daDomain.Verticals.Remove(item);
 
-            foreach (var item in staged.Except(current))
+            foreach (var item in stagedVerticals.Except(currentVerticals))
                 daDomain.Verticals.Add(new Vertical { Name = item });
 
             daDomain.SaveChanges();
@@ -219,7 +229,7 @@ namespace DirectAgents.Domain.Concrete
             public CakeAdvertiser Advertiser { get; set; }
         }
 
-        private static IEnumerable<_OfferAndAdvertiser> StagedCampaigns(CakeStagingEntities cake)
+        private static IEnumerable<_OfferAndAdvertiser> StagedOffers(CakeStagingEntities cake)
         {
             var query = from offer in cake.CakeOffers.ToList()
                         from advertiser in cake.CakeAdvertisers.ToList()
