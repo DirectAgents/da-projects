@@ -9,11 +9,11 @@ namespace ClientPortal.Web.HtmlHelpers
 {
     public static class FormatHelpers
     {
-        public static HtmlString FormatDate(this HtmlHelper html, DateTime? date, CultureInfo cultureInfo)
+        public static HtmlString FormatDate(this HtmlHelper html, DateTime? date, CultureInfo cultureInfo, bool includeTime = false)
         {
             string text = null;
             if (date.HasValue)
-                text = date.Value.ToString("d", cultureInfo);
+                text = date.Value.ToString((includeTime ? "g" : "d"), cultureInfo);
             return new HtmlString(text);
         }
 

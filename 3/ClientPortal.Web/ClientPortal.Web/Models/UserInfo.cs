@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 
 namespace ClientPortal.Web.Models
 {
@@ -91,6 +92,15 @@ namespace ClientPortal.Web.Models
 
         //public DayOfWeek SearchWeekEndDay // compute this from StartDay ?
 
+        public DateTime? LatestDaySums
+        {
+            get { return (Advertiser == null) ? null : Advertiser.LatestDaySums; }
+        }
+        public DateTime? LatestClicks
+        {
+            get { return (Advertiser == null) ? null : Advertiser.LatestClicks; }
+        }
+
         private Dates _dates;
         internal Dates Dates
         {
@@ -103,7 +113,13 @@ namespace ClientPortal.Web.Models
 
         public bool UseYesterdayAsLatest
         {
-            get { return true; } // TODO: use config or settings in db
+            get {
+                bool useYesterdayAsLatest;
+                if (Boolean.TryParse(WebConfigurationManager.AppSettings["UseYesterdayAsLatest"], out useYesterdayAsLatest))
+                    return useYesterdayAsLatest;
+                else
+                    return true; // (if not specified)
+            }
         }
     }
 }

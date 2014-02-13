@@ -1,0 +1,42 @@
+﻿@model ClientPortal.Web.Models.DashboardModel
+
+@helper ChangeVis(double? change, bool showPercent) {
+    if (change.HasValue && change != 0) {
+        <br />
+        <span style="white-space: nowrap">
+            <img src="~/Images/arrow_@(change > 0 ? "up" : "down").jpg" />
+            @(Math.Abs(change.Value) + (showPercent ? "%" : ""))
+        </span>
+    }
+}
+
+<span style="float:left"><b>Summary Report</b></span>
+<span id="summaryNote" style="float: right">@(Model.LatestDaySums == null ? "" : "As of " + Html.FormatDate(Model.LatestDaySums, Model.CultureInfo, true))</span>
+
+<table class="summarytable" style="width: 100%">
+    <tr>
+        <th></th>
+        <th>Clicks</th>
+        <th>Leads</th>
+        <th>Rate</th>
+        <th>Spend</th>
+        @if (Model.ShowConVal)
+        {
+            <th>@Model.ConValName</th>
+        }
+    </tr>
+    @foreach (var summary in Model.AdvertiserSummaries)
+    {
+        <tr>
+            <td style="vertical-align: middle"><a href="@summary.Link">@summary.Name</a></td>
+            <td>@String.Format("{0:n0}", summary.Clicks)@ChangeVis(summary.PctChg_Clicks, true)</td>
+            <td>@String.Format("{0:n0}", summary.Conversions)@ChangeVis(summary.PctChg_Conversions, true)</td>
+            <td>@String.Format("{0:n1}", summary.ConversionRate)%@ChangeVis(summary.Chg_ConversionRate, false)</td>
+            <td>@summary.RevenueFormatted@ChangeVis(summary.PctChg_Revenue, true)</td>
+            @if (Model.ShowConVal)
+            {
+                <td>@summary.ConValFormatted(Model.ConValIsNum ? "n0" : "c")@ChangeVis(summary.PctChg_ConVal, true)</td>
+            }
+        </tr>
+    }
+</table>

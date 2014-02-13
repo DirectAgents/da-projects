@@ -1591,6 +1591,7 @@
     <Content Include="Views\Shared\_DateFuncs.cshtml" />
     <Content Include="Views\SearchHome\Monthly.cshtml" />
     <Content Include="Views\SearchHome\CampaignWeekly.cshtml" />
+    <Content Include="Views\Home\SummaryVis.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

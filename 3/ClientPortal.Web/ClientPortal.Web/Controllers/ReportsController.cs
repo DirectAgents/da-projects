@@ -135,8 +135,8 @@ namespace ClientPortal.Web.Controllers
 
             var model = new ReportModel()
             {
-                StartDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
-                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
+                StartDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo),
+                EndDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo),
                 ShowConVal = userInfo.ShowConversionData,
                 ConValName = userInfo.ConversionValueName,
                 ConValIsNum = userInfo.ConversionValueIsNumber
@@ -230,8 +230,8 @@ namespace ClientPortal.Web.Controllers
 
             var model = new ReportModel()
             {
-                StartDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
-                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo)
+                StartDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo),
+                EndDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo)
             };
             return PartialView("_AffiliateReportPartial", model);
         }

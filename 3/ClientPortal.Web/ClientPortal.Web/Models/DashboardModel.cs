@@ -31,6 +31,9 @@ namespace ClientPortal.Web.Models
         public string ConValName { get; set; }
         public bool ConValIsNum { get; set; }
 
+        public DateTime? LatestDaySums { get; set; }
+        public DateTime? LatestClicks { get; set; }
+
         public DatesModel Dates { get; set; }
 
         public DashboardModel(UserInfo userInfo)

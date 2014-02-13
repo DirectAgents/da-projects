@@ -132,6 +132,19 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult Dashboard()
         {
+            var model = CreateDashboardModel(true);
+            return PartialView(model);
+        }
+
+        public PartialViewResult SummaryVis()
+        {
+            var model = CreateDashboardModel(false);
+            return PartialView(model);
+        }
+
+        private DashboardModel CreateDashboardModel(bool includegoals)
+        {
+            DashboardModel model;
             var profiler = MiniProfiler.Current;
             using (profiler.Step("Dashboard"))
             {
@@ -184,15 +197,17 @@ namespace ClientPortal.Web.Controllers
                 //            var summaryYTD = cpRepo.GetDateRangeSummary(dates.FirstOfYear, dates.Latest, advId, null);
                 //            summaryYTD.Name = "Year-to-Date";
 
-                List<OfferGoalSummary> offerGoalSummaries;
-                using (profiler.Step("offerGoalSummaries"))
+                List<OfferGoalSummary> offerGoalSummaries = null;
+                if (includegoals)
                 {
-                    offerGoalSummaries = CreateOfferGoalSummaries(advId.Value, dates, showConversionData);
+                    using (profiler.Step("offerGoalSummaries"))
+                    {
+                        offerGoalSummaries = CreateOfferGoalSummaries(advId.Value, dates, showConversionData);
+                    }
                 }
-
                 var dateRange = GetDashboardDateRange(dates);
 
-                var model = new DashboardModel(userInfo)
+                model = new DashboardModel(userInfo)
                 {
                     AdvertiserSummaries = new List<DateRangeSummary> { summaryWTD, summaryMTD, summaryLMTD, summaryLM },
                     OfferGoalSummaries = offerGoalSummaries,
@@ -201,10 +216,12 @@ namespace ClientPortal.Web.Controllers
                     End = dateRange.Item2,
                     ShowConVal = showConversionData,
                     ConValName = userInfo.ConversionValueName,
-                    ConValIsNum = userInfo.ConversionValueIsNumber
+                    ConValIsNum = userInfo.ConversionValueIsNumber,
+                    LatestDaySums = userInfo.LatestDaySums,
+                    LatestClicks = userInfo.LatestClicks,
                 };
-                return PartialView(model);
             }
+            return model;
         }
 
         public PartialViewResult DashboardGoals()
