@@ -15,6 +15,7 @@
     <span class="paddedlabel">End:</span>
     <input id="affrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('affrep')" />
     <a class="button paddedbutton" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
+    <span id="affrep_note">*</span>
     <a class="button paddedbutton" style="float: right" href="#" onclick="ExportAffRepCSV(); return false">Export CSV</a>
 </div>
 <div id="affrepGrid"></div>
@@ -33,6 +34,8 @@
         $('#affrep_dateRangeSel').kendoDropDownList();
         $('#affrep_startdate').kendoDatePicker({ footer: ' ' });
         $('#affrep_enddate').kendoDatePicker({ footer: ' ' });
+
+        $('#affrep_note').kendoTooltip({ content: 'Note: Stats available through yesterday' });
 
         var readData = function () {
             return {

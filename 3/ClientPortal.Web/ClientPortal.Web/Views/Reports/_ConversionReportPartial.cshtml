@@ -15,6 +15,7 @@
     <span class="paddedlabel">End:</span>
     <input id="conrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('conrep')" />
     <a class="button paddedbutton" id="conrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('conrep'); return false">Filter</a>
+    <span id="conrep_note">*</span>
     <a class="button paddedbutton" style="float: right" href="#" onclick="ExportConRepCSV(); return false">Export CSV</a>
 </div>
 <div id="conrepChartSection" class="k-content">
@@ -38,6 +39,8 @@
         $('#conrep_dateRangeSel').kendoDropDownList();
         $('#conrep_startdate').kendoDatePicker({ footer: ' ' });
         $('#conrep_enddate').kendoDatePicker({ footer: ' ' });
+
+        $('#conrep_note').kendoTooltip({ content: 'Note: Stats available through yesterday' });
 
         var readData = function () {
             return {
