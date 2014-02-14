@@ -21,6 +21,7 @@
             schema: {
                 data: 'data',
                 total: 'total',
+                aggregates: 'aggregates',
                 model: {
                     id: 'Id',
                     fields: {
@@ -35,12 +36,18 @@
                 }
             },
             sort: { field: "Date", dir: "asc" },
+            serverAggregates: true,
             aggregate: [
                 { field: "Date", aggregate: "max" },
+                { field: "Date", aggregate: "proj" },
                 { field: "Clicks", aggregate: "max" },
+                { field: "Clicks", aggregate: "sum" },
                 { field: "Conversions", aggregate: "max" },
-                { field: "Revenue", aggregate: "max" }
-        ]
+                { field: "Conversions", aggregate: "sum" },
+                { field: "Conversions", aggregate: "proj" },
+                { field: "Revenue", aggregate: "max" },
+                { field: "Revenue", aggregate: "sum" }
+            ]
         });
     }
 

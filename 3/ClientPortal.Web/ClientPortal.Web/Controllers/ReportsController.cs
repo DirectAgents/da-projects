@@ -84,10 +84,19 @@ namespace ClientPortal.Web.Controllers
 
             var dailyInfos = cpRepo.GetDailyInfos(start, end, userInfo.AdvertiserId);
 
+            DailyInfo totals = new DailyInfo()
+            {   // Computed before making cumulative or projecting:
+                Impressions = dailyInfos.Sum(i => i.Impressions),
+                Clicks = dailyInfos.Sum(i => i.Clicks),
+                Conversions = dailyInfos.Sum(i => i.Conversions),
+                Revenue = dailyInfos.Sum(i => i.Revenue)
+            };
+            DailyInfo projectionInfo = null;
+
             if (cumulative)
                 dailyInfos = DailyInfo.MakeCumulative(dailyInfos);
             if (projection)
-                dailyInfos = DailyInfo.AddProjection(dailyInfos);
+                dailyInfos = DailyInfo.AddProjection(dailyInfos, out projectionInfo);
 
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
 
@@ -101,27 +110,23 @@ namespace ClientPortal.Web.Controllers
                     decimal maxRevenue = dailyInfos.Max(i => i.Revenue);
                     kgrid.aggregates = new
                     {
-                        Date = new { max = maxDate },
-                        Clicks = new { max = maxClicks },
-                        Conversions = new { max = maxConversions },
-                        Revenue = new { max = maxRevenue }
+                        Date = new { max = maxDate, proj = (projectionInfo == null ? maxDate : projectionInfo.Date) },
+                        Clicks = new { max = maxClicks, sum = totals.Clicks },
+                        Conversions = new { max = maxConversions, sum = totals.Conversions, proj = (projectionInfo == null ? 0 : projectionInfo.Conversions) },
+                        Revenue = new { max = maxRevenue, sum = totals.Revenue }
                     };
                 }
                 else
                 {
-                    int totalImpressions = dailyInfos.Sum(i => i.Impressions);
-                    int totalClicks = dailyInfos.Sum(i => i.Clicks);
-                    int totalConversions = dailyInfos.Sum(i => i.Conversions);
-                    float totalConversionPct = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
-                    decimal totalRevenue = dailyInfos.Sum(i => i.Revenue);
-                    decimal totalEPC = (totalClicks == 0) ? 0 : Math.Round(totalRevenue / totalClicks, 2);
+                    float totalConversionPct = (totals.Clicks == 0) ? 0 : (float)Math.Round((double)totals.Conversions / totals.Clicks, 3);
+                    decimal totalEPC = (totals.Clicks == 0) ? 0 : Math.Round(totals.Revenue / totals.Clicks, 2);
                     kgrid.aggregates = new
                     {
-                        Impressions = new { sum = totalImpressions },
-                        Clicks = new { sum = totalClicks },
-                        Conversions = new { sum = totalConversions },
+                        Impressions = new { sum = totals.Impressions },
+                        Clicks = new { sum = totals.Clicks },
+                        Conversions = new { sum = totals.Conversions },
                         ConversionPct = new { agg = totalConversionPct },
-                        Revenue = new { sum = totalRevenue },
+                        Revenue = new { sum = totals.Revenue },
                         EPC = new { agg = totalEPC }
                     };
                 }

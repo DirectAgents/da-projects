@@ -44,28 +44,43 @@ namespace ClientPortal.Data.DTOs
         }
 
         // project cumulative infos to the end of the month...
-        public static IQueryable<DailyInfo> AddProjection(IQueryable<DailyInfo> dailyInfos)
+        public static IQueryable<DailyInfo> AddProjection(IQueryable<DailyInfo> dailyInfos, out DailyInfo projectionInfo)
         {
-            if (dailyInfos.Count() == 0) return dailyInfos;
-
+            int numInfos = dailyInfos.Count();
+            if (numInfos == 0)
+            {
+                projectionInfo = null;
+                return dailyInfos;
+            }
             var orderedInfos = dailyInfos.OrderBy(di => di.Date);
             var firstInfo = orderedInfos.First();
             var firstDate = firstInfo.Date;
 
-            var lastInfo = dailyInfos.OrderByDescending(di => di.Date).First();
+            var reverseOrderedInfos = dailyInfos.OrderByDescending(di => di.Date);
+            var savedLastInfo = reverseOrderedInfos.First(); // see below
+            var lastInfo = savedLastInfo;
+
+            if (numInfos > 1 && lastInfo.Date == DateTime.Today)
+            { // Don't include "today" because it's partial data, unless we only have one dailyInfo
+                lastInfo = reverseOrderedInfos.Skip(1).First();
+            }
             var lastDate = lastInfo.Date;
 
             //            if (firstDate.Year != lastDate.Year || firstDate.Month != lastDate.Month) return dailyInfos; // if multiple months
 
             var daysInMonth = DateTime.DaysInMonth(lastDate.Year, lastDate.Month);
-            if (lastDate.Day == daysInMonth) return dailyInfos; // if last day of the month, nothing to project
+            if (lastDate.Day == daysInMonth) // if last day of the month, nothing to project
+            { // Since we're not including "today", this would only happen if we were looking at a previous month for some reason
+                projectionInfo = lastInfo;
+                return dailyInfos;
+            }
 
             var projectionDate = new DateTime(lastDate.Year, lastDate.Month, daysInMonth);
             var numOverallDays = (projectionDate - firstDate).Days + 1;
 
             var numDays = (lastDate - firstDate).Days + 1; // # of days in the supplied range
 
-            var newInfo = new DailyInfo()
+            projectionInfo = new DailyInfo()
             {
                 Date = projectionDate,
                 Impressions = numOverallDays * lastInfo.Impressions / numDays,
@@ -74,7 +89,9 @@ namespace ClientPortal.Data.DTOs
                 Revenue = numOverallDays * lastInfo.Revenue / numDays,
                 Culture = lastInfo.Culture
             };
-            dailyInfos = dailyInfos.Concat(new List<DailyInfo>() { newInfo });
+            if (projectionDate != savedLastInfo.Date) // (Don't add it if the date is already there)
+                dailyInfos = dailyInfos.Concat(new List<DailyInfo>() { projectionInfo });
+
             return dailyInfos;
         }
 

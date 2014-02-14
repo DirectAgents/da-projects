@@ -132,9 +132,17 @@
         projDS.read();
         projDS.bind('change', function () {
             var aggs = this.aggregates();
-            var projNote = kendo.toString(aggs.Conversions.max, 'n0') + ' Leads projected by ' + aggs.Date.max.toLocaleDateString() + '*';
+            var projDate = kendo.parseDate(aggs.Date.proj);
+            var projNote = kendo.toString(aggs.Conversions.proj, 'n0') + ' Leads projected by ' + projDate.toLocaleDateString() + '*';
             $('#projNote').html(projNote);
             UpdateProjectionChart();
+
+            // TODO: What happens when the timeframe is changed and it's not the same day as when this view was generated?
+            // It could be the next day, and even worse, it could be the next month. The server-generated variables are still for the (now previous) day.
+            if ($('#dash_dateRangeSel').val() == 'mtd')
+                UpdatePerformanceChartValues(['Last Month', 'MTD', 'Projection'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum, aggs.Conversions.proj]);
+            else
+                UpdatePerformanceChartValues([$('#dash_startdate').val() + ' - ' + $('#dash_enddate').val()], [aggs.Conversions.sum]);
         });
 
         //CreateSpendChart(0, 'C0', cultureGlobal, 'Spend', 75);
@@ -144,13 +152,7 @@
         CreateSpendLineChart(spendDS, 'Daily Spend', 125);
         spendDS.read();
         spendDS.bind('change', function () {
-            // TODO: What happens when the timeframe is changed and it's not the same day as when this view was generated?
-            // It could be the next day, and even worse, it could be the next month. The server-generated variables are still for the (now previous) day.
             var aggs = this.aggregates();
-            if ($('#dash_dateRangeSel').val() == 'mtd')
-                UpdatePerformanceChartValues(['Last Month', 'MTD', 'Projection'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum, Projection(aggs.Conversions.sum)]);
-            else
-                UpdatePerformanceChartValues([$('#dash_startdate').val() + ' - ' + $('#dash_enddate').val()], [aggs.Conversions.sum]);
             UpdateSpendChart(aggs.Revenue.sum);
             UpdateSpendLineChart();
         });
@@ -162,12 +164,12 @@
         ResizeDashboardPanelHeights();
     });
 
-    function Projection(value) {
+@*    function Projection(value) {
         var date = new Date(@(Model.Dates.LatestAsDateTime.Year +","+ (Model.Dates.LatestAsDateTime.Month - 1) +","+ Model.Dates.LatestAsDateTime.Day));
         var numDays = date.getDate(); // # days gone by
         var daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
         return daysInMonth * value / numDays;
-    }
+    }*@
 
     function RefreshDashboardRange() {
         $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
