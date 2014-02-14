@@ -112,7 +112,7 @@ namespace ClientPortal.Web.Controllers
                     {
                         Date = new { max = maxDate, proj = (projectionInfo == null ? maxDate : projectionInfo.Date) },
                         Clicks = new { max = maxClicks, sum = totals.Clicks },
-                        Conversions = new { max = maxConversions, sum = totals.Conversions, proj = (projectionInfo == null ? 0 : projectionInfo.Conversions) },
+                        Conversions = new { max = maxConversions, sum = totals.Conversions, proj = (projectionInfo == null ? -1 : projectionInfo.Conversions) },
                         Revenue = new { max = maxRevenue, sum = totals.Revenue }
                     };
                 }

@@ -60,8 +60,14 @@ namespace ClientPortal.Data.DTOs
             var savedLastInfo = reverseOrderedInfos.First(); // see below
             var lastInfo = savedLastInfo;
 
-            if (numInfos > 1 && lastInfo.Date == DateTime.Today)
-            { // Don't include "today" because it's partial data, unless we only have one dailyInfo
+            if (lastInfo.Date == DateTime.Today)
+            {
+                if (numInfos == 1)
+                { // Don't project because all we have is today and that's partial data.
+                    projectionInfo = null;
+                    return dailyInfos;
+                }
+                // We have more than one dailyInfo; don't include today's stats in the calculations.
                 lastInfo = reverseOrderedInfos.Skip(1).First();
             }
             var lastDate = lastInfo.Date;

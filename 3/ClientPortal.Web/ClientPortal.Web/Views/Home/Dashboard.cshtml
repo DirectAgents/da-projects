@@ -49,7 +49,7 @@
             <span><b>Projection</b></span>
             <span id="projNote" style="float: right"></span>
             @Html.Partial("ProjectionVis")
-            <span style="float: right">*Based on average # of leads per day</span>
+            <span id="projFooter" style="float: right">*Based on average # of leads per day</span>
         </div>
     </div>
 
@@ -132,17 +132,25 @@
         projDS.read();
         projDS.bind('change', function () {
             var aggs = this.aggregates();
-            var projDate = kendo.parseDate(aggs.Date.proj);
-            var projNote = kendo.toString(aggs.Conversions.proj, 'n0') + ' Leads projected by ' + projDate.toLocaleDateString() + '*';
-            $('#projNote').html(projNote);
+            if (aggs.Conversions.proj >= 0) {
+                var projDate = kendo.parseDate(aggs.Date.proj);
+                var projNote = kendo.toString(aggs.Conversions.proj, 'n0') + ' Leads projected by ' + projDate.toLocaleDateString() + '*';
+                $('#projNote').html(projNote);
+                $('#projFooter').show();
+            } else {
+                $('#projNote').html('(Not enough data to calculate projection.)');
+                $('#projFooter').hide();
+            }
             UpdateProjectionChart();
 
             // TODO: What happens when the timeframe is changed and it's not the same day as when this view was generated?
             // It could be the next day, and even worse, it could be the next month. The server-generated variables are still for the (now previous) day.
-            if ($('#dash_dateRangeSel').val() == 'mtd')
+            if ($('#dash_dateRangeSel').val() != 'mtd')
+                UpdatePerformanceChartValues([$('#dash_startdate').val() + ' - ' + $('#dash_enddate').val()], [aggs.Conversions.sum]);
+            else if (aggs.Conversions.proj >= 0)
                 UpdatePerformanceChartValues(['Last Month', 'MTD', 'Projection'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum, aggs.Conversions.proj]);
             else
-                UpdatePerformanceChartValues([$('#dash_startdate').val() + ' - ' + $('#dash_enddate').val()], [aggs.Conversions.sum]);
+                UpdatePerformanceChartValues(['Last Month', 'MTD'], [@Model.SummaryLM.Conversions, aggs.Conversions.sum]);
         });
 
         //CreateSpendChart(0, 'C0', cultureGlobal, 'Spend', 75);
