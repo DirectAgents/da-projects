@@ -24,9 +24,10 @@ namespace ClientPortal.Web.Controllers
 
             var now = DateTime.Now;
             var model = new ReportModel()
-            {
+            {   //TODO? make a constructor (or two) that takes a UserInfo and sets these properties
                 StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
                 EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
+                TodayString = userInfo.Dates.Today.ToString("d", userInfo.CultureInfo),
                 ShowConVal = userInfo.ShowConversionData,
                 ConValName = userInfo.ConversionValueName,
                 ConValIsNum = userInfo.ConversionValueIsNumber

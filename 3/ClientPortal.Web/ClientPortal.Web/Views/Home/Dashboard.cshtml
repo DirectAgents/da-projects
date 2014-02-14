@@ -60,7 +60,7 @@
                 <div id="heatMapOuter">
                     <b>Conversions by State</b>
                     @Html.Partial("_HeatMap")
-                    <span style="float: left">(updated daily)</span>
+                    <span style="float: left; font-size: smaller">(stats updated daily)</span>
                 </div>
             </div>
             <div class="six columns">
@@ -93,7 +93,7 @@
                 <div id="clicksByDeviceOuter">
                     <b>Mobile Clicks</b>
                     @Html.Partial("_ClicksByDevice")
-                    <span style="float: left">(updated daily)</span>
+                    <span style="float: left; font-size: smaller">(stats updated daily)</span>
                 </div>
             </div>
             <div class="six columns">
@@ -180,7 +180,7 @@
 
     function LoadSummary() {
         $.ajax({
-            url: '@Url.Action("SummaryVis", new { includegoals = false })',
+            url: '@Url.Action("SummaryVis")',
             cache: false
         }).done(function (html) {
             $("#panelSumRep").html(html);

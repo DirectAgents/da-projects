@@ -2,6 +2,7 @@
 
 <div style="height: 35px;">
     <select style="width: 140px" id="offsum_dateRangeSel" onchange="ChangeDateRange('offsum', true)">@* show all in USD for now *@
+        <option value="today">Today</option>
         <option value="yesterday">Yesterday</option>
         <option value="wtd">Week to Date</option>
         <option value="mtd" selected="selected">Month to Date</option>
@@ -157,13 +158,20 @@
 
     function OffSumDetailInit(e) {
         var readData = function () {
-            return {
+            return {@* TODO: Put dates in hidden elements and read from there. Update hiddens when click Filter. *@
                 startdate: $('#offsum_startdate').val(),
                 enddate: $('#offsum_enddate').val(),
                 offerid: e.data.OfferId
             };
         }
         var dataSource = CreateOfferAffiliateReportDataSource(readData);
+
+        var headerText = 'Affiliate Stats';
+        if ($('#offsum_startdate').val() == '@Model.TodayString')
+            headerText += ' (available through yesterday)';
+        else if ($('#offsum_enddate').val() == '@Model.TodayString')
+            headerText += ' (as of yesterday)';
+        $("<span style='font-size:smaller'>" + headerText + "</span>").appendTo(e.detailCell);
 
         $("<div/>").appendTo(e.detailCell).kendoGrid({
             dataSource: dataSource,

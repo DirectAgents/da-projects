@@ -9,6 +9,7 @@ namespace ClientPortal.Web.Models
     {
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+        public string TodayString { get; set; }
 
         public bool ShowConVal { get; set; }
         public string ConValName { get; set; }

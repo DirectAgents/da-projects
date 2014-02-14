@@ -9,11 +9,20 @@ namespace ClientPortal.Web.HtmlHelpers
 {
     public static class FormatHelpers
     {
-        public static HtmlString FormatDate(this HtmlHelper html, DateTime? date, CultureInfo cultureInfo, bool includeTime = false)
+        public static HtmlString FormatDate(this HtmlHelper html, DateTime? date, CultureInfo cultureInfo, bool includeTime = false, bool includeTimezone = false)
         {
             string text = null;
             if (date.HasValue)
-                text = date.Value.ToString((includeTime ? "g" : "d"), cultureInfo);
+            {
+                if (includeTime)
+                {
+                    text = date.Value.ToString("g", cultureInfo);
+                    if (includeTimezone)
+                        text += TimeZoneInfo.Local.IsDaylightSavingTime(date.Value) ? " EDT" : " EST"; //TODO: Put in a central place?
+                }
+                else
+                    text = date.Value.ToString("d", cultureInfo);
+            }
             return new HtmlString(text);
         }
 
