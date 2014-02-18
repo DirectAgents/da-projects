@@ -20,18 +20,7 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult OfferSummaryPartial()
         {
-            var userInfo = GetUserInfo();
-
-            var now = DateTime.Now;
-            var model = new ReportModel()
-            {   //TODO? make a constructor (or two) that takes a UserInfo and sets these properties
-                StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
-                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo),
-                TodayString = userInfo.Dates.Today.ToString("d", userInfo.CultureInfo),
-                ShowConVal = userInfo.ShowConversionData,
-                ConValName = userInfo.ConversionValueName,
-                ConValIsNum = userInfo.ConversionValueIsNumber
-            };
+            var model = new ReportModel(GetUserInfo());
             return PartialView("_OfferSummaryPartial", model);
         }
 
@@ -62,13 +51,7 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult DailySummaryPartial()
         {
-            var userInfo = GetUserInfo();
-
-            var model = new ReportModel()
-            {
-                StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo),
-                EndDate = userInfo.Dates.Latest.ToString("d", userInfo.CultureInfo)
-            };
+            var model = new ReportModel(GetUserInfo());
             return PartialView("_DailySummaryPartial", model);
         }
 
@@ -137,17 +120,8 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult ConversionReportPartial()
         {
-            var userInfo = GetUserInfo();
-
-            var model = new ReportModel()
-            {
-                StartDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo),
-                EndDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo),
-                ShowConVal = userInfo.ShowConversionData,
-                ConValName = userInfo.ConversionValueName,
-                ConValIsNum = userInfo.ConversionValueIsNumber
-            };
-
+            var model = new ReportModel(GetUserInfo(), false);
+            model.SetStartEndYesterday();
             return PartialView("_ConversionReportPartial", model);
         }
 
@@ -199,11 +173,10 @@ namespace ClientPortal.Web.Controllers
         {
             var userInfo = GetUserInfo();
             var firstOfLatest = userInfo.Dates.FirstOfLatestCompleteMonth;
-            var model = new ReportModel()
-            {
-                StartDate = firstOfLatest.AddMonths(-2).ToString("MM/yyyy"),
-                EndDate = firstOfLatest.ToString("MM/yyyy")
-            };
+            var model = new ReportModel(
+                startDate: firstOfLatest.AddMonths(-2).ToString("MM/yyyy"),
+                endDate: firstOfLatest.ToString("MM/yyyy")
+                );
             return PartialView("_CPMSummaryPartial", model);
         }
 
@@ -232,13 +205,8 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult AffiliateReportPartial()
         {
-            var userInfo = GetUserInfo();
-
-            var model = new ReportModel()
-            {
-                StartDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo),
-                EndDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo)
-            };
+            var model = new ReportModel(GetUserInfo(), false);
+            model.SetStartEndYesterday();
             return PartialView("_AffiliateReportPartial", model);
         }
 

@@ -25,7 +25,7 @@
 
     <!-- Column 1 -->
     <div class="six columns">
-        <div class="panel" id="panelSumRep">
+        <div class="panel" style="min-height: 237px" id="panelSumRep">
             @Html.Partial("SummaryVis")
         </div>
     </div>
@@ -45,11 +45,11 @@
 
     <!-- Column 1 -->
     <div class="six columns">
-        <div class="panel" id="projChartOuter">
+        <div class="panel" style="min-height: 263px" id="projChartOuter">
             <span><b>Projection</b></span>
             <span id="projNote" style="float: right"></span>
             @Html.Partial("ProjectionVis")
-            <span id="projFooter" style="float: right">*Based on average # of leads per day</span>
+            <span id="projFooter" class="subtext" style="float: right">*Based on average # of leads per day</span>
         </div>
     </div>
 
@@ -60,7 +60,7 @@
                 <div id="heatMapOuter">
                     <b>Conversions by State</b>
                     @Html.Partial("_HeatMap")
-                    <span style="float: left; font-size: smaller">(stats updated daily)</span>
+                    <span class="subtext" style="float: left">(stats updated daily)</span>
                 </div>
             </div>
             <div class="six columns">
@@ -79,7 +79,7 @@
 
     <!-- Column 1 -->
     <div class="six columns">
-        <div class="panel" id="spendChartOuter">
+        <div class="panel" style="min-height: 283px" id="spendChartOuter">
             <b>Budget</b>
             @Html.Partial("SpendVis")
         </div>
@@ -93,7 +93,7 @@
                 <div id="clicksByDeviceOuter">
                     <b>Mobile Clicks</b>
                     @Html.Partial("_ClicksByDevice")
-                    <span style="float: left; font-size: smaller">(stats updated daily)</span>
+                    <span class="subtext" style="float: left">(stats updated daily)</span>
                 </div>
             </div>
             <div class="six columns">

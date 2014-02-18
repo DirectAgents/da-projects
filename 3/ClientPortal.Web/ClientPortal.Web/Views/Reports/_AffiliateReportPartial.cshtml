@@ -1,22 +1,28 @@
 ﻿@model ClientPortal.Web.Models.ReportModel
 
-<div style="height: 35px;">
-    <select style="width: 140px" id="affrep_dateRangeSel" onchange="ChangeDateRange('affrep')">
-        <option value="yesterday">Yesterday</option>
-        <option value="wtd">Week to Date</option>
-        <option value="mtd">Month to Date</option>
-        <option value="ytd">Year to Date</option>
-        <option value="lastweek">Last Week</option>
-        <option value="lastmonth">Last Month</option>
-        <option value="custom">- custom -</option>
-    </select>
-    <span class="paddedlabel">Start:</span>
-    <input id="affrep_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('affrep')" />
-    <span class="paddedlabel">End:</span>
-    <input id="affrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('affrep')" />
-    <a class="button paddedbutton" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
-    <span id="affrep_note">*</span>
-    <a class="button paddedbutton" style="float: right" href="#" onclick="ExportAffRepCSV(); return false">Export CSV</a>
+<div style="height: 50px;">
+    <div style="float: left; background-color: #ffffff; padding-right: 1px">
+        <select style="width: 140px" id="affrep_dateRangeSel" onchange="ChangeDateRange('affrep')">
+            <option value="yesterday">Yesterday</option>
+            <option value="wtd">Week to Date</option>
+            <option value="mtd">Month to Date</option>
+            <option value="ytd">Year to Date</option>
+            <option value="lastweek">Last Week</option>
+            <option value="lastmonth">Last Month</option>
+            <option value="custom">- custom -</option>
+        </select>
+        <span class="paddedlabel">Start:</span>
+        <input id="affrep_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('affrep')" />
+        <span class="paddedlabel">End:</span>
+        <input id="affrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('affrep')" />
+        <a class="button paddedbutton" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
+    </div>
+    <div style="float: right">
+        <span class="statsnote subtext">Affiliate Stats available through @Model.YesterdayString</span>
+    </div>
+</div>
+<div style="position: fixed; top: 150px; right: 15px; z-index: -1">
+    <a class="button paddedbutton exportbutton" href="#" onclick="ExportAffRepCSV(); return false">Export CSV</a>
 </div>
 <div id="affrepGrid"></div>
 
@@ -34,8 +40,6 @@
         $('#affrep_dateRangeSel').kendoDropDownList();
         $('#affrep_startdate').kendoDatePicker({ footer: ' ' });
         $('#affrep_enddate').kendoDatePicker({ footer: ' ' });
-
-        $('#affrep_note').kendoTooltip({ content: 'Note: Stats available through yesterday' });
 
         var readData = function () {
             return {

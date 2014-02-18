@@ -11,7 +11,7 @@
 }
 
 <span style="float: left"><b>Summary Report</b></span>
-<span id="summaryNote" style="float: right; font-size: smaller">@(Model.LatestDaySums == null ? "" : "(As of " + Html.FormatDate(Model.LatestDaySums, Model.CultureInfo, true, true) + ")")</span>
+<span id="summaryNote" class="subtext" style="float: right">@(Model.LatestDaySums == null ? "" : "As of " + Html.FormatDate(Model.LatestDaySums, Model.CultureInfo, true, true))</span>
 
 <table class="summarytable" style="width: 100%">
     <tr>

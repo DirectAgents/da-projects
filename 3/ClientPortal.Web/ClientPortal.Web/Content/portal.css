@@ -18,6 +18,20 @@ label.checkbox {
     padding: 3px;
     margin-left: 5px;
 }
+.exportbutton {
+    float: right;
+    margin-top: 2px;
+}
+.statsnote {
+    float: right;
+    margin-right: 110px;
+    margin-top: 4px;
+}
+
+.subtext {
+    font-size: 11px;
+}
+
 .k-datepicker {
     width: 110px;
 }

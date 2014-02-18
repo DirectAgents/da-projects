@@ -16,7 +16,7 @@
     <span class="paddedlabel">End:</span>
     <input id="offsum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('offsum')" />  @* show all in USD for now *@
     <a class="button paddedbutton" id="offsum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('offsum', true); return false">Filter</a>
-    <a class="button paddedbutton" style="float: right" href="#" onclick="ExportOffSumCSV(); return false">Export CSV</a>
+    <a class="button paddedbutton exportbutton" href="#" onclick="ExportOffSumCSV(); return false">Export CSV</a>
 </div>
 <div id="offsumChartSection" class="k-content">
     <div class="chart-wrapper">
@@ -168,10 +168,10 @@
 
         var headerText = 'Affiliate Stats';
         if ($('#offsum_startdate').val() == '@Model.TodayString')
-            headerText += ' (available through yesterday)';
+            headerText += ' (available through @Model.YesterdayString)';
         else if ($('#offsum_enddate').val() == '@Model.TodayString')
-            headerText += ' (as of yesterday)';
-        $("<span style='font-size:smaller'>" + headerText + "</span>").appendTo(e.detailCell);
+            headerText += ' (as of @Model.YesterdayString)';
+        $("<span style='font-size: 12px'>" + headerText + "</span>").appendTo(e.detailCell);
 
         $("<div/>").appendTo(e.detailCell).kendoGrid({
             dataSource: dataSource,
