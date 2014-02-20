@@ -17,13 +17,11 @@
         <input id="affrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('affrep')" />
         <a class="button paddedbutton" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
     </div>
-    <div style="float: right">
-        <span class="statsnote subtext">Affiliate Stats available through @Model.YesterdayString</span>
-    </div>
-</div>
-<div style="position: fixed; top: 150px; right: 15px; z-index: -1">
     <a class="button paddedbutton exportbutton" href="#" onclick="ExportAffRepCSV(); return false">Export CSV</a>
+    <br style="clear: both" />
+    <span class="statsnote subtext">Affiliate Stats available through @Model.YesterdayString</span>
 </div>
+
 <div id="affrepGrid"></div>
 
 <script>

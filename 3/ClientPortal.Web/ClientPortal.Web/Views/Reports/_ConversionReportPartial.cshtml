@@ -1,6 +1,6 @@
 ﻿@model ClientPortal.Web.Models.ReportModel
 
-<div style="height: 50px;">
+<div style="height: 45px;">
     <div style="float: left; background-color: #ffffff; padding-right: 1px">
         <select style="width: 140px" id="conrep_dateRangeSel" onchange="ChangeDateRange('conrep')">
             <option value="yesterday">Yesterday</option>
@@ -17,13 +17,11 @@
         <input id="conrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('conrep')" />
         <a class="button paddedbutton" id="conrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('conrep'); return false">Filter</a>
     </div>
-    <div style="float: right">
-        <span class="statsnote subtext">Conversion Stats available through @Model.YesterdayString</span>
-    </div>
+    <a class="button paddedbutton exportbutton" style="margin-right: 110px" href="#" onclick="ExportConRepCSV(); return false">Export CSV</a>
+    <br style="clear: both" />
+    <span class="statsnote subtext" style="margin-right: 110px;">Conversion Stats available through @Model.YesterdayString</span>
 </div>
-<div style="position: fixed; top: 150px; right: 15px; z-index: -1">
-    <a class="button paddedbutton exportbutton" href="#" onclick="ExportConRepCSV(); return false">Export CSV</a>
-</div>
+
 <div id="conrepChartSection" class="k-content">
     <div class="chart-wrapper">
         <div id="conrepChart"></div>

@@ -5,6 +5,7 @@
     <div class="twelve columns" style="top: -35px; height: 15px">
         <span>Timeframe:</span>
         <select style="width: 125px" id="dash_dateRangeSel" onchange="ChangeDashboardDateRange()">
+            <option value="yesterday">Yesterday</option>
             <option value="wtd">Week to Date</option>
             <option value="mtd" selected="selected">Month to Date</option>
             <option value="ytd">Year to Date</option>
@@ -206,6 +207,10 @@
         var refresh = true;
         var dateRange = $('#dash_dateRangeSel').val();
         switch (dateRange) {
+            case "yesterday":
+                $(startId).val('@Model.Dates.Yesterday');
+                $(endId).val('@Model.Dates.Yesterday');
+                break;
             case "wtd":
                 $(startId).val('@Model.Dates.FirstOfWeek');
                 $(endId).val('@Model.Dates.Latest');
