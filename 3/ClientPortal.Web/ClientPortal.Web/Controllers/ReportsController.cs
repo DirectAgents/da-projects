@@ -120,8 +120,7 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult ConversionReportPartial()
         {
-            var model = new ReportModel(GetUserInfo(), false);
-            model.SetStartEndYesterday();
+            var model = new ReportModel(GetUserInfo());
             return PartialView("_ConversionReportPartial", model);
         }
 
@@ -205,8 +204,7 @@ namespace ClientPortal.Web.Controllers
 
         public PartialViewResult AffiliateReportPartial()
         {
-            var model = new ReportModel(GetUserInfo(), false);
-            model.SetStartEndYesterday();
+            var model = new ReportModel(GetUserInfo());
             return PartialView("_AffiliateReportPartial", model);
         }
 

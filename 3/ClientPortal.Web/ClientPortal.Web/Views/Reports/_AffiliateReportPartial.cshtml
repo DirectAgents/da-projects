@@ -5,7 +5,7 @@
         <select style="width: 140px" id="affrep_dateRangeSel" onchange="ChangeDateRange('affrep')">
             <option value="yesterday">Yesterday</option>
             <option value="wtd">Week to Date</option>
-            <option value="mtd">Month to Date</option>
+            <option value="mtd" selected="selected">Month to Date</option>
             <option value="ytd">Year to Date</option>
             <option value="lastweek">Last Week</option>
             <option value="lastmonth">Last Month</option>
@@ -105,9 +105,9 @@
                 }
             },
             sort: [
-                { field: "AffId", dir: "asc" },
-                { field: "OfferId", dir: "asc" }
-            ],
+                { field: "OfferId", dir: "asc" },
+                { field: "AffId", dir: "asc" }
+        ],
             aggregate: [
                 { field: "PriceReceived", aggregate: "sum" },
                 { field: "Count", aggregate: "sum" }

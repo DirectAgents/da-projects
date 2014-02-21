@@ -135,7 +135,13 @@
             var aggs = this.aggregates();
             if (aggs.Conversions.proj >= 0) {
                 var projDate = kendo.parseDate(aggs.Date.proj);
-                var projNote = kendo.toString(aggs.Conversions.proj, 'n0') + ' Leads projected by ' + projDate.toLocaleDateString() + '*';
+
+                if (toLocaleDateStringSupportsLocales())
+                    projDate = projDate.toLocaleDateString('@Model.Culture');
+                else
+                    projDate = kendo.toString(projDate, 'd');
+
+                var projNote = kendo.toString(aggs.Conversions.proj, 'n0') + ' Leads projected by ' + projDate + '*';
                 $('#projNote').html(projNote);
                 $('#projFooter').show();
             } else {
@@ -172,13 +178,6 @@
         CreateGoalCharts(); @* //defined in DashboardGoals *@
         ResizeDashboardPanelHeights();
     });
-
-@*    function Projection(value) {
-        var date = new Date(@(Model.Dates.LatestAsDateTime.Year +","+ (Model.Dates.LatestAsDateTime.Month - 1) +","+ Model.Dates.LatestAsDateTime.Day));
-        var numDays = date.getDate(); // # days gone by
-        var daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-        return daysInMonth * value / numDays;
-    }*@
 
     function RefreshDashboardRange() {
         $.get('@Url.Action("SetDashboardDateRange", "Home")', { type: $('#dash_dateRangeSel').val(), startdate: $('#dash_startdate').val(), enddate: $('#dash_enddate').val() });
@@ -318,5 +317,15 @@
                 format: valueFormat
             }
         });
+    }
+
+    @* Note: toLocaleDateString(culture) will be supported in Firefox(gecko) starting with version 29 *@
+    function toLocaleDateStringSupportsLocales() {
+        try {
+            new Date().toLocaleDateString("i");
+        } catch (e) {
+            return e.name === "RangeError";
+        }
+        return false;
     }
 </script>

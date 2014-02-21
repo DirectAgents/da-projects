@@ -416,50 +416,5 @@
             kendo.culture(culture);
             return kendo.toString(val, "c");
         }
-
-        // DataSource used by both the Offer Summary and Conversion Report tabs
-        function CreateConversionReportDataSource(readData) {
-            return new kendo.data.DataSource({
-                serverPaging: true,
-                serverSorting: true,
-                serverFiltering: true,
-                serverAggregates: true,
-                pageSize: 50,
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: '@Url.Action("ConversionReportData", "Reports")',
-                        data: readData
-                    }
-                },
-                schema: {
-                    data: 'data',
-                    total: 'total',
-                    aggregates: 'aggregates',
-                    model: {
-                        id: 'ConversionId',
-                        fields: {
-                            Date: { type: 'date' },
-                            AffId: { type: 'number' },
-                            OfferId: { type: 'number' },
-                            Offer: { type: 'string' },
-                            PriceReceived: { type: 'number' },
-                            TransactionId: { type: 'string' },
-                            Positive: { type: 'boolean' },
-                            ConVal: { type: 'number' }
-                        }
-                    }
-                },
-                sort: [
-                    { field: "Offer", dir: "asc" },
-                    { field: "Date", dir: "asc" }
-                ],
-                aggregate: [
-                    { field: "PriceReceived", aggregate: "sum" },
-                    { field: "ConVal", aggregate: "sum" }
-                ]
-            });
-        }
     </script>
 }

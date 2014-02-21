@@ -113,12 +113,16 @@
                 { field: 'Conversions', title: 'Leads', width: 67, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             ],
-            filterable: true,
+            filterable: false,
             sortable: {
-                mode: 'multiple'
+                mode: 'single'
             },
             pageable: true,
-            detailInit: OffSumDetailInit
+            detailInit: OffSumDetailInit,
+            dataBound: function (e) {
+                $('#offsumGrid th.k-hierarchy-cell').html('<span title="Affiliate Drilldown">Aff</span>');
+                $('#offsumGrid a.k-plus').attr('title', 'Click for Affiliate Stats');
+            }
         });
         CreateOffSumChart(dataSource);
         dataSource.read();
@@ -197,7 +201,7 @@
                 },
             ],
             sortable: {
-                mode: 'multiple'
+                mode: 'single'
             },
             pageable: true,
             scrollable: false,

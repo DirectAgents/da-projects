@@ -5,7 +5,7 @@
         <select style="width: 140px" id="conrep_dateRangeSel" onchange="ChangeDateRange('conrep')">
             <option value="yesterday">Yesterday</option>
             <option value="wtd">Week to Date</option>
-            <option value="mtd">Month to Date</option>
+            <option value="mtd" selected="selected">Month to Date</option>
             <option value="ytd">Year to Date</option>
             <option value="lastweek">Last Week</option>
             <option value="lastmonth">Last Month</option>
@@ -36,6 +36,49 @@
 
         var url = '@Url.Action("ConversionReport", "Export")?startdate=' + s + '&enddate=' + e;
         window.location.href = url;
+    }
+
+    function CreateConversionReportDataSource(readData) {
+        return new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 50,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("ConversionReportData", "Reports")',
+                    data: readData
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'ConversionId',
+                    fields: {
+                        Date: { type: 'date' },
+                        AffId: { type: 'number' },
+                        OfferId: { type: 'number' },
+                        Offer: { type: 'string' },
+                        PriceReceived: { type: 'number' },
+                        TransactionId: { type: 'string' },
+                        Positive: { type: 'boolean' },
+                        ConVal: { type: 'number' }
+                    }
+                }
+            },
+            sort: [
+                { field: "Date", dir: "asc" }
+            ],
+            aggregate: [
+                { field: "PriceReceived", aggregate: "sum" },
+                { field: "ConVal", aggregate: "sum" }
+            ]
+        });
     }
 
     function SetupConversionReportGrid() {
@@ -71,7 +114,7 @@
             ],
             filterable: true,
             sortable: {
-                mode: 'multiple'
+                mode: 'single'
             },
             pageable: true
         });
