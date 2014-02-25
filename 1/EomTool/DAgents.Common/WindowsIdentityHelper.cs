@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -35,7 +36,19 @@ namespace DAgents.Common
             {
                 if (_CurrentUsersGroups == null)
                 {
-                    _CurrentUsersGroups = WindowsIdentity.GetCurrent().Groups.Select(g => ((IdentityReference)g).Translate(typeof(NTAccount)).Value.ToUpper()).ToList();
+                    _CurrentUsersGroups = new List<string>();
+                    var groups = WindowsIdentity.GetCurrent().Groups;
+                    foreach (var group in groups)
+                    {
+                        try
+                        {
+                            string identityRef = ((IdentityReference)group).Translate(typeof(NTAccount)).Value.ToUpper();
+                            _CurrentUsersGroups.Add(identityRef);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
                     _CurrentUsersGroups.Add(GetWindowsIdentityName().ToUpper());
                 }
                 return _CurrentUsersGroups;
