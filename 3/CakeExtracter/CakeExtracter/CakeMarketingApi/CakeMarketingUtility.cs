@@ -134,6 +134,7 @@ namespace CakeExtracter.CakeMarketingApi
             // hard code an upper limit for the max number of rows to be returned in one call
             int rowLimitForOneCall = 5000;
 
+            DateTime? lastDateTime = null;
             bool done = false;
             int total = 0;
             while (!done)
@@ -141,8 +142,8 @@ namespace CakeExtracter.CakeMarketingApi
                 // prepare the request
                 var request = new ClicksRequest
                 {
-                    start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
-                    end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                    start_date = dateRange.FromDate.ToString(),
+                    end_date = dateRange.ToDate.ToString(),
                     advertiser_id = advertiserId,
                     offer_id = offerId,
                     row_limit = rowLimitForOneCall,
@@ -163,14 +164,10 @@ namespace CakeExtracter.CakeMarketingApi
                 }
 
                 if (response == null)
-                {
                     throw new Exception("Clicks client returned null response");
-                }
 
                 if (!response.Success)
-                {
                     throw new Exception("ClicksClient failed");
-                }
 
                 // update the running total
                 total += response.Clicks.Count;
@@ -181,10 +178,28 @@ namespace CakeExtracter.CakeMarketingApi
                     yield return click;
                 }
 
-                if (total >= response.RowCount)
+                if (total >= response.RowCount) // all rows have been extracted
                     done = true;
+                else if (response.Clicks.Count == 0)
+                {
+                    Logger.Warn("Clicks client returned 0 clicks. Total extracted: {0} RowCount (expected): {1}", total, response.RowCount);
+                    if (lastDateTime.HasValue)
+                    {
+                        Logger.Warn("Recursively calling EnumerateClicks, starting at {0}", lastDateTime.Value);
+                        DateRange newDateRange = new DateRange(lastDateTime.Value, dateRange.ToDate, false);
+                        var moreClicks = EnumerateClicks(newDateRange, advertiserId, offerId);
+                        foreach (var click in moreClicks)
+                            yield return click;
+                    }
+                    else
+                    {   // It must have happened with startAtRow was 1; so we're not able to increase the FromDate
+                        Logger.Warn("Bailing out of EnumerateClicks");
+                    }
+                    yield break;
+                }
                 else
                 {
+                    lastDateTime = response.Clicks[response.Clicks.Count - 1].ClickDate; // remember the last clickdate retrieved
                     startAtRow += rowLimitForOneCall;
                     Logger.Info("Extracted a total of {0} rows, checking for more, starting at row {1}..", total, startAtRow);
                 }

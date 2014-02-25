@@ -11,12 +11,12 @@ namespace CakeExtracter.Common
 
         public DateTime ToDate { get; set; }
 
-        public DateRange(DateTime fromDate, DateTime toDate)
+        public DateRange(DateTime fromDate, DateTime toDate, bool datePartOnly = true)
             : this()
         {
             step = x => x.AddDays(1);
-            FromDate = fromDate.Date;
-            ToDate = toDate.Date;
+            FromDate = datePartOnly ? fromDate.Date : fromDate;
+            ToDate = datePartOnly ? toDate.Date : toDate;
         }
 
         public override string ToString()
