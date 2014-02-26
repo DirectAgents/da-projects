@@ -10,7 +10,7 @@ namespace ClientPortal.Data.Contracts
     {
         void SaveChanges();
 
-        IQueryable<Offer> Offers(int? advertiserId);
+        IQueryable<Offer> Offers(int? advertiserId, DateTime? start = null, DateTime? end = null);
         IQueryable<Offer> Offers(int? accountManagerId, int? advertiserId, bool cpmOnly, int? minCampaigns = null);
         Offer GetOffer(int id);
         IQueryable<Campaign> Campaigns(int? offerId, bool cpmOnly);
@@ -79,7 +79,7 @@ namespace ClientPortal.Data.Contracts
 
         IQueryable<MonthlyInfo> GetMonthlyInfosFromDaily(DateTime? start, DateTime? end, int advertiserId, int? offerId);
         IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId);
-        IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId);
+        IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId = null);
         IQueryable<ConversionInfo> GetConversionInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
         IQueryable<ConversionSummary> GetConversionSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId);
         IQueryable<AffiliateSummary> GetAffiliateSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId);

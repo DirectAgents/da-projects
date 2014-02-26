@@ -243,6 +243,7 @@
     <Compile Include="Models\FileUploadInfo.cs" />
     <Compile Include="Models\GoalsModel.cs" />
     <Compile Include="Models\GoalVM.cs" />
+    <Compile Include="Models\IdNameVM.cs" />
     <Compile Include="Models\ImportModels.cs" />
     <Compile Include="Models\IndexModel.cs" />
     <Compile Include="Models\QuickBooksModels.cs" />

@@ -24,9 +24,27 @@ namespace ClientPortal.Data.Services
         // ------
 
         #region Offers, Campaigns
-        public IQueryable<Offer> Offers(int? advertiserId)
+        public IQueryable<Offer> Offers(int? advertiserId, DateTime? start = null, DateTime? end = null)
         {
-            return context.Offers.Where(o => o.AdvertiserId == advertiserId);
+            var offers = context.Offers.Where(o => o.AdvertiserId == advertiserId);
+
+            if (start.HasValue || end.HasValue) // filter on offers that have daily summary data within this timeframe
+            {
+                var dailySummaries = context.DailySummaries.AsQueryable();
+                if (start.HasValue)
+                    dailySummaries = dailySummaries.Where(ds => ds.date >= start.Value);
+                if (end.HasValue)
+                    dailySummaries = dailySummaries.Where(ds => ds.date <= end.Value);
+
+                var offerIdsWithData = dailySummaries.Select(ds => ds.offer_id).Distinct();
+
+                offers = from o in offers
+                         join od in offerIdsWithData
+                         on o.OfferId equals od
+                         select o;
+            }
+
+            return offers;
         }
 
         // includes Advertisers

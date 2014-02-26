@@ -49,6 +49,21 @@ namespace ClientPortal.Web.Controllers
             return json;
         }
 
+        [HttpPost]
+        public JsonResult Offers(string startdate, string enddate)
+        {
+            var userInfo = GetUserInfo();
+            DateTime? start, end;
+            ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end);
+
+            var offers = cpRepo.Offers(userInfo.AdvertiserId, start, end);
+            var offerVMs = offers.ToList().Select(o => new IdNameVM { Id = o.OfferId, Name = o.DisplayName })
+                .OrderBy(o => o.Name);
+
+            var json = Json(offerVMs);
+            return json;
+        }
+
         public PartialViewResult DailySummaryPartial()
         {
             var model = new ReportModel(GetUserInfo());
@@ -56,7 +71,7 @@ namespace ClientPortal.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult DailySummaryData(KendoGridRequest request, string startdate, string enddate, bool cumulative = false, bool projection = false)
+        public JsonResult DailySummaryData(KendoGridRequest request, string startdate, string enddate, int? offerid, bool cumulative = false, bool projection = false)
         {
             var userInfo = GetUserInfo();
             DateTime? start, end;
@@ -65,14 +80,15 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
-            var dailyInfos = cpRepo.GetDailyInfos(start, end, userInfo.AdvertiserId);
+            var dailyInfos = cpRepo.GetDailyInfos(start, end, userInfo.AdvertiserId, offerid);
+            bool anyInfos = dailyInfos.Any();
 
             DailyInfo totals = new DailyInfo()
             {   // Computed before making cumulative or projecting:
-                Impressions = dailyInfos.Sum(i => i.Impressions),
-                Clicks = dailyInfos.Sum(i => i.Clicks),
-                Conversions = dailyInfos.Sum(i => i.Conversions),
-                Revenue = dailyInfos.Sum(i => i.Revenue)
+                Impressions = anyInfos ? dailyInfos.Sum(i => i.Impressions) : 0,
+                Clicks = anyInfos ? dailyInfos.Sum(i => i.Clicks) : 0,
+                Conversions = anyInfos ? dailyInfos.Sum(i => i.Conversions) : 0,
+                Revenue = anyInfos ? dailyInfos.Sum(i => i.Revenue) : 0
             };
             DailyInfo projectionInfo = null;
 
@@ -83,7 +99,7 @@ namespace ClientPortal.Web.Controllers
 
             var kgrid = new KendoGrid<DailyInfo>(request, dailyInfos);
 
-            if (dailyInfos.Any())
+            if (anyInfos)
             {
                 if (cumulative)
                 {

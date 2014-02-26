@@ -18,6 +18,10 @@ namespace ClientPortal.Web.Models
         {
             get { return _userInfo.Dates.Yesterday.ToString("d", _userInfo.CultureInfo); }
         }
+        public string OneYearAgoString
+        {
+            get { return _userInfo.Dates.OneYearAgo.ToString("d", _userInfo.CultureInfo); }
+        }
 
         private UserInfo _userInfo;
         public bool ShowConVal

@@ -12,6 +12,8 @@
     <span class="paddedlabel">End:</span>
     <input id="daysum_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('daysum')" />  @* show all in USD for now *@
     <a class="button paddedbutton" id="daysum_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('daysum', true); return false">Filter</a>
+    <input id="daysum_offerFilter" style="width: 290px; margin-left: 5px" />
+
     <a class="button paddedbutton exportbutton" href="#" onclick="ExportDaySumCSV(); return false">Export CSV</a>
 </div>
 <div id="daysumChartSection" class="k-content">
@@ -46,12 +48,19 @@
 </div>
 <div id="daysumGrid"></div>
 
+<style>
+    #daysum_offerFilter-list .k-item {
+        font-size: 9px;
+    }
+</style>
+
 <script>
     function ExportDaySumCSV() {
         var s = $('#daysum_startdate').val();
         var e = $('#daysum_enddate').val();
+        var o = $('#daysum_offerFilter').val();
 
-        var url = '@Url.Action("DailySummaryReport", "Export")?startdate=' + s + '&enddate=' + e;
+        var url = '@Url.Action("DailySummaryReport", "Export")?startdate=' + s + '&enddate=' + e + '&offerid=' + o;
         window.location.href = url;
     }
 
@@ -70,7 +79,8 @@
                     data: function () {
                         return {
                             startdate: $('#daysum_startdate').val(),
-                            enddate: $('#daysum_enddate').val()
+                            enddate: $('#daysum_enddate').val(),
+                            offerid: $('#daysum_offerFilter').val()
                         };
                     }
                 }
@@ -110,9 +120,14 @@
         $('#daysum_startdate').kendoDatePicker({ footer: ' ' });
         $('#daysum_enddate').kendoDatePicker({ footer: ' ' });
 
+        CreateOfferFilter();
+
         kendo.culture('en-US');@* show all in USD for now *@
 
         var dataSource = CreateDailySummaryDataSource();
+        //dataSource.bind('change', function () {
+        //    $('#daysum_offerFilter').data('kendoDropDownList').dataSource.read();
+        //});
 
         $('#daysumGrid').kendoGrid({
             dataSource: dataSource,
@@ -135,6 +150,31 @@
         dataSource.read();
         $(".configuration").bind("change", UpdateDaySumBaseUnit);
         dataSource.bind("change", function () { UpdateDaySumChart(true); });
+    }
+
+    function CreateOfferFilter() {
+        var offersDS = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    type: "post",
+                    dataType: "json",
+                    url: "@Url.Action("Offers", "Reports")",
+                    data: function () {
+                        return {
+                            startdate: '@Model.OneYearAgoString'
+                        };
+                    }
+                }
+            }
+        });
+        $('#daysum_offerFilter').kendoDropDownList({
+            autoBind: true,
+            optionLabel: "All Offers",
+            dataTextField: "Name",
+            dataValueField: "Id",
+            dataSource: offersDS,
+            change: function () { RefreshGrid('daysum', true); }
+        });                                             @* show all in USD for now *@
     }
 
     function CreateDaySumChart(dataSource) {

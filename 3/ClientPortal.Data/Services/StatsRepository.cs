@@ -107,9 +107,12 @@ namespace ClientPortal.Data.Services
             return offerInfos;
         }
 
-        public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId)
+        public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId = null)
         {
             var offers = Offers(advertiserId);
+            if (offerId.HasValue)
+                offers = offers.Where(o => o.OfferId == offerId.Value);
+
             var offerIds = offers.Select(o => o.OfferId).ToList();
 
             string currency = null; // Assume all offers for the advertiser have the same currency

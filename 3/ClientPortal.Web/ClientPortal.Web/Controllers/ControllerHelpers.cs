@@ -118,6 +118,7 @@ namespace ClientPortal.Web.Controllers
         public DateTime FirstOfLastMonth { get; set; }
         public DateTime LastOfLastMonth { get; set; }
         public DateTime FirstOfYear { get; set; }
+        public DateTime OneYearAgo { get; set; }
 
         // will be the last day of last month if "Latest" (today or yesterday) is greater than the number of days in last month
         public DateTime OneMonthAgo { get; set; }
@@ -152,6 +153,7 @@ namespace ClientPortal.Web.Controllers
             LastOfLastMonth = FirstOfMonth.AddDays(-1);
 
             FirstOfYear = new DateTime(Latest.Year, 1, 1);
+            OneYearAgo = Latest.AddYears(-1);
             OneMonthAgo = new DateTime(FirstOfLastMonth.Year, FirstOfLastMonth.Month, (Latest.Day < LastOfLastMonth.Day) ? Latest.Day : LastOfLastMonth.Day);
         }
     }
