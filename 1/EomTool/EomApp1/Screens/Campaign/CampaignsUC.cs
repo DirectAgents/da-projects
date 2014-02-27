@@ -11,6 +11,27 @@ namespace EomApp1.Screens.Campaign
 {
     public partial class CampaignsUC : UserControl
     {
+        private int[] _requiredCols;
+        private int[] RequiredCols
+        {
+            get
+            {
+                if (_requiredCols == null)
+                    _requiredCols = new int[] { colAccountManager.Index, colAdManager.Index, colAdvertiser.Index, colPID.Index, colName.Index };
+                return _requiredCols;
+            }
+        }
+        private int[] _integerCols;
+        private int[] IntegerCols
+        {
+            get
+            {
+                if (_integerCols == null)
+                    _integerCols = new int[] { colPID.Index };
+                return _integerCols;
+            }
+        }
+
         public CampaignsUC()
         {
             InitializeComponent();
@@ -64,6 +85,41 @@ namespace EomApp1.Screens.Campaign
             }
             campaignDataGridView.Sort(sortColumn, direction);
             displayColumn.HeaderCell.SortGlyphDirection = (direction == ListSortDirection.Ascending) ? SortOrder.Ascending : SortOrder.Descending;
+        }
+
+        private void campaignDataGridView_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            foreach (var requiredCol in this.RequiredCols)
+            {
+                var cell = campaignDataGridView.Rows[e.RowIndex].Cells[requiredCol];
+                if (cell.FormattedValue.ToString() == string.Empty)
+                {
+                    cell.ErrorText = "Mandatory";
+                    e.Cancel = true;
+                }
+                else
+                {
+                    cell.ErrorText = string.Empty;
+                }
+            }
+        }
+
+        private void campaignDataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            int val;
+            if (this.IntegerCols.Contains(e.ColumnIndex))
+            {
+                var cell = campaignDataGridView[e.ColumnIndex, e.RowIndex];
+                if (!int.TryParse(e.FormattedValue.ToString(), out val))
+                {
+                    cell.ErrorText = "Must be an integer";
+                    e.Cancel = true;
+                }
+                else
+                {
+                    cell.ErrorText = string.Empty;
+                }
+            }
         }
     }
 }

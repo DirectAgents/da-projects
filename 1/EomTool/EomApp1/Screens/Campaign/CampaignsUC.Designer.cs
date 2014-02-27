@@ -59,8 +59,8 @@
             this.colAccountManager = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.colAdManager = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.colAdvertiser = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -174,8 +174,8 @@
             this.colAccountManager,
             this.colAdManager,
             this.colAdvertiser,
-            this.dataGridViewTextBoxColumn6,
-            this.dataGridViewTextBoxColumn7,
+            this.colPID,
+            this.colName,
             this.dataGridViewTextBoxColumn3,
             this.dataGridViewTextBoxColumn11,
             this.dataGridViewTextBoxColumn12,
@@ -198,7 +198,9 @@
             this.campaignDataGridView.Name = "campaignDataGridView";
             this.campaignDataGridView.Size = new System.Drawing.Size(1143, 580);
             this.campaignDataGridView.TabIndex = 1;
+            this.campaignDataGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.campaignDataGridView_CellValidating);
             this.campaignDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.campaignDataGridView_ColumnHeaderMouseClick);
+            this.campaignDataGridView.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.campaignDataGridView_RowValidating);
             // 
             // accountManagerBindingSource
             // 
@@ -334,19 +336,19 @@
             this.colAdvertiser.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.colAdvertiser.ValueMember = "id";
             // 
-            // dataGridViewTextBoxColumn6
+            // colPID
             // 
-            this.dataGridViewTextBoxColumn6.DataPropertyName = "pid";
-            this.dataGridViewTextBoxColumn6.HeaderText = "PID";
-            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
-            this.dataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colPID.DataPropertyName = "pid";
+            this.colPID.HeaderText = "PID";
+            this.colPID.Name = "colPID";
+            this.colPID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
-            // dataGridViewTextBoxColumn7
+            // colName
             // 
-            this.dataGridViewTextBoxColumn7.DataPropertyName = "campaign_name";
-            this.dataGridViewTextBoxColumn7.HeaderText = "Name";
-            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
-            this.dataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.colName.DataPropertyName = "campaign_name";
+            this.colName.HeaderText = "Name";
+            this.colName.Name = "colName";
+            this.colName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             // 
             // dataGridViewTextBoxColumn3
             // 
@@ -464,6 +466,7 @@
             this.colAdvertiserName.DataPropertyName = "AdvertiserName";
             this.colAdvertiserName.HeaderText = "AdvertiserName";
             this.colAdvertiserName.Name = "colAdvertiserName";
+            this.colAdvertiserName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
             this.colAdvertiserName.Visible = false;
             // 
             // CampaignsUC
@@ -524,8 +527,8 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn colAccountManager;
         private System.Windows.Forms.DataGridViewComboBoxColumn colAdManager;
         private System.Windows.Forms.DataGridViewComboBoxColumn colAdvertiser;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewTextBoxColumn11;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
