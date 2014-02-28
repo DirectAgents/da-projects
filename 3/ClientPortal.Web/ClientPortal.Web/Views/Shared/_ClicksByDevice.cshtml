@@ -42,7 +42,8 @@
                 sortable: true,
                 columns: [
                     { field: "DeviceName", width: 75, title: "Device Name" },
-                    { field: "ClickCount", width: 20, title: "Clicks" }
+                    { field: "ClickCount", width: 30, title: "Clicks" }
+                 @* { field: "ClickCount", width: 30, title: "Clicks", attributes: { style: "text-align: right" } } //didn't work *@
                 ],
                 rowTemplate: kendo.template($("#clicksByDeviceRowTemplate").html()),
                 height: widgetHeight,
