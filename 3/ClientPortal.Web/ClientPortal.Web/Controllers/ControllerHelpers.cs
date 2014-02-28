@@ -187,6 +187,7 @@ namespace ClientPortal.Web.Controllers
         public string FirstOfWeek { get { return DateString(Dates.FirstOfWeek); } }
         public string FirstOfLastWeek { get { return DateString(Dates.FirstOfLastWeek); } }
         public string LastOfLastWeek { get { return DateString(Dates.LastOfLastWeek); } }
+        public string OneYearAgo { get { return DateString(Dates.OneYearAgo); } }
 
         public string TodayMY { get { return Dates.Today.ToString("MM/yyyy"); } }
         public string LastMonthMY { get { return Dates.FirstOfLastMonth.ToString("MM/yyyy"); } }

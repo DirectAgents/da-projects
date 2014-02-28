@@ -55,7 +55,7 @@ namespace ClientPortal.Web.Controllers
             return CsvFile(rows, "DailySummary" + ControllerHelpers.DateStamp() + ".csv");
         }
 
-        public FileResult ConversionReport(string startdate, string enddate)
+        public FileResult ConversionReport(string startdate, string enddate, int? offerid)
         {
             var userInfo = GetUserInfo();
             DateTime? start, end;
@@ -67,7 +67,7 @@ namespace ClientPortal.Web.Controllers
                 start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             // Get data and map to rows
-            var records = cpRepo.GetConversionInfos(start, end, userInfo.AdvertiserId, null)
+            var records = cpRepo.GetConversionInfos(start, end, userInfo.AdvertiserId, offerid)
                 .OrderBy(r => r.Date).Take(MaxExportedRows);
             var rows = Mapper.Map<IEnumerable<ConversionInfo>, IEnumerable<ConversionReportExportRow>>(records);
             return CsvFile(rows, "Conversions" + ControllerHelpers.DateStamp() + ".csv");

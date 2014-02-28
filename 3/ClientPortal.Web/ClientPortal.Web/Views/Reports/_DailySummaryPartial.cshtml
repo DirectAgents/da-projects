@@ -119,15 +119,11 @@
         $('#daysum_dateRangeSel').kendoDropDownList();
         $('#daysum_startdate').kendoDatePicker({ footer: ' ' });
         $('#daysum_enddate').kendoDatePicker({ footer: ' ' });
-
-        CreateOfferFilter();
+        CreateOfferFilter('daysum');
 
         kendo.culture('en-US');@* show all in USD for now *@
 
         var dataSource = CreateDailySummaryDataSource();
-        //dataSource.bind('change', function () {
-        //    $('#daysum_offerFilter').data('kendoDropDownList').dataSource.read();
-        //});
 
         $('#daysumGrid').kendoGrid({
             dataSource: dataSource,
@@ -150,31 +146,6 @@
         dataSource.read();
         $(".configuration").bind("change", UpdateDaySumBaseUnit);
         dataSource.bind("change", function () { UpdateDaySumChart(true); });
-    }
-
-    function CreateOfferFilter() {
-        var offersDS = new kendo.data.DataSource({
-            transport: {
-                read: {
-                    type: "post",
-                    dataType: "json",
-                    url: "@Url.Action("Offers", "Reports")",
-                    data: function () {
-                        return {
-                            startdate: '@Model.OneYearAgoString'
-                        };
-                    }
-                }
-            }
-        });
-        $('#daysum_offerFilter').kendoDropDownList({
-            autoBind: true,
-            optionLabel: "All Offers",
-            dataTextField: "Name",
-            dataValueField: "Id",
-            dataSource: offersDS,
-            change: function () { RefreshGrid('daysum', true); }
-        });                                             @* show all in USD for now *@
     }
 
     function CreateDaySumChart(dataSource) {

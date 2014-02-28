@@ -16,6 +16,7 @@
         <span class="paddedlabel">End:</span>
         <input id="conrep_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('conrep')" />
         <a class="button paddedbutton" id="conrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('conrep'); return false">Filter</a>
+        <input id="conrep_offerFilter" style="width: 290px; margin-left: 5px" />
     </div>
     <a class="button paddedbutton exportbutton" style="margin-right: 110px" href="#" onclick="ExportConRepCSV(); return false">Export CSV</a>
     <br style="clear: both" />
@@ -29,12 +30,19 @@
 </div>
 <div id="conrepGrid"></div>
 
+<style>
+    #conrep_offerFilter-list .k-item {
+        font-size: 9px;
+    }
+</style>
+
 <script>
     function ExportConRepCSV() {
         var s = $('#conrep_startdate').val();
         var e = $('#conrep_enddate').val();
+        var o = $('#conrep_offerFilter').val();
 
-        var url = '@Url.Action("ConversionReport", "Export")?startdate=' + s + '&enddate=' + e;
+        var url = '@Url.Action("ConversionReport", "Export")?startdate=' + s + '&enddate=' + e + '&offerid=' + o;
         window.location.href = url;
     }
 
@@ -86,11 +94,13 @@
         $('#conrep_dateRangeSel').kendoDropDownList();
         $('#conrep_startdate').kendoDatePicker({ footer: ' ' });
         $('#conrep_enddate').kendoDatePicker({ footer: ' ' });
+        CreateOfferFilter('conrep');
 
         var readData = function () {
             return {
                 startdate: $('#conrep_startdate').val(),
-                enddate: $('#conrep_enddate').val()
+                enddate: $('#conrep_enddate').val(),
+                offerid: $('#conrep_offerFilter').val()
             };
         }
         var dataSource = CreateConversionReportDataSource(readData);
@@ -124,7 +134,8 @@
         var readData = function () {
             return {
                 startdate: $('#conrep_startdate').val(),
-                enddate: $('#conrep_enddate').val()
+                enddate: $('#conrep_enddate').val(),
+                offerid: $('#conrep_offerFilter').val()
             };
         }
         var dataSource = CreateConversionSummaryDataSource(readData);

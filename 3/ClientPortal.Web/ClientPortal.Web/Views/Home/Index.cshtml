@@ -416,5 +416,31 @@
             kendo.culture(culture);
             return kendo.toString(val, "c");
         }
+
+        function CreateOfferFilter(grid) {
+            var offersDS = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        type: "post",
+                        dataType: "json",
+                        url: "@Url.Action("Offers", "Reports")",
+                    data: function () {
+                        return {
+                            startdate: '@Model.Dates.OneYearAgo'
+                        };
+                    }
+                }
+            }
+        });
+        $('#' + grid + '_offerFilter').kendoDropDownList({
+            autoBind: true,
+            optionLabel: "All Offers",
+            dataTextField: "Name",
+            dataValueField: "Id",
+            dataSource: offersDS,
+            change: function () { RefreshGrid(grid, true); }
+        });                                         @* show all in USD for now *@
+    }
+
     </script>
 }
