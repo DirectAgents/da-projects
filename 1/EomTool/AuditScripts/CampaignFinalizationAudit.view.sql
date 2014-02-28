@@ -1,6 +1,3 @@
-USE DADatabaseJuly2012
-GO
-
 CREATE VIEW [dbo].[CampaignFinalizationAudit]
 AS
 SELECT     TOP (100) PERCENT dbo.Campaign.campaign_name AS Campaign, dbo.CampaignStatus.name AS [From], CampaignStatus_1.name AS [To], 
