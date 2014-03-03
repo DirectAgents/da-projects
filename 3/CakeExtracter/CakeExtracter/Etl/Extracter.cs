@@ -52,6 +52,11 @@ namespace CakeExtracter.Etl
             }
         }
 
+        protected void Add(T item)
+        {
+            Add(new List<T> { item });
+        }
+
         /// <summary>
         /// The derived class implements this method, which calls Add() for each item
         /// extracted and then calls End() when complete.

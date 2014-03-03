@@ -12,12 +12,14 @@ namespace CakeExtracter.Commands
     public class SynchDailySummariesCommand : ConsoleCommand
     {
         public string Advertiser { get; set; }
+        public int? OfferId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
         public override void ResetProperties()
         {
             Advertiser = null;
+            OfferId = null;
             StartDate = null;
             EndDate = null;
         }
@@ -29,6 +31,7 @@ namespace CakeExtracter.Commands
 
             IsCommand("synchDailySummaries", "synch DailySummaries for an advertisers offers in a date range");
             HasOption("a|advertiserId=", "Advertiser Id (* = all advertisers)", c => Advertiser = c);
+            HasOption<int>("o|offerId=", "Offer Id (default = all)", c => OfferId = c);
             HasOption("s|startDate=", "Start Date (default is two months ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is today)", c => EndDate = DateTime.Parse(c));
         }
@@ -42,20 +45,23 @@ namespace CakeExtracter.Commands
 
             foreach (var advertiserId in GetAdvertiserIds())
             {
-                var extracter = new DailySummariesExtracter(dateRange, advertiserId);
+                var extracter = new DailySummariesExtracter(dateRange, advertiserId, OfferId);
                 var loader = new DailySummariesLoader();
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
                 loaderThread.Join();
 
-                // Set "LatestDaySums" datetime
-                using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
+                // Set "LatestDaySums" datetime (if we're updating all offers to today)
+                if (dateRange.ToDate > DateTime.Today && !OfferId.HasValue)
                 {
-                    var advertiser = db.Advertisers.Where(a => a.AdvertiserId == advertiserId).FirstOrDefault();
-                    if (advertiser != null)
-                        advertiser.LatestDaySums = DateTime.Now;
-                    db.SaveChanges();
+                    using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
+                    {
+                        var advertiser = db.Advertisers.Where(a => a.AdvertiserId == advertiserId).FirstOrDefault();
+                        if (advertiser != null)
+                            advertiser.LatestDaySums = DateTime.Now;
+                        db.SaveChanges();
+                    }
                 }
             }
             return 0;
