@@ -32,7 +32,7 @@ namespace ClientPortal.Web.Models
 
     public class ConversionReportExportRow
     {
-        public int ConversionId { get; set; }
+        public string ConversionId { get; set; }
         public DateTime Date { get; set; }
         public int OfferId { get; set; }
         public string Offer { get; set; }

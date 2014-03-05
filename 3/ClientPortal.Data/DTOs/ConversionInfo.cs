@@ -4,12 +4,13 @@ namespace ClientPortal.Data.DTOs
 {
     public class ConversionInfo
     {
-        public string ConversionIdString
-        {
-            set { ConversionId = Int32.Parse(value); }
-        }
+        //public string ConversionIdString
+        //{
+        //    set { ConversionId = Int32.Parse(value); }
+        //}
 
-        public int ConversionId { get; set; }
+        //public int ConversionId { get; set; }
+        public string ConversionId { get; set; }
         public DateTime Date { get; set; }
         public int AffId { get; set; }
         public int OfferId { get; set; }

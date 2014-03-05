@@ -147,7 +147,8 @@ namespace ClientPortal.Data.Services
                 from cd in gj_conv_data.DefaultIfEmpty() // left join to ConversionData
                 select new ConversionInfo()
                 {
-                    ConversionIdString = c.conversion_id,
+                    //ConversionIdString = c.conversion_id,
+                    ConversionId = c.conversion_id,
                     Date = c.conversion_date,
                     AffId = c.affiliate_id,
                     OfferId = c.offer_id,
