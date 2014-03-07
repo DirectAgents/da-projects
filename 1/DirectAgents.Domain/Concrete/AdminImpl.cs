@@ -6,6 +6,7 @@ using Cake.Model.Staging;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.Cake;
+using System.Diagnostics;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -14,10 +15,24 @@ namespace DirectAgents.Domain.Concrete
         private EFDbContext daDomain;
 
         public event LogEventHandler LogHandler;
-        protected virtual void Log(string messageFormat, params object[] formatArgs)
+        protected void Log(string messageFormat, params object[] formatArgs)
+        {
+            Log(TraceEventType.Information, messageFormat, formatArgs);
+        }
+        protected void LogWarning(string messageFormat, params object[] formatArgs)
+        {
+            Log(TraceEventType.Warning, messageFormat, formatArgs);
+        }
+        protected void Log(TraceEventType severity, string messageFormat, params object[] formatArgs)
         {
             if (LogHandler != null)
-                LogHandler(this, messageFormat, formatArgs);
+                LogHandler(this, severity, messageFormat, formatArgs);
+        }
+
+        public void Test()
+        {
+            Log("some information");
+            LogWarning("some warning");
         }
 
         public void CreateDatabaseIfNotExists()
@@ -52,7 +67,7 @@ namespace DirectAgents.Domain.Concrete
                     var cakeSummaries = cake.DailySummaries.Where(ds => ds.offer_id == pid);
                     if (!cakeSummaries.Any())
                     {
-                        Log("No cake summaries found; done");
+                        LogWarning("No cake summaries found; done");
                     }
                     else
                     {

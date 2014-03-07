@@ -42,11 +42,12 @@ namespace EomToolWeb.Controllers
             return Content("Summaries loaded");
         }
 
-        static void admin_LogHandler(object sender, string messageFormat, params object[] formatArgs)
+        static void admin_LogHandler(object sender, TraceEventType severity, string messageFormat, params object[] formatArgs)
         {
             var msg = String.Format(messageFormat, formatArgs);
             bool wantNewLine = msg.Contains("done");
             Debugger.Log(0, null, wantNewLine ? msg + Environment.NewLine : msg);
+            //TODO: incorporate severity - e.g. as 'level' ?
         }
     }
 }

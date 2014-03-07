@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common;
+﻿using DirectAgents.Common.Logging;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
+using System.Diagnostics;
 
 namespace CampaignUpdater
 {
@@ -13,19 +9,24 @@ namespace CampaignUpdater
     {
         static void Main(string[] args)
         {
-            Logger.Log("start CampaignUpdater");
+            Logger.InitializeLogging();
+
+            Logger.Info("start CampaignUpdater");
             IAdmin admin = new AdminImpl();
             admin.LogHandler += admin_LogHandler;
 
             admin.LoadCampaigns();
             admin.LoadSummaries();
 
-            Logger.Log("end CampaignUpdater");
+            Logger.Info("end CampaignUpdater");
         }
 
-        static void admin_LogHandler(object sender, string messageFormat, params object[] formatArgs)
+        static void admin_LogHandler(object sender, TraceEventType severity, string messageFormat, params object[] formatArgs)
         {
-            Logger.Log(messageFormat, formatArgs);
+            if (severity == TraceEventType.Information)
+                Logger.Info(messageFormat, formatArgs);
+            else
+                Logger.Warn(messageFormat, formatArgs);
         }
     }
 }
