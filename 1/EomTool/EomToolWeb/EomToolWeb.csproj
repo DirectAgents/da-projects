@@ -2674,12 +2674,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DirectAgents.Domain\DirectAgents.Domain.csproj">
-      <Project>{278911AB-CB92-4316-843E-4571CD0C3410}</Project>
+      <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
       <Name>DirectAgents.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DAgents.Common\DirectAgents.Common.csproj">
-      <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
-      <Name>DirectAgents.Common</Name>
+    <ProjectReference Include="..\DAgents.Common\DAgents.Common.csproj">
+      <Project>{c96a7a6b-f15a-4c83-b871-0df48e798c5f}</Project>
+      <Name>DAgents.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Eom.Common\Eom.Common.csproj">
       <Project>{7C8D69E8-324C-43ED-958A-2248778DD89E}</Project>

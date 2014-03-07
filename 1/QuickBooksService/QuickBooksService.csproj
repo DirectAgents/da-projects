@@ -189,9 +189,9 @@
       <Project>{D09AA1DE-FB06-4334-A9D2-DAE8A035CD7D}</Project>
       <Name>AccountingBackupWeb.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EomTool\DAgents.Common\DirectAgents.Common.csproj">
+    <ProjectReference Include="..\EomTool\DAgents.Common\DAgents.Common.csproj">
       <Project>{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}</Project>
-      <Name>DirectAgents.Common</Name>
+      <Name>DAgents.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\QuickBooksLibrary\QuickBooksLibrary.csproj">
       <Project>{72427403-94B7-487D-BD9E-E0C1CF1954CA}</Project>

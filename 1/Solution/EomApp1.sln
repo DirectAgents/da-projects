@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EomApp1", "..\EomTool\EomAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataGridViewExtensions", "..\EomTool\DataGridViewExtension\DataGridViewExtensions.csproj", "{ACFA074E-254F-482C-90A1-FB0E60497B17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectAgents.Common", "..\EomTool\DAgents.Common\DirectAgents.Common.csproj", "{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAgents.Common", "..\EomTool\DAgents.Common\DAgents.Common.csproj", "{C96A7A6B-F15A-4C83-B871-0DF48E798C5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eom.Common", "..\EomTool\Eom.Common\Eom.Common.csproj", "{7C8D69E8-324C-43ED-958A-2248778DD89E}"
 EndProject
