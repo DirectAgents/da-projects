@@ -14,6 +14,7 @@ namespace ApiClient
     {
         static Program()
         {
+            Logger.InitializeLogging();
             ServicePointManager.DefaultConnectionLimit = 100;
         }
 
@@ -25,14 +26,14 @@ namespace ApiClient
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: {0}, trying again..", e.Message);
+                Logger.Warn("Exception: {0}, trying again..", e.Message);
                 try
                 {
                     DoIt(args);
                 }
                 catch (Exception e2)
                 {
-                    Console.WriteLine("Exception on retry: {0}, quitting..", e2.Message);
+                    Logger.Warn("Exception on retry: {0}, quitting..", e2.Message);
                 }
             }
         }
@@ -63,7 +64,7 @@ namespace ApiClient
             }
             else
             {
-                Console.WriteLine("Invalid Command");
+                Logger.Warn("Invalid Command");
             }
         }
 
