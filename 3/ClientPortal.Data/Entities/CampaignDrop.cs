@@ -10,7 +10,7 @@ namespace ClientPortal.Data.Contexts
         [Range(typeof(DateTime), "1/1/2000", "1/1/3000")]
         public DateTime Date { get; set; }
 
-        [DataType(DataType.EmailAddress)]
+        [Display(Name="From")]
         public string FromEmail { get; set; }
 
         [Display(Name = "Combine Creatives?")]

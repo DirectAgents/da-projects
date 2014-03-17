@@ -22,7 +22,7 @@ namespace ClientPortal.Data.Contexts
             {
                 AdvertiserId = advertiserId,
                 AdvertiserName = advertiserName,
-                AccountManagerId = accountManager.CakeContactId,
+                AccountManagerId = (accountManager != null) ? accountManager.CakeContactId : (int?)null,
                 AccountManager = accountManager
             };
             return this;
