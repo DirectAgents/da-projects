@@ -48,7 +48,7 @@ Campaigns:
         <td>@campaign.CampaignName</td>
         <td>@campaign.AffiliateId</td>
         <td>@campaign.Affiliate.AffiliateName</td>
-        <td>@campaign.CampaignDrops.Count</td>
+        <td>@campaign.CampaignDrops_Originals.Count()</td>
         <td>@Ajax.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId, from = "offer" }, ajaxOpts_Drop)</td>
     </tr>
 }
