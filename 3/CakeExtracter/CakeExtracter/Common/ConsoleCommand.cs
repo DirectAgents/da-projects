@@ -12,6 +12,11 @@ namespace CakeExtracter.Common
             this.commandsToRunBeforeThisCommand.Add(consoleCommand);
         }
 
+        public int Run()
+        {
+            return this.Run(null);
+        }
+
         public override int Run(string[] remainingArguments)
         {
             string commandName = this.GetType().Name;

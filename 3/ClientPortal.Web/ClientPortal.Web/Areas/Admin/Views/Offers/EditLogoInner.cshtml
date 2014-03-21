@@ -1,0 +1,18 @@
+﻿@model ClientPortal.Data.Contexts.Offer
+@{
+//    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmSummaryTab");@* TODO: parameterize the tab*@
+}
+Offer: <b>@Model.DisplayName</b>
+<br /><br />
+
+@if (Model.Logo != null)
+{
+    <text>Current Logo:</text><br/>
+    <img src="@Url.Action("Logo", "Offers", new { id = Model.OfferId, v = DateTime.Now.Ticks })" />
+}
+
+@*@using (Ajax.BeginForm(ajaxOptions))*@
+@using (Html.BeginForm("UploadLogo", "Offers"))
+{
+    <input id="offerLogoUpload" name="logo" type="file" />
+}

@@ -30,7 +30,7 @@ namespace ClientPortal.Data.Contracts
         void FillExtended_CPMReport(CPMReport inReport);
         Offer DeleteCPMReport(int reportId, bool saveChanges = false);
 
-        IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId);
+        IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId, bool includeCopies = false);
         CampaignDrop GetCampaignDrop(int id);
         bool AddCampaignDrop(CampaignDrop campaignDrop, int creativeId, bool saveChanges = false);
         bool SaveCampaignDrop(CampaignDrop campaignDrop, bool saveChanges = false);

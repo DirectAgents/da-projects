@@ -209,6 +209,7 @@
     <Compile Include="Areas\Admin\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContactsController.cs" />
     <Compile Include="Areas\Admin\Controllers\CPMReportsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CPMReportsWizardController.cs" />
     <Compile Include="Areas\Admin\Controllers\CreativeFilesController.cs" />
     <Compile Include="Areas\Admin\Controllers\CreativesController.cs" />
     <Compile Include="Areas\Admin\Controllers\CreativeStatsController.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Areas\Admin\Models\CampaignDropVM.cs" />
     <Compile Include="Areas\Admin\Models\ContactVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportVM.cs" />
+    <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CPController.cs" />
@@ -667,6 +669,14 @@
     <Content Include="Areas\Admin\Views\CPMReports\PreviewEmail.cshtml" />
     <Content Include="Areas\Admin\Views\Creatives\EditThumbnail.cshtml" />
     <Content Include="Areas\Admin\Views\Offers\EditLogo.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReports\Start.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDrops\Start.cshtml" />
+    <Content Include="Areas\Admin\Views\Creatives\Start.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReportsWizard\OfferLogo.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReportsWizard\SynchCampaigns.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReportsWizard\SynchCreatives.cshtml" />
+    <Content Include="Areas\Admin\Views\Offers\EditLogoInner.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReportsWizard\Test.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

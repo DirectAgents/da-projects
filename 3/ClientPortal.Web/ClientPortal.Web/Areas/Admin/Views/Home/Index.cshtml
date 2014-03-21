@@ -105,10 +105,10 @@
                       +-----------------------+-->*@
                 <ul class="tabs-content">
                     <li id="cpmOffersTab" class="active"></li>
-                    <li id="cpmSummaryTab">Please select an offer</li>
-                    <li id="cpmReportsTab">Please select an offer and a report</li>
-                    <li id="cpmDropsTab">Please select an offer and a drop</li>
-                    <li id="cpmCreativesTab">Please select an offer</li>
+                    <li id="cpmSummaryTab">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</li>
+                    <li id="cpmReportsTab">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</li>
+                    <li id="cpmDropsTab">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</li>
+                    <li id="cpmCreativesTab">Please <a href="#" onclick="$('#navCPMOffers').click(); return false">select an offer</a>.</li>
                 </ul>
             </div>
         </li>
@@ -186,6 +186,30 @@
                 }).done(function (html) {
                     $("#cpmOffersTab").html(html);
                 });
+            });
+        }
+
+        function ResetOfferTabs(offerId) {
+            $.ajax({
+                url: '@Url.Action("Start", "CPMReports")',
+                data: { offerid: offerId },
+                cache: false
+            }).done(function (html) {
+                $("#cpmReportsTab").html(html);
+            });
+            $.ajax({
+                url: '@Url.Action("Start", "CampaignDrops")',
+                data: { offerid: offerId },
+                cache: false
+            }).done(function (html) {
+                $("#cpmDropsTab").html(html);
+            });
+            $.ajax({
+                url: '@Url.Action("Start", "Creatives")',
+                data: { offerid: offerId },
+                cache: false
+            }).done(function (html) {
+                $("#cpmCreativesTab").html(html);
             });
         }
 

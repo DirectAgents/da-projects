@@ -16,9 +16,15 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             this.cpRepo = cpRepository;
         }
 
+        public ActionResult Start(int offerid)
+        {
+            var offer = cpRepo.GetOffer(offerid);
+            return View(offer);
+        }
+
         public ActionResult Index(int? offerid, int? campaignid)
         {
-            var drops = cpRepo.CampaignDrops(offerid, campaignid);
+            var drops = cpRepo.CampaignDrops(offerid, campaignid, true);
             return View(drops.OrderByDescending(d => d.Date));
         }
 

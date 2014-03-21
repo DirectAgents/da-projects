@@ -18,6 +18,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             this.cpRepo = cpRepository;
         }
 
+        public ActionResult Start(int offerid)
+        {
+            var offer = cpRepo.GetOffer(offerid);
+            return View(offer);
+        }
+
         public ActionResult Index(int? offerid)
         {
             var reports = cpRepo.CPMReports(offerid);

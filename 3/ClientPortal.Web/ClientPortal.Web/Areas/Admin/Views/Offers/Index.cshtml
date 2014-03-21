@@ -50,7 +50,7 @@ Show:
         <td>@offer.AdvertiserId</td>
         <td>@offer.Advertiser.AdvertiserName</td>
         <td>@offer.OfferId</td>
-        <td>@Ajax.ActionLink(offer.OfferName, "Show", "Offers", new { id = offer.OfferId }, ajaxOpts_Sum)</td>
+        <td>@Ajax.ActionLink(offer.OfferName, "Show", "Offers", new { id = offer.OfferId }, ajaxOpts_Sum, new { onclick = "ResetOfferTabs(" + offer.OfferId + ")" })</td>
         <td style="text-align:center">@offer.CPMReports.Count</td>
         <td style="text-align:center">@offer.AllCampaignDrops(null).Count()</td>
         <td style="text-align:center">@offer.Campaigns.Count</td>

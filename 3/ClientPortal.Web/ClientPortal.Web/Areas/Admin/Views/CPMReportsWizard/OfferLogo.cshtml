@@ -1,0 +1,19 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+}
+
+<h3>Report Wizard</h3>
+
+Next Step: <b>Upload logo for offer</b>
+
+@{
+    ViewBag.ShowHeader = false;
+    ViewBag.ShowFooter = false;
+    ViewBag.ParentSel = "#cpmReportsTab";
+}
+<table><tr><td>
+@Html.Partial("../Offers/EditLogo", Model.Offer)
+</td></tr></table>
+
+@Ajax.ActionLink("Go to next step", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)

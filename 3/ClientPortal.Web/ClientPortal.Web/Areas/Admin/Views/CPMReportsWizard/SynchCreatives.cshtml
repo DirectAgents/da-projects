@@ -1,0 +1,25 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+}
+
+<h3>Report Wizard</h3>
+
+Next Step: <b>Synch creatives with Cake</b>
+<table><tr><td>
+
+@Ajax.ActionLink("Click here to synch", "SynchCreatives", "CPMReportsWizard", new { offerid = Model.Offer.OfferId }, ajaxOptions)
+<br /><br />
+
+@if (Model.Offer.Creatives.Any()) {
+    <text>Last Synch: x/x/xx 00:00</text><br /><br />
+
+    ViewBag.Title = "Existing Creatives:";
+    ViewBag.ShowActions = false;
+    @Html.Partial("../Creatives/Index", Model.Offer.Creatives.OrderByDescending(c => c.DateCreated))
+    <br /><br />
+}
+</td></tr></table>
+
+@Ajax.ActionLink("Prev", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions) |
+@Ajax.ActionLink("Skip", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)

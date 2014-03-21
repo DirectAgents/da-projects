@@ -288,9 +288,12 @@ namespace ClientPortal.Data.Services
             return true;
         }
 
-        public IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId)
+        public IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId, bool includeCopies = false)
         {
-            var campaignDrops = context.CampaignDrops.Include("Campaign").Include("CreativeStats.Creative").Include("CPMReports").Include("CampaignDropCopies").AsQueryable();
+            var campaignDropsDbQuery = context.CampaignDrops.Include("Campaign").Include("CreativeStats.Creative").Include("CPMReports");
+            if (includeCopies)
+                campaignDropsDbQuery = campaignDropsDbQuery.Include("CampaignDropCopies.CPMReports");
+            var campaignDrops = campaignDropsDbQuery.AsQueryable();
             campaignDrops = campaignDrops.Where(cd => cd.CopyOf == null);
 
             if (offerId.HasValue)

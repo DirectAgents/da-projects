@@ -11,6 +11,17 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchCreativesCommand : ConsoleCommand
     {
+        public static int RunStatic(int advertiserId, int? offerId, bool overwriteNames)
+        {
+            var cmd = new SynchCreativesCommand
+            {
+                AdvertiserId = advertiserId,
+                OfferId = offerId,
+                OverwriteNames = overwriteNames
+            };
+            return cmd.Run();
+        }
+
         public int AdvertiserId { get; set; }
         public int? OfferId { get; set; }
         public bool OverwriteNames { get; set; }

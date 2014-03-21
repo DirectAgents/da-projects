@@ -1,0 +1,15 @@
+﻿@model ClientPortal.Data.Contexts.Offer
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+}
+@if (!Request.IsAjaxRequest())
+{
+    <h3>Offer-Report Start</h3>
+}
+Offer: <b>@Model.DisplayName</b>
+<br />
+<br />
+
+?Link to summary<br />
+?List reports<br />
+New report (manual / @Ajax.ActionLink("Wizard", "Show", "CPMReportsWizard", new { offerid = @Model.OfferId }, ajaxOptions))

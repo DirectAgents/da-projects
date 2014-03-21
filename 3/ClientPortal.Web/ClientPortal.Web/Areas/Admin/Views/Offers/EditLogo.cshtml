@@ -5,31 +5,33 @@
     if (Model.Logo == null) {
         header = "Add Logo";
     }
+    bool showHeader = ViewBag.ShowHeader ?? true;
+    bool showFooter = ViewBag.ShowFooter ?? true;
+    string parentSel = ViewBag.ParentSel ?? "#cpmSummaryTab";
 }
 
-<h3>@header</h3>
-
-Offer: <b>@Model.DisplayName</b>
-
-@if (Model.Logo != null)
+@if (showHeader)
 {
-    <br /><br />
-    <text>Current Logo:</text><br/>
-    <img src="@Url.Action("Logo", "Offers", new { id = Model.OfferId })" />
+    <h3>@header</h3>
 }
-
-@using (Ajax.BeginForm(ajaxOptions))
-{
-    <input id="offerLogoUpload" name="logo" type="file" />
-}
-
-<div>
-    @Ajax.ActionLink("Back to Offer Summary", "Show", "Offers", new { id = Model.OfferId }, ajaxOptions)
+<div id="divEditOfferLogo">
+    @Html.Partial("../Offers/EditLogoInner", Model)
 </div>
+
+@if (showFooter)
+{
+    <div>
+        @Ajax.ActionLink("Back to Offer Summary", "Show", "Offers", new { id = Model.OfferId }, ajaxOptions)
+    </div>
+}
 
 <script>
     $(function () {
-        $("#offerLogoUpload").kendoUpload({
+        SetupLogoUploadElement();
+    });
+
+    function SetupLogoUploadElement() {
+        $("@parentSel #offerLogoUpload").kendoUpload({
             async: {
                 saveUrl: "@Url.Action("UploadLogo", "Offers")",
                 autoUpload: false
@@ -38,19 +40,25 @@ Offer: <b>@Model.DisplayName</b>
                 e.data = { id: @Model.OfferId };
             },
             localization: {
+                select: "Select File...",
                 uploadSelectedFiles: "Upload"
             },
             multiple: false,
             complete: onUploadComplete
         });
-    });
+    }
 
     function onUploadComplete() {
         $.ajax({
             url: '@Url.Action("EditLogo", "Offers")',
+            data: {
+                id: @Model.OfferId,
+                inner: true
+            },
             cache: false
         }).done(function (html) {
-            $("#cpmSummaryTab").html(html);
+            $("@parentSel #divEditOfferLogo").html(html);
+            SetupLogoUploadElement();
         });
     }
 </script>

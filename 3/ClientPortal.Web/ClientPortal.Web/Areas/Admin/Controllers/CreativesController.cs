@@ -17,6 +17,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             this.cpRepo = cpRepository;
         }
 
+        public ActionResult Start(int offerid)
+        {
+            var offer = cpRepo.GetOffer(offerid);
+            return View(offer);
+        }
+
         public ActionResult Index(int? offerid)
         {
             if (offerid.HasValue)
@@ -100,13 +106,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Synch(int offerid, bool overwrite = false)
         {
-            var cmd = new SynchCreativesCommand
-            {
-                OfferId = offerid,
-                OverwriteNames = overwrite
-            };
-            cmd.Run(null);
-
+            SynchCreativesCommand.RunStatic(0, offerid, overwrite);
             return RedirectToAction("Index", new { offerid = offerid });
         }
     }

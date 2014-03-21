@@ -6,6 +6,7 @@
     var ajaxOpts_Drop = RazorHelpers.GetAjaxOptions("cpmDropsTab", "navCPMDrops");
     var ajaxOpts_Creative = RazorHelpers.GetAjaxOptions("cpmCreativesTab", "navCPMCreatives");
     var ajaxOpts_ConfirmSynch = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Get", "Synch Campaigns?");
+    var ajaxOpts_ConfirmDeleteLogo = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Post", "Are you sure you want to delete this offer's logo?");
     var am = Model.Advertiser.AccountManager;
 }
 @if (!Request.IsAjaxRequest())
@@ -22,37 +23,26 @@ Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offe
     <br />
 }
 @Ajax.ActionLink((Model.Logo == null ? "Add Logo" : "View/Edit Logo"), "EditLogo", "Offers", new { id = Model.OfferId }, ajaxOptions) |
+@if (Model.Logo != null)
+{
+    @Ajax.ActionLink("Delete Logo", "DeleteLogo", "Offers", new { id = Model.OfferId }, ajaxOpts_ConfirmDeleteLogo)<text> | </text>
+}
 @Ajax.ActionLink("Show Creatives", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOpts_Creative)
 <br />
 <br />
 @Html.Partial("../CPMReports/Index", Model.CPMReports.OrderByDescending(r => r.CPMReportId))
 @Ajax.ActionLink("[new report]", "Create", "CPMReports", new { offerid = Model.OfferId }, ajaxOpts_Rep)
+@Ajax.ActionLink("[wizard]", "Show", "CPMReportsWizard", new { offerid = Model.OfferId }, ajaxOpts_Rep)
 
 <br /><br />
 @Html.Partial("../CampaignDrops/Index", Model.AllCampaignDrops(false))
 (To create a new drop, click the "New Drop" link next to one of the Campaigns below.)
 
 <br /><br />
-Campaigns:
-<table border="1">
-    <tr>
-        <th>Campaign</th>
-        <th>AffId</th>
-        <th>Affiliate</th>
-        <th>Drops</th>
-        <th></th>
-    </tr>
-@foreach (var campaign in Model.Campaigns.OrderBy(c => c.Affiliate.AffiliateName).ThenBy(c => c.CampaignName))
-{
-    <tr>
-        <td>@campaign.CampaignName</td>
-        <td>@campaign.AffiliateId</td>
-        <td>@campaign.Affiliate.AffiliateName</td>
-        <td>@campaign.CampaignDrops_Originals.Count()</td>
-        <td>@Ajax.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId, from = "offer" }, ajaxOpts_Drop)</td>
-    </tr>
+@{
+    ViewBag.Parent = "offer";
 }
-</table>
+@Html.Partial("../Campaigns/Index", Model.Campaigns.OrderBy(c => c.Affiliate.AffiliateName).ThenBy(c => c.CampaignName))
 
 <br />
 @Ajax.ActionLink("Synch Campaigns", "SynchCampaigns", new { offerid = Model.OfferId }, ajaxOpts_ConfirmSynch)

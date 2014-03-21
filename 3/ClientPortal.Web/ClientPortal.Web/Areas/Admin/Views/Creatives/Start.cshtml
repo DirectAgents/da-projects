@@ -1,0 +1,20 @@
+﻿@model ClientPortal.Data.Contexts.Offer
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmCreativesTab");
+}
+@if (!Request.IsAjaxRequest())
+{
+    <h3>Offer-Creatives Start</h3>
+}
+Offer: <b>@Model.DisplayName</b>
+<br />
+<br />
+
+@if (Model.Creatives.Count == 0)
+{
+    @Ajax.ActionLink("Synch Creatives", "Synch", "Creatives", new { offerid = Model.OfferId }, ajaxOptions)@* overwrite=true not necessary b/c all are created newly *@
+}
+else
+{
+    @Ajax.ActionLink("Show Creatives", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOptions)
+}

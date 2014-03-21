@@ -1,36 +1,32 @@
 ﻿@model IEnumerable<ClientPortal.Data.Contexts.Campaign>
-
 @{
-    int? offerId = null;
-    var offerIds = Model.Select(c => c.OfferId).Distinct();
-    if (offerIds.Count() == 1)
-    {
-        offerId = offerIds.First();
-    }
+    var ajaxOpts_Drop = RazorHelpers.GetAjaxOptions("cpmDropsTab", "navCPMDrops");
+    string parent = ViewBag.Parent ?? "campaigns";
+    bool showActions = ViewBag.ShowActions ?? true;
+    string title = ViewBag.Title ?? "Campaigns:";
 }
 
-<h2>Campaigns</h2>
-
+@title<br />
 <table border="1">
     <tr>
         <th>Campaign</th>
+        <th>AffId</th>
         <th>Affiliate</th>
-        <th colspan="2">Drops</th>
+        <th>Drops</th>
+        @if (showActions) {
+            <th></th>
+        }
     </tr>
 @foreach (var campaign in Model)
 {
-    string viewText = "View Drops (" + campaign.CampaignDrops_Originals.Count() + ")";
     <tr>
         <td>@campaign.CampaignName</td>
+        <td>@campaign.AffiliateId</td>
         <td>@campaign.Affiliate.AffiliateName</td>
-        <td>@Html.ActionLink(viewText, "Show", "Campaigns", new { id = campaign.CampaignId }, null)</td>
-        <td>@Html.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId, from = "campaigns" }, null)</td>
+        <td>@campaign.CampaignDrops_Originals.Count()</td>
+        @if (showActions) {
+            <td>@Ajax.ActionLink("New Drop", "Create", "CampaignDrops", new { campaignid = campaign.CampaignId, from = parent }, ajaxOpts_Drop)</td>
+        }
     </tr>
 }
 </table>
-
-@if (offerId.HasValue)
-{
-    <br />
-    @Html.ActionLink("Show all drops for Offer " + offerId.Value, "Index", "CampaignDrops", new { offerid = offerId.Value }, null)
-}

@@ -11,6 +11,16 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchCampaignsCommand : ConsoleCommand
     {
+        public static int RunStatic(int advertiserId, int? offerId)
+        {
+            var cmd = new SynchCampaignsCommand
+            {
+                AdvertiserId = advertiserId,
+                OfferId = offerId
+            };
+            return cmd.Run();
+        }
+
         public int AdvertiserId { get; set; }
         public int? OfferId { get; set; }
 

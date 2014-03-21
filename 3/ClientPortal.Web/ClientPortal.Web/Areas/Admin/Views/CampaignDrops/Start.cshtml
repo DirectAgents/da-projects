@@ -1,0 +1,15 @@
+﻿@model ClientPortal.Data.Contexts.Offer
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
+}
+@if (!Request.IsAjaxRequest())
+{
+    <h3>Offer-Drop Start</h3>
+}
+Offer: <b>@Model.DisplayName</b>
+<br />
+<br />
+
+?Link to summary<br />
+?List drops<br />
+New drop (manual / wizard)
