@@ -16,7 +16,7 @@
             <dt>Link:</dt>
             <dd><a href="${Link}" target="_blank">${Link}</a></dd>
             <dt>Payout:</dt>
-            <dd># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { #${CostCurrency}${Cost}# } } #</dd>
+            <dd># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { ##= data.CostCurrency + kendo.toString(data.Cost,"n2") ## } } #</dd>
             <dt>Restrictions:</dt>
             <dd style="overflow: auto">#= RestrictionsHtml #</dd>
             <dt>Wiki Details:</dt>
@@ -24,7 +24,7 @@
             <dt>Budget:</dt>
             <dd>${Budget}</dd>
             <dt>Payout to DA:</dt>
-            <dd># if(RevenueIsPercentage){ #${Revenue}%# }else{ #${RevenueCurrency}${Revenue}# } #</dd>
+            <dd># if(RevenueIsPercentage){ #${Revenue}%# }else{ ##= data.RevenueCurrency + kendo.toString(data.Revenue,"n2") ## } #</dd>
             <dt>Passed Info:</dt>
             <dd>${PassedInfo}</dd>
             <dt>Lead Caps:</dt>

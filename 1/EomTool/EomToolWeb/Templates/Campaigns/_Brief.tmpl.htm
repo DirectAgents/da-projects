@@ -29,7 +29,7 @@
             </tr>
             <tr>
                 <td class="fieldName">Payout:</td>
-                <td># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { #${CostCurrency}${Cost}# } } #</td>
+                <td># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { ##= data.CostCurrency + kendo.toString(data.Cost,"n2") ## } } #</td>
             </tr>
             <tr>
                 <td class="fieldName">Restrictions:</td>
@@ -45,7 +45,7 @@
             </tr>
             <tr>
                 <td class="fieldName">Payout to DA:</td>
-                <td># if(RevenueIsPercentage){ #${Revenue}%# }else{ #${RevenueCurrency}${Revenue}# } #</td>
+                <td># if(RevenueIsPercentage){ #${Revenue}%# }else{ ##= data.RevenueCurrency + kendo.toString(data.Revenue,"n2") ## } #</td>
             </tr>
             <tr>
                 <td class="fieldName">Passed Information:</td>
