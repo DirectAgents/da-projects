@@ -23,16 +23,6 @@ namespace EomApp1.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=Nov10Eom2;Integrated Security=True")]
-        public string Nov10Eom2ConnectionString2 {
-            get {
-                return ((string)(this["Nov10Eom2ConnectionString2"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Sep 2012")]
@@ -42,26 +32,6 @@ namespace EomApp1.Properties {
             }
             set {
                 this["DADatabaseName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseR2;Integrated Security=True")]
-        public string DADatabaseR2ConnectionString {
-            get {
-                return ((string)(this["DADatabaseR2ConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseMarch11;Integrated Security=True")]
-        public string DADatabaseMarch11ConnectionString {
-            get {
-                return ((string)(this["DADatabaseMarch11ConnectionString"]));
             }
         }
         
@@ -151,17 +121,6 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseNov2012Test;User=sa;Password=sp0ng" +
-            "bOb")]
-        public string OverrideConnectionString {
-            get {
-                return ((string)(this["OverrideConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2012-11-01")]
         public global::System.DateTime OverrideDate {
             get {
@@ -193,7 +152,8 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseR1;User=sa;Password=sp0ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DADatabaseR1;User=sa;Password=sp0ngbOb" +
+            "")]
         public string DADatabaseR1ConnectionString {
             get {
                 return ((string)(this["DADatabaseR1ConnectionString"]));
@@ -203,7 +163,17 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=Nov10Eom2;Integrated Security=True")]
+        public string Nov10Eom2ConnectionString2 {
+            get {
+                return ((string)(this["Nov10Eom2ConnectionString2"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
         public string DAMain1ConnectionString {
             get {
                 return ((string)(this["DAMain1ConnectionString"]));
@@ -213,7 +183,29 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseJul11;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DADatabaseR2;Integrated Security=True")]
+        public string DADatabaseR2ConnectionString {
+            get {
+                return ((string)(this["DADatabaseR2ConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DADatabaseMarch11;Integrated Security=" +
+            "True")]
+        public string DADatabaseMarch11ConnectionString {
+            get {
+                return ((string)(this["DADatabaseMarch11ConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DADatabaseJul11;Integrated Security=Tr" +
+            "ue")]
         public string DADatabaseJul11ConnectionString {
             get {
                 return ((string)(this["DADatabaseJul11ConnectionString"]));
@@ -223,7 +215,8 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseAug11;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DADatabaseAug11;Integrated Security=Tr" +
+            "ue")]
         public string DADatabaseAug11ConnectionString {
             get {
                 return ((string)(this["DADatabaseAug11ConnectionString"]));
@@ -233,7 +226,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DirectTrack;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DirectTrack;Integrated Security=True")]
         public string DirectTrackConnectionString {
             get {
                 return ((string)(this["DirectTrackConnectionString"]));
@@ -243,7 +236,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DirectTrack3;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DirectTrack3;Integrated Security=True")]
         public string DirectTrack3ConnectionString {
             get {
                 return ((string)(this["DirectTrack3ConnectionString"]));
@@ -253,8 +246,8 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseApril2012_before_cake;Integrated Se" +
-            "curity=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DADatabaseApril2012_before_cake;Integr" +
+            "ated Security=True")]
         public string DADatabaseApril2012_before_cakeConnectionString {
             get {
                 return ((string)(this["DADatabaseApril2012_before_cakeConnectionString"]));
@@ -264,7 +257,19 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=EOMToolSecurity;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=zDADatabaseNov2012Test;User=sa;Passwor" +
+            "d=sp0ngbOb")]
+        public string OverrideConnectionString {
+            get {
+                return ((string)(this["OverrideConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=EOMToolSecurity;Integrated Security=Tr" +
+            "ue")]
         public string EomToolSecurityConnectionString {
             get {
                 return ((string)(this["EomToolSecurityConnectionString"]));
@@ -274,7 +279,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DADatabaseR1;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True")]
         public string DADatabaseR1ConnectionString1 {
             get {
                 return ((string)(this["DADatabaseR1ConnectionString1"]));
@@ -284,33 +289,34 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=EomToolSecurity;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=EomToolSecurity;Integrated Security=Tr" +
+            "ue")]
         public string OverrideEomToolSecurityConnectionString {
             get {
                 return ((string)(this["OverrideEomToolSecurityConnectionString"]));
             }
         }
         
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=zDADatabaseNov2012Test;Integrated Secu" +
+            "rity=True")]
+        public string zDADatabaseNov2012TestConnectionString {
+            get {
+                return ((string)(this["zDADatabaseNov2012TestConnectionString"]));
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb")]
         public string SettingsConnectionString {
             get {
                 return ((string)(this["SettingsConnectionString"]));
             }
             set {
                 this["SettingsConnectionString"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz2\\da;Initial Catalog=zDADatabaseNov2012Test;Integrated Security=Tr" +
-            "ue")]
-        public string zDADatabaseNov2012TestConnectionString {
-            get {
-                return ((string)(this["zDADatabaseNov2012TestConnectionString"]));
             }
         }
     }
