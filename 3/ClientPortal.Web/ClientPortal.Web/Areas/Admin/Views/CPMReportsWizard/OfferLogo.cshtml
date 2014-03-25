@@ -5,7 +5,7 @@
 
 <h3>Report Wizard</h3>
 
-Next Step: <b>Upload logo for offer</b>
+First Step: <b>Upload logo for offer</b>
 
 @{
     ViewBag.ShowHeader = false;
@@ -17,3 +17,4 @@ Next Step: <b>Upload logo for offer</b>
 </td></tr></table>
 
 @Ajax.ActionLink("Go to next step", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+<br /><br />
