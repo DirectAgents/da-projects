@@ -41,6 +41,7 @@ Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offe
 <br /><br />
 @{
     ViewBag.Parent = "offer";
+    ViewBag.LastSynch = Model.LastSynch_Campaigns;
 }
 @Html.Partial("../Campaigns/Index", Model.Campaigns.OrderBy(c => c.Affiliate.AffiliateName).ThenBy(c => c.CampaignName))
 

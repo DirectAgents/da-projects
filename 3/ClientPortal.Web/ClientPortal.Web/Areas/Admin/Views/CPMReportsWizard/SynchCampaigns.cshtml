@@ -12,14 +12,14 @@ Next Step: <b>Synch campaigns with Cake</b>
 <br /><br />
 
 @if (Model.Offer.Campaigns.Any()) {
-    <text>Last Synch: x/x/xx 00:00</text><br /><br />
-
     ViewBag.Title = "Existing Campaigns:";
+    ViewBag.LastSynch = Model.Offer.LastSynch_Campaigns;
     ViewBag.ShowActions = false;
     @Html.Partial("../Campaigns/Index", Model.Offer.Campaigns.OrderBy(c => c.Affiliate.AffiliateName).ThenBy(c => c.CampaignName))
     <br /><br />
 }
 </td></tr></table>
 
-@Ajax.ActionLink("Prev", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions) |
+@Ajax.ActionLink("Back", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions) |
 @Ajax.ActionLink("Skip", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+<br /><br />

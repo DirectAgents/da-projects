@@ -481,6 +481,8 @@
           <Property Name="DefaultPriceFormat" Type="nvarchar" MaxLength="255" />
           <Property Name="Currency" Type="nchar" MaxLength="3" />
           <Property Name="Logo" Type="varbinary(max)" />
+          <Property Name="LastSynch_Campaigns" Type="datetime" />
+          <Property Name="LastSynch_Creatives" Type="datetime" />
         </EntityType>
         <EntityType Name="ScheduledReport">
           <Key>
@@ -1703,6 +1705,8 @@
           <NavigationProperty Name="Creatives" Relationship="ClientPortalModel.FK_Creative_Offer" FromRole="Offer" ToRole="Creative" />
           <Property Type="Binary" Name="Logo" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="Offer" ToRole="CPMReport" />
+          <Property Type="DateTime" Name="LastSynch_Campaigns" Precision="3" />
+          <Property Type="DateTime" Name="LastSynch_Creatives" Precision="3" />
         </EntityType>
         <Association Name="FK_Goal_Offer">
           <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="0..1" />
@@ -2306,6 +2310,8 @@
           <EntitySetMapping Name="Offers">
             <EntityTypeMapping TypeName="ClientPortalModel.Offer">
               <MappingFragment StoreEntitySet="Offer">
+                <ScalarProperty Name="LastSynch_Creatives" ColumnName="LastSynch_Creatives" />
+                <ScalarProperty Name="LastSynch_Campaigns" ColumnName="LastSynch_Campaigns" />
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="Currency" ColumnName="Currency" />
                 <ScalarProperty Name="DefaultPriceFormat" ColumnName="DefaultPriceFormat" />

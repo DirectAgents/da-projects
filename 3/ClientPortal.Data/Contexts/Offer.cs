@@ -28,6 +28,8 @@ namespace ClientPortal.Data.Contexts
         public string DefaultPriceFormat { get; set; }
         public string Currency { get; set; }
         public byte[] Logo { get; set; }
+        public Nullable<System.DateTime> LastSynch_Campaigns { get; set; }
+        public Nullable<System.DateTime> LastSynch_Creatives { get; set; }
     
         public virtual ICollection<Goal> Goals { get; set; }
         public virtual ICollection<Campaign> Campaigns { get; set; }

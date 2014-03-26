@@ -12,14 +12,14 @@ Next Step: <b>Synch creatives with Cake</b>
 <br /><br />
 
 @if (Model.Offer.Creatives.Any()) {
-    <text>Last Synch: x/x/xx 00:00</text><br /><br />
-
     ViewBag.Title = "Existing Creatives:";
+    ViewBag.LastSynch = Model.Offer.LastSynch_Creatives;
     ViewBag.ShowActions = false;
     @Html.Partial("../Creatives/Index", Model.Offer.Creatives.OrderByDescending(c => c.DateCreated))
     <br /><br />
 }
 </td></tr></table>
 
-@Ajax.ActionLink("Prev", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions) |
+@Ajax.ActionLink("Back", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions) |
 @Ajax.ActionLink("Skip", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+<br /><br />

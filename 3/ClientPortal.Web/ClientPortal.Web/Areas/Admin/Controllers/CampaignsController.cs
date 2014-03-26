@@ -28,6 +28,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         public ActionResult Show(int id)
         {
             var campaign = cpRepo.GetCampaign(id);
+            if (campaign == null)
+                return HttpNotFound();
 
             return View(campaign);
         }

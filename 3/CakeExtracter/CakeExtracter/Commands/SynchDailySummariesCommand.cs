@@ -1,6 +1,7 @@
 ﻿using CakeExtracter.Common;
 using CakeExtracter.Etl.CakeMarketing.Extracters;
 using CakeExtracter.Etl.CakeMarketing.Loaders;
+using ClientPortal.Data.Contexts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -55,12 +56,14 @@ namespace CakeExtracter.Commands
                 // Set "LatestDaySums" datetime (if we're updating all offers to today)
                 if (dateRange.ToDate > DateTime.Today && !OfferId.HasValue)
                 {
-                    using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
+                    using (var db = new ClientPortalContext())
                     {
                         var advertiser = db.Advertisers.Where(a => a.AdvertiserId == advertiserId).FirstOrDefault();
                         if (advertiser != null)
+                        {
                             advertiser.LatestDaySums = DateTime.Now;
-                        db.SaveChanges();
+                            db.SaveChanges();
+                        }
                     }
                 }
             }
@@ -72,7 +75,7 @@ namespace CakeExtracter.Commands
             if (string.IsNullOrWhiteSpace(Advertiser) || Advertiser == "*")
             {
                 List<int> advertiserIds;
-                using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
+                using (var db = new ClientPortalContext())
                 {
                     advertiserIds = db.Advertisers
                                       .OrderBy(c => c.AdvertiserId)

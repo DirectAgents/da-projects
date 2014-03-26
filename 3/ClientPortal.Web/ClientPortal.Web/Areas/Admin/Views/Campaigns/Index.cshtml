@@ -4,9 +4,12 @@
     string parent = ViewBag.Parent ?? "campaigns";
     bool showActions = ViewBag.ShowActions ?? true;
     string title = ViewBag.Title ?? "Campaigns:";
+    DateTime? lastSynch = ViewBag.LastSynch;
 }
 
-@title<br />
+@title
+@if (lastSynch.HasValue) { <i>[Last Synch: @lastSynch.Value.ToString("g")]</i> }
+<br />
 <table border="1">
     <tr>
         <th>Campaign</th>

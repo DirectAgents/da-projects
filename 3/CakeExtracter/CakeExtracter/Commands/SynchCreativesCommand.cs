@@ -2,6 +2,7 @@
 using CakeExtracter.Etl.CakeMarketing.Extracters;
 using CakeExtracter.Etl.CakeMarketing.Loaders;
 using ClientPortal.Data.Contexts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -52,6 +53,16 @@ namespace CakeExtracter.Commands
                 var loaderThread = loader.Start(extracter);
                 extracterThread.Join();
                 loaderThread.Join();
+
+                using (var db = new ClientPortalContext())
+                {
+                    var off = db.Offers.FirstOrDefault(o => o.OfferId == offer.OfferId);
+                    if (off != null)
+                    {
+                        off.LastSynch_Creatives = DateTime.Now;
+                        db.SaveChanges();
+                    }
+                }
             }
             return 0;
         }

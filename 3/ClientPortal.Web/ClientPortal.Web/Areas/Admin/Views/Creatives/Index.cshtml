@@ -8,19 +8,28 @@
     ClientPortal.Data.Contexts.Offer offer = (ClientPortal.Data.Contexts.Offer)ViewData["offer"];
     bool showActions = ViewBag.ShowActions ?? true;
     string title = ViewBag.Title ?? "Creatives:";
+    DateTime? lastSynch = ViewBag.LastSynch;
 }
 
 @if (offer == null)
 {
     @title
+    if (lastSynch.HasValue){ <i>[Last Synch: @lastSynch.Value.ToString("g")]</i> }
 }
 else
 {
     <text>Offer: </text><b>@offer.DisplayName</b><br />
-    @Ajax.ActionLink("Synch Creatives", "Synch", "Creatives", new { offerid = offer.OfferId }, ajaxOpts_ConfirmSynch)<text> | </text>
-    @Ajax.ActionLink("Synch With Overwrite", "Synch", "Creatives", new { offerid = offer.OfferId, overwrite = true }, ajaxOpts_ConfirmOverwrite)<text> | </text>
-    @Ajax.ActionLink("Refresh", "Index", "Creatives", new { offerid = offer.OfferId }, ajaxOptions)
-    <br />
+    if (showActions)
+    {
+        @Ajax.ActionLink("Synch Creatives", "Synch", "Creatives", new { offerid = offer.OfferId }, ajaxOpts_ConfirmSynch)<text> | </text>
+        @Ajax.ActionLink("Synch With Overwrite", "Synch", "Creatives", new { offerid = offer.OfferId, overwrite = true }, ajaxOpts_ConfirmOverwrite)<text> | </text>
+        @Ajax.ActionLink("Refresh", "Index", "Creatives", new { offerid = offer.OfferId }, ajaxOptions)
+        <br />
+    }
+    if (offer.LastSynch_Creatives.HasValue)
+    {
+        <i>Last Synch: @offer.LastSynch_Creatives</i><br />
+    }
 }
 <table border="1">
     <tr>
@@ -66,5 +75,7 @@ else
     </tr>
 }
 </table>
-
-<br />
+@if (showActions)
+{ // don't want to show this in the reports wizard
+    <br />
+}
