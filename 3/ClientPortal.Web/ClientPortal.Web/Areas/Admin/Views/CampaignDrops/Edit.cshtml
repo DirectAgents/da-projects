@@ -2,6 +2,8 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
+    string formAction = ViewBag.FormAction;
+    bool showCancel = ViewBag.ShowCancel ?? true;
 }
 
 @if (!IsAjax)
@@ -11,7 +13,7 @@
 Campaign: <b>@Model.Campaign.CampaignName</b><br />
 Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)</b><br />
 
-@using (Ajax.BeginForm(ajaxOpts_Post))
+@using (Ajax.BeginForm(formAction, ajaxOpts_Post))
 {
     @Html.ValidationSummary()
 
@@ -50,7 +52,7 @@ Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.Affiliate
             </tr>
         </table>
 @{
-    var creatives = (IEnumerable<ClientPortal.Data.Contexts.Creative>)ViewData["Creatives"];
+    var creatives = Model.Campaign.Offer.CreativesByDate();
     int i = 0;
 }
         @foreach (var creativeStat in Model.CreativeStats)
@@ -79,8 +81,11 @@ Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.Affiliate
         }
         <br />
         <input type="submit" value="Save" />
-        &nbsp;
-        @Ajax.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, ajaxOptions)
+        @if (showCancel)
+        {
+            <text>&nbsp;</text>
+            @Ajax.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, ajaxOptions)
+        }
     </fieldset>
     
 }

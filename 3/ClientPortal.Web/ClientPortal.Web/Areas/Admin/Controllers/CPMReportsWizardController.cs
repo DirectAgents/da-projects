@@ -47,5 +47,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return ShowNextStep(offerid, CPMReportWizardVM.WizardStep.SynchCreatives);
         }
 
+        public ActionResult CreateReport(string reportname)
+        {
+            return null;
+        }
     }
 }

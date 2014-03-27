@@ -1,0 +1,24 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
+}
+
+<h3>Drop Wizard</h3>
+
+Next Step: <b>Add Creatives</b>
+<table><tr><td>
+Add one or more creatives to the drop. If available, add a creative of type "Email" first.
+<br /><br />
+When done: @Ajax.ActionLink("Synch creative stats", "SynchCreativeStats", new { id = Model.CampaignDrop.CampaignDropId }, ajaxOptions)
+<br /><br />
+
+@{
+    ViewBag.ShowDropDetails = false;
+}
+@Html.Partial("ReviewDrop", Model.CampaignDrop)
+
+</td></tr></table>
+
+@Ajax.ActionLink("Back", "Show", "CampaignDropsWizard", new { id = Model.CampaignDrop.CampaignDropId, step = (int)(Model.Step - 1) }, ajaxOptions) |
+@Ajax.ActionLink("Skip", "Show", "CampaignDropsWizard", new { id = Model.CampaignDrop.CampaignDropId, step = (int)(Model.Step + 1) }, ajaxOptions)
+<br /><br />

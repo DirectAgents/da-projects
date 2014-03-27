@@ -2,9 +2,11 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab", "navCPMDrops");
     var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Get", "Are you sure you want to delete this drop?");
+    bool showActions = ViewBag.ShowActions ?? true;
+    string title = ViewBag.Title ?? "Drops:";
 }
 
-Drops:<br />
+@title<br />
 <table border="1">
     <tr>
         <th>List</th>
@@ -14,7 +16,9 @@ Drops:<br />
         <th>Clicks</th>
         <th>Leads</th>
         <th>Total Cost</th>
-        <th></th>
+        @if (showActions) {
+            <th></th>
+        }
     </tr>
 @foreach (var drop in Model)
 {
@@ -31,14 +35,15 @@ Drops:<br />
             eCPL: @(drop.CostPerLead.HasValue ? drop.CostPerLead.Value.ToString("C2") : "")
         </td>
         <td style="text-align:center">@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")</td>
-        <td>@Ajax.ActionLink("Manage", "Show", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)
-            | @Ajax.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)
-            @if (!drop.IsInCPMReport) {
-                <text>| </text>@Ajax.ActionLink("Delete", "Delete", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOpts_Confirm)
-            }
-        </td>
-        @* for testing! *@
-        @*<td>@drop.CampaignDropId</td>*@
+        @if (showActions)
+        {
+            <td>@Ajax.ActionLink("Manage", "Show", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)
+                | @Ajax.ActionLink("Edit", "Edit", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)
+                @if (!drop.IsInCPMReport) {
+                    <text>| </text>@Ajax.ActionLink("Delete", "Delete", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOpts_Confirm)
+                }
+            </td>
+        }
     </tr>
     if (drop.CreativeStats.Count > 1 && !drop.CombineCreatives)
     {

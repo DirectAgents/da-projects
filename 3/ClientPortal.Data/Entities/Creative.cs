@@ -10,5 +10,11 @@ namespace ClientPortal.Data.Contexts
         {
             get { return CreativeId + (string.IsNullOrEmpty(CreativeName) ? "" : " - " + CreativeName); }
         }
+
+        [NotMapped]
+        public string DisplayNameWithType
+        {
+            get { return DisplayName + " [" + this.CreativeType.CreativeTypeName + "]"; }
+        }
     }
 }

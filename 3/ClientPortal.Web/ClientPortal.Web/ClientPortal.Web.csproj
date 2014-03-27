@@ -206,6 +206,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AdvertisersController.cs" />
     <Compile Include="Areas\Admin\Controllers\CampaignDropsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CampaignDropsWizardController.cs" />
     <Compile Include="Areas\Admin\Controllers\CampaignsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContactsController.cs" />
     <Compile Include="Areas\Admin\Controllers\CPMReportsController.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\OffersController.cs" />
     <Compile Include="Areas\Admin\Models\CampaignDropVM.cs" />
+    <Compile Include="Areas\Admin\Models\CampaignDropWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\ContactVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
@@ -677,6 +679,16 @@
     <Content Include="Areas\Admin\Views\CPMReportsWizard\SynchCreatives.cshtml" />
     <Content Include="Areas\Admin\Views\Offers\EditLogoInner.cshtml" />
     <Content Include="Areas\Admin\Views\CPMReportsWizard\Test.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\ChooseCampaign.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReportsWizard\ReviewDrops.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReportsWizard\ReportName.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\CreateDrop.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\Test.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\Creatives.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\ReviewDrop.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\FinalReview.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDrops\FieldsTable.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

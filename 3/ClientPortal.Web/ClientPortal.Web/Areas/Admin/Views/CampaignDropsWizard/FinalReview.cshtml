@@ -1,0 +1,26 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
+    var ajaxOpts_Report = RazorHelpers.GetAjaxOptions("cpmReportsTab", "navCPMReports");
+}
+
+<h3>Drop Wizard</h3>
+
+Next Step: <b>Final Review</b>
+<table><tr><td>
+Review the stats for the drop. Make any adjustments as needed.
+<br /><br />
+When done, continue to:
+@Ajax.ActionLink("Report Wizard", "Show", "CPMReportsWizard", new { offerid = Model.CampaignDrop.Campaign.OfferId, step = (int)ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM.WizardStep.ReviewDrops }, ajaxOpts_Report)
+<br /><br />
+
+@{
+    ViewBag.ShowCreativeStats = true;
+    ViewBag.ShowAddRemoveCreatives = false;
+}
+@Html.Partial("ReviewDrop", Model.CampaignDrop)
+
+</td></tr></table>
+
+@Ajax.ActionLink("Back", "Show", "CampaignDropsWizard", new { id = Model.CampaignDrop.CampaignDropId, step = (int)(Model.Step - 1) }, ajaxOptions)
+<br /><br />

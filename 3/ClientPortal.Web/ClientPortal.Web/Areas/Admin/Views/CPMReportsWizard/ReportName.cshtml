@@ -1,0 +1,31 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+    var ajaxOpts_post = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Post");
+}
+
+<h3>Report Wizard</h3>
+
+Next Step: <b>Report Name</b>
+<table><tr><td>
+Enter a name for the report.
+<br /><br />
+
+@using (Ajax.BeginForm("CreateReport", ajaxOpts_post))
+{
+    <table>
+    <tr>
+        <td>Report Name</td>
+        <td>
+            @Html.TextBox("reportname")
+        </td>
+    </tr>
+    </table>
+    
+    <br />
+    <input type="submit" value="Create Report" />
+}
+</td></tr></table>
+
+@Ajax.ActionLink("Back", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions)
+<br /><br />

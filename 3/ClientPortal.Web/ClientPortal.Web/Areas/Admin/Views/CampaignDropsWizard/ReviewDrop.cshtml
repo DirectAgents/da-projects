@@ -1,0 +1,74 @@
+﻿@model ClientPortal.Data.Contexts.CampaignDrop
+@{
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
+    var ajaxOpts_RemoveCreative = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Get", "Are you sure you want to remove this creative?");
+
+    bool showCreativeStats = ViewBag.ShowCreativeStats ?? false;
+    bool showAddRemoveCreatives = ViewBag.ShowAddRemoveCreatives ?? true;
+    bool first = true;
+}
+
+<fieldset>
+    <legend>Campaign Drop</legend>
+    @Html.Partial("../CampaignDrops/FieldsTable")
+
+    @foreach (var creativeStat in Model.CreativeStats)
+    {
+        //Html.RenderPartial("../CreativeStats/Show", creativeStat);
+        <fieldset>
+            <legend>Creative</legend>
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(_ => creativeStat.Creative.CreativeName, "Name")</td>
+                    <td>@Html.DisplayFor(_ => creativeStat.Creative.DisplayName)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(_ => creativeStat.Creative.CreativeType, "Type")</td>
+                    <td>@Html.DisplayFor(_ => creativeStat.Creative.CreativeType.CreativeTypeName)</td>
+                </tr>
+                @if (showCreativeStats)
+                {
+                    <tr>
+                        <td>@Html.LabelFor(_ => creativeStat.Clicks)</td>
+                        <td>@Html.DisplayFor(_ => creativeStat.Clicks)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(_ => creativeStat.Leads)</td>
+                        <td>@Html.DisplayFor(_ => creativeStat.Leads)</td>
+                    </tr>
+                }
+                @if (showAddRemoveCreatives)
+                {
+                    <tr>
+                        <td colspan="2">@Ajax.ActionLink("Remove from drop", "RemoveCreative", new {campaigndropid = Model.CampaignDropId, creativestatid = creativeStat.CreativeStatId }, ajaxOpts_RemoveCreative)</td>
+                    </tr>
+                }
+                @if (first)
+                {
+                    <tr>
+                        <td colspan="2"><i>Coming soon: Add/Edit thumbnail</i></td>
+                    </tr>
+                }
+            </table>
+        </fieldset>
+        first = false;
+    }
+    <br />
+@if (showAddRemoveCreatives)
+{
+    var creatives = Model.CreativesNotInDrop.OrderByDescending(c => c.DateCreated);
+    if (creatives.Any())
+    {
+        using (Ajax.BeginForm("AddCreative", ajaxOpts_Post))
+        {
+            var selectList = new SelectList(creatives, "CreativeId", "DisplayNameWithType");
+            <text>Add Creative:</text>
+            <table><tr><td>
+                @Html.DropDownList("CreativeId", selectList)
+            </td></tr></table>
+            <input type="submit" value="Add" />
+            @Html.HiddenFor(m => m.CampaignDropId)
+        }
+    }
+}
+</fieldset>

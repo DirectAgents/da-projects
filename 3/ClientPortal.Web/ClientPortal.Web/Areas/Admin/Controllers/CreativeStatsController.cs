@@ -36,13 +36,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         private void SetupForCreate(CreativeStat creativeStat)
         {
             creativeStat.CampaignDrop = cpRepo.GetCampaignDrop(creativeStat.CampaignDropId);
-            if (creativeStat.CampaignDrop == null)
-                return;
-
-            var creativeIds = creativeStat.CampaignDrop.CreativeStats.Select(cs => cs.CreativeId).ToList();
-            ViewData["Creatives"] = creativeStat.CampaignDrop.Campaign.Offer.Creatives
-                                            .Where(c => !creativeIds.Contains(c.CreativeId))
-                                            .OrderByDescending(c => c.DateCreated);
         }
 
         [HttpPost]

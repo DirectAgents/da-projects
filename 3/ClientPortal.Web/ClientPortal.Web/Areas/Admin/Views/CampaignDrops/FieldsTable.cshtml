@@ -1,0 +1,39 @@
+﻿@model ClientPortal.Data.Contexts.CampaignDrop
+
+@{
+    bool showDetails = ViewBag.ShowDropDetails ?? true;
+}
+
+<table>
+    <tr>
+        <td>@Html.LabelFor(m => m.Date)</td>
+        <td>@Html.DisplayFor(m => m.Date, "Date")</td>
+    </tr>
+    @if (showDetails)
+    {
+        <tr>
+            <td>@Html.LabelFor(m => m.FromEmail)</td>
+            <td>@Html.DisplayFor(m => m.FromEmail)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Subject)</td>
+            <td>@Html.DisplayFor(m => m.Subject)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Cost)</td>
+            <td>@Html.DisplayFor(m => m.Cost, "Money")</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Volume)</td>
+            <td>@Html.DisplayFor(m => m.Volume)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Opens)</td>
+            <td>@Html.DisplayFor(m => m.Opens)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.CombineCreatives)</td>
+            <td>@(Model.CombineCreatives ? "yes" : "no")</td>
+        </tr>
+    }
+</table>

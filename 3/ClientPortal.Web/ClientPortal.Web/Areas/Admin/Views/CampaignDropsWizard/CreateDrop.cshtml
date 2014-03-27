@@ -1,0 +1,18 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM
+
+<h3>Drop Wizard</h3>
+
+Next Step: <b>Enter Details</b>
+<table><tr><td>
+Enter the details for the drop...
+<br /><br />
+
+@{
+    ViewBag.ShowHeader = false;
+    ViewBag.IncludeCreative = false;
+}
+@Html.Partial("../CampaignDrops/Create", Model.CampaignDrop)
+
+</td></tr></table>
+
+<br /><br />

@@ -1,0 +1,38 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
+    var ajaxOpts_post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
+
+    var camps = Model.Offer.Campaigns.OrderBy(c => c.Affiliate.AffiliateName)
+        .Select(c => new ClientPortal.Web.Models.IdNameVM
+        {
+            Id = c.CampaignId,
+            Name = "(" + c.AffiliateId + ") " + c.Affiliate.AffiliateName + " | " + c.CampaignName
+        }).ToList();
+    
+}
+
+<h3>Drop Wizard</h3>
+
+First Step: <b>Choose Affiliate</b>
+<table><tr><td>
+Choose the Affiliate/Campaign...
+<br /><br />
+
+@using (Ajax.BeginForm("ChooseCampaign", ajaxOpts_post))
+{
+    <table>
+    <tr>
+        <td>Affiliate | Campaign</td>
+        <td>
+            @Html.DropDownList("campaignid", new SelectList(camps, "Id", "Name"))
+        </td>
+    </tr>
+    </table>
+    
+    <br />
+    <input type="submit" value="Continue" />
+}
+</td></tr></table>
+
+<br /><br />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -88,6 +89,17 @@ namespace ClientPortal.Data.Contexts
                     return null;
                 else
                     return Cost.Value / CreativeStatTotals.Leads.Value;
+            }
+        }
+
+        [NotMapped]
+        public IEnumerable<Creative> CreativesNotInDrop
+        {
+            get
+            {
+                var creativeIds = this.CreativeStats.Select(cs => cs.CreativeId).ToList();
+                var creatives = this.Campaign.Offer.Creatives.Where(c => !creativeIds.Contains(c.CreativeId));
+                return creatives;
             }
         }
 

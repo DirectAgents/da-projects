@@ -1,0 +1,42 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+    var ajaxOpts_Drop = RazorHelpers.GetAjaxOptions("cpmDropsTab", "navCPMDrops");
+    var drops = Model.Offer.AllCampaignDrops(false);
+}
+
+<h3>Report Wizard</h3>
+
+Next Step: <b>@(drops.Any() ? "Review" : "Create") drops</b>
+<table><tr><td>
+
+@if (!drops.Any())
+{
+    <text>Create at least one drop to add to the report.</text>
+    <br /><br />
+    
+    @Ajax.ActionLink("Create a drop", "Show", "CampaignDropsWizard", new { offerid = Model.Offer.OfferId }, ajaxOpts_Drop)
+    <br /><br />
+}
+else
+{
+    <text>Need to create any drops for the report? Review the existing drops below.</text>
+    <br /><br />
+    
+    @Ajax.ActionLink("Create a drop", "Show", "CampaignDropsWizard", new { offerid = Model.Offer.OfferId }, ajaxOpts_Drop)<text> | </text>
+    @Ajax.ActionLink("Continue to next step", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+    <br /><br />
+
+    ViewBag.Title = "Existing Drops:";
+    ViewBag.ShowActions = false;
+    @Html.Partial("../CampaignDrops/Index", drops)
+    <br /><br />
+}
+</td></tr></table>
+
+@Ajax.ActionLink("Back", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions)
+@if (drops.Any())
+{
+    <text> | </text>@Ajax.ActionLink("Continue", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+}
+<br /><br />

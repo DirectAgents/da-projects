@@ -43,7 +43,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (campaign == null)
                 return null;
 
-            ViewData["Creatives"] = campaign.Offer.CreativesByDate();
             ViewData["from"] = from; // only used for non-ajax page
 
             if (drop == null)
@@ -91,7 +90,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (campaignDrop == null)
                 return HttpNotFound();
 
-            ViewData["Creatives"] = campaignDrop.Campaign.Offer.CreativesByDate();
             return View(campaignDrop);
         }
 
@@ -107,7 +105,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 ModelState.AddModelError("", "Campaign Drop could not be saved");
             }
             cpRepo.FillExtended_CampaignDrop(drop); // for campaign/affiliate info
-            ViewData["Creatives"] = drop.Campaign.Offer.CreativesByDate();
             return View(drop);
         }
 
@@ -129,9 +126,21 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult SynchStats(int id)
         {
-            var drop = cpRepo.GetCampaignDrop(id);
-            if (drop == null)
+            bool success = SynchStatsForDrop(cpRepo, id);
+            if (!success)
                 return HttpNotFound();
+
+            if (Request.IsAjaxRequest())
+                return RedirectToAction("Show", new { id = id });
+            else
+                return Content("Synch complete. Click 'back' and refresh.");
+        }
+
+        public static bool SynchStatsForDrop(IClientPortalRepository cpRepo, int dropId)
+        {
+            var drop = cpRepo.GetCampaignDrop(dropId);
+            if (drop == null)
+                return false;
 
             cpRepo.DuplicateDropIfNecessary(drop);
 
@@ -145,10 +154,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 command.Run(null);
                 cpRepo.UpdateCreativeStatFromSummaries(creativeStat.CreativeStatId, true);
             }
-            if (Request.IsAjaxRequest())
-                return RedirectToAction("Show", new { id = id });
-            else
-                return Content("Synch complete. Click 'back' and refresh.");
+            return true;
         }
     }
 }

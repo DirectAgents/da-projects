@@ -309,28 +309,49 @@ namespace ClientPortal.Data.Services
             return campaignDrop;
         }
 
+        public CampaignDrop AddCampaignDrop(int campaignId, DateTime date, bool saveChanges = false)
+        {
+            var drop = new CampaignDrop
+            {
+                CampaignId = campaignId,
+                Date = date
+            };
+
+            if (AddCampaignDrop(drop, null, saveChanges))
+                return drop;
+            else
+                return null;
+        }
+
+
         // returns whether the drop was successfully created
-        public bool AddCampaignDrop(CampaignDrop drop, int creativeId, bool saveChanges = false)
+        public bool AddCampaignDrop(CampaignDrop drop, int? creativeId, bool saveChanges = false)
         {
             var campaign = context.Campaigns.Find(drop.CampaignId);
-            var creative = context.Creatives.Find(creativeId);
-
-            if (campaign == null || creative == null)
+            if (campaign == null)
                 return false;
 
-            var creativeStat = new CreativeStat
+            if (creativeId.HasValue)
             {
-                Creative = creative,
-                CampaignDrop = drop
-            };
-            context.CreativeStats.Add(creativeStat);
+                var creative = context.Creatives.Find(creativeId);
+                if (creative == null)
+                    return false;
+
+                var creativeStat = new CreativeStat
+                {
+                    Creative = creative,
+                    //CampaignDrop = drop
+                };
+                drop.CreativeStats.Add(creativeStat);
+            }
+            context.CampaignDrops.Add(drop);
 
             try
             {
                 if (saveChanges)
                     SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -436,6 +457,18 @@ namespace ClientPortal.Data.Services
                 success = true;
             }
             return success;
+        }
+
+        public bool AddCreativeStat(int campaignDropId, int creativeId, bool saveChanges = false)
+        {
+            var creativeStat = new CreativeStat
+            {
+                CampaignDropId = campaignDropId,
+                CreativeId = creativeId
+            };
+            return AddCreativeStat(creativeStat, saveChanges);
+            //TODO: ?do this by getting the creative, adding it to the stat, then adding the stat to the drop?
+            //(issue w/ CampaignDropsWizard.AddCreative(): if call Show w/o redirect, creative displayname is blank)
         }
 
         public bool AddCreativeStat(CreativeStat inStat, bool saveChanges = false)

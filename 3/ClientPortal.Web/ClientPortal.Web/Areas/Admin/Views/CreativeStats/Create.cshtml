@@ -2,6 +2,8 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
+
+    var creatives = Model.CampaignDrop.CreativesNotInDrop.OrderByDescending(c => c.DateCreated);
 }
 
 @if (!IsAjax)
@@ -22,7 +24,7 @@
             </tr>
             <tr>
                 <td>Creative</td>
-                <td>@Html.EditorFor(_ => ViewData["Creatives"], "CreativeDropDown", "CreativeId")</td>
+                <td>@Html.EditorFor(_ => creatives, "CreativeDropDown", "CreativeId")</td>
             </tr>
         </table>
 

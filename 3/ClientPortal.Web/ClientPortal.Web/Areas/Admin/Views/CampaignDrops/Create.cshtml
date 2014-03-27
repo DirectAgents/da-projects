@@ -2,9 +2,14 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
     string from = (string)ViewData["from"];
+    bool showHeader = ViewBag.ShowHeader ?? true;
+    bool includeCreative = ViewBag.IncludeCreative ?? true;
 }
 
-<h3>Create Drop</h3>
+@if (showHeader)
+{
+    <h3>Create Drop</h3>
+}
 
 @using (Ajax.BeginForm(ajaxOptions))
 {
@@ -26,10 +31,14 @@
                 <td>@Html.LabelFor(m => m.Date)</td>
                 <td>@Html.TextBoxFor(m => m.Date, "{0:d}")</td>
             </tr>
-            <tr>
-                <td>@Html.Label("Creative")</td>
-                <td>@Html.EditorFor(_ => ViewData["Creatives"], "CreativeDropDown", "CreativeId")</td>
-            </tr>
+            @if (includeCreative)
+            {
+                var creatives = Model.Campaign.Offer.CreativesByDate();
+                <tr>
+                    <td>@Html.Label("Creative")</td>
+                    <td>@Html.EditorFor(_ => creatives, "CreativeDropDown", "CreativeId")</td>
+                </tr>
+            }
             <tr>
                 <td>@Html.LabelFor(m => m.FromEmail)</td>
                 <td>@Html.EditorFor(m => m.FromEmail)</td>
