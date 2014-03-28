@@ -2,14 +2,12 @@
 
 <h3>Drop Wizard</h3>
 
-Next Step: <b>Enter Details</b>
+Last Step: <b>Final Review - Edit</b>
 <table><tr><td>
-Enter the details for the drop...
-<br /><br />
 
 @{
-    ViewBag.FormAction = "Details";
-    ViewBag.ShowCancel = false;
+    ViewBag.FormAction = "FinalReviewEdit";
+    ViewBag.FromWizard = true;
     ViewBag.AllowChangeCreative = false;
 }
 @Html.Partial("../CampaignDrops/Edit", Model.CampaignDrop)

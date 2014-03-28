@@ -2,8 +2,10 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
-    string formAction = ViewBag.FormAction;
+    string formAction = ViewBag.FormAction; // null is okay; will post back to same path
     bool showCancel = ViewBag.ShowCancel ?? true;
+    bool fromWizard = ViewBag.FromWizard ?? false;
+    bool allowChangeCreative = ViewBag.AllowChangeCreative ?? true;
 }
 
 @if (!IsAjax)
@@ -11,7 +13,7 @@
     <h3>Edit Drop</h3>
 }
 Campaign: <b>@Model.Campaign.CampaignName</b><br />
-Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.AffiliateId)</b><br />
+Affiliate: <b>@Model.Campaign.Affiliate.DisplayName</b><br />
 
 @using (Ajax.BeginForm(formAction, ajaxOpts_Post))
 {
@@ -57,15 +59,27 @@ Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.Affiliate
 }
         @foreach (var creativeStat in Model.CreativeStats)
         {
-            var selectList = new SelectList(creatives, "CreativeId", "DisplayName", creativeStat.CreativeId);
             //Html.RenderPartial("../CreativeStats/Edit", creativeStat);
             <fieldset>
                 <legend>Creative</legend>
                 @Html.Hidden("CreativeStats[" + i + "].CreativeStatId", creativeStat.CreativeStatId)
+                @if (!allowChangeCreative)
+                {
+                    @Html.Hidden("CreativeStats[" + i + "].CreativeId", creativeStat.CreativeId)
+                }
                 <table>
                     <tr>
+                    @if (allowChangeCreative)
+                    {
+                        var selectList = new SelectList(creatives, "CreativeId", "DisplayName", creativeStat.CreativeId);
                         <td></td>
                         <td>@Html.DropDownList("CreativeStats[" + i + "].CreativeId", selectList)</td>
+                    }
+                    else
+                    {
+                        <td>@Html.Label("Name")</td>
+                        <td>@creativeStat.Creative.DisplayName</td>
+                    }
                     </tr>
                     <tr>
                         <td>@Html.Label("Clicks")</td>
@@ -84,7 +98,12 @@ Affiliate: <b>@Model.Campaign.Affiliate.AffiliateName (@Model.Campaign.Affiliate
         @if (showCancel)
         {
             <text>&nbsp;</text>
-            @Ajax.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, ajaxOptions)
+            if (fromWizard)
+            {
+                @Ajax.ActionLink("Cancel", "Show", "CampaignDropsWizard", new { id = Model.CampaignDropId, step = (int)ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM.WizardStep.FinalReview }, ajaxOptions)
+            } else {
+                @Ajax.ActionLink("Cancel", "Show", "CampaignDrops", new { id = Model.CampaignDropId }, ajaxOptions)
+            }
         }
     </fieldset>
     

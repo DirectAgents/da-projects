@@ -61,22 +61,31 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Details(CampaignDrop drop)
         {
+            return SaveDrop(drop, CampaignDropWizardVM.WizardStep.Details);
+        }
+
+        private ActionResult SaveDrop(CampaignDrop drop, CampaignDropWizardVM.WizardStep step, CampaignDropWizardVM.WizardStep? nextStep = null)
+        {
             if (ModelState.IsValid)
             {
                 bool success = cpRepo.SaveCampaignDrop(drop, true);
                 if (success)
-                    return ShowNextStep(drop.CampaignDropId, null, CampaignDropWizardVM.WizardStep.Details);
-
+                {
+                    if (nextStep == null)
+                        return RedirectToAction("Show", new { id = drop.CampaignDropId, step = (int)(step + 1) });
+                    else
+                        return RedirectToAction("Show", new { id = drop.CampaignDropId, step = (int)(nextStep.Value) });
+                }
                 ModelState.AddModelError("", "Campaign Drop could not be saved");
             }
             cpRepo.FillExtended_CampaignDrop(drop); // for campaign/affiliate info
 
             var model = new CampaignDropWizardVM
             {
-                Step = CampaignDropWizardVM.WizardStep.Details,
+                Step = step,
                 CampaignDrop = drop,
             };
-            return View(model);
+            return View(step.ToString(), model);
         }
 
         [HttpPost]
@@ -100,6 +109,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             CampaignDropsController.SynchStatsForDrop(cpRepo, id);
             //TODO: handle an error in synching
             return RedirectToAction("Show", new { id = id, step = (int)CampaignDropWizardVM.WizardStep.FinalReview, v = DateTime.Now.Ticks });
+        }
+
+        [HttpPost]
+        public ActionResult FinalReviewEdit(CampaignDrop drop)
+        {
+            return SaveDrop(drop, CampaignDropWizardVM.WizardStep.FinalReviewEdit, CampaignDropWizardVM.WizardStep.FinalReview);
         }
 
     }

@@ -5,7 +5,7 @@ namespace ClientPortal.Web.Areas.Admin.Models
 {
     public class CampaignDropWizardVM
     {
-        public enum WizardStep { ChooseCampaign, Details, Creatives, FinalReview, Test };
+        public enum WizardStep { ChooseCampaign, Details, Creatives, FinalReview, FinalReviewEdit };
 
         public WizardStep Step { get; set; }
         public Offer Offer { get; set; }

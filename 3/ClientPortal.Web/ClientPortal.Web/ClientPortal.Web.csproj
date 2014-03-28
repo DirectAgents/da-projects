@@ -686,9 +686,10 @@
     <Content Include="Areas\Admin\Views\CampaignDropsWizard\Details.cshtml" />
     <Content Include="Areas\Admin\Views\CampaignDropsWizard\Test.cshtml" />
     <Content Include="Areas\Admin\Views\CampaignDropsWizard\Creatives.cshtml" />
-    <Content Include="Areas\Admin\Views\CampaignDropsWizard\ReviewDrop.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\ShowDrop.cshtml" />
     <Content Include="Areas\Admin\Views\CampaignDropsWizard\FinalReview.cshtml" />
     <Content Include="Areas\Admin\Views\CampaignDrops\FieldsTable.cshtml" />
+    <Content Include="Areas\Admin\Views\CampaignDropsWizard\FinalReviewEdit.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

@@ -1,10 +1,12 @@
 ﻿@model ClientPortal.Data.Contexts.CampaignDrop
 @{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
     var ajaxOpts_RemoveCreative = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Get", "Are you sure you want to remove this creative?");
 
     bool showCreativeStats = ViewBag.ShowCreativeStats ?? false;
     bool showAddRemoveCreatives = ViewBag.ShowAddRemoveCreatives ?? true;
+    bool showWizardEditLink = ViewBag.ShowWizardEditLink ?? false;
     bool first = true;
 }
 
@@ -52,6 +54,11 @@
             </table>
         </fieldset>
         first = false;
+    }
+    @if (showWizardEditLink)
+    {
+        <text>Switch to:</text>
+        @Ajax.ActionLink("Edit Mode", "Show", new { id = Model.CampaignDropId, step = (int)ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM.WizardStep.FinalReviewEdit }, ajaxOptions)
     }
     <br />
 @if (showAddRemoveCreatives)
