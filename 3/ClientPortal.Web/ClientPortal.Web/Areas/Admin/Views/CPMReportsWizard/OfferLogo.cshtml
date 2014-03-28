@@ -8,9 +8,7 @@
 First Step: <b>Upload logo for offer</b>
 
 @{
-    ViewBag.ShowHeader = false;
-    ViewBag.ShowFooter = false;
-    ViewBag.ParentSel = "#cpmReportsTab";
+    ViewBag.FromWizard = true;
 }
 <table><tr><td>
 @Html.Partial("../Offers/EditLogo", Model.Offer)

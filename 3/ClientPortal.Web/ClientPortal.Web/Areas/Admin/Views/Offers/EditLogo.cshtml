@@ -1,24 +1,22 @@
 ﻿@model ClientPortal.Data.Contexts.Offer
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmSummaryTab");
-    var header = "View/Edit Logo";
-    if (Model.Logo == null) {
-        header = "Add Logo";
-    }
-    bool showHeader = ViewBag.ShowHeader ?? true;
-    bool showFooter = ViewBag.ShowFooter ?? true;
-    string parentSel = ViewBag.ParentSel ?? "#cpmSummaryTab";
+
+    bool fromWizard = ViewBag.FromWizard ?? false;
+    string parentSel = fromWizard ? "#cpmReportsTab" : "#cpmSummaryTab";
+    string setupFunc = "SetupOfferLogoUploadEl" + (fromWizard ? "_wiz" : "");
+    string onUploadFunc = "onUploadOfferLogoComplete" + (fromWizard ? "_wiz" : "");
 }
 
-@if (showHeader)
+@if (!fromWizard)
 {
-    <h3>@header</h3>
+    <h3>@(Model.Logo == null ? "Add Logo" : "View/Edit Logo")</h3>
 }
 <div id="divEditOfferLogo">
     @Html.Partial("../Offers/EditLogoInner", Model)
 </div>
 
-@if (showFooter)
+@if (!fromWizard)
 {
     <div>
         @Ajax.ActionLink("Back to Offer Summary", "Show", "Offers", new { id = Model.OfferId }, ajaxOptions)
@@ -27,10 +25,10 @@
 
 <script>
     $(function () {
-        SetupLogoUploadElement();
+        @(setupFunc)();
     });
 
-    function SetupLogoUploadElement() {
+    function @(setupFunc)() {
         $("@parentSel #offerLogoUpload").kendoUpload({
             async: {
                 saveUrl: "@Url.Action("UploadLogo", "Offers")",
@@ -44,11 +42,11 @@
                 uploadSelectedFiles: "Upload"
             },
             multiple: false,
-            complete: onUploadComplete
+            complete: @onUploadFunc
         });
     }
 
-    function onUploadComplete() {
+    function @(onUploadFunc)() {
         $.ajax({
             url: '@Url.Action("EditLogo", "Offers")',
             data: {
@@ -58,7 +56,7 @@
             cache: false
         }).done(function (html) {
             $("@parentSel #divEditOfferLogo").html(html);
-            SetupLogoUploadElement();
+            @(setupFunc)();
         });
     }
 </script>

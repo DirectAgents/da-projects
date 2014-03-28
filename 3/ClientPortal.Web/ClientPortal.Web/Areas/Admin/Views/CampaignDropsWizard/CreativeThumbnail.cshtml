@@ -1,0 +1,19 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
+}
+
+<h3>Drop Wizard</h3>
+
+<b>Upload creative thumbnail</b>
+
+@{
+    ViewBag.FromWizard = true;
+}
+<table><tr><td>
+@Html.Partial("../Creatives/EditThumbnail", Model.Creative)
+</td></tr></table>
+
+Back to:
+@Ajax.ActionLink("Final Review", "Show", "CampaignDropsWizard", new { id = Model.CampaignDrop.CampaignDropId, step = (int)ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM.WizardStep.FinalReview }, ajaxOptions)
+<br /><br />

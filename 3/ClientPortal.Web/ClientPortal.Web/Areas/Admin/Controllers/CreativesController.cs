@@ -67,14 +67,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return File(thumbnail.GetBytes(), "image/" + thumbnail.ImageFormat, thumbnail.FileName);
         }
 
-        public ActionResult EditThumbnail(int id)
+        public ActionResult EditThumbnail(int id, bool inner = false)
         {
             var creative = cpRepo.GetCreative(id);
             if (creative == null)
-            {
                 return HttpNotFound();
-            }
-            return View(creative);
+
+            if (inner)
+                return View("EditThumbnailInner", creative);
+            else
+                return View(creative);
         }
         [HttpPost]
         public ActionResult UploadThumbnail(int id)

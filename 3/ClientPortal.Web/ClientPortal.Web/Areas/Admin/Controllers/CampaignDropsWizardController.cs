@@ -117,5 +117,15 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return SaveDrop(drop, CampaignDropWizardVM.WizardStep.FinalReviewEdit, CampaignDropWizardVM.WizardStep.FinalReview);
         }
 
+        public ActionResult CreativeThumbnail(int campaigndropid, int creativeid)
+        {
+            var model = new CampaignDropWizardVM
+            {
+                Creative = cpRepo.GetCreative(creativeid),
+                CampaignDrop = cpRepo.GetCampaignDrop(campaigndropid) //note: only the id is used; ?allow to just set id in the VM?
+            };
+            return View(model);
+        }
+
     }
 }

@@ -54,25 +54,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return File(logo.GetBytes(), "image/" + logo.ImageFormat, logo.FileName);
         }
 
-        public ActionResult EditLogo(int id, bool? showheader, bool? showfooter, bool inner = false)
+        public ActionResult EditLogo(int id, bool inner = false)
         {
             var offer = cpRepo.GetOffer(id);
             if (offer == null)
-            {
                 return HttpNotFound();
-            }
+
             if (inner)
-            {
                 return View("EditLogoInner", offer);
-            }
             else
-            {
-                if (showheader.HasValue)
-                    ViewBag.ShowHeader = showheader.Value;
-                if (showfooter.HasValue)
-                    ViewBag.ShowFooter = showfooter.Value;
                 return View(offer);
-            }
         }
         [HttpPost]
         public ActionResult UploadLogo(int id)

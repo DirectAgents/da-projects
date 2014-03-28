@@ -10,14 +10,16 @@
 Last Step: <b>Final Review</b>
 <table><tr><td>
 
-Review the stats for the drop. Make any adjustments as needed.
+Review the stats for the drop and make any adjustments as needed.
+You can also <i>add a thumbnail</i> for the first creative.
 <br /><br />
 
 When done, continue to:
-@Ajax.ActionLink("Report Wizard", "Show", "CPMReportsWizard", new { offerid = Model.CampaignDrop.Campaign.OfferId, step = (int)ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM.WizardStep.ReviewDrops }, ajaxOpts_Report)
-<br />
-Or return to:
+@Ajax.ActionLink("Report Wizard - Review Drops", "Show", "CPMReportsWizard", new { offerid = Model.CampaignDrop.Campaign.OfferId, step = (int)ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM.WizardStep.ReviewDrops }, ajaxOpts_Report)
+@*
+<br />Or return to:
 @Ajax.ActionLink("Offer Summary (" + Model.CampaignDrop.Campaign.OfferId + ")", "Show", "Offers", new { id = Model.CampaignDrop.Campaign.OfferId }, ajaxOpts_Sum)
+*@
 <br /><br />
 
 To edit, switch to:
@@ -26,6 +28,7 @@ To edit, switch to:
 @{
     ViewBag.ShowCreativeStats = true;
     ViewBag.ShowAddRemoveCreatives = false;
+    ViewBag.ShowCreativeThumbnailLink = true;
     ViewBag.ShowWizardEditLink = true;
 }
 @Html.Partial("ShowDrop", Model.CampaignDrop)

@@ -1,7 +1,5 @@
 ﻿@model ClientPortal.Data.Contexts.Offer
-@{
-//    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmSummaryTab");@* TODO: parameterize the tab*@
-}
+
 Offer: <b>@Model.DisplayName</b>
 <br /><br />
 
@@ -11,8 +9,7 @@ Offer: <b>@Model.DisplayName</b>
     <img src="@Url.Action("Logo", "Offers", new { id = Model.OfferId, v = DateTime.Now.Ticks })" />
 }
 
-@*@using (Ajax.BeginForm(ajaxOptions))*@
-@using (Html.BeginForm("UploadLogo", "Offers"))
+@using (Html.BeginForm("UploadLogo", "Offers", new { id = Model.OfferId })) // note: action not used; it's specified in the kendoUpload setup
 {
     <input id="offerLogoUpload" name="logo" type="file" />
 }

@@ -20,23 +20,21 @@ Next Step: <b>@(drops.Any() ? "Review" : "Create") drops</b>
 }
 else
 {
-    <text>Need to create any drops for the report? Review the existing drops below.</text>
+    <text>Need to create any drops for the report? The existing drops are listed below.</text>
     <br /><br />
     
-    @Ajax.ActionLink("Create a drop", "Show", "CampaignDropsWizard", new { offerid = Model.Offer.OfferId }, ajaxOpts_Drop)<text> | </text>
-    @Ajax.ActionLink("Continue to next step", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+    @Ajax.ActionLink("Create a drop", "Show", "CampaignDropsWizard", new { offerid = Model.Offer.OfferId }, ajaxOpts_Drop)
+    <br /><br />
+    <text> Or continue to: </text>
+    @Ajax.ActionLink("Enter report name", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
     <br /><br />
 
     ViewBag.Title = "Existing Drops:";
     ViewBag.ShowActions = false;
     @Html.Partial("../CampaignDrops/Index", drops)
-    <br /><br />
+    <br />
 }
 </td></tr></table>
 
 @Ajax.ActionLink("Back", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions)
-@if (drops.Any())
-{
-    <text> | </text>@Ajax.ActionLink("Continue", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
-}
 <br /><br />

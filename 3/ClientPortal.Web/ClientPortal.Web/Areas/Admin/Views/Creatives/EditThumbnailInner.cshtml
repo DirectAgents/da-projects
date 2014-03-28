@@ -1,0 +1,15 @@
+﻿@model ClientPortal.Data.Contexts.Creative
+
+Creative: <b>@Model.DisplayNameWithType</b>
+<br /><br />
+
+@if (Model.Thumbnail != null)
+{
+    <text>Current Thumbnail:</text><br/>
+    <img src="@Url.Action("Thumbnail", "Creatives", new { id = Model.CreativeId, v = DateTime.Now.Ticks })" />
+}
+
+@using (Html.BeginForm("UploadThumbnail", "Creatives", new { id = Model.CreativeId })) // note: action not used; it's specified in the kendoUpload setup
+{
+    <input id="creativeThumbnailUpload" name="thumbnail" type="file" />
+}

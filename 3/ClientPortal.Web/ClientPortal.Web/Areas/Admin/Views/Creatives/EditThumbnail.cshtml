@@ -1,35 +1,35 @@
 ﻿@model ClientPortal.Data.Contexts.Creative
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmCreativesTab");
-    var header = "View/Edit Thumbnail";
-    if (Model.Thumbnail == null) {
-        header = "Add Thumbnail";
-    }
+
+    bool fromWizard = ViewBag.FromWizard ?? false;
+    string parentSel = fromWizard ? "#cpmDropsTab" : "#cpmCreativesTab";
+    string setupFunc = "SetupCreativeThumbnailUploadEl" + (fromWizard ? "_wiz" : "");
+    string onUploadFunc = "onUploadCreativeThumbnailComplete" + (fromWizard ? "_wiz" : "");
 }
 
-<h3>@header</h3>
-
-Creative: <b>@Model.CreativeName</b>
-
-@if (Model.Thumbnail != null)
+@if (!fromWizard)
 {
-    <br /><br />
-    <text>Current Thumbnail:</text><br/>
-    <img src="@Url.Action("Thumbnail", "Creatives", new { id = Model.CreativeId })" />
+    <h3>@(Model.Thumbnail == null ? "Add Thumbnail" : "View/Edit Thumbnail")</h3>
 }
-
-@using (Ajax.BeginForm(ajaxOptions))
-{
-    <input id="creativeThumbnailUpload" name="thumbnail" type="file" />
-}
-
-<div>
-    @Ajax.ActionLink("Back to Creatives List", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOptions)
+<div id="divEditCreativeThumbnail">
+    @Html.Partial("../Creatives/EditThumbnailInner", Model)
 </div>
+
+@if (!fromWizard)
+{
+    <div>
+        @Ajax.ActionLink("Back to Creatives List", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOptions)
+    </div>
+}
 
 <script>
     $(function () {
-        $("#creativeThumbnailUpload").kendoUpload({
+        @(setupFunc)();
+    });
+
+    function @(setupFunc)() {
+        $("@parentSel #creativeThumbnailUpload").kendoUpload({
             async: {
                 saveUrl: "@Url.Action("UploadThumbnail", "Creatives")",
                 autoUpload: false
@@ -38,19 +38,25 @@ Creative: <b>@Model.CreativeName</b>
                 e.data = { id: @Model.CreativeId };
             },
             localization: {
+                select: "Select File...",
                 uploadSelectedFiles: "Upload"
             },
             multiple: false,
-            complete: onUploadComplete
+            complete: @onUploadFunc
         });
-    });
+    }
 
-    function onUploadComplete() {
+    function @(onUploadFunc)() {
         $.ajax({
             url: '@Url.Action("EditThumbnail", "Creatives")',
+            data: {
+                id: @Model.CreativeId,
+                inner: true
+            },
             cache: false
         }).done(function (html) {
-            $("#cpmCreativesTab").html(html);
+            $("@parentSel #divEditCreativeThumbnail").html(html);
+            @(setupFunc)();
         });
     }
 </script>
