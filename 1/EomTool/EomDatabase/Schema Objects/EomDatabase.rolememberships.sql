@@ -1,2 +1,2 @@
-﻿EXECUTE sp_addrolemember @rolename = N'db_owner', @membername = N'DIRECTAGENTS\AccountMangers';
+﻿EXECUTE sp_addrolemember @rolename = N'db_owner', @membername = N'DIRECTAGENTS\Account Managers';
 GO

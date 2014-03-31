@@ -1,2 +1,2 @@
-﻿CREATE USER [DIRECTAGENTS\AccountMangers] FOR LOGIN [DIRECTAGENTS\AccountMangers];
+﻿CREATE USER [DIRECTAGENTS\Account Managers] FOR LOGIN [DIRECTAGENTS\Account Managers];
 
