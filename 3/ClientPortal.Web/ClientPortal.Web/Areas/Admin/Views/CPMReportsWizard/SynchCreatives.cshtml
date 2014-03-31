@@ -20,6 +20,6 @@ Next Step: <b>Synch creatives with Cake</b>
 }
 </td></tr></table>
 
-@Ajax.ActionLink("Back", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions) |
-@Ajax.ActionLink("Skip", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+@Ajax.ActionLink("Back", "Show", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions) |
+@Ajax.ActionLink("Skip", "Show", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
 <br /><br />

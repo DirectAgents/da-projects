@@ -288,6 +288,20 @@ namespace ClientPortal.Data.Services
             return true;
         }
 
+        public IQueryable<CampaignDrop> CampaignDropsNotInReport(int reportId)
+        {
+            var report = GetCPMReport(reportId);
+            if (report == null)
+                return null;
+
+            var dropIds_nonCopies = report.CampaignDrops.Where(cd => cd.CopyOf == null).Select(cd => cd.CampaignDropId);
+            var dropIds_original = report.CampaignDrops.Where(cd => cd.CopyOf != null).Select(cd => cd.CampaignDropOriginal).Select(cd => cd.CampaignDropId);
+            var dropIds = dropIds_nonCopies.Union(dropIds_original).ToList();
+
+            // maybe... report.Offer.AllCampaignDrops()...?
+            return CampaignDrops(report.OfferId, null).Where(cd => !dropIds.Contains(cd.CampaignDropId));
+        }
+
         public IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId, bool includeCopies = false)
         {
             var campaignDropsDbQuery = context.CampaignDrops.Include("Campaign").Include("CreativeStats.Creative").Include("CPMReports");

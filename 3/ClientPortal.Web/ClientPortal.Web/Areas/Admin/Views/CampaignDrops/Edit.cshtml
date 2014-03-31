@@ -2,6 +2,7 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmDropsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmDropsTab", null, "Post");
+
     string formAction = ViewBag.FormAction; // null is okay; will post back to same path
     bool showCancel = ViewBag.ShowCancel ?? true;
     bool fromWizard = ViewBag.FromWizard ?? false;

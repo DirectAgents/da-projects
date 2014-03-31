@@ -51,9 +51,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         private void SetupForCreate(CPMReport cpmReport)
         {
             cpmReport.Offer = cpRepo.GetOffer(cpmReport.OfferId);
-            //if (cpmReport.Offer == null)
-            //    return;
-            //ViewData["CampaignDrops"] = cpmReport.Offer.AllCampaignDrops(false);
         }
 
         [HttpPost]
@@ -83,12 +80,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (report == null)
                 return null;
 
-            var dropIds_nonCopies = report.CampaignDrops.Where(cd => cd.CopyOf == null).Select(cd => cd.CampaignDropId);
-            var dropIds_original = report.CampaignDrops.Where(cd => cd.CopyOf != null).Select(cd => cd.CampaignDropOriginal).Select(cd => cd.CampaignDropId);
-            var dropIds = dropIds_nonCopies.Union(dropIds_original).ToList();
-
-            ViewData["CampaignDrops"] = cpRepo.CampaignDrops(report.OfferId, null)
-                                                .Where(cd => !dropIds.Contains(cd.CampaignDropId))
+            ViewBag.CampaignDrops = cpRepo.CampaignDropsNotInReport(cpmReportId)
                                                 .OrderByDescending(cd => cd.Date);
             return report;
         }
@@ -99,7 +91,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (report == null)
                 return HttpNotFound();
 
-            //ViewData["CampaignDrops"] = cpRepo.CampaignDrops(report.OfferId, null);
             return View(report);
         }
 
@@ -112,7 +103,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 return RedirectToAction("Show", new { id = report.CPMReportId });
             }
             cpRepo.FillExtended_CPMReport(report);
-            //ViewData["CampaignDrops"] = cpRepo.CampaignDrops(report.OfferId, null);
             return View(report);
         }
 

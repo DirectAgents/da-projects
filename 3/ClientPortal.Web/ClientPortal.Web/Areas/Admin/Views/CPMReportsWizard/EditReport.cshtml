@@ -1,0 +1,30 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+}
+
+<h3>Report Wizard</h3>
+
+Next Step: <b>Report Details</b>
+<table><tr><td>
+Enter the details for the report.
+<br /><br />
+When done, click "save report" to go to Manage Report
+<br />
+(to preview, test and send the report)
+<br /><br />
+
+@{
+    ViewBag.FormAction = "EditReport";
+    ViewBag.FromWizard = true;
+}
+@Html.Partial("../CPMReports/Edit", Model.Report)
+
+@Html.ActionLink("Preview Report", "PreviewEmail", "CPMReports", new { id = Model.Report.CPMReportId }, new { target = "_blank" })
+(opens in new tab)
+<br /><br />
+
+</td></tr></table>
+
+@Ajax.ActionLink("Back", "Show", new { id = Model.Report.CPMReportId, step = (int)(Model.Step - 1) }, ajaxOptions)
+<br /><br />

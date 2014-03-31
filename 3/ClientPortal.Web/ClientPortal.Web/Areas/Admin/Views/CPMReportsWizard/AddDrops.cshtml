@@ -1,0 +1,23 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+}
+
+<h3>Report Wizard</h3>
+
+Next Step: <b>Add drops</b>
+<table><tr><td>
+Add one or more drops to the report.
+<br /><br />
+When done: @Ajax.ActionLink("Enter report details", "Show", new { id = Model.Report.CPMReportId, step = (int)(Model.Step + 1) }, ajaxOptions)
+<br /><br />
+
+@{
+    ViewBag.FromWizard = true;
+    ViewBag.ShowReportDetails = false;
+}
+@Html.Partial("../CPMReports/Show", Model.Report)
+
+</td></tr></table>
+
+<br /><br />

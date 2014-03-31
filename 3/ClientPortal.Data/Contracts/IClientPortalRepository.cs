@@ -29,6 +29,7 @@ namespace ClientPortal.Data.Contracts
         bool RemoveDropFromCPMReport(int cpmReportId, int campaignDropId, bool saveChanges = false);
         void FillExtended_CPMReport(CPMReport inReport);
         Offer DeleteCPMReport(int reportId, bool saveChanges = false);
+        IQueryable<CampaignDrop> CampaignDropsNotInReport(int reportId);
 
         IQueryable<CampaignDrop> CampaignDrops(int? offerId, int? campaignId, bool includeCopies = false);
         CampaignDrop GetCampaignDrop(int id);

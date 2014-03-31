@@ -2,16 +2,22 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Post");
+
+    string formAction = ViewBag.FormAction; // null is okay; will post back to same path
+    bool fromWizard = ViewBag.FromWizard ?? false;
 }
 
-@if (!IsAjax)
+@if (!fromWizard)
 {
-    <h3>Edit Report</h3>
+    if (!IsAjax)
+    {
+        <h3>Edit Report</h3>
+    }
+    <text>Advertiser: </text><b>@Model.Offer.Advertiser.AdvertiserName</b><br />
+    <text>Offer: </text><b>@Model.Offer.DisplayName</b><br />
 }
-Advertiser: <b>@Model.Offer.Advertiser.AdvertiserName</b><br />
-Offer: <b>@Model.Offer.DisplayName</b><br />
 
-@using (Ajax.BeginForm(ajaxOpts_Post))
+@using (Ajax.BeginForm(formAction, ajaxOpts_Post))
 {
     @Html.ValidationSummary()
 
@@ -41,19 +47,24 @@ Offer: <b>@Model.Offer.DisplayName</b><br />
                 <td>@Html.TextAreaFor(m => m.Conclusion, 8, 100, null)</td>
             </tr>
         </table>
-@{
-    //var drops = (IEnumerable<ClientPortal.Data.Contexts.CampaignDrop>)ViewData["CampaignDrops"];
-}
-        @foreach(var drop in Model.CampaignDropsOrdered)
-        {
-        <fieldset>
-            <legend>Drop</legend>
-            @drop.DisplayName
-        </fieldset>
-        }
         <br />
-        <input type="submit" value="Save" />
-        &nbsp;
-        @Ajax.ActionLink("Cancel", "Show", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)
+        <input type="submit" value="Save Report" />
+        @if (!fromWizard)
+        {
+            <text>&nbsp;</text>
+            @Ajax.ActionLink("Cancel", "Show", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)
+        }
+        <br /><br />
+
+        @{
+            var drops = Model.CampaignDropsOrdered;
+        }
+        @if (drops.Any())
+        {
+            ViewBag.Title = "Report Drops:";
+            ViewBag.ShowActions = false;
+            @Html.Partial("../CampaignDrops/Index", drops)
+        }
+
     </fieldset>
 }

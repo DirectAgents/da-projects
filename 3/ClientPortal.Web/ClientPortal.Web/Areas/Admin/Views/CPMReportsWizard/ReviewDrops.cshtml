@@ -36,5 +36,5 @@ else
 }
 </td></tr></table>
 
-@Ajax.ActionLink("Back", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions)
+@Ajax.ActionLink("Back", "Show", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions)
 <br /><br />

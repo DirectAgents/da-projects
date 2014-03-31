@@ -4,9 +4,11 @@ namespace ClientPortal.Web.Areas.Admin.Models
 {
     public class CPMReportWizardVM
     {
-        public enum WizardStep { OfferLogo, SynchCampaigns, SynchCreatives, ReviewDrops, ReportName, Test };
+        public enum WizardStep { OfferLogo, SynchCampaigns, SynchCreatives, ReviewDrops, CreateReport, AddDrops, EditReport };
 
-        public Offer Offer { get; set; }
         public WizardStep Step { get; set; }
+
+        public CPMReport Report { get; set; }
+        public Offer Offer { get; set; }
     }
 }

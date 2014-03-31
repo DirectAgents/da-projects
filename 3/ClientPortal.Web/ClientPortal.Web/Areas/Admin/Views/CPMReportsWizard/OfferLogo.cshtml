@@ -14,5 +14,5 @@ First Step: <b>Upload logo for offer</b>
 @Html.Partial("../Offers/EditLogo", Model.Offer)
 </td></tr></table>
 
-@Ajax.ActionLink("Go to next step", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+@Ajax.ActionLink("Go to next step", "Show", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
 <br /><br />

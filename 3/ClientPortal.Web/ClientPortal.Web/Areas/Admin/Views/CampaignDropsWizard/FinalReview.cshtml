@@ -35,5 +35,5 @@ To edit, switch to:
 
 </td></tr></table>
 
-@Ajax.ActionLink("Back", "Show", "CampaignDropsWizard", new { id = Model.CampaignDrop.CampaignDropId, step = (int)(Model.Step - 1) }, ajaxOptions)
+@Ajax.ActionLink("Back", "Show", new { id = Model.CampaignDrop.CampaignDropId, step = (int)(Model.Step - 1) }, ajaxOptions)
 <br /><br />

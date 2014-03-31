@@ -13,11 +13,14 @@ Enter a name for the report.
 
 @using (Ajax.BeginForm("CreateReport", ajaxOpts_post))
 {
+    @Html.ValidationSummary()
+    
+    @Html.Hidden("OfferId", Model.Offer.OfferId)
     <table>
     <tr>
         <td>Report Name</td>
         <td>
-            @Html.TextBox("reportname")
+            @Html.TextBox("Name")
         </td>
     </tr>
     </table>
@@ -27,5 +30,5 @@ Enter a name for the report.
 }
 </td></tr></table>
 
-@Ajax.ActionLink("Back", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions)
+@Ajax.ActionLink("Back", "Show", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions)
 <br /><br />
