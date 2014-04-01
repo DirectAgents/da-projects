@@ -24,6 +24,8 @@ CPM Reports:
             {
                 <text> | </text>@Ajax.ActionLink("Delete", "Delete", "CPMReports", new { id = report.CPMReportId }, ajaxOpts_Confirm)
             }
+            @* testing!
+            | @Ajax.ActionLink("wiztest", "Show", "CPMReportsWizard", new { id = report.CPMReportId, step = (int)ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM.WizardStep.AddDrops }, ajaxOptions) *@
         </td>
     </tr>
 }

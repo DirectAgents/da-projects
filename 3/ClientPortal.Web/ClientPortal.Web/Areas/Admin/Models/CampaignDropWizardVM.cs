@@ -13,5 +13,7 @@ namespace ClientPortal.Web.Areas.Admin.Models
         public CampaignDrop CampaignDrop { get; set; }
         public IEnumerable<Creative> Creatives { get; set; }
         public Creative Creative { get; set; }
+
+        public bool FromReportWizard { get; set; }
     }
 }

@@ -15,23 +15,15 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             this.cpRepo = cpRepository;
         }
 
-        //public ActionResult Show(int offerid, CampaignDropWizardVM.WizardStep step = 0, CampaignDrop drop = null)
-        //{
-        //    var offer = cpRepo.GetOffer(offerid);
-        //    var model = new CampaignDropWizardVM
-        //    {
-        //        Step = step,
-        //        Offer = offer,
-        //        CampaignDrop = drop
-        //    };
-
-        //    return View(step.ToString(), model);
-        //}
-        public ActionResult Show(int? id, int? offerid, CampaignDropWizardVM.WizardStep step = 0)
+        public ActionResult Show(int? id, int? offerid, CampaignDropWizardVM.WizardStep step = 0, bool? fromreportwizard = null)
         {
+            if (!fromreportwizard.HasValue)
+                fromreportwizard = (bool?)Session["FromReportWizard"];
+
             var model = new CampaignDropWizardVM
             {
-                Step = step
+                Step = step,
+                FromReportWizard = fromreportwizard ?? false
             };
 
             if (id.HasValue)
@@ -48,8 +40,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChooseCampaign(int campaignid)
+        public ActionResult ChooseCampaign(int campaignid, bool fromreportwizard = false)
         {
+            Session["FromReportWizard"] = fromreportwizard;
+
             var drop = cpRepo.AddCampaignDrop(campaignid, DateTime.Today, true);
             if (drop == null)
                 return HttpNotFound();

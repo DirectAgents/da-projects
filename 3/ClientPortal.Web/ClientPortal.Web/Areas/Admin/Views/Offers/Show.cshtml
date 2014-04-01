@@ -32,7 +32,7 @@ Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offe
 <br />
 @Html.Partial("../CPMReports/Index", Model.CPMReports.OrderByDescending(r => r.CPMReportId))
 @Ajax.ActionLink("[new report]", "Create", "CPMReports", new { offerid = Model.OfferId }, ajaxOpts_Rep)
-@Ajax.ActionLink("[wizard]", "Show", "CPMReportsWizard", new { offerid = Model.OfferId }, ajaxOpts_Rep)
+@Ajax.ActionLink("[cpm report wizard]", "Show", "CPMReportsWizard", new { offerid = Model.OfferId }, ajaxOpts_Rep)
 
 <br /><br />
 @Html.Partial("../CampaignDrops/Index", Model.AllCampaignDrops(false))

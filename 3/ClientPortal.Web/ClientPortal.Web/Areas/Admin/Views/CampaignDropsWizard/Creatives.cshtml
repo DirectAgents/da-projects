@@ -9,7 +9,13 @@ Next Step: <b>Add Creatives</b>
 <table><tr><td>
 Add one or more creatives to the drop. If available, add a creative of type "Email" first.
 <br /><br />
-When done: @Ajax.ActionLink("Synch creative stats", "SynchCreativeStats", new { id = Model.CampaignDrop.CampaignDropId }, ajaxOptions)
+When done:
+@if (Model.CampaignDrop.CreativeStats.Any())
+{
+    @Ajax.ActionLink("Synch creative stats", "SynchCreativeStats", new { id = Model.CampaignDrop.CampaignDropId }, ajaxOptions)
+} else {
+    <a href="#" onclick="alert('You must first add a creative to the drop.'); return false">Synch creative stats</a>
+}
 <br /><br />
 
 @{

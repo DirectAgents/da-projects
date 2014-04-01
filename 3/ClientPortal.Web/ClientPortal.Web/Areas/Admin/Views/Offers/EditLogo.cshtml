@@ -2,13 +2,13 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmSummaryTab");
 
-    bool fromWizard = ViewBag.FromWizard ?? false;
-    string parentSel = fromWizard ? "#cpmReportsTab" : "#cpmSummaryTab";
-    string setupFunc = "SetupOfferLogoUploadEl" + (fromWizard ? "_wiz" : "");
-    string onUploadFunc = "onUploadOfferLogoComplete" + (fromWizard ? "_wiz" : "");
+    bool inWizard = ViewBag.InWizard ?? false;
+    string parentSel = inWizard ? "#cpmReportsTab" : "#cpmSummaryTab";
+    string setupFunc = "SetupOfferLogoUploadEl" + (inWizard ? "_wiz" : "");
+    string onUploadFunc = "onUploadOfferLogoComplete" + (inWizard ? "_wiz" : "");
 }
 
-@if (!fromWizard)
+@if (!inWizard)
 {
     <h3>@(Model.Logo == null ? "Add Logo" : "View/Edit Logo")</h3>
 }
@@ -16,7 +16,7 @@
     @Html.Partial("../Offers/EditLogoInner", Model)
 </div>
 
-@if (!fromWizard)
+@if (!inWizard)
 {
     <div>
         @Ajax.ActionLink("Back to Offer Summary", "Show", "Offers", new { id = Model.OfferId }, ajaxOptions)

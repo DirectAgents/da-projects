@@ -21,6 +21,7 @@ Choose the Affiliate/Campaign...
 
 @using (Ajax.BeginForm("ChooseCampaign", ajaxOpts_post))
 {
+    @Html.HiddenFor(m => m.FromReportWizard)
     <table>
     <tr>
         <td>Affiliate | Campaign</td>

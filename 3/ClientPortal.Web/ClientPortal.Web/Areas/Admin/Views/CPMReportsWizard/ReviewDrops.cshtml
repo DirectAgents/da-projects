@@ -23,7 +23,7 @@ else
     <text>Need to create any drops for the report? The existing drops are listed below.</text>
     <br /><br />
     
-    @Ajax.ActionLink("Create a drop", "Show", "CampaignDropsWizard", new { offerid = Model.Offer.OfferId }, ajaxOpts_Drop)
+    @Ajax.ActionLink("Create a drop", "Show", "CampaignDropsWizard", new { offerid = Model.Offer.OfferId, fromreportwizard = true }, ajaxOpts_Drop)
     <br /><br />
     <text> Or continue to: </text>
     @Ajax.ActionLink("Enter report name", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
@@ -33,6 +33,11 @@ else
     ViewBag.ShowActions = false;
     @Html.Partial("../CampaignDrops/Index", drops)
     <br />
+    @*testing
+    foreach (var drop in drops)
+    {
+        @Ajax.ActionLink(drop.CampaignDropId.ToString(), "Show", "CampaignDropsWizard", new { id = drop.CampaignDropId, step = 1 }, ajaxOpts_Drop)<br />
+    }*@
 }
 </td></tr></table>
 

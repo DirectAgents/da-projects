@@ -5,8 +5,8 @@
 
     string formAction = ViewBag.FormAction; // null is okay; will post back to same path
     bool showCancel = ViewBag.ShowCancel ?? true;
-    bool fromWizard = ViewBag.FromWizard ?? false;
     bool allowChangeCreative = ViewBag.AllowChangeCreative ?? true;
+    bool inWizard = ViewBag.InWizard ?? false;
 }
 
 @if (!IsAjax)
@@ -99,7 +99,7 @@ Affiliate: <b>@Model.Campaign.Affiliate.DisplayName</b><br />
         @if (showCancel)
         {
             <text>&nbsp;</text>
-            if (fromWizard)
+            if (inWizard)
             {
                 @Ajax.ActionLink("Cancel", "Show", "CampaignDropsWizard", new { id = Model.CampaignDropId, step = (int)ClientPortal.Web.Areas.Admin.Models.CampaignDropWizardVM.WizardStep.FinalReview }, ajaxOptions)
             } else {

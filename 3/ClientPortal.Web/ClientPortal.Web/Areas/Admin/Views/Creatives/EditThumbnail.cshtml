@@ -2,13 +2,13 @@
 @{
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmCreativesTab");
 
-    bool fromWizard = ViewBag.FromWizard ?? false;
-    string parentSel = fromWizard ? "#cpmDropsTab" : "#cpmCreativesTab";
-    string setupFunc = "SetupCreativeThumbnailUploadEl" + (fromWizard ? "_wiz" : "");
-    string onUploadFunc = "onUploadCreativeThumbnailComplete" + (fromWizard ? "_wiz" : "");
+    bool inWizard = ViewBag.InWizard ?? false;
+    string parentSel = inWizard ? "#cpmDropsTab" : "#cpmCreativesTab";
+    string setupFunc = "SetupCreativeThumbnailUploadEl" + (inWizard ? "_wiz" : "");
+    string onUploadFunc = "onUploadCreativeThumbnailComplete" + (inWizard ? "_wiz" : "");
 }
 
-@if (!fromWizard)
+@if (!inWizard)
 {
     <h3>@(Model.Thumbnail == null ? "Add Thumbnail" : "View/Edit Thumbnail")</h3>
 }
@@ -16,7 +16,7 @@
     @Html.Partial("../Creatives/EditThumbnailInner", Model)
 </div>
 
-@if (!fromWizard)
+@if (!inWizard)
 {
     <div>
         @Ajax.ActionLink("Back to Creatives List", "Index", "Creatives", new { offerid = Model.OfferId }, ajaxOptions)

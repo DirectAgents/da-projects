@@ -9,14 +9,14 @@ Next Step: <b>Report Details</b>
 <table><tr><td>
 Enter the details for the report.
 <br /><br />
-When done, click "save report" to go to Manage Report
+When done, click "save report" to go to the Manage Report page
 <br />
-(to preview, test and send the report)
+(where you can preview, test and send the report)
 <br /><br />
 
 @{
     ViewBag.FormAction = "EditReport";
-    ViewBag.FromWizard = true;
+    ViewBag.InWizard = true;
 }
 @Html.Partial("../CPMReports/Edit", Model.Report)
 

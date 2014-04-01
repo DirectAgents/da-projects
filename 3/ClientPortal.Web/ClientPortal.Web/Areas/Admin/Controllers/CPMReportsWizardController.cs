@@ -21,6 +21,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Show(int? id, int? offerid, CPMReportWizardVM.WizardStep step = 0)
         {
+            // to clear this out after returning from drop wizard:
+            Session["FromReportWizard"] = null;
+
             var model = new CPMReportWizardVM
             {
                 Step = step

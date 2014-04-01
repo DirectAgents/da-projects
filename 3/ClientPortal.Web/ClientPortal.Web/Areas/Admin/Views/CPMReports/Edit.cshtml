@@ -4,10 +4,10 @@
     var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("cpmReportsTab", null, "Post");
 
     string formAction = ViewBag.FormAction; // null is okay; will post back to same path
-    bool fromWizard = ViewBag.FromWizard ?? false;
+    bool inWizard = ViewBag.InWizard ?? false;
 }
 
-@if (!fromWizard)
+@if (!inWizard)
 {
     if (!IsAjax)
     {
@@ -49,7 +49,7 @@
         </table>
         <br />
         <input type="submit" value="Save Report" />
-        @if (!fromWizard)
+        @if (!inWizard)
         {
             <text>&nbsp;</text>
             @Ajax.ActionLink("Cancel", "Show", "CPMReports", new { id = Model.CPMReportId }, ajaxOptions)

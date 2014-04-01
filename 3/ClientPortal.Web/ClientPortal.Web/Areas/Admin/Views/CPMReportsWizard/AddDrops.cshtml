@@ -9,11 +9,17 @@ Next Step: <b>Add drops</b>
 <table><tr><td>
 Add one or more drops to the report.
 <br /><br />
-When done: @Ajax.ActionLink("Enter report details", "Show", new { id = Model.Report.CPMReportId, step = (int)(Model.Step + 1) }, ajaxOptions)
+When done:
+@if (Model.Report.CampaignDrops.Any())
+{
+    @Ajax.ActionLink("Enter report details", "Show", new { id = Model.Report.CPMReportId, step = (int)(Model.Step + 1) }, ajaxOptions)
+} else {
+    <a href="#" onclick="alert('You must first add a drop to the report.'); return false">Enter report details</a>
+}
 <br /><br />
 
 @{
-    ViewBag.FromWizard = true;
+    ViewBag.InWizard = true;
     ViewBag.ShowReportDetails = false;
 }
 @Html.Partial("../CPMReports/Show", Model.Report)
