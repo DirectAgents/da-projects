@@ -10,6 +10,8 @@
 @title
 @if (lastSynch.HasValue) { <i>[Last Synch: @lastSynch.Value.ToString("g")]</i> }
 <br />
+@if (Model.Any())
+{
 <table border="1">
     <tr>
         <th>Campaign</th>
@@ -33,3 +35,4 @@
     </tr>
 }
 </table>
+}

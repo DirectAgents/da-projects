@@ -5,7 +5,7 @@
 
 <h3>Report Wizard</h3>
 
-First Step: <b>Upload logo for offer</b>
+First Step: <b>@(Model.Offer.Logo == null ? "Upload" : "Review") logo for offer</b>
 
 @{
     ViewBag.InWizard = true;

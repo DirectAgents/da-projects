@@ -23,7 +23,7 @@ You can also <i>add a thumbnail</i> for the first creative.
     @Ajax.ActionLink("Offer Summary (" + Model.CampaignDrop.Campaign.OfferId + ")", "Show", "Offers", new { id = Model.CampaignDrop.Campaign.OfferId }, ajaxOpts_Sum)
     <br />
     <text>Or:</text>
-    @Ajax.ActionLink("Create another drop", "Show", new { offerid = Model.CampaignDrop.Campaign.OfferId }, ajaxOptions)
+    @Ajax.ActionLink("Create another drop", "Show", new { id = (int?)null, offerid = Model.CampaignDrop.Campaign.OfferId }, ajaxOptions)
 }
 <br /><br />
 

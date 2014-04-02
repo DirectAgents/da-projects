@@ -10,6 +10,7 @@ Offer: <b>@Model.DisplayName</b>
 <br />
 <br />
 
-?Link to summary<br />
-?List drops<br />
-New drop (manual / wizard)
+@if (Model.Campaigns.Any())
+{
+    @Ajax.ActionLink("Create a new drop", "Show", "CampaignDropsWizard", new { offerid = Model.OfferId, fromreportwizard = false }, ajaxOptions)
+}

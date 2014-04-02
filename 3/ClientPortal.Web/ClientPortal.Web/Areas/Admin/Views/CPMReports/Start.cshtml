@@ -10,6 +10,11 @@ Offer: <b>@Model.DisplayName</b>
 <br />
 <br />
 
-?Link to summary<br />
-?List reports<br />
-New report (manual / @Ajax.ActionLink("Wizard", "Show", "CPMReportsWizard", new { offerid = @Model.OfferId }, ajaxOptions))
+Create a new report (
+@if (Model.Campaigns.Any())
+{
+    @Ajax.ActionLink("manual", "Create", "CPMReports", new { offerid = Model.OfferId }, ajaxOptions)
+    <text> / </text>
+}
+@Ajax.ActionLink("wizard", "Show", "CPMReportsWizard", new { offerid = Model.OfferId }, ajaxOptions)
+)

@@ -31,12 +31,18 @@ Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offe
 <br />
 <br />
 @Html.Partial("../CPMReports/Index", Model.CPMReports.OrderByDescending(r => r.CPMReportId))
-@Ajax.ActionLink("[new report]", "Create", "CPMReports", new { offerid = Model.OfferId }, ajaxOpts_Rep)
+@if (Model.Campaigns.Any())
+{
+    @Ajax.ActionLink("[new report - manual]", "Create", "CPMReports", new { offerid = Model.OfferId }, ajaxOpts_Rep)<text> </text>
+}
 @Ajax.ActionLink("[cpm report wizard]", "Show", "CPMReportsWizard", new { offerid = Model.OfferId }, ajaxOpts_Rep)
 
 <br /><br />
 @Html.Partial("../CampaignDrops/Index", Model.AllCampaignDrops(false))
-(To create a new drop, click the "New Drop" link next to one of the Campaigns below.)
+@if (Model.Campaigns.Any())
+{
+    <text>(To create a new drop, click the "New Drop" link next to one of the Campaigns below.)</text>
+}
 
 <br /><br />
 @{

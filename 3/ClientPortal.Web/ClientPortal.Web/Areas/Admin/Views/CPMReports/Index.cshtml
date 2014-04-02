@@ -4,7 +4,9 @@
     var ajaxOpts_Confirm = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Get", "Are you sure you want to delete this report?");
 }
 
-CPM Reports:
+CPM Reports:<br />
+@if (Model.Any())
+{
 <table border="1">
     <tr>
         <th>Name</th>
@@ -30,3 +32,4 @@ CPM Reports:
     </tr>
 }
 </table>
+}

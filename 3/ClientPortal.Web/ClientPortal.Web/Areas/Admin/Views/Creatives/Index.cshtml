@@ -31,6 +31,9 @@ else
         <i>Last Synch: @offer.LastSynch_Creatives</i><br />
     }
 }
+
+@if (Model.Any())
+{
 <table border="1">
     <tr>
         @if (showActions) {
@@ -75,6 +78,7 @@ else
     </tr>
 }
 </table>
+}
 @if (showActions)
 { // don't want to show this in the reports wizard
     <br />
