@@ -1,0 +1,51 @@
+﻿@model ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmReportsTab");
+
+    bool anyCampaigns = Model.Offer.Campaigns.Any();
+    bool anyCreatives = Model.Offer.Creatives.Any();
+}
+
+<h3>Report Wizard</h3>
+
+Next Step: <b>Synch campaigns and creatives with Cake</b>
+<table><tr><td>
+
+@if (!anyCampaigns && !anyCreatives)
+{
+    <br />
+}
+@Ajax.ActionLink("Synch campaigns and creatives", "Synch", new { offerid = Model.Offer.OfferId }, ajaxOptions)
+<br /><br />
+
+@if (anyCampaigns) {
+    ViewBag.Title = "Existing Campaigns:";
+    ViewBag.LastSynch = Model.Offer.LastSynch_Campaigns;
+    ViewBag.ShowActions = false;
+    @Html.Partial("../Campaigns/Index", Model.Offer.Campaigns.OrderBy(c => c.Affiliate.AffiliateName).ThenBy(c => c.CampaignName))
+    <br />
+}
+
+@if (anyCreatives) {
+    ViewBag.Title = "Existing Creatives:";
+    ViewBag.LastSynch = Model.Offer.LastSynch_Creatives;
+    ViewBag.ShowActions = false;
+    @Html.Partial("../Creatives/Index", Model.Offer.Creatives.OrderByDescending(c => c.DateCreated))
+    <br />
+}
+
+@if (anyCampaigns || anyCreatives)
+{
+    @Ajax.ActionLink("Synch campaigns and creatives", "Synch", new { offerid = Model.Offer.OfferId }, ajaxOptions)
+    <br /><br />
+}
+
+</td></tr></table>
+
+@Ajax.ActionLink("Back", "Show", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step - 1) }, ajaxOptions)
+@if (anyCampaigns || anyCreatives)
+{
+    <text> | </text>
+    @Ajax.ActionLink("Skip", "Show", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+}
+<br /><br />

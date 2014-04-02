@@ -23,6 +23,13 @@ When done:
 }
 @Html.Partial("ShowDrop", Model.CampaignDrop)
 
+@if (Model.CampaignDrop.CreativeStats.Any())
+{
+    <text>Next: </text>
+    @Ajax.ActionLink("Synch creative stats", "SynchCreativeStats", new { id = Model.CampaignDrop.CampaignDropId }, ajaxOptions)
+    <br /><br />
+}
+
 </td></tr></table>
 
 @Ajax.ActionLink("Back", "Show", new { id = Model.CampaignDrop.CampaignDropId, step = (int)(Model.Step - 1) }, ajaxOptions) |

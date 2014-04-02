@@ -14,13 +14,11 @@ Review the stats for the drop and make any adjustments as needed.
 You can also <i>add a thumbnail</i> for the first creative.
 <br /><br />
 
-@if (Model.FromReportWizard)
+When done, continue to:
+@Ajax.ActionLink("Report Wizard - Review Drops", "Show", "CPMReportsWizard", new { offerid = Model.CampaignDrop.Campaign.OfferId, step = (int)ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM.WizardStep.ReviewDrops }, ajaxOpts_Report)
+
+@if (!Model.FromReportWizard)
 {
-    <text>When done, continue to:</text>
-    @Ajax.ActionLink("Report Wizard - Review Drops", "Show", "CPMReportsWizard", new { offerid = Model.CampaignDrop.Campaign.OfferId, step = (int)ClientPortal.Web.Areas.Admin.Models.CPMReportWizardVM.WizardStep.ReviewDrops }, ajaxOpts_Report)
-} else {
-    <text>When done, return to:</text>
-    @Ajax.ActionLink("Offer Summary (" + Model.CampaignDrop.Campaign.OfferId + ")", "Show", "Offers", new { id = Model.CampaignDrop.Campaign.OfferId }, ajaxOpts_Sum)
     <br />
     <text>Or:</text>
     @Ajax.ActionLink("Create another drop", "Show", new { id = (int?)null, offerid = Model.CampaignDrop.Campaign.OfferId }, ajaxOptions)

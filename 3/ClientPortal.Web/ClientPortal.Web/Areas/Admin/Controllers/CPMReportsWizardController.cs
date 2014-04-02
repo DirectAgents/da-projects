@@ -21,9 +21,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Show(int? id, int? offerid, CPMReportWizardVM.WizardStep step = 0)
         {
-            // to clear this out after returning from drop wizard:
-            Session["FromReportWizard"] = null;
-
             var model = new CPMReportWizardVM
             {
                 Step = step
@@ -39,6 +36,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                 ViewBag.CampaignDrops = cpRepo.CampaignDropsNotInReport(id.Value)
                                                     .OrderByDescending(cd => cd.Date);
             }
+            if (step == CPMReportWizardVM.WizardStep.ReviewDrops)
+            {
+                // to clear this out after returning from drop wizard:
+                Session["FromReportWizard"] = null;
+            }
 
             return View(step.ToString(), model);
         }
@@ -48,16 +50,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return Show(dropId, offerId, step + 1);
         }
 
-        public ActionResult SynchCampaigns(int offerid)
+        public ActionResult Synch(int offerid)
         {
             SynchCampaignsCommand.RunStatic(0, offerid);
-            return ShowNextStep(null, offerid, CPMReportWizardVM.WizardStep.SynchCampaigns);
-        }
-
-        public ActionResult SynchCreatives(int offerid)
-        {
             SynchCreativesCommand.RunStatic(0, offerid, false);
-            return ShowNextStep(null, offerid, CPMReportWizardVM.WizardStep.SynchCreatives);
+            return ShowNextStep(null, offerid, CPMReportWizardVM.WizardStep.Synch);
         }
 
         [HttpPost]

@@ -24,6 +24,13 @@ When done:
 }
 @Html.Partial("../CPMReports/Show", Model.Report)
 
+@if (Model.Report.CampaignDrops.Any())
+{
+    <text>Next: </text>
+    @Ajax.ActionLink("Enter report details", "Show", new { id = Model.Report.CPMReportId, step = (int)(Model.Step + 1) }, ajaxOptions)
+    <br /><br />
+}
+
 </td></tr></table>
 
 <br /><br />

@@ -25,7 +25,7 @@ else
     
     @Ajax.ActionLink("Create a drop", "Show", "CampaignDropsWizard", new { offerid = Model.Offer.OfferId, fromreportwizard = true }, ajaxOpts_Drop)
     <br /><br />
-    <text> Or continue to: </text>
+    <text>Or continue to: </text>
     @Ajax.ActionLink("Enter report name", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
     <br /><br />
 
@@ -33,6 +33,10 @@ else
     ViewBag.ShowActions = false;
     @Html.Partial("../CampaignDrops/Index", drops)
     <br />
+    <text>Continue to: </text>
+    @Ajax.ActionLink("Enter report name", "Show", "CPMReportsWizard", new { offerid = Model.Offer.OfferId, step = (int)(Model.Step + 1) }, ajaxOptions)
+    <br /><br />
+
     @*testing
     foreach (var drop in drops)
     {

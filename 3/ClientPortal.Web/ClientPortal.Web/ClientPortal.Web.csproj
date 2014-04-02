@@ -691,6 +691,7 @@
     <Content Include="Areas\Admin\Views\CampaignDropsWizard\CreativeThumbnail.cshtml" />
     <Content Include="Areas\Admin\Views\CPMReportsWizard\AddDrops.cshtml" />
     <Content Include="Areas\Admin\Views\CPMReportsWizard\EditReport.cshtml" />
+    <Content Include="Areas\Admin\Views\CPMReportsWizard\Synch.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
