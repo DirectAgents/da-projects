@@ -38,11 +38,9 @@ Show:
         <th>Drops</th>
         <th>Campaigns</th>
         <th>Creatives</th>
-        <th>Creative Types</th>
     </tr>
 @foreach (var offer in Model)
 {
-    var creativesText = "show (" + offer.Creatives.Count + ")";
     var linksText = "links (" + offer.Creatives.Where(c => c.CreativeTypeId == 1).Count() + ")";
     var emailsText = "emails (" + offer.Creatives.Where(c => c.CreativeTypeId == 2).Count() + ")";
     var imagesText = "images (" + offer.Creatives.Where(c => c.CreativeTypeId == 3).Count() + ")";
@@ -50,11 +48,10 @@ Show:
         <td>@offer.AdvertiserId</td>
         <td>@offer.Advertiser.AdvertiserName</td>
         <td>@offer.OfferId</td>
-        <td>@Ajax.ActionLink(offer.OfferName, "Show", "Offers", new { id = offer.OfferId }, ajaxOpts_Sum, new { onclick = "ResetOfferTabs(" + offer.OfferId + ")" })</td>
+        <td>@Html.ActionLink(offer.OfferName, "Show", "Offers", new { id = offer.OfferId }, new { onclick = "LoadOfferTabs(" + offer.OfferId + "); return false" })</td>
         <td style="text-align:center">@offer.CPMReports.Count</td>
         <td style="text-align:center">@offer.AllCampaignDrops(null).Count()</td>
         <td style="text-align:center">@offer.Campaigns.Count</td>
-        <td>@Ajax.ActionLink(creativesText, "Index", "Creatives", new { offerid = offer.OfferId }, ajaxOpts_Creative)</td>
         <td>
             &nbsp; @linksText
             &nbsp; | &nbsp; @emailsText

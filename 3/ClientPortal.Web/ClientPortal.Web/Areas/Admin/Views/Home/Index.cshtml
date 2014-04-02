@@ -179,6 +179,7 @@
                     $("#contactsTab").html(html);
                 });
             });
+            // CPM interface
             $("#vertNav_CPM").one("click", function () {
                 $.ajax({
                     url: '@Url.Action("Filter", "Offers")',
@@ -187,9 +188,25 @@
                     $("#cpmOffersTab").html(html);
                 });
             });
+            // Offer Summary tab
+            $('#navCPMSummary').click(function () {
+                var offerId = $('#cpmSummaryTab').data('offerId');
+                if (typeof (offerId) != 'undefined') {
+                    $.ajax({
+                        url: '@Url.Action("Show", "Offers")',
+                        data: { id: offerId },
+                        cache: false
+                    }).done(function (html) {
+                        $("#cpmSummaryTab").html(html);
+                    });
+                }
+            });
         }
 
-        function ResetOfferTabs(offerId) {
+        function LoadOfferTabs(offerId) {
+            $("#cpmSummaryTab").data('offerId', offerId).html("Loading...");
+            $('#navCPMSummary').click();
+
             $.ajax({
                 url: '@Url.Action("Start", "CPMReports")',
                 data: { offerid: offerId },
