@@ -319,7 +319,7 @@
           <Property Name="CreativeName" Type="nvarchar" MaxLength="255" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="CreativeStatusId" Type="int" Nullable="false" />
-          <Property Name="OfferLinkOverride" Type="nvarchar" MaxLength="255" />
+          <Property Name="OfferLinkOverride" Type="nvarchar" MaxLength="1000" />
           <Property Name="Width" Type="int" />
           <Property Name="Height" Type="int" />
           <Property Name="Thumbnail" Type="varbinary(max)" />
@@ -1810,7 +1810,7 @@
           <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_Creative_Offer" FromRole="Creative" ToRole="Offer" />
           <NavigationProperty Name="CreativeStats" Relationship="ClientPortalModel.FK_CreativeStat_Creative" FromRole="Creative" ToRole="CreativeStat" />
           <Property Type="Int32" Name="CreativeStatusId" Nullable="false" />
-          <Property Type="String" Name="OfferLinkOverride" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="OfferLinkOverride" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Width" />
           <Property Type="Int32" Name="Height" />
           <NavigationProperty Name="CreativeFiles" Relationship="ClientPortalModel.FK_CreativeFile_Creative" FromRole="Creative" ToRole="CreativeFile" />
