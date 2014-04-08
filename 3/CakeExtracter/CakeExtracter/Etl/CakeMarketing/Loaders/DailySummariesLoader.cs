@@ -20,7 +20,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     var pk1 = item.OfferId;
                     var pk2 = item.DeleteDate ?? source.Date;
 
-                    var target = db.Set<ClientPortal.Data.Contexts.DailySummary>().Find(pk1, pk2);
+                    var target = db.Set<ClientPortal.Data.Contexts.OfferDailySummary>().Find(pk1, pk2);
 
                     if (item.DeleteDate.HasValue) // Marked for deletion
                     {
@@ -30,7 +30,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                         }
                         else
                         {
-                            db.DailySummaries.Remove(target);
+                            db.OfferDailySummaries.Remove(target);
                             deleted++;
                         }
 
@@ -39,12 +39,12 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     {
                         if (target == null)
                         {
-                            target = new ClientPortal.Data.Contexts.DailySummary
+                            target = new ClientPortal.Data.Contexts.OfferDailySummary
                                          {
                                              offer_id = pk1,
                                              date = pk2
                                          };
-                            db.DailySummaries.Add(target);
+                            db.OfferDailySummaries.Add(target);
                             added++;
                         }
                         else

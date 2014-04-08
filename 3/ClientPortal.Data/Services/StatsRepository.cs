@@ -9,9 +9,9 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
-        public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency)
+        public IQueryable<OfferDailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency)
         {
-            var dailySummaries = context.DailySummaries.AsQueryable();
+            var dailySummaries = context.OfferDailySummaries.AsQueryable();
 
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
 
@@ -84,7 +84,7 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
-            var dailySummaries = context.DailySummaries.AsQueryable();
+            var dailySummaries = context.OfferDailySummaries.AsQueryable();
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
             if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
 
@@ -118,7 +118,7 @@ namespace ClientPortal.Data.Services
             string currency = null; // Assume all offers for the advertiser have the same currency
             if (offers.Count() > 0) currency = offers.First().Currency;
 
-            var dailySummaries = context.DailySummaries.Where(ds => offerIds.Contains(ds.offer_id));
+            var dailySummaries = context.OfferDailySummaries.Where(ds => offerIds.Contains(ds.offer_id));
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
             if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
 

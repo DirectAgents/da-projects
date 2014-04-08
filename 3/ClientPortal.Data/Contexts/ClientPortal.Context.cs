@@ -26,7 +26,6 @@ namespace ClientPortal.Data.Contexts
         }
     
         public DbSet<ConversionData> ConversionDatas { get; set; }
-        public DbSet<DailySummary> DailySummaries { get; set; }
         public DbSet<Goal> Goals { get; set; }
         public DbSet<AdvertiserContact> AdvertiserContacts { get; set; }
         public DbSet<Contact> Contacts { get; set; }
@@ -60,5 +59,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<CakeRole> CakeRoles { get; set; }
         public DbSet<CreativeFile> CreativeFiles { get; set; }
         public DbSet<CPMReport> CPMReports { get; set; }
+        public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
     }
 }

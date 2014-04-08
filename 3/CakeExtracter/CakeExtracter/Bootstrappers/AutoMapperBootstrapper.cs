@@ -10,7 +10,7 @@ namespace CakeExtracter.Bootstrappers
         public void Run()
         {
             Mapper.CreateMap<SearchDailySummary, SearchDailySummary>();
-            Mapper.CreateMap<DailySummary, DailySummary>();
+            Mapper.CreateMap<OfferDailySummary, OfferDailySummary>();
             Mapper.CreateMap<GoogleAnalyticsSummary, GoogleAnalyticsSummary>();
         }
     }

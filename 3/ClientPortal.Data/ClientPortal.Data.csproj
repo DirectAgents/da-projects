@@ -134,9 +134,6 @@
     <Compile Include="Contexts\CreativeType.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
-    <Compile Include="Contexts\DailySummary.cs">
-      <DependentUpon>ClientPortal.tt</DependentUpon>
-    </Compile>
     <Compile Include="Contexts\DeviceClicks.cs">
       <DependentUpon>ClientPortalDW.tt</DependentUpon>
     </Compile>
@@ -204,6 +201,9 @@
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\Offer.cs">
+      <DependentUpon>ClientPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Contexts\OfferDailySummary.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contexts\ReportStatus.cs">

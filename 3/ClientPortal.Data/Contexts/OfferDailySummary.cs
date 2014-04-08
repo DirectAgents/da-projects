@@ -12,7 +12,7 @@ namespace ClientPortal.Data.Contexts
     using System;
     using System.Collections.Generic;
     
-    public partial class DailySummary
+    public partial class OfferDailySummary
     {
         public int offer_id { get; set; }
         public System.DateTime date { get; set; }

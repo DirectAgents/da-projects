@@ -30,7 +30,7 @@ namespace ClientPortal.Data.Services
 
             if (start.HasValue || end.HasValue) // filter on offers that have daily summary data within this timeframe
             {
-                var dailySummaries = context.DailySummaries.AsQueryable();
+                var dailySummaries = context.OfferDailySummaries.AsQueryable();
                 if (start.HasValue)
                     dailySummaries = dailySummaries.Where(ds => ds.date >= start.Value);
                 if (end.HasValue)

@@ -23,7 +23,6 @@
           <EntitySet Name="CreativeStat" EntityType="ClientPortalModel.Store.CreativeStat" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeSummary" EntityType="ClientPortalModel.Store.CreativeSummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeType" EntityType="ClientPortalModel.Store.CreativeType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="DailySummary" EntityType="ClientPortalModel.Store.DailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="EmailedReport" EntityType="ClientPortalModel.Store.EmailedReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="GeneratedReport" EntityType="ClientPortalModel.Store.GeneratedReport" store:Type="Tables" Schema="dbo" />
@@ -33,6 +32,7 @@
           <EntitySet Name="MetricCount" EntityType="ClientPortalModel.Store.MetricCount" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MetricValue" EntityType="ClientPortalModel.Store.MetricValue" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Offer" EntityType="ClientPortalModel.Store.Offer" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="OfferDailySummary" EntityType="ClientPortalModel.Store.OfferDailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ScheduledReport" EntityType="ClientPortalModel.Store.ScheduledReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ScheduledReportRecipient" EntityType="ClientPortalModel.Store.ScheduledReportRecipient" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchAccount" EntityType="ClientPortalModel.Store.SearchAccount" store:Type="Tables" Schema="dbo" />
@@ -363,28 +363,6 @@
           <Property Name="CreativeTypeId" Type="int" Nullable="false" />
           <Property Name="CreativeTypeName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <EntityType Name="DailySummary">
-          <Key>
-            <PropertyRef Name="offer_id" />
-            <PropertyRef Name="date" />
-          </Key>
-          <Property Name="offer_id" Type="int" Nullable="false" />
-          <Property Name="date" Type="datetime" Nullable="false" />
-          <Property Name="views" Type="int" Nullable="false" />
-          <Property Name="clicks" Type="int" Nullable="false" />
-          <Property Name="click_thru" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="conversions" Type="int" Nullable="false" />
-          <Property Name="paid" Type="int" Nullable="false" />
-          <Property Name="sellable" Type="int" Nullable="false" />
-          <Property Name="conversion_rate" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="cpl" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="cost" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="rpt" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="revenue" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="margin" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="profit" Type="decimal" Nullable="false" Scale="2" />
-          <Property Name="epc" Type="decimal" Nullable="false" Scale="2" />
-        </EntityType>
         <EntityType Name="EmailedReport">
           <Key>
             <PropertyRef Name="Id" />
@@ -483,6 +461,28 @@
           <Property Name="Logo" Type="varbinary(max)" />
           <Property Name="LastSynch_Campaigns" Type="datetime" />
           <Property Name="LastSynch_Creatives" Type="datetime" />
+        </EntityType>
+        <EntityType Name="OfferDailySummary">
+          <Key>
+            <PropertyRef Name="offer_id" />
+            <PropertyRef Name="date" />
+          </Key>
+          <Property Name="offer_id" Type="int" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="views" Type="int" Nullable="false" />
+          <Property Name="clicks" Type="int" Nullable="false" />
+          <Property Name="click_thru" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="conversions" Type="int" Nullable="false" />
+          <Property Name="paid" Type="int" Nullable="false" />
+          <Property Name="sellable" Type="int" Nullable="false" />
+          <Property Name="conversion_rate" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="cpl" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="cost" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="rpt" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="revenue" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="margin" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="profit" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="epc" Type="decimal" Nullable="false" Scale="2" />
         </EntityType>
         <EntityType Name="ScheduledReport">
           <Key>
@@ -985,7 +985,6 @@
       <Schema Namespace="ClientPortalModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ClientPortalContext" p1:LazyLoadingEnabled="true">
           <EntitySet Name="ConversionDatas" EntityType="ClientPortalModel.ConversionData" />
-          <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
           <EntitySet Name="Goals" EntityType="ClientPortalModel.Goal" />
           <EntitySet Name="AdvertiserContacts" EntityType="ClientPortalModel.AdvertiserContact" />
           <EntitySet Name="Contacts" EntityType="ClientPortalModel.Contact" />
@@ -1143,6 +1142,7 @@
             <End Role="CampaignDrop" EntitySet="CampaignDrops" />
             <End Role="CPMReport" EntitySet="CPMReports" />
           </AssociationSet>
+          <EntitySet Name="OfferDailySummaries" EntityType="ClientPortalModel.OfferDailySummary" />
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -1166,28 +1166,6 @@
           </Key>
           <Property Type="String" Name="conversion_id" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Type="Decimal" Name="value0" Nullable="false" Precision="18" Scale="2" />
-        </EntityType>
-        <EntityType Name="DailySummary">
-          <Key>
-            <PropertyRef Name="offer_id" />
-            <PropertyRef Name="date" />
-          </Key>
-          <Property Type="Int32" Name="offer_id" Nullable="false" />
-          <Property Type="DateTime" Name="date" Nullable="false" Precision="3" />
-          <Property Type="Int32" Name="views" Nullable="false" />
-          <Property Type="Int32" Name="clicks" Nullable="false" />
-          <Property Type="Decimal" Name="click_thru" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Int32" Name="conversions" Nullable="false" />
-          <Property Type="Int32" Name="paid" Nullable="false" />
-          <Property Type="Int32" Name="sellable" Nullable="false" />
-          <Property Type="Decimal" Name="conversion_rate" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="cpl" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="cost" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="rpt" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="revenue" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="margin" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="profit" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="epc" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Goal">
           <Key>
@@ -2010,6 +1988,28 @@
           <End Type="ClientPortalModel.CampaignDrop" Role="CampaignDrop" Multiplicity="*" />
           <End Type="ClientPortalModel.CPMReport" Role="CPMReport" Multiplicity="*" />
         </Association>
+        <EntityType Name="OfferDailySummary">
+          <Key>
+            <PropertyRef Name="offer_id" />
+            <PropertyRef Name="date" />
+          </Key>
+          <Property Type="Int32" Name="offer_id" Nullable="false" />
+          <Property Type="DateTime" Name="date" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="views" Nullable="false" />
+          <Property Type="Int32" Name="clicks" Nullable="false" />
+          <Property Type="Decimal" Name="click_thru" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Int32" Name="conversions" Nullable="false" />
+          <Property Type="Int32" Name="paid" Nullable="false" />
+          <Property Type="Int32" Name="sellable" Nullable="false" />
+          <Property Type="Decimal" Name="conversion_rate" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="cpl" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="cost" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="rpt" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="revenue" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="margin" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="profit" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="epc" Nullable="false" Precision="18" Scale="2" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2021,28 +2021,6 @@
               <MappingFragment StoreEntitySet="ConversionData">
                 <ScalarProperty Name="value0" ColumnName="value0" />
                 <ScalarProperty Name="conversion_id" ColumnName="conversion_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DailySummaries">
-            <EntityTypeMapping TypeName="ClientPortalModel.DailySummary">
-              <MappingFragment StoreEntitySet="DailySummary">
-                <ScalarProperty Name="epc" ColumnName="epc" />
-                <ScalarProperty Name="profit" ColumnName="profit" />
-                <ScalarProperty Name="margin" ColumnName="margin" />
-                <ScalarProperty Name="revenue" ColumnName="revenue" />
-                <ScalarProperty Name="rpt" ColumnName="rpt" />
-                <ScalarProperty Name="cost" ColumnName="cost" />
-                <ScalarProperty Name="cpl" ColumnName="cpl" />
-                <ScalarProperty Name="conversion_rate" ColumnName="conversion_rate" />
-                <ScalarProperty Name="sellable" ColumnName="sellable" />
-                <ScalarProperty Name="paid" ColumnName="paid" />
-                <ScalarProperty Name="conversions" ColumnName="conversions" />
-                <ScalarProperty Name="click_thru" ColumnName="click_thru" />
-                <ScalarProperty Name="clicks" ColumnName="clicks" />
-                <ScalarProperty Name="views" ColumnName="views" />
-                <ScalarProperty Name="date" ColumnName="date" />
-                <ScalarProperty Name="offer_id" ColumnName="offer_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2459,6 +2437,28 @@
               <ScalarProperty Name="CampaignDropId" ColumnName="CampaignDropId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="OfferDailySummaries">
+            <EntityTypeMapping TypeName="ClientPortalModel.OfferDailySummary">
+              <MappingFragment StoreEntitySet="OfferDailySummary">
+                <ScalarProperty Name="epc" ColumnName="epc" />
+                <ScalarProperty Name="profit" ColumnName="profit" />
+                <ScalarProperty Name="margin" ColumnName="margin" />
+                <ScalarProperty Name="revenue" ColumnName="revenue" />
+                <ScalarProperty Name="rpt" ColumnName="rpt" />
+                <ScalarProperty Name="cost" ColumnName="cost" />
+                <ScalarProperty Name="cpl" ColumnName="cpl" />
+                <ScalarProperty Name="conversion_rate" ColumnName="conversion_rate" />
+                <ScalarProperty Name="sellable" ColumnName="sellable" />
+                <ScalarProperty Name="paid" ColumnName="paid" />
+                <ScalarProperty Name="conversions" ColumnName="conversions" />
+                <ScalarProperty Name="click_thru" ColumnName="click_thru" />
+                <ScalarProperty Name="clicks" ColumnName="clicks" />
+                <ScalarProperty Name="views" ColumnName="views" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="offer_id" ColumnName="offer_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
