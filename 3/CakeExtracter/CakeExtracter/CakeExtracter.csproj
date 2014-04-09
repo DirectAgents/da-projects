@@ -248,6 +248,7 @@
     <Compile Include="Commands\SynchClicksCommand.cs" />
     <Compile Include="Commands\SynchCreativesCommand.cs" />
     <Compile Include="Commands\SynchCreativeSummariesCommand.cs" />
+    <Compile Include="Commands\SynchOfferDailySummariesCommand.cs" />
     <Compile Include="Commands\SynchOffersCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesAdWordsCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesAnalyticsCommand.cs" />
@@ -289,6 +290,7 @@
     <Compile Include="Etl\CakeMarketing\Extracters\ConversionsExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CreativeMonthlySummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CreativesExtracter.cs" />
+    <Compile Include="Etl\CakeMarketing\Extracters\OfferDailySummariesExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\OffersExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\TrafficExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\DailySummariesExtracter.cs" />
@@ -300,6 +302,7 @@
     <Compile Include="Etl\CakeMarketing\Loaders\ConversionsLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CreativeMonthlySummariesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\CreativesLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\Loaders\OfferDailySummariesLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\OffersLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Loaders\TrafficLoader.cs" />
     <Compile Include="Etl\ILoader.cs" />
