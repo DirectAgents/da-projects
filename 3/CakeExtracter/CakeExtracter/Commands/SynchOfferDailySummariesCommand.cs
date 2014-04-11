@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CakeExtracter.Commands
 {
@@ -44,53 +45,58 @@ namespace CakeExtracter.Commands
 
             dateRange.ToDate = dateRange.ToDate.AddDays(1); // cake requires the date _after_ the last date you want stats for
 
-            foreach (var advertiserId in GetAdvertiserIds())
-            {
-                var extracter = new OfferDailySummariesExtracter(dateRange, advertiserId, OfferId);
-                var loader = new OfferDailySummariesLoader();
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+            var advertiserIds = GetAdvertiserIds();
+            var extracter = new OfferDailySummariesExtracter(dateRange, advertiserIds, OfferId);
+            var loader = new OfferDailySummariesLoader();
+            var extracterThread = extracter.Start();
+            var loaderThread = loader.Start(extracter);
+            extracterThread.Join();
+            loaderThread.Join();
 
-                // Set "LatestDaySums" datetime (if we're updating all offers to today)
-                if (dateRange.ToDate > DateTime.Today && !OfferId.HasValue)
+            // Set "LatestDaySums" datetime (if we're updating all offers to today)
+            if (dateRange.ToDate > DateTime.Today && !OfferId.HasValue)
+            {
+                using (var db = new ClientPortalContext())
                 {
-                    using (var db = new ClientPortalContext())
+                    var advertisers = db.Advertisers.Where(a => advertiserIds.Contains(a.AdvertiserId));
+                    foreach (var advertiser in advertisers)
                     {
-                        var advertiser = db.Advertisers.Where(a => a.AdvertiserId == advertiserId).FirstOrDefault();
-                        if (advertiser != null)
-                        {
-                            advertiser.LatestDaySums = DateTime.Now;
-                            db.SaveChanges();
-                        }
+                        advertiser.LatestDaySums = DateTime.Now;
                     }
+                    db.SaveChanges();
                 }
             }
             return 0;
         }
 
-        private IEnumerable<int> GetAdvertiserIds()
+        private List<int> GetAdvertiserIds()
         {
+            List<int> advertiserIds = null;
             if (string.IsNullOrWhiteSpace(Advertiser) || Advertiser == "*")
             {
-                List<int> advertiserIds;
                 using (var db = new ClientPortalContext())
                 {
-                    advertiserIds = db.Advertisers
-                                      .OrderBy(c => c.AdvertiserId)
-                                      .Select(c => c.AdvertiserId)
-                                      .ToList();
-                }
-                foreach (var advertiserId in advertiserIds)
-                {
-                    yield return advertiserId;
+                    if (OfferId.HasValue)
+                    {
+                        var offer = db.Offers.FirstOrDefault(o => o.OfferId == OfferId.Value);
+                        if (offer != null && offer.AdvertiserId.HasValue)
+                            advertiserIds = new List<int> { offer.AdvertiserId.Value };
+                    }
+                    else
+                    {
+                        advertiserIds = db.Advertisers
+                                          .Where(c => c.AdvertiserId < 90000)
+                                          .OrderBy(c => c.AdvertiserId)
+                                          .Select(c => c.AdvertiserId)
+                                          .ToList();
+                    }
                 }
             }
             else
             {
-                yield return int.Parse(Advertiser);
+                advertiserIds = new List<int> { int.Parse(Advertiser) };
             }
+            return advertiserIds;
         }
 
     }

@@ -10,52 +10,62 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
     public class OfferDailySummariesExtracter : Extracter<OfferDailySummary>
     {
         private readonly DateRange dateRange;
-        private readonly int advertiserId;
+        private readonly IEnumerable<int> advertiserIds;
         private readonly int? offerId;
 
-        public OfferDailySummariesExtracter(DateRange dateRange, int advertiserId, int? offerId)
+        // Note: You can pass in null for advertiserIds - for all advertisers or if offerId is specified
+
+        public OfferDailySummariesExtracter(DateRange dateRange, IEnumerable<int> advertiserIds, int? offerId)
         {
             this.dateRange = dateRange;
-            this.advertiserId = advertiserId;
+            this.advertiserIds = advertiserIds ?? new List<int> { 0 };
             this.offerId = offerId;
         }
 
         protected override void Extract()
         {
-            Logger.Info("Getting offerIds for advertiserId={0}", advertiserId);
-
-            List<int> offerIds;
-            if (this.offerId.HasValue)
+            foreach (var advIdBatch in advertiserIds.InBatches(20))
             {
-                offerIds = new List<int> { offerId.Value };
-            }
-            else
-            {
-                offerIds = CakeMarketingUtility.OfferIds(advertiserId);
-            }
-
-            Logger.Info("Extracting DailySummaries for {0} offerIds between {2} and {3}: {1}",
-                            offerIds.Count,
-                            string.Join(", ", offerIds),
-                            dateRange.FromDate.ToShortDateString(),
-                            dateRange.ToDate.ToShortDateString());
-
-            Parallel.ForEach(offerIds, offerId =>
-            {
-                var dailySummaries = CakeMarketingUtility.DailySummaries(dateRange, advertiserId, offerId, 0, 0);
-
-                Logger.Info("Extracted {0} DailySummaries for offerId={1}", dailySummaries.Count, offerId);
-
-                Add(dailySummaries.Select(c => new OfferDailySummary(offerId, c)));
-
-                // Check for dates with no data
-                var datesExtracted = dailySummaries.Select(ds => ds.Date);
-                for (var iDate = dateRange.FromDate; iDate < dateRange.ToDate; iDate = iDate.AddDays(1))
+                Parallel.ForEach(advIdBatch, advertiserId =>
                 {
-                    if (!datesExtracted.Contains(iDate))
-                        Add(new OfferDailySummary(offerId, iDate));
-                }
-            });
+                    List<int> offerIds;
+                    if (this.offerId.HasValue)
+                        offerIds = new List<int> { offerId.Value };
+                    else
+                        offerIds = CakeMarketingUtility.OfferIds(advertiserId);
+
+                    if (offerIds.Count == 0)
+                        Logger.Info("Adv {0} - no offers", advertiserId);
+                    else
+                        Logger.Info("Adv {0} - Extracting DailySummaries for {1} offerIds between {2} and {3}: {4}",
+                                    advertiserId,
+                                    offerIds.Count,
+                                    dateRange.FromDate.ToShortDateString(),
+                                    dateRange.ToDate.ToShortDateString(),
+                                    string.Join(", ", offerIds));
+
+                    foreach (var offIdBatch in offerIds.InBatches(20))
+                    {
+                        Parallel.ForEach(offIdBatch, offId =>
+                        {
+                            var dailySummaries = CakeMarketingUtility.DailySummaries(dateRange, advertiserId, offId, 0, 0);
+
+                            Logger.Info("Extracted {0} DailySummaries for offerId={1}", dailySummaries.Count, offId);
+
+                            Add(dailySummaries.Select(c => new OfferDailySummary(offId, c)));
+
+                            // Check for dates with no data
+                            var datesExtracted = dailySummaries.Select(ds => ds.Date);
+                            for (var iDate = dateRange.FromDate; iDate < dateRange.ToDate; iDate = iDate.AddDays(1))
+                            {
+                                if (!datesExtracted.Contains(iDate))
+                                    Add(new OfferDailySummary(offId, iDate));
+                            }
+                        });
+                    }
+
+                });
+            }
 
             End();
         }

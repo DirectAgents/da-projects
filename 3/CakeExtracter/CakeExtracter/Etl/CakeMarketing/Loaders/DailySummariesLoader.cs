@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CakeExtracter.Etl.CakeMarketing.Loaders
 {
-    public class DailySummariesLoader : Loader<OfferDailySummary>
+    public class DailySummariesLoader : Loader<OfferAffiliateDailySummary>
     {
-        protected override int Load(List<OfferDailySummary> items)
+        protected override int Load(List<OfferAffiliateDailySummary> items)
         {
             var loaded = 0;
             var added = 0;
@@ -17,10 +17,11 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                 foreach (var item in items)
                 {
                     var source = item.DailySummary;
-                    var pk1 = item.OfferId;
-                    var pk2 = item.DeleteDate ?? source.Date;
+                    var pk1 = item.DeleteDate ?? source.Date;
+                    var pk2 = item.OfferId;
+                    var pk3 = item.AffiliateId;
 
-                    var target = db.Set<ClientPortal.Data.Contexts.OfferDailySummary>().Find(pk1, pk2);
+                    var target = db.Set<ClientPortal.Data.Contexts.DailySummary>().Find(pk1, pk2, pk3);
 
                     if (item.DeleteDate.HasValue) // Marked for deletion
                     {
@@ -30,7 +31,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                         }
                         else
                         {
-                            db.OfferDailySummaries.Remove(target);
+                            db.DailySummaries.Remove(target);
                             deleted++;
                         }
 
@@ -39,12 +40,13 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                     {
                         if (target == null)
                         {
-                            target = new ClientPortal.Data.Contexts.OfferDailySummary
+                            target = new ClientPortal.Data.Contexts.DailySummary
                                          {
-                                             offer_id = pk1,
-                                             date = pk2
+                                             Date = pk1,
+                                             OfferId = pk2,
+                                             AffiliateId = pk3
                                          };
-                            db.OfferDailySummaries.Add(target);
+                            db.DailySummaries.Add(target);
                             added++;
                         }
                         else
@@ -52,20 +54,13 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
                             updated++;
                         }
 
-                        target.views = source.Views;
-                        target.clicks = source.Clicks;
-                        target.click_thru = source.ClickThru;
-                        target.conversions = source.Conversions;
-                        target.paid = source.Paid;
-                        target.sellable = source.Sellable;
-                        target.conversion_rate = source.ConversionRate;
-                        target.cpl = source.CPL;
-                        target.cost = source.Cost;
-                        target.rpt = source.RPT;
-                        target.revenue = source.Revenue;
-                        target.margin = source.Margin;
-                        target.profit = source.Profit;
-                        target.epc = source.EPC;
+                        target.Views = source.Views;
+                        target.Clicks = source.Clicks;
+                        target.Conversions = source.Conversions;
+                        target.Paid = source.Paid;
+                        target.Sellable = source.Sellable;
+                        target.Cost = source.Cost;
+                        target.Revenue = source.Revenue;
                     }
                     loaded++;
                 }

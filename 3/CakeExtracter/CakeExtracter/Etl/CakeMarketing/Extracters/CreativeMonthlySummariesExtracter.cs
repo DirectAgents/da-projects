@@ -33,7 +33,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
                     dateRange.FromDate.ToShortDateString(),
                     dateRange.ToDate.ToShortDateString());
 
-            var dailySummaries = CakeMarketingUtility.DailySummaries(dateRange, 0, 0, creativeId);
+            var dailySummaries = CakeMarketingUtility.DailySummaries(dateRange, 0, 0, creativeId, 0);
 
             DateTime iDate = new DateTime(dateRange.FromDate.Year, dateRange.FromDate.Month, 1);
             while (iDate < dateRange.ToDate)

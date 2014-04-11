@@ -12,7 +12,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
     {
         protected override int Load(List<Campaign> items)
         {
-            Logger.Info("Synching {0} campaigns...", items.Count);
+            Logger.Info("Loading/Synching {0} campaigns...", items.Count);
             using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
             {
                 List<ClientPortal.Data.Contexts.Offer> newOffers = new List<ClientPortal.Data.Contexts.Offer>();

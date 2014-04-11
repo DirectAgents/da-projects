@@ -60,5 +60,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<CreativeFile> CreativeFiles { get; set; }
         public DbSet<CPMReport> CPMReports { get; set; }
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
+        public DbSet<DailySummary> DailySummaries { get; set; }
     }
 }

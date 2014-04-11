@@ -73,7 +73,36 @@ namespace CakeExtracter.CakeMarketingApi
             return response.Creatives;
         }
 
-        public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId, int creativeId)
+        public static List<OfferSummary> OfferSummaries(DateRange dateRange, int advertiserId)
+        {
+            var client = new OfferSummariesClient();
+            var request = new OfferSummariesRequest
+            {
+                start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
+                end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                advertiser_id = advertiserId
+            };
+            var response = client.OfferSummaries(request);
+            return response.Offers;
+        }
+
+        public static List<CampaignSummary> CampaignSummaries(DateRange dateRange, int offerId)
+        {
+            var client = new CampaignSummariesClient();
+            var request = new CampaignSummariesRequest
+            {
+                start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
+                end_date = dateRange.ToDate.ToString("MM/dd/yyyy"),
+                offer_id = offerId
+            };
+            var response = client.CampaignSummaries(request);
+            if (response != null)
+                return response.Campaigns;
+            else
+                return new List<CampaignSummary>();
+        }
+
+        public static List<DailySummary> DailySummaries(DateRange dateRange, int advertiserId, int offerId, int creativeId, int affiliateId)
         {
             var client = new DailySummariesClient();
             var request = new DailySummariesRequest
@@ -81,11 +110,15 @@ namespace CakeExtracter.CakeMarketingApi
                 advertiser_id = advertiserId,
                 offer_id = offerId,
                 creative_id = creativeId,
+                affiliate_id = affiliateId,
                 start_date = dateRange.FromDate.ToString("MM/dd/yyyy"),
                 end_date = dateRange.ToDate.ToString("MM/dd/yyyy")
             };
             var response = client.DailySummaries(request);
-            return response.DailySummaries;
+            if (response != null)
+                return response.DailySummaries;
+            else
+                return new List<DailySummary>();
         }
 
         public static List<Click> Clicks(DateRange dateRange, int advertiserId, int offerId, out int rowCount)

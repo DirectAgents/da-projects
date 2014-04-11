@@ -23,6 +23,7 @@
           <EntitySet Name="CreativeStat" EntityType="ClientPortalModel.Store.CreativeStat" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeSummary" EntityType="ClientPortalModel.Store.CreativeSummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CreativeType" EntityType="ClientPortalModel.Store.CreativeType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DailySummary" EntityType="ClientPortalModel.Store.DailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="EmailedReport" EntityType="ClientPortalModel.Store.EmailedReport" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="FileUpload" EntityType="ClientPortalModel.Store.FileUpload" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="GeneratedReport" EntityType="ClientPortalModel.Store.GeneratedReport" store:Type="Tables" Schema="dbo" />
@@ -362,6 +363,23 @@
           </Key>
           <Property Name="CreativeTypeId" Type="int" Nullable="false" />
           <Property Name="CreativeTypeName" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DailySummary">
+          <Key>
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="OfferId" />
+            <PropertyRef Name="AffiliateId" />
+          </Key>
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="OfferId" Type="int" Nullable="false" />
+          <Property Name="AffiliateId" Type="int" Nullable="false" />
+          <Property Name="Views" Type="int" Nullable="false" />
+          <Property Name="Clicks" Type="int" Nullable="false" />
+          <Property Name="Conversions" Type="int" Nullable="false" />
+          <Property Name="Paid" Type="int" Nullable="false" />
+          <Property Name="Sellable" Type="int" Nullable="false" />
+          <Property Name="Cost" Type="decimal" Nullable="false" Scale="2" />
+          <Property Name="Revenue" Type="decimal" Nullable="false" Scale="2" />
         </EntityType>
         <EntityType Name="EmailedReport">
           <Key>
@@ -1143,6 +1161,7 @@
             <End Role="CPMReport" EntitySet="CPMReports" />
           </AssociationSet>
           <EntitySet Name="OfferDailySummaries" EntityType="ClientPortalModel.OfferDailySummary" />
+          <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -2010,6 +2029,23 @@
           <Property Type="Decimal" Name="profit" Nullable="false" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="epc" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
+        <EntityType Name="DailySummary">
+          <Key>
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="OfferId" />
+            <PropertyRef Name="AffiliateId" />
+          </Key>
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="OfferId" Nullable="false" />
+          <Property Type="Int32" Name="AffiliateId" Nullable="false" />
+          <Property Type="Int32" Name="Views" Nullable="false" />
+          <Property Type="Int32" Name="Clicks" Nullable="false" />
+          <Property Type="Int32" Name="Conversions" Nullable="false" />
+          <Property Type="Int32" Name="Paid" Nullable="false" />
+          <Property Type="Int32" Name="Sellable" Nullable="false" />
+          <Property Type="Decimal" Name="Cost" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Revenue" Nullable="false" Precision="18" Scale="2" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2456,6 +2492,22 @@
                 <ScalarProperty Name="views" ColumnName="views" />
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="offer_id" ColumnName="offer_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailySummaries">
+            <EntityTypeMapping TypeName="ClientPortalModel.DailySummary">
+              <MappingFragment StoreEntitySet="DailySummary">
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Sellable" ColumnName="Sellable" />
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+                <ScalarProperty Name="Conversions" ColumnName="Conversions" />
+                <ScalarProperty Name="Clicks" ColumnName="Clicks" />
+                <ScalarProperty Name="Views" ColumnName="Views" />
+                <ScalarProperty Name="AffiliateId" ColumnName="AffiliateId" />
+                <ScalarProperty Name="OfferId" ColumnName="OfferId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -2,25 +2,28 @@
 
 namespace CakeExtracter.CakeMarketingApi.Entities
 {
-    public class OfferDailySummary
+    public class OfferAffiliateDailySummary
     {
-        public OfferDailySummary()
+        public OfferAffiliateDailySummary()
         {
         }
 
-        public OfferDailySummary(int offerId, DailySummary dailySummary)
+        public OfferAffiliateDailySummary(int offerId, int affiliateId, DailySummary dailySummary)
         {
             OfferId = offerId;
+            AffiliateId = affiliateId;
             DailySummary = dailySummary;
         }
 
-        public OfferDailySummary(int offerId, DateTime deleteDate)
+        public OfferAffiliateDailySummary(int offerId, int affiliateId, DateTime deleteDate)
         {
             OfferId = offerId;
+            AffiliateId = affiliateId;
             DeleteDate = deleteDate;
         }
 
         public int OfferId { get; set; }
+        public int AffiliateId { get; set; }
         public DailySummary DailySummary { get; set; }
 
         // if not null, means delete the dailysummary for this date

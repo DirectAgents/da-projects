@@ -71,6 +71,7 @@
         <AssociationConnector Association="ClientPortalModel.FK_CPMReport_Offer" />
         <AssociationConnector Association="ClientPortalModel.CPMReportCampaignDrop" />
         <EntityTypeShape EntityType="ClientPortalModel.OfferDailySummary" Width="1.5" PointX="15.875" PointY="8.75" />
+        <EntityTypeShape EntityType="ClientPortalModel.DailySummary" Width="1.5" PointX="12.125" PointY="8.375" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

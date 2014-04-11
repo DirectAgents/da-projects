@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CakeExtracter.Commands
 {
@@ -40,30 +41,34 @@ namespace CakeExtracter.Commands
 
         public override int Execute(string[] remainingArguments)
         {
-            var offers = GetOffers();
-            foreach (var offer in offers)
-            {
-                var extracter = new CampaignsExtracter(offer.OfferId);
-                var loader = new CampaignsLoader();
-                var extracterThread = extracter.Start();
-                var loaderThread = loader.Start(extracter);
-                extracterThread.Join();
-                loaderThread.Join();
+            var offerIds = GetOfferIds();
 
-                using (var db = new ClientPortalContext())
+            foreach (var offerIdBatch in offerIds.InBatches(4)) // doing 4 at a time
+            {
+                Parallel.ForEach(offerIdBatch, offerId =>
                 {
-                    var off = db.Offers.FirstOrDefault(o => o.OfferId == offer.OfferId);
-                    if (off != null)
+                    var extracter = new CampaignsExtracter(offerId);
+                    var loader = new CampaignsLoader();
+                    var extracterThread = extracter.Start();
+                    var loaderThread = loader.Start(extracter);
+                    extracterThread.Join();
+                    loaderThread.Join();
+
+                    using (var db = new ClientPortalContext())
                     {
-                        off.LastSynch_Campaigns = DateTime.Now;
-                        db.SaveChanges();
+                        var off = db.Offers.FirstOrDefault(o => o.OfferId == offerId);
+                        if (off != null)
+                        {
+                            off.LastSynch_Campaigns = DateTime.Now;
+                            db.SaveChanges();
+                        }
                     }
-                }
+                });
             }
             return 0;
         }
 
-        private IEnumerable<Offer> GetOffers()
+        private IEnumerable<int> GetOfferIds()
         {
             using (var db = new ClientPortalContext())
             {
@@ -73,7 +78,7 @@ namespace CakeExtracter.Commands
                 if (this.OfferId.HasValue)
                     offers = offers.Where(o => o.OfferId == OfferId.Value);
 
-                return offers.ToList();
+                return offers.Select(o => o.OfferId).ToList();
             }
 
         }
