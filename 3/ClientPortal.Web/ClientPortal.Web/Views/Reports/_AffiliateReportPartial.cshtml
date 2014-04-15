@@ -53,12 +53,13 @@
                 { field: 'AffId', title: 'SubId', width: 80, template: '<a href="">#: AffId#</a>' },
                 { field: 'OfferId', width: 80 },
                 { field: 'Offer' },
-                { field: 'Count', title: 'Leads', width: 100, footerTemplate: "#= sum #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Clicks', width: 90, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Convs', title: 'Leads', width: 80, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'ConvRate', title: 'Conv Pct', width: 90, format: '{0:p1}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p1') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 {
-                    field: 'PriceReceived',
-                    title: 'Price',
-                    width: 100,
-                    template: '#= FormatCurrTemp(PriceReceived, Culture) #',
+                    field: 'Price',
+                    width: 110,
+                    template: '#= FormatCurrTemp(Price, Culture) #',
                     attributes: { style: "text-align: right" },
                     footerTemplate: "#= kendo.toString(sum, 'c') #",
                     footerAttributes: { style: "font-weight: bold; text-align: right" }
@@ -97,9 +98,11 @@
                         AffId: { type: 'number' },
                         OfferId: { type: 'number' },
                         Offer: { type: 'string' },
-                        PriceReceived: { type: 'number' },
-                        Count: { type: 'number' }
-                    }
+                        Clicks: { type: 'number' },
+                        Convs: { type: 'number' },
+                        ConvRate: { type: 'number' },
+                        Price: { type: 'number' }
+            }
                 }
             },
             sort: [
@@ -107,8 +110,10 @@
                 { field: "AffId", dir: "asc" }
         ],
             aggregate: [
-                { field: "PriceReceived", aggregate: "sum" },
-                { field: "Count", aggregate: "sum" }
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Convs", aggregate: "sum" },
+                { field: "ConvRate", aggregate: "agg" },
+                { field: "Price", aggregate: "sum" }
             ]
         });
         }

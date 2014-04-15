@@ -84,8 +84,8 @@ namespace ClientPortal.Web
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PriceReceived));
             Mapper.CreateMap<AffiliateSummary, AffiliateReportExportRow>()
                 .ForMember(dest => dest.SubId, opt => opt.MapFrom(src => src.AffId))
-                .ForMember(dest => dest.Leads, opt => opt.MapFrom(src => src.Count))
-                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PriceReceived));
+                .ForMember(dest => dest.Leads, opt => opt.MapFrom(src => src.Convs))
+                .ForMember(dest => dest.ConversionPct, opt => opt.MapFrom(src => src.ConvRate));
             Mapper.CreateMap<MonthlyInfo, CPMReportExportRow>()
                 .ForMember(dest => dest.Spend, opt => opt.MapFrom(src => src.Revenue));
             Mapper.CreateMap<SearchStat, SearchStatExportRow>();

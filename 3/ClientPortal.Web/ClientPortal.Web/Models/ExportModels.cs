@@ -48,7 +48,9 @@ namespace ClientPortal.Web.Models
         public int SubId { get; set; }
         public int OfferId { get; set; }
         public string Offer { get; set; }
+        public int Clicks { get; set; }
         public int Leads { get; set; }
+        public float ConversionPct { get; set; }
         public decimal Price { get; set; }
         public string Culture { get; set; }
     }

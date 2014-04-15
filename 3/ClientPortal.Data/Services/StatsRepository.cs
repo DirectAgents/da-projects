@@ -183,8 +183,7 @@ namespace ClientPortal.Data.Services
         public IQueryable<AffiliateSummary> GetAffiliateSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
             string currency;
-            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency)
-                .Where(ds => ds.Conversions > 0); // initial version only
+            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
             var summaryGroups = dailySummaries.GroupBy(ds => new { ds.OfferId, ds.AffiliateId });
 
             var offers = Offers(advertiserId);
@@ -198,47 +197,12 @@ namespace ClientPortal.Data.Services
                               AffId = sumGroup.Key.AffiliateId,
                               OfferId = sumGroup.Key.OfferId,
                               Offer = (offer == null) ? String.Empty : offer.OfferName,
-                              Count = sumGroup.Any() ? sumGroup.Sum(g => g.Conversions) : 0,
-                              PriceReceived = sumGroup.Any() ? sumGroup.Sum(g => g.Revenue) : 0,
+                              Clicks = sumGroup.Any() ? sumGroup.Sum(g => g.Clicks) : 0,
+                              Convs = sumGroup.Any() ? sumGroup.Sum(g => g.Conversions) : 0,
+                              Price = sumGroup.Any() ? sumGroup.Sum(g => g.Revenue) : 0,
                               Currency = currency //TODO: handle the case when they're not all the same currency
                           };
             return affSums;
-        }
-        public IQueryable<AffiliateSummary> GetAffiliateSummariesOld(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
-        {
-            var conversions = GetConversions(start, end, advertiserId, offerId);
-
-            var offers = Offers(advertiserId);
-            if (offerId.HasValue)
-                offers = offers.Where(o => o.OfferId == offerId.Value);
-
-            var affiliateInfos =
-                from conv in conversions
-                from offer in offers
-                where conv.offer_id == offer.OfferId
-                select new
-                {
-                    AffId = conv.affiliate_id,
-                    OfferId = conv.offer_id,
-                    Offer = (offer == null) ? String.Empty : offer.OfferName,
-                    PriceReceived = conv.received_amount,
-                    CurrencyId = conv.received_currency_id
-                };
-
-            // Doing group in memory because generated query was not optimal.. (TODO: see if Kevin knows how to improve this?)
-            var groupedConversionInfos = affiliateInfos.AsEnumerable().GroupBy(
-                    c => new { c.AffId, c.OfferId, c.Offer, c.CurrencyId },
-                    (key, group) => new AffiliateSummary()
-                    {
-                        AffId = key.AffId,
-                        OfferId = key.OfferId,
-                        Offer = key.Offer,
-                        CurrencyId = key.CurrencyId,
-                        PriceReceived = group.Sum(c => c.PriceReceived),
-                        Count = group.Count(c => true)
-                    });
-
-            return groupedConversionInfos.AsQueryable();
         }
 
         public IQueryable<MonthlyInfo> GetMonthlyInfos(string type, DateTime? start, DateTime? end, int? advertiserId)

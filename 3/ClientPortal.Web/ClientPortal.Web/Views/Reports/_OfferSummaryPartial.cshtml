@@ -77,6 +77,7 @@
                         Price: { type: 'number' },
                         Clicks: { type: 'number' },
                         Conversions: { type: 'number' },
+                        ConvRate: { type: 'number' },
                         Revenue: { type: 'number' },
                     }
                 }
@@ -85,6 +86,7 @@
             aggregate: [
                 { field: "Clicks", aggregate: "sum" },
                 { field: "Conversions", aggregate: "sum" },
+                { field: "ConvRate", aggregate: "agg" },
                 { field: "Revenue", aggregate: "sum" }
             ]
         });
@@ -105,13 +107,14 @@
             autoBind: false,
             height: 400,
             columns: [
-                { field: 'OfferId', title: 'Id', width: 45, attributes: { style: "text-align: right" } },
-                { field: 'Name', width: 225, title: 'Offer' },
-                { field: 'Format', width: 30 },
+                { field: 'OfferId', title: 'Id', width: 60, attributes: { style: "text-align: right" } },
+                { field: 'Name', title: 'Offer' },
+                { field: 'Format', width: 65 },
                 { field: 'Price', width: 65, template: '#= FormatCurr(Price, Culture) #', attributes: { style: "text-align: right" } },
-                { field: 'Clicks', width: 70, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Clicks', width: 85, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
                 { field: 'Conversions', title: 'Leads', width: 67, format: '{0:n0}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Revenue', title: 'Spend', width: 100, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'ConvRate', title: 'Conv Pct', width: 70, format: '{0:p1}', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(agg, 'p1') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Revenue', title: 'Spend', width: 110, template: '#= FormatCurr(Revenue, Culture) #', attributes: { style: "text-align: right" }, footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             ],
             filterable: false,
             sortable: {
@@ -177,19 +180,38 @@
             columns: [
                 { field: 'AffId', title: 'SubId', width: 80 },
                 {
-                    field: 'Count',
-                    title: 'Leads',
+                    field: 'Clicks',
                     width: 100,
+                    format: '{0:n0}',
                     attributes: { style: "text-align: right" },
-                    headerAttributes: { style: "text-align: right" },
-                    footerTemplate: "#= sum #",
+                    @*headerAttributes: { style: "text-align: right" },*@
+                    footerTemplate: "#= kendo.toString(sum, 'n0') #",
                     footerAttributes: { style: "font-weight: bold; text-align: right" }
                 },
                 {
-                    field: 'PriceReceived',
-                    title: 'Price',
+                    field: 'Convs',
+                    title: 'Leads',
                     width: 100,
-                    template: '#= FormatCurrTemp(PriceReceived, Culture) #',
+                    format: '{0:n0}',
+                    attributes: { style: "text-align: right" },
+                    @*headerAttributes: { style: "text-align: right" },*@
+                    footerTemplate: "#= kendo.toString(sum, 'n0') #",
+                    footerAttributes: { style: "font-weight: bold; text-align: right" }
+                },
+                {
+                    field: 'ConvRate',
+                    title: 'Conv Pct',
+                    width: 90,
+                    format: '{0:p1}',
+                    attributes: { style: "text-align: right" },
+                    @*headerAttributes: { style: "text-align: right" },*@
+                    footerTemplate: "#= kendo.toString(agg, 'p1') #",
+                    footerAttributes: { style: "font-weight: bold; text-align: right" }
+                },
+                {
+                    field: 'Price',
+                    width: 110,
+                    template: '#= FormatCurrTemp(Price, Culture) #',
                     attributes: { style: "text-align: right" },
                     footerTemplate: "#= kendo.toString(sum, 'c') #",
                     footerAttributes: { style: "font-weight: bold; text-align: right" }
@@ -227,8 +249,10 @@
                     id: 'AffId',
                     fields: {
                         AffId: { type: 'number' },
-                        PriceReceived: { type: 'number' },
-                        Count: { type: 'number' }
+                        Clicks: { type: 'number' },
+                        Convs: { type: 'number' },
+                        ConvRate: { type: 'number' },
+                        Price: { type: 'number' }
                     }
                 }
             },
@@ -236,8 +260,10 @@
                 { field: "AffId", dir: "asc" }
             ],
             aggregate: [
-                { field: "PriceReceived", aggregate: "sum" },
-                { field: "Count", aggregate: "sum" }
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Convs", aggregate: "sum" },
+                { field: "ConvRate", aggregate: "agg" },
+                { field: "Price", aggregate: "sum" }
             ]
         });
     }

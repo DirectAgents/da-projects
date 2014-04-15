@@ -38,10 +38,14 @@ namespace ClientPortal.Web.Controllers
             var kgrid = new KendoGrid<OfferInfo>(request, offerInfos);
             if (offerInfos.Any())
             {
+                var totalClicks = offerInfos.Sum(i => i.Clicks);
+                var totalConversions = offerInfos.Sum(i => i.Conversions);
+                float totalConversionRate = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
                 kgrid.aggregates = new
                 {
-                    Clicks = new { sum = offerInfos.Sum(i => i.Clicks) },
-                    Conversions = new { sum = offerInfos.Sum(i => i.Conversions) },
+                    Clicks = new { sum = totalClicks },
+                    Conversions = new { sum = totalConversions },
+                    ConvRate = new { agg = totalConversionRate },
                     Revenue = new { sum = offerInfos.Sum(i => i.Revenue) }
                 };
             }
@@ -234,15 +238,20 @@ namespace ClientPortal.Web.Controllers
 
             if (!start.HasValue) start = userInfo.Dates.FirstOfMonth;
 
-            var affiliateSummaries = cpRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
+            var affSums = cpRepo.GetAffiliateSummaries(start, end, userInfo.AdvertiserId, offerid);
 
-            var kgrid = new KendoGrid<AffiliateSummary>(request, affiliateSummaries);
-            if (affiliateSummaries.Any())
+            var kgrid = new KendoGrid<AffiliateSummary>(request, affSums);
+            if (affSums.Any())
             {
+                var totalClicks = affSums.Sum(a => a.Clicks);
+                var totalConversions = affSums.Sum(a => a.Convs);
+                float totalConversionRate = (totalClicks == 0) ? 0 : (float)Math.Round((double)totalConversions / totalClicks, 3);
                 kgrid.aggregates = new
                 {
-                    PriceReceived = new { sum = affiliateSummaries.Sum(c => c.PriceReceived) },
-                    Count = new { sum = affiliateSummaries.Sum(c => c.Count) }
+                    Clicks = new { sum = totalClicks },
+                    Convs = new { sum = totalConversions },
+                    ConvRate = new { agg = totalConversionRate },
+                    Price = new { sum = affSums.Sum(c => c.Price) }
                 };
             }
             var json = Json(kgrid);

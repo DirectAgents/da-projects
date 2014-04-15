@@ -16,6 +16,12 @@ namespace ClientPortal.Data.DTOs
 
         public int Clicks { get; set; }
         public int Conversions { get; set; }
+
+        public float ConvRate
+        {
+            get { return (Clicks == 0) ? 0 : (float)Math.Round((double)Conversions / Clicks, 3); }
+        }
+
         public decimal Revenue { get; set; }
         public decimal Price
         {
