@@ -9,26 +9,25 @@ namespace ClientPortal.Data.Services
 {
     public partial class ClientPortalRepository
     {
-        public IQueryable<OfferDailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency)
+        private IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId, out string currency)
         {
-            var dailySummaries = context.OfferDailySummaries.AsQueryable();
+            var dailySummaries = context.DailySummaries.AsQueryable();
 
-            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date >= start);
 
-            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date <= end);
 
             var offers = Offers(advertiserId);
 
             if (offerId.HasValue)
             {
                 offers = offers.Where(o => o.OfferId == offerId.Value);
-                dailySummaries = dailySummaries.Where(ds => ds.offer_id == offerId.Value);
+                dailySummaries = dailySummaries.Where(ds => ds.OfferId == offerId.Value);
             }
             else
             {
-                dailySummaries = from ds in dailySummaries
-                                 join o in offers on ds.offer_id equals o.OfferId
-                                 select ds;
+                var offerIds = offers.Select(o => o.OfferId).ToList();
+                dailySummaries = dailySummaries.Where(ds => offerIds.Contains(ds.OfferId));
             }
             currency = null; // Assume all offers for the advertiser have the same currency
             if (offers.Any()) currency = offers.First().Currency;
@@ -44,9 +43,9 @@ namespace ClientPortal.Data.Services
             var any = dailySummaries.Any();
             DateRangeSummary summary = new DateRangeSummary()
             {
-                Clicks = any ? dailySummaries.Sum(ds => ds.clicks) : 0,
-                Conversions = any ? dailySummaries.Sum(ds => ds.conversions) : 0,
-                Revenue = any ? dailySummaries.Sum(ds => ds.revenue) : 0,
+                Clicks = any ? dailySummaries.Sum(ds => ds.Clicks) : 0,
+                Conversions = any ? dailySummaries.Sum(ds => ds.Conversions) : 0,
+                Revenue = any ? dailySummaries.Sum(ds => ds.Revenue) : 0,
                 Currency = currency
             };
             if (includeConversionData)
@@ -63,20 +62,22 @@ namespace ClientPortal.Data.Services
         }
 
         #region Report Queries
+
+        // CURRENTLY NOT USED
         public IQueryable<MonthlyInfo> GetMonthlyInfosFromDaily(DateTime? start, DateTime? end, int advertiserId, int? offerId)
         {
             string currency;
             var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
 
             var m = from ds in dailySummaries
-                    group ds by new { ds.date.Year, ds.date.Month } into g
+                    group ds by new { ds.Date.Year, ds.Date.Month } into g
                     select new MonthlyInfo()
                     {
                         Year = g.Key.Year,
                         Month = g.Key.Month,
                         AdvertiserId = advertiserId,
                         OfferId = offerId.HasValue ? offerId.Value : -1,
-                        Revenue = g.Sum(ds => ds.revenue),
+                        Revenue = g.Sum(ds => ds.Revenue),
                         Currency = currency
                     };
             return m;
@@ -84,11 +85,11 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<OfferInfo> GetOfferInfos(DateTime? start, DateTime? end, int? advertiserId)
         {
-            var dailySummaries = context.OfferDailySummaries.AsQueryable();
-            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
-            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
+            var dailySummaries = context.DailySummaries.AsQueryable();
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date >= start);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date <= end);
 
-            var summaryGroups = dailySummaries.GroupBy(s => s.offer_id);
+            var summaryGroups = dailySummaries.GroupBy(s => s.OfferId);
 
             var offers = Offers(advertiserId);
             var offerInfos = from offer in offers
@@ -99,9 +100,9 @@ namespace ClientPortal.Data.Services
                                  AdvertiserId_Int = offer.AdvertiserId,
                                  Name = offer.OfferName,
                                  Format = offer.DefaultPriceFormat,
-                                 Clicks = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.clicks),
-                                 Conversions = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.conversions),
-                                 Revenue = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.revenue),
+                                 Clicks = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.Clicks),
+                                 Conversions = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.Conversions),
+                                 Revenue = (sumGroup.Count() == 0) ? 0 : sumGroup.Sum(s => s.Revenue),
                                  Currency = offer.Currency,
                              };
             return offerInfos;
@@ -109,27 +110,17 @@ namespace ClientPortal.Data.Services
 
         public IQueryable<DailyInfo> GetDailyInfos(DateTime? start, DateTime? end, int? advertiserId, int? offerId = null)
         {
-            var offers = Offers(advertiserId);
-            if (offerId.HasValue)
-                offers = offers.Where(o => o.OfferId == offerId.Value);
+            string currency;
+            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency);
 
-            var offerIds = offers.Select(o => o.OfferId).ToList();
-
-            string currency = null; // Assume all offers for the advertiser have the same currency
-            if (offers.Count() > 0) currency = offers.First().Currency;
-
-            var dailySummaries = context.OfferDailySummaries.Where(ds => offerIds.Contains(ds.offer_id));
-            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date >= start);
-            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.date <= end);
-
-            var dailyInfos = from sumGroup in dailySummaries.GroupBy(s => s.date)
+            var dailyInfos = from sumGroup in dailySummaries.GroupBy(s => s.Date)
                              select new DailyInfo()
                              {
                                  Date = sumGroup.Key,
-                                 Impressions = sumGroup.Sum(s => s.views),
-                                 Clicks = sumGroup.Sum(s => s.clicks),
-                                 Conversions = sumGroup.Sum(s => s.conversions),
-                                 Revenue = sumGroup.Sum(s => s.revenue),
+                                 Impressions = sumGroup.Sum(s => s.Views),
+                                 Clicks = sumGroup.Sum(s => s.Clicks),
+                                 Conversions = sumGroup.Sum(s => s.Conversions),
+                                 Revenue = sumGroup.Sum(s => s.Revenue),
                                  Currency = currency
                              };
             return dailyInfos;
@@ -190,6 +181,30 @@ namespace ClientPortal.Data.Services
         }
 
         public IQueryable<AffiliateSummary> GetAffiliateSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
+        {
+            string currency;
+            var dailySummaries = GetDailySummaries(start, end, advertiserId, offerId, out currency)
+                .Where(ds => ds.Conversions > 0); // initial version only
+            var summaryGroups = dailySummaries.GroupBy(ds => new { ds.OfferId, ds.AffiliateId });
+
+            var offers = Offers(advertiserId);
+            if (offerId.HasValue)
+                offers = offers.Where(o => o.OfferId == offerId.Value);
+
+            var affSums = from offer in offers
+                          join sumGroup in summaryGroups on offer.OfferId equals sumGroup.Key.OfferId
+                          select new AffiliateSummary()
+                          {
+                              AffId = sumGroup.Key.AffiliateId,
+                              OfferId = sumGroup.Key.OfferId,
+                              Offer = (offer == null) ? String.Empty : offer.OfferName,
+                              Count = sumGroup.Any() ? sumGroup.Sum(g => g.Conversions) : 0,
+                              PriceReceived = sumGroup.Any() ? sumGroup.Sum(g => g.Revenue) : 0,
+                              Currency = currency //TODO: handle the case when they're not all the same currency
+                          };
+            return affSums;
+        }
+        public IQueryable<AffiliateSummary> GetAffiliateSummariesOld(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
             var conversions = GetConversions(start, end, advertiserId, offerId);
 

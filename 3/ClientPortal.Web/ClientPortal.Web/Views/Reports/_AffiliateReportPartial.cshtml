@@ -1,6 +1,6 @@
 ﻿@model ClientPortal.Web.Models.ReportModel
 
-<div style="height: 50px;">
+<div style="height: 40px;">
     <div style="float: left; background-color: #ffffff; padding-right: 1px">
         <select style="width: 140px" id="affrep_dateRangeSel" onchange="ChangeDateRange('affrep')">
             <option value="yesterday">Yesterday</option>
@@ -18,8 +18,6 @@
         <a class="button paddedbutton" id="affrep_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('affrep'); return false">Filter</a>
     </div>
     <a class="button paddedbutton exportbutton" href="#" onclick="ExportAffRepCSV(); return false">Export CSV</a>
-    <br style="clear: both" />
-    <span class="statsnote subtext">Affiliate Stats available through @Model.YesterdayString</span>
 </div>
 
 <div id="affrepGrid"></div>

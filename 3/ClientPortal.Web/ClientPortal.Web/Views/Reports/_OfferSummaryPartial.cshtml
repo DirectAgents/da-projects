@@ -170,12 +170,7 @@
         }
         var dataSource = CreateOfferAffiliateReportDataSource(readData);
 
-        var headerText = 'Affiliate Stats';
-        if ($('#offsum_startdate').val() == '@Model.TodayString')
-            headerText += ' (available through @Model.YesterdayString)';
-        else if ($('#offsum_enddate').val() == '@Model.TodayString')
-            headerText += ' (as of @Model.YesterdayString)';
-        $("<span style='font-size: 12px'>" + headerText + "</span>").appendTo(e.detailCell);
+        $("<span style='font-size: 12px'>Affiliate Stats</span>").appendTo(e.detailCell);
 
         $("<div/>").appendTo(e.detailCell).kendoGrid({
             dataSource: dataSource,
