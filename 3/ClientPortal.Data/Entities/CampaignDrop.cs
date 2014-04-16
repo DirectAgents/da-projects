@@ -73,10 +73,22 @@ namespace ClientPortal.Data.Contexts
         {
             get
             {
-                if (Opens == null || Opens.Value == 0)
+                if (CreativeStatTotals.Clicks == null || Opens == null || Opens.Value == 0)
                     return null;
                 else
                     return (decimal)CreativeStatTotals.Clicks.Value / Opens.Value;
+            }
+        }
+
+        [NotMapped]
+        public decimal? ConversionRate
+        {
+            get
+            {
+                if (CreativeStatTotals.Leads == null || CreativeStatTotals.Clicks == null || CreativeStatTotals.Clicks.Value == 0)
+                    return null;
+                else
+                    return (decimal)CreativeStatTotals.Leads.Value / CreativeStatTotals.Clicks.Value;
             }
         }
 

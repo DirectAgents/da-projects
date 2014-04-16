@@ -11,13 +11,13 @@
 {
 <table border="1">
     <tr>
-        <th>List</th>
-        <th>Date</th>
-        <th>Volume</th>
-        <th>Opens</th>
-        <th>Clicks</th>
-        <th>Leads</th>
-        <th>Total Cost</th>
+        <th style="text-align:center">List</th>
+        <th style="text-align:center">Date</th>
+        <th style="text-align:center">Volume</th>
+        <th style="text-align:center">Opens</th>
+        <th style="text-align:center">Clicks</th>
+        <th style="text-align:center">Conversions</th>
+        <th style="text-align:center">Total Cost</th>
         @if (showActions) {
             <th></th>
         }
@@ -34,9 +34,11 @@
             CTR: @(drop.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", drop.ClickThroughRate.Value) : "")
         </td>
         <td style="text-align:center">@drop.CreativeStatTotals.Leads.Value.ToString("N0")<br />
+            Conv Rate: @(drop.ConversionRate.HasValue ? String.Format("{0:0.00%}", drop.ConversionRate.Value) : "")
+        </td>
+        <td style="text-align:center">@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")<br />
             eCPL: @(drop.CostPerLead.HasValue ? drop.CostPerLead.Value.ToString("C2") : "")
         </td>
-        <td style="text-align:center">@(drop.Cost.HasValue ? drop.Cost.Value.ToString("C2") : "")</td>
         @if (showActions)
         {
             <td>@Ajax.ActionLink("Manage", "Show", "CampaignDrops", new { id = drop.CampaignDropId }, ajaxOptions)

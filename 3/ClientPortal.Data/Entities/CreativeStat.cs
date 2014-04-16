@@ -1,8 +1,16 @@
 ﻿using ClientPortal.Data.Contexts;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClientPortal.Data.Contexts
 {
+    public class CreativeStat_Validation
+    {
+        [Display(Name = "Conversions")]
+        public int? Leads { get; set; }
+    }
+
+    [MetadataType(typeof(CreativeStat_Validation))]
     public partial class CreativeStat
     {
         [NotMapped]

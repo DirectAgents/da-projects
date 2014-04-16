@@ -65,6 +65,10 @@ namespace ClientPortal.Web.Areas.Admin.Models
         {
             get { return Model.CreativeStatTotals.Leads.Value.ToString("N0"); }
         }
+        public string ConversionRate
+        {
+            get { return (Model.ConversionRate.HasValue ? String.Format("{0:0.00%}", Model.ConversionRate.Value) : ""); }
+        }
         public string CostPerLead
         {
             get { return (Model.CostPerLead.HasValue ? Model.CostPerLead.Value.ToString("C2") : ""); }

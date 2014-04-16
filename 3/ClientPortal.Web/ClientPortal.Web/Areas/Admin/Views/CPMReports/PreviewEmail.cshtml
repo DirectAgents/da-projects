@@ -55,7 +55,7 @@
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Volume</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Opens</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Clicks</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Leads</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Conversions</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Total Cost</b></td>
             </tr>
             <tr>
@@ -96,7 +96,7 @@
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Volume</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Opens</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Clicks</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Leads</b></td>
+                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Conversions</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Total Cost</b></td>
             </tr>
             @{
@@ -117,8 +117,9 @@
                     <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.TotalClicks
                         <br />CTR: @drop.ClickThroughRate</td>
                     <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@drop.TotalLeads
-                        <br />eCPL: @drop.CostPerLead</b></td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Cost</td>
+                        <br />Conv Rate: @drop.ConversionRate</b></td>
+                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Cost
+                        <br />eCPL: @drop.CostPerLead</td>
                 </tr>
                 if (drop.CreativeStats.Count() > 1 && !drop.CombineCreatives)
                 {

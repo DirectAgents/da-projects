@@ -19,7 +19,7 @@
         <th>Volume</th>
         <th>Opens</th>
         <th>Clicks</th>
-        <th>Leads</th>
+        <th>Conversions</th>
         <th>Total Cost</th>
     </tr>
 @foreach (var drop in Model.CampaignDropsOrdered)
@@ -29,14 +29,17 @@
         <td>@drop.Date</td>
         <td>@drop.Volume</td>
         <td>@drop.Opens<br />
-            Open Rate: @drop.OpenRate</td>
+            Open Rate: @drop.OpenRate
+        </td>
         <td>@drop.TotalClicks<br />
             CTR: @drop.ClickThroughRate
         </td>
         <td>@drop.TotalLeads<br />
+            Conv Rate: @drop.ConversionRate
+        </td>
+        <td>@drop.Cost<br />
             eCPL: @drop.CostPerLead
         </td>
-        <td>@drop.Cost</td>
     </tr>
     if (drop.CreativeStats.Count() > 1)
     {
