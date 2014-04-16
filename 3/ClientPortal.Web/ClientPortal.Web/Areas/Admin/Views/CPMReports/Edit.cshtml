@@ -43,8 +43,12 @@
                 <td>@Html.TextAreaFor(m => m.Summary, 8, 100, null)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(m => m.Conclusion, "Next Steps")</td>
+                <td>@Html.LabelFor(m => m.Conclusion)</td>
                 <td>@Html.TextAreaFor(m => m.Conclusion, 8, 100, null)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ShowConversions)</td>
+                <td>@Html.EditorFor(m => m.ShowConversions)</td>
             </tr>
         </table>
         <br />

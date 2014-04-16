@@ -16,6 +16,7 @@ namespace ClientPortal.Data.Contexts
     {
         public CPMReport()
         {
+            this.ShowConversions = true;
             this.CampaignDrops = new HashSet<CampaignDrop>();
         }
     
@@ -27,6 +28,7 @@ namespace ClientPortal.Data.Contexts
         public string RecipientCC { get; set; }
         public string Summary { get; set; }
         public string Conclusion { get; set; }
+        public bool ShowConversions { get; set; }
     
         public virtual Offer Offer { get; set; }
         public virtual ICollection<CampaignDrop> CampaignDrops { get; set; }

@@ -55,7 +55,10 @@
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Volume</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Opens</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Clicks</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Conversions</b></td>
+                @if (Model.ShowConversions)
+                {
+                    <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Conversions</b></td>
+                }
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Total Cost</b></td>
             </tr>
             <tr>
@@ -64,10 +67,17 @@
                     <br />Open Rate: @Model.OpenRate</td>
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@Model.TotalClicks
                     <br />CTR: @Model.ClickThroughRate</td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@Model.TotalLeads
-                    <br />Conv Rate: @Model.ConversionRate</b></td>
+                @if (Model.ShowConversions)
+                {
+                    <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@Model.TotalLeads
+                        <br />Conv Rate: @Model.ConversionRate</b></td>
+                }
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@Model.TotalCost
-                    <br />eCPA: @Model.CostPerLead</b></td>
+                    @if (Model.ShowConversions)
+                    {
+                        <br /><text>eCPA: @Model.CostPerLead</text>
+                    }
+                </td>
             </tr>
             </table>
 
@@ -96,7 +106,10 @@
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Volume</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Opens</b></td>
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Clicks</b></td>
-                <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Conversions</b></td>
+                @if (Model.ShowConversions)
+                {
+                    <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Conversions</b></td>
+                }
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Total Cost</b></td>
             </tr>
             @{
@@ -116,10 +129,17 @@
                         <br />Open Rate: @drop.OpenRate</td>
                     <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.TotalClicks
                         <br />CTR: @drop.ClickThroughRate</td>
-                    <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@drop.TotalLeads
-                        <br />Conv Rate: @drop.ConversionRate</b></td>
+                    @if (Model.ShowConversions)
+                    {
+                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@drop.TotalLeads
+                            <br />Conv Rate: @drop.ConversionRate</b></td>
+                    }
                     <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Cost
-                        <br />eCPL: @drop.CostPerLead</td>
+                        @if (Model.ShowConversions)
+                        {
+                            <br /><text>eCPL: @drop.CostPerLead</text>
+                        }
+                    </td>
                 </tr>
                 if (drop.CreativeStats.Count() > 1 && !drop.CombineCreatives)
                 {
@@ -130,7 +150,10 @@
                         <td colspan="2" height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">Creative: @creativeStat.CreativeName</td>
                         <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@creativeStat.Clicks
                             <br />CTR: @creativeStat.ClickThroughRate</td>
-                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@creativeStat.Leads</td>
+                        @if (Model.ShowConversions)
+                        {
+                            <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@creativeStat.Leads</td>
+                        }
                         <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">&nbsp;</td>
                     </tr>
                     }
@@ -143,7 +166,10 @@
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalVolume</b></td>
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalOpens</b></td>
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalClicks</b></td>
-                <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalLeads</b></td>
+                @if (Model.ShowConversions)
+                {
+                    <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalLeads</b></td>
+                }
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalCost</b></td>
             </tr>
             </table>

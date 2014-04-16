@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -15,6 +16,15 @@ namespace ClientPortal.Data.Contexts
 
         [Display(Name = "CC")]
         public string RecipientCC { get; set; }
+
+        [Display(Name = "Date Sent")]
+        public DateTime? DateSent { get; set; }
+
+        [Display(Name = "Next Steps")]
+        public string Conclusion { get; set; }
+
+        [Display(Name = "Show Conversions?")]
+        public bool ShowConversions { get; set; }
     }
 
     [MetadataType(typeof(CPMReport_Validation))]
@@ -113,6 +123,7 @@ namespace ClientPortal.Data.Contexts
             RecipientCC = inReport.RecipientCC;
             Summary = inReport.Summary;
             Conclusion = inReport.Conclusion;
+            ShowConversions = inReport.ShowConversions;
         }
 
     }

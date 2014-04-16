@@ -38,6 +38,11 @@ namespace ClientPortal.Web.Areas.Admin.Models
             get { return ReplaceSpecialChars(Model.Conclusion); }
         }
 
+        public bool ShowConversions
+        {
+            get { return Model.ShowConversions; }
+        }
+
         public string TotalVolume
         {
             get { return Model.TotalVolume.ToString("N0"); }

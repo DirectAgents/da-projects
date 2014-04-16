@@ -55,7 +55,7 @@
                 <td>@Html.DisplayFor(m => m.RecipientCC)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(m => m.DateSent, "Date Sent")</td>
+                <td>@Html.LabelFor(m => m.DateSent)</td>
                 <td>@Html.DisplayFor(m => m.DateSent)</td>
             </tr>
             <tr>
@@ -63,8 +63,12 @@
                 <td>@Html.DisplayWithBreaksFor(m => m.Summary)</td>
             </tr>
             <tr>
-                <td>@Html.LabelFor(m => m.Conclusion, "Next Steps")</td>
+                <td>@Html.LabelFor(m => m.Conclusion)</td>
                 <td>@Html.DisplayWithBreaksFor(m => m.Conclusion)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ShowConversions)</td>
+                <td>@(Model.ShowConversions ? "yes" : "no")</td>
             </tr>
         }
     </table>

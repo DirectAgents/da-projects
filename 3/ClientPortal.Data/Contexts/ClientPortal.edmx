@@ -301,6 +301,7 @@
           <Property Name="RecipientCC" Type="nvarchar" MaxLength="255" />
           <Property Name="Summary" Type="nvarchar(max)" />
           <Property Name="Conclusion" Type="nvarchar(max)" />
+          <Property Name="ShowConversions" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="CPMReportCampaignDrop">
           <Key>
@@ -1990,6 +1991,7 @@
           <Property Type="String" Name="Conclusion" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="CPMReport" ToRole="Offer" />
           <NavigationProperty Name="CampaignDrops" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CPMReport" ToRole="CampaignDrop" />
+          <Property Type="Boolean" Name="ShowConversions" Nullable="false" DefaultValue="True" />
         </EntityType>
         <Association Name="FK_CPMReport_Offer">
           <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="1" />
@@ -2454,6 +2456,7 @@
           <EntitySetMapping Name="CPMReports">
             <EntityTypeMapping TypeName="ClientPortalModel.CPMReport">
               <MappingFragment StoreEntitySet="CPMReport">
+                <ScalarProperty Name="ShowConversions" ColumnName="ShowConversions" />
                 <ScalarProperty Name="Conclusion" ColumnName="Conclusion" />
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="RecipientCC" ColumnName="RecipientCC" />
