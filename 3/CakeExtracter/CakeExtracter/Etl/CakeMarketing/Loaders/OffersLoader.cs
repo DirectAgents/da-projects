@@ -10,6 +10,7 @@ namespace CakeExtracter.Etl.CakeMarketing.Loaders
     {
         protected override int Load(List<Offer> items)
         {
+            Logger.Info("Synching {0} offers...", items.Count);
             using (var db = new ClientPortal.Data.Contexts.ClientPortalContext())
             {
                 foreach (var item in items)

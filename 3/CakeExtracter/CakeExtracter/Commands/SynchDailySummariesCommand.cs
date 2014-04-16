@@ -32,9 +32,10 @@ namespace CakeExtracter.Commands
 
         public SynchDailySummariesCommand()
         {
-// TESTING!!! ...these two are commented out for testing...
-            RunBefore(new SynchAdvertisersCommand());
-            RunBefore(new SynchOffersCommand());
+            //Note: These should have been run recently...
+            // RunBefore(new SynchAdvertisersCommand());
+            // RunBefore(new SynchOffersCommand());
+            //TODO: a way to specify whether you want to run these or not?
 
             // Note: If CheckCakeTraffic is false, we rely on each offer's campaigns to be saved in the database
             //       (so synchCampaigns should have been run recently in that case)

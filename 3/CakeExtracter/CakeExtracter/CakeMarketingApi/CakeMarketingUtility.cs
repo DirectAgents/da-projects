@@ -26,13 +26,13 @@ namespace CakeExtracter.CakeMarketingApi
             }
         }
 
-        public static List<int> OfferIds(int advertiserId)
+        public static List<int> OfferIds(int advertiserId = 0)
         {
             var client = new OffersClient();
             var request = new OffersRequest
-                {
-                    advertiser_id = advertiserId
-                };
+            {
+                advertiser_id = advertiserId
+            };
             var response = client.Offers(request);
             if (response == null || response.Offers == null)
             {
@@ -43,10 +43,13 @@ namespace CakeExtracter.CakeMarketingApi
             return offerIds.ToList();
         }
 
-        public static List<Offer> Offers()
+        public static List<Offer> Offers(int advertiserId = 0)
         {
             var client = new OffersClient();
-            var request = new OffersRequest();
+            var request = new OffersRequest()
+            {
+                advertiser_id = advertiserId
+            };
             var response = client.Offers(request);
             return response.Offers;
         }

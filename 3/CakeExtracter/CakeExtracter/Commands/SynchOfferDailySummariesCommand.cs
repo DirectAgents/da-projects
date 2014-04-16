@@ -28,8 +28,8 @@ namespace CakeExtracter.Commands
 
         public SynchOfferDailySummariesCommand()
         {
-            RunBefore(new SynchAdvertisersCommand());
-            RunBefore(new SynchOffersCommand());
+            //RunBefore(new SynchAdvertisersCommand());
+            //RunBefore(new SynchOffersCommand());
 
             IsCommand("synchOfferDailySummaries", "synch OfferDailySummaries for an advertisers offers in a date range");
             HasOption("a|advertiserId=", "Advertiser Id (* = all advertisers)", c => Advertiser = c);
