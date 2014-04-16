@@ -155,17 +155,21 @@ namespace ClientPortal.Data.Services
         public IQueryable<ConversionSummary> GetConversionSummaries(DateTime? start, DateTime? end, int? advertiserId, int? offerId)
         {
             var conversions = GetConversions(start, end, advertiserId, offerId);
-            var conversionGroups = conversions.GroupBy(c => c.offer_id);
+            var conversionGroupSums = conversions.GroupBy(c => c.offer_id)
+                .Select(g => new
+                {
+                    OfferId = g.Key,
+                    Count = g.Count(),
+                    Revenue = g.Any() ? g.Sum(s => s.received_amount) : 0
+                });
 
             var offers = Offers(advertiserId);
-
             if (offerId.HasValue)
                 offers = offers.Where(o => o.OfferId == offerId.Value);
 
             var conversionSummaries =
                 from offer in offers
-                join conversionGroup in conversionGroups on offer.OfferId equals conversionGroup.Key into gj_convgroup
-                from convGroup in gj_convgroup.DefaultIfEmpty() // left join to conversionGroups
+                join convSum in conversionGroupSums on offer.OfferId equals convSum.OfferId
                 select new ConversionSummary()
                 {
                     AdvertiserId = offer.AdvertiserId,
@@ -173,8 +177,8 @@ namespace ClientPortal.Data.Services
                     OfferName = offer.OfferName,
                     Format = offer.DefaultPriceFormat,
                     Currency = offer.Currency,
-                    Count = convGroup.Count(),
-                    Revenue = (convGroup.Count() == 0) ? 0 : convGroup.Sum(g => g.received_amount),
+                    Count = convSum.Count,
+                    Revenue = convSum.Revenue,
                     //ConValTotal = 
                 };
             return conversionSummaries;
