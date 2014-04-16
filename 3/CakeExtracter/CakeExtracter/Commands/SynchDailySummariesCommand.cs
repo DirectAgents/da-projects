@@ -13,7 +13,7 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchDailySummariesCommand : ConsoleCommand
     {
-        public string Advertiser { get; set; }
+        public int AdvertiserId { get; set; }
         public int? OfferId { get; set; } //note: if OfferId is null, then CheckCakeTraffic determines how to get the offerIds
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
@@ -22,7 +22,7 @@ namespace CakeExtracter.Commands
 
         public override void ResetProperties()
         {
-            Advertiser = null;
+            AdvertiserId = 0;
             OfferId = null;
             StartDate = null;
             EndDate = null;
@@ -42,7 +42,7 @@ namespace CakeExtracter.Commands
             //       RunBefore(new SynchCampaignsCommand()); ...in some cases
 
             IsCommand("synchDailySummaries", "synch DailySummaries for an advertisers offers in a date range");
-            HasOption("a|advertiserId=", "Advertiser Id (* = all advertisers)", c => Advertiser = c);
+            HasOption<int>("a|advertiserId=", "Advertiser Id (default = 0 / all advertisers)", c => AdvertiserId = c);
             HasOption<int>("o|offerId=", "Offer Id (default = all)", c => OfferId = c);
             HasOption("s|startDate=", "Start Date (default is two months ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is today)", c => EndDate = DateTime.Parse(c));
@@ -63,8 +63,9 @@ namespace CakeExtracter.Commands
             }
             dateRange.ToDate = dateRange.ToDate.AddDays(1); // cake requires the date _after_ the last date you want stats for
 
-            var advertiserIds = GetAdvertiserIds();
-            var extracter = new DailySummariesExtracter(dateRange, advertiserIds, OfferId, CheckCakeTraffic, IncludeDeletions);
+            var startTime = DateTime.Now;
+
+            var extracter = new DailySummariesExtracter(dateRange, AdvertiserId, OfferId, CheckCakeTraffic, IncludeDeletions);
             var loader = new DailySummariesLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
@@ -76,45 +77,18 @@ namespace CakeExtracter.Commands
             {
                 using (var db = new ClientPortalContext())
                 {
-                    var advertisers = db.Advertisers.Where(a => advertiserIds.Contains(a.AdvertiserId));
+                    var advertisers = db.Advertisers.AsQueryable();
+                    if (AdvertiserId != 0)
+                        advertisers = advertisers.Where(a => a.AdvertiserId == AdvertiserId);
+
                     foreach (var advertiser in advertisers)
                     {
-                        advertiser.LatestDaySums = DateTime.Now;
+                        advertiser.LatestDaySums = startTime;
                     }
                     db.SaveChanges();
                 }
             }
             return 0;
-        }
-
-        private List<int> GetAdvertiserIds()
-        {
-            List<int> advertiserIds = null;
-            if (string.IsNullOrWhiteSpace(Advertiser) || Advertiser == "*")
-            {
-                using (var db = new ClientPortalContext())
-                {
-                    if (OfferId.HasValue)
-                    {
-                        var offer = db.Offers.FirstOrDefault(o => o.OfferId == OfferId.Value);
-                        if (offer != null && offer.AdvertiserId.HasValue)
-                            advertiserIds = new List<int> { offer.AdvertiserId.Value };
-                    }
-                    else
-                    {
-                        advertiserIds = db.Advertisers
-                                          .Where(c => c.AdvertiserId < 90000)
-                                          .OrderBy(c => c.AdvertiserId)
-                                          .Select(c => c.AdvertiserId)
-                                          .ToList();
-                    }
-                }
-            }
-            else
-            {
-                advertiserIds = new List<int> { int.Parse(Advertiser) };
-            }
-            return advertiserIds;
         }
 
     }
