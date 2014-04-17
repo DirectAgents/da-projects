@@ -3,30 +3,48 @@
     var ajaxOptions = RazorHelpers.GetAjaxOptions("cpmOffersTab");
     var ajaxOpts_Sum = RazorHelpers.GetAjaxOptions("cpmSummaryTab", "navCPMSummary");
     var ajaxOpts_Creative = RazorHelpers.GetAjaxOptions("cpmCreativesTab", "navCPMCreatives");
-    var accountManagers = Model.Select(o => o.Advertiser).Distinct().Where(a => a.AccountManagerId != null).Select(a => a.AccountManager).Distinct().OrderBy(am => am.FullName);
     var advertisers = Model.Select(o => o.Advertiser).Distinct(new ClientPortal.Data.Contexts.AdvertiserComparer()).OrderBy(a => a.AdvertiserName);
+    var accountManagers = Model.Select(o => o.Advertiser).Distinct().Where(a => a.AccountManagerId != null).Select(a => a.AccountManager).Distinct().OrderBy(am => am.FullName);
+
+    int? filterAM = ViewBag.FilterAM;
+    int? filterAdv = ViewBag.FilterAdv;
+
+    ClientPortal.Data.Contexts.Advertiser oneAdv = null; // if non-null, we're showing a single advertisers's offers
+    if (advertisers.Count() == 1)
+    {
+        oneAdv = advertisers.First();
+    }
+    ClientPortal.Data.Contexts.CakeContact oneAM = null; // if non-null, we're showing a single account manager's offers
+    if (accountManagers.Count() == 1)
+    {
+        oneAM = accountManagers.First();
+    }
+    bool CPMonly = ViewBag.CPMonly ?? true;
+    int? minCampaigns = ViewBag.MinCampaigns;
 }
 
 @if (!Request.IsAjaxRequest())
 {
     <h3>CPM Offers</h3>
 }
-Show:
-@Ajax.ActionLink("all offers", "Index", "Offers", ajaxOptions) |
-@Ajax.ActionLink("filter by account manager", "Filter", "Offers", ajaxOptions)
+
+@if (CPMonly)
+{
+    @Ajax.ActionLink("Include non-CPM offers", "Index", "Offers", new { am = filterAM, advertiserid = filterAdv, cpmonly = false, mincampaigns = minCampaigns }, ajaxOptions)
+    <text> | </text>
+}
+@Ajax.ActionLink("Filter by account manager", "Filter", "Offers", ajaxOptions)
 <br />
 
-@if (advertisers.Count() == 1)
+@if (filterAdv.HasValue)
 {
-    var adv = advertisers.First();
-    <text>Advertiser: </text>@adv.AdvertiserName
-    <text> </text>@Ajax.ActionLink("[refesh]", "Index", "Offers", new { advertiserid = adv.AdvertiserId }, ajaxOptions)
-} else if (accountManagers.Count() == 1)
-{
-    var am = accountManagers.First();
-    <text>Account Manager: </text>@am.FullName
-    <text> </text>@Ajax.ActionLink("[refresh]", "Index", "Offers", new { am = am.CakeContactId }, ajaxOptions)
+    <text>Advertiser: </text>@((oneAdv != null) ? oneAdv.AdvertiserName : filterAdv.ToString())<text> </text>
 }
+@if (filterAM.HasValue)
+{
+    <text>Account Manager: </text>@((oneAM != null) ? oneAM.FullName : filterAM.ToString())<text> </text>
+}
+@Ajax.ActionLink("[refresh]", "Index", "Offers", new { am = filterAM, advertiserid = filterAdv, cpmonly = CPMonly, mincampaigns = minCampaigns }, ajaxOptions)
 
 <table border="1">
     <tr>

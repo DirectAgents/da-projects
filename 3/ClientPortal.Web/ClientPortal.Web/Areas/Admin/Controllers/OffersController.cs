@@ -25,14 +25,18 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return View(accountManagers);
         }
 
-        public ActionResult Index(int? am, int? advertiserid, int? mincampaigns)
+        public ActionResult Index(int? am, int? advertiserid, int? mincampaigns, bool cpmonly = true)
         {
-            var offers = cpRepo.Offers(am, advertiserid, true, mincampaigns);
+            var offers = cpRepo.Offers(am, advertiserid, cpmonly, mincampaigns);
 
             offers = offers
                 .OrderBy(o => o.Advertiser.AdvertiserName)
                 .ThenBy(o => o.OfferName);
 
+            ViewBag.FilterAM = am;
+            ViewBag.FilterAdv = advertiserid;
+            ViewBag.MinCampaigns = mincampaigns;
+            ViewBag.CPMonly = cpmonly;
             return View(offers);
         }
 

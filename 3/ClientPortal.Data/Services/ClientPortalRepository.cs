@@ -55,8 +55,8 @@ namespace ClientPortal.Data.Services
             if (advertiserId.HasValue)
                 offers = offers.Where(o => o.AdvertiserId == advertiserId.Value);
             if (cpmOnly)
-                offers = offers.Where(o => o.OfferName.Contains("CPM"));
-            if (minCampaigns.HasValue)
+                offers = offers.Where(o => o.OfferName.Contains("CPM") || o.CPMReports.Any() );
+            if (minCampaigns.HasValue && minCampaigns > 0)
                 offers = offers.Where(o => o.Campaigns.Count >= minCampaigns);
 
             var q = from o in offers

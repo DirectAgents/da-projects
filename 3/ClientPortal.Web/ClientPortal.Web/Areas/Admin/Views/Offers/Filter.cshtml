@@ -10,6 +10,15 @@ Filter by Account Manager:<br />
 }
 
 <br />
-@Ajax.ActionLink("Show all offers", "Index", "Offers", ajaxOptions)
+Show:
 <br />
-@Ajax.ActionLink("Show all offers with campaigns", "Index", "Offers", new { mincampaigns = 1 }, ajaxOptions)
+@Ajax.ActionLink("all cpm offers", "Index", "Offers", ajaxOptions)
+(
+@Ajax.ActionLink("just those with campaigns", "Index", "Offers", new { mincampaigns = 1 }, ajaxOptions)
+)
+
+<br />
+@Ajax.ActionLink("all offers", "Index", "Offers", new { cpmonly = false }, ajaxOptions)
+(
+@Ajax.ActionLink("just those with campaigns", "Index", "Offers", new { mincampaigns = 1, cpmonly = false }, ajaxOptions)
+)

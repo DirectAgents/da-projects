@@ -142,17 +142,20 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             if (drop == null)
                 return false;
 
-            cpRepo.DuplicateDropIfNecessary(drop);
-
-            foreach (var creativeStat in drop.CreativeStats)
+            if (drop.CreativeStats.Any())
             {
-                var command = new SynchCreativeSummariesCommand
+                cpRepo.DuplicateDropIfNecessary(drop);
+
+                foreach (var creativeStat in drop.CreativeStats)
                 {
-                    CreativeId = creativeStat.CreativeId,
-                    StartDate = creativeStat.Creative.DateCreated.Date
-                };
-                command.Run(null);
-                cpRepo.UpdateCreativeStatFromSummaries(creativeStat.CreativeStatId, true);
+                    var command = new SynchCreativeSummariesCommand
+                    {
+                        CreativeId = creativeStat.CreativeId,
+                        StartDate = creativeStat.Creative.DateCreated.Date
+                    };
+                    command.Run(null);
+                    cpRepo.UpdateCreativeStatFromSummaries(creativeStat.CreativeStatId, true);
+                }
             }
             return true;
         }
