@@ -50,7 +50,7 @@
         <EntityTypeShape EntityType="ClientPortalModel.Campaign" Width="1.5" PointX="12.125" PointY="4" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Affiliate" />
         <AssociationConnector Association="ClientPortalModel.FK_Campaign_Offer" />
-        <EntityTypeShape EntityType="ClientPortalModel.CampaignDrop" Width="1.5" PointX="14" PointY="7.125" />
+        <EntityTypeShape EntityType="ClientPortalModel.CampaignDrop" Width="1.5" PointX="14" PointY="7.625" />
         <AssociationConnector Association="ClientPortalModel.FK_CampaignDrop_Campaign" />
         <EntityTypeShape EntityType="ClientPortalModel.CreativeStat" Width="1.5" PointX="15.75" PointY="4.25" />
         <AssociationConnector Association="ClientPortalModel.FK_CreativeStat_CampaignDrop" />

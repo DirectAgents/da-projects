@@ -21,6 +21,7 @@
         <th>Clicks</th>
         <th>Conversions</th>
         <th>Total Cost</th>
+        <th>@Model.ExtraColumnName</th>
     </tr>
 @foreach (var drop in Model.CampaignDropsOrdered)
 {
@@ -40,6 +41,7 @@
         <td>@drop.Cost<br />
             eCPL: @drop.CostPerLead
         </td>
+        <td>@drop.Extra</td>
     </tr>
     if (drop.CreativeStats.Count() > 1)
     {
@@ -51,7 +53,8 @@
                 <td colspan="2">Creative: @creativeStat.CreativeName</td>
                 <td>@creativeStat.Clicks<br />
                     CTR: @creativeStat.ClickThroughRate</td>
-                <td>@creativeStat.Leads</td>
+                <td>@creativeStat.Leads<br />
+                    Conv Rate: @creativeStat.ConversionRate</td>
             </tr>
         }
     }
@@ -64,6 +67,7 @@
         <td>@Model.TotalClicks</td>
         <td>@Model.TotalLeads</td>
         <td>@Model.TotalCost</td>
+        <td>@Model.ExtraColumnValue</td>
     </tr>
     <tr>
         <td colspan="5"></td>

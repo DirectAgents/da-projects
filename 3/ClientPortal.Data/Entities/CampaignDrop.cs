@@ -16,6 +16,9 @@ namespace ClientPortal.Data.Contexts
 
         [Display(Name = "Combine Creatives?")]
         public bool CombineCreatives { get; set; }
+
+        [Display(Name = "Extra Column Value")]
+        public string Extra { get; set; }
     }
 
     [MetadataType(typeof(CampaignDrop_Validation))]
@@ -124,6 +127,7 @@ namespace ClientPortal.Data.Contexts
             Volume = inDrop.Volume;
             Opens = inDrop.Opens;
             CombineCreatives = inDrop.CombineCreatives;
+            Extra = inDrop.Extra;
         }
 
         public CampaignDrop Duplicate()
@@ -144,6 +148,7 @@ namespace ClientPortal.Data.Contexts
             return dropCopy;
         }
 
+        //not used??
         public bool AnyChanges(CampaignDrop inDrop)
         {
             bool anyChanges = false;
@@ -152,9 +157,13 @@ namespace ClientPortal.Data.Contexts
                 this.Cost != inDrop.Cost ||
                 this.Volume != inDrop.Volume ||
                 this.Opens != inDrop.Opens ||
-                this.Subject != inDrop.Subject)
+                this.Subject != inDrop.Subject ||
+                this.FromEmail != inDrop.FromEmail ||
+                this.CombineCreatives != inDrop.CombineCreatives ||
+                this.Extra != inDrop.Extra)
+            {
                 anyChanges = true;
-
+            }
             // Check for changes in CreativeStats ?
 //            if (!anyChanges)
 //                foreach (var cstat in this.CreativeStats)

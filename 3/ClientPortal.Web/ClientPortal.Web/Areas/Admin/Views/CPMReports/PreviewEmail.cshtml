@@ -111,6 +111,10 @@
                     <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Conversions</b></td>
                 }
                 <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>Total Cost</b></td>
+                @if (Model.ShowExtras)
+                {
+                    <td height="45" align="center" valign="middle" bgcolor="#3c9ffe" style="color: #fff; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 14px;"><b>@Model.ExtraColumnName</b></td>
+                }
             </tr>
             @{
                 string bgcolor = "ffffff";
@@ -140,6 +144,10 @@
                             <br /><text>eCPL: @drop.CostPerLead</text>
                         }
                     </td>
+                    @if (Model.ShowExtras)
+                    {
+                        <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">@drop.Extra</td>
+                    }
                 </tr>
                 if (drop.CreativeStats.Count() > 1 && !drop.CombineCreatives)
                 {
@@ -152,9 +160,14 @@
                             <br />CTR: @creativeStat.ClickThroughRate</td>
                         @if (Model.ShowConversions)
                         {
-                            <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@creativeStat.Leads</td>
+                            <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #3399ff; font-weight: bold;"><b>@creativeStat.Leads
+                                <br />Conv Rate: @creativeStat.ConversionRate</b></td>
                         }
                         <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">&nbsp;</td>
+                        @if (Model.ShowExtras)
+                        {
+                            <td height="45" align="left" valign="middle" bgcolor="#@bgcolor" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #666666">&nbsp;</td>
+                        }
                     </tr>
                     }
                 }
@@ -171,6 +184,10 @@
                     <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalLeads</b></td>
                 }
                 <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.TotalCost</b></td>
+                @if (Model.ShowExtras)
+                {
+                    <td height="45" align="left" valign="middle" bgcolor="#ffffff" style="color: #000; border-right: 1px solid #c7c3c7; font-family: Arial, Helvetica, sans-serif; font-size: 13px; text-align: center; color: #000000; font-weight: bold;"><b>@Model.ExtraColumnValue</b></td>
+                }
             </tr>
             </table>
 

@@ -254,6 +254,7 @@ namespace ClientPortal.Data.Services
             return offer;
         }
 
+        //not used??
         public bool CopyCPMReportDrops(int id, bool saveChanges = false)
         {
             var report = GetCPMReport(id);
@@ -264,13 +265,10 @@ namespace ClientPortal.Data.Services
                 var dropCopy = new CampaignDrop
                 {
                     CampaignId = drop.CampaignId,
-                    Date = drop.Date,
-                    Cost = drop.Cost,
-                    Volume = drop.Volume,
-                    Opens = drop.Opens,
-                    Subject = drop.Subject,
                     CopyOf = drop.CampaignDropId
                 };
+                dropCopy.SetFieldsFrom(drop);
+
                 foreach (var cStat in drop.CreativeStats)
                 {
                     var cStatCopy = new CreativeStat

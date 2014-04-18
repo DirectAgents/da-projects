@@ -70,6 +70,18 @@
                 <td>@Html.LabelFor(m => m.ShowConversions)</td>
                 <td>@(Model.ShowConversions ? "yes" : "no")</td>
             </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ShowExtras)</td>
+                <td>@(Model.ShowExtras ? "yes" : "no")</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ExtraColumnName)</td>
+                <td>@Html.DisplayFor(m => m.ExtraColumnName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ExtraColumnValue)</td>
+                <td>@Html.DisplayFor(m => m.ExtraColumnValue)</td>
+            </tr>
         }
     </table>
     @foreach (var drop in Model.CampaignDropsOrdered)

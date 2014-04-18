@@ -25,6 +25,15 @@ namespace ClientPortal.Data.Contexts
 
         [Display(Name = "Show Conversions?")]
         public bool ShowConversions { get; set; }
+
+        [Display(Name = "Show Extra Column?")]
+        public bool ShowExtras { get; set; }
+
+        [Display(Name = "Extra Column Name")]
+        public string ExtraColumnName { get; set; }
+
+        [Display(Name = "Extra Column Value")]
+        public string ExtraColumnValue { get; set; }
     }
 
     [MetadataType(typeof(CPMReport_Validation))]
@@ -124,6 +133,9 @@ namespace ClientPortal.Data.Contexts
             Summary = inReport.Summary;
             Conclusion = inReport.Conclusion;
             ShowConversions = inReport.ShowConversions;
+            ShowExtras = inReport.ShowExtras;
+            ExtraColumnName = inReport.ExtraColumnName;
+            ExtraColumnValue = inReport.ExtraColumnValue;
         }
 
     }

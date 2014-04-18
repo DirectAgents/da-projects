@@ -42,6 +42,18 @@ namespace ClientPortal.Web.Areas.Admin.Models
         {
             get { return Model.ShowConversions; }
         }
+        public bool ShowExtras
+        {
+            get { return Model.ShowExtras; }
+        }
+        public string ExtraColumnName
+        {
+            get { return Model.ExtraColumnName; }
+        }
+        public string ExtraColumnValue
+        {
+            get { return Model.ExtraColumnValue; }
+        }
 
         public string TotalVolume
         {

@@ -29,6 +29,9 @@ namespace ClientPortal.Data.Contexts
         public string Summary { get; set; }
         public string Conclusion { get; set; }
         public bool ShowConversions { get; set; }
+        public bool ShowExtras { get; set; }
+        public string ExtraColumnName { get; set; }
+        public string ExtraColumnValue { get; set; }
     
         public virtual Offer Offer { get; set; }
         public virtual ICollection<CampaignDrop> CampaignDrops { get; set; }

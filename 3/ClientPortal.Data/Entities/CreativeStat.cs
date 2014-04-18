@@ -18,10 +18,22 @@ namespace ClientPortal.Data.Contexts
         {
             get
             {
-                if (Clicks == null || CampaignDrop.Opens == null)
+                if (Clicks == null || CampaignDrop.Opens == null || CampaignDrop.Opens.Value == 0)
                     return null;
                 else
                     return (decimal)Clicks.Value / CampaignDrop.Opens.Value;
+            }
+        }
+
+        [NotMapped]
+        public decimal? ConversionRate
+        {
+            get
+            {
+                if (Leads == null || Clicks == null || Clicks.Value == 0)
+                    return null;
+                else
+                    return (decimal)Leads.Value / Clicks.Value;
             }
         }
 
@@ -32,6 +44,7 @@ namespace ClientPortal.Data.Contexts
             this.Leads = inStat.Leads;
         }
 
+        //not used??
         public bool AnyChanges(CreativeStat inStat)
         {
             bool anyChanges = false;

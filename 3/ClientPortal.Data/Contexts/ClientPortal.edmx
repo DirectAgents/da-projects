@@ -258,6 +258,7 @@
           <Property Name="CopyOf" Type="int" />
           <Property Name="FromEmail" Type="nvarchar" MaxLength="100" />
           <Property Name="CombineCreatives" Type="bit" Nullable="false" />
+          <Property Name="Extra" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Contact">
           <Key>
@@ -302,6 +303,9 @@
           <Property Name="Summary" Type="nvarchar(max)" />
           <Property Name="Conclusion" Type="nvarchar(max)" />
           <Property Name="ShowConversions" Type="bit" Nullable="false" />
+          <Property Name="ShowExtras" Type="bit" Nullable="false" />
+          <Property Name="ExtraColumnName" Type="nvarchar" MaxLength="100" />
+          <Property Name="ExtraColumnValue" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="CPMReportCampaignDrop">
           <Key>
@@ -1782,6 +1786,7 @@
           <Property Type="String" Name="FromEmail" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CPMReports" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CampaignDrop" ToRole="CPMReport" />
           <Property Type="Boolean" Name="CombineCreatives" Nullable="false" />
+          <Property Type="String" Name="Extra" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_CampaignDrop_Campaign">
           <End Type="ClientPortalModel.Campaign" Role="Campaign" Multiplicity="1" />
@@ -1992,6 +1997,9 @@
           <NavigationProperty Name="Offer" Relationship="ClientPortalModel.FK_CPMReport_Offer" FromRole="CPMReport" ToRole="Offer" />
           <NavigationProperty Name="CampaignDrops" Relationship="ClientPortalModel.CPMReportCampaignDrop" FromRole="CPMReport" ToRole="CampaignDrop" />
           <Property Type="Boolean" Name="ShowConversions" Nullable="false" DefaultValue="True" />
+          <Property Type="Boolean" Name="ShowExtras" Nullable="false" />
+          <Property Type="String" Name="ExtraColumnName" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ExtraColumnValue" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_CPMReport_Offer">
           <End Type="ClientPortalModel.Offer" Role="Offer" Multiplicity="1" />
@@ -2359,6 +2367,7 @@
           <EntitySetMapping Name="CampaignDrops">
             <EntityTypeMapping TypeName="ClientPortalModel.CampaignDrop">
               <MappingFragment StoreEntitySet="CampaignDrop">
+                <ScalarProperty Name="Extra" ColumnName="Extra" />
                 <ScalarProperty Name="CombineCreatives" ColumnName="CombineCreatives" />
                 <ScalarProperty Name="FromEmail" ColumnName="FromEmail" />
                 <ScalarProperty Name="CopyOf" ColumnName="CopyOf" />
@@ -2456,6 +2465,9 @@
           <EntitySetMapping Name="CPMReports">
             <EntityTypeMapping TypeName="ClientPortalModel.CPMReport">
               <MappingFragment StoreEntitySet="CPMReport">
+                <ScalarProperty Name="ExtraColumnValue" ColumnName="ExtraColumnValue" />
+                <ScalarProperty Name="ExtraColumnName" ColumnName="ExtraColumnName" />
+                <ScalarProperty Name="ShowExtras" ColumnName="ShowExtras" />
                 <ScalarProperty Name="ShowConversions" ColumnName="ShowConversions" />
                 <ScalarProperty Name="Conclusion" ColumnName="Conclusion" />
                 <ScalarProperty Name="Summary" ColumnName="Summary" />

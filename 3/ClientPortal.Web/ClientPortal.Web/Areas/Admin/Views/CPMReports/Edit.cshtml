@@ -50,6 +50,18 @@
                 <td>@Html.LabelFor(m => m.ShowConversions)</td>
                 <td>@Html.EditorFor(m => m.ShowConversions)</td>
             </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ShowExtras)</td>
+                <td>@Html.EditorFor(m => m.ShowExtras)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ExtraColumnName)</td>
+                <td>@Html.EditorFor(m => m.ExtraColumnName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ExtraColumnValue)</td>
+                <td>@Html.EditorFor(m => m.ExtraColumnValue)</td>
+            </tr>
         </table>
         <br />
         <input type="submit" value="Save Report" />

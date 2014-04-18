@@ -77,5 +77,10 @@ namespace ClientPortal.Web.Areas.Admin.Models
         {
             get { return (Model.Cost.HasValue ? Model.Cost.Value.ToString("C2") : ""); }
         }
+
+        public string Extra
+        {
+            get { return Model.Extra; }
+        }
     }
 }

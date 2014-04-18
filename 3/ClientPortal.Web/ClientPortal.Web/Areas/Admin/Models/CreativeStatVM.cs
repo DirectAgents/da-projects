@@ -35,6 +35,10 @@ namespace ClientPortal.Web.Areas.Admin.Models
         {
             get { return (Model.ClickThroughRate.HasValue ? String.Format("{0:0.00%}", Model.ClickThroughRate.Value) : ""); }
         }
+        public string ConversionRate
+        {
+            get { return (Model.ConversionRate.HasValue ? String.Format("{0:0.00%}", Model.ConversionRate.Value) : ""); }
+        }
 
         public byte[] Thumbnail
         {
