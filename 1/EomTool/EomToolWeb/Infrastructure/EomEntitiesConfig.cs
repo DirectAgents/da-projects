@@ -12,19 +12,20 @@ namespace EomToolWeb.Infrastructure
         {
             get
             {
+                DateTime thisMonth = DateTime.Now.FirstDayOfMonth();
+
                 var userEomDateFromCookie = HttpContext.Current.Request.Cookies["UserEomDate"];
-                DateTime lastMonth = DateTime.Now.FirstDayOfMonth(-1);
                 DateTime eomDate;
                 if (userEomDateFromCookie == null || !DateTime.TryParse(userEomDateFromCookie.Value, out eomDate))
                 {
-                    eomDate = lastMonth;
+                    eomDate = thisMonth.AddMonths(-1); // default to last month
                     HttpCookie cookie = new HttpCookie("UserEomDate");
                     cookie.Value = eomDate.ToString();
                     HttpContext.Current.Response.Cookies.Add(cookie);
                 }
-                // valid eom dates are between Aug 2012 and last month
-                if ((eomDate < new DateTime(2012, 8, 1)) || (eomDate > lastMonth))
-                    eomDate = lastMonth;
+                // valid eom dates are between Aug 2012 and this month
+                if ((eomDate < new DateTime(2012, 8, 1)) || (eomDate > thisMonth))
+                    eomDate = thisMonth;
                 return eomDate;
             }
             set
@@ -55,6 +56,11 @@ namespace EomToolWeb.Infrastructure
             }
         }
 
+        public bool DebugMode
+        {
+            get { return EomToolWebConfigSection.GetConfigSection().DebugMode; }
+        }
+
         public bool DatabaseExistsForDate(DateTime eomDate)
         {
             var eomToolConfig = EomToolWebConfigSection.GetConfigSection();
@@ -74,7 +80,7 @@ namespace EomToolWeb.Infrastructure
             {
                 var year = eomDate.Year;
                 var month = eomDate.ToString("MMM");
-                connectionString = @"data source=biz2\da;initial catalog=zDADatabase" + month + year + "Test;Integrated Security=True";
+                connectionString = @"data source=biz\sqlexpress;initial catalog=zDADatabase" + month + year + "Test;Integrated Security=True";
             }
             else
             {

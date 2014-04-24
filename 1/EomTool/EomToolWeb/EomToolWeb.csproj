@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\..\Solution\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
@@ -133,6 +136,9 @@
       <Private>True</Private>
       <HintPath>..\..\Solution\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -144,6 +150,7 @@
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Controllers\CampaignsController.cs" />
     <Compile Include="Controllers\CampaignsApiController.cs" />
+    <Compile Include="Controllers\ExtraItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaymentBatchesController.cs" />
     <Compile Include="Controllers\PayoutsController.cs" />
@@ -2669,6 +2676,9 @@
     <Content Include="Views\PaymentBatches\PubAttachmentsInfrastructure.cshtml" />
     <Content Include="Views\PaymentBatches\Selector.cshtml" />
     <Content Include="Views\PaymentBatches\SelectorNav.cshtml" />
+    <Content Include="Views\ExtraItems\Import.cshtml" />
+    <Content Include="Views\ExtraItems\PreviewImport.cshtml" />
+    <Content Include="Views\ExtraItems\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

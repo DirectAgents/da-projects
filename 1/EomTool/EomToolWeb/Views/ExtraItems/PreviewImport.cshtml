@@ -1,0 +1,83 @@
+﻿@model DAgents.Common.RowsConverter<Item>
+
+@if (Model.ImportComplete)
+{
+    <h2>Extra Items Import</h2>
+}
+else
+{
+    <h2>Import Preview</h2>
+}
+
+<table border="1" style="border-spacing: 0">
+    <tr>
+        <th>Advertiser</th>
+        <th>PID</th>
+        <th>Campaign</th>
+        <th>AffId</th>
+        <th>Publisher(Affiliate)</th>
+        <th>Type</th>
+        <th>Units</th>
+        <th>Revenue/Unit</th>
+        <th>Cost/Unit</th>
+        <th>Notes</th>
+        <th>ERRORS</th>
+    </tr>
+@foreach (var row in Model.Rows)
+{
+    <tr>
+    @if (row.Errors.Count == 0 && row.Object != null)
+    {
+        var item = row.Object;
+        <td>@item.AdvertiserName</td>
+        <td>@item.pid</td>
+        <td>@item.CampaignName</td>
+        <td>@item.affid</td>
+        <td>@item.AffiliateName</td>
+        <td>@item.UnitTypeName</td>
+        <td>@item.num_units</td>
+        <td>@item.RevenueCurrencyName @item.revenue_per_unit</td>
+        <td>@item.CostCurrencyName @item.cost_per_unit</td>
+        <td>@item.notes</td>
+        <td></td>
+    }
+    else // error in row...
+    {
+        <td></td>
+        <td>@row.DataFor("pid")</td>
+        <td></td>
+        <td>@row.DataFor("affid")</td>
+        <td></td>
+        <td>@row.DataFor("type")</td>
+        <td>@row.DataFor("units")</td>
+        <td>@row.DataFor("revenue")</td>
+        <td>@row.DataFor("cost")</td>
+        <td>@row.DataFor("notes")</td>
+        <td style="color:red">
+            @foreach (var error in row.Errors)
+            {
+                <text>@error</text><br />
+            }
+        </td>
+    }
+    </tr>
+}
+</table>
+
+@if (Model.ImportComplete)
+{
+    <br />
+    <span style="color:green">Import Complete</span>
+}
+else if (Model.AnyErrors)
+{
+    <span style="color:red">Correct errors and click "back" to re-import</span>
+}
+else
+{
+    <br />
+    using (Html.BeginForm("FinishImport", "ExtraItems"))
+    {
+        <input type="submit" value="Finish Import" />
+    }
+}

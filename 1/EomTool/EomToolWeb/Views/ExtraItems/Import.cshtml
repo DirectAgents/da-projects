@@ -1,0 +1,11 @@
+﻿<h2>Extra Item Importer</h2>
+
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+
+<form method="post" action="@Url.Action("Import")" enctype="multipart/form-data">
+    <div>
+        <input name="uploadFile" type="file" />
+        <br /><br />
+        <input type="submit" value="Import" />
+    </div>
+</form>

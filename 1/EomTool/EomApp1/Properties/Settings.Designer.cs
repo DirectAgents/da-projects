@@ -121,7 +121,7 @@ namespace EomApp1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2012-11-01")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2014-03-01")]
         public global::System.DateTime OverrideDate {
             get {
                 return ((global::System.DateTime)(this["OverrideDate"]));
@@ -257,7 +257,7 @@ namespace EomApp1.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=zDADatabaseNov2012Test;User=sa;Passwor" +
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=biz\\sqlexpress;Initial Catalog=zDADatabaseMar2014Test;User=sa;Passwor" +
             "d=sp0ngbOb")]
         public string OverrideConnectionString {
             get {

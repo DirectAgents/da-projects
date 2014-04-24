@@ -59,6 +59,7 @@
     <Compile Include="Concrete\AffiliateRepository.cs" />
     <Compile Include="Concrete\BatchRepository.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
+    <Compile Include="Concrete\MediaBuyerApprovalRepository.cs" />
     <Compile Include="Concrete\PaymentBatchRepository.cs" />
     <Compile Include="Concrete\PublisherRelatedItemsRepository.cs" />
     <Compile Include="Concrete\SecurityRepository.cs" />
@@ -81,12 +82,14 @@
       <DependentUpon>EomToolSecurity.edmx</DependentUpon>
     </Compile>
     <Compile Include="Entities\IEomEntitiesConfig.cs" />
+    <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\ItemAccountingStatus.cs" />
     <Compile Include="Entities\MediaBuyerApprovalStatus.cs" />
     <Compile Include="Entities\PaymentBatch.cs" />
     <Compile Include="Entities\PaymentBatchState.cs" />
     <Compile Include="Entities\PublisherPayment.cs" />
     <Compile Include="Entities\PublisherSummary.cs" />
+    <Compile Include="Entities\Util.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

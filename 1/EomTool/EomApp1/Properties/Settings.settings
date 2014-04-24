@@ -27,7 +27,7 @@
       <Value Profile="(Default)">DirectTrack</Value>
     </Setting>
     <Setting Name="OverrideDate" Type="System.DateTime" Scope="Application">
-      <Value Profile="(Default)">2012-11-01</Value>
+      <Value Profile="(Default)">2014-03-01</Value>
     </Setting>
     <Setting Name="TestMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -117,9 +117,9 @@
     <Setting Name="OverrideConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Data Source=biz\sqlexpress;Initial Catalog=zDADatabaseNov2012Test;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Data Source=biz\sqlexpress;Initial Catalog=zDADatabaseMar2014Test;User=sa;Password=sp0ngbOb&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Data Source=biz\sqlexpress;Initial Catalog=zDADatabaseNov2012Test;User=sa;Password=sp0ngbOb</Value>
+      <Value Profile="(Default)">Data Source=biz\sqlexpress;Initial Catalog=zDADatabaseMar2014Test;User=sa;Password=sp0ngbOb</Value>
     </Setting>
     <Setting Name="EomToolSecurityConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;

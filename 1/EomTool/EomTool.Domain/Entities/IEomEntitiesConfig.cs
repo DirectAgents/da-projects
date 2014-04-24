@@ -5,5 +5,6 @@ namespace EomTool.Domain.Entities
     {
         string ConnectionString { get; }
         DateTime CurrentEomDate { get; set; }
+        bool DebugMode { get; }
     }
 }

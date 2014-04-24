@@ -68,6 +68,7 @@ namespace EomToolWeb.Controllers
             };
 
             ViewBag.ChooseMonthSelectList = new SelectList(daMain1Repository.ChooseMonthListItems(), "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToString());
+            ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
 
             return View(viewModel);
         }
