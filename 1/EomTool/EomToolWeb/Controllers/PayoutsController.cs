@@ -56,8 +56,14 @@ namespace EomToolWeb.Controllers
             return affIds;
         }
 
-        public ActionResult Summary(string mode, bool includeZero = true)
+        public ActionResult Summary(string mode, bool includeZero = true, DateTime? period = null)
         {
+            if (period.HasValue)
+            {
+                eomEntitiesConfig.CurrentEomDate = period.Value.FirstDayOfMonth();
+                return RedirectToAction("Summary", new { mode = mode, includeZero = includeZero });
+            }
+
             var affIds = AffIdsForCurrentUser();
 
             var viewModel = new PublisherSummaryViewModel

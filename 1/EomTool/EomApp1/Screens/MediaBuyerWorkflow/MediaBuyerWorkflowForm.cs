@@ -35,10 +35,12 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
                     string mediaBuyerName = mediaBuyerNameCol.Value<string>(e).Trim();
                     string mediaBuyerFirstName = mediaBuyerName.Split(' ').First();
 
+                    var link = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Link + "?period=" + Properties.Settings.Default.StatsDate.ToShortDateString();
+
                     var emailTemplate = new MediaBuyerEmailTemplate()
                     {
                         MediaBuyerName = mediaBuyerFirstName,
-                        UrlToOpen = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Link,
+                        UrlToOpen = link,
                         TimePeriod = Properties.Settings.Default.DADatabaseName
                     };
 

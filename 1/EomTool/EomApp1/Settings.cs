@@ -74,6 +74,11 @@ namespace EomApp1.Properties
 
         public int StatsMonth { get; set; }
 
+        public DateTime StatsDate
+        {
+            get { return new DateTime(StatsYear, StatsMonth, 1); }
+        }
+
         public string PubReportSubjectLine { get; set; }
 
         public int StatsDaysInMonth { get; set; }

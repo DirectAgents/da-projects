@@ -128,6 +128,7 @@ namespace EomTool.Domain.Concrete
             SetMediaBuyerApprovalStatus(affId, note, author, MediaBuyerApprovalStatus.Held, MediaBuyerApprovalStatus.Sent);
         }
 
+        // also sets campaign status to verified if setting MediaBuyerApprovalStatus.Approved
         private void SetMediaBuyerApprovalStatus(int affId, string note, string author, int toMediaBuyerApprovalStatus, int fromMediaBuyerApprovalStatus)
         {
             var items = context.Items.Where(i => i.affid == affId &&
@@ -136,6 +137,8 @@ namespace EomTool.Domain.Concrete
             foreach (var item in items)
             {
                 item.media_buyer_approval_status_id = toMediaBuyerApprovalStatus;
+                if (toMediaBuyerApprovalStatus == MediaBuyerApprovalStatus.Approved)
+                    item.campaign_status_id = CampaignStatus.Verified;
             }
             string extra = null;
             var aff = context.Affiliates.Where(a => a.affid == affId);

@@ -34,8 +34,8 @@ namespace EomToolWeb.Controllers
             int numAccountingPeriods = eomToolConfig.PaymentBatches.NumAccountingPeriods;
             if (eomToolConfig.DebugMode)
             {
-                today = new DateTime(2012, 12, 25);
-                numAccountingPeriods = 2; // debug with zOct & zNov
+                today = new DateTime(2014, 5, 5);
+                numAccountingPeriods = 2; // debug with zMar & zApr
             }
             for (int i = 0; i < numAccountingPeriods; i++)
             {
