@@ -1,8 +1,7 @@
-﻿using System;
+﻿using DAgents.Common;
+using EomTool.Domain.Abstract;
+using System;
 using System.Web;
-using System.Web.Configuration;
-using DAgents.Common;
-using EomTool.Domain.Entities;
 
 namespace EomToolWeb.Infrastructure
 {

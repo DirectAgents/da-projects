@@ -73,5 +73,19 @@ namespace EomTool.Domain.Concrete
         {
             context.Items.AddObject(item);
         }
+        public bool ItemExists(Item item)
+        {
+            return context.Items.Any(i =>
+                i.pid == item.pid &&
+                i.affid == item.affid &&
+                i.unit_type_id == item.unit_type_id &&
+                i.num_units == item.num_units &&
+                i.revenue_currency_id == item.revenue_currency_id &&
+                i.revenue_per_unit == item.revenue_per_unit &&
+                i.cost_currency_id == item.cost_currency_id &&
+                i.cost_per_unit == item.cost_per_unit &&
+                i.notes == item.notes &&
+                i.source_id == item.source_id);
+        }
     }
 }

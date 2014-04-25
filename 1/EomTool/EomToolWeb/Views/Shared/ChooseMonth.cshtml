@@ -2,11 +2,12 @@
 @{
     bool debugMode = ViewBag.DebugMode ?? false;
 }
-@if (debugMode)
-{
-    <span style="color:red">[DEBUG MODE]</span>
-}
+
 @using (Html.BeginForm("ChooseMonth", "Payouts"))
 {
-    @Html.DropDownList("selectedMonth", Model, new { onchange = "this.form.submit();" })
+    @Html.DropDownList("accountingmonth", Model, new { onchange = "this.form.submit();" })
+    if (debugMode)
+    {
+        <span style="color:red">[DEBUG MODE]</span>
+    }
 }

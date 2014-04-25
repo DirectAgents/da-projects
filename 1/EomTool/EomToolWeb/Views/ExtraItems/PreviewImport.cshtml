@@ -1,4 +1,8 @@
 ﻿@model DAgents.Common.RowsConverter<Item>
+@{
+    DateTime currentEomDate = ViewBag.CurrentEomDate;
+    bool debugMode = ViewBag.DebugMode ?? false;
+}
 
 @if (Model.ImportComplete)
 {
@@ -8,6 +12,13 @@ else
 {
     <h2>Import Preview</h2>
 }
+
+Accounting Period: *** @currentEomDate.ToString("MMMyyyy") ***
+@if (debugMode)
+{
+    <span style="color:red">[DEBUG MODE]</span>
+}
+<br /><br />
 
 <table border="1" style="border-spacing: 0">
     <tr>
@@ -71,7 +82,7 @@ else
 }
 else if (Model.AnyErrors)
 {
-    <span style="color:red">Correct errors and click "back" to re-import</span>
+    <span style="color:red">Correct errors and click "back" to retry.</span>
 }
 else
 {

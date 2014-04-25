@@ -1,5 +1,6 @@
-﻿using System.Data.EntityClient;
+﻿using EomTool.Domain.Abstract;
 using Ninject;
+using System.Data.EntityClient;
 
 namespace EomTool.Domain.Entities
 {

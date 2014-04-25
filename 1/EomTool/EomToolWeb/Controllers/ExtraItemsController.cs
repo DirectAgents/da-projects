@@ -26,8 +26,9 @@ namespace EomToolWeb.Controllers
         [HttpGet]
         public ActionResult Import()
         {
-            ViewBag.ChooseMonthSelectList = new SelectList(daMain1Repository.ChooseMonthListItems(), "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToString());
+            ViewBag.ChooseMonthSelectList = daMain1Repository.ChooseMonthSelectList(eomEntitiesConfig);
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
+            ViewBag.CurrentEomDate = eomEntitiesConfig.CurrentEomDate;
             return View();
         }
 
@@ -55,6 +56,8 @@ namespace EomToolWeb.Controllers
             if (rowsConverter == null)
                 return Content("Preview unavailable");
 
+            ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
+            ViewBag.CurrentEomDate = eomEntitiesConfig.CurrentEomDate;
             return View(rowsConverter);
         }
 
@@ -133,7 +136,12 @@ namespace EomToolWeb.Controllers
                     rowWithObj.Errors.AddRange(errors);
 
                 if (rowWithObj.Errors.Count == 0)
-                    rowWithObj.Object = item;
+                {
+                    if (mainRepo.ItemExists(item))
+                        rowWithObj.Errors.Add("Item already exists in the database");
+                    else
+                        rowWithObj.Object = item; // no errors; item can be added
+                }
             }
             return rowsConverter;
         }

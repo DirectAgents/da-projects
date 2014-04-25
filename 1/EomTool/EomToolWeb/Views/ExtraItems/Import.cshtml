@@ -1,11 +1,21 @@
-﻿<h2>Extra Item Importer</h2>
+﻿@{
+    DateTime currentEomDate = ViewBag.CurrentEomDate;
+    string onclick = "return true";
+    if (currentEomDate < DateTime.Now.AddMonths(-1))
+    {
+        onclick = String.Format("return confirm('Are you sure you want to import items for this accounting period?\\n\\n*** {0} ***')", currentEomDate.ToString("MMMyyyy"));
+    }
+}
 
+<h2>Extra Item Importer</h2>
+
+Accounting Period:
 @Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
 
 <form method="post" action="@Url.Action("Import")" enctype="multipart/form-data">
     <div>
         <input name="uploadFile" type="file" />
         <br /><br />
-        <input type="submit" value="Import" />
+        <input type="submit" value="Import" onclick="@onclick"/>
     </div>
 </form>

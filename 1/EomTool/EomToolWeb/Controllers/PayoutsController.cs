@@ -28,9 +28,9 @@ namespace EomToolWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChooseMonth(DateTime selectedMonth)
+        public ActionResult ChooseMonth(DateTime accountingMonth)
         {
-            eomEntitiesConfig.CurrentEomDate = selectedMonth;
+            eomEntitiesConfig.CurrentEomDate = accountingMonth;
             return Redirect(Request.UrlReferrer.ToString());
         }
 
@@ -73,7 +73,7 @@ namespace EomToolWeb.Controllers
                 IncludeZero = includeZero
             };
 
-            ViewBag.ChooseMonthSelectList = new SelectList(daMain1Repository.ChooseMonthListItems(), "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToString());
+            ViewBag.ChooseMonthSelectList = daMain1Repository.ChooseMonthSelectList(eomEntitiesConfig);
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
 
             return View(viewModel);

@@ -24,6 +24,7 @@ namespace EomTool.Domain.Abstract
         Currency GetCurrency(string currencyName);
 
         void AddItem(Item item);
+        bool ItemExists(Item item);
 
         // --- Media Buyer Approval stuff ---
         IQueryable<PublisherPayout> PublisherPayouts { get; }

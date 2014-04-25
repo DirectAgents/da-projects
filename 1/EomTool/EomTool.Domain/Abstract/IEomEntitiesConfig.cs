@@ -1,5 +1,6 @@
 ﻿using System;
-namespace EomTool.Domain.Entities
+
+namespace EomTool.Domain.Abstract
 {
     public interface IEomEntitiesConfig
     {

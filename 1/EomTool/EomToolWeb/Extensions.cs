@@ -1,11 +1,11 @@
-﻿using System;
+﻿using EomTool.Domain.Abstract;
+using EomToolWeb.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.SessionState;
-using EomTool.Domain.Abstract;
-using EomToolWeb.Infrastructure;
 
 namespace EomToolWeb
 {
@@ -47,9 +47,14 @@ namespace EomToolWeb
                             select new SelectListItem
                             {
                                 Text = c.name,
-                                Value = c.effective_date.Value.ToString()
+                                Value = c.effective_date.Value.ToShortDateString()
                             };
             return listItems;
+        }
+
+        public static SelectList ChooseMonthSelectList(this IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
+        {
+            return new SelectList(daMain1Repository.ChooseMonthListItems(), "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToShortDateString());
         }
     }
 }
