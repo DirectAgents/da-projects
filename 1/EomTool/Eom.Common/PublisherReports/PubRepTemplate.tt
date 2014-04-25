@@ -1,7 +1,7 @@
 ﻿<#@ template language="C#" #>
 <#@ import namespace="System.Linq" #>
 <#
-var items = Data.Where(c => c.Publisher == Publisher).ToList();
+var items = Data.Where(c => c.Publisher.Trim().ToLower() == Publisher.Trim().ToLower()).ToList();
 string currency = "";
 var first = items.FirstOrDefault();
 if (first != null) currency = first.PayCurrency;
