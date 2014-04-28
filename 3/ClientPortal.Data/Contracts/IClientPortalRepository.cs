@@ -45,6 +45,7 @@ namespace ClientPortal.Data.Contracts
         bool AddCreativeStat(CreativeStat creativeStat, bool saveChanges = false);
         int? DeleteCreativeStat(int creativeStatId, bool saveChanges = false);
         bool UpdateCreativeStatFromSummaries(int creativeStatId, bool saveChanges = false);
+        void UpdateCreativeStatsFromSummaries(IEnumerable<CreativeStat> creativeStats, bool saveChanges = false);
 
         IQueryable<Advertiser> Advertisers { get; }
         IQueryable<Contact> Contacts { get; }

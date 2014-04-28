@@ -6,6 +6,7 @@
     var ajaxOpts_Drop = RazorHelpers.GetAjaxOptions("cpmDropsTab", "navCPMDrops");
     var ajaxOpts_Creative = RazorHelpers.GetAjaxOptions("cpmCreativesTab", "navCPMCreatives");
     var ajaxOpts_ConfirmSynch = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Get", "Synch Campaigns?");
+    var ajaxOpts_ConfirmSynchStats = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Get", "This will overwrite clicks and conversions for all drops. Are you sure? (Sent reports are preserved.)");
     var ajaxOpts_ConfirmDeleteLogo = RazorHelpers.GetAjaxOptions("cpmSummaryTab", null, "Post", "Are you sure you want to delete this offer's logo?");
     var am = Model.Advertiser.AccountManager;
 }
@@ -38,7 +39,16 @@ Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offe
 @Ajax.ActionLink("[cpm report wizard]", "Show", "CPMReportsWizard", new { offerid = Model.OfferId }, ajaxOpts_Rep)
 
 <br /><br />
-@Html.Partial("../CampaignDrops/Index", Model.AllCampaignDrops(false))
+@{
+    var drops = Model.AllCampaignDrops(false);
+    ViewBag.Title = String.Empty;
+}
+Drops:
+@if (drops.Any())
+{
+    @Ajax.ActionLink("synch creative stats", "SynchStatsForDrops", new { offerid = Model.OfferId }, ajaxOpts_ConfirmSynchStats)
+}
+@Html.Partial("../CampaignDrops/Index", drops)
 @if (Model.Campaigns.Any())
 {
     <text>(To create a new drop, click the "New Drop" link next to one of the Campaigns below.)</text>
@@ -46,6 +56,7 @@ Advertiser: <b>@Model.Advertiser.AdvertiserName</b> @Ajax.ActionLink("[show offe
 
 <br /><br />
 @{
+    ViewBag.Title = null; // use default
     ViewBag.Parent = "offer";
     ViewBag.LastSynch = Model.LastSynch_Campaigns;
 }

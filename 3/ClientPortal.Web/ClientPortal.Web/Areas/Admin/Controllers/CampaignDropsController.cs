@@ -24,7 +24,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Index(int? offerid, int? campaignid)
         {
-            var drops = cpRepo.CampaignDrops(offerid, campaignid, true);
+            var drops = cpRepo.CampaignDrops(offerid, campaignid, true); // ?do we need to include copies?
             return View(drops.OrderByDescending(d => d.Date));
         }
 
@@ -148,16 +148,37 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
                 foreach (var creativeStat in drop.CreativeStats)
                 {
-                    var command = new SynchCreativeSummariesCommand
-                    {
-                        CreativeId = creativeStat.CreativeId,
-                        StartDate = creativeStat.Creative.DateCreated.Date
-                    };
-                    command.Run(null);
+                    SynchCreativeSummariesCommand.RunStatic(
+                        creativeStat.Creative.DateCreated.Date,
+                        null,
+                        null,
+                        creativeStat.CreativeId
+                    );
                     cpRepo.UpdateCreativeStatFromSummaries(creativeStat.CreativeStatId, true);
                 }
             }
             return true;
         }
+
+        public static void SynchStatsForAllDrops(IClientPortalRepository cpRepo, int offerId)
+        {
+            var drops = cpRepo.CampaignDrops(offerId, null);
+            if (drops.Any(d => d.CreativeStats.Any()))
+            {
+                var creativeStats = drops.SelectMany(d => d.CreativeStats).ToList();
+                var creatives = creativeStats.Select(cs => cs.Creative).Distinct();
+                foreach (var creative in creatives)
+                {
+                    SynchCreativeSummariesCommand.RunStatic(
+                        creative.DateCreated.Date,
+                        null,
+                        null,
+                        creative.CreativeId
+                    );
+                }
+                cpRepo.UpdateCreativeStatsFromSummaries(creativeStats, true);
+            }
+        }
+
     }
 }

@@ -51,7 +51,7 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         public FileResult Logo(int id)
         {
             var offer = cpRepo.GetOffer(id);
-            if (offer == null)
+            if (offer == null || offer.Logo == null)
                 return null;
 
             WebImage logo = new WebImage(offer.Logo);
@@ -99,6 +99,16 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         public ActionResult SynchCampaigns(int offerid)
         {
             SynchCampaignsCommand.RunStatic(0, offerid);
+
+            if (Request.IsAjaxRequest())
+                return RedirectToAction("Show", new { id = offerid });
+            else
+                return Content("Synch complete. Click 'back' and refresh.");
+        }
+
+        public ActionResult SynchStatsForDrops(int offerid)
+        {
+            CampaignDropsController.SynchStatsForAllDrops(cpRepo, offerid);
 
             if (Request.IsAjaxRequest())
                 return RedirectToAction("Show", new { id = offerid });

@@ -12,6 +12,18 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class SynchCreativeSummariesCommand : ConsoleCommand
     {
+        public static int RunStatic(DateTime? startDate, DateTime? endDate, int? offerId, int? creativeId)
+        {
+            var cmd = new SynchCreativeSummariesCommand
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                OfferId = offerId,
+                CreativeId = creativeId
+            };
+            return cmd.Run();
+        }
+
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int? OfferId { get; set; }

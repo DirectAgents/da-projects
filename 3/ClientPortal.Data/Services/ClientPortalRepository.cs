@@ -306,6 +306,8 @@ namespace ClientPortal.Data.Services
             if (includeCopies)
                 campaignDropsDbQuery = campaignDropsDbQuery.Include("CampaignDropCopies.CPMReports");
             var campaignDrops = campaignDropsDbQuery.AsQueryable();
+
+            // Just return "originals".  "Copies" are for archive purposes (e.g. in sent reports)
             campaignDrops = campaignDrops.Where(cd => cd.CopyOf == null);
 
             if (offerId.HasValue)
@@ -377,6 +379,8 @@ namespace ClientPortal.Data.Services
             var drop = context.CampaignDrops.Find(inDrop.CampaignDropId);
             if (drop != null)
             {
+                //Note: could we check if there are any changes first? (and if not, don't do anything)
+
                 success = true;
                 DuplicateDropIfNecessary(drop);
 
@@ -533,6 +537,25 @@ namespace ClientPortal.Data.Services
 
             if (saveChanges) SaveChanges();
             return true;
+        }
+
+        public void UpdateCreativeStatsFromSummaries(IEnumerable<CreativeStat> creativeStats, bool saveChanges = false)
+        {
+            // group such that all creativeStats in a group reference the same creative
+            var csGroups = creativeStats.GroupBy(cs => cs.CreativeId);
+            foreach (var csGroup in csGroups)
+            {
+                var creativeId = csGroup.Key;
+                var creativeSummaries = context.CreativeSummaries.Where(cs => cs.CreativeId == creativeId);
+                int clicks = creativeSummaries.Sum(cs => cs.Clicks);
+                int leads = creativeSummaries.Sum(cs => cs.Conversions);
+                foreach (var creativeStat in csGroup)
+                {
+                    creativeStat.Clicks = clicks;
+                    creativeStat.Leads = leads;
+                }
+            }
+            if (saveChanges) SaveChanges();
         }
         #endregion
 
