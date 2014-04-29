@@ -109,6 +109,7 @@ namespace EomToolWeb.Controllers
 
         private RowsConverter<Item> CreateItemRowsConverter(SLExcelData data)
         {
+            int numHeaders = data.Headers.Count;
             var rowsConverter = new RowsConverter<Item>(data.Headers);
             var settableProps = Item.SettableProperties;
             foreach (var dataRow in data.DataRows)
@@ -121,8 +122,9 @@ namespace EomToolWeb.Controllers
                 var item = new Item();
                 item.SetDefaults();
 
-                for (int i = 0; i < dataRow.Count; i++)
-                { // the # of dataRow items will be equal to or less than the # of headers
+                // go through the cells in the row. ignore cells beyond the rightmost header
+                for (int i = 0; i < dataRow.Count && i < numHeaders; i++)
+                {
                     var colName = data.Headers[i].ToLower();
                     if (settableProps.Contains(colName))
                     {
