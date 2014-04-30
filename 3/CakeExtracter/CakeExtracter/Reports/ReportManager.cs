@@ -33,26 +33,37 @@ namespace CakeExtracter.Reports
             var advertisers = GetAutoReportingAdvertisers();
             while (advertisers.Count() > 0)
             {
-                foreach (var advertiser in advertisers)
+                foreach (var adv in advertisers)
                 {
-                    if (advertiser.AutomatedReportsNextSendAfter == null)
-                        advertiser.AutomatedReportsNextSendAfter = DateTime.Today.AddDays(-1);
+                    if (adv.AutomatedReportsNextSendAfter == null)
+                        adv.AutomatedReportsNextSendAfter = DateTime.Today.AddDays(-1);
 
-                    var report = this.SelectReport(advertiser);
-                    this.SendReport(advertiser, report);
-                    this.UpdateAdvertiser(advertiser);
+                    if (adv.AutomatedReportsPeriodDays == 0 || String.IsNullOrWhiteSpace(adv.AutomatedReportsDestinationEmail))
+                    {
+                        // Has invalid values. Disable.
+                        adv.AutomatedReportsEnabled = false;
+                    }
+                    else
+                    {
+                        var report = this.SelectReport(adv);
+                        this.SendReport(adv, report);
+                        this.UpdateAdvertiser(adv);
+                    }
+                    cpRepo.SaveChanges();
                 }
                 advertisers = GetAutoReportingAdvertisers();
                 // in case more reports need to be generated for an advertiser
             }
+
+            Cleanup();
         }
 
         private IEnumerable<Advertiser> GetAutoReportingAdvertisers()
         {
             return cpRepo.Advertisers
-                         .Where(c => c.AutomatedReportsEnabled)
+                         .Where(a => a.AutomatedReportsEnabled)
                          .ToList()
-                         .Where(c => c.AutomatedReportsNextSendAfter == null || DateTime.Now > c.AutomatedReportsNextSendAfter);
+                         .Where(a => a.AutomatedReportsNextSendAfter == null || DateTime.Now > a.AutomatedReportsNextSendAfter);
         }
 
         private IReport SelectReport(Advertiser advertiser)
@@ -84,6 +95,16 @@ namespace CakeExtracter.Reports
         private void UpdateAdvertiser(Advertiser advertiser)
         {
             advertiser.AutomatedReportsNextSendAfter = advertiser.AutomatedReportsNextSendAfter.Value.AddDays(advertiser.AutomatedReportsPeriodDays);
+        }
+
+        private void Cleanup()
+        {
+            var disabledAdvertisers = cpRepo.Advertisers.Where(a => !a.AutomatedReportsEnabled);
+            foreach (var adv in disabledAdvertisers)
+            {
+                adv.AutomatedReportsNextSendAfter = null;
+                // so that multiple reports won't be sent unexpectedly once re-enabled
+            }
             cpRepo.SaveChanges();
         }
 
