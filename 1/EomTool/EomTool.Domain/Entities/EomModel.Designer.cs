@@ -40,6 +40,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_Item_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatch1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatchState", "PaymentBatchState", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatchState), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.AccountManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
 
 #endregion
 
@@ -538,6 +539,22 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<PublisherRelatedItemCount> _PublisherRelatedItemCounts;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<AccountManager> AccountManagers
+        {
+            get
+            {
+                if ((_AccountManagers == null))
+                {
+                    _AccountManagers = base.CreateObjectSet<AccountManager>("AccountManagers");
+                }
+                return _AccountManagers;
+            }
+        }
+        private ObjectSet<AccountManager> _AccountManagers;
 
         #endregion
 
@@ -765,6 +782,14 @@ namespace EomTool.Domain.Entities
         public void AddToPublisherRelatedItemCounts(PublisherRelatedItemCount publisherRelatedItemCount)
         {
             base.AddObject("PublisherRelatedItemCounts", publisherRelatedItemCount);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the AccountManagers EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToAccountManagers(AccountManager accountManager)
+        {
+            base.AddObject("AccountManagers", accountManager);
         }
 
         #endregion
@@ -1596,6 +1621,115 @@ namespace EomTool.Domain.Entities
         #endregion
 
     
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="AccountManager")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class AccountManager : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new AccountManager object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="name">Initial value of the name property.</param>
+        public static AccountManager CreateAccountManager(global::System.Int32 id, global::System.String name)
+        {
+            AccountManager accountManager = new AccountManager();
+            accountManager.id = id;
+            accountManager.name = name;
+            return accountManager;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "Campaign")]
+        public EntityCollection<Campaign> Campaigns
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Campaign>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "Campaign");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Campaign>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "Campaign", value);
+                }
+            }
+        }
+
+        #endregion
+
     }
     
     /// <summary>
@@ -3348,6 +3482,44 @@ namespace EomTool.Domain.Entities
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager")]
+        public AccountManager AccountManager
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManager>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManager>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<AccountManager> AccountManagerReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManager>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AccountManager>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", value);
+                }
+            }
+        }
 
         #endregion
 
@@ -4296,50 +4468,6 @@ namespace EomTool.Domain.Entities
                 }
             }
         }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK", "Item")]
-        public EntityCollection<Item> Items
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.Item_Currency_id_FK_Currency_id_PK", "Item");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.Item_Currency_id_FK_Currency_id_PK", "Item", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK1", "Item")]
-        public EntityCollection<Item> Items1
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.Item_Currency_id_FK_Currency_id_PK1", "Item");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.Item_Currency_id_FK_Currency_id_PK1", "Item", value);
-                }
-            }
-        }
 
         #endregion
 
@@ -4993,7 +5121,7 @@ namespace EomTool.Domain.Entities
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK", "Currency")]
-        public Currency Currency
+        public Currency RevenueCurrency
         {
             get
             {
@@ -5009,7 +5137,7 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Currency> CurrencyReference
+        public EntityReference<Currency> RevenueCurrencyReference
         {
             get
             {
@@ -5031,7 +5159,7 @@ namespace EomTool.Domain.Entities
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK1", "Currency")]
-        public Currency Currency1
+        public Currency CostCurrency
         {
             get
             {
@@ -5047,7 +5175,7 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Currency> Currency1Reference
+        public EntityReference<Currency> CostCurrencyReference
         {
             get
             {

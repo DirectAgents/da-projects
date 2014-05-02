@@ -1,0 +1,19 @@
+﻿@{
+    IQueryable<AccountManager> AMs = ViewBag.AccountManagers;
+}
+<h2>Invoices</h2>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+
+<br />
+
+<b>Select Account Manager:</b>
+<br />
+@foreach (var am in AMs)
+{
+    @Html.ActionLink(@am.name, "ChooseAdvertiser", new { am = am.id })
+    <br />
+}
+@Html.ActionLink("(all)", "ChooseAdvertiser")
+<br />

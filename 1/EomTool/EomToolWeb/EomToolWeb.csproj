@@ -152,6 +152,9 @@
     <Compile Include="Controllers\CampaignsApiController.cs" />
     <Compile Include="Controllers\ExtraItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoicesController.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controllers\PaymentBatchesController.cs" />
     <Compile Include="Controllers\PayoutsController.cs" />
     <Compile Include="Controllers\PublishersController.cs" />
@@ -178,6 +181,7 @@
     <Compile Include="Models\CampaignsByCountryViewModel.cs" />
     <Compile Include="Models\CampaignsListViewModel.cs" />
     <Compile Include="Models\CampaignViewModel.cs" />
+    <Compile Include="Models\ChooseAmountsModel.cs" />
     <Compile Include="Models\ListViewMode.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PaymentBatchesViewModel.cs" />
@@ -3183,6 +3187,15 @@
     <Content Include="Scripts\ZeroClipboard10.swf" />
     <Content Include="Templates\Campaigns\_List.tmpl.htm" />
     <Content Include="Templates\Campaigns\_Brief.tmpl.htm" />
+    <Content Include="Views\Invoices\ChooseAmounts.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Invoices\Index.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Invoices\_ViewStart.cshtml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -3328,6 +3341,7 @@
     <Content Include="Scripts\kendo\2014.1.416\kendo.view.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.416\kendo.window.min.js.map" />
     <Content Include="Views\Shared\_Layout2014.cshtml" />
+    <Content Include="Views\Invoices\ChooseAdvertiser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,40 @@
+﻿@model IQueryable<EomTool.Domain.DTOs.CampaignAmount>
+@{
+    var campaignAmounts = Model.ToList();
+    int lastAdvId = -1;
+    bool grayRow = false;
+    bool firstRow = true;
+}
+
+<h2>Select Advertiser</h2>
+
+<table style="border: 1px solid gray">
+    <tr>
+        <th>Advertiser</th>
+        <th>PID</th>
+        <th>Campaign</th>
+        <th colspan="2">Revenue</th>
+        <th>#Pubs</th>
+    </tr>
+@foreach (var ca in campaignAmounts)
+{
+    if (ca.AdvId != lastAdvId)
+    {
+        lastAdvId = ca.AdvId;
+        grayRow = !grayRow;
+        firstRow = true;
+    }
+    else
+    {
+        firstRow = false;
+    }
+    <tr style="@(grayRow ? "background-color:#ddd" : "")">
+        <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, "ChooseAmounts", new { advid = ca.AdvId }) : new HtmlString(""))</td>
+        <td style="text-align: center">@ca.Pid</td>
+        <td>@ca.CampaignName</td>
+        <td>@ca.RevenueCurrency</td>
+        <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
+        <td style="text-align: center">@ca.NumAffs</td>
+    </tr>    
+}
+</table>

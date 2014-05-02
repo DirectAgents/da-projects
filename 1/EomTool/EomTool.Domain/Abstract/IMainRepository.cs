@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using EomTool.Domain.Entities;
+using EomTool.Domain.DTOs;
 
 namespace EomTool.Domain.Abstract
 {
@@ -7,6 +8,14 @@ namespace EomTool.Domain.Abstract
     {
         void SaveChanges();
 
+        Advertiser GetAdvertiser(int advId);
+
+        IQueryable<AccountManager> AccountManagers(bool withActivityOnly = false);
+        IQueryable<Campaign> Campaigns(int? accountManagerId, int? advertiserId, bool activeOnly = false);
+
+        IQueryable<CampaignAmount> CampaignAmounts(int? accountManagerId, int? advertiserId, bool byAffiliate = false);
+
+        // --- Extra Item Import stuff ---
         bool CampaignExists(int pid);
         Campaign GetCampaign(int pid);
 

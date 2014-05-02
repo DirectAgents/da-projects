@@ -1,0 +1,37 @@
+﻿@model ChooseAmountsModel
+@{
+    int lastPid = -1;
+    bool grayRow = false;
+    bool firstRow = true;
+}
+
+<h2>@Model.AdvertiserName</h2>
+
+<table style="border: 1px solid gray">
+    <tr>
+        <th>PID</th>
+        <th>Campaign</th>
+        <th>Affiliate</th>
+        <th colspan="2">Revenue</th>
+    </tr>
+@foreach (var ca in Model.CampaignAmounts)
+{
+    if (ca.Pid != lastPid)
+    {
+        lastPid = ca.Pid;
+        grayRow = !grayRow;
+        firstRow = true;
+    }
+    else
+    {
+        firstRow = false;
+    }
+    <tr style="@(grayRow ? "background-color:#ddd" : "")">
+        <td style="text-align: center">@(firstRow ? ca.Pid.ToString() : "")</td>
+        <td>@(firstRow ? ca.CampaignName : "")</td>
+        <td>@ca.AffiliateName</td>
+        <td>@ca.RevenueCurrency</td>
+        <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
+    </tr>    
+}
+</table>
