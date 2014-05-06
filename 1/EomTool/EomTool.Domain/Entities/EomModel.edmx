@@ -15,6 +15,10 @@
           <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Invoice" EntityType="EomModel.Store.Invoice" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="InvoiceItem" EntityType="EomModel.Store.InvoiceItem" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="InvoiceNote" EntityType="EomModel.Store.InvoiceNote" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="InvoiceStatus" EntityType="EomModel.Store.InvoiceStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MediaBuyer" EntityType="EomModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" />
@@ -219,6 +223,22 @@
             <End Role="MediaBuyerApprovalStatus" EntitySet="MediaBuyerApprovalStatus" />
             <End Role="BatchUpdate" EntitySet="BatchUpdate" />
           </AssociationSet>
+          <AssociationSet Name="FK_Invoice_InvoiceStatus" Association="EomModel.Store.FK_Invoice_InvoiceStatus">
+            <End Role="InvoiceStatus" EntitySet="InvoiceStatus" />
+            <End Role="Invoice" EntitySet="Invoice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceItem_Currency" Association="EomModel.Store.FK_InvoiceItem_Currency">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="InvoiceItem" EntitySet="InvoiceItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceItem_Invoice" Association="EomModel.Store.FK_InvoiceItem_Invoice">
+            <End Role="Invoice" EntitySet="Invoice" />
+            <End Role="InvoiceItem" EntitySet="InvoiceItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceNote_Invoice" Association="EomModel.Store.FK_InvoiceNote_Invoice">
+            <End Role="Invoice" EntitySet="Invoice" />
+            <End Role="InvoiceNote" EntitySet="InvoiceNote" />
+          </AssociationSet>
           <AssociationSet Name="FK_Item_Batch" Association="EomModel.Store.FK_Item_Batch">
             <End Role="Batch" EntitySet="Batch" />
             <End Role="Item" EntitySet="Item" />
@@ -279,6 +299,7 @@
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
+      warning 6035: The relationship 'FK_InvoiceItem_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
       warning 6035: The relationship 'Item_Affiliate_affid_FK_Affiliate_affid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
       -->
         <EntityType Name="Affiliate">
@@ -328,6 +349,7 @@
           <Property Name="from_media_buyer_approval_status_id" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
+      warning 6035: The relationship 'FK_InvoiceItem_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
       warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
       -->
         <EntityType Name="Campaign">
@@ -370,6 +392,42 @@
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="to_usd_multiplier" Type="decimal" Nullable="false" Precision="14" Scale="4" />
+        </EntityType>
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="invoice_status_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvoiceItem">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="invoice_id" Type="int" Nullable="false" />
+          <Property Name="pid" Type="int" />
+          <Property Name="affid" Type="int" />
+          <Property Name="currency_id" Type="int" Nullable="false" />
+          <Property Name="amount" Type="money" Nullable="false" />
+          <Property Name="num_units" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvoiceNote">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="invoice_id" Type="int" Nullable="false" />
+          <Property Name="note" Type="varchar(max)" Nullable="false" />
+          <Property Name="added_by" Type="varchar" MaxLength="255" />
+          <Property Name="created" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvoiceStatus">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="Item">
           <Key>
@@ -490,9 +548,6 @@
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.AccountingView2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
         <!--Errors Found During Generation:
       warning 6002: The table/view 'zDADatabaseApr2014Test.dbo.CampaignsPublisherReportDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
@@ -862,6 +917,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Invoice_InvoiceStatus">
+          <End Role="InvoiceStatus" Type="EomModel.Store.InvoiceStatus" Multiplicity="1" />
+          <End Role="Invoice" Type="EomModel.Store.Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvoiceStatus">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="invoice_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceItem_Currency">
+          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
+          <End Role="InvoiceItem" Type="EomModel.Store.InvoiceItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InvoiceItem">
+              <PropertyRef Name="currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceItem_Invoice">
+          <End Role="Invoice" Type="EomModel.Store.Invoice" Multiplicity="1" />
+          <End Role="InvoiceItem" Type="EomModel.Store.InvoiceItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoice">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InvoiceItem">
+              <PropertyRef Name="invoice_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceNote_Invoice">
+          <End Role="Invoice" Type="EomModel.Store.Invoice" Multiplicity="1" />
+          <End Role="InvoiceNote" Type="EomModel.Store.InvoiceNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoice">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InvoiceNote">
+              <PropertyRef Name="invoice_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Item_Batch">
           <End Role="Batch" Type="EomModel.Store.Batch" Multiplicity="0..1" />
           <End Role="Item" Type="EomModel.Store.Item" Multiplicity="*" />
@@ -1115,6 +1218,26 @@
             <End Role="AccountManager" EntitySet="AccountManagers" />
             <End Role="Campaign" EntitySet="Campaigns" />
           </AssociationSet>
+          <EntitySet Name="Invoices" EntityType="EomModel.Invoice" />
+          <EntitySet Name="InvoiceItems" EntityType="EomModel.InvoiceItem" />
+          <EntitySet Name="InvoiceNotes" EntityType="EomModel.InvoiceNote" />
+          <EntitySet Name="InvoiceStatuses" EntityType="EomModel.InvoiceStatus" />
+          <AssociationSet Name="FK_InvoiceItem_Currency" Association="EomModel.FK_InvoiceItem_Currency">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="InvoiceItem" EntitySet="InvoiceItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Invoice_InvoiceStatus" Association="EomModel.FK_Invoice_InvoiceStatus">
+            <End Role="InvoiceStatu" EntitySet="InvoiceStatuses" />
+            <End Role="Invoice" EntitySet="Invoices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceItem_Invoice" Association="EomModel.FK_InvoiceItem_Invoice">
+            <End Role="Invoice" EntitySet="Invoices" />
+            <End Role="InvoiceItem" EntitySet="InvoiceItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvoiceNote_Invoice" Association="EomModel.FK_InvoiceNote_Invoice">
+            <End Role="Invoice" EntitySet="Invoices" />
+            <End Role="InvoiceNote" EntitySet="InvoiceNotes" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -1193,7 +1316,6 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="to_usd_multiplier" Type="Decimal" Nullable="false" Precision="14" Scale="4" />
-          <NavigationProperty Name="Affiliates" Relationship="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Affiliate" />
         </EntityType>
         <EntityType Name="Item">
           <Key>
@@ -1826,6 +1948,97 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="invoice_status_id" Nullable="false" />
+          <NavigationProperty Name="InvoiceStatus" Relationship="EomModel.FK_Invoice_InvoiceStatus" FromRole="Invoice" ToRole="InvoiceStatu" />
+          <NavigationProperty Name="InvoiceItems" Relationship="EomModel.FK_InvoiceItem_Invoice" FromRole="Invoice" ToRole="InvoiceItem" />
+          <NavigationProperty Name="InvoiceNotes" Relationship="EomModel.FK_InvoiceNote_Invoice" FromRole="Invoice" ToRole="InvoiceNote" />
+        </EntityType>
+        <EntityType Name="InvoiceItem">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="invoice_id" Nullable="false" />
+          <Property Type="Int32" Name="pid" />
+          <Property Type="Int32" Name="affid" />
+          <Property Type="Int32" Name="currency_id" Nullable="false" />
+          <Property Type="Decimal" Name="amount" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="Currency" Relationship="EomModel.FK_InvoiceItem_Currency" FromRole="InvoiceItem" ToRole="Currency" />
+          <NavigationProperty Name="Invoice" Relationship="EomModel.FK_InvoiceItem_Invoice" FromRole="InvoiceItem" ToRole="Invoice" />
+          <Property Type="Int32" Name="num_units" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InvoiceNote">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="invoice_id" Nullable="false" />
+          <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="added_by" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="created" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Invoice" Relationship="EomModel.FK_InvoiceNote_Invoice" FromRole="InvoiceNote" ToRole="Invoice" />
+        </EntityType>
+        <EntityType Name="InvoiceStatus">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Invoices" Relationship="EomModel.FK_Invoice_InvoiceStatus" FromRole="InvoiceStatu" ToRole="Invoice" />
+        </EntityType>
+        <Association Name="FK_InvoiceItem_Currency">
+          <End Type="EomModel.Currency" Role="Currency" Multiplicity="1" />
+          <End Type="EomModel.InvoiceItem" Role="InvoiceItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InvoiceItem">
+              <PropertyRef Name="currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Invoice_InvoiceStatus">
+          <End Type="EomModel.InvoiceStatus" Role="InvoiceStatu" Multiplicity="1" />
+          <End Type="EomModel.Invoice" Role="Invoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="InvoiceStatu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Invoice">
+              <PropertyRef Name="invoice_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceItem_Invoice">
+          <End Type="EomModel.Invoice" Role="Invoice" Multiplicity="1" />
+          <End Type="EomModel.InvoiceItem" Role="InvoiceItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoice">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InvoiceItem">
+              <PropertyRef Name="invoice_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvoiceNote_Invoice">
+          <End Type="EomModel.Invoice" Role="Invoice" Multiplicity="1" />
+          <End Type="EomModel.InvoiceNote" Role="InvoiceNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Invoice">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InvoiceNote">
+              <PropertyRef Name="invoice_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2164,6 +2377,46 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Invoices">
+            <EntityTypeMapping TypeName="EomModel.Invoice">
+              <MappingFragment StoreEntitySet="Invoice">
+                <ScalarProperty Name="invoice_status_id" ColumnName="invoice_status_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceItems">
+            <EntityTypeMapping TypeName="EomModel.InvoiceItem">
+              <MappingFragment StoreEntitySet="InvoiceItem">
+                <ScalarProperty Name="num_units" ColumnName="num_units" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="currency_id" ColumnName="currency_id" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="invoice_id" ColumnName="invoice_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceNotes">
+            <EntityTypeMapping TypeName="EomModel.InvoiceNote">
+              <MappingFragment StoreEntitySet="InvoiceNote">
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="added_by" ColumnName="added_by" />
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="invoice_id" ColumnName="invoice_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceStatuses">
+            <EntityTypeMapping TypeName="EomModel.InvoiceStatus">
+              <MappingFragment StoreEntitySet="InvoiceStatus">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2324,6 +2577,14 @@
         <EntityTypeShape EntityType="EomModel.PublisherRelatedItemCount" Width="2.25" PointX="13.375" PointY="14.125" />
         <EntityTypeShape EntityType="EomModel.AccountManager" Width="1.625" PointX="10.25" PointY="27.25" />
         <AssociationConnector Association="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" />
+        <EntityTypeShape EntityType="EomModel.Invoice" Width="1.5" PointX="10.375" PointY="16.875" />
+        <EntityTypeShape EntityType="EomModel.InvoiceItem" Width="1.5" PointX="10.375" PointY="19.125" />
+        <EntityTypeShape EntityType="EomModel.InvoiceNote" Width="1.5" PointX="12.375" PointY="19" />
+        <EntityTypeShape EntityType="EomModel.InvoiceStatus" Width="1.5" PointX="12.375" PointY="16.875" />
+        <AssociationConnector Association="EomModel.FK_InvoiceItem_Currency" />
+        <AssociationConnector Association="EomModel.FK_Invoice_InvoiceStatus" />
+        <AssociationConnector Association="EomModel.FK_InvoiceItem_Invoice" />
+        <AssociationConnector Association="EomModel.FK_InvoiceNote_Invoice" />
         </Diagram>
     </Diagrams>
   </Designer>

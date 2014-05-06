@@ -1,4 +1,5 @@
 ﻿using EomTool.Domain.Abstract;
+using EomTool.Domain.Entities;
 using EomToolWeb.Models;
 using System;
 using System.Collections.Generic;
@@ -44,9 +45,7 @@ namespace EomToolWeb.Controllers
         {
             var advertiser = mainRepo.GetAdvertiser(advId);
 
-            var campaignAmounts = mainRepo.CampaignAmounts(null, advId, true)
-                .OrderBy(ca => ca.CampaignName)
-                .ThenBy(ca => ca.AffiliateName);
+            var campaignAmounts = mainRepo.CampaignAmounts(null, advId, true);
 
             var model = new ChooseAmountsModel()
             {
@@ -54,6 +53,42 @@ namespace EomToolWeb.Controllers
                 CampaignAmounts = campaignAmounts
             };
             return View(model);
+        }
+
+        //[HttpPost]
+        //public ActionResult PreviewAmounts(string[] items)
+        //{
+        //    var campAffIds = Util.ExtractCampAffIds(items);
+
+        //    var campaignAmounts = mainRepo.CampaignAmounts(campAffIds)
+        //        .OrderBy(ca => ca.CampaignName)
+        //        .ThenBy(ca => ca.AffiliateName);
+
+        //    var model = new ChooseAmountsModel()
+        //    {
+        //        AdvertiserName = "...",
+        //        CampaignAmounts = campaignAmounts
+        //    };
+        //    return View("ChooseAmounts", model);
+        //}
+
+        [HttpPost]
+        public ActionResult Generate(string[] idpairs)
+        {
+            var campAffIds = Util.ExtractCampAffIds(idpairs);
+            var invoice = mainRepo.GenerateInvoice(campAffIds);
+            Session["invoice"] = invoice;
+
+            return RedirectToAction("Show");
+        }
+
+        public ActionResult Show()
+        {
+            var invoice = (Invoice)Session["invoice"];
+            if (invoice == null)
+                return null;
+
+            return View(invoice);
         }
     }
 }

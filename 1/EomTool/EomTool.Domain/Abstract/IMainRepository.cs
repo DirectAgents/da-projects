@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using EomTool.Domain.Entities;
 using EomTool.Domain.DTOs;
+using System.Collections.Generic;
 
 namespace EomTool.Domain.Abstract
 {
@@ -14,6 +15,8 @@ namespace EomTool.Domain.Abstract
         IQueryable<Campaign> Campaigns(int? accountManagerId, int? advertiserId, bool activeOnly = false);
 
         IQueryable<CampaignAmount> CampaignAmounts(int? accountManagerId, int? advertiserId, bool byAffiliate = false);
+        IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds);
+        Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);
 
         // --- Extra Item Import stuff ---
         bool CampaignExists(int pid);

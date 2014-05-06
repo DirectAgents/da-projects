@@ -1,0 +1,35 @@
+﻿@model Invoice
+@{
+    var inv = Model;
+}
+
+Invoice for: @inv.Advertiser.name
+<br /><br />
+
+<table style="border: 1px solid gray">
+    <tr>
+        <th>Campaign</th>
+        <th>#Units</th>
+        <th colspan="2">Revenue</th>
+    </tr>
+@for (var i=0; i < inv.LineItems.Count; i++)
+{
+    var li = inv.LineItems[i];
+    <tr>
+        <td>@li.Campaign.campaign_name (@li.Campaign.pid)</td>
+        <td style="text-align: center">@li.NumUnits</td>
+        <td>@li.Currency.name</td>
+        <td style="text-align: right">@li.Amount.ToString("N2")</td>
+        <td><a href="#" onclick="$('.sub@(i)').toggle(); return false">+</a></td>
+    </tr>
+    foreach (var item in li.SubItems)
+    {
+        <tr style="background-color:#ddd; display: none" class="sub@(i)">
+            <td style="text-align: right">Aff: @item.affid ...</td>
+            <td style="text-align: center">@item.num_units</td>
+            <td>@item.CurrencyName</td>
+            <td style="text-align: right">@item.amount.ToString("N2")</td>
+        </tr>
+    }
+}
+</table>

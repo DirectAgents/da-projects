@@ -41,6 +41,10 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatch1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatchState", "PaymentBatchState", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatchState), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.AccountManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Currency", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Currency), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_Invoice_InvoiceStatus", "InvoiceStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.InvoiceStatus), "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Invoice), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceNote_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceNote", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceNote), true)]
 
 #endregion
 
@@ -539,6 +543,70 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<AccountManager> _AccountManagers;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Invoice> Invoices
+        {
+            get
+            {
+                if ((_Invoices == null))
+                {
+                    _Invoices = base.CreateObjectSet<Invoice>("Invoices");
+                }
+                return _Invoices;
+            }
+        }
+        private ObjectSet<Invoice> _Invoices;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<InvoiceItem> InvoiceItems
+        {
+            get
+            {
+                if ((_InvoiceItems == null))
+                {
+                    _InvoiceItems = base.CreateObjectSet<InvoiceItem>("InvoiceItems");
+                }
+                return _InvoiceItems;
+            }
+        }
+        private ObjectSet<InvoiceItem> _InvoiceItems;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<InvoiceNote> InvoiceNotes
+        {
+            get
+            {
+                if ((_InvoiceNotes == null))
+                {
+                    _InvoiceNotes = base.CreateObjectSet<InvoiceNote>("InvoiceNotes");
+                }
+                return _InvoiceNotes;
+            }
+        }
+        private ObjectSet<InvoiceNote> _InvoiceNotes;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<InvoiceStatus> InvoiceStatuses
+        {
+            get
+            {
+                if ((_InvoiceStatuses == null))
+                {
+                    _InvoiceStatuses = base.CreateObjectSet<InvoiceStatus>("InvoiceStatuses");
+                }
+                return _InvoiceStatuses;
+            }
+        }
+        private ObjectSet<InvoiceStatus> _InvoiceStatuses;
 
         #endregion
 
@@ -766,6 +834,38 @@ namespace EomTool.Domain.Entities
         public void AddToAccountManagers(AccountManager accountManager)
         {
             base.AddObject("AccountManagers", accountManager);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Invoices EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToInvoices(Invoice invoice)
+        {
+            base.AddObject("Invoices", invoice);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the InvoiceItems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToInvoiceItems(InvoiceItem invoiceItem)
+        {
+            base.AddObject("InvoiceItems", invoiceItem);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the InvoiceNotes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToInvoiceNotes(InvoiceNote invoiceNote)
+        {
+            base.AddObject("InvoiceNotes", invoiceNote);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the InvoiceStatuses EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToInvoiceStatuses(InvoiceStatus invoiceStatus)
+        {
+            base.AddObject("InvoiceStatuses", invoiceStatus);
         }
 
         #endregion
@@ -3598,6 +3698,89 @@ namespace EomTool.Domain.Entities
         #endregion
 
     
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="Invoice")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Invoice : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Invoice object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="invoice_status_id">Initial value of the invoice_status_id property.</param>
+        public static Invoice CreateInvoice(global::System.Int32 id, global::System.Int32 invoice_status_id)
+        {
+            Invoice invoice = new Invoice();
+            invoice.id = id;
+            invoice.invoice_status_id = invoice_status_id;
+            return invoice;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 invoice_status_id
+        {
+            get
+            {
+                return _invoice_status_id;
+            }
+            set
+            {
+                Oninvoice_status_idChanging(value);
+                ReportPropertyChanging("invoice_status_id");
+                _invoice_status_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("invoice_status_id");
+                Oninvoice_status_idChanged();
+            }
+        }
+        private global::System.Int32 _invoice_status_id;
+        partial void Oninvoice_status_idChanging(global::System.Int32 value);
+        partial void Oninvoice_status_idChanged();
+
+        #endregion
+
+    
         #region Navigation Properties
     
         /// <summary>
@@ -3606,18 +3789,677 @@ namespace EomTool.Domain.Entities
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate")]
-        public EntityCollection<Affiliate> Affiliates
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Invoice_InvoiceStatus", "InvoiceStatu")]
+        public InvoiceStatus InvoiceStatus
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Affiliate>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<InvoiceStatus>("EomModel.FK_Invoice_InvoiceStatus", "InvoiceStatu").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<InvoiceStatus>("EomModel.FK_Invoice_InvoiceStatus", "InvoiceStatu").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<InvoiceStatus> InvoiceStatusReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<InvoiceStatus>("EomModel.FK_Invoice_InvoiceStatus", "InvoiceStatu");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Affiliate>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<InvoiceStatus>("EomModel.FK_Invoice_InvoiceStatus", "InvoiceStatu", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceItem_Invoice", "InvoiceItem")]
+        public EntityCollection<InvoiceItem> InvoiceItems
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<InvoiceItem>("EomModel.FK_InvoiceItem_Invoice", "InvoiceItem");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<InvoiceItem>("EomModel.FK_InvoiceItem_Invoice", "InvoiceItem", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceNote_Invoice", "InvoiceNote")]
+        public EntityCollection<InvoiceNote> InvoiceNotes
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<InvoiceNote>("EomModel.FK_InvoiceNote_Invoice", "InvoiceNote");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<InvoiceNote>("EomModel.FK_InvoiceNote_Invoice", "InvoiceNote", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="InvoiceItem")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class InvoiceItem : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new InvoiceItem object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="invoice_id">Initial value of the invoice_id property.</param>
+        /// <param name="currency_id">Initial value of the currency_id property.</param>
+        /// <param name="amount">Initial value of the amount property.</param>
+        /// <param name="num_units">Initial value of the num_units property.</param>
+        public static InvoiceItem CreateInvoiceItem(global::System.Int32 id, global::System.Int32 invoice_id, global::System.Int32 currency_id, global::System.Decimal amount, global::System.Int32 num_units)
+        {
+            InvoiceItem invoiceItem = new InvoiceItem();
+            invoiceItem.id = id;
+            invoiceItem.invoice_id = invoice_id;
+            invoiceItem.currency_id = currency_id;
+            invoiceItem.amount = amount;
+            invoiceItem.num_units = num_units;
+            return invoiceItem;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 invoice_id
+        {
+            get
+            {
+                return _invoice_id;
+            }
+            set
+            {
+                Oninvoice_idChanging(value);
+                ReportPropertyChanging("invoice_id");
+                _invoice_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("invoice_id");
+                Oninvoice_idChanged();
+            }
+        }
+        private global::System.Int32 _invoice_id;
+        partial void Oninvoice_idChanging(global::System.Int32 value);
+        partial void Oninvoice_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> pid
+        {
+            get
+            {
+                return _pid;
+            }
+            set
+            {
+                OnpidChanging(value);
+                ReportPropertyChanging("pid");
+                _pid = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("pid");
+                OnpidChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _pid;
+        partial void OnpidChanging(Nullable<global::System.Int32> value);
+        partial void OnpidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> affid
+        {
+            get
+            {
+                return _affid;
+            }
+            set
+            {
+                OnaffidChanging(value);
+                ReportPropertyChanging("affid");
+                _affid = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("affid");
+                OnaffidChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _affid;
+        partial void OnaffidChanging(Nullable<global::System.Int32> value);
+        partial void OnaffidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 currency_id
+        {
+            get
+            {
+                return _currency_id;
+            }
+            set
+            {
+                Oncurrency_idChanging(value);
+                ReportPropertyChanging("currency_id");
+                _currency_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("currency_id");
+                Oncurrency_idChanged();
+            }
+        }
+        private global::System.Int32 _currency_id;
+        partial void Oncurrency_idChanging(global::System.Int32 value);
+        partial void Oncurrency_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Decimal amount
+        {
+            get
+            {
+                return _amount;
+            }
+            set
+            {
+                OnamountChanging(value);
+                ReportPropertyChanging("amount");
+                _amount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("amount");
+                OnamountChanged();
+            }
+        }
+        private global::System.Decimal _amount;
+        partial void OnamountChanging(global::System.Decimal value);
+        partial void OnamountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 num_units
+        {
+            get
+            {
+                return _num_units;
+            }
+            set
+            {
+                Onnum_unitsChanging(value);
+                ReportPropertyChanging("num_units");
+                _num_units = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("num_units");
+                Onnum_unitsChanged();
+            }
+        }
+        private global::System.Int32 _num_units;
+        partial void Onnum_unitsChanging(global::System.Int32 value);
+        partial void Onnum_unitsChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceItem_Currency", "Currency")]
+        public Currency Currency
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_InvoiceItem_Currency", "Currency").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_InvoiceItem_Currency", "Currency").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Currency> CurrencyReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_InvoiceItem_Currency", "Currency");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Currency>("EomModel.FK_InvoiceItem_Currency", "Currency", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceItem_Invoice", "Invoice")]
+        public Invoice Invoice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Invoice>("EomModel.FK_InvoiceItem_Invoice", "Invoice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Invoice>("EomModel.FK_InvoiceItem_Invoice", "Invoice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Invoice> InvoiceReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Invoice>("EomModel.FK_InvoiceItem_Invoice", "Invoice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Invoice>("EomModel.FK_InvoiceItem_Invoice", "Invoice", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="InvoiceNote")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class InvoiceNote : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new InvoiceNote object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="invoice_id">Initial value of the invoice_id property.</param>
+        /// <param name="note">Initial value of the note property.</param>
+        /// <param name="created">Initial value of the created property.</param>
+        public static InvoiceNote CreateInvoiceNote(global::System.Int32 id, global::System.Int32 invoice_id, global::System.String note, global::System.DateTime created)
+        {
+            InvoiceNote invoiceNote = new InvoiceNote();
+            invoiceNote.id = id;
+            invoiceNote.invoice_id = invoice_id;
+            invoiceNote.note = note;
+            invoiceNote.created = created;
+            return invoiceNote;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 invoice_id
+        {
+            get
+            {
+                return _invoice_id;
+            }
+            set
+            {
+                Oninvoice_idChanging(value);
+                ReportPropertyChanging("invoice_id");
+                _invoice_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("invoice_id");
+                Oninvoice_idChanged();
+            }
+        }
+        private global::System.Int32 _invoice_id;
+        partial void Oninvoice_idChanging(global::System.Int32 value);
+        partial void Oninvoice_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String note
+        {
+            get
+            {
+                return _note;
+            }
+            set
+            {
+                OnnoteChanging(value);
+                ReportPropertyChanging("note");
+                _note = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("note");
+                OnnoteChanged();
+            }
+        }
+        private global::System.String _note;
+        partial void OnnoteChanging(global::System.String value);
+        partial void OnnoteChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String added_by
+        {
+            get
+            {
+                return _added_by;
+            }
+            set
+            {
+                Onadded_byChanging(value);
+                ReportPropertyChanging("added_by");
+                _added_by = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("added_by");
+                Onadded_byChanged();
+            }
+        }
+        private global::System.String _added_by;
+        partial void Onadded_byChanging(global::System.String value);
+        partial void Onadded_byChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime created
+        {
+            get
+            {
+                return _created;
+            }
+            set
+            {
+                OncreatedChanging(value);
+                ReportPropertyChanging("created");
+                _created = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("created");
+                OncreatedChanged();
+            }
+        }
+        private global::System.DateTime _created;
+        partial void OncreatedChanging(global::System.DateTime value);
+        partial void OncreatedChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceNote_Invoice", "Invoice")]
+        public Invoice Invoice
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Invoice>("EomModel.FK_InvoiceNote_Invoice", "Invoice").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Invoice>("EomModel.FK_InvoiceNote_Invoice", "Invoice").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Invoice> InvoiceReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Invoice>("EomModel.FK_InvoiceNote_Invoice", "Invoice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Invoice>("EomModel.FK_InvoiceNote_Invoice", "Invoice", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="InvoiceStatus")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class InvoiceStatus : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new InvoiceStatus object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="name">Initial value of the name property.</param>
+        public static InvoiceStatus CreateInvoiceStatus(global::System.Int32 id, global::System.String name)
+        {
+            InvoiceStatus invoiceStatus = new InvoiceStatus();
+            invoiceStatus.id = id;
+            invoiceStatus.name = name;
+            return invoiceStatus;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_Invoice_InvoiceStatus", "Invoice")]
+        public EntityCollection<Invoice> Invoices
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Invoice>("EomModel.FK_Invoice_InvoiceStatus", "Invoice");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Invoice>("EomModel.FK_Invoice_InvoiceStatus", "Invoice", value);
                 }
             }
         }

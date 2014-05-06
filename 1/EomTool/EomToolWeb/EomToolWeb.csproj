@@ -192,6 +192,7 @@
     <Compile Include="Models\TrafficTypeViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionUtility.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\KendoSkin.css" />
@@ -3342,6 +3343,7 @@
     <Content Include="Scripts\kendo\2014.1.416\kendo.window.min.js.map" />
     <Content Include="Views\Shared\_Layout2014.cshtml" />
     <Content Include="Views\Invoices\ChooseAdvertiser.cshtml" />
+    <Content Include="Views\Invoices\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

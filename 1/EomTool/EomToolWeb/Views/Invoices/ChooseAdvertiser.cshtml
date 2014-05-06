@@ -13,6 +13,7 @@
         <th>Advertiser</th>
         <th>PID</th>
         <th>Campaign</th>
+        <th>#Units</th>
         <th colspan="2">Revenue</th>
         <th>#Pubs</th>
     </tr>
@@ -32,6 +33,7 @@
         <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, "ChooseAmounts", new { advid = ca.AdvId }) : new HtmlString(""))</td>
         <td style="text-align: center">@ca.Pid</td>
         <td>@ca.CampaignName</td>
+        <td style="text-align: center">@ca.NumUnits</td>
         <td>@ca.RevenueCurrency</td>
         <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
         <td style="text-align: center">@ca.NumAffs</td>
