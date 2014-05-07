@@ -16,7 +16,11 @@ namespace EomTool.Domain.Abstract
 
         IQueryable<CampaignAmount> CampaignAmounts(int? accountManagerId, int? advertiserId, bool byAffiliate = false);
         IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds);
+
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);
+        void SaveInvoice(Invoice invoice, string note = null, bool markSentToAccounting = false);
+        Invoice GetInvoice(int id, bool fill);
+        IEnumerable<Invoice> Invoices(bool fill);
 
         // --- Extra Item Import stuff ---
         bool CampaignExists(int pid);

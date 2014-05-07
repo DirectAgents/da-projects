@@ -1,6 +1,7 @@
 ﻿using EomTool.Domain.Abstract;
 using EomTool.Domain.DTOs;
 using EomTool.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -192,6 +193,50 @@ namespace EomTool.Domain.Concrete
             }
         }
 
+        public void SaveInvoice(Invoice invoice, string note = null, bool markSentToAccounting = false)
+        {
+            if (note != null)
+            {
+                var invoiceNote = new InvoiceNote()
+                {
+                    note = note,
+                    added_by = "who",
+                    created = DateTime.Now
+                };
+                invoice.InvoiceNotes.Add(invoiceNote);
+            }
+            if (markSentToAccounting)
+                invoice.invoice_status_id = InvoiceStatus.AccountingReview;
+
+            context.Invoices.AddObject(invoice);
+            SaveChanges();
+        }
+
+        public Invoice GetInvoice(int id, bool fill)
+        {
+            var invoice = context.Invoices.FirstOrDefault(i => i.id == id);
+            if (fill && invoice != null)
+            {
+                GenerateInvoiceLineItems(invoice, true);
+            }
+            return invoice;
+        }
+
+        public IEnumerable<Invoice> Invoices(bool fill)
+        {
+            var invoices = context.Invoices.AsEnumerable();
+            if (fill)
+            {
+                foreach (var invoice in invoices)
+                {
+                    GenerateInvoiceLineItems(invoice, true);
+                }
+            }
+            return invoices;
+        }
+
+        //---
+
         private IQueryable<Item> Items(bool invoiceableOnly)
         {
             var items = context.Items.AsQueryable();
@@ -200,8 +245,6 @@ namespace EomTool.Domain.Concrete
 
             return items;
         }
-
-        //---
 
         private List<Currency> _currencyList;
         private List<Currency> CurrencyList
@@ -230,25 +273,6 @@ namespace EomTool.Domain.Concrete
                 currencyName = currency.name;
             return currencyName;
         }
-
-        //private Dictionary<int, string> _currencyDictionary;
-        //private Dictionary<int, string> CurrencyDictionary
-        //{
-        //    get
-        //    {
-        //        if (_currencyDictionary == null)
-        //        {
-        //            _currencyDictionary = new Dictionary<int, string>();
-
-        //            var currencies = context.Currencies.AsQueryable();
-        //            foreach (var currency in currencies)
-        //            {
-        //                _currencyDictionary.Add(currency.id, currency.name);
-        //            }
-        //        }
-        //        return _currencyDictionary;
-        //    }
-        //}
 
         //---
 

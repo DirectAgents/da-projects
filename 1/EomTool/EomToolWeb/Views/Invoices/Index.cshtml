@@ -1,19 +1,18 @@
-﻿@{
-    IQueryable<AccountManager> AMs = ViewBag.AccountManagers;
-}
-<h2>Invoices</h2>
+﻿@model IEnumerable<Invoice>
 
-Accounting Period:
-@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
-
-<br />
-
-<b>Select Account Manager:</b>
-<br />
-@foreach (var am in AMs)
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Advertiser</th>
+        <th colspan="2">Amount</th>
+    </tr>
+@foreach (var invoice in Model)
 {
-    @Html.ActionLink(@am.name, "ChooseAdvertiser", new { am = am.id })
-    <br />
+    <tr style="background-color: #eee">
+        <td>@invoice.DateRequested</td>
+        <td>@invoice.Advertiser.name</td>
+        <td>@invoice.CurrencyName</td>
+        <td>@invoice.Total.ToString("N2")</td>
+    </tr>
 }
-@Html.ActionLink("(all)", "ChooseAdvertiser")
-<br />
+</table>

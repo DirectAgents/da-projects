@@ -17,7 +17,7 @@ namespace EomToolWeb
 
             routes.MapRoute(
                 name: null,
-                url: "{controller}/{action}/{mode}",
+                url: "Payouts/Summary/{mode}",
                 defaults: new { controller = "Payouts", action = "Summary", mode = UrlParameter.Optional }
             );
 

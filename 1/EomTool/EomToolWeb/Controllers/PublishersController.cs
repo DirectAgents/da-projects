@@ -82,7 +82,7 @@ namespace EomToolWeb.Controllers
                .Replace("[[Affid]]", affiliate.affid.ToString())
                .Replace("[[Note]]", note);
 
-            EmailUtility.SendEmail(from, new string[] { to }, new string[] { }, subject, body, true);
+            EmailUtility.SendEmail(from, to, null, subject, body, true);
         }
     }
 }

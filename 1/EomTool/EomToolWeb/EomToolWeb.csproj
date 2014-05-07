@@ -150,6 +150,7 @@
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Controllers\CampaignsController.cs" />
     <Compile Include="Controllers\CampaignsApiController.cs" />
+    <Compile Include="Controllers\EOMController.cs" />
     <Compile Include="Controllers\ExtraItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoicesController.cs">
@@ -3191,7 +3192,7 @@
     <Content Include="Views\Invoices\ChooseAmounts.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Views\Invoices\Index.cshtml">
+    <Content Include="Views\Invoices\Start.cshtml">
       <SubType>Code</SubType>
     </Content>
     <Content Include="Views\Invoices\_ViewStart.cshtml">
@@ -3344,6 +3345,8 @@
     <Content Include="Views\Shared\_Layout2014.cshtml" />
     <Content Include="Views\Invoices\ChooseAdvertiser.cshtml" />
     <Content Include="Views\Invoices\Show.cshtml" />
+    <Content Include="Views\Invoices\ShowEmail.cshtml" />
+    <Content Include="Views\Invoices\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

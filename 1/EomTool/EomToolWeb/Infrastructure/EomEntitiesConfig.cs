@@ -40,6 +40,11 @@ namespace EomToolWeb.Infrastructure
     {
         public virtual DateTime CurrentEomDate { get; set; }
 
+        public string CurrentEomDateString
+        {
+            get { return CurrentEomDate.ToString("MMMyyyy"); }
+        }
+
         public string ConnectionString
         {
             get

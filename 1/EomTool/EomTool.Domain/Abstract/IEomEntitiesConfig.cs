@@ -6,6 +6,7 @@ namespace EomTool.Domain.Abstract
     {
         string ConnectionString { get; }
         DateTime CurrentEomDate { get; set; }
+        string CurrentEomDateString { get; }
         bool DebugMode { get; }
     }
 }

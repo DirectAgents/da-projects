@@ -236,7 +236,7 @@ namespace EomToolWeb.Controllers
                .Replace("[[Date]]", DateTime.Now.ToString())
                .Replace("[[BatchUrl]]", batchUrl);
 
-            EmailUtility.SendEmail(from, new string[] { to }, new string[] { }, subject, body, true);
+            EmailUtility.SendEmail(from, to, null, subject, body, true);
         }
 
         // --- Notes ---
