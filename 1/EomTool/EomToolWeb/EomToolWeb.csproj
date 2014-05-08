@@ -3345,7 +3345,6 @@
     <Content Include="Views\Shared\_Layout2014.cshtml" />
     <Content Include="Views\Invoices\ChooseAdvertiser.cshtml" />
     <Content Include="Views\Invoices\Show.cshtml" />
-    <Content Include="Views\Invoices\ShowEmail.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

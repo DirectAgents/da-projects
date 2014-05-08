@@ -71,27 +71,32 @@ namespace EomToolWeb.Controllers
             var invoice = mainRepo.GenerateInvoice(campAffIds);
             Session["invoice"] = invoice;
 
-            return RedirectToAction("Show");
+            return RedirectToAction("Preview");
         }
 
-        public ActionResult Show(int? id, bool asEmail = false)
+        public ActionResult Preview()
         {
-            Invoice invoice;
-            if (id.HasValue)
-                invoice = mainRepo.GetInvoice(id.Value, true);
-            else
-                invoice = (Invoice)Session["invoice"];
-
+            var invoice = (Invoice)Session["invoice"];
             if (invoice == null)
                 return null;
 
-            if (asEmail)
-                return View("ShowEmail", invoice);
-            else
-                return View(invoice);
+            ViewBag.Expandable = true;
+            ViewBag.IncludeSubmit = true;
+            return View("Show", invoice);
         }
 
-        public ActionResult Send(string note)
+        public ActionResult Show(int id)
+        {
+            var invoice = mainRepo.GetInvoice(id, true);
+            if (invoice == null)
+                return null;
+
+            ViewBag.Expandable = true;
+            return View(invoice);
+        }
+
+        // Submit invoice request
+        public ActionResult Submit(string note)
         {
             var invoice = (Invoice)Session["invoice"];
             if (invoice == null)
@@ -104,7 +109,7 @@ namespace EomToolWeb.Controllers
             string to = "kevin@directagents.com"; //TESTING
             string cc = null;
             string subject = eomEntitiesConfig.CurrentEomDateString + ": Invoice Request";
-            string body = RenderPartialViewToString("ShowEmail", invoice);
+            string body = RenderPartialViewToString("Show", invoice);
 
             EmailUtility.SendEmail(from, to, cc, subject, body, true);
 

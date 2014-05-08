@@ -17,5 +17,11 @@ namespace EomTool.Domain.Entities
             }
         }
 
+        [NotMapped]
+        public decimal TotalAmount0
+        {
+            get { return (total_amount.HasValue ? total_amount.Value : 0); }
+        }
+
     }
 }

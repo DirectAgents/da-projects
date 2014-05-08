@@ -1,49 +1,68 @@
 ﻿@model Invoice
 @{
     var invoice = Model;
+    bool expandable = ViewBag.Expandable ?? false;
+    bool includeSubmit = ViewBag.IncludeSubmit ?? false;
 }
 
-Invoice for: @invoice.Advertiser.name
+<b>Invoice Request for:</b> @invoice.Advertiser.name
 <br /><br />
 
-<table style="border: 1px solid gray">
+<table style="border: 1px solid gray; border-spacing: 10px 0">
     <tr>
-        <th>Campaign</th>
-        <th>#Units</th>
-        <th colspan="2">Amount</th>
+        <th>Quantity</th>
+        <th style="text-align: left">Description</th>
+        <th style="text-align: left" colspan="2">Price</th>
+        <th style="text-align: left" colspan="2">SubTotal</th>
     </tr>
 @for (var i=0; i < invoice.LineItems.Count; i++)
 {
     var li = invoice.LineItems[i];
     <tr>
-        <td>@li.Campaign.campaign_name (@li.Campaign.pid)</td>
         <td style="text-align: center">@li.NumUnits</td>
+        <td>@li.Campaign.campaign_name</td>
         <td>@li.Currency.name</td>
-        <td style="text-align: right">@li.Amount.ToString("N2")</td>
-        <td><a href="#" onclick="$('.sub@(i)').toggle(); return false">+</a></td>
+        <td style="text-align: right">@li.AmountPerUnit.ToString("N2")</td>
+        <td>@li.Currency.name</td>
+        <td style="text-align: right">@li.TotalAmount.ToString("N2")</td>
+        @if (expandable)
+        {
+            <td><a href="#" onclick="$('.sub@(i)').toggle(); return false">+</a></td>
+        }
     </tr>
-    foreach (var item in li.SubItems)
+    if (expandable)
     {
-        <tr style="background-color:#ddd; display: none" class="sub@(i)">
-            <td style="text-align: right">Aff: @item.affid ...</td>
-            <td style="text-align: center">@item.num_units</td>
-            <td>@item.CurrencyName</td>
-            <td style="text-align: right">@item.amount.ToString("N2")</td>
-        </tr>
+        foreach (var item in li.SubItems)
+        {
+            <tr style="background-color:#ddd; display: none" class="sub@(i)">
+                <td style="text-align: center">@item.num_units</td>
+                <td style="text-align: right">SubId: @item.affid ...&nbsp;</td>
+                <td>@item.CurrencyName</td>
+                <td style="text-align: right">@item.amount_per_unit.ToString("N2")</td>
+                <td>@item.CurrencyName</td>
+                <td style="text-align: right">@item.TotalAmount0.ToString("N2")</td>
+            </tr>
+        }
     }
 }
     <tr>
-        <td colspan="2" style="font-weight: bold; text-align: right">TOTAL:</td>
+        <td colspan="6">&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="4" style="font-weight: bold; text-align: right">TOTAL:&nbsp;&nbsp;&nbsp;</td>
         <td>@invoice.CurrencyName</td>
         <td>@invoice.Total.ToString("N2")</td>
     </tr>
 </table>
 <br />
 
-@using (Html.BeginForm("Send", "Invoices"))
+@if (includeSubmit)
 {
-    <text>Comment:</text><br />
-    <textarea style="width: 450px; height: 135px" name="note"></textarea>
-    <br />
-    <input type="submit" value="Send" />
+    using (Html.BeginForm("Submit", "Invoices"))
+    {
+        <text>Comments:</text><br />
+        <textarea style="width: 450px; height: 135px" name="note"></textarea>
+        <br />
+        <input type="submit" value="Submit Request" />
+    }
 }

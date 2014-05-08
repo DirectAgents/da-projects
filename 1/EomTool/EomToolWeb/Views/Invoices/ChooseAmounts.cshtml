@@ -6,7 +6,13 @@
     bool firstRow = true;
 }
 
-<h2>@Model.AdvertiserName</h2>
+<h2>Request Invoice</h2>
+
+Advertiser: @Model.AdvertiserName
+<br /><br />
+
+Select the amounts to include in the invoice:
+<br /><br />
 
 @using (Html.BeginForm("Generate", "Invoices"))
 {
@@ -32,6 +38,7 @@
     {
         firstRow = false;
     }
+    decimal perunit = ca.Revenue / ca.NumUnits;
     <tr style="@(grayRow ? "background-color:#ddd" : "")">
         <td style="text-align: center">@(firstRow ? ca.Pid.ToString() : "")</td>
         <td>@(firstRow ? ca.CampaignName : "")</td>
@@ -47,6 +54,7 @@
                 <a href="#" onclick="$('.chk@(ca.Pid)').prop('checked',false); return false">none</a>
             }
         </td>
+        <td>@perunit.ToString("N2")</td>
     </tr>
     if (i == campaignAmounts.Count - 1 || ca.Pid != campaignAmounts[i + 1].Pid)
     {
@@ -65,5 +73,6 @@
 }
 </table>
 
-<input type="submit" value="Preview" />
+<br />
+<input type="submit" value="Preview Invoice" />
 }

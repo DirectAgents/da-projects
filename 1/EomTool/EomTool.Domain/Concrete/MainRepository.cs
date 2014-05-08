@@ -147,18 +147,19 @@ namespace EomTool.Domain.Concrete
             foreach (var campAffId in campAffIds)
             {
                 var itemGroups = items.Where(i => i.pid == campAffId.pid && i.affid == campAffId.affid)
-                                      .GroupBy(i => i.revenue_currency_id);
-                foreach (var itemGroup in itemGroups) // usually just one (currency)
+                                      .GroupBy(i => new { i.revenue_currency_id, i.revenue_per_unit });
+                foreach (var itemGroup in itemGroups) // usually just one (currency/revenue_per_unit)
                 {
                     var invoiceItem = new InvoiceItem()
                     {
                         pid = campAffId.pid,
                         affid = campAffId.affid,
-                        currency_id = itemGroup.Key,
-                        CurrencyName = CurrencyName(itemGroup.Key),
-                        amount = itemGroup.Sum(i => i.total_revenue.HasValue ? i.total_revenue.Value : 0),
+                        currency_id = itemGroup.Key.revenue_currency_id,
+                        CurrencyName = CurrencyName(itemGroup.Key.revenue_currency_id),
+                        amount_per_unit = itemGroup.Key.revenue_per_unit,
                         num_units = (int)itemGroup.Sum(i => i.num_units)
                     };
+                    invoiceItem.total_amount = invoiceItem.amount_per_unit * invoiceItem.num_units;
                     invoice.InvoiceItems.Add(invoiceItem);
                 }
             }
@@ -169,8 +170,8 @@ namespace EomTool.Domain.Concrete
 
         private void GenerateInvoiceLineItems(Invoice invoice, bool setAdvertiser)
         {
-            // group the items by pid,currency and generate a LineItem for each (with subitems for the various affiliates)
-            var itemGroups = invoice.InvoiceItems.GroupBy(i => new { i.pid, i.currency_id });
+            // group the items by pid/currency/amount_per_unit and generate a LineItem for each (with subitems for the various affiliates)
+            var itemGroups = invoice.InvoiceItems.GroupBy(i => new { i.pid, i.currency_id, i.amount_per_unit });
             foreach (var itemGroup in itemGroups)
             {
                 // if pid == null, skip ?

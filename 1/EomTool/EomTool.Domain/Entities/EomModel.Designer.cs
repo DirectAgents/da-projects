@@ -41,10 +41,10 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatch1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatchState", "PaymentBatchState", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatchState), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.AccountManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Currency", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Currency), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_Invoice_InvoiceStatus", "InvoiceStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.InvoiceStatus), "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Invoice), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceNote_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceNote", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceNote), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Currency", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Currency), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
 
 #endregion
 
@@ -563,22 +563,6 @@ namespace EomTool.Domain.Entities
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<InvoiceItem> InvoiceItems
-        {
-            get
-            {
-                if ((_InvoiceItems == null))
-                {
-                    _InvoiceItems = base.CreateObjectSet<InvoiceItem>("InvoiceItems");
-                }
-                return _InvoiceItems;
-            }
-        }
-        private ObjectSet<InvoiceItem> _InvoiceItems;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<InvoiceNote> InvoiceNotes
         {
             get
@@ -607,6 +591,22 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<InvoiceStatus> _InvoiceStatuses;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<InvoiceItem> InvoiceItems
+        {
+            get
+            {
+                if ((_InvoiceItems == null))
+                {
+                    _InvoiceItems = base.CreateObjectSet<InvoiceItem>("InvoiceItems");
+                }
+                return _InvoiceItems;
+            }
+        }
+        private ObjectSet<InvoiceItem> _InvoiceItems;
 
         #endregion
 
@@ -845,14 +845,6 @@ namespace EomTool.Domain.Entities
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the InvoiceItems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToInvoiceItems(InvoiceItem invoiceItem)
-        {
-            base.AddObject("InvoiceItems", invoiceItem);
-        }
-    
-        /// <summary>
         /// Deprecated Method for adding a new object to the InvoiceNotes EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToInvoiceNotes(InvoiceNote invoiceNote)
@@ -866,6 +858,14 @@ namespace EomTool.Domain.Entities
         public void AddToInvoiceStatuses(InvoiceStatus invoiceStatus)
         {
             base.AddObject("InvoiceStatuses", invoiceStatus);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the InvoiceItems EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToInvoiceItems(InvoiceItem invoiceItem)
+        {
+            base.AddObject("InvoiceItems", invoiceItem);
         }
 
         #endregion
@@ -3827,28 +3827,6 @@ namespace EomTool.Domain.Entities
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceItem_Invoice", "InvoiceItem")]
-        public EntityCollection<InvoiceItem> InvoiceItems
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<InvoiceItem>("EomModel.FK_InvoiceItem_Invoice", "InvoiceItem");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<InvoiceItem>("EomModel.FK_InvoiceItem_Invoice", "InvoiceItem", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceNote_Invoice", "InvoiceNote")]
         public EntityCollection<InvoiceNote> InvoiceNotes
         {
@@ -3861,6 +3839,28 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<InvoiceNote>("EomModel.FK_InvoiceNote_Invoice", "InvoiceNote", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceItem_Invoice", "InvoiceItem")]
+        public EntityCollection<InvoiceItem> InvoiceItems
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<InvoiceItem>("EomModel.FK_InvoiceItem_Invoice", "InvoiceItem");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<InvoiceItem>("EomModel.FK_InvoiceItem_Invoice", "InvoiceItem", value);
                 }
             }
         }
@@ -3885,15 +3885,15 @@ namespace EomTool.Domain.Entities
         /// <param name="id">Initial value of the id property.</param>
         /// <param name="invoice_id">Initial value of the invoice_id property.</param>
         /// <param name="currency_id">Initial value of the currency_id property.</param>
-        /// <param name="amount">Initial value of the amount property.</param>
+        /// <param name="amount_per_unit">Initial value of the amount_per_unit property.</param>
         /// <param name="num_units">Initial value of the num_units property.</param>
-        public static InvoiceItem CreateInvoiceItem(global::System.Int32 id, global::System.Int32 invoice_id, global::System.Int32 currency_id, global::System.Decimal amount, global::System.Int32 num_units)
+        public static InvoiceItem CreateInvoiceItem(global::System.Int32 id, global::System.Int32 invoice_id, global::System.Int32 currency_id, global::System.Decimal amount_per_unit, global::System.Int32 num_units)
         {
             InvoiceItem invoiceItem = new InvoiceItem();
             invoiceItem.id = id;
             invoiceItem.invoice_id = invoice_id;
             invoiceItem.currency_id = currency_id;
-            invoiceItem.amount = amount;
+            invoiceItem.amount_per_unit = amount_per_unit;
             invoiceItem.num_units = num_units;
             return invoiceItem;
         }
@@ -4030,24 +4030,24 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Decimal amount
+        public global::System.Decimal amount_per_unit
         {
             get
             {
-                return _amount;
+                return _amount_per_unit;
             }
             set
             {
-                OnamountChanging(value);
-                ReportPropertyChanging("amount");
-                _amount = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("amount");
-                OnamountChanged();
+                Onamount_per_unitChanging(value);
+                ReportPropertyChanging("amount_per_unit");
+                _amount_per_unit = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("amount_per_unit");
+                Onamount_per_unitChanged();
             }
         }
-        private global::System.Decimal _amount;
-        partial void OnamountChanging(global::System.Decimal value);
-        partial void OnamountChanged();
+        private global::System.Decimal _amount_per_unit;
+        partial void Onamount_per_unitChanging(global::System.Decimal value);
+        partial void Onamount_per_unitChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -4072,6 +4072,30 @@ namespace EomTool.Domain.Entities
         private global::System.Int32 _num_units;
         partial void Onnum_unitsChanging(global::System.Int32 value);
         partial void Onnum_unitsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> total_amount
+        {
+            get
+            {
+                return _total_amount;
+            }
+            set
+            {
+                Ontotal_amountChanging(value);
+                ReportPropertyChanging("total_amount");
+                _total_amount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("total_amount");
+                Ontotal_amountChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _total_amount;
+        partial void Ontotal_amountChanging(Nullable<global::System.Decimal> value);
+        partial void Ontotal_amountChanged();
 
         #endregion
 

@@ -34,8 +34,7 @@ namespace EomTool.Domain.Entities
         [NotMapped]
         public decimal Total
         {
-            //get { return LineItems.Sum(li => li.Amount); }
-            get { return InvoiceItems.Sum(i => i.amount); }
+            get { return InvoiceItems.Sum(i => i.total_amount.HasValue ? i.total_amount.Value : 0); }
         }
 
         [NotMapped]
@@ -81,20 +80,22 @@ namespace EomTool.Domain.Entities
     // intended for one campaign (pid)
     public class InvoiceLineItem
     {
-        public IEnumerable<InvoiceItem> SubItems { get; set; }
-
         public Campaign Campaign { get; set; }
         public Currency Currency { get; set; }
-        
-        //todo? compute on demand and save as private variable?
-        public decimal Amount
-        {
-            get { return SubItems.Sum(i => i.amount); }
-        }
 
+        public IEnumerable<InvoiceItem> SubItems { get; set; }
+
+        public decimal TotalAmount
+        {
+            get { return SubItems.Sum(i => i.total_amount.HasValue ? i.total_amount.Value : 0); }
+        }
         public int NumUnits
         {
             get { return SubItems.Sum(i => i.num_units); }
+        }
+        public decimal AmountPerUnit
+        {
+            get { return TotalAmount / NumUnits; }
         }
     }
 }
