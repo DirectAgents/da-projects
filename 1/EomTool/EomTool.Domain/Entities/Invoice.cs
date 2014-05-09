@@ -82,6 +82,7 @@ namespace EomTool.Domain.Entities
     {
         public Campaign Campaign { get; set; }
         public Currency Currency { get; set; }
+        public string ItemCode { get; set; }
 
         public IEnumerable<InvoiceItem> SubItems { get; set; }
 

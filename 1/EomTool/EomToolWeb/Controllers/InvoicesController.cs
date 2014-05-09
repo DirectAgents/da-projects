@@ -64,6 +64,7 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
+        // Note: We assume that each pid/affid pair has a unique currency
         [HttpPost]
         public ActionResult Generate(string[] idpairs)
         {

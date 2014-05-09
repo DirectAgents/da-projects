@@ -45,6 +45,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceNote_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceNote", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceNote), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Currency", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Currency), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_UnitType", "UnitType", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.UnitType), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
 
 #endregion
 
@@ -4096,6 +4097,30 @@ namespace EomTool.Domain.Entities
         private Nullable<global::System.Decimal> _total_amount;
         partial void Ontotal_amountChanging(Nullable<global::System.Decimal> value);
         partial void Ontotal_amountChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> unit_type_id
+        {
+            get
+            {
+                return _unit_type_id;
+            }
+            set
+            {
+                Onunit_type_idChanging(value);
+                ReportPropertyChanging("unit_type_id");
+                _unit_type_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("unit_type_id");
+                Onunit_type_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _unit_type_id;
+        partial void Onunit_type_idChanging(Nullable<global::System.Int32> value);
+        partial void Onunit_type_idChanged();
 
         #endregion
 
@@ -4174,6 +4199,44 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Invoice>("EomModel.FK_InvoiceItem_Invoice", "Invoice", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_InvoiceItem_UnitType", "UnitType")]
+        public UnitType UnitType
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomModel.FK_InvoiceItem_UnitType", "UnitType").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomModel.FK_InvoiceItem_UnitType", "UnitType").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<UnitType> UnitTypeReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<UnitType>("EomModel.FK_InvoiceItem_UnitType", "UnitType");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<UnitType>("EomModel.FK_InvoiceItem_UnitType", "UnitType", value);
                 }
             }
         }
@@ -9573,32 +9636,6 @@ namespace EomTool.Domain.Entities
         #endregion
 
     
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_UnitType_id_FK_UnitType_id_PK", "Item")]
-        public EntityCollection<Item> Items
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.Item_UnitType_id_FK_UnitType_id_PK", "Item");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.Item_UnitType_id_FK_UnitType_id_PK", "Item", value);
-                }
-            }
-        }
-
-        #endregion
-
     }
 
     #endregion

@@ -47,6 +47,7 @@ Select the amounts to include in the invoice:
         <td>@ca.RevenueCurrency</td>
         <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
         <td><input type="checkbox" name="idpairs" value="@(ca.Pid + "," + ca.AffId)" class="chk@(ca.Pid)" checked="checked" /></td>
+        @* Note: We assume that each pid/affid pair has a unique currency *@
         <td>
             @if (firstRow)
             {

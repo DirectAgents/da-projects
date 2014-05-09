@@ -17,6 +17,19 @@ namespace EomTool.Domain.Entities
             }
         }
 
+        public string _unitTypeName = null;
+        [NotMapped]
+        public string UnitTypeName
+        {
+            set { _unitTypeName = value; }
+            get
+            {
+                if (_unitTypeName == null && UnitType != null)
+                    _unitTypeName = UnitType.name;
+                return _unitTypeName;
+            }
+        }
+
         [NotMapped]
         public decimal TotalAmount0
         {

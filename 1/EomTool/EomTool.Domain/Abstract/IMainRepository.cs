@@ -15,12 +15,24 @@ namespace EomTool.Domain.Abstract
         IQueryable<Campaign> Campaigns(int? accountManagerId, int? advertiserId, bool activeOnly = false);
 
         IQueryable<CampaignAmount> CampaignAmounts(int? accountManagerId, int? advertiserId, bool byAffiliate = false);
-        IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds);
+        //IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds);
 
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);
         void SaveInvoice(Invoice invoice, string note = null, bool markSentToAccounting = false);
         Invoice GetInvoice(int id, bool fill);
         IEnumerable<Invoice> Invoices(bool fill);
+
+        // ---
+
+        string UnitTypeName(int unitTypeId);
+        bool UnitTypeExists(int unitTypeId);
+        UnitType GetUnitType(int unitTypeId);
+        UnitType GetUnitType(string unitTypeName);
+
+        bool CurrencyExists(int currency);
+        string CurrencyName(int currencyId);
+        Currency GetCurrency(int currencyId);
+        Currency GetCurrency(string currencyName);
 
         // --- Extra Item Import stuff ---
         bool CampaignExists(int pid);
@@ -31,13 +43,6 @@ namespace EomTool.Domain.Abstract
 
         Source GetSource(int sourceId);
         Source GetSource(string sourceName);
-
-        bool UnitTypeExists(int unitTypeId);
-        UnitType GetUnitType(int unitTypeId);
-        UnitType GetUnitType(string unitTypeName);
-
-        bool CurrencyExists(int currency);
-        Currency GetCurrency(string currencyName);
 
         void AddItem(Item item);
         bool ItemExists(Item item);

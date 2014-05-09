@@ -116,6 +116,7 @@ namespace EomTool.Domain.Concrete
             return amounts;
         }
 
+        // unused...
         public IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds)
         {
             var pids = campAffIds.Select(ca => ca.pid).Distinct();
@@ -147,8 +148,8 @@ namespace EomTool.Domain.Concrete
             foreach (var campAffId in campAffIds)
             {
                 var itemGroups = items.Where(i => i.pid == campAffId.pid && i.affid == campAffId.affid)
-                                      .GroupBy(i => new { i.revenue_currency_id, i.revenue_per_unit });
-                foreach (var itemGroup in itemGroups) // usually just one (currency/revenue_per_unit)
+                                      .GroupBy(i => new { i.revenue_currency_id, i.revenue_per_unit, i.unit_type_id });
+                foreach (var itemGroup in itemGroups) // usually just one (currency/revenue_per_unit/unit_type)
                 {
                     var invoiceItem = new InvoiceItem()
                     {
@@ -157,6 +158,8 @@ namespace EomTool.Domain.Concrete
                         currency_id = itemGroup.Key.revenue_currency_id,
                         CurrencyName = CurrencyName(itemGroup.Key.revenue_currency_id),
                         amount_per_unit = itemGroup.Key.revenue_per_unit,
+                        unit_type_id = itemGroup.Key.unit_type_id,
+                        UnitTypeName = UnitTypeName(itemGroup.Key.unit_type_id),
                         num_units = (int)itemGroup.Sum(i => i.num_units)
                     };
                     invoiceItem.total_amount = invoiceItem.amount_per_unit * invoiceItem.num_units;
@@ -170,8 +173,8 @@ namespace EomTool.Domain.Concrete
 
         private void GenerateInvoiceLineItems(Invoice invoice, bool setAdvertiser)
         {
-            // group the items by pid/currency/amount_per_unit and generate a LineItem for each (with subitems for the various affiliates)
-            var itemGroups = invoice.InvoiceItems.GroupBy(i => new { i.pid, i.currency_id, i.amount_per_unit });
+            // group the items by pid/currency/amount_per_unit/unit_type and generate a LineItem for each (with subitems for the various affiliates)
+            var itemGroups = invoice.InvoiceItems.GroupBy(i => new { i.pid, i.currency_id, i.amount_per_unit, i.unit_type_id });
             foreach (var itemGroup in itemGroups)
             {
                 // if pid == null, skip ?
@@ -180,6 +183,7 @@ namespace EomTool.Domain.Concrete
                 {
                     Campaign = GetCampaign(itemGroup.Key.pid.Value),
                     Currency = GetCurrency(itemGroup.Key.currency_id),
+                    ItemCode = UnitTypeCode(itemGroup.Key.unit_type_id),
                     SubItems = itemGroup.ToList()
                 };
                 context.Campaigns.Detach(lineItem.Campaign);
@@ -247,6 +251,56 @@ namespace EomTool.Domain.Concrete
             return items;
         }
 
+        //---
+
+        private List<UnitType> _unitTypeList;
+        private List<UnitType> UnitTypeList
+        {
+            get
+            {
+                if (_unitTypeList == null)
+                {
+                    _unitTypeList = context.UnitTypes.ToList();
+                }
+                return _unitTypeList;
+            }
+        }
+
+        public string UnitTypeName(int unitTypeId)
+        {
+            var unitType = UnitTypeList.FirstOrDefault(ut => ut.id == unitTypeId);
+            if (unitType != null)
+                return unitType.name;
+            else
+                return null;
+        }
+        public string UnitTypeCode(int? unitTypeId)
+        {
+            string code = null;
+            if (unitTypeId.HasValue)
+            {
+                var unitType = UnitTypeList.FirstOrDefault(ut => ut.id == unitTypeId.Value);
+                if (unitType != null)
+                    code = unitType.name; // + " Mgmt" ???
+            }
+            return code;
+        }
+
+        public bool UnitTypeExists(int unitTypeId)
+        {
+            return UnitTypeList.Any(u => u.id == unitTypeId);
+        }
+        public UnitType GetUnitType(int unitTypeId)
+        {
+            return UnitTypeList.FirstOrDefault(u => u.id == unitTypeId);
+        }
+        public UnitType GetUnitType(string unitTypeName)
+        {
+            return UnitTypeList.FirstOrDefault(ut => ut.name == unitTypeName);
+        }
+
+        //---
+
         private List<Currency> _currencyList;
         private List<Currency> CurrencyList
         {
@@ -260,19 +314,26 @@ namespace EomTool.Domain.Concrete
             }
         }
 
-        private Currency GetCurrency(int currencyId)
-        {
-            var currency = CurrencyList.FirstOrDefault(c => c.id == currencyId);
-            return currency;
-        }
-
-        private string CurrencyName(int currencyId)
+        public string CurrencyName(int currencyId)
         {
             string currencyName = null;
             var currency = CurrencyList.FirstOrDefault(c => c.id == currencyId);
             if (currency != null)
                 currencyName = currency.name;
             return currencyName;
+        }
+
+        public bool CurrencyExists(int currency)
+        {
+            return CurrencyList.Any(c => c.id == currency);
+        }
+        public Currency GetCurrency(int currencyId)
+        {
+            return CurrencyList.FirstOrDefault(c => c.id == currencyId);
+        }
+        public Currency GetCurrency(string currencyName)
+        {
+            return CurrencyList.FirstOrDefault(c => c.name == currencyName);
         }
 
         //---
@@ -302,28 +363,6 @@ namespace EomTool.Domain.Concrete
         public Source GetSource(string sourceName)
         {
             return context.Sources.FirstOrDefault(s => s.name == sourceName);
-        }
-
-        public bool UnitTypeExists(int unitTypeId)
-        {
-            return context.UnitTypes.Any(u => u.id == unitTypeId);
-        }
-        public UnitType GetUnitType(int unitTypeId)
-        {
-            return context.UnitTypes.FirstOrDefault(u => u.id == unitTypeId);
-        }
-        public UnitType GetUnitType(string unitTypeName)
-        {
-            return context.UnitTypes.FirstOrDefault(ut => ut.name == unitTypeName);
-        }
-
-        public bool CurrencyExists(int currency)
-        {
-            return context.Currencies.Any(c => c.id == currency);
-        }
-        public Currency GetCurrency(string currencyName)
-        {
-            return context.Currencies.FirstOrDefault(c => c.name == currencyName);
         }
 
         public void AddItem(Item item)
