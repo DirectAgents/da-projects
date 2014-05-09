@@ -1,0 +1,18 @@
+﻿@model InvoicesAccounting
+@{
+    var incompleteInvoices = Model.Invoices(false);
+    var completeInvoices = Model.Invoices(true);
+}
+
+<h2>Invoice Requests</h2>
+
+@if (incompleteInvoices.Count() > 0)
+{
+    @Html.Partial("Index", incompleteInvoices)
+    <br /><br />
+}
+
+@if (completeInvoices.Count() > 0)
+{
+    @Html.Partial("Index", completeInvoices)
+}

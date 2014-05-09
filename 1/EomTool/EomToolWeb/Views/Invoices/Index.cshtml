@@ -1,18 +1,35 @@
 ﻿@model IEnumerable<Invoice>
 
-<table>
+<table style="border-spacing: 10px 0">
     <tr>
         <th>Date</th>
+        <th>Account Manager</th>
         <th>Advertiser</th>
         <th colspan="2">Amount</th>
+        <th>Status</th>
     </tr>
-@foreach (var invoice in Model)
+@foreach (var inv in Model)
 {
     <tr style="background-color: #eee">
-        <td>@invoice.DateRequested</td>
-        <td>@invoice.Advertiser.name</td>
-        <td>@invoice.CurrencyName</td>
-        <td>@invoice.Total.ToString("N2")</td>
+        <td>@inv.DateRequested.ToShortDateString() @inv.DateRequested.ToShortTimeString()</td>
+        <td>@inv.Advertiser.AccountManager.name</td>
+        <td>@inv.Advertiser.name</td>
+        <td>@inv.CurrencyName</td>
+        <td>@inv.Total.ToString("N2")</td>
+        <td>@inv.InvoiceStatus.name</td>
+        <td>
+            @Html.ActionLink("View", "Show", new { id = inv.id })
+            @if (inv.invoice_status_id < InvoiceStatus.Generated)
+            {
+                <text> | </text>
+                @Html.ActionLink("Mark Done", "SetStatus", new { id = inv.id, statusid = InvoiceStatus.Generated })
+            }
+            else
+            {
+                <text> | </text>
+                @Html.ActionLink("Mark Undone", "SetStatus", new { id = inv.id, statusid = InvoiceStatus.AccountingReview })
+            }
+        </td>
     </tr>
 }
 </table>

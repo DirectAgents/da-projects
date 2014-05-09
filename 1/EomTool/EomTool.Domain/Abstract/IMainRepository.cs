@@ -9,7 +9,8 @@ namespace EomTool.Domain.Abstract
     {
         void SaveChanges();
 
-        Advertiser GetAdvertiser(int advId);
+        AccountManager GetAccountManager(int id);
+        Advertiser GetAdvertiser(int id);
 
         IQueryable<AccountManager> AccountManagers(bool withActivityOnly = false);
         IQueryable<Campaign> Campaigns(int? accountManagerId, int? advertiserId, bool activeOnly = false);
@@ -19,8 +20,9 @@ namespace EomTool.Domain.Abstract
 
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);
         void SaveInvoice(Invoice invoice, string note = null, bool markSentToAccounting = false);
-        Invoice GetInvoice(int id, bool fill);
-        IEnumerable<Invoice> Invoices(bool fill);
+        IQueryable<Invoice> Invoices(bool fillExtended);
+        Invoice GetInvoice(int id, bool fillLineItems = false);
+        bool SetInvoiceStatus(int id, int statusId);
 
         // ---
 

@@ -65,6 +65,7 @@
     <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="DTOs\CampAffId.cs" />
     <Compile Include="DTOs\CampaignAmount.cs" />
+    <Compile Include="Entities\Advertiser.cs" />
     <Compile Include="Entities\BatchUpdate.cs" />
     <Compile Include="Entities\CampaignStatus.cs" />
     <Compile Include="Entities\DAMain1.Designer.cs">

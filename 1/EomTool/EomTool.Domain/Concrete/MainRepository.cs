@@ -22,9 +22,14 @@ namespace EomTool.Domain.Concrete
         }
         //---
 
-        public Advertiser GetAdvertiser(int advId)
+        public AccountManager GetAccountManager(int id)
         {
-            return context.Advertisers.FirstOrDefault(a => a.id == advId);
+            return context.AccountManagers.FirstOrDefault(am => am.id == id);
+        }
+
+        public Advertiser GetAdvertiser(int id)
+        {
+            return context.Advertisers.FirstOrDefault(a => a.id == id);
         }
 
         public IQueryable<AccountManager> AccountManagers(bool withActivityOnly = false)
@@ -171,8 +176,10 @@ namespace EomTool.Domain.Concrete
             return invoice;
         }
 
-        private void GenerateInvoiceLineItems(Invoice invoice, bool setAdvertiser)
+        private void GenerateInvoiceLineItems(Invoice invoice, bool setExtended)
         {
+            bool firstGroup = true;
+
             // group the items by pid/currency/amount_per_unit/unit_type and generate a LineItem for each (with subitems for the various affiliates)
             var itemGroups = invoice.InvoiceItems.GroupBy(i => new { i.pid, i.currency_id, i.amount_per_unit, i.unit_type_id });
             foreach (var itemGroup in itemGroups)
@@ -186,15 +193,32 @@ namespace EomTool.Domain.Concrete
                     ItemCode = UnitTypeCode(itemGroup.Key.unit_type_id),
                     SubItems = itemGroup.ToList()
                 };
+                if (firstGroup && setExtended)
+                    SetInvoiceExtended(invoice, lineItem.Campaign);
+
                 context.Campaigns.Detach(lineItem.Campaign);
 
                 invoice.LineItems.Add(lineItem);
+                firstGroup = false;
             }
+        }
 
-            if (setAdvertiser && invoice.LineItems.Count > 0)
-            { // Assume all campaigns are for the same advertiser. Use the first one.
-                invoice.Advertiser = GetAdvertiser(invoice.LineItems[0].Campaign.advertiser_id);
+        // pass in an example campaign, if known
+        private void SetInvoiceExtended(Invoice invoice, Campaign campaign = null)
+        {
+            if (campaign == null)
+            {   // Assume all items' campaigns are for the same advertiser (& account manager). Use the first one.
+                var itemWithPid = invoice.InvoiceItems.FirstOrDefault(i => i.pid.HasValue);
+                if (itemWithPid != null)
+                    campaign = GetCampaign(itemWithPid.pid.Value);
+            }
+            if (campaign != null)
+            {
+                invoice.Advertiser = campaign.Advertiser;
                 context.Advertisers.Detach(invoice.Advertiser);
+
+                invoice.Advertiser.AccountManager = campaign.AccountManager;
+                context.AccountManagers.Detach(invoice.Advertiser.AccountManager);
             }
         }
 
@@ -217,27 +241,40 @@ namespace EomTool.Domain.Concrete
             SaveChanges();
         }
 
-        public Invoice GetInvoice(int id, bool fill)
+        public IQueryable<Invoice> Invoices(bool fillExtended)
+        {
+            var invoices = context.Invoices.AsQueryable();
+            if (fillExtended)
+            {
+                foreach (var invoice in invoices)
+                {
+                    SetInvoiceExtended(invoice);
+                }
+            }
+            return invoices;
+        }
+
+        public Invoice GetInvoice(int id, bool fillLineItems = false)
         {
             var invoice = context.Invoices.FirstOrDefault(i => i.id == id);
-            if (fill && invoice != null)
+            if (fillLineItems && invoice != null)
             {
                 GenerateInvoiceLineItems(invoice, true);
             }
             return invoice;
         }
 
-        public IEnumerable<Invoice> Invoices(bool fill)
+        public bool SetInvoiceStatus(int id, int statusId)
         {
-            var invoices = context.Invoices.AsEnumerable();
-            if (fill)
+            bool success = false;
+            var invoice = GetInvoice(id);
+            if (invoice != null)
             {
-                foreach (var invoice in invoices)
-                {
-                    GenerateInvoiceLineItems(invoice, true);
-                }
+                invoice.invoice_status_id = statusId;
+                SaveChanges();
+                success = true;
             }
-            return invoices;
+            return success;
         }
 
         //---

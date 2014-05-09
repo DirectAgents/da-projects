@@ -24,12 +24,28 @@ namespace EomToolWeb.Controllers
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
+        public ActionResult Accounting()
+        {
+            var invoices = mainRepo.Invoices(true);
+            var model = new InvoicesAccounting(invoices);
+
+            return View(model);
+        }
+
         public ActionResult Index()
         {
             var invoices = mainRepo.Invoices(true);
 
             return View(invoices);
         }
+
+        public ActionResult SetStatus(int id, int statusid)
+        {
+            mainRepo.SetInvoiceStatus(id, statusid);
+            return RedirectToAction("Accounting");
+        }
+
+        // --- AM section ---
 
         public ActionResult Start()
         {
@@ -93,6 +109,7 @@ namespace EomToolWeb.Controllers
                 return null;
 
             ViewBag.Expandable = true;
+            ViewBag.ShowNotes = true;
             return View(invoice);
         }
 

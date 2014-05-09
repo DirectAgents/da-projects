@@ -2,6 +2,7 @@
 @{
     var invoice = Model;
     bool expandable = ViewBag.Expandable ?? false;
+    bool showNotes = ViewBag.ShowNotes ?? false;
     bool includeSubmit = ViewBag.IncludeSubmit ?? false;
 }
 
@@ -58,6 +59,18 @@
     </tr>
 </table>
 <br />
+
+@if (showNotes)
+{
+    foreach (var note in invoice.InvoiceNotes.OrderBy(n => n.created))
+    {
+        @note.added_by<text> on </text>@note.created.ToShortDateString()<text> </text>@note.created.ToShortTimeString()
+        <table border="1" cellspacing="0">
+            <tr><td>@Html.DisplayWithBreaksFor(_ => note.note)</td></tr>
+        </table>
+        <br /><br />
+    }
+}
 
 @if (includeSubmit)
 {

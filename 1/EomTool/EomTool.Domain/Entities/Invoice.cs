@@ -19,7 +19,6 @@ namespace EomTool.Domain.Entities
         {
             get
             {
-//                var currencyNames = LineItems.Select(li => li.Currency.name).Distinct();
                 var currencyNames = InvoiceItems.Select(i => i.CurrencyName).Distinct();
 
                 if (currencyNames.Count() > 1)

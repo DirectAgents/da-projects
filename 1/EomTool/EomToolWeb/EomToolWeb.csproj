@@ -183,6 +183,7 @@
     <Compile Include="Models\CampaignsListViewModel.cs" />
     <Compile Include="Models\CampaignViewModel.cs" />
     <Compile Include="Models\ChooseAmountsModel.cs" />
+    <Compile Include="Models\InvoicesAccounting.cs" />
     <Compile Include="Models\ListViewMode.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PaymentBatchesViewModel.cs" />
@@ -3346,6 +3347,7 @@
     <Content Include="Views\Invoices\ChooseAdvertiser.cshtml" />
     <Content Include="Views\Invoices\Show.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
+    <Content Include="Views\Invoices\Accounting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
