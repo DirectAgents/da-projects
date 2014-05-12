@@ -9,13 +9,13 @@ namespace EomTool.Domain.Abstract
     {
         void SaveChanges();
 
-        AccountManager GetAccountManager(int id);
+        AccountManagerTeam GetAccountManagerTeam(int id);
         Advertiser GetAdvertiser(int id);
 
-        IQueryable<AccountManager> AccountManagers(bool withActivityOnly = false);
-        IQueryable<Campaign> Campaigns(int? accountManagerId, int? advertiserId, bool activeOnly = false);
+        IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false);
+        IQueryable<Campaign> Campaigns(int? amId, int? advertiserId, bool activeOnly = false);
 
-        IQueryable<CampaignAmount> CampaignAmounts(int? accountManagerId, int? advertiserId, bool byAffiliate = false);
+        IQueryable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate = false);
         //IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds);
 
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);

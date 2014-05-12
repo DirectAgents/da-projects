@@ -53,7 +53,7 @@ namespace EomToolWeb.Controllers
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
             ViewBag.CurrentEomDate = eomEntitiesConfig.CurrentEomDate;
 
-            ViewBag.AccountManagers = mainRepo.AccountManagers(true).OrderBy(a => a.name);
+            ViewBag.AMs = mainRepo.AccountManagerTeams(true).OrderBy(a => a.name);
             return View();
         }
 

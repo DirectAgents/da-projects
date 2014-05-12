@@ -40,7 +40,7 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_Item_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatch", "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.PaymentBatch), "PaymentBatch1", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_PaymentBatchState", "PaymentBatchState", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.PaymentBatchState), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
-[assembly: EdmRelationshipAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.AccountManager), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.AccountManagerTeam), "Campaign", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Campaign), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_Invoice_InvoiceStatus", "InvoiceStatu", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.InvoiceStatus), "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Invoice), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceNote_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceNote", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceNote), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Currency", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Currency), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
@@ -532,18 +532,18 @@ namespace EomTool.Domain.Entities
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<AccountManager> AccountManagers
+        public ObjectSet<AccountManagerTeam> AccountManagerTeams
         {
             get
             {
-                if ((_AccountManagers == null))
+                if ((_AccountManagerTeams == null))
                 {
-                    _AccountManagers = base.CreateObjectSet<AccountManager>("AccountManagers");
+                    _AccountManagerTeams = base.CreateObjectSet<AccountManagerTeam>("AccountManagerTeams");
                 }
-                return _AccountManagers;
+                return _AccountManagerTeams;
             }
         }
-        private ObjectSet<AccountManager> _AccountManagers;
+        private ObjectSet<AccountManagerTeam> _AccountManagerTeams;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -830,11 +830,11 @@ namespace EomTool.Domain.Entities
         }
     
         /// <summary>
-        /// Deprecated Method for adding a new object to the AccountManagers EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// Deprecated Method for adding a new object to the AccountManagerTeams EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToAccountManagers(AccountManager accountManager)
+        public void AddToAccountManagerTeams(AccountManagerTeam accountManagerTeam)
         {
-            base.AddObject("AccountManagers", accountManager);
+            base.AddObject("AccountManagerTeams", accountManagerTeam);
         }
     
         /// <summary>
@@ -880,24 +880,24 @@ namespace EomTool.Domain.Entities
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="AccountManager")]
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="AccountManagerTeam")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class AccountManager : EntityObject
+    public partial class AccountManagerTeam : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new AccountManager object.
+        /// Create a new AccountManagerTeam object.
         /// </summary>
         /// <param name="id">Initial value of the id property.</param>
         /// <param name="name">Initial value of the name property.</param>
-        public static AccountManager CreateAccountManager(global::System.Int32 id, global::System.String name)
+        public static AccountManagerTeam CreateAccountManagerTeam(global::System.Int32 id, global::System.String name)
         {
-            AccountManager accountManager = new AccountManager();
-            accountManager.id = id;
-            accountManager.name = name;
-            return accountManager;
+            AccountManagerTeam accountManagerTeam = new AccountManagerTeam();
+            accountManagerTeam.id = id;
+            accountManagerTeam.name = name;
+            return accountManagerTeam;
         }
 
         #endregion
@@ -2744,15 +2744,15 @@ namespace EomTool.Domain.Entities
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("EomModel", "Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager")]
-        public AccountManager AccountManager
+        public AccountManagerTeam AccountManagerTeam
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManager>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManagerTeam>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManager>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManagerTeam>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager").Value = value;
             }
         }
         /// <summary>
@@ -2760,17 +2760,17 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<AccountManager> AccountManagerReference
+        public EntityReference<AccountManagerTeam> AccountManagerTeamReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManager>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AccountManagerTeam>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AccountManager>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AccountManagerTeam>("EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK", "AccountManager", value);
                 }
             }
         }

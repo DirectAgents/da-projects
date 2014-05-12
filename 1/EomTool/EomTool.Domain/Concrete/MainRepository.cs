@@ -22,9 +22,9 @@ namespace EomTool.Domain.Concrete
         }
         //---
 
-        public AccountManager GetAccountManager(int id)
+        public AccountManagerTeam GetAccountManagerTeam(int id)
         {
-            return context.AccountManagers.FirstOrDefault(am => am.id == id);
+            return context.AccountManagerTeams.FirstOrDefault(am => am.id == id);
         }
 
         public Advertiser GetAdvertiser(int id)
@@ -32,19 +32,19 @@ namespace EomTool.Domain.Concrete
             return context.Advertisers.FirstOrDefault(a => a.id == id);
         }
 
-        public IQueryable<AccountManager> AccountManagers(bool withActivityOnly = false)
+        public IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false)
         {
             if (withActivityOnly)
-                return Campaigns(null, null, true).Select(c => c.AccountManager).Distinct();
+                return Campaigns(null, null, true).Select(c => c.AccountManagerTeam).Distinct();
             else
-                return context.AccountManagers;
+                return context.AccountManagerTeams;
         }
 
-        public IQueryable<Campaign> Campaigns(int? accountManagerId, int? advertiserId, bool activeOnly = false)
+        public IQueryable<Campaign> Campaigns(int? amId, int? advertiserId, bool activeOnly = false)
         {
             var campaigns = context.Campaigns.AsQueryable();
-            if (accountManagerId.HasValue)
-                campaigns = campaigns.Where(c => c.account_manager_id == accountManagerId.Value);
+            if (amId.HasValue)
+                campaigns = campaigns.Where(c => c.account_manager_id == amId.Value);
             if (advertiserId.HasValue)
                 campaigns = campaigns.Where(c => c.advertiser_id == advertiserId.Value);
 
@@ -58,9 +58,9 @@ namespace EomTool.Domain.Concrete
                 return campaigns;
         }
 
-        public IQueryable<CampaignAmount> CampaignAmounts(int? accountManagerId, int? advertiserId, bool byAffiliate = false)
+        public IQueryable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate = false)
         {
-            var campaigns = Campaigns(accountManagerId, advertiserId);
+            var campaigns = Campaigns(amId, advertiserId);
             return CampaignAmounts(campaigns, byAffiliate);
         }
         private IQueryable<CampaignAmount> CampaignAmounts(IQueryable<Campaign> campaigns, bool byAffiliate)
@@ -217,8 +217,8 @@ namespace EomTool.Domain.Concrete
                 invoice.Advertiser = campaign.Advertiser;
                 context.Advertisers.Detach(invoice.Advertiser);
 
-                invoice.Advertiser.AccountManager = campaign.AccountManager;
-                context.AccountManagers.Detach(invoice.Advertiser.AccountManager);
+                invoice.Advertiser.AccountManagerTeam = campaign.AccountManagerTeam;
+                context.AccountManagerTeams.Detach(invoice.Advertiser.AccountManagerTeam);
             }
         }
 
