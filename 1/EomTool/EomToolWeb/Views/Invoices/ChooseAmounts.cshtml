@@ -24,6 +24,9 @@ Select the amounts to include in the invoice:
         <th>Affiliate</th>
         <th>#Units</th>
         <th colspan="2">Revenue</th>
+        <th></th>
+        <th></th>
+        <th>Invoiced</th>
     </tr>
 @for (int i = 0; i < campaignAmounts.Count; i++)
 {
@@ -38,7 +41,8 @@ Select the amounts to include in the invoice:
     {
         firstRow = false;
     }
-    decimal perunit = ca.Revenue / ca.NumUnits;
+    //decimal perunit = ca.Revenue / ca.NumUnits;
+    string checkedString = (ca.InvoicedAmount < ca.Revenue ? "checked=\"checked\"" : "");
     <tr style="@(grayRow ? "background-color:#ddd" : "")">
         <td style="text-align: center">@(firstRow ? ca.Pid.ToString() : "")</td>
         <td>@(firstRow ? ca.CampaignName : "")</td>
@@ -46,16 +50,17 @@ Select the amounts to include in the invoice:
         <td style="text-align: center">@ca.NumUnits</td>
         <td>@ca.RevenueCurrency</td>
         <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
-        <td><input type="checkbox" name="idpairs" value="@(ca.Pid + "," + ca.AffId)" class="chk@(ca.Pid)" checked="checked" /></td>
+        <td><input type="checkbox" name="idpairs" value="@(ca.Pid + "," + ca.AffId)" class="chk@(ca.Pid)" @checkedString /></td>
         @* Note: We assume that each pid/affid pair has a unique currency *@
         <td>
             @if (firstRow)
             {
+                <text>&#x2713;:</text>
                 <a href="#" onclick="$('.chk@(ca.Pid)').prop('checked',true); return false">all</a><text> | </text>
                 <a href="#" onclick="$('.chk@(ca.Pid)').prop('checked',false); return false">none</a>
             }
         </td>
-        <td>@perunit.ToString("N2")</td>
+        <td style="text-align: right">@ca.InvoicedAmount.ToString("N2")</td>
     </tr>
     if (i == campaignAmounts.Count - 1 || ca.Pid != campaignAmounts[i + 1].Pid)
     {

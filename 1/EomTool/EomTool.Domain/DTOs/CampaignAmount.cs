@@ -19,6 +19,8 @@ namespace EomTool.Domain.DTOs
         public string RevenueCurrency { get; set; }
         public decimal Revenue { get; set; }
 
+        public decimal InvoicedAmount { get; set; }
+
         public int NumUnits { get; set; }
         public int NumAffs { get; set; }
     }

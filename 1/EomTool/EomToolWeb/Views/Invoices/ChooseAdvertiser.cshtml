@@ -1,4 +1,4 @@
-﻿@model IQueryable<EomTool.Domain.DTOs.CampaignAmount>
+﻿@model IEnumerable<EomTool.Domain.DTOs.CampaignAmount>
 @{
     var campaignAmounts = Model.ToList();
     int lastAdvId = -1;
@@ -13,9 +13,10 @@
         <th>Advertiser</th>
         <th>PID</th>
         <th>Campaign</th>
+        <th>#Pubs</th>
         <th>#Units</th>
         <th colspan="2">Revenue</th>
-        <th>#Pubs</th>
+        <th>Invoiced</th>
     </tr>
 @foreach (var ca in campaignAmounts)
 {
@@ -33,10 +34,11 @@
         <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, "ChooseAmounts", new { advid = ca.AdvId }) : new HtmlString(""))</td>
         <td style="text-align: center">@ca.Pid</td>
         <td>@ca.CampaignName</td>
+        <td style="text-align: center">@ca.NumAffs</td>
         <td style="text-align: center">@ca.NumUnits</td>
         <td>@ca.RevenueCurrency</td>
         <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
-        <td style="text-align: center">@ca.NumAffs</td>
+        <td style="text-align: right">@ca.InvoicedAmount.ToString("N2")</td>
     </tr>    
 }
 </table>

@@ -7,7 +7,7 @@ namespace EomToolWeb.Models
     public class ChooseAmountsModel
     {
         public string AdvertiserName { get; set; }
-        public IQueryable<CampaignAmount> CampaignAmounts { get; set; }
+        public IEnumerable<CampaignAmount> CampaignAmounts { get; set; }
 
         // totals for a campaign
         public CampaignAmount SummaryAmount(int pid)

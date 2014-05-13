@@ -58,16 +58,16 @@ namespace EomTool.Domain.Concrete
                 return campaigns;
         }
 
-        public IQueryable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate = false)
+        public IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate = false)
         {
             var campaigns = Campaigns(amId, advertiserId);
             return CampaignAmounts(campaigns, byAffiliate);
         }
-        private IQueryable<CampaignAmount> CampaignAmounts(IQueryable<Campaign> campaigns, bool byAffiliate)
+        private IEnumerable<CampaignAmount> CampaignAmounts(IQueryable<Campaign> campaigns, bool byAffiliate)
         {
             var items = Items(true);
 
-            IQueryable<CampaignAmount> amounts;
+            IEnumerable<CampaignAmount> amounts;
             if (!byAffiliate) // by campaign
             {
                 var itemGroups = items.GroupBy(i => new { i.pid, i.revenue_currency_id });
@@ -81,42 +81,85 @@ namespace EomTool.Domain.Concrete
                                      numAffs = ig.Select(g => g.affid).Distinct().Count()
                                  };
 
-                amounts = from ra in rawAmounts
-                          join c in campaigns on ra.pid equals c.pid
-                          join rc in context.Currencies on ra.revenue_currency_id equals rc.id
-                          select new CampaignAmount()
+                //var invItems = InvoiceItems(pid, affId)
+                var invItemGroups = context.InvoiceItems.Where(i => i.pid.HasValue)
+                                                        .GroupBy(i => new { pid = i.pid.Value, i.currency_id });
+                var invoicedAmounts = from ig in invItemGroups
+                                      select new
+                                      {
+                                          ig.Key.pid,
+                                          ig.Key.currency_id,
+                                          amount = ig.Sum(g => g.total_amount.HasValue ? g.total_amount.Value : 0)
+                                      };
+
+                var query = from ra in rawAmounts
+                            join c in campaigns on ra.pid equals c.pid
+                            join rc in context.Currencies on ra.revenue_currency_id equals rc.id
+                            join ia in invoicedAmounts on new { ra.pid, currency_id = ra.revenue_currency_id } equals
+                                                          new { ia.pid, ia.currency_id } into gj
+                            from invoicedAmount in gj.DefaultIfEmpty()
+                            select new { ra, c, rc, invoicedAmount };
+
+                amounts = query.ToList().Select(q => new CampaignAmount()
                           {
-                              AdvId = c.advertiser_id,
-                              AdvertiserName = c.Advertiser.name,
-                              Pid = ra.pid,
-                              CampaignName = c.campaign_name,
-                              RevenueCurrency = rc.name,
-                              Revenue = ra.revenue,
-                              NumUnits = ra.numUnits,
-                              NumAffs = ra.numAffs
-                          };
+                              AdvId = q.c.advertiser_id,
+                              AdvertiserName = q.c.Advertiser.name,
+                              Pid = q.ra.pid,
+                              CampaignName = q.c.campaign_name,
+                              RevenueCurrency = q.rc.name,
+                              Revenue = q.ra.revenue,
+                              InvoicedAmount = (q.invoicedAmount == null ? 0 : q.invoicedAmount.amount),
+                              NumUnits = q.ra.numUnits,
+                              NumAffs = q.ra.numAffs
+                          });
             }
             else // by affiliate
             {
                 var itemGroups = items.GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id });
+                var rawAmounts = from ig in itemGroups
+                                 select new
+                                 {
+                                     ig.Key.pid,
+                                     ig.Key.affid,
+                                     ig.Key.revenue_currency_id,
+                                     revenue = ig.Sum(g => g.total_revenue.HasValue ? g.total_revenue.Value : 0),
+                                     numUnits = (int)ig.Sum(g => g.num_units)
+                                 };
 
-                amounts = from itemGroup in itemGroups
-                          join c in campaigns on itemGroup.Key.pid equals c.pid
-                          join a in context.Affiliates on itemGroup.Key.affid equals a.affid
-                          join rc in context.Currencies on itemGroup.Key.revenue_currency_id equals rc.id
-                          select new CampaignAmount()
+                var invItemGroups = context.InvoiceItems.Where(i => i.pid.HasValue && i.affid.HasValue)
+                                                        .GroupBy(i => new { pid = i.pid.Value, affid = i.affid.Value, i.currency_id });
+                var invoicedAmounts = from ig in invItemGroups
+                                      select new
+                                      {
+                                          ig.Key.pid,
+                                          ig.Key.affid,
+                                          ig.Key.currency_id,
+                                          amount = ig.Sum(g => g.total_amount.HasValue ? g.total_amount.Value : 0)
+                                      };
+
+                var query = from ra in rawAmounts
+                            join c in campaigns on ra.pid equals c.pid
+                            join a in context.Affiliates on ra.affid equals a.affid
+                            join rc in context.Currencies on ra.revenue_currency_id equals rc.id
+                            join ia in invoicedAmounts on new { ra.pid, ra.affid, currency_id = ra.revenue_currency_id } equals
+                                                          new { ia.pid, ia.affid, ia.currency_id } into gj
+                            from invoicedAmount in gj.DefaultIfEmpty()
+                            select new { ra, c, a, rc, invoicedAmount };
+
+                amounts = query.AsEnumerable().Select(q => new CampaignAmount()
                           {
-                              AdvId = c.advertiser_id,
-                              AdvertiserName = c.Advertiser.name,
-                              Pid = itemGroup.Key.pid,
-                              CampaignName = c.campaign_name,
-                              AffId = itemGroup.Key.affid,
-                              AffiliateName = a.name2,
-                              RevenueCurrency = rc.name,
-                              Revenue = itemGroup.Sum(g => g.total_revenue.HasValue ? g.total_revenue.Value : 0),
-                              NumUnits = (int)itemGroup.Sum(g => g.num_units),
+                              AdvId = q.c.advertiser_id,
+                              AdvertiserName = q.c.Advertiser.name,
+                              Pid = q.ra.pid,
+                              CampaignName = q.c.campaign_name,
+                              AffId = q.ra.affid,
+                              AffiliateName = q.a.name2,
+                              RevenueCurrency = q.rc.name,
+                              Revenue = q.ra.revenue,
+                              InvoicedAmount = (q.invoicedAmount == null ? 0 : q.invoicedAmount.amount),
+                              NumUnits = q.ra.numUnits,
                               NumAffs = 1
-                          };
+                          });
             }
             return amounts;
         }
@@ -138,6 +181,16 @@ namespace EomTool.Domain.Concrete
                 campaignAmounts.AddRange(amounts);
             }
             return campaignAmounts;
+        }
+
+        public IQueryable<InvoiceItem> InvoiceItems(int? pid, int? affId)
+        {
+            var invItems = context.InvoiceItems.AsQueryable();
+            if (pid.HasValue)
+                invItems = invItems.Where(i => i.pid == pid.Value);
+            if (affId.HasValue)
+                invItems = invItems.Where(i => i.affid == affId.Value);
+            return invItems;
         }
 
         // Given the specified pid/affid pairs, generate an Invoice with InvoiceItems
@@ -190,7 +243,7 @@ namespace EomTool.Domain.Concrete
                 {
                     Campaign = GetCampaign(itemGroup.Key.pid.Value),
                     Currency = GetCurrency(itemGroup.Key.currency_id),
-                    ItemCode = UnitTypeCode(itemGroup.Key.unit_type_id),
+                    UnitTypeName = itemGroup.Key.unit_type_id.HasValue ? UnitTypeName(itemGroup.Key.unit_type_id.Value) : null,
                     SubItems = itemGroup.ToList()
                 };
                 if (firstGroup && setExtended)
@@ -310,17 +363,6 @@ namespace EomTool.Domain.Concrete
                 return unitType.name;
             else
                 return null;
-        }
-        public string UnitTypeCode(int? unitTypeId)
-        {
-            string code = null;
-            if (unitTypeId.HasValue)
-            {
-                var unitType = UnitTypeList.FirstOrDefault(ut => ut.id == unitTypeId.Value);
-                if (unitType != null)
-                    code = unitType.name; // + " Mgmt" ???
-            }
-            return code;
         }
 
         public bool UnitTypeExists(int unitTypeId)
