@@ -88,6 +88,7 @@
     <Compile Include="Abstract\IEomEntitiesConfig.cs" />
     <Compile Include="Entities\Invoice.cs" />
     <Compile Include="Entities\InvoiceItem.cs" />
+    <Compile Include="Entities\InvoiceNote.cs" />
     <Compile Include="Entities\InvoiceStatus.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\ItemAccountingStatus.cs" />

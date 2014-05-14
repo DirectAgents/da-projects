@@ -1,12 +1,18 @@
 ﻿@model Invoice
 @{
     var invoice = Model;
+    string from = ViewBag.From;
     bool expandable = ViewBag.Expandable ?? false;
     bool showNotes = ViewBag.ShowNotes ?? false;
     bool includeSubmit = ViewBag.IncludeSubmit ?? false;
 }
 
-<b>Invoice Request for:</b> @invoice.Advertiser.name
+@if (!String.IsNullOrWhiteSpace(from))
+{
+    <b>From:</b> @from
+    <br /><br />
+}
+<b>Invoice for:</b> @invoice.Advertiser.name
 <br /><br />
 
 <table style="border: 1px solid gray; border-spacing: 10px 0">
@@ -64,7 +70,7 @@
 {
     foreach (var note in invoice.InvoiceNotes.OrderBy(n => n.created))
     {
-        @note.added_by<text> on </text>@note.created.ToShortDateString()<text> </text>@note.created.ToShortTimeString()
+        <text>From </text>@note.AddedBy_IdOnly<text> on </text>@note.created.ToShortDateString()<text> </text>@note.created.ToShortTimeString()<text>:</text>
         <table border="1" cellspacing="0">
             <tr><td>@Html.DisplayWithBreaksFor(_ => note.note)</td></tr>
         </table>

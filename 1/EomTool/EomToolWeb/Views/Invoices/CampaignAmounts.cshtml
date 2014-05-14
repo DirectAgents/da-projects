@@ -1,0 +1,44 @@
+﻿@model IEnumerable<EomTool.Domain.DTOs.CampaignAmount>
+@{
+    int lastAdvId = -1;
+    bool grayRow = false;
+    bool firstRow = true;
+
+    bool requestingInvoice = ViewBag.RequestingInvoice ?? false;
+    string advertiserAction = (requestingInvoice ? "ChooseAmounts" : "CampaignAffiliateAmounts");
+}
+
+<table style="border: 1px solid gray">
+    <tr>
+        <th>Advertiser</th>
+        <th>PID</th>
+        <th>Campaign</th>
+        <th>#Pubs</th>
+        <th>#Units</th>
+        <th colspan="2">Revenue</th>
+        <th>Invoiced</th>
+    </tr>
+@foreach (var ca in Model)
+{
+    if (ca.AdvId != lastAdvId)
+    {
+        lastAdvId = ca.AdvId;
+        grayRow = !grayRow;
+        firstRow = true;
+    }
+    else
+    {
+        firstRow = false;
+    }
+    <tr style="@(grayRow ? "background-color:#ddd" : "")">
+        <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, advertiserAction, new { advid = ca.AdvId }) : new HtmlString(""))</td>
+        <td style="text-align: center">@ca.Pid</td>
+        <td>@Html.ActionLink(ca.CampaignName, "EditCampaign", new { pid = ca.Pid }, new { target = "_blank" })</td>
+        <td style="text-align: center">@ca.NumAffs</td>
+        <td style="text-align: center">@ca.NumUnits</td>
+        <td>@ca.RevenueCurrency</td>
+        <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
+        <td style="text-align: right">@ca.InvoicedAmount.ToString("N2")</td>
+    </tr>    
+}
+</table>

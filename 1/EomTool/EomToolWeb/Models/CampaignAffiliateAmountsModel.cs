@@ -4,10 +4,11 @@ using System.Linq;
 
 namespace EomToolWeb.Models
 {
-    public class ChooseAmountsModel
+    public class CampaignAffiliateAmountsModel
     {
         public string AdvertiserName { get; set; }
         public IEnumerable<CampaignAmount> CampaignAmounts { get; set; }
+        public bool ShowCheckboxes { get; set; }
 
         // totals for a campaign
         public CampaignAmount SummaryAmount(int pid)
@@ -24,7 +25,8 @@ namespace EomToolWeb.Models
                 Pid = pid,
                 NumUnits = pidAmounts.Sum(a => a.NumUnits),
                 RevenueCurrency = currency,
-                Revenue = pidAmounts.Sum(a => a.Revenue)
+                Revenue = pidAmounts.Sum(a => a.Revenue),
+                InvoicedAmount = pidAmounts.Sum(a => a.InvoicedAmount)
             };
             return summaryAmount;
         }

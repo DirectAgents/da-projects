@@ -22,12 +22,12 @@
             @if (inv.invoice_status_id < InvoiceStatus.Generated)
             {
                 <text> | </text>
-                @Html.ActionLink("Mark Done", "SetStatus", new { id = inv.id, statusid = InvoiceStatus.Generated })
+                @Html.ActionLink("Mark Generated", "SetStatus", new { id = inv.id, statusid = InvoiceStatus.Generated })
             }
             else
             {
                 <text> | </text>
-                @Html.ActionLink("Mark Undone", "SetStatus", new { id = inv.id, statusid = InvoiceStatus.AccountingReview })
+                @Html.ActionLink("Mark Ungenerated", "SetStatus", new { id = inv.id, statusid = InvoiceStatus.AccountingReview })
             }
         </td>
     </tr>

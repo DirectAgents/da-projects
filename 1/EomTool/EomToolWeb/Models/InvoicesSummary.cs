@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace EomToolWeb.Models
 {
-    public class InvoicesAccounting
+    public class InvoicesSummary
     {
         private IQueryable<Invoice> _Invoices { get; set; }
 
-        public InvoicesAccounting(IQueryable<Invoice> invoices)
+        public InvoicesSummary(IQueryable<Invoice> invoices)
         {
             this._Invoices = invoices;
         }

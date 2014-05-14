@@ -74,6 +74,17 @@ namespace EomTool.Domain.Entities
                 return (latestNote == null) ? null : latestNote.note;
             }
         }
+
+        public void AddNote(string from, string note)
+        {
+            var invoiceNote = new InvoiceNote
+            {
+                added_by = from,
+                note = note,
+                created = DateTime.Now
+            };
+            this.InvoiceNotes.Add(invoiceNote);
+        }
     }
 
     // intended for one campaign (pid)

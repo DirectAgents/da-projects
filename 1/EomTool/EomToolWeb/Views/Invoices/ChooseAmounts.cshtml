@@ -1,10 +1,4 @@
-﻿@model ChooseAmountsModel
-@{
-    var campaignAmounts = Model.CampaignAmounts.OrderBy(ca => ca.CampaignName).ThenBy(ca => ca.AffiliateName).ToList();
-    int lastPid = -1;
-    bool grayRow = false;
-    bool firstRow = true;
-}
+﻿@model CampaignAffiliateAmountsModel
 
 <h2>Request Invoice</h2>
 
@@ -16,69 +10,8 @@ Select the amounts to include in the invoice:
 
 @using (Html.BeginForm("Generate", "Invoices"))
 {
-
-<table style="border: 1px solid gray">
-    <tr>
-        <th>PID</th>
-        <th>Campaign</th>
-        <th>Affiliate</th>
-        <th>#Units</th>
-        <th colspan="2">Revenue</th>
-        <th></th>
-        <th></th>
-        <th>Invoiced</th>
-    </tr>
-@for (int i = 0; i < campaignAmounts.Count; i++)
-{
-    var ca = campaignAmounts[i];
-    if (ca.Pid != lastPid)
-    {
-        lastPid = ca.Pid;
-        grayRow = !grayRow;
-        firstRow = true;
-    }
-    else
-    {
-        firstRow = false;
-    }
-    //decimal perunit = ca.Revenue / ca.NumUnits;
-    string checkedString = (ca.InvoicedAmount < ca.Revenue ? "checked=\"checked\"" : "");
-    <tr style="@(grayRow ? "background-color:#ddd" : "")">
-        <td style="text-align: center">@(firstRow ? ca.Pid.ToString() : "")</td>
-        <td>@(firstRow ? ca.CampaignName : "")</td>
-        <td>@ca.AffiliateName</td>
-        <td style="text-align: center">@ca.NumUnits</td>
-        <td>@ca.RevenueCurrency</td>
-        <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
-        <td><input type="checkbox" name="idpairs" value="@(ca.Pid + "," + ca.AffId)" class="chk@(ca.Pid)" @checkedString /></td>
-        @* Note: We assume that each pid/affid pair has a unique currency *@
-        <td>
-            @if (firstRow)
-            {
-                <text>&#x2713;:</text>
-                <a href="#" onclick="$('.chk@(ca.Pid)').prop('checked',true); return false">all</a><text> | </text>
-                <a href="#" onclick="$('.chk@(ca.Pid)').prop('checked',false); return false">none</a>
-            }
-        </td>
-        <td style="text-align: right">@ca.InvoicedAmount.ToString("N2")</td>
-    </tr>
-    if (i == campaignAmounts.Count - 1 || ca.Pid != campaignAmounts[i + 1].Pid)
-    {
-        //TOTAL row for a campaign...
-        var sa = Model.SummaryAmount(ca.Pid);
-
-        <tr style="@(grayRow ? "background-color:#ddd" : "")">
-            <td></td>
-            <td></td>
-            <td style="font-weight: bold; text-align: right">CAMPAIGN TOTAL...</td>
-            <td style="font-weight: bold; text-align: center">@sa.NumUnits</td>
-            <td style="font-weight: bold">@sa.RevenueCurrency</td>
-            <td style="font-weight: bold; text-align: right">@sa.Revenue.ToString("N2")</td>
-        </tr>
-    }
-}
-</table>
-
-<br />
-<input type="submit" value="Preview Invoice" />
+    Model.ShowCheckboxes = true;
+    @Html.Partial("CampaignAffiliateAmounts")
+    <br />
+    <input type="submit" value="Preview Invoice" />
 }

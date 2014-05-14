@@ -19,7 +19,7 @@ namespace EomTool.Domain.Abstract
         //IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds);
 
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);
-        void SaveInvoice(Invoice invoice, string note = null, bool markSentToAccounting = false);
+        void SaveInvoice(Invoice invoice, bool markSentToAccounting = false);
         IQueryable<Invoice> Invoices(bool fillExtended);
         Invoice GetInvoice(int id, bool fillLineItems = false);
         bool SetInvoiceStatus(int id, int statusId);

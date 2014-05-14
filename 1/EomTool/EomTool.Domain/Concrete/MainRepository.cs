@@ -205,7 +205,7 @@ namespace EomTool.Domain.Concrete
 
             foreach (var campAffId in campAffIds)
             {
-                var itemGroups = items.Where(i => i.pid == campAffId.pid && i.affid == campAffId.affid)
+                var itemGroups = items.Where(i => i.pid == campAffId.pid && i.affid == campAffId.affid && i.total_revenue.HasValue && i.total_revenue > 0)
                                       .GroupBy(i => new { i.revenue_currency_id, i.revenue_per_unit, i.unit_type_id });
                 foreach (var itemGroup in itemGroups) // usually just one (currency/revenue_per_unit/unit_type)
                 {
@@ -275,18 +275,8 @@ namespace EomTool.Domain.Concrete
             }
         }
 
-        public void SaveInvoice(Invoice invoice, string note = null, bool markSentToAccounting = false)
+        public void SaveInvoice(Invoice invoice, bool markSentToAccounting = false)
         {
-            if (note != null)
-            {
-                var invoiceNote = new InvoiceNote()
-                {
-                    note = note,
-                    added_by = "who",
-                    created = DateTime.Now
-                };
-                invoice.InvoiceNotes.Add(invoiceNote);
-            }
             if (markSentToAccounting)
                 invoice.invoice_status_id = InvoiceStatus.AccountingReview;
 
