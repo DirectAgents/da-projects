@@ -6,6 +6,7 @@
 
     bool requestingInvoice = ViewBag.RequestingInvoice ?? false;
     string advertiserAction = (requestingInvoice ? "ChooseAmounts" : "CampaignAffiliateAmounts");
+    string advertiserActionController = (requestingInvoice ? "Invoices" : "Workflow");
 }
 
 <table style="border: 1px solid gray">
@@ -31,9 +32,9 @@
         firstRow = false;
     }
     <tr style="@(grayRow ? "background-color:#ddd" : "")">
-        <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, advertiserAction, new { advid = ca.AdvId }) : new HtmlString(""))</td>
+        <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, advertiserAction, advertiserActionController, new { advid = ca.AdvId }, null) : new HtmlString(""))</td>
         <td style="text-align: center">@ca.Pid</td>
-        <td>@Html.ActionLink(ca.CampaignName, "EditCampaign", new { pid = ca.Pid }, new { target = "_blank" })</td>
+        <td>@Html.ActionLink(ca.CampaignName, "EditCampaign", "Workflow", new { pid = ca.Pid }, new { target = "_blank" })</td>
         <td style="text-align: center">@ca.NumAffs</td>
         <td style="text-align: center">@ca.NumUnits</td>
         <td>@ca.RevenueCurrency</td>

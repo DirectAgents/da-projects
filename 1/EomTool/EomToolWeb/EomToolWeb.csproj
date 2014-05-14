@@ -166,6 +166,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\WikiController.cs" />
+    <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -3349,9 +3350,10 @@
     <Content Include="Views\Invoices\Show.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
     <Content Include="Views\Invoices\Summary.cshtml" />
-    <Content Include="Views\Invoices\EditCampaign.cshtml" />
-    <Content Include="Views\Invoices\CampaignAmounts.cshtml" />
-    <Content Include="Views\Invoices\CampaignAffiliateAmounts.cshtml" />
+    <Content Include="Views\Workflow\EditCampaign.cshtml" />
+    <Content Include="Views\Workflow\CampaignAmounts.cshtml" />
+    <Content Include="Views\Workflow\CampaignAffiliateAmounts.cshtml" />
+    <Content Include="Views\Workflow\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

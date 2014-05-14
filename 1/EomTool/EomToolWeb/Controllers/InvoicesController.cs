@@ -81,17 +81,6 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
-        public ActionResult CampaignAffiliateAmounts(int advId)
-        {
-            var advertiser = mainRepo.GetAdvertiser(advId);
-            var model = new CampaignAffiliateAmountsModel()
-            {
-                AdvertiserName = advertiser.name,
-                CampaignAmounts = mainRepo.CampaignAmounts(null, advId, true)
-            };
-            return View(model);
-        }
-
         // Note: We assume that each pid/affid pair has a unique currency
         [HttpPost]
         public ActionResult Generate(string[] idpairs)
@@ -152,24 +141,5 @@ namespace EomToolWeb.Controllers
             return Content("okay");
         }
 
-        // ---
-
-        [HttpGet]
-        public ActionResult EditCampaign(int pid)
-        {
-            var campaign = mainRepo.GetCampaign(pid);
-            if (campaign == null)
-                return Content("Campaign not found");
-            return View(campaign);
-        }
-
-        [HttpPost]
-        public ActionResult EditCampaign(Campaign campaign)
-        {
-            if (mainRepo.SaveCampaign(campaign))
-                return Content("Saved. You may now close this tab.");
-            else
-                return null;
-        }
     }
 }
