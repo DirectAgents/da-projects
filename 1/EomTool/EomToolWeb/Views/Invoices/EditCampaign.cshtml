@@ -1,0 +1,25 @@
+﻿@model EomTool.Domain.Entities.Campaign
+
+@using (Html.BeginForm("EditCampaign", "Invoices", FormMethod.Post))
+{
+<fieldset>
+    <legend>Campaign</legend>
+    @Html.HiddenFor(m => m.pid)
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.pid)</td>
+            <td>@Html.DisplayFor(m => m.pid)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.campaign_name)</td>
+            <td>@Html.DisplayFor(m => m.campaign_name)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.display_name)</td>
+            <td>@Html.EditorFor(m => m.display_name)</td>
+        </tr>
+    </table>
+    <br />
+    <input type="submit" value="Save" />
+</fieldset>
+}

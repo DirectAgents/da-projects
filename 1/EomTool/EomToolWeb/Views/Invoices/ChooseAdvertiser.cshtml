@@ -6,7 +6,11 @@
     bool firstRow = true;
 }
 
-<h2>Select Advertiser</h2>
+<h2>Advertiser Summary</h2>
+
+Click on an advertiser to generate an invoice request.<br />
+Click on a campaign to edit its display name (as it will appear in an invoice).<br />
+<br />
 
 <table style="border: 1px solid gray">
     <tr>
@@ -33,7 +37,7 @@
     <tr style="@(grayRow ? "background-color:#ddd" : "")">
         <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, "ChooseAmounts", new { advid = ca.AdvId }) : new HtmlString(""))</td>
         <td style="text-align: center">@ca.Pid</td>
-        <td>@ca.CampaignName</td>
+        <td>@Html.ActionLink(ca.CampaignName, "EditCampaign", new { pid = ca.Pid }, new { target = "_blank" })</td>
         <td style="text-align: center">@ca.NumAffs</td>
         <td style="text-align: center">@ca.NumUnits</td>
         <td>@ca.RevenueCurrency</td>

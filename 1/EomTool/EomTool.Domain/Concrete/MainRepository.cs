@@ -425,6 +425,16 @@ namespace EomTool.Domain.Concrete
         {
             return context.Campaigns.FirstOrDefault(c => c.pid == pid);
         }
+        public bool SaveCampaign(Campaign inCampaign)
+        {
+            var campaign = GetCampaign(inCampaign.pid);
+            if (campaign == null)
+                return false;
+
+            campaign.display_name = inCampaign.display_name;
+            SaveChanges();
+            return true;
+        }
 
         public bool AffiliateExists(int affId)
         {

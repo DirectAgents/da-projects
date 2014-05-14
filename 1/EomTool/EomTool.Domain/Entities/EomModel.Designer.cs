@@ -2617,6 +2617,30 @@ namespace EomTool.Domain.Entities
         private Nullable<global::System.Int32> _external_id;
         partial void Onexternal_idChanging(Nullable<global::System.Int32> value);
         partial void Onexternal_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String display_name
+        {
+            get
+            {
+                return _display_name;
+            }
+            set
+            {
+                Ondisplay_nameChanging(value);
+                ReportPropertyChanging("display_name");
+                _display_name = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("display_name");
+                Ondisplay_nameChanged();
+            }
+        }
+        private global::System.String _display_name;
+        partial void Ondisplay_nameChanging(global::System.String value);
+        partial void Ondisplay_nameChanged();
 
         #endregion
 

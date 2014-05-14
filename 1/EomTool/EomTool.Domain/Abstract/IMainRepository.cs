@@ -39,6 +39,7 @@ namespace EomTool.Domain.Abstract
         // --- Extra Item Import stuff ---
         bool CampaignExists(int pid);
         Campaign GetCampaign(int pid);
+        bool SaveCampaign(Campaign inCampaign);
 
         bool AffiliateExists(int affId);
         Affiliate GetAffiliate(int affId);

@@ -381,6 +381,7 @@
           <Property Name="notes" Type="varchar(max)" />
           <Property Name="tracking_system_id" Type="int" />
           <Property Name="external_id" Type="int" />
+          <Property Name="display_name" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="CampaignStatus">
           <Key>
@@ -1321,6 +1322,7 @@
           <NavigationProperty Name="CampaignStatus" Relationship="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="Campaign" ToRole="CampaignStatus" />
           <NavigationProperty Name="TrackingSystem" Relationship="EomModel.tracking_system_fk" FromRole="Campaign" ToRole="TrackingSystem" />
           <NavigationProperty Name="AccountManagerTeam" Relationship="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" FromRole="Campaign" ToRole="AccountManager" />
+          <Property Type="String" Name="display_name" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CampaignStatus">
           <Key>
@@ -2102,7 +2104,8 @@
             <ScalarProperty Name="external_id" ColumnName="external_id" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Campaigns"><EntityTypeMapping TypeName="EomModel.Campaign"><MappingFragment StoreEntitySet="Campaign">
-            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="display_name" ColumnName="display_name" />
+                <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="account_manager_id" ColumnName="account_manager_id" />
             <ScalarProperty Name="campaign_status_id" ColumnName="campaign_status_id" />
             <ScalarProperty Name="ad_manager_id" ColumnName="ad_manager_id" />

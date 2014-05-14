@@ -409,6 +409,7 @@
     <Content Include="Content\kendo\2014.1.416\Uniform\sprite.png" />
     <Content Include="Content\kendo\2014.1.416\Uniform\sprite_2x.png" />
     <Content Include="Content\PubRep.css" />
+    <Content Include="Content\Site2014.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -3348,6 +3349,7 @@
     <Content Include="Views\Invoices\Show.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
     <Content Include="Views\Invoices\Accounting.cshtml" />
+    <Content Include="Views\Invoices\EditCampaign.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

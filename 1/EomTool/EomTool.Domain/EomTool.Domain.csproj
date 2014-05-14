@@ -67,6 +67,7 @@
     <Compile Include="DTOs\CampaignAmount.cs" />
     <Compile Include="Entities\Advertiser.cs" />
     <Compile Include="Entities\BatchUpdate.cs" />
+    <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\CampaignStatus.cs" />
     <Compile Include="Entities\DAMain1.Designer.cs">
       <AutoGen>True</AutoGen>
