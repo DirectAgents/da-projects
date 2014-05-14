@@ -50,9 +50,12 @@ namespace ClientPortal.Web.Areas.Admin.Models
             get
             {
                 if (Model.Creative.CreativeFiles.Count > 0)
-                    return Model.Creative.CreativeFiles.First().CreativeFileLink;
-                else
-                    return null;
+                {
+                    var fileWithPreview = Model.Creative.CreativeFiles.FirstOrDefault(f => f.Preview);
+                    if (fileWithPreview != null)
+                        return fileWithPreview.CreativeFileLink;
+                }
+                return null;
             }
         }
     }
