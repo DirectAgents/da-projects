@@ -6,6 +6,14 @@
 
 <h2>Invoice Requests</h2>
 
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+Go to:
+@Html.ActionLink("Campaign Summary", "Index", "Workflow")
+<br /><br />
+
 @if (incompleteInvoices.Count() > 0)
 {
     @Html.Partial("Index", incompleteInvoices)

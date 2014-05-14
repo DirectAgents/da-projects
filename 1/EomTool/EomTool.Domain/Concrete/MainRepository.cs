@@ -40,6 +40,8 @@ namespace EomTool.Domain.Concrete
                 return context.AccountManagerTeams;
         }
 
+        // ---
+
         public IQueryable<Campaign> Campaigns(int? amId, int? advertiserId, bool activeOnly = false)
         {
             var campaigns = context.Campaigns.AsQueryable();
@@ -58,14 +60,14 @@ namespace EomTool.Domain.Concrete
                 return campaigns;
         }
 
-        public IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate = false)
+        public IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate, int? campaignStatus)
         {
             var campaigns = Campaigns(amId, advertiserId);
-            return CampaignAmounts(campaigns, byAffiliate);
+            return CampaignAmounts(campaigns, byAffiliate, campaignStatus);
         }
-        private IEnumerable<CampaignAmount> CampaignAmounts(IQueryable<Campaign> campaigns, bool byAffiliate)
+        private IEnumerable<CampaignAmount> CampaignAmounts(IQueryable<Campaign> campaigns, bool byAffiliate, int? campaignStatus)
         {
-            var items = Items(true);
+            var items = Items(campaignStatus);
 
             IEnumerable<CampaignAmount> amounts;
             if (!byAffiliate) // by campaign
@@ -169,7 +171,7 @@ namespace EomTool.Domain.Concrete
         {
             var pids = campAffIds.Select(ca => ca.pid).Distinct();
             var campaigns = context.Campaigns.Where(c => pids.Contains(c.pid));
-            var campaignAmountsAll = CampaignAmounts(campaigns, true);
+            var campaignAmountsAll = CampaignAmounts(campaigns, true, null);
 
             //now, narrow down to just the specified campaign/affiliate combos
             List<CampaignAmount> campaignAmounts = new List<CampaignAmount>();
@@ -201,7 +203,7 @@ namespace EomTool.Domain.Concrete
             //var itemGroups = Items(true).GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id });
             // could do a where contains using a list of distinct pids... then do aggregates
 
-            var items = Items(true);
+            var items = Items(CampaignStatus.Default); // only unfinalized amounts will be included
 
             foreach (var campAffId in campAffIds)
             {
@@ -256,7 +258,7 @@ namespace EomTool.Domain.Concrete
             }
         }
 
-        // pass in an example campaign, if known
+        // Set the extended properties of an invoice. Pass in an example campaign, if known.
         private void SetInvoiceExtended(Invoice invoice, Campaign campaign = null)
         {
             if (campaign == null)
@@ -322,12 +324,16 @@ namespace EomTool.Domain.Concrete
 
         //---
 
-        private IQueryable<Item> Items(bool invoiceableOnly)
+        private IQueryable<Item> Items(int? campaignStatus)
         {
             var items = context.Items.AsQueryable();
-            if (invoiceableOnly)
-                items = items.Where(i => i.campaign_status_id == CampaignStatus.Default || i.campaign_status_id == CampaignStatus.Finalized);
-
+            if (campaignStatus.HasValue)
+                items = items.Where(i => i.campaign_status_id == campaignStatus);
+            return items;
+        }
+        private IQueryable<Item> Items(int[] campaignStatuses)
+        {
+            var items = context.Items.Where(i => campaignStatuses.Contains(i.campaign_status_id));
             return items;
         }
 

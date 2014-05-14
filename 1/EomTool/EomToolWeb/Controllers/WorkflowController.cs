@@ -21,22 +21,30 @@ namespace EomToolWeb.Controllers
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
-        public ActionResult CampaignAmounts(int? am)
+        public ActionResult Index(int? am, int? cs, bool uninvoiced = false)
         {
-            var campaignAmounts = mainRepo.CampaignAmounts(am, null)
-                .OrderBy(ca => ca.AdvertiserName)
-                .ThenBy(ca => ca.CampaignName);
+            var campaignAmounts = mainRepo.CampaignAmounts(am, null, false, cs);
 
-            return View(campaignAmounts);
+            if (uninvoiced) // only show the uninvoiced amounts
+                campaignAmounts = campaignAmounts.Where(ca => ca.InvoicedAmount < ca.Revenue);
+
+            var model = new WorkflowModel
+            {
+                CampaignAmounts = campaignAmounts.OrderBy(ca => ca.AdvertiserName).ThenBy(ca => ca.CampaignName),
+                CampaignStatusId = cs
+            };
+            return View(model);
         }
 
-        public ActionResult CampaignAffiliateAmounts(int advId)
+        public ActionResult AffiliateDrilldown(int advId, int? cs)
         {
             var advertiser = mainRepo.GetAdvertiser(advId);
             var model = new CampaignAffiliateAmountsModel()
             {
+                AdvertiserId = advId,
                 AdvertiserName = advertiser.name,
-                CampaignAmounts = mainRepo.CampaignAmounts(null, advId, true)
+                CampaignAmounts = mainRepo.CampaignAmounts(null, advId, true, cs),
+                CampaignStatusId = cs
             };
             return View(model);
         }

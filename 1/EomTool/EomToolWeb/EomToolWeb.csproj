@@ -193,6 +193,7 @@
     <Compile Include="Models\SelectorViewModel.cs" />
     <Compile Include="Models\TopViewModel.cs" />
     <Compile Include="Models\TrafficTypeViewModel.cs" />
+    <Compile Include="Models\WorkflowModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionUtility.cs" />
     <Compile Include="Util.cs" />
@@ -3354,6 +3355,8 @@
     <Content Include="Views\Workflow\CampaignAmounts.cshtml" />
     <Content Include="Views\Workflow\CampaignAffiliateAmounts.cshtml" />
     <Content Include="Views\Workflow\_ViewStart.cshtml" />
+    <Content Include="Views\Workflow\Index.cshtml" />
+    <Content Include="Views\Workflow\AffiliateDrilldown.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -26,19 +26,28 @@ namespace EomToolWeb.Controllers
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
+        //public ActionResult Index()
+        //{
+        //    var invoices = mainRepo.Invoices(true);
+
+        //    return View(invoices);
+        //}
+        public ActionResult Index()
+        {
+            var groups = securityRepo.GroupsForUser(User);
+            if (groups.Any(g => g.Name == "Accountants" || g.Name == "Administrators"))
+                return RedirectToAction("Summary");
+            else
+                return RedirectToAction("Start");
+        }
+
         public ActionResult Summary()
         {
             var invoices = mainRepo.Invoices(true);
             var model = new InvoicesSummary(invoices);
 
+            SetAccountingPeriodViewData();
             return View(model);
-        }
-
-        public ActionResult Index()
-        {
-            var invoices = mainRepo.Invoices(true);
-
-            return View(invoices);
         }
 
         public ActionResult SetStatus(int id, int statusid)
@@ -49,34 +58,40 @@ namespace EomToolWeb.Controllers
             return RedirectToAction("Summary");
         }
 
-        // --- AM section ---
-
-        public ActionResult Start()
+        private void SetAccountingPeriodViewData()
         {
             ViewBag.ChooseMonthSelectList = daMain1Repo.ChooseMonthSelectList(eomEntitiesConfig);
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
             ViewBag.CurrentEomDate = eomEntitiesConfig.CurrentEomDate;
+        }
 
+        // --- AM section ---
+
+        public ActionResult Start()
+        {
+            SetAccountingPeriodViewData();
             ViewBag.AMs = mainRepo.AccountManagerTeams(true).OrderBy(a => a.name);
             return View();
         }
 
-        public ActionResult ChooseAdvertiser(int? am)
+        public ActionResult ChooseAdvertiser(int? am, bool includeInvoiced = false)
         {
-            var campaignAmounts = mainRepo.CampaignAmounts(am, null)
-                .OrderBy(ca => ca.AdvertiserName)
-                .ThenBy(ca => ca.CampaignName);
+            var campaignAmounts = mainRepo.CampaignAmounts(am, null, false, CampaignStatus.Default);
+            if (!includeInvoiced)
+                campaignAmounts = campaignAmounts.Where(ca => ca.InvoicedAmount < ca.Revenue);
 
-            return View(campaignAmounts);
+            var model = campaignAmounts.OrderBy(ca => ca.AdvertiserName).ThenBy(ca => ca.CampaignName);
+            return View(model);
         }
 
         public ActionResult ChooseAmounts(int advId)
         {
             var advertiser = mainRepo.GetAdvertiser(advId);
-            var model = new CampaignAffiliateAmountsModel()
+            var model = new CampaignAffiliateAmountsModel
             {
+                AdvertiserId = advId,
                 AdvertiserName = advertiser.name,
-                CampaignAmounts = mainRepo.CampaignAmounts(null, advId, true)
+                CampaignAmounts = mainRepo.CampaignAmounts(null, advId, true, CampaignStatus.Default)
             };
             return View(model);
         }

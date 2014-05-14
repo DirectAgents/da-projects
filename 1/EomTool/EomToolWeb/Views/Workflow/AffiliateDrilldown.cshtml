@@ -1,0 +1,26 @@
+﻿@model CampaignAffiliateAmountsModel
+@{
+    int?[] statuses = { null, CampaignStatus.Default, CampaignStatus.Finalized, CampaignStatus.Verified };
+}
+
+<h2>Affiliate Drilldown</h2>
+
+Status:
+@foreach (var iStatus in statuses)
+{
+    if (iStatus.HasValue)
+    {
+        <text> | </text>
+    }
+    string displayVal = EomTool.Domain.Entities.CampaignStatus.DisplayVal(iStatus);
+    if (Model.CampaignStatusId == iStatus)
+    {
+        <b>@displayVal</b>
+    }
+    else
+    {
+        @Html.ActionLink(displayVal, "AffiliateDrilldown", new { advid = Model.AdvertiserId, cs = iStatus })
+    }
+}
+<br />
+@Html.Partial("CampaignAffiliateAmounts")

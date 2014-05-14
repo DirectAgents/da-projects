@@ -1,0 +1,32 @@
+﻿@model WorkflowModel
+@{
+    int?[] statuses = { null, CampaignStatus.Default, CampaignStatus.Finalized, CampaignStatus.Verified };
+}
+
+<h2>Campaign Summary</h2>
+
+Status:
+@foreach (var iStatus in statuses)
+{
+    if (iStatus.HasValue)
+    {
+        <text> | </text>
+    }
+    string displayVal = EomTool.Domain.Entities.CampaignStatus.DisplayVal(iStatus);
+    if (Model.CampaignStatusId == iStatus)
+    {
+        <b>@displayVal</b>
+    }
+    else
+    {
+        @Html.ActionLink(displayVal, "Index", new { cs = iStatus })
+    }
+}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+@Html.ActionLink("Show Uninvoiced", "Index", new { cs = Model.CampaignStatusId, uninvoiced = true })
+
+<br />
+@{
+    ViewBag.CampaignStatusId = Model.CampaignStatusId;
+}
+@Html.Partial("CampaignAmounts", Model.CampaignAmounts)

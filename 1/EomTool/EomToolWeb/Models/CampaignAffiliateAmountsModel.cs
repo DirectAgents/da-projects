@@ -6,8 +6,10 @@ namespace EomToolWeb.Models
 {
     public class CampaignAffiliateAmountsModel
     {
+        public int? AdvertiserId { get; set; }
         public string AdvertiserName { get; set; }
         public IEnumerable<CampaignAmount> CampaignAmounts { get; set; }
+        public int? CampaignStatusId { get; set; }
         public bool ShowCheckboxes { get; set; }
 
         // totals for a campaign
