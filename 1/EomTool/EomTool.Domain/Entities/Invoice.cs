@@ -30,6 +30,12 @@ namespace EomTool.Domain.Entities
             }
         }
 
+        public decimal CampaignSubTotal(int pid)
+        {
+            var campaignLineItems = LineItems.Where(li => li.Campaign.pid == pid);
+            return campaignLineItems.Sum(li => li.TotalAmount);
+        }
+
         [NotMapped]
         public decimal Total
         {

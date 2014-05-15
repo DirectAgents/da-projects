@@ -26,7 +26,8 @@ namespace EomToolWeb.Controllers
         [HttpGet]
         public ActionResult Import()
         {
-            ViewBag.ChooseMonthSelectList = daMain1Repository.ChooseMonthSelectList(eomEntitiesConfig);
+            DateTime minDateForImport = new DateTime(2014, 1, 1);
+            ViewBag.ChooseMonthSelectList = daMain1Repository.ChooseMonthSelectList(eomEntitiesConfig, minDateForImport);
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
             ViewBag.CurrentEomDate = eomEntitiesConfig.CurrentEomDate;
             return View();

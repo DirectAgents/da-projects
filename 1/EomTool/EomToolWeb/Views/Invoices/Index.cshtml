@@ -11,11 +11,11 @@
 @foreach (var inv in Model)
 {
     <tr style="background-color: #eee">
-        <td>@inv.DateRequested.ToShortDateString() @inv.DateRequested.ToShortTimeString()</td>
+        <td style="text-align:center">@inv.DateRequested.ToShortDateString() @inv.DateRequested.ToShortTimeString()</td>
         <td>@inv.Advertiser.AccountManagerTeam.name</td>
         <td>@inv.Advertiser.name</td>
         <td>@inv.CurrencyName</td>
-        <td>@inv.Total.ToString("N2")</td>
+        <td style="text-align:right">@inv.Total.ToString("N2")</td>
         <td>@inv.InvoiceStatus.name</td>
         <td>
             @Html.ActionLink("View", "Show", new { id = inv.id })

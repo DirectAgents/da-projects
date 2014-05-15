@@ -43,6 +43,7 @@ namespace EomTool.Domain.Abstract
 
         bool AffiliateExists(int affId);
         Affiliate GetAffiliate(int affId);
+        string AffiliateName(int affId, bool withId = false);
 
         Source GetSource(int sourceId);
         Source GetSource(string sourceName);

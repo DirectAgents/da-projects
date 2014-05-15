@@ -73,7 +73,8 @@ namespace EomToolWeb.Controllers
                 IncludeZero = includeZero
             };
 
-            ViewBag.ChooseMonthSelectList = daMain1Repository.ChooseMonthSelectList(eomEntitiesConfig);
+            DateTime minDateForMBA = new DateTime(2014, 1, 1);
+            ViewBag.ChooseMonthSelectList = daMain1Repository.ChooseMonthSelectList(eomEntitiesConfig, minDateForMBA);
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
 
             return View(viewModel);

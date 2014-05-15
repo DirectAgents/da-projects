@@ -255,7 +255,11 @@ namespace EomTool.Domain.Concrete
                 };
                 if (firstGroup && setExtended)
                     SetInvoiceExtended(invoice, lineItem.Campaign);
-
+                foreach (var subItem in lineItem.SubItems)
+                {
+                    if (subItem.affid.HasValue)
+                        subItem.AffiliateName = AffiliateName(subItem.affid.Value, true);
+                }
                 context.Campaigns.Detach(lineItem.Campaign);
 
                 invoice.LineItems.Add(lineItem);
@@ -449,6 +453,14 @@ namespace EomTool.Domain.Concrete
         public Affiliate GetAffiliate(int affId)
         {
             return context.Affiliates.FirstOrDefault(a => a.affid == affId);
+        }
+        public string AffiliateName(int affId, bool withId = false)
+        {
+            var affiliate = GetAffiliate(affId);
+            if (affiliate != null)
+                return (withId ? affiliate.name2 : affiliate.name);
+            else
+                return null;
         }
 
         public Source GetSource(int sourceId)

@@ -4,6 +4,9 @@ namespace EomTool.Domain.Entities
 {
     public partial class InvoiceItem
     {
+        [NotMapped]
+        public string AffiliateName { get; set; }
+
         public string _currencyName = null;
         [NotMapped]
         public string CurrencyName

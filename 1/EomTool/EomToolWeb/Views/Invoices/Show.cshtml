@@ -5,6 +5,8 @@
     bool expandable = ViewBag.Expandable ?? false;
     bool showNotes = ViewBag.ShowNotes ?? false;
     bool includeSubmit = ViewBag.IncludeSubmit ?? false;
+    int numLinesForPid = 0;
+    bool lastLineForPid = false;
 }
 
 @if (!String.IsNullOrWhiteSpace(from))
@@ -25,7 +27,13 @@
     </tr>
 @for (var i=0; i < invoice.LineItems.Count; i++)
 {
+    numLinesForPid++;
     var li = invoice.LineItems[i];
+    if (i == 0 || li.Campaign.pid != invoice.LineItems[i-1].Campaign.pid)
+    {
+        numLinesForPid = 1;
+    }
+    lastLineForPid = (i == invoice.LineItems.Count - 1 || li.Campaign.pid != invoice.LineItems[i + 1].Campaign.pid);
     <tr>
         <td style="text-align: center">@li.NumUnits</td>
         <td>@li.ItemCode</td>
@@ -33,7 +41,16 @@
         <td>@li.Currency.name</td>
         <td style="text-align: right">@li.AmountPerUnit.ToString("N2")</td>
         <td>@li.Currency.name</td>
-        <td style="text-align: right">@li.TotalAmount.ToString("N2")</td>
+        <td style="text-align: right">
+            @if (lastLineForPid && numLinesForPid == 1)
+            {
+                <b>@li.TotalAmount.ToString("N2")</b>
+            }
+            else
+            {
+                @li.TotalAmount.ToString("N2")
+            }
+        </td>
         @if (expandable)
         {
             <td><a href="#" onclick="$('.sub@(i)').toggle(); return false">+</a></td>
@@ -46,7 +63,7 @@
             <tr style="background-color:#ddd; display: none" class="sub@(i)">
                 <td style="text-align: center">@item.num_units</td>
                 <td>@item.UnitTypeName</td>
-                <td style="text-align: right">SubId: @item.affid ...&nbsp;</td>
+                <td style="text-align: right">@item.AffiliateName</td>
                 <td>@item.CurrencyName</td>
                 <td style="text-align: right">@item.amount_per_unit.ToString("N2")</td>
                 <td>@item.CurrencyName</td>
@@ -54,14 +71,26 @@
             </tr>
         }
     }
+    if (numLinesForPid > 1 && lastLineForPid)
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td><b>Campaign SubTotal</b></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="text-align: right"><b>@invoice.CampaignSubTotal(li.Campaign.pid).ToString("N2")</b></td>
+        </tr>
+    }
 }
     <tr>
         <td colspan="6">&nbsp;</td>
     </tr>
     <tr>
-        <td colspan="5" style="font-weight: bold; text-align: right">TOTAL:&nbsp;&nbsp;&nbsp;</td>
-        <td>@invoice.CurrencyName</td>
-        <td>@invoice.Total.ToString("N2")</td>
+        <td colspan="5" style="text-align: right"><b>TOTAL:</b>&nbsp;&nbsp;&nbsp;</td>
+        <td><b>@invoice.CurrencyName</b></td>
+        <td><b>@invoice.Total.ToString("N2")</b></td>
     </tr>
 </table>
 <br />
