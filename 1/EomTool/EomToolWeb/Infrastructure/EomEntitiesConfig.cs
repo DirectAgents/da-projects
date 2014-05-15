@@ -42,7 +42,7 @@ namespace EomToolWeb.Infrastructure
 
         public string CurrentEomDateString
         {
-            get { return CurrentEomDate.ToString("MMMyyyy"); }
+            get { return CurrentEomDate.ToString("MMMyyyy") + DebugModeString; }
         }
 
         public string ConnectionString
@@ -63,6 +63,10 @@ namespace EomToolWeb.Infrastructure
         public bool DebugMode
         {
             get { return EomToolWebConfigSection.GetConfigSection().DebugMode; }
+        }
+        private string DebugModeString
+        {
+            get { return (DebugMode ? " [DEBUG MODE]" : String.Empty); }
         }
 
         public bool DatabaseExistsForDate(DateTime eomDate)

@@ -7,7 +7,11 @@
     bool requestingInvoice = ViewBag.RequestingInvoice ?? false;
     string advertiserAction = (requestingInvoice ? "ChooseAmounts" : "AffiliateDrilldown");
     string advertiserActionController = (requestingInvoice ? "Invoices" : "Workflow");
-
+    var htmlAttributes = new { target = "_blank" };
+    if (!requestingInvoice)
+    {
+        htmlAttributes = null;
+    }
     int? cs = ViewBag.CampaignStatusId;
 }
 
@@ -34,9 +38,9 @@
         firstRow = false;
     }
     <tr style="@(grayRow ? "background-color:#ddd" : "")">
-        <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, advertiserAction, advertiserActionController, new { advid = ca.AdvId, cs = cs }, null) : new HtmlString(""))</td>
+        <td>@(firstRow ? Html.ActionLink(ca.AdvertiserName, advertiserAction, advertiserActionController, new { advid = ca.AdvId, cs = cs }, htmlAttributes) : new HtmlString(""))</td>
         <td style="text-align: center">@ca.Pid</td>
-        <td>@Html.ActionLink(ca.CampaignName, "EditCampaign", "Workflow", new { pid = ca.Pid }, new { target = "_blank" })</td>
+        <td>@Html.ActionLink(ca.CampaignName, "EditCampaign", "Workflow", new { pid = ca.Pid }, new { target = "_blank", title = ca.CampaignDisplayName })</td>
         <td style="text-align: center">@ca.NumAffs</td>
         <td style="text-align: center">@ca.NumUnits</td>
         <td>@ca.RevenueCurrency</td>

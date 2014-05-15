@@ -34,8 +34,7 @@ namespace EomToolWeb.Controllers
         //}
         public ActionResult Index()
         {
-            var groups = securityRepo.GroupsForUser(User);
-            if (groups.Any(g => g.Name == "Accountants" || g.Name == "Administrators"))
+            if (securityRepo.IsAccountantOrAdmin(User))
                 return RedirectToAction("Summary");
             else
                 return RedirectToAction("Start");
@@ -43,6 +42,9 @@ namespace EomToolWeb.Controllers
 
         public ActionResult Summary()
         {
+            if (!securityRepo.IsAccountantOrAdmin(User))
+                return Content("unauthorized");
+
             var invoices = mainRepo.Invoices(true);
             var model = new InvoicesSummary(invoices);
 
@@ -52,15 +54,21 @@ namespace EomToolWeb.Controllers
 
         public ActionResult SetStatus(int id, int statusid)
         {
+            if (!securityRepo.IsAccountantOrAdmin(User))
+                return Content("unauthorized");
+
             mainRepo.SetInvoiceStatus(id, statusid);
             // ? add a note to record when the status was changed ?
 
             return RedirectToAction("Summary");
         }
 
+        // ---
+
         private void SetAccountingPeriodViewData()
         {
-            ViewBag.ChooseMonthSelectList = daMain1Repo.ChooseMonthSelectList(eomEntitiesConfig);
+            DateTime minDateForInvoicing = new DateTime(2014, 1, 1);
+            ViewBag.ChooseMonthSelectList = daMain1Repo.ChooseMonthSelectList(eomEntitiesConfig, minDateForInvoicing);
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
             ViewBag.CurrentEomDate = eomEntitiesConfig.CurrentEomDate;
         }
@@ -70,13 +78,17 @@ namespace EomToolWeb.Controllers
         public ActionResult Start()
         {
             SetAccountingPeriodViewData();
-            ViewBag.AMs = mainRepo.AccountManagerTeams(true).OrderBy(a => a.name);
+            var amNames = securityRepo.AccountManagersForUser(User);
+            var amTeams = mainRepo.AccountManagerTeams(true);
+            amTeams = amTeams.Where(am => amNames.Contains(am.name));
+            ViewBag.AMs = amTeams.OrderBy(a => a.name);
+            ViewBag.IncludeAMall = securityRepo.IsAccountantOrAdmin(User);
             return View();
         }
 
         public ActionResult ChooseAdvertiser(int? am, bool includeInvoiced = false)
         {
-            var campaignAmounts = mainRepo.CampaignAmounts(am, null, false, CampaignStatus.Default);
+            var campaignAmounts = mainRepo.CampaignAmounts(am, null, false, null);
             if (!includeInvoiced)
                 campaignAmounts = campaignAmounts.Where(ca => ca.InvoicedAmount < ca.Revenue);
 
@@ -89,9 +101,10 @@ namespace EomToolWeb.Controllers
             var advertiser = mainRepo.GetAdvertiser(advId);
             var model = new CampaignAffiliateAmountsModel
             {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
                 AdvertiserId = advId,
                 AdvertiserName = advertiser.name,
-                CampaignAmounts = mainRepo.CampaignAmounts(null, advId, true, CampaignStatus.Default)
+                CampaignAmounts = mainRepo.CampaignAmounts(null, advId, true, null)
             };
             return View(model);
         }
@@ -100,6 +113,9 @@ namespace EomToolWeb.Controllers
         [HttpPost]
         public ActionResult Generate(string[] idpairs)
         {
+            if (idpairs == null)
+                return Content("No amounts selected. Please click \"Back\".");
+
             var campAffIds = Util.ExtractCampAffIds(idpairs);
             var invoice = mainRepo.GenerateInvoice(campAffIds);
             Session["invoice"] = invoice;
@@ -137,8 +153,7 @@ namespace EomToolWeb.Controllers
                 return null;
 
             invoice.AddNote(User.Identity.Name, note); // to record when the invoice was submitted
-            //TEST...
-            //mainRepo.SaveInvoice(invoice, true);
+            mainRepo.SaveInvoice(invoice, true);
 
             var idGroup = securityRepo.WindowsIdentityGroup(User.Identity.Name);
 
@@ -153,7 +168,7 @@ namespace EomToolWeb.Controllers
 
             EmailUtility.SendEmail(from, to, cc, subject, body, true);
 
-            return Content("okay");
+            return Content("Invoice Request sent. You may now close this tab.");
         }
 
     }

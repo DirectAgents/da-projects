@@ -26,6 +26,7 @@ namespace EomTool.Domain.Abstract
         // ---
 
         string UnitTypeName(int unitTypeId);
+        string ItemCode(int unitTypeId);
         bool UnitTypeExists(int unitTypeId);
         UnitType GetUnitType(int unitTypeId);
         UnitType GetUnitType(string unitTypeName);

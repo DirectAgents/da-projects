@@ -12,6 +12,7 @@ namespace EomTool.Domain.DTOs
 
         public int Pid { get; set; }
         public string CampaignName { get; set; }
+        public string CampaignDisplayName { get; set; }
 
         public int? AffId { get; set; }
         public string AffiliateName { get; set; }

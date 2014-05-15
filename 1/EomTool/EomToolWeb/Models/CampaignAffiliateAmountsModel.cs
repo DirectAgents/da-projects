@@ -6,6 +6,7 @@ namespace EomToolWeb.Models
 {
     public class CampaignAffiliateAmountsModel
     {
+        public string CurrentEomDateString { get; set; }
         public int? AdvertiserId { get; set; }
         public string AdvertiserName { get; set; }
         public IEnumerable<CampaignAmount> CampaignAmounts { get; set; }

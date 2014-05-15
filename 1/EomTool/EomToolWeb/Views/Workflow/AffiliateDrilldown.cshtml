@@ -5,6 +5,14 @@
 
 <h2>Affiliate Drilldown</h2>
 
+Accounting Period: <b>@Model.CurrentEomDateString</b><br />
+
+@if (!String.IsNullOrWhiteSpace(Model.AdvertiserName))
+{
+    <text>Advertiser: </text><b>@Model.AdvertiserName</b>
+    <br /><br />
+}
+
 Status:
 @foreach (var iStatus in statuses)
 {

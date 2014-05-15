@@ -37,7 +37,12 @@
     string checkedString = (ca.InvoicedAmount < ca.Revenue ? "checked=\"checked\"" : "");
     <tr style="@(grayRow ? "background-color:#ddd" : "")">
         <td style="text-align: center">@(firstRow ? ca.Pid.ToString() : "")</td>
-        <td>@(firstRow ? ca.CampaignName : "")</td>
+        <td>
+            @if (firstRow)
+            {
+                @Html.ActionLink(ca.CampaignName, "EditCampaign", "Workflow", new { pid = ca.Pid }, new { target = "_blank", title = ca.CampaignDisplayName })
+            }
+        </td>
         <td>@ca.AffiliateName</td>
         <td style="text-align: center">@ca.NumUnits</td>
         <td>@ca.RevenueCurrency</td>

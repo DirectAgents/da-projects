@@ -1,4 +1,5 @@
-﻿namespace EomTool.Domain.Entities
+﻿
+namespace EomTool.Domain.Entities
 {
     public partial class CampaignStatus
     {

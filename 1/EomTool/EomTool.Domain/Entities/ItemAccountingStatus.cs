@@ -3,6 +3,7 @@ namespace EomTool.Domain.Entities
 {
     public partial class ItemAccountingStatus
     {
+        //TODO: change to const ?
         public static int Default = 1;
         public static int PaymentDue = 2;
         public static int DoNotPay = 3;

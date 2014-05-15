@@ -1,7 +1,8 @@
 ﻿@{
     IQueryable<AccountManagerTeam> AMs = ViewBag.AMs;
+    bool includeAMall = ViewBag.IncludeAMall ?? false;
 }
-<h2>Invoices</h2>
+<h2>Invoice Requests</h2>
 
 Accounting Period:
 @Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
@@ -14,5 +15,8 @@ Accounting Period:
     @Html.ActionLink(@am.name, "ChooseAdvertiser", new { am = am.id })
     <br />
 }
-@Html.ActionLink("(all)", "ChooseAdvertiser")
-<br />
+@if (includeAMall)
+{
+    @Html.ActionLink("(all)", "ChooseAdvertiser")
+    <br />
+}

@@ -94,10 +94,6 @@ namespace EomTool.Domain.Entities
         public Currency Currency { get; set; }
 
         public string ItemCode { get; set; }
-        public string UnitTypeName
-        {
-            set { ItemCode = value + " Mgmt"; }
-        }
 
         public IEnumerable<InvoiceItem> SubItems { get; set; }
 

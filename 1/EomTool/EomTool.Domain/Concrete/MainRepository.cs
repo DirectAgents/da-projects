@@ -108,6 +108,7 @@ namespace EomTool.Domain.Concrete
                               AdvertiserName = q.c.Advertiser.name,
                               Pid = q.ra.pid,
                               CampaignName = q.c.campaign_name,
+                              CampaignDisplayName = q.c.DisplayName,
                               RevenueCurrency = q.rc.name,
                               Revenue = q.ra.revenue,
                               InvoicedAmount = (q.invoicedAmount == null ? 0 : q.invoicedAmount.amount),
@@ -154,6 +155,7 @@ namespace EomTool.Domain.Concrete
                               AdvertiserName = q.c.Advertiser.name,
                               Pid = q.ra.pid,
                               CampaignName = q.c.campaign_name,
+                              CampaignDisplayName = q.c.DisplayName,
                               AffId = q.ra.affid,
                               AffiliateName = q.a.name2,
                               RevenueCurrency = q.rc.name,
@@ -203,7 +205,8 @@ namespace EomTool.Domain.Concrete
             //var itemGroups = Items(true).GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id });
             // could do a where contains using a list of distinct pids... then do aggregates
 
-            var items = Items(CampaignStatus.Default); // only unfinalized amounts will be included
+            //var items = Items(CampaignStatus.Default); // only unfinalized amounts will be included
+            var items = Items(null);
 
             foreach (var campAffId in campAffIds)
             {
@@ -226,6 +229,8 @@ namespace EomTool.Domain.Concrete
                     invoice.InvoiceItems.Add(invoiceItem);
                 }
             }
+            //TODO: check for invoiceitem amounts that have already been invoiced. Remove or reduce the amounts accordingly.
+
             GenerateInvoiceLineItems(invoice, true);
 
             return invoice;
@@ -245,7 +250,7 @@ namespace EomTool.Domain.Concrete
                 {
                     Campaign = GetCampaign(itemGroup.Key.pid.Value),
                     Currency = GetCurrency(itemGroup.Key.currency_id),
-                    UnitTypeName = itemGroup.Key.unit_type_id.HasValue ? UnitTypeName(itemGroup.Key.unit_type_id.Value) : null,
+                    ItemCode = itemGroup.Key.unit_type_id.HasValue ? ItemCode(itemGroup.Key.unit_type_id.Value) : null,
                     SubItems = itemGroup.ToList()
                 };
                 if (firstGroup && setExtended)
@@ -331,11 +336,11 @@ namespace EomTool.Domain.Concrete
                 items = items.Where(i => i.campaign_status_id == campaignStatus);
             return items;
         }
-        private IQueryable<Item> Items(int[] campaignStatuses)
-        {
-            var items = context.Items.Where(i => campaignStatuses.Contains(i.campaign_status_id));
-            return items;
-        }
+        //private IQueryable<Item> Items(int[] campaignStatuses)
+        //{
+        //    var items = context.Items.Where(i => campaignStatuses.Contains(i.campaign_status_id));
+        //    return items;
+        //}
 
         //---
 
@@ -359,6 +364,11 @@ namespace EomTool.Domain.Concrete
                 return unitType.name;
             else
                 return null;
+        }
+        public string ItemCode(int unitTypeId)
+        {
+            string unitTypeName = UnitTypeName(unitTypeId);
+            return UnitType.ToItemCode(unitTypeName);
         }
 
         public bool UnitTypeExists(int unitTypeId)

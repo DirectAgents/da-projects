@@ -30,6 +30,7 @@ namespace EomToolWeb.Controllers
 
             var model = new WorkflowModel
             {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
                 CampaignAmounts = campaignAmounts.OrderBy(ca => ca.AdvertiserName).ThenBy(ca => ca.CampaignName),
                 CampaignStatusId = cs
             };
@@ -41,6 +42,7 @@ namespace EomToolWeb.Controllers
             var advertiser = mainRepo.GetAdvertiser(advId);
             var model = new CampaignAffiliateAmountsModel()
             {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
                 AdvertiserId = advId,
                 AdvertiserName = advertiser.name,
                 CampaignAmounts = mainRepo.CampaignAmounts(null, advId, true, cs),

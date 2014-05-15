@@ -97,6 +97,7 @@
     <Compile Include="Entities\PaymentBatchState.cs" />
     <Compile Include="Entities\PublisherPayment.cs" />
     <Compile Include="Entities\PublisherSummary.cs" />
+    <Compile Include="Entities\UnitType.cs" />
     <Compile Include="Entities\Util.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

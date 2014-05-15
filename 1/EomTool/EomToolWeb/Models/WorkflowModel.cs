@@ -9,6 +9,7 @@ namespace EomToolWeb.Models
 {
     public class WorkflowModel
     {
+        public string CurrentEomDateString { get; set; }
         public IEnumerable<CampaignAmount> CampaignAmounts { get; set; }
         public int? CampaignStatusId { get; set; }
     }

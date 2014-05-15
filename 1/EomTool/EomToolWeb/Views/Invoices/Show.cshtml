@@ -12,7 +12,7 @@
     <b>From:</b> @from
     <br /><br />
 }
-<b>Invoice for:</b> @invoice.Advertiser.name
+<b>Invoice for:</b> @(invoice.Advertiser != null ? invoice.Advertiser.name : "")
 <br /><br />
 
 <table style="border: 1px solid gray; border-spacing: 10px 0">
@@ -78,13 +78,13 @@
     }
 }
 
-@if (includeSubmit)
+@if (includeSubmit && invoice.InvoiceItems.Count > 0)
 {
     using (Html.BeginForm("Submit", "Invoices"))
     {
         <text>Comments:</text><br />
         <textarea style="width: 450px; height: 135px" name="note"></textarea>
         <br />
-        <input type="submit" value="Submit Request" />
+        <input type="submit" value="Submit Invoice Request" />
     }
 }

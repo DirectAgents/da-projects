@@ -38,23 +38,34 @@ namespace EomToolWeb
            return (T)config.GetSection(typeof(T).SingleCustomAttribute<ConfigurationSectionAttribute>().Name);
         }
 
-        public static IEnumerable<SelectListItem> ChooseMonthListItems(this IDAMain1Repository daMain1Repository)
+        public static IEnumerable<SelectListItem> ChooseMonthListItems(this IDAMain1Repository daMain1Repository, DateTime? minDate = null, DateTime? includeDate = null)
         {
-            var listItems = from c in daMain1Repository.DADatabases
-                                .Where(d => d.initialized)
+            var daDatabases = daMain1Repository.DADatabases.Where(d => d.initialized);
+            if (minDate.HasValue)
+            {
+                if (includeDate.HasValue)
+                    daDatabases = daDatabases.Where(d => d.effective_date.HasValue && (d.effective_date >= minDate.Value || d.effective_date == includeDate.Value));
+                else
+                    daDatabases = daDatabases.Where(d => d.effective_date.HasValue && d.effective_date >= minDate.Value);
+            }
+            var listItems = from d in daDatabases
                                 .OrderByDescending(d => d.effective_date)
                                 .ToList()
                             select new SelectListItem
                             {
-                                Text = c.name,
-                                Value = c.effective_date.Value.ToShortDateString()
+                                Text = d.name,
+                                Value = d.effective_date.Value.ToShortDateString()
                             };
             return listItems;
         }
 
-        public static SelectList ChooseMonthSelectList(this IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
+        public static SelectList ChooseMonthSelectList(this IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig, DateTime? minDate = null)
         {
-            return new SelectList(daMain1Repository.ChooseMonthListItems(), "Value", "Text", eomEntitiesConfig.CurrentEomDate.ToShortDateString());
+            DateTime currentEomDate = eomEntitiesConfig.CurrentEomDate;
+            DateTime? includeDate = null;
+            if (minDate.HasValue && currentEomDate < minDate.Value)
+                includeDate = currentEomDate;
+            return new SelectList(daMain1Repository.ChooseMonthListItems(minDate, includeDate), "Value", "Text", currentEomDate.ToShortDateString());
         }
     }
 }

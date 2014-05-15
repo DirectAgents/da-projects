@@ -2,7 +2,8 @@
 
 <h2>Request Invoice</h2>
 
-Advertiser: @Model.AdvertiserName
+Accounting Period: <b>@Model.CurrentEomDateString</b><br />
+Advertiser: <b>@Model.AdvertiserName</b>
 <br /><br />
 
 Select the amounts to include in the invoice:
@@ -12,6 +13,7 @@ Select the amounts to include in the invoice:
 {
     Model.ShowCheckboxes = true;
     @Html.Partial("../Workflow/CampaignAffiliateAmounts")
-    <br />
+    <text>Hover over a campaign to see its display name (as it will appear in an invoice). Click to edit.</text>
+    <br /><br />
     <input type="submit" value="Preview Invoice" />
 }
