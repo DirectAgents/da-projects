@@ -5,8 +5,12 @@
 
 <h2>Campaign Summary</h2>
 
-Accounting Period: <b>@Model.CurrentEomDateString</b>
-<br /><br />
+Accounting Period: <b>@Model.CurrentEomDateString</b><br />
+@if (Model.AccountManagerId.HasValue)
+{
+    <text>Account Manager: </text><b>@Model.AccountManagerName</b><br />
+}
+<br />
 
 Status:
 @foreach (var iStatus in statuses)
@@ -22,11 +26,11 @@ Status:
     }
     else
     {
-        @Html.ActionLink(displayVal, "Index", new { cs = iStatus })
+        @Html.ActionLink(displayVal, "Index", new { am = Model.AccountManagerId, cs = iStatus })
     }
 }
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-@Html.ActionLink("Show Uninvoiced", "Index", new { cs = Model.CampaignStatusId, uninvoiced = true })
+@Html.ActionLink("Show Uninvoiced Only", "Index", new { am = Model.AccountManagerId, cs = Model.CampaignStatusId, uninvoiced = true })
 
 <br />
 @{

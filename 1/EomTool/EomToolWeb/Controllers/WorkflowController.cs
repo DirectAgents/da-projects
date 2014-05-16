@@ -32,8 +32,15 @@ namespace EomToolWeb.Controllers
             {
                 CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
                 CampaignAmounts = campaignAmounts.OrderBy(ca => ca.AdvertiserName).ThenBy(ca => ca.CampaignName),
-                CampaignStatusId = cs
+                CampaignStatusId = cs,
+                AccountManagerId = am
             };
+            if (am.HasValue)
+            {
+                var accountManagerTeam = mainRepo.GetAccountManagerTeam(am.Value);
+                if (accountManagerTeam != null)
+                    model.AccountManagerName = accountManagerTeam.name;
+            }
             return View(model);
         }
 

@@ -95,8 +95,15 @@ namespace EomToolWeb.Controllers
             var model = new WorkflowModel
             {
                 CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
-                CampaignAmounts = campaignAmounts.OrderBy(ca => ca.AdvertiserName).ThenBy(ca => ca.CampaignName)
+                CampaignAmounts = campaignAmounts.OrderBy(ca => ca.AdvertiserName).ThenBy(ca => ca.CampaignName),
+                AccountManagerId = am
             };
+            if (am.HasValue)
+            {
+                var accountManagerTeam = mainRepo.GetAccountManagerTeam(am.Value);
+                if (accountManagerTeam != null)
+                    model.AccountManagerName = accountManagerTeam.name;
+            }
             return View(model);
         }
 

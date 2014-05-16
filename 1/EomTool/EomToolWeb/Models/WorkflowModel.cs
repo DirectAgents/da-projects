@@ -12,5 +12,7 @@ namespace EomToolWeb.Models
         public string CurrentEomDateString { get; set; }
         public IEnumerable<CampaignAmount> CampaignAmounts { get; set; }
         public int? CampaignStatusId { get; set; }
+        public int? AccountManagerId { get; set; }
+        public string AccountManagerName { get; set; }
     }
 }

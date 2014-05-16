@@ -2,8 +2,12 @@
 
 <h2>Campaign Summary</h2>
 
-Accounting Period: <b>@Model.CurrentEomDateString</b>
-<br /><br />
+Accounting Period: <b>@Model.CurrentEomDateString</b><br />
+@if (Model.AccountManagerId.HasValue)
+{
+    <text>Account Manager: </text><b>@Model.AccountManagerName</b><br />
+}
+<br />
 
 Click on an advertiser to generate an invoice request.<br />
 Hover over a campaign to see its display name (as it will appear in an invoice).<br />
@@ -13,3 +17,7 @@ Hover over a campaign to see its display name (as it will appear in an invoice).
     ViewBag.RequestingInvoice = true;
 }
 @Html.Partial("../Workflow/CampaignAmounts", Model.CampaignAmounts)
+
+<br />
+Go to:
+@Html.ActionLink("Workflow View", "Index", "Workflow", new { am = Model.AccountManagerId }, new { target = "_blank" })

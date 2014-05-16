@@ -272,7 +272,7 @@ namespace EomTool.Domain.Concrete
                 invoiceLineItems.Add(lineItem);
                 firstGroup = false;
             }
-            invoice.LineItems = invoiceLineItems.OrderBy(li => li.ItemCode).ThenBy(li => li.Campaign.DisplayName).ThenByDescending(li => li.AmountPerUnit).ToList();
+            invoice.LineItems = invoiceLineItems.OrderBy(li => li.Campaign.DisplayName).ThenBy(li => li.ItemCode).ThenByDescending(li => li.AmountPerUnit).ToList();
         }
 
         // Set the extended properties of an invoice. Pass in an example campaign, if known.
