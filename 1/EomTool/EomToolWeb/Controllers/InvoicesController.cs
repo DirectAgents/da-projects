@@ -92,7 +92,11 @@ namespace EomToolWeb.Controllers
             if (!includeInvoiced)
                 campaignAmounts = campaignAmounts.Where(ca => ca.InvoicedAmount < ca.Revenue);
 
-            var model = campaignAmounts.OrderBy(ca => ca.AdvertiserName).ThenBy(ca => ca.CampaignName);
+            var model = new WorkflowModel
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                CampaignAmounts = campaignAmounts.OrderBy(ca => ca.AdvertiserName).ThenBy(ca => ca.CampaignName)
+            };
             return View(model);
         }
 

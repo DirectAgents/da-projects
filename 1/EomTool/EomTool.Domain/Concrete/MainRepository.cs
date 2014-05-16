@@ -67,7 +67,8 @@ namespace EomTool.Domain.Concrete
         }
         private IEnumerable<CampaignAmount> CampaignAmounts(IQueryable<Campaign> campaigns, bool byAffiliate, int? campaignStatus)
         {
-            var items = Items(campaignStatus);
+            var items = Items(campaignStatus).Where(i => (i.total_revenue.HasValue && i.total_revenue != 0) ||
+                                                         (i.total_cost.HasValue && i.total_cost != 0));
 
             IEnumerable<CampaignAmount> amounts;
             if (!byAffiliate) // by campaign
@@ -118,7 +119,7 @@ namespace EomTool.Domain.Concrete
             }
             else // by affiliate
             {
-                var itemGroups = items.GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id });
+                var itemGroups = items.GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id, i.cost_currency_id });
                 var rawAmounts = from ig in itemGroups
                                  select new
                                  {
@@ -126,7 +127,9 @@ namespace EomTool.Domain.Concrete
                                      ig.Key.affid,
                                      ig.Key.revenue_currency_id,
                                      revenue = ig.Sum(g => g.total_revenue.HasValue ? g.total_revenue.Value : 0),
-                                     numUnits = (int)ig.Sum(g => g.num_units)
+                                     numUnits = (int)ig.Sum(g => g.num_units),
+                                     ig.Key.cost_currency_id,
+                                     cost = ig.Sum(g => g.total_cost.HasValue ? g.total_cost.Value : 0)
                                  };
 
                 var invItemGroups = context.InvoiceItems.Where(i => i.pid.HasValue && i.affid.HasValue)
@@ -144,10 +147,11 @@ namespace EomTool.Domain.Concrete
                             join c in campaigns on ra.pid equals c.pid
                             join a in context.Affiliates on ra.affid equals a.affid
                             join rc in context.Currencies on ra.revenue_currency_id equals rc.id
+                            join cc in context.Currencies on ra.cost_currency_id equals cc.id
                             join ia in invoicedAmounts on new { ra.pid, ra.affid, currency_id = ra.revenue_currency_id } equals
                                                           new { ia.pid, ia.affid, ia.currency_id } into gj
                             from invoicedAmount in gj.DefaultIfEmpty()
-                            select new { ra, c, a, rc, invoicedAmount };
+                            select new { ra, c, a, rc, cc, invoicedAmount };
 
                 amounts = query.AsEnumerable().Select(q => new CampaignAmount()
                           {
@@ -161,6 +165,8 @@ namespace EomTool.Domain.Concrete
                               RevenueCurrency = q.rc.name,
                               Revenue = q.ra.revenue,
                               InvoicedAmount = (q.invoicedAmount == null ? 0 : q.invoicedAmount.amount),
+                              CostCurrency = q.cc.name,
+                              Cost = q.ra.cost,
                               NumUnits = q.ra.numUnits,
                               NumAffs = 1
                           });
@@ -206,11 +212,11 @@ namespace EomTool.Domain.Concrete
             // could do a where contains using a list of distinct pids... then do aggregates
 
             //var items = Items(CampaignStatus.Default); // only unfinalized amounts will be included
-            var items = Items(null);
+            var items = Items(null).Where(i => i.total_revenue.HasValue && i.total_revenue != 0);
 
             foreach (var campAffId in campAffIds)
             {
-                var itemGroups = items.Where(i => i.pid == campAffId.pid && i.affid == campAffId.affid && i.total_revenue.HasValue && i.total_revenue > 0)
+                var itemGroups = items.Where(i => i.pid == campAffId.pid && i.affid == campAffId.affid)
                                       .GroupBy(i => new { i.revenue_currency_id, i.revenue_per_unit, i.unit_type_id });
                 foreach (var itemGroup in itemGroups) // usually just one (currency/revenue_per_unit/unit_type)
                 {
@@ -242,6 +248,7 @@ namespace EomTool.Domain.Concrete
 
             // group the items by pid/currency/amount_per_unit/unit_type and generate a LineItem for each (with subitems for the various affiliates)
             var itemGroups = invoice.InvoiceItems.GroupBy(i => new { i.pid, i.currency_id, i.amount_per_unit, i.unit_type_id });
+            List<InvoiceLineItem> invoiceLineItems = new List<InvoiceLineItem>();
             foreach (var itemGroup in itemGroups)
             {
                 // if pid == null, skip ?
@@ -262,9 +269,10 @@ namespace EomTool.Domain.Concrete
                 }
                 context.Campaigns.Detach(lineItem.Campaign);
 
-                invoice.LineItems.Add(lineItem);
+                invoiceLineItems.Add(lineItem);
                 firstGroup = false;
             }
+            invoice.LineItems = invoiceLineItems.OrderBy(li => li.ItemCode).ThenBy(li => li.Campaign.DisplayName).ThenByDescending(li => li.AmountPerUnit).ToList();
         }
 
         // Set the extended properties of an invoice. Pass in an example campaign, if known.

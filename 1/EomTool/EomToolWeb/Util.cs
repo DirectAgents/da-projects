@@ -1,6 +1,7 @@
 ﻿using EomTool.Domain.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EomToolWeb
 {
@@ -9,7 +10,7 @@ namespace EomToolWeb
         public static List<CampAffId> ExtractCampAffIds(string[] idPairs)
         {
             List<CampAffId> campAffIds = new List<CampAffId>();
-            foreach (var idPair in idPairs)
+            foreach (var idPair in idPairs.Distinct())
             {
                 var ids = idPair.Split(new char[] { ',' }); // pid,affid
                 if (ids.Length >= 2)

@@ -22,6 +22,20 @@ namespace EomTool.Domain.DTOs
 
         public decimal InvoicedAmount { get; set; }
 
+        public string CostCurrency { get; set; }
+        public decimal Cost { get; set; }
+
+        public decimal MarginPct
+        {
+            get
+            {
+                if (Revenue != 0 && RevenueCurrency == CostCurrency)
+                    return (1 - Cost / Revenue);
+                else
+                    return 0;
+            }
+        }
+
         public int NumUnits { get; set; }
         public int NumAffs { get; set; }
     }

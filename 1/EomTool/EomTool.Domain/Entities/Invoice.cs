@@ -20,14 +20,24 @@ namespace EomTool.Domain.Entities
             get
             {
                 var currencyNames = InvoiceItems.Select(i => i.CurrencyName).Distinct();
-
-                if (currencyNames.Count() > 1)
-                    return "mixed";
-                else if (currencyNames.Count() == 1)
-                    return currencyNames.First();
-                else
-                    return null;
+                return ComputeCurrencyName(currencyNames);
             }
+        }
+        private string ComputeCurrencyName(IEnumerable<string> currencyNames)
+        {
+            if (currencyNames.Count() > 1)
+                return "mixed";
+            else if (currencyNames.Count() == 1)
+                return currencyNames.First();
+            else
+                return null;
+        }
+
+        public string CampaignCurrencyName(int pid)
+        {
+            var campaignLineItems = LineItems.Where(li => li.Campaign.pid == pid);
+            var currencyNames = campaignLineItems.Select(li => (li.Currency != null ? li.Currency.name : null)).Distinct();
+            return ComputeCurrencyName(currencyNames);
         }
 
         public decimal CampaignSubTotal(int pid)

@@ -34,23 +34,15 @@
         numLinesForPid = 1;
     }
     lastLineForPid = (i == invoice.LineItems.Count - 1 || li.Campaign.pid != invoice.LineItems[i + 1].Campaign.pid);
+    bool boldSubTotal = (lastLineForPid && numLinesForPid == 1);
     <tr>
         <td style="text-align: center">@li.NumUnits</td>
         <td>@li.ItemCode</td>
         <td>@li.Campaign.DisplayName</td>
         <td>@li.Currency.name</td>
         <td style="text-align: right">@li.AmountPerUnit.ToString("N2")</td>
-        <td>@li.Currency.name</td>
-        <td style="text-align: right">
-            @if (lastLineForPid && numLinesForPid == 1)
-            {
-                <b>@li.TotalAmount.ToString("N2")</b>
-            }
-            else
-            {
-                @li.TotalAmount.ToString("N2")
-            }
-        </td>
+        <td style="@(boldSubTotal ? "font-weight:bold" : "")">@li.Currency.name</td>
+        <td style="text-align: right@(boldSubTotal ? "; font-weight:bold" : "")">@li.TotalAmount.ToString("N2")</td>
         @if (expandable)
         {
             <td><a href="#" onclick="$('.sub@(i)').toggle(); return false">+</a></td>
@@ -79,8 +71,8 @@
             <td><b>Campaign SubTotal</b></td>
             <td></td>
             <td></td>
-            <td></td>
-            <td style="text-align: right"><b>@invoice.CampaignSubTotal(li.Campaign.pid).ToString("N2")</b></td>
+            <td style="font-weight: bold">@invoice.CampaignCurrencyName(li.Campaign.pid)</td>
+            <td style="font-weight: bold; text-align: right">@invoice.CampaignSubTotal(li.Campaign.pid).ToString("N2")</td>
         </tr>
     }
 }
@@ -88,9 +80,9 @@
         <td colspan="6">&nbsp;</td>
     </tr>
     <tr>
-        <td colspan="5" style="text-align: right"><b>TOTAL:</b>&nbsp;&nbsp;&nbsp;</td>
-        <td><b>@invoice.CurrencyName</b></td>
-        <td><b>@invoice.Total.ToString("N2")</b></td>
+        <td style="font-weight: bold; text-align: right" colspan="5">INVOICE TOTAL:&nbsp;&nbsp;&nbsp;</td>
+        <td style="font-weight: bold">@invoice.CurrencyName</td>
+        <td style="font-weight: bold">@invoice.Total.ToString("N2")</td>
     </tr>
 </table>
 <br />

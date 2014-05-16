@@ -1,6 +1,9 @@
-﻿@model IEnumerable<EomTool.Domain.DTOs.CampaignAmount>
+﻿@model WorkflowModel
 
 <h2>Campaign Summary</h2>
+
+Accounting Period: <b>@Model.CurrentEomDateString</b>
+<br /><br />
 
 Click on an advertiser to generate an invoice request.<br />
 Hover over a campaign to see its display name (as it will appear in an invoice).<br />
@@ -9,4 +12,4 @@ Hover over a campaign to see its display name (as it will appear in an invoice).
 @{
     ViewBag.RequestingInvoice = true;
 }
-@Html.Partial("../Workflow/CampaignAmounts")
+@Html.Partial("../Workflow/CampaignAmounts", Model.CampaignAmounts)
