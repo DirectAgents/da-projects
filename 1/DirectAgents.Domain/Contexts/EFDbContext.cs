@@ -1,8 +1,8 @@
 ﻿using System.Data.Entity;
-using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Wiki;
 using DirectAgents.Domain.Entities.Cake;
 
-namespace DirectAgents.Domain.Concrete
+namespace DirectAgents.Domain.Contexts
 {
     public class EFDbContext : DbContext
     {
@@ -17,6 +17,8 @@ namespace DirectAgents.Domain.Concrete
             //Disable the check to see if the model is out of sync with the database
 //            Database.SetInitializer<EFDbContext>(null);
 
+            string schema = "wiki";
+
             modelBuilder.Entity<Campaign>()
                 .HasMany(u => u.AccountManagers)
                 .WithMany(t => t.AccountManagerCampaigns)
@@ -24,7 +26,7 @@ namespace DirectAgents.Domain.Concrete
                 {
                     x.MapLeftKey("Pid");
                     x.MapRightKey("PersonId");
-                    x.ToTable("CampaignAccountManagers");
+                    x.ToTable("CampaignAccountManagers", schema);
                 });
 
             modelBuilder.Entity<Campaign>()
@@ -34,7 +36,7 @@ namespace DirectAgents.Domain.Concrete
                 {
                     x.MapLeftKey("Pid");
                     x.MapRightKey("PersonId");
-                    x.ToTable("CampaignAdManagers");
+                    x.ToTable("CampaignAdManagers", schema);
                 });
 
             modelBuilder.Entity<Campaign>()
@@ -44,7 +46,7 @@ namespace DirectAgents.Domain.Concrete
                 {
                     x.MapLeftKey("Pid");
                     x.MapRightKey("CountryCode");
-                    x.ToTable("CampaignCountries");
+                    x.ToTable("CampaignCountries", schema);
                 });
 
             modelBuilder.Entity<Campaign>()
@@ -54,8 +56,17 @@ namespace DirectAgents.Domain.Concrete
                 {
                     c.MapLeftKey("Pid");
                     c.MapRightKey("TrafficTypeId");
-                    c.ToTable("CampaignTrafficTypes");
+                    c.ToTable("CampaignTrafficTypes", schema);
                 });
+
+            modelBuilder.Entity<Campaign>().ToTable("Campaigns", schema);
+            modelBuilder.Entity<Conversion>().ToTable("Conversions", schema);
+            modelBuilder.Entity<Country>().ToTable("Countries", schema);
+            modelBuilder.Entity<DailySummary>().ToTable("DailySummaries", schema);
+            modelBuilder.Entity<Person>().ToTable("People", schema);
+            modelBuilder.Entity<Status>().ToTable("Status", schema);
+            modelBuilder.Entity<TrafficType>().ToTable("TrafficTypes", schema);
+            modelBuilder.Entity<Vertical>().ToTable("Verticals", schema);
         }
 
         public DbSet<Campaign> Campaigns { get; set; }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace DirectAgents.Domain.Entities
+namespace DirectAgents.Domain.Entities.Wiki
 {
     public class Country
     {

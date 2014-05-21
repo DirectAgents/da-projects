@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Http;
-using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.Wiki;
 
 namespace EomToolWeb.Controllers
 {

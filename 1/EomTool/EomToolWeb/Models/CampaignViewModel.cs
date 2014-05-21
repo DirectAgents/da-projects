@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using DirectAgents.Domain.Entities;
-using System.Web.Mvc;
+﻿using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
+using DirectAgents.Domain.Entities.Wiki;
 
 namespace EomToolWeb.Models
 {

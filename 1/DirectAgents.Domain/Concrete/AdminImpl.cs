@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Cake.Data.Wsdl.ExportService;
 using Cake.Model.Staging;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Entities;
-using DirectAgents.Domain.Entities.Cake;
-using System.Diagnostics;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities.Wiki;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -29,10 +29,16 @@ namespace DirectAgents.Domain.Concrete
                 LogHandler(this, severity, messageFormat, formatArgs);
         }
 
-        public void Test()
+        public string Test()
         {
+            string text;
             Log("some information");
             LogWarning("some warning");
+            using (daDomain = new EFDbContext())
+            {
+                text = daDomain.Campaigns.Count() + " campaigns";
+            }
+            return text;
         }
 
         public void CreateDatabaseIfNotExists()

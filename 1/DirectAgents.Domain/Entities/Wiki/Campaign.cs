@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
 
-namespace DirectAgents.Domain.Entities
+namespace DirectAgents.Domain.Entities.Wiki
 {
     public class Campaign
     {

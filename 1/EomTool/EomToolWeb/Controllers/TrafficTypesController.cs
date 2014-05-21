@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Contexts;
 using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers

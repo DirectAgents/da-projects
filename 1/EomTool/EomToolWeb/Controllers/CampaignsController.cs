@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Wiki;
 using EomToolWeb.Models;
 
 namespace EomToolWeb.Controllers

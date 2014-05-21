@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Wiki;
 
 namespace EomToolWeb.Models
 {

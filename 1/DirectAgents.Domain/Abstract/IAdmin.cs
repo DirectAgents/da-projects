@@ -7,7 +7,7 @@ namespace DirectAgents.Domain.Abstract
     {
         event LogEventHandler LogHandler;
 
-        void Test();
+        string Test();
 
         void CreateDatabaseIfNotExists();
         void ReCreateDatabase();

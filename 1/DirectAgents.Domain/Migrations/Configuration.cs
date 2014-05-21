@@ -5,14 +5,14 @@ namespace DirectAgents.Domain.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DirectAgents.Domain.Concrete.EFDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<DirectAgents.Domain.Contexts.EFDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(DirectAgents.Domain.Concrete.EFDbContext context)
+        protected override void Seed(DirectAgents.Domain.Contexts.EFDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

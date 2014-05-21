@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DirectAgents.Domain</RootNamespace>
     <AssemblyName>DirectAgents.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,10 +31,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\Solution\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Solution\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -54,17 +58,17 @@
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\CountryLookup.cs" />
-    <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="Contexts\EFDbContext.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="Entities\Cake\DailySummary.cs" />
-    <Compile Include="Entities\Campaign.cs" />
+    <Compile Include="Entities\Wiki\Campaign.cs" />
     <Compile Include="Entities\Cake\Conversion.cs" />
-    <Compile Include="Entities\Status.cs" />
-    <Compile Include="Entities\TrafficType.cs" />
-    <Compile Include="Entities\Country.cs" />
-    <Compile Include="Entities\Person.cs" />
-    <Compile Include="Entities\Vertical.cs" />
+    <Compile Include="Entities\Wiki\Status.cs" />
+    <Compile Include="Entities\Wiki\TrafficType.cs" />
+    <Compile Include="Entities\Wiki\Country.cs" />
+    <Compile Include="Entities\Wiki\Person.cs" />
+    <Compile Include="Entities\Wiki\Vertical.cs" />
     <Compile Include="Migrations\201209131807451_StartOver.cs" />
     <Compile Include="Migrations\201209131807451_StartOver.Designer.cs">
       <DependentUpon>201209131807451_StartOver.cs</DependentUpon>
@@ -128,6 +132,10 @@
     <Compile Include="Migrations\201302262132524_MobileLP.cs" />
     <Compile Include="Migrations\201302262132524_MobileLP.Designer.cs">
       <DependentUpon>201302262132524_MobileLP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201405201651129_WikiSchema.cs" />
+    <Compile Include="Migrations\201405201651129_WikiSchema.Designer.cs">
+      <DependentUpon>201405201651129_WikiSchema.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -194,6 +202,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201302262132524_MobileLP.resx">
       <DependentUpon>201302262132524_MobileLP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405201651129_WikiSchema.resx">
+      <DependentUpon>201405201651129_WikiSchema.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

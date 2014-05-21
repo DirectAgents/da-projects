@@ -17,6 +17,12 @@ namespace EomToolWeb.Controllers
             this.admin = admin;
             this.admin.LogHandler += admin_LogHandler;
         }
+
+        public ActionResult Test()
+        {
+            var text = admin.Test();
+            return Content(text);
+        }
         
         public ActionResult CreateDB()
         {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DirectAgents.Domain.Entities
+namespace DirectAgents.Domain.Entities.Wiki
 {
     public class Person
     {

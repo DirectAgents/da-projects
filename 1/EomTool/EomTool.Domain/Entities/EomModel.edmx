@@ -1,37 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
   <!-- EF Runtime content -->
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EomModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="EomModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="EomModelStoreContainer">
-          <EntitySet Name="AccountManager" EntityType="EomModel.Store.AccountManager" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Batch" EntityType="EomModel.Store.Batch" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="BatchBatchUpdate" EntityType="EomModel.Store.BatchBatchUpdate" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="BatchUpdate" EntityType="EomModel.Store.BatchUpdate" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Invoice" EntityType="EomModel.Store.Invoice" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="InvoiceItem" EntityType="EomModel.Store.InvoiceItem" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="InvoiceNote" EntityType="EomModel.Store.InvoiceNote" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="InvoiceStatus" EntityType="EomModel.Store.InvoiceStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MediaBuyer" EntityType="EomModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MediaBuyerApprovalStatus" EntityType="EomModel.Store.MediaBuyerApprovalStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PaymentBatch" EntityType="EomModel.Store.PaymentBatch" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PaymentBatchState" EntityType="EomModel.Store.PaymentBatchState" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PubAttachment" EntityType="EomModel.Store.PubAttachment" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="PubNotes" EntityType="EomModel.Store.PubNotes" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="UnitType" EntityType="EomModel.Store.UnitType" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CampaignsPublisherReportDetails" EntityType="EomModel.Store.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportDetails">
+          <EntitySet Name="AccountManager" EntityType="EomModel.Store.AccountManager" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Batch" EntityType="EomModel.Store.Batch" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="BatchBatchUpdate" EntityType="EomModel.Store.BatchBatchUpdate" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="BatchUpdate" EntityType="EomModel.Store.BatchUpdate" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Invoice" EntityType="EomModel.Store.Invoice" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="InvoiceItem" EntityType="EomModel.Store.InvoiceItem" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="InvoiceNote" EntityType="EomModel.Store.InvoiceNote" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="InvoiceStatus" EntityType="EomModel.Store.InvoiceStatus" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="MediaBuyer" EntityType="EomModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="MediaBuyerApprovalStatus" EntityType="EomModel.Store.MediaBuyerApprovalStatus" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="PaymentBatch" EntityType="EomModel.Store.PaymentBatch" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="PaymentBatchState" EntityType="EomModel.Store.PaymentBatchState" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="PubAttachment" EntityType="EomModel.Store.PubAttachment" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="PubNotes" EntityType="EomModel.Store.PubNotes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="UnitType" EntityType="EomModel.Store.UnitType" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="CampaignsPublisherReportDetails" EntityType="EomModel.Store.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportDetails" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
             <DefiningQuery>SELECT 
       [CampaignsPublisherReportDetails].[ItemIDs] AS [ItemIDs], 
       [CampaignsPublisherReportDetails].[CampaignStatus] AS [CampaignStatus], 
@@ -49,7 +49,7 @@
       [CampaignsPublisherReportDetails].[Total] AS [Total]
       FROM [dbo].[CampaignsPublisherReportDetails] AS [CampaignsPublisherReportDetails]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="CampaignsPublisherReportSummary" EntityType="EomModel.Store.CampaignsPublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportSummary">
+          <EntitySet Name="CampaignsPublisherReportSummary" EntityType="EomModel.Store.CampaignsPublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportSummary" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
             <DefiningQuery>SELECT 
       [CampaignsPublisherReportSummary].[CampaignStatus] AS [CampaignStatus], 
       [CampaignsPublisherReportSummary].[Publisher] AS [Publisher], 
@@ -63,7 +63,7 @@
       [CampaignsPublisherReportSummary].[Total] AS [Total]
       FROM [dbo].[CampaignsPublisherReportSummary] AS [CampaignsPublisherReportSummary]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherPayments" EntityType="EomModel.Store.PublisherPayments" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayments">
+          <EntitySet Name="PublisherPayments" EntityType="EomModel.Store.PublisherPayments" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayments" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
             <DefiningQuery>SELECT 
       [PublisherPayments].[NetTermTypeId] AS [NetTermTypeId], 
       [PublisherPayments].[NetTermType] AS [NetTermType], 
@@ -82,7 +82,7 @@
       [PublisherPayments].[ItemIds] AS [ItemIds]
       FROM [dbo].[PublisherPayments] AS [PublisherPayments]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherPayouts" EntityType="EomModel.Store.PublisherPayouts" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayouts">
+          <EntitySet Name="PublisherPayouts" EntityType="EomModel.Store.PublisherPayouts" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayouts" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
             <DefiningQuery>SELECT 
       [PublisherPayouts].[affid] AS [affid], 
       [PublisherPayouts].[Publisher] AS [Publisher], 
@@ -122,7 +122,7 @@
       [PublisherPayouts].[BatchIds] AS [BatchIds]
       FROM [dbo].[PublisherPayouts] AS [PublisherPayouts]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherRelatedItemCounts" EntityType="EomModel.Store.PublisherRelatedItemCounts" store:Type="Views" store:Schema="dbo" store:Name="PublisherRelatedItemCounts">
+          <EntitySet Name="PublisherRelatedItemCounts" EntityType="EomModel.Store.PublisherRelatedItemCounts" store:Type="Views" store:Schema="dbo" store:Name="PublisherRelatedItemCounts" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
             <DefiningQuery>SELECT 
       [PublisherRelatedItemCounts].[Id] AS [Id], 
       [PublisherRelatedItemCounts].[Publisher] AS [Publisher], 
@@ -130,7 +130,7 @@
       [PublisherRelatedItemCounts].[NumAttachments] AS [NumAttachments]
       FROM [dbo].[PublisherRelatedItemCounts] AS [PublisherRelatedItemCounts]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherReportDetails" EntityType="EomModel.Store.PublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportDetails">
+          <EntitySet Name="PublisherReportDetails" EntityType="EomModel.Store.PublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportDetails" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
             <DefiningQuery>SELECT 
       [PublisherReportDetails].[PublisherName] AS [PublisherName], 
       [PublisherReportDetails].[NetTermTypeName] AS [NetTermTypeName], 
@@ -147,7 +147,7 @@
       [PublisherReportDetails].[ItemIDs] AS [ItemIDs]
       FROM [dbo].[PublisherReportDetails] AS [PublisherReportDetails]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherReports" EntityType="EomModel.Store.PublisherReports" store:Type="Views" store:Schema="dbo" store:Name="PublisherReports">
+          <EntitySet Name="PublisherReports" EntityType="EomModel.Store.PublisherReports" store:Type="Views" store:Schema="dbo" store:Name="PublisherReports" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
             <DefiningQuery>SELECT 
       [PublisherReports].[ItemIDs] AS [ItemIDs], 
       [PublisherReports].[CampaignStatus] AS [CampaignStatus], 
@@ -165,7 +165,7 @@
       [PublisherReports].[Total] AS [Total]
       FROM [dbo].[PublisherReports] AS [PublisherReports]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherReportSummary" EntityType="EomModel.Store.PublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportSummary">
+          <EntitySet Name="PublisherReportSummary" EntityType="EomModel.Store.PublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportSummary" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
             <DefiningQuery>SELECT 
       [PublisherReportSummary].[Name] AS [Name], 
       [PublisherReportSummary].[Net Terms] AS [Net Terms], 
@@ -1119,8 +1119,8 @@
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="EomModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
-        <EntityContainer Name="EomEntities" annotation:LazyLoadingEnabled="true">
+      <Schema Namespace="EomModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="EomEntities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
           <EntitySet Name="Advertisers" EntityType="EomModel.Advertiser" />
           <EntitySet Name="Affiliates" EntityType="EomModel.Affiliate" />
           <EntitySet Name="Campaigns" EntityType="EomModel.Campaign" />
@@ -1266,7 +1266,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" FromRole="Advertiser" ToRole="Campaign" />
         </EntityType>
@@ -1274,7 +1274,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
           <Property Name="media_buyer_id" Type="Int32" Nullable="false" />
           <Property Name="affid" Type="Int32" Nullable="false" />
@@ -1283,7 +1283,7 @@
           <Property Name="add_code" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="net_term_type_id" Type="Int32" />
           <Property Name="payment_method_id" Type="Int32" Nullable="false" />
-          <Property Name="name2" Type="String" Nullable="false" MaxLength="358" Unicode="false" FixedLength="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="name2" Type="String" Nullable="false" MaxLength="358" Unicode="false" FixedLength="false" annotation:StoreGeneratedPattern="Computed" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="date_created" Type="DateTime" Precision="3" />
           <Property Name="date_modified" Type="DateTime" Precision="3" />
           <Property Name="tracking_system_id" Type="Int32" />
@@ -1297,7 +1297,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="account_manager_id" Type="Int32" Nullable="false" />
           <Property Name="campaign_status_id" Type="Int32" Nullable="false" />
           <Property Name="ad_manager_id" Type="Int32" Nullable="false" />
@@ -1328,7 +1328,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="CampaignStatus" ToRole="Campaign" />
           <NavigationProperty Name="Items" Relationship="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" FromRole="CampaignStatus" ToRole="Item" />
@@ -1337,7 +1337,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <Property Name="to_usd_multiplier" Type="Decimal" Nullable="false" Precision="14" Scale="4" />
         </EntityType>
@@ -1345,7 +1345,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" MaxLength="300" Unicode="false" FixedLength="false" />
           <Property Name="pid" Type="Int32" Nullable="false" />
           <Property Name="affid" Type="Int32" Nullable="false" />
@@ -1361,10 +1361,10 @@
           <Property Name="accounting_notes" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
           <Property Name="item_accounting_status_id" Type="Int32" Nullable="false" />
           <Property Name="item_reporting_status_id" Type="Int32" Nullable="false" />
-          <Property Name="total_revenue" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="total_cost" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="margin" Type="Decimal" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="modified" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" Precision="3" />
+          <Property Name="total_revenue" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="total_cost" Type="Decimal" Precision="36" Scale="10" annotation:StoreGeneratedPattern="Computed" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="margin" Type="Decimal" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Name="modified" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Computed" Precision="3" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="campaign_status_id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="RevenueCurrency" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Item" ToRole="Currency" />
           <NavigationProperty Name="CostCurrency" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Item" ToRole="Currency" />
@@ -1383,7 +1383,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Items" Relationship="EomModel.Item_ItemAccountingStatus_id_FK_ItemAccountingStatus_id_PK" FromRole="ItemAccountingStatus" ToRole="Item" />
         </EntityType>
@@ -1391,7 +1391,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Affiliates" Relationship="EomModel.Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK" FromRole="MediaBuyer" ToRole="Affiliate" />
         </EntityType>
@@ -1399,7 +1399,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Affiliates" Relationship="EomModel.Affiliate_NetTermType_id_FK_NetTermType_id_PK" FromRole="NetTermType" ToRole="Affiliate" />
         </EntityType>
@@ -1407,7 +1407,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Items" Relationship="EomModel.Item_Source_id_FK_Source_id_PK" FromRole="Source" ToRole="Item" />
         </EntityType>
@@ -1424,7 +1424,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
         </EntityType>
         <EntityType Name="CampaignsPublisherReportDetail">
@@ -1679,7 +1679,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Items" Relationship="EomModel.FK__Item__media_buye__540C7B00" FromRole="MediaBuyerApprovalStatu" ToRole="Item" />
           <NavigationProperty Name="BatchUpdates" Relationship="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus" FromRole="MediaBuyerApprovalStatus" ToRole="BatchUpdate" />
@@ -1760,7 +1760,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="name" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Items" Relationship="EomModel.FK_Item_Batch" FromRole="Batch" ToRole="Item" />
           <NavigationProperty Name="BatchUpdates" Relationship="EomModel.BatchBatchUpdate" FromRole="Batch" ToRole="BatchUpdate" />
@@ -1781,10 +1781,10 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="author" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="date_created" Nullable="false" annotation:StoreGeneratedPattern="Computed" Precision="3" />
+          <Property Type="DateTime" Name="date_created" Nullable="false" annotation:StoreGeneratedPattern="Computed" Precision="3" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Int32" Name="media_buyer_approval_status_id" />
           <Property Type="String" Name="extra" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="MediaBuyerApprovalStatus" Relationship="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus" FromRole="BatchUpdate" ToRole="MediaBuyerApprovalStatus" />
@@ -1836,7 +1836,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="approver_identity" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="payment_batch_state_id" Nullable="false" />
           <Property Type="Boolean" Name="is_current" Nullable="false" />
@@ -1925,7 +1925,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="publisher_name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="name" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="description" MaxLength="255" FixedLength="false" Unicode="true" />
@@ -1935,11 +1935,11 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="publisher_name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="added_by_system_user" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="created" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="DateTime" Name="created" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
         <EntityType Name="PublisherRelatedItemCount">
           <Key>
@@ -1955,7 +1955,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" FromRole="AccountManager" ToRole="Campaign" />
         </EntityType>
@@ -1975,7 +1975,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Int32" Name="invoice_status_id" Nullable="false" />
           <NavigationProperty Name="InvoiceStatus" Relationship="EomModel.FK_Invoice_InvoiceStatus" FromRole="Invoice" ToRole="InvoiceStatu" />
           <NavigationProperty Name="InvoiceNotes" Relationship="EomModel.FK_InvoiceNote_Invoice" FromRole="Invoice" ToRole="InvoiceNote" />
@@ -1985,7 +1985,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Int32" Name="invoice_id" Nullable="false" />
           <Property Type="String" Name="note" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="added_by" MaxLength="255" FixedLength="false" Unicode="false" />
@@ -2028,14 +2028,14 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Type="Int32" Name="invoice_id" Nullable="false" />
           <Property Type="Int32" Name="pid" />
           <Property Type="Int32" Name="affid" />
           <Property Type="Int32" Name="currency_id" Nullable="false" />
           <Property Type="Decimal" Name="amount_per_unit" Nullable="false" Precision="19" Scale="4" />
           <Property Type="Int32" Name="num_units" Nullable="false" />
-          <Property Type="Decimal" Name="total_amount" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Decimal" Name="total_amount" Precision="19" Scale="4" annotation:StoreGeneratedPattern="Computed" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <NavigationProperty Name="Currency" Relationship="EomModel.FK_InvoiceItem_Currency" FromRole="InvoiceItem" ToRole="Currency" />
           <NavigationProperty Name="Invoice" Relationship="EomModel.FK_InvoiceItem_Invoice" FromRole="InvoiceItem" ToRole="Invoice" />
           <Property Type="Int32" Name="unit_type_id" />
@@ -2081,7 +2081,7 @@
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EomModelStoreContainer" CdmEntityContainer="EomEntities">
           <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="EomModel.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
             <ScalarProperty Name="id" ColumnName="id" />
@@ -2463,7 +2463,7 @@
     </edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
-  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <Connection>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
@@ -2583,26 +2583,26 @@
           <ConnectorPoint PointX="7.1249995000000013" PointY="10.787822265625001" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EomModel.MediaBuyerApprovalStatus" Width="2.25" PointX="7.625" PointY="0.5" Height="1.595683593749996" />
-        <AssociationConnector Association="EomModel.FK__Item__media_buye__540C7B00" >
+        <AssociationConnector Association="EomModel.FK__Item__media_buye__540C7B00">
           <ConnectorPoint PointX="8.875" PointY="6.8651432291666659" />
           <ConnectorPoint PointX="8.375" PointY="6.8651432291666659" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EomModel.PublisherPayout" Width="2.375" PointX="0.5" PointY="13.125" Height="7.7493294270833264" />
         <EntityTypeShape EntityType="EomModel.Batch" Width="1.5" PointX="4.125" PointY="3.5" Height="1.7879850260416674" />
-        <AssociationConnector Association="EomModel.FK_Item_Batch" >
+        <AssociationConnector Association="EomModel.FK_Item_Batch">
           <ConnectorPoint PointX="9" PointY="4.8314925130208337" />
           <ConnectorPoint PointX="8.375" PointY="4.8314925130208337" />
         </AssociationConnector>
         <EntityTypeShape EntityType="EomModel.BatchUpdate" Width="2.625" PointX="4.125" PointY="0.5" Height="2.9417936197916665" />
-        <AssociationConnector Association="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus" >
+        <AssociationConnector Association="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatus">
           <ConnectorPoint PointX="10.970703125" PointY="5.875" />
           <ConnectorPoint PointX="10.970703125" PointY="3.4417936197916665" />
         </AssociationConnector>
-        <AssociationConnector Association="EomModel.BatchBatchUpdate" >
+        <AssociationConnector Association="EomModel.BatchBatchUpdate">
           <ConnectorPoint PointX="9.75" PointY="3.875" />
           <ConnectorPoint PointX="9.75" PointY="3.4417936197916665" />
         </AssociationConnector>
-        <AssociationConnector Association="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatusFrom" >
+        <AssociationConnector Association="EomModel.FK_BatchUpdate_MediaBuyerApprovalStatusFrom">
           <ConnectorPoint PointX="10.7041015625" PointY="5.875" />
           <ConnectorPoint PointX="10.7041015625" PointY="3.4417936197916665" />
         </AssociationConnector>

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DirectAgents.Domain.Entities;
+using DirectAgents.Domain.Entities.Wiki;
 
 namespace EomToolWeb.Models
 {

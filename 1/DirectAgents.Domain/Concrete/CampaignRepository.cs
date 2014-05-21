@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
-using DirectAgents.Domain.Entities;
-using System;
+using DirectAgents.Domain.Entities.Wiki;
 
 namespace DirectAgents.Domain.Concrete
 {

@@ -1,4 +1,4 @@
-﻿namespace DirectAgents.Domain.Entities
+﻿namespace DirectAgents.Domain.Entities.Wiki
 {
     public class Vertical
     {

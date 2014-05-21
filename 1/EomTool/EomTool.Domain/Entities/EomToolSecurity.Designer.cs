@@ -183,7 +183,7 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
-        #region Primitive Properties
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -202,7 +202,7 @@ namespace EomTool.Domain.Entities
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -227,7 +227,7 @@ namespace EomTool.Domain.Entities
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -251,7 +251,7 @@ namespace EomTool.Domain.Entities
             {
                 OnWindowsIdentityChanging(value);
                 ReportPropertyChanging("WindowsIdentity");
-                _WindowsIdentity = StructuralObject.SetValidValue(value, false);
+                _WindowsIdentity = StructuralObject.SetValidValue(value, false, "WindowsIdentity");
                 ReportPropertyChanged("WindowsIdentity");
                 OnWindowsIdentityChanged();
             }
@@ -275,7 +275,7 @@ namespace EomTool.Domain.Entities
             {
                 OnEmailAddressChanging(value);
                 ReportPropertyChanging("EmailAddress");
-                _EmailAddress = StructuralObject.SetValidValue(value, true);
+                _EmailAddress = StructuralObject.SetValidValue(value, true, "EmailAddress");
                 ReportPropertyChanged("EmailAddress");
                 OnEmailAddressChanged();
             }
@@ -299,7 +299,7 @@ namespace EomTool.Domain.Entities
             {
                 OnIpAddressChanging(value);
                 ReportPropertyChanging("IpAddress");
-                _IpAddress = StructuralObject.SetValidValue(value, true);
+                _IpAddress = StructuralObject.SetValidValue(value, true, "IpAddress");
                 ReportPropertyChanged("IpAddress");
                 OnIpAddressChanged();
             }
@@ -310,7 +310,6 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
-    
         #region Navigation Properties
     
         /// <summary>
@@ -366,7 +365,7 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
-        #region Primitive Properties
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -385,7 +384,7 @@ namespace EomTool.Domain.Entities
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -410,7 +409,7 @@ namespace EomTool.Domain.Entities
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -434,7 +433,7 @@ namespace EomTool.Domain.Entities
             {
                 OnTagChanging(value);
                 ReportPropertyChanging("Tag");
-                _Tag = StructuralObject.SetValidValue(value, false);
+                _Tag = StructuralObject.SetValidValue(value, false, "Tag");
                 ReportPropertyChanged("Tag");
                 OnTagChanged();
             }
@@ -445,7 +444,6 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
-    
         #region Navigation Properties
     
         /// <summary>
@@ -499,7 +497,7 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
-        #region Primitive Properties
+        #region Simple Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -518,7 +516,7 @@ namespace EomTool.Domain.Entities
                 {
                     OnIdChanging(value);
                     ReportPropertyChanging("Id");
-                    _Id = StructuralObject.SetValidValue(value);
+                    _Id = StructuralObject.SetValidValue(value, "Id");
                     ReportPropertyChanged("Id");
                     OnIdChanged();
                 }
@@ -543,7 +541,7 @@ namespace EomTool.Domain.Entities
             {
                 OnNameChanging(value);
                 ReportPropertyChanging("Name");
-                _Name = StructuralObject.SetValidValue(value, false);
+                _Name = StructuralObject.SetValidValue(value, false, "Name");
                 ReportPropertyChanged("Name");
                 OnNameChanged();
             }
@@ -554,7 +552,6 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
-    
         #region Navigation Properties
     
         /// <summary>
@@ -607,5 +604,4 @@ namespace EomTool.Domain.Entities
 
     #endregion
 
-    
 }
