@@ -1,6 +1,5 @@
 ﻿using System.Data.Entity;
 using DirectAgents.Domain.Entities.Wiki;
-using DirectAgents.Domain.Entities.Cake;
 
 namespace DirectAgents.Domain.Contexts
 {

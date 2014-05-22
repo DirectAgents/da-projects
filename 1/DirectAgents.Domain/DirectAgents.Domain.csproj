@@ -61,9 +61,9 @@
     <Compile Include="Contexts\EFDbContext.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
-    <Compile Include="Entities\Cake\DailySummary.cs" />
+    <Compile Include="Entities\Wiki\DailySummary.cs" />
     <Compile Include="Entities\Wiki\Campaign.cs" />
-    <Compile Include="Entities\Cake\Conversion.cs" />
+    <Compile Include="Entities\Wiki\Conversion.cs" />
     <Compile Include="Entities\Wiki\Status.cs" />
     <Compile Include="Entities\Wiki\TrafficType.cs" />
     <Compile Include="Entities\Wiki\Country.cs" />
@@ -209,6 +209,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\Cake\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

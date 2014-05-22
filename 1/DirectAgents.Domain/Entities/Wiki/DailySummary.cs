@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using DirectAgents.Domain.Entities.Wiki;
 
-namespace DirectAgents.Domain.Entities.Cake
+namespace DirectAgents.Domain.Entities.Wiki
 {
     public class DailySummary
     {

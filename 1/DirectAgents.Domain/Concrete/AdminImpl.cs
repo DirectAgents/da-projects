@@ -114,7 +114,7 @@ namespace DirectAgents.Domain.Concrete
                         Log("Loading {0} new summaries", cakeSummaries.Count());
                         foreach (var cakeSummary in cakeSummaries)
                         {
-                            var daSummary = new DirectAgents.Domain.Entities.Cake.DailySummary
+                            var daSummary = new DirectAgents.Domain.Entities.Wiki.DailySummary
                             {
                                 Pid = cakeSummary.offer_id,
                                 Date = cakeSummary.date,

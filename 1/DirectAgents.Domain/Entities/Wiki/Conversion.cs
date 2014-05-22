@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DirectAgents.Domain.Entities.Cake
+namespace DirectAgents.Domain.Entities.Wiki
 {
     public partial class Conversion
     {
