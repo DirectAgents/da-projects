@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using System.Web.Http;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Wiki;
 
 namespace EomToolWeb.Controllers
 {
     public class VerticalsController : ApiController
     {
-        private EFDbContext db = new EFDbContext();
+        private WikiContext db = new WikiContext();
 
         public IQueryable<Vertical> Get()
         {

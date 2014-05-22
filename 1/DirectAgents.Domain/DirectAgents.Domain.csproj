@@ -58,86 +58,50 @@
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\CountryLookup.cs" />
-    <Compile Include="Contexts\EFDbContext.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
-    <Compile Include="Entities\Wiki\DailySummary.cs" />
-    <Compile Include="Entities\Wiki\Campaign.cs" />
-    <Compile Include="Entities\Wiki\Conversion.cs" />
-    <Compile Include="Entities\Wiki\Status.cs" />
-    <Compile Include="Entities\Wiki\TrafficType.cs" />
-    <Compile Include="Entities\Wiki\Country.cs" />
-    <Compile Include="Entities\Wiki\Person.cs" />
-    <Compile Include="Entities\Wiki\Vertical.cs" />
-    <Compile Include="Migrations\201209131807451_StartOver.cs" />
-    <Compile Include="Migrations\201209131807451_StartOver.Designer.cs">
-      <DependentUpon>201209131807451_StartOver.cs</DependentUpon>
+    <Compile Include="Entities\WikiPartials\Campaign.cs" />
+    <Compile Include="Entities\WikiPartials\Country.cs" />
+    <Compile Include="Entities\WikiPartials\Status.cs" />
+    <Compile Include="Entities\Wiki\Campaign.cs">
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209131918214_ImageUrl.cs" />
-    <Compile Include="Migrations\201209131918214_ImageUrl.Designer.cs">
-      <DependentUpon>201209131918214_ImageUrl.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\Conversion.cs">
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209131937231_Countries.cs" />
-    <Compile Include="Migrations\201209131937231_Countries.Designer.cs">
-      <DependentUpon>201209131937231_Countries.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\Country.cs">
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209132118115_RmCountryCodes.cs" />
-    <Compile Include="Migrations\201209132118115_RmCountryCodes.Designer.cs">
-      <DependentUpon>201209132118115_RmCountryCodes.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\DailySummary.cs">
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209170529231_Vertical.cs" />
-    <Compile Include="Migrations\201209170529231_Vertical.Designer.cs">
-      <DependentUpon>201209170529231_Vertical.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\Person.cs">
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209171922380_TrafficType.cs" />
-    <Compile Include="Migrations\201209171922380_TrafficType.Designer.cs">
-      <DependentUpon>201209171922380_TrafficType.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\Status.cs">
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209181555255_RmTrafficTypeNvarchar.cs" />
-    <Compile Include="Migrations\201209181555255_RmTrafficTypeNvarchar.Designer.cs">
-      <DependentUpon>201209181555255_RmTrafficTypeNvarchar.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\TrafficType.cs">
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209191732527_FixCurrencyTypes.cs" />
-    <Compile Include="Migrations\201209191732527_FixCurrencyTypes.Designer.cs">
-      <DependentUpon>201209191732527_FixCurrencyTypes.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\Vertical.cs">
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209201838238_Conversions.cs" />
-    <Compile Include="Migrations\201209201838238_Conversions.Designer.cs">
-      <DependentUpon>201209201838238_Conversions.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\WikiModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WikiModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201209272230008_MonthlySummaries.cs" />
-    <Compile Include="Migrations\201209272230008_MonthlySummaries.Designer.cs">
-      <DependentUpon>201209272230008_MonthlySummaries.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\WikiModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WikiModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201210041739405_DailySummaries.cs" />
-    <Compile Include="Migrations\201210041739405_DailySummaries.Designer.cs">
-      <DependentUpon>201210041739405_DailySummaries.cs</DependentUpon>
+    <Compile Include="Entities\Wiki\WikiModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201210051910596_UpdateCampaignFields.cs" />
-    <Compile Include="Migrations\201210051910596_UpdateCampaignFields.Designer.cs">
-      <DependentUpon>201210051910596_UpdateCampaignFields.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201210152035244_StatusAndHidden.cs" />
-    <Compile Include="Migrations\201210152035244_StatusAndHidden.Designer.cs">
-      <DependentUpon>201210152035244_StatusAndHidden.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201210172102104_RmMonthlySummaries.cs" />
-    <Compile Include="Migrations\201210172102104_RmMonthlySummaries.Designer.cs">
-      <DependentUpon>201210172102104_RmMonthlySummaries.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201211291655140_RevShareStuff.cs" />
-    <Compile Include="Migrations\201211291655140_RevShareStuff.Designer.cs">
-      <DependentUpon>201211291655140_RevShareStuff.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201302262132524_MobileLP.cs" />
-    <Compile Include="Migrations\201302262132524_MobileLP.Designer.cs">
-      <DependentUpon>201302262132524_MobileLP.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201405201651129_WikiSchema.cs" />
-    <Compile Include="Migrations\201405201651129_WikiSchema.Designer.cs">
-      <DependentUpon>201405201651129_WikiSchema.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -152,60 +116,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="Entities\Wiki\WikiModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>WikiModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Entities\Wiki\WikiModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WikiModel.edmx</DependentUpon>
+      <LastGenOutput>WikiModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Wiki\WikiModel.edmx.diagram">
+      <DependentUpon>WikiModel.edmx</DependentUpon>
+    </None>
+    <None Include="Entities\Wiki\WikiModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WikiModel.edmx</DependentUpon>
+      <LastGenOutput>WikiModel.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201209131807451_StartOver.resx">
-      <DependentUpon>201209131807451_StartOver.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209131918214_ImageUrl.resx">
-      <DependentUpon>201209131918214_ImageUrl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209131937231_Countries.resx">
-      <DependentUpon>201209131937231_Countries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209132118115_RmCountryCodes.resx">
-      <DependentUpon>201209132118115_RmCountryCodes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209170529231_Vertical.resx">
-      <DependentUpon>201209170529231_Vertical.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209171922380_TrafficType.resx">
-      <DependentUpon>201209171922380_TrafficType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209181555255_RmTrafficTypeNvarchar.resx">
-      <DependentUpon>201209181555255_RmTrafficTypeNvarchar.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209191732527_FixCurrencyTypes.resx">
-      <DependentUpon>201209191732527_FixCurrencyTypes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209201838238_Conversions.resx">
-      <DependentUpon>201209201838238_Conversions.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201209272230008_MonthlySummaries.resx">
-      <DependentUpon>201209272230008_MonthlySummaries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201210041739405_DailySummaries.resx">
-      <DependentUpon>201210041739405_DailySummaries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201210051910596_UpdateCampaignFields.resx">
-      <DependentUpon>201210051910596_UpdateCampaignFields.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201210152035244_StatusAndHidden.resx">
-      <DependentUpon>201210152035244_StatusAndHidden.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201210172102104_RmMonthlySummaries.resx">
-      <DependentUpon>201210172102104_RmMonthlySummaries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201211291655140_RevShareStuff.resx">
-      <DependentUpon>201211291655140_RevShareStuff.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201302262132524_MobileLP.resx">
-      <DependentUpon>201302262132524_MobileLP.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201405201651129_WikiSchema.resx">
-      <DependentUpon>201405201651129_WikiSchema.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -23,7 +23,13 @@ namespace EomToolWeb.Controllers
             var text = admin.Test();
             return Content(text);
         }
-        
+
+        public ActionResult Test2()
+        {
+            var text = admin.Test2();
+            return Content(text);
+        }
+
         public ActionResult CreateDB()
         {
             admin.CreateDatabaseIfNotExists();

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.DTO;
 using DirectAgents.Domain.Entities.Wiki;
 
@@ -11,9 +10,9 @@ namespace DirectAgents.Domain.Concrete
 {
     public class CampaignRepository : ICampaignRepository
     {
-        EFDbContext context;
+        WikiContext context;
 
-        public CampaignRepository(EFDbContext context)
+        public CampaignRepository(WikiContext context)
         {
             this.context = context;
         }

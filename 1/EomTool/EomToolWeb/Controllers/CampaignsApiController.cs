@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Http;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Wiki;
 using EomToolWeb.Models;
 
@@ -19,7 +18,7 @@ namespace EomToolWeb.Controllers
         //}
         public CampaignsApiController()
         {
-            EFDbContext db = new EFDbContext();
+            WikiContext db = new WikiContext();
             this.campaignRepository = new CampaignRepository(db);
         }
 

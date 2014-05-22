@@ -5,14 +5,13 @@ using System.Linq;
 using Cake.Data.Wsdl.ExportService;
 using Cake.Model.Staging;
 using DirectAgents.Domain.Abstract;
-using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Wiki;
 
 namespace DirectAgents.Domain.Concrete
 {
     public class AdminImpl : IAdmin
     {
-        private EFDbContext daDomain;
+        private WikiContext wikiDomain;
 
         public event LogEventHandler LogHandler;
         protected void Log(string messageFormat, params object[] formatArgs)
@@ -34,16 +33,27 @@ namespace DirectAgents.Domain.Concrete
             string text;
             Log("some information");
             LogWarning("some warning");
-            using (daDomain = new EFDbContext())
+            using (wikiDomain = new WikiContext())
             {
-                text = daDomain.Campaigns.Count() + " campaigns";
+                text = wikiDomain.Campaigns.Count() + " campaigns";
             }
+            return text;
+        }
+
+        public string Test2()
+        {
+            string text = "bla";
+            //string text;
+            //using (var db = new DAContext())
+            //{
+            //    text = db.Offers.Count() + " offers";
+            //}
             return text;
         }
 
         public void CreateDatabaseIfNotExists()
         {
-            using (var context = new EFDbContext())
+            using (var context = new WikiContext())
             {
                 if (!context.Database.Exists())
                     context.Database.Create();
@@ -52,7 +62,7 @@ namespace DirectAgents.Domain.Concrete
 
         public void ReCreateDatabase()
         {
-            using (var context = new EFDbContext())
+            using (var context = new WikiContext())
             {
                 if (context.Database.Exists())
                     context.Database.Delete();
@@ -64,9 +74,9 @@ namespace DirectAgents.Domain.Concrete
         {
             Log("start LoadSummaries");
             using (var cake = new Cake.Model.Staging.CakeStagingEntities())
-            using (daDomain = new EFDbContext())
+            using (wikiDomain = new WikiContext())
             {
-                var pids = daDomain.Campaigns.Select(c => c.Pid).ToList();
+                var pids = wikiDomain.Campaigns.Select(c => c.Pid).ToList();
                 foreach (var pid in pids)
                 {
                     Log("Pid {0}", pid);
@@ -77,7 +87,7 @@ namespace DirectAgents.Domain.Concrete
                     }
                     else
                     {
-                        var existingSummaries = daDomain.DailySummaries.Where(ds => ds.Pid == pid);
+                        var existingSummaries = wikiDomain.DailySummaries.Where(ds => ds.Pid == pid);
                         if (existingSummaries.Any())
                         {
                             // Try deleting today's and yesterday's summaries so they can be updated
@@ -95,9 +105,9 @@ namespace DirectAgents.Domain.Concrete
                                 Log("Deleting most recent summaries");
                                 foreach (var summary in recentSummaries)
                                 {
-                                    daDomain.DailySummaries.Remove(summary);
+                                    wikiDomain.DailySummaries.Remove(summary);
                                 }
-                                daDomain.SaveChanges();
+                                wikiDomain.SaveChanges();
                             }
                         }
                         // See if any existing summaries remain
@@ -125,9 +135,9 @@ namespace DirectAgents.Domain.Concrete
                                 Cost = cakeSummary.cost,
                                 Revenue = cakeSummary.revenue
                             };
-                            daDomain.DailySummaries.Add(daSummary);
+                            wikiDomain.DailySummaries.Add(daSummary);
                         }
-                        daDomain.SaveChanges();
+                        wikiDomain.SaveChanges();
                         Log("done");
                     }
                 }
@@ -139,7 +149,7 @@ namespace DirectAgents.Domain.Concrete
         {
             Log("start LoadCampaigns");
             using (var cake = new Cake.Model.Staging.CakeStagingEntities())
-            using (daDomain = new EFDbContext())
+            using (wikiDomain = new WikiContext())
             {
                 Log("Updating verticals");
                 UpdateVerticals(cake);
@@ -155,24 +165,24 @@ namespace DirectAgents.Domain.Concrete
                     var campaign = GetOrCreateCampaign(item);
 
                     campaign.Name = item.Offer.OfferName;
-                    campaign.Vertical = daDomain.Verticals.Single(c => c.Name == item.Offer.VerticalName);
+                    campaign.Vertical = wikiDomain.Verticals.Single(c => c.Name == item.Offer.VerticalName);
 
                     var offer = (Cake.Data.Wsdl.ExportService.offer1)item.Offer;
 
                     if (offer != null)
                     {
                         ExtractFieldsFromWsdlOffer(campaign, offer);
-                        if (!daDomain.Statuses.Any(s => s.StatusId == offer.StatusId))
+                        if (!wikiDomain.Statuses.Any(s => s.StatusId == offer.StatusId))
                         {
                             var status = new Status { StatusId = offer.StatusId, Name = offer.StatusName };
-                            daDomain.Statuses.Add(status);
+                            wikiDomain.Statuses.Add(status);
                         }
                     }
                     AddCountries(countryLookup[campaign.Pid], campaign);
                     AddTrafficTypes(item.Offer.AllowedMediaTypeNames.SplitCSV().Distinct(), campaign);
                     AddAccountManagers(item.Advertiser.AccountManagerName, campaign);
                     AddAdManagers(item.Advertiser.AdManagerName, campaign);
-                    daDomain.SaveChanges();
+                    wikiDomain.SaveChanges();
                 }
             }
             Log("done LoadCampaigns");
@@ -212,36 +222,36 @@ namespace DirectAgents.Domain.Concrete
 
         private void UpdateVerticals(CakeStagingEntities cake)
         {
-            var verticals = daDomain.Verticals.ToList();
+            var verticals = wikiDomain.Verticals.ToList();
             var currentVerticals = verticals.Select(c => c.Name);
 
-            var usedVerticalIds = daDomain.Campaigns.Select(c => c.Vertical.VerticalId).Distinct();
-            var currentUnusedVerticals = daDomain.Verticals.Where(v => !usedVerticalIds.Contains(v.VerticalId)).Select(v => v.Name).ToList();
+            var usedVerticalIds = wikiDomain.Campaigns.Select(c => c.Vertical.VerticalId).Distinct();
+            var currentUnusedVerticals = wikiDomain.Verticals.Where(v => !usedVerticalIds.Contains(v.VerticalId)).Select(v => v.Name).ToList();
 
             var stagedVerticals = cake.CakeOffers.Select(o => o.VerticalName).Distinct();
 
             foreach (var item in currentUnusedVerticals.Except(stagedVerticals).Select(vn => verticals.Single(v => v.Name == vn)))
-                daDomain.Verticals.Remove(item);
+                wikiDomain.Verticals.Remove(item);
 
             foreach (var item in stagedVerticals.Except(currentVerticals))
-                daDomain.Verticals.Add(new Vertical { Name = item });
+                wikiDomain.Verticals.Add(new Vertical { Name = item });
 
-            daDomain.SaveChanges();
+            wikiDomain.SaveChanges();
         }
 
         private void UpdateTrafficTypes(CakeStagingEntities cake)
         {
-            var trafficTypes = daDomain.TrafficTypes.ToList();
+            var trafficTypes = wikiDomain.TrafficTypes.ToList();
             var staged = cake.CakeOffers.ToList().SelectMany(c => c.AllowedMediaTypeNames.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)).Distinct();
             var current = trafficTypes.Select(c => c.Name);
 
             foreach (var item in current.Except(staged).Select(c => trafficTypes.Single(d => d.Name == c)))
-                daDomain.TrafficTypes.Remove(item);
+                wikiDomain.TrafficTypes.Remove(item);
 
             foreach (var item in staged.Except(current))
-                daDomain.TrafficTypes.Add(new TrafficType { Name = item });
+                wikiDomain.TrafficTypes.Add(new TrafficType { Name = item });
 
-            daDomain.SaveChanges();
+            wikiDomain.SaveChanges();
         }
 
         private class _OfferAndAdvertiser
@@ -262,11 +272,11 @@ namespace DirectAgents.Domain.Concrete
 
         Campaign GetOrCreateCampaign(_OfferAndAdvertiser item)
         {
-            var campaign = daDomain.Campaigns.FirstOrDefault(c => c.Pid == item.Offer.Offer_Id);
+            var campaign = wikiDomain.Campaigns.FirstOrDefault(c => c.Pid == item.Offer.Offer_Id);
             if (campaign == null)
             {
                 campaign = new Campaign { Pid = item.Offer.Offer_Id, };
-                daDomain.Campaigns.Add(campaign);
+                wikiDomain.Campaigns.Add(campaign);
                 Log("Pid {0} (adding)", campaign.Pid);
             }
             else
@@ -280,7 +290,7 @@ namespace DirectAgents.Domain.Concrete
         // TODO: support multiple accountmangers
         private void AddAccountManagers(string accountManagerName, Campaign campaign)
         {
-            var am = daDomain.People.Where(p => p.Name == accountManagerName).FirstOrDefault();
+            var am = wikiDomain.People.Where(p => p.Name == accountManagerName).FirstOrDefault();
 
             if (am == null)
                 am = new Person { Name = accountManagerName };
@@ -292,7 +302,7 @@ namespace DirectAgents.Domain.Concrete
         // TODO: support multiple admangers
         private void AddAdManagers(string adManagerName, Campaign campaign)
         {
-            var ad = daDomain.People.Where(p => p.Name == adManagerName).FirstOrDefault();
+            var ad = wikiDomain.People.Where(p => p.Name == adManagerName).FirstOrDefault();
 
             if (ad == null)
                 ad = new Person { Name = adManagerName };
@@ -310,7 +320,7 @@ namespace DirectAgents.Domain.Concrete
 
             foreach (var countryCode in countryCodes)
             {
-                var country = daDomain.Countries.Where(c => c.CountryCode == countryCode).FirstOrDefault();
+                var country = wikiDomain.Countries.Where(c => c.CountryCode == countryCode).FirstOrDefault();
 
                 if (country == null)
                     country = new Country { CountryCode = countryCode, Name = countryCode + "." };
@@ -325,7 +335,7 @@ namespace DirectAgents.Domain.Concrete
 
             foreach (var trafficTypeName in trafficTypeNames)
             {
-                var trafficType = daDomain.TrafficTypes.Where(c => c.Name == trafficTypeName).FirstOrDefault();
+                var trafficType = wikiDomain.TrafficTypes.Where(c => c.Name == trafficTypeName).FirstOrDefault();
 
                 if (trafficType == null)
                     trafficType = new TrafficType { Name = trafficTypeName };
