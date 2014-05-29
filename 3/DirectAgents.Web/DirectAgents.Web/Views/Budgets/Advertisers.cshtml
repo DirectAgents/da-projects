@@ -1,0 +1,17 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Advertiser>
+
+<table style="border: 1px solid gray">
+    <tr>
+        <th>Id</th>
+        <th>Advertiser</th>
+    </tr>
+
+@foreach (var adv in Model)
+{
+    <tr>
+        <td>@adv.AdvertiserId</td>
+        <td>@adv.AdvertiserName</td>
+    </tr>
+}
+
+</table>

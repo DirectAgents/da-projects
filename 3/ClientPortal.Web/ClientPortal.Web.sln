@@ -19,6 +19,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickBooks.Utility", "..\QuickBooks.Utility\QuickBooks.Utility.csproj", "{5A6D055F-1C43-4A27-AA2D-D034685BB63A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CakeExtracter", "..\CakeExtracter\CakeExtracter\CakeExtracter.csproj", "{3B6C5433-5392-4165-A7E4-4AA431A75BB3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{278911AB-CB92-4316-843E-4571CD0C3410} = {278911AB-CB92-4316-843E-4571CD0C3410}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StackExchange.Profiling", "..\..\..\MiniProfiler\StackExchange.Profiling\StackExchange.Profiling.csproj", "{386222BD-6B6E-480F-A342-8DE1AB516E2C}"
 EndProject
@@ -43,6 +46,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{D7E8DD09-2BE7-43DD-858C-C0B8D87252EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{6B006DA8-6725-438B-AA64-44DE1038A88D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectAgents.Domain", "..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj", "{278911AB-CB92-4316-843E-4571CD0C3410}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -220,6 +225,16 @@ Global
 		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5C9EEBEE-1F02-47F3-92B8-700542642C7D}.Release|x86.ActiveCfg = Release|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{278911AB-CB92-4316-843E-4571CD0C3410}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

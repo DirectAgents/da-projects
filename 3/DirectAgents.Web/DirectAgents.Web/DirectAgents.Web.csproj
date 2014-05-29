@@ -39,6 +39,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -137,6 +141,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Budgets\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
+      <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
+      <Name>DirectAgents.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CakeExtracter\CakeExtracter\CakeExtracter.csproj">
+      <Project>{3b6c5433-5392-4165-a7e4-4aa431a75bb3}</Project>
+      <Name>CakeExtracter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Budgets\Advertisers.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
