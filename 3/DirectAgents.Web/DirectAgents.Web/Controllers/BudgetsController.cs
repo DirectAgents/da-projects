@@ -1,6 +1,7 @@
 ﻿using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Contexts;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace DirectAgents.Web.Controllers
@@ -18,7 +19,7 @@ namespace DirectAgents.Web.Controllers
         {
             var advertisers = mainRepo.GetAdvertisers();
 
-            return View(advertisers);
+            return View(advertisers.OrderBy(a => a.AdvertiserName));
         }
 
         public ActionResult Index()
