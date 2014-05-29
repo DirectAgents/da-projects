@@ -6,6 +6,8 @@ using Cake.Data.Wsdl.ExportService;
 using Cake.Model.Staging;
 using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Entities.Wiki;
+using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities;
 
 namespace DirectAgents.Domain.Concrete
 {
@@ -42,12 +44,19 @@ namespace DirectAgents.Domain.Concrete
 
         public string Test2()
         {
-            string text = "bla";
-            //string text;
-            //using (var db = new DAContext())
-            //{
-            //    text = db.Offers.Count() + " offers";
-            //}
+            string text;
+            using (var db = new DAContext())
+            {
+                //var oi = new OfferInfo()
+                //{
+                //    OfferId = 1563,
+                //    Budget = 250
+                //};
+                //db.OfferInfos.Add(oi);
+                //db.SaveChanges();
+
+                text = db.OfferInfos.Count() + " offerinfos";
+            }
             return text;
         }
 

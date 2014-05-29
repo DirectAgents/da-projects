@@ -54,12 +54,19 @@
   <ItemGroup>
     <Compile Include="Abstract\IAdmin.cs" />
     <Compile Include="Abstract\ICampaignRepository.cs" />
+    <Compile Include="Abstract\IMainRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\CountryLookup.cs" />
     <Compile Include="Concrete\Extensions.cs" />
+    <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
+    <Compile Include="Entities\Cake\Advertiser.cs" />
+    <Compile Include="Entities\Cake\Offer.cs" />
+    <Compile Include="Contexts\DAContext.cs" />
+    <Compile Include="Entities\Cake\OfferDailySummary.cs" />
+    <Compile Include="Entities\OfferInfo.cs" />
     <Compile Include="Entities\WikiPartials\Campaign.cs" />
     <Compile Include="Entities\WikiPartials\Country.cs" />
     <Compile Include="Entities\WikiPartials\Status.cs" />
@@ -102,6 +109,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201405282033412_OfferDailySummary.cs" />
+    <Compile Include="Migrations\201405282033412_OfferDailySummary.Designer.cs">
+      <DependentUpon>201405282033412_OfferDailySummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,7 +127,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <EntityDeploy Include="Entities\Wiki\WikiModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>WikiModel.Designer.cs</LastGenOutput>
@@ -139,7 +153,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Entities\Cake\" />
+    <EmbeddedResource Include="Migrations\201405282033412_OfferDailySummary.resx">
+      <DependentUpon>201405282033412_OfferDailySummary.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
