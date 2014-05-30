@@ -44,7 +44,7 @@ namespace CakeExtracter.Commands
             IsCommand("synchDailySummaries", "synch DailySummaries for an advertisers offers in a date range");
             HasOption<int>("a|advertiserId=", "Advertiser Id (default = 0 / all advertisers)", c => AdvertiserId = c);
             HasOption<int>("o|offerId=", "Offer Id (default = all)", c => OfferId = c);
-            HasOption("s|startDate=", "Start Date (default is two months ago)", c => StartDate = DateTime.Parse(c));
+            HasOption("s|startDate=", "Start Date (default is 30 days ago)", c => StartDate = DateTime.Parse(c));
             HasOption("e|endDate=", "End Date (default is today)", c => EndDate = DateTime.Parse(c));
             HasOption("c|checkCakeTraffic=", "Check Cake to see which campaigns to update, rather than relying on the database (default = false)", c => CheckCakeTraffic = bool.Parse(c));
             HasOption("d|includeDeletions=", "clear dates with no data (default is false)", c => IncludeDeletions = bool.Parse(c));

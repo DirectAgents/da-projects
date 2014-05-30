@@ -242,6 +242,9 @@
     <Compile Include="CakeMarketingApi\Entities\Received.cs" />
     <Compile Include="CakeMarketingApi\Entities\Region.cs" />
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
+    <Compile Include="Commands\DASynchAdvertisersCommand.cs" />
+    <Compile Include="Commands\DASynchOfferDailySummariesCommand.cs" />
+    <Compile Include="Commands\DASynchOffersCommand.cs" />
     <Compile Include="Commands\PrintItCommand.cs" />
     <Compile Include="Commands\ScheduledCommand.cs" />
     <Compile Include="Commands\ScheduledJob.cs" />
@@ -290,6 +293,9 @@
     <Compile Include="Common\BatchingExtensions.cs" />
     <Compile Include="CakeMarketingApi\CakeMarketingUtility.cs" />
     <Compile Include="Data\CakeTraffic\CakeTrafficContext.cs" />
+    <Compile Include="Etl\CakeMarketing\DALoaders\DAAdvertisersLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\DALoaders\DAOfferDailySummariesLoader.cs" />
+    <Compile Include="Etl\CakeMarketing\DALoaders\DAOffersLoader.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\AdvertisersExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\CampaignsExtracter.cs" />
     <Compile Include="Etl\CakeMarketing\Extracters\ClicksExtracter.cs" />
@@ -397,6 +403,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\1\DirectAgents.Domain\DirectAgents.Domain.csproj">
+      <Project>{278911ab-cb92-4316-843e-4571cd0c3410}</Project>
+      <Name>DirectAgents.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\BingAds\BingAds.csproj">
       <Project>{e2ea8ab5-abaf-4007-a446-09624cb159e6}</Project>
       <Name>BingAds</Name>

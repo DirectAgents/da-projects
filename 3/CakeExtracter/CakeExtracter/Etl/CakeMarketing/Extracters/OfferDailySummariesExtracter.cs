@@ -22,6 +22,13 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
             this.offerId = offerId;
         }
 
+        public OfferDailySummariesExtracter(DateRange dateRange, int advertiserId, int? offerId)
+        {
+            this.dateRange = dateRange;
+            this.advertiserIds = new List<int> { advertiserId };
+            this.offerId = offerId;
+        }
+
         protected override void Extract()
         {
             foreach (var advIdBatch in advertiserIds.InBatches(20))
