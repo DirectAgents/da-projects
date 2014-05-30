@@ -4,14 +4,34 @@
     <tr>
         <th>Id</th>
         <th>Advertiser</th>
+        <th>Offers</th>
     </tr>
 
 @foreach (var adv in Model)
 {
-    <tr>
-        <td>@adv.AdvertiserId</td>
-        <td>@adv.AdvertiserName</td>
+    <tr id="advrow@(adv.AdvertiserId)">
+        @Html.Partial("AdvertiserRow", adv)
     </tr>
 }
 
 </table>
+
+@section scripts {
+    <script type="text/javascript">
+
+        function SynchOffers(advId) {
+            var url = '@Url.Action("SynchOffers")?advId=' + advId;
+            $.get(url, function (data) {
+                LoadRow(advId, true);
+            });
+        }
+
+        function LoadRow(advId, showAlert) {
+            var url = '@Url.Action("AdvertiserRow")?advId=' + advId;
+            $.get(url, function (data) {
+                $('#advrow' + advId).html(data);
+                if (showAlert) alert('Updated');
+            });
+        }
+    </script>
+}

@@ -1,0 +1,72 @@
+﻿@model DirectAgents.Web.Models.OfferVM
+@{
+    var offer = Model.Offer;
+}
+
+<h3>Show Offer Budget</h3>
+
+@Html.ActionLink("Edit", "Edit", new { offerId = Model.Offer.OfferId })
+<br /><br />
+
+<fieldset>
+    <legend>Offer Details</legend>
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.Offer.Advertiser)</td>
+            <td>@Html.ActionLink(offer.Advertiser.AdvertiserName, "Offers", new { advId = offer.AdvertiserId })</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Offer.OfferId)</td>
+            <td>@Html.DisplayFor(m => m.Offer.OfferId)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Offer.OfferName)</td>
+            <td>@Html.DisplayFor(m => m.Offer.OfferName)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Offer.DateCreated)</td>
+            <td>@Html.DisplayFor(m => m.Offer.DateCreated)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Offer.Budget)</td>
+            <td>@Html.DisplayFor(m => m.Offer.Budget)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Offer.BudgetIsMonthly)</td>
+            <td>@Html.DisplayFor(m => m.Offer.BudgetIsMonthlyString)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Offer.BudgetStart)</td>
+            <td>@Html.DisplayFor(m => m.Offer.BudgetStart)</td>
+        </tr>
+    </table>
+</fieldset>
+
+<fieldset>
+    <legend>Offer Stats</legend>
+    <table>
+        <tr>
+            <td>Earliest</td>
+            <td>@Html.DisplayFor(m => m.EarliestStatDate, "Date")</td>
+        </tr>
+        <tr>
+            <td>Latest</td>
+            <td>@Html.DisplayFor(m => m.LatestStatDate, "Date")</td>
+        </tr>
+        <tr>
+            <td>Clicks</td>
+            <td>@Html.DisplayFor(m => m.Clicks, "IntComma")</td>
+        </tr>
+        <tr>
+            <td>Conversions</td>
+            <td>@Html.DisplayFor(m => m.Conversions, "IntComma")</td>
+        </tr>
+        <tr>
+            <td>Revenue</td>
+            <td>@Html.DisplayFor(m => m.Revenue, "Money")</td>
+        </tr>
+    </table>
+</fieldset>
+
+<br />
+@Html.ActionLink("Synch Stats", "SynchStats", new { offerId = offer.OfferId })

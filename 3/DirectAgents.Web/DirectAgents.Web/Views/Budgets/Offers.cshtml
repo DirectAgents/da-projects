@@ -1,0 +1,26 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Offer>
+
+<table style="border: 1px solid gray">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Offer</th>
+        <th>Budget</th>
+        <th>Monthly?</th>
+        <th>StartDate</th>
+    </tr>
+
+@foreach (var offer in Model)
+{
+    <tr>
+        @Html.Partial("OfferRow", offer)
+    </tr>
+}
+
+</table>
+
+@section scripts {
+    <script type="text/javascript">
+
+    </script>
+}
