@@ -9,6 +9,18 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchOfferDailySummariesCommand : ConsoleCommand
     {
+        public static int RunStatic(int advertiserId, int? offerId, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var cmd = new DASynchOfferDailySummariesCommand
+            {
+                AdvertiserId = advertiserId,
+                OfferId = offerId,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+            return cmd.Run();
+        }
+
         public int AdvertiserId { get; set; }
         public int? OfferId { get; set; }
         public DateTime? StartDate { get; set; }

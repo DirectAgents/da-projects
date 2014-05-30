@@ -47,6 +47,12 @@ namespace DirectAgents.Domain.Concrete
             return context.Offers.Find(offerId);
         }
 
+        public IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId)
+        {
+            var ods = context.OfferDailySummaries.Where(o => o.OfferId == offerId);
+            return ods;
+        }
+
         // ---
 
         private bool disposed = false;

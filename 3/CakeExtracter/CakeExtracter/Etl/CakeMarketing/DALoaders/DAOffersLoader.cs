@@ -32,6 +32,7 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                     offer.DefaultPriceFormatName = (from c in item.OfferContracts
                                                     where c.OfferContractId == item.DefaultOfferContractId
                                                     select c.PriceFormat.PriceFormatName).SingleOrDefault();
+                    offer.DateCreated = item.DateCreated;
                 }
 
                 Logger.Info(db.ChangeCountsAsString());

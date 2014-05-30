@@ -18,7 +18,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<Offer>()
                 .Map(m =>
                 {
-                    m.Properties(o => new { o.OfferId, o.AdvertiserId, o.OfferName, o.DefaultPriceFormatName, o.CurrencyAbbr });
+                    m.Properties(o => new { o.OfferId, o.AdvertiserId, o.OfferName, o.DefaultPriceFormatName, o.CurrencyAbbr, o.DateCreated });
                     m.ToTable("Offer", cakeSchema);
                 })
                 .Map(m =>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CakeExtracter.CakeMarketingApi.Entities
 {
@@ -10,5 +11,6 @@ namespace CakeExtracter.CakeMarketingApi.Entities
         public int DefaultOfferContractId { get; set; }
         public List<OfferContractInfo> OfferContracts { get; set; }
         public Currency Currency { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 }

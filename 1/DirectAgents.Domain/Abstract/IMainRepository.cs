@@ -14,5 +14,7 @@ namespace DirectAgents.Domain.Abstract
         Advertiser GetAdvertiser(int advertiserId);
         IQueryable<Offer> GetOffers(int? advertiserId);
         Offer GetOffer(int offerId);
+
+        IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId);
     }
 }

@@ -108,6 +108,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WikiModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201405292045335_InitialCreate.cs" />
+    <Compile Include="Migrations\201405292045335_InitialCreate.Designer.cs">
+      <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201405301659568_OfferUpdate.cs" />
+    <Compile Include="Migrations\201405301659568_OfferUpdate.Designer.cs">
+      <DependentUpon>201405301659568_OfferUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +154,14 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201405292045335_InitialCreate.resx">
+      <DependentUpon>201405292045335_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201405301659568_OfferUpdate.resx">
+      <DependentUpon>201405301659568_OfferUpdate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
