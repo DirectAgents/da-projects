@@ -1,5 +1,6 @@
 ﻿using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Contexts;
+using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.Cake;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,37 @@ namespace DirectAgents.Domain.Concrete
             this.context = context;
         }
 
-        public IEnumerable<Advertiser> GetAdvertisers()
+        public void SaveChanges()
         {
-            return context.Advertisers.ToList();
+            context.SaveChanges();
         }
+
+        // ---
+
+        public IQueryable<Advertiser> GetAdvertisers()
+        {
+            return context.Advertisers.AsQueryable();
+        }
+
+        public Advertiser GetAdvertiser(int advertiserId)
+        {
+            return context.Advertisers.Find(advertiserId);
+        }
+
+        public IQueryable<Offer> GetOffers(int? advertiserId)
+        {
+            var offers = context.Offers.AsQueryable();
+            if (advertiserId.HasValue)
+                offers = offers.Where(o => o.AdvertiserId == advertiserId);
+            return offers;
+        }
+
+        public Offer GetOffer(int offerId)
+        {
+            return context.Offers.Find(offerId);
+        }
+
+        // ---
 
         private bool disposed = false;
 

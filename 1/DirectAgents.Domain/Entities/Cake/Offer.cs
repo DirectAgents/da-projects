@@ -14,5 +14,9 @@ namespace DirectAgents.Domain.Entities.Cake
         public string OfferName { get; set; }
         public string DefaultPriceFormatName { get; set; }
         public string CurrencyAbbr { get; set; }
+
+        public Nullable<decimal> Budget { get; set; }
+        public bool BudgetIsMonthly { get; set; }
+        public DateTime? BudgetStart { get; set; }
     }
 }

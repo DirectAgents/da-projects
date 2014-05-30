@@ -55,7 +55,7 @@ namespace DirectAgents.Domain.Concrete
                 //db.OfferInfos.Add(oi);
                 //db.SaveChanges();
 
-                text = db.OfferInfos.Count() + " offerinfos";
+                text = db.Offers.Count() + " offers";
             }
             return text;
         }
