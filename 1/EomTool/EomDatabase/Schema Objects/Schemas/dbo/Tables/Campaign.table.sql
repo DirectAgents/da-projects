@@ -19,5 +19,6 @@
 	[max_scrub] [int] NULL,
 	[notes] [varchar](max) NULL,
 	[tracking_system_id] [int] NULL,
-	[external_id] [int] NULL
+	[external_id] [int] NULL,
+	[display_name] [varchar](255) NULL
 );

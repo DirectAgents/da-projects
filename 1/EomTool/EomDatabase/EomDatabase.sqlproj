@@ -817,6 +817,12 @@
     <Build Include="Schema Objects\Schemas\dbo\Views\CampaignPublisherPaymentBatchesSummary.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\PubAttachment.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Views\PublisherRelatedItemCounts.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\CommissionView.sql" />
+    <Build Include="Schema Objects\Database Level Objects\Security\Users\DIRECTAGENTS_RAkhtar.user.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\Invoice.table.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\InvoiceItem.table.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\InvoiceNote.table.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Tables\InvoiceStatus.table.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">

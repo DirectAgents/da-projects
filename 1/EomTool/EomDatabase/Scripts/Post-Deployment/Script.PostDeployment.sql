@@ -35,6 +35,13 @@ Post-Deployment Script Template
 --	DADatabaseFeb2012.dbo.[AccountManager]
 --SET IDENTITY_INSERT [$(DatabaseName)].[dbo].[AccountManager] OFF
 
+INSERT INTO [dbo].[InvoiceStatus] VALUES
+	 (0, 'default')
+	,(1, 'am_review')
+	,(2, 'acct_review')
+	,(3, 'generated')
+GO
+
 INSERT INTO [dbo].[MediaBuyerApprovalStatus] VALUES 
 	 ('1', 'default')
 	,('2', 'Queued')
@@ -52,6 +59,9 @@ INSERT INTO [dbo].[PaymentBatchState] VALUES
 	 ('1', 'default')
 	,('3', 'Sent')
 	,('6', 'Complete')
+GO
+
+GRANT EXECUTE ON [dbo].[tousd3] TO [DIRECTAGENTS\Account Managers]
 GO
 
 /*
