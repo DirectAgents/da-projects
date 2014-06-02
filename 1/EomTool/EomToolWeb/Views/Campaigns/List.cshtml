@@ -23,11 +23,11 @@
 {
     <div>Search for: @Model.SearchString</div>
 }
-<div>@Model.Campaigns.Count() campaign@(Model.Campaigns.Count()==1 ? "" : "s")</div>
-@foreach (var campaign in Model.Campaigns)
+<div>@Model.CampaignVMs.Count() campaign@(Model.CampaignVMs.Count()==1 ? "" : "s")</div>
+@foreach (var campaignVM in Model.CampaignVMs)
 {
-    <p id="camp@(campaign.Pid)">
-        @Html.Partial("Show", new CampaignViewModel(campaign))
+    <p id="camp@(campaignVM.Pid)">
+        @Html.Partial("Show", campaignVM)
     </p>
 }
 <div id="divEditCampaign" title="Edit Campaign">

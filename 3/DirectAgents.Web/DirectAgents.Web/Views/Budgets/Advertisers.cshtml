@@ -4,7 +4,7 @@
     <tr>
         <th>Id</th>
         <th>Advertiser</th>
-        <th>Offers</th>
+        <th>#Offers</th>
     </tr>
 
 @foreach (var adv in Model)
@@ -15,6 +15,9 @@
 }
 
 </table>
+
+@Model.Count() advertisers
+<br />
 
 @section scripts {
     <script type="text/javascript">

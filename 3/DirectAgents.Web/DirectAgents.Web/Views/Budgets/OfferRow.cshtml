@@ -8,4 +8,4 @@
 <td>@Html.ActionLink(offer.OfferName, "Show", new { offerId = offer.OfferId })</td>
 <td style="text-align:right">@offer.Budget</td>
 <td style="text-align:center">@offer.BudgetIsMonthlyString</td>
-<td>@offer.BudgetStart</td>
+<td>@Html.DisplayFor(m => m.BudgetStart, "Date")</td>

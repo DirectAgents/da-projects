@@ -35,6 +35,8 @@
             <dd>${EomNotes}</dd>
             <dt>Countries:</dt>
             <dd>${CountryCodes}</dd>
+            <dt>Avail. Budget:</dt>
+            <dd># if(AvailableBudget!=null){ ##= data.RevenueCurrency + kendo.toString(data.AvailableBudget,"n2") ## } #</dd>
         </dl>
     </div>
 </script>

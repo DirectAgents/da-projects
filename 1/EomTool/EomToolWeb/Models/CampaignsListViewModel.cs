@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DirectAgents.Domain.Entities.Wiki;
 
 namespace EomToolWeb.Models
 {
     public class CampaignsListViewModel
     {
-        public IEnumerable<Campaign> Campaigns { get; set; }
+        public IEnumerable<CampaignViewModel> CampaignVMs { get; set; }
+
         public string SearchString { get; set; }
         public int? Pid { get; set; }
         public Country Country { get; set; }

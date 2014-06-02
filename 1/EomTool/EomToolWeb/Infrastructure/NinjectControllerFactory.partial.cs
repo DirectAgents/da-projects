@@ -5,10 +5,12 @@ namespace EomToolWeb.Infrastructure
 {
     public partial class NinjectControllerFactory
     {
+        // setup classes in the DirectAgents.Domain namespace
         public void SetupOther()
         {
             kernel.Bind<ICampaignRepository>().To<CampaignRepository>();
             kernel.Bind<IAdmin>().To<AdminImpl>();
+            kernel.Bind<IMainRepository>().To<MainRepository>();
         }
     }
 }

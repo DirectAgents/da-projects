@@ -44,8 +44,7 @@ namespace DirectAgents.Web.Controllers
             if (offer == null)
                 return Content("Offer not found");
 
-            var ods = mainRepo.GetOfferDailySummaries(offerId);
-
+            var ods = mainRepo.GetOfferDailySummariesForBudget(offer);
             var model = new OfferVM(offer, ods);
             return View(model);
         }
@@ -73,6 +72,14 @@ namespace DirectAgents.Web.Controllers
             mainRepo.SaveChanges();
 
             return RedirectToAction("Show", new { offerId = inOffer.OfferId });
+        }
+
+        // --- Cake Synching ---
+
+        public ActionResult SynchAdvertisers()
+        {
+            DASynchAdvertisersCommand.RunStatic(0);
+            return RedirectToAction("Advertisers");
         }
 
         public ActionResult SynchStats(int offerId)

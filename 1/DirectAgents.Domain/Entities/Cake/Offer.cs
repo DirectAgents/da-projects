@@ -1,5 +1,7 @@
-﻿using System;
+﻿using DirectAgents.Domain.Abstract;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace DirectAgents.Domain.Entities.Cake
 {
@@ -32,5 +34,18 @@ namespace DirectAgents.Domain.Entities.Cake
                 return (!Budget.HasValue ? "" : (BudgetIsMonthly ? "yes" : "no"));
             }
         }
+
+        //public decimal? GetAvailableBudget(IMainRepository mainRepo)
+        //{
+        //    if (this.Budget == null)
+        //        return null;
+
+        //    decimal spent = 0;
+        //    var ods = mainRepo.GetOfferDailySummariesForBudget(this);
+        //    if (ods.Any())
+        //        spent = ods.Sum(o => o.Revenue);
+
+        //    return (this.Budget.Value - spent);
+        //}
     }
 }

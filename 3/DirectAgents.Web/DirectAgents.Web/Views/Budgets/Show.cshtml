@@ -5,7 +5,7 @@
 
 <h3>Show Offer Budget</h3>
 
-@Html.ActionLink("Edit", "Edit", new { offerId = Model.Offer.OfferId })
+@Html.ActionLink("Edit Budget", "Edit", new { offerId = Model.Offer.OfferId })
 <br /><br />
 
 <fieldset>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.Offer.Budget)</td>
-            <td>@Html.DisplayFor(m => m.Offer.Budget)</td>
+            <td>@Html.DisplayFor(m => m.Offer.Budget, "Money")</td>
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.Offer.BudgetIsMonthly)</td>
@@ -37,7 +37,7 @@
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.Offer.BudgetStart)</td>
-            <td>@Html.DisplayFor(m => m.Offer.BudgetStart)</td>
+            <td>@Html.DisplayFor(m => m.Offer.BudgetStart, "Date")</td>
         </tr>
     </table>
 </fieldset>
@@ -46,12 +46,16 @@
     <legend>Offer Stats</legend>
     <table>
         <tr>
-            <td>Earliest</td>
+            <td>From</td>
             <td>@Html.DisplayFor(m => m.EarliestStatDate, "Date")</td>
         </tr>
         <tr>
-            <td>Latest</td>
+            <td>To</td>
             <td>@Html.DisplayFor(m => m.LatestStatDate, "Date")</td>
+        </tr>
+        <tr>
+            <td>Revenue</td>
+            <td>@Html.DisplayFor(m => m.Revenue, "Money")</td>
         </tr>
         <tr>
             <td>Clicks</td>
@@ -61,12 +65,22 @@
             <td>Conversions</td>
             <td>@Html.DisplayFor(m => m.Conversions, "IntComma")</td>
         </tr>
+    </table>
+</fieldset>
+
+<fieldset>
+    <legend>Calculated</legend>
+    <table>
         <tr>
-            <td>Revenue</td>
-            <td>@Html.DisplayFor(m => m.Revenue, "Money")</td>
+            <td>Budget Remaining</td>
+            <td>@Html.DisplayFor(m => m.BudgetRemaining, "Money")</td>
+        </tr>
+        <tr>
+            <td>Percent Used</td>
+            <td>@Html.DisplayFor(m => m.BudgetUsedPercent, "Percent")</td>
         </tr>
     </table>
 </fieldset>
 
 <br />
-@Html.ActionLink("Synch Stats", "SynchStats", new { offerId = offer.OfferId })
+@Html.ActionLink("Synch Stats (from DateCreated)", "SynchStats", new { offerId = offer.OfferId })

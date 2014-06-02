@@ -15,6 +15,9 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Offer> GetOffers(int? advertiserId);
         Offer GetOffer(int offerId);
 
-        IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId);
+        decimal? GetOfferAvailableBudget(int offerId);
+        IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId, DateTime? startDate = null, DateTime? endDate = null);
+        IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(int offerId);
+        IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(Offer offer);
     }
 }

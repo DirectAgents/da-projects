@@ -12,10 +12,12 @@ namespace EomToolWeb.Controllers
     public class CampaignsController : Controller
     {
         private ICampaignRepository campaignRepository;
+        private IMainRepository mainRepo;
 
-        public CampaignsController(ICampaignRepository campaignRepository)
+        public CampaignsController(ICampaignRepository campaignRepository, IMainRepository mainRepository)
         {
             this.campaignRepository = campaignRepository;
+            this.mainRepo = mainRepository;
         }
 
         // non-Kendo
@@ -58,7 +60,7 @@ namespace EomToolWeb.Controllers
                 else
                     campaigns = campaigns.OrderBy(c => c.Name);
             }
-            viewModel.Campaigns = campaigns.AsEnumerable();
+            viewModel.CampaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, mainRepo.GetOfferAvailableBudget(c.Pid)));
             return View(viewModel);
         }
 

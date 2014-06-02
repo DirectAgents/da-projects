@@ -47,9 +47,55 @@ namespace DirectAgents.Domain.Concrete
             return context.Offers.Find(offerId);
         }
 
-        public IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId)
+        public decimal? GetOfferAvailableBudget(int offerId)
+        {
+            var offer = GetOffer(offerId);
+            if (offer == null) return null;
+//            return offer.GetAvailableBudget(this);
+            if (offer.Budget == null)
+                return null;
+
+            decimal spent = 0;
+            var ods = GetOfferDailySummariesForBudget(offer);
+            if (ods.Any())
+                spent = ods.Sum(o => o.Revenue);
+
+            return (offer.Budget.Value - spent);
+        }
+
+        public IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId, DateTime? startDate = null, DateTime? endDate = null)
         {
             var ods = context.OfferDailySummaries.Where(o => o.OfferId == offerId);
+            if (startDate.HasValue)
+                ods = ods.Where(o => o.Date >= startDate.Value);
+            if (endDate.HasValue)
+                ods = ods.Where(o => o.Date <= endDate.Value);
+            return ods;
+        }
+
+        // get OfferDailySummaries used to compute budget spent for the specified offer
+        public IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(int offerId)
+        {
+            var offer = GetOffer(offerId);
+            return GetOfferDailySummariesForBudget(offer);
+        }
+        public IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(Offer offer)
+        {
+            if (offer == null)
+                return new List<OfferDailySummary>().AsQueryable();
+
+            DateTime statStart;
+            if (offer.BudgetIsMonthly)
+            {
+                statStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                if (offer.BudgetStart.HasValue && offer.BudgetStart.Value > statStart)
+                    statStart = offer.BudgetStart.Value;
+            }
+            else
+            {
+                statStart = (offer.BudgetStart.HasValue ? offer.BudgetStart.Value : offer.DateCreated);
+            }
+            var ods = context.OfferDailySummaries.Where(o => o.OfferId == offer.OfferId && o.Date >= statStart);
             return ods;
         }
 

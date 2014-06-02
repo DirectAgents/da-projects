@@ -1,16 +1,17 @@
-﻿using System.Data.Entity;
-using System.Linq;
-using System.Web.Http;
-using DirectAgents.Domain.Abstract;
+﻿using DirectAgents.Domain.Abstract;
 using DirectAgents.Domain.Concrete;
+using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Wiki;
 using EomToolWeb.Models;
+using System.Linq;
+using System.Web.Http;
 
 namespace EomToolWeb.Controllers
 {
     public class CampaignsApiController : ApiController
     {
         private ICampaignRepository campaignRepository;
+        private IMainRepository mainRepo;
         // TODO: used ninject
         //public CampaignsApiController(ICampaignRepository campaignRepository)
         //{
@@ -18,8 +19,8 @@ namespace EomToolWeb.Controllers
         //}
         public CampaignsApiController()
         {
-            WikiContext db = new WikiContext();
-            this.campaignRepository = new CampaignRepository(db);
+            this.campaignRepository = new CampaignRepository(new WikiContext());
+            this.mainRepo = new MainRepository(new DAContext());
         }
 
         public IQueryable<CampaignViewModel> Get()
@@ -64,7 +65,7 @@ namespace EomToolWeb.Controllers
 
             var query = campaigns
                        .AsEnumerable()
-                       .Select(c => new CampaignViewModel(c))
+                       .Select(c => new CampaignViewModel(c, mainRepo.GetOfferAvailableBudget(c.Pid)))
                        .AsQueryable();
 
             return query;

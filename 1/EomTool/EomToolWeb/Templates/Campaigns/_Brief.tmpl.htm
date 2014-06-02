@@ -79,6 +79,10 @@
                 <td class="fieldName">Hidden:</td>
                 <td>${Hidden}</td>
             </tr>
+            <tr>
+                <td class="fieldName">Avail. Budget:</td>
+                <td># if(AvailableBudget!=null){ ##= data.RevenueCurrency + kendo.toString(data.AvailableBudget,"n2") ## } #</td>
+            </tr>
         </table>
     </div>
 </script>
@@ -163,6 +167,10 @@
             <tr>
                 <td class="fieldName">Hidden:</td>
                 <td>${Hidden}</td>
+            </tr>
+            <tr>
+                <td class="fieldName">Avail. Budget:</td>
+                <td># if(AvailableBudget!=null){ ##= data.RevenueCurrency + kendo.toString(data.AvailableBudget,"n2") ## } #</td>
             </tr>
         </table>
     </div>

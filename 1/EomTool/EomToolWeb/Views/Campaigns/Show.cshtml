@@ -56,3 +56,9 @@ Status: @Model.Status
 <br />
 Hidden: @Model.Hidden
 <br />
+Available Budget:
+@if (Model.AvailableBudget.HasValue)
+{
+    @Model.RevenueCurrency@Model.AvailableBudget.Value
+}
+<br />

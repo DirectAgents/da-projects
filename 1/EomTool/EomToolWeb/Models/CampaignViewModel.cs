@@ -13,7 +13,12 @@ namespace EomToolWeb.Models
         public CampaignViewModel(Campaign campaign)
         {
             this.campaign = campaign;
-        } 
+        }
+        public CampaignViewModel(Campaign campaign, decimal? availableBudget)
+        {
+            this.campaign = campaign;
+            this.AvailableBudget = availableBudget;
+        }
 
         public string AdManagers
         {
@@ -87,6 +92,8 @@ namespace EomToolWeb.Models
         public decimal Revenue { get { return campaign.Revenue; } }
 
         public bool RevenueIsPercentage { get { return campaign.RevenueIsPercentage; } }
+
+        public decimal? AvailableBudget { get; set; }
 
         public string ImportantDetails { get { return campaign.ImportantDetails ?? string.Empty; } }
         public string ImportantDetailsHtml
