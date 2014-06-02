@@ -84,6 +84,7 @@ namespace EomApp1.Screens.Synch
         {
             using (this.cakeEntities = new CakeEntities())
             {
+                this.cakeEntities.CommandTimeout = 60;
                 this.DeleteExistingConversions(); // 1
                 this.cakeEntities.SaveChanges();
             }
@@ -94,6 +95,7 @@ namespace EomApp1.Screens.Synch
             }
             using (this.cakeEntities = new CakeEntities())
             {
+                this.cakeEntities.CommandTimeout = 60;
                 // 3, 4
                 this.ExtractConversions();
                 // 5
@@ -123,12 +125,15 @@ namespace EomApp1.Screens.Synch
                                                                                               this.parameters.FromDate,
                                                                                               this.parameters.ToDate);
 
-            foreach (var conversion in existingConversions)
+            int numConversions = existingConversions.Count();
+            if (numConversions > 0)
             {
-                this.cakeEntities.CakeConversions.DeleteObject(conversion);
+                foreach (var conversion in existingConversions)
+                {
+                    this.cakeEntities.CakeConversions.DeleteObject(conversion);
+                }
             }
-
-            this.logger.Log("Deleted " + existingConversions.Count() + " conversions.");
+            this.logger.Log("Deleted " + numConversions + " conversions.");
         }
 
         // step 2

@@ -43,7 +43,7 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
         {
             try
             {
-                EmailUtility.SendEmail(this.From, new string[] { this.To }, new string[] { }, this.Subject, this.Body, true);
+                EmailUtility.SendEmail(this.From, this.To, null, this.Subject, this.Body, true);
             }
             catch (Exception ex)
             {

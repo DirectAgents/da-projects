@@ -6,6 +6,13 @@ namespace DAgents.Common
 {
     public static class EmailUtility
     {
+        public static void SendEmail(string from, string to, string cc, string subject, string body, bool isHTML)
+        {
+            string[] toArray = (to == null) ? new string[] { } : new string[] { to };
+            string[] ccArray = (cc == null) ? new string[] { } : new string[] { cc };
+            SendEmail(from, toArray, ccArray, subject, body, isHTML);
+        }
+
         public static void SendEmail(string from, string[] to, string[] cc, string subject, string body, bool isHTML)
         {
             MailMessage message = new MailMessage
