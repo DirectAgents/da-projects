@@ -12,3 +12,6 @@ TestResults
 connectionsconfig.xml
 
 ThirdParty
+
+# other
+*.dbmdl

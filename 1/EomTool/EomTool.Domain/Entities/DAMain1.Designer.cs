@@ -156,7 +156,7 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
-        #region Simple Properties
+        #region Primitive Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -175,7 +175,7 @@ namespace EomTool.Domain.Entities
                 {
                     OnidChanging(value);
                     ReportPropertyChanging("id");
-                    _id = StructuralObject.SetValidValue(value, "id");
+                    _id = StructuralObject.SetValidValue(value);
                     ReportPropertyChanged("id");
                     OnidChanged();
                 }
@@ -202,7 +202,7 @@ namespace EomTool.Domain.Entities
                 {
                     OnnameChanging(value);
                     ReportPropertyChanging("name");
-                    _name = StructuralObject.SetValidValue(value, false, "name");
+                    _name = StructuralObject.SetValidValue(value, false);
                     ReportPropertyChanged("name");
                     OnnameChanged();
                 }
@@ -229,7 +229,7 @@ namespace EomTool.Domain.Entities
                 {
                     Onconnection_stringChanging(value);
                     ReportPropertyChanging("connection_string");
-                    _connection_string = StructuralObject.SetValidValue(value, false, "connection_string");
+                    _connection_string = StructuralObject.SetValidValue(value, false);
                     ReportPropertyChanged("connection_string");
                     Onconnection_stringChanged();
                 }
@@ -254,7 +254,7 @@ namespace EomTool.Domain.Entities
             {
                 Oneffective_dateChanging(value);
                 ReportPropertyChanging("effective_date");
-                _effective_date = StructuralObject.SetValidValue(value, "effective_date");
+                _effective_date = StructuralObject.SetValidValue(value);
                 ReportPropertyChanged("effective_date");
                 Oneffective_dateChanged();
             }
@@ -280,7 +280,7 @@ namespace EomTool.Domain.Entities
                 {
                     Onam_view_nameChanging(value);
                     ReportPropertyChanging("am_view_name");
-                    _am_view_name = StructuralObject.SetValidValue(value, false, "am_view_name");
+                    _am_view_name = StructuralObject.SetValidValue(value, false);
                     ReportPropertyChanged("am_view_name");
                     Onam_view_nameChanged();
                 }
@@ -307,7 +307,7 @@ namespace EomTool.Domain.Entities
                 {
                     OninitializedChanging(value);
                     ReportPropertyChanging("initialized");
-                    _initialized = StructuralObject.SetValidValue(value, "initialized");
+                    _initialized = StructuralObject.SetValidValue(value);
                     ReportPropertyChanged("initialized");
                     OninitializedChanged();
                 }
@@ -319,6 +319,7 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
+    
     }
     
     /// <summary>
@@ -350,7 +351,7 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
-        #region Simple Properties
+        #region Primitive Properties
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -369,7 +370,7 @@ namespace EomTool.Domain.Entities
                 {
                     OnidChanging(value);
                     ReportPropertyChanging("id");
-                    _id = StructuralObject.SetValidValue(value, "id");
+                    _id = StructuralObject.SetValidValue(value);
                     ReportPropertyChanged("id");
                     OnidChanged();
                 }
@@ -394,7 +395,7 @@ namespace EomTool.Domain.Entities
             {
                 Onpublisher_nameChanging(value);
                 ReportPropertyChanging("publisher_name");
-                _publisher_name = StructuralObject.SetValidValue(value, false, "publisher_name");
+                _publisher_name = StructuralObject.SetValidValue(value, false);
                 ReportPropertyChanged("publisher_name");
                 Onpublisher_nameChanged();
             }
@@ -418,7 +419,7 @@ namespace EomTool.Domain.Entities
             {
                 OnnoteChanging(value);
                 ReportPropertyChanging("note");
-                _note = StructuralObject.SetValidValue(value, false, "note");
+                _note = StructuralObject.SetValidValue(value, false);
                 ReportPropertyChanged("note");
                 OnnoteChanged();
             }
@@ -442,7 +443,7 @@ namespace EomTool.Domain.Entities
             {
                 Onadded_by_system_userChanging(value);
                 ReportPropertyChanging("added_by_system_user");
-                _added_by_system_user = StructuralObject.SetValidValue(value, true, "added_by_system_user");
+                _added_by_system_user = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("added_by_system_user");
                 Onadded_by_system_userChanged();
             }
@@ -466,7 +467,7 @@ namespace EomTool.Domain.Entities
             {
                 OncreatedChanging(value);
                 ReportPropertyChanging("created");
-                _created = StructuralObject.SetValidValue(value, "created");
+                _created = StructuralObject.SetValidValue(value);
                 ReportPropertyChanged("created");
                 OncreatedChanged();
             }
@@ -477,8 +478,10 @@ namespace EomTool.Domain.Entities
 
         #endregion
 
+    
     }
 
     #endregion
 
+    
 }
