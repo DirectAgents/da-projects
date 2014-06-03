@@ -55,12 +55,14 @@
     <Compile Include="Abstract\IAdmin.cs" />
     <Compile Include="Abstract\ICampaignRepository.cs" />
     <Compile Include="Abstract\IMainRepository.cs" />
+    <Compile Include="Abstract\ISecurityRepository.cs" />
     <Compile Include="Abstract\TopCampaignBy.cs" />
     <Compile Include="Concrete\AdminImpl.cs" />
     <Compile Include="Concrete\CampaignRepository.cs" />
     <Compile Include="Concrete\CountryLookup.cs" />
     <Compile Include="Concrete\Extensions.cs" />
     <Compile Include="Concrete\MainRepository.cs" />
+    <Compile Include="Concrete\SecurityRepository.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
     <Compile Include="Entities\Cake\Contact.cs" />
@@ -68,6 +70,30 @@
     <Compile Include="Contexts\DAContext.cs" />
     <Compile Include="Entities\Cake\OfferDailySummary.cs" />
     <Compile Include="Entities\Cake\Role.cs" />
+    <Compile Include="Entities\Security\Group.cs">
+      <DependentUpon>SecurityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Security\Permission.cs">
+      <DependentUpon>SecurityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Security\Role.cs">
+      <DependentUpon>SecurityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Security\SecurityModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SecurityModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Security\SecurityModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SecurityModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Security\SecurityModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SecurityModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Entities\WikiPartials\Campaign.cs" />
     <Compile Include="Entities\WikiPartials\Country.cs" />
     <Compile Include="Entities\WikiPartials\Status.cs" />
@@ -143,6 +169,23 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>WikiModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <EntityDeploy Include="Entities\Security\SecurityModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SecurityModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Entities\Security\SecurityModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SecurityModel.edmx</DependentUpon>
+      <LastGenOutput>SecurityModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Entities\Security\SecurityModel.edmx.diagram">
+      <DependentUpon>SecurityModel.edmx</DependentUpon>
+    </None>
+    <None Include="Entities\Security\SecurityModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SecurityModel.edmx</DependentUpon>
+      <LastGenOutput>SecurityModel.cs</LastGenOutput>
+    </None>
     <None Include="Entities\Wiki\WikiModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>WikiModel.edmx</DependentUpon>
