@@ -63,9 +63,11 @@
     <Compile Include="Concrete\MainRepository.cs" />
     <Compile Include="DTO\CampaignSummary.cs" />
     <Compile Include="Entities\Cake\Advertiser.cs" />
+    <Compile Include="Entities\Cake\Contact.cs" />
     <Compile Include="Entities\Cake\Offer.cs" />
     <Compile Include="Contexts\DAContext.cs" />
     <Compile Include="Entities\Cake\OfferDailySummary.cs" />
+    <Compile Include="Entities\Cake\Role.cs" />
     <Compile Include="Entities\WikiPartials\Campaign.cs" />
     <Compile Include="Entities\WikiPartials\Country.cs" />
     <Compile Include="Entities\WikiPartials\Status.cs" />
@@ -116,6 +118,10 @@
     <Compile Include="Migrations\201405301659568_OfferUpdate.Designer.cs">
       <DependentUpon>201405301659568_OfferUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201406031449369_CakeContactAndRole.cs" />
+    <Compile Include="Migrations\201406031449369_CakeContactAndRole.Designer.cs">
+      <DependentUpon>201406031449369_CakeContactAndRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -161,6 +167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201405301659568_OfferUpdate.resx">
       <DependentUpon>201405301659568_OfferUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406031449369_CakeContactAndRole.resx">
+      <DependentUpon>201406031449369_CakeContactAndRole.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -242,6 +242,7 @@
     <Compile Include="CakeMarketingApi\Entities\Received.cs" />
     <Compile Include="CakeMarketingApi\Entities\Region.cs" />
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
     <Compile Include="Commands\DASynchAdvertisersCommand.cs" />
     <Compile Include="Commands\DASynchOfferDailySummariesCommand.cs" />
     <Compile Include="Commands\DASynchOffersCommand.cs" />

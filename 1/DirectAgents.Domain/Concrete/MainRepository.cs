@@ -24,9 +24,19 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
-        public IQueryable<Advertiser> GetAdvertisers()
+        public IQueryable<Contact> GetAccountManagers()
         {
-            return context.Advertisers.AsQueryable();
+            var accountManagers = context.Advertisers.Where(a => a.AccountManagerId.HasValue).Select(a => a.AccountManager).Distinct();
+            return accountManagers;
+        }
+
+        public IQueryable<Advertiser> GetAdvertisers(int? acctMgrId)
+        {
+            var advertisers = context.Advertisers.AsQueryable();
+            if (acctMgrId.HasValue)
+                advertisers = advertisers.Where(a => a.AccountManagerId == acctMgrId.Value);
+
+            return advertisers;
         }
 
         public Advertiser GetAdvertiser(int advertiserId)
@@ -34,11 +44,16 @@ namespace DirectAgents.Domain.Concrete
             return context.Advertisers.Find(advertiserId);
         }
 
-        public IQueryable<Offer> GetOffers(int? advertiserId)
+        public IQueryable<Offer> GetOffers(int? advertiserId, bool? withBudget)
         {
             var offers = context.Offers.AsQueryable();
             if (advertiserId.HasValue)
                 offers = offers.Where(o => o.AdvertiserId == advertiserId);
+            if (withBudget.HasValue && withBudget.Value)
+                offers = offers.Where(o => o.Budget.HasValue);
+            if (withBudget.HasValue && !withBudget.Value)
+                offers = offers.Where(o => !o.Budget.HasValue);
+
             return offers;
         }
 

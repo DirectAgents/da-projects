@@ -18,9 +18,15 @@ namespace DirectAgents.Web.Controllers
             this.mainRepo = new MainRepository(new DAContext());
         }
 
-        public ActionResult Advertisers()
+        public ActionResult AccountManagers()
         {
-            var advertisers = mainRepo.GetAdvertisers();
+            var accountManagers = mainRepo.GetAccountManagers();
+            return View(accountManagers.OrderBy(c => c.FirstName).ThenBy(c => c.LastName));
+        }
+
+        public ActionResult Advertisers(int? am)
+        {
+            var advertisers = mainRepo.GetAdvertisers(am);
             return View(advertisers.OrderBy(a => a.AdvertiserName));
         }
 
@@ -32,9 +38,9 @@ namespace DirectAgents.Web.Controllers
             return PartialView(advertiser);
         }
 
-        public ActionResult Offers(int? advId)
+        public ActionResult Offers(int? advId, bool? withBudget)
         {
-            var offers = mainRepo.GetOffers(advId);
+            var offers = mainRepo.GetOffers(advId, withBudget);
             return View(offers.OrderBy(o => o.OfferId));
         }
 
@@ -78,7 +84,7 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult SynchAdvertisers()
         {
-            DASynchAdvertisersCommand.RunStatic(0);
+            DASynchAdvertisersCommand.RunStatic(0, true, false);
             return RedirectToAction("Advertisers");
         }
 

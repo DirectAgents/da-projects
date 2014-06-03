@@ -10,9 +10,10 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
-        IQueryable<Advertiser> GetAdvertisers();
+        IQueryable<Contact> GetAccountManagers();
+        IQueryable<Advertiser> GetAdvertisers(int? acctMgrId);
         Advertiser GetAdvertiser(int advertiserId);
-        IQueryable<Offer> GetOffers(int? advertiserId);
+        IQueryable<Offer> GetOffers(int? advertiserId, bool? withBudget);
         Offer GetOffer(int offerId);
 
         decimal? GetOfferAvailableBudget(int offerId);
