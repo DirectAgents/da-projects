@@ -68,7 +68,7 @@ namespace DirectAgents.Domain.Concrete
             return offers;
         }
 
-        public Offer GetOffer(int offerId)
+        public Offer GetOffer(int offerId) //TODO: add arg: bool fillBudgetStats
         {
             return context.Offers.Find(offerId);
         }
@@ -76,24 +76,23 @@ namespace DirectAgents.Domain.Concrete
         public decimal? GetOfferAvailableBudget(int offerId)
         {
             var offer = GetOffer(offerId);
-            return GetOfferAvailableBudget(offer);
-        }
-        public decimal? GetOfferAvailableBudget(Offer offer)
-        {
             if (offer == null) return null;
-//            return offer.GetAvailableBudget(this);
-            if (offer.Budget == null || offer.Budget <= 0)
-                return null;
 
-            decimal spent = 0;
+            FillOfferBudgetStats(offer);
+            return offer.BudgetAvailable;
+        }
+
+        public void FillOfferBudgetStats(Offer offer)
+        {
+            if (offer.Budget == null || offer.Budget <= 0)
+                return;
+
+            decimal revenue = 0;
             var ods = GetOfferDailySummariesForBudget(offer);
             if (ods.Any())
-                spent = ods.Sum(o => o.Revenue);
+                revenue = ods.Sum(o => o.Revenue);
 
-            if (spent >= offer.Budget.Value)
-                return 0;
-            else
-                return (offer.Budget.Value - spent);
+            offer.BudgetUsed = revenue;
         }
 
         public IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId, DateTime? startDate = null, DateTime? endDate = null)

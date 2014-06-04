@@ -21,3 +21,15 @@
 </td>
 <td style="text-align:center">@offer.BudgetIsMonthlyString</td>
 <td>@Html.DisplayFor(m => m.BudgetStart, "Date")</td>
+<td style="text-align:right">
+    @if (offer.BudgetUsed.HasValue)
+    {
+        @offer.BudgetUsed.Value.ToString("N2")
+    }
+</td>
+<td style="text-align:center">
+    @if (offer.BudgetUsedPercent.HasValue)
+    {
+        <text>(</text>@offer.BudgetUsedPercent.Value.ToString("P1")<text>)</text>
+    }
+</td>

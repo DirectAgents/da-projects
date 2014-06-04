@@ -82,6 +82,10 @@ namespace DirectAgents.Web.Controllers
         public ActionResult Offers(int? am, int? advId, bool? withBudget)
         {
             var offers = mainRepo.GetOffers(am, advId, withBudget);
+            foreach (var offer in offers)
+            {
+                mainRepo.FillOfferBudgetStats(offer);
+            }
             return View(offers.OrderBy(o => o.Advertiser.AdvertiserName).ThenBy(o => o.OfferId));
             //TODO: tolist the offers - but with lazy loading - then include the budget remaining
         }

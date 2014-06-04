@@ -35,8 +35,31 @@ namespace DirectAgents.Domain.Entities.Cake
             }
         }
 
-        //[NotMapped]
-        //public decimal? AvailableBudget { get; set; }
+        [NotMapped]
+        public decimal? BudgetUsed { get; set; }
+        [NotMapped]
+        public decimal? BudgetAvailable
+        {
+            get
+            {
+                if (!Budget.HasValue || !BudgetUsed.HasValue)
+                    return null;
+                if (BudgetUsed.Value >= Budget.Value)
+                    return 0;
+                else
+                    return Budget.Value - BudgetUsed.Value;
+            }
+        }
+        [NotMapped]
+        public decimal? BudgetUsedPercent
+        {
+            get
+            {
+                if (!Budget.HasValue || Budget.Value <= 0 || !BudgetUsed.HasValue)
+                    return null;
+                return BudgetUsed.Value / Budget.Value;
+            }
+        }
 
         //public decimal? GetAvailableBudget(IMainRepository mainRepo)
         //{

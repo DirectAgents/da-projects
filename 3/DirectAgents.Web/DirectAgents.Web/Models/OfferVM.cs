@@ -98,7 +98,12 @@ namespace DirectAgents.Web.Models
             {
                 decimal? remaining = null;
                 if (Offer.Budget.HasValue)
-                    remaining = Offer.Budget.Value - Revenue;
+                {
+                    if (Revenue >= Offer.Budget.Value)
+                        remaining = 0;
+                    else
+                        remaining = Offer.Budget.Value - Revenue;
+                }
                 return remaining;
             }
         }
