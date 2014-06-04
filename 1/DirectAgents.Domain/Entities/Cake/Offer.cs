@@ -35,6 +35,9 @@ namespace DirectAgents.Domain.Entities.Cake
             }
         }
 
+        //[NotMapped]
+        //public decimal? AvailableBudget { get; set; }
+
         //public decimal? GetAvailableBudget(IMainRepository mainRepo)
         //{
         //    if (this.Budget == null)

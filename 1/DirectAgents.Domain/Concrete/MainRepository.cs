@@ -35,11 +35,15 @@ namespace DirectAgents.Domain.Concrete
             return accountManagers;
         }
 
-        public IQueryable<Advertiser> GetAdvertisers(int? acctMgrId)
+        public IQueryable<Advertiser> GetAdvertisers(int? acctMgrId, bool? withBudgetedOffers)
         {
             var advertisers = context.Advertisers.AsQueryable();
             if (acctMgrId.HasValue)
                 advertisers = advertisers.Where(a => a.AccountManagerId == acctMgrId.Value);
+            if (withBudgetedOffers.HasValue && withBudgetedOffers.Value)
+                advertisers = advertisers.Where(a => a.Offers.Any(o => o.Budget.HasValue));
+            if (withBudgetedOffers.HasValue && !withBudgetedOffers.Value)
+                advertisers = advertisers.Where(a => !a.Offers.Any() || a.Offers.Any(o => !o.Budget.HasValue));
 
             return advertisers;
         }
@@ -49,9 +53,11 @@ namespace DirectAgents.Domain.Concrete
             return context.Advertisers.Find(advertiserId);
         }
 
-        public IQueryable<Offer> GetOffers(int? advertiserId, bool? withBudget)
+        public IQueryable<Offer> GetOffers(int? acctMgrId, int? advertiserId, bool? withBudget)
         {
             var offers = context.Offers.AsQueryable();
+            if (acctMgrId.HasValue)
+                offers = offers.Where(o => o.Advertiser.AccountManagerId == acctMgrId.Value);
             if (advertiserId.HasValue)
                 offers = offers.Where(o => o.AdvertiserId == advertiserId);
             if (withBudget.HasValue && withBudget.Value)
@@ -70,9 +76,13 @@ namespace DirectAgents.Domain.Concrete
         public decimal? GetOfferAvailableBudget(int offerId)
         {
             var offer = GetOffer(offerId);
+            return GetOfferAvailableBudget(offer);
+        }
+        public decimal? GetOfferAvailableBudget(Offer offer)
+        {
             if (offer == null) return null;
 //            return offer.GetAvailableBudget(this);
-            if (offer.Budget == null)
+            if (offer.Budget == null || offer.Budget <= 0)
                 return null;
 
             decimal spent = 0;
@@ -80,7 +90,10 @@ namespace DirectAgents.Domain.Concrete
             if (ods.Any())
                 spent = ods.Sum(o => o.Revenue);
 
-            return (offer.Budget.Value - spent);
+            if (spent >= offer.Budget.Value)
+                return 0;
+            else
+                return (offer.Budget.Value - spent);
         }
 
         public IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId, DateTime? startDate = null, DateTime? endDate = null)

@@ -19,5 +19,15 @@ namespace DirectAgents.Domain.Entities.Cake
         public virtual Contact AdManager { get; set; }
 
         public virtual List<Offer> Offers { get; set; }
+
+        public string AdvertiserNameTrimmed(int maxChars)
+        {
+            if (AdvertiserName == null)
+                return null;
+            if (AdvertiserName.Length <= maxChars)
+                return AdvertiserName;
+            else
+                return AdvertiserName.Substring(0, maxChars) + "...";
+        }
     }
 }

@@ -1,10 +1,13 @@
 ﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Offer>
 
-<table style="border: 1px solid gray">
+<h3>@Html.ActionLink("Budgets", "Start") - Offers</h3>
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
     <tr>
-        <th></th>
-        <th>Id</th>
+        <th>Advertiser</th>
+        <th>OfferId</th>
         <th>Offer</th>
+        <th></th>
         <th>Budget</th>
         <th>Monthly?</th>
         <th>StartDate</th>
@@ -12,7 +15,7 @@
 
 @foreach (var offer in Model)
 {
-    <tr>
+    <tr id="offrow@(offer.OfferId)">
         @Html.Partial("OfferRow", offer)
     </tr>
 }
@@ -22,5 +25,19 @@
 @section scripts {
     <script type="text/javascript">
 
+        function InitOffer(offerId) {
+            var url = '@Url.Action("Initialize")?offerId=' + offerId;
+            $.get(url, function (data) {
+                LoadRow(offerId, true);
+            });
+        }
+
+        function LoadRow(offerId, showAlert) {
+            var url = '@Url.Action("OfferRow")?offerId=' + offerId;
+            $.get(url, function (data) {
+                $('#offrow' + offerId).html(data);
+                if (showAlert) alert('Updated');
+            });
+        }
     </script>
 }

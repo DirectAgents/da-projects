@@ -12,12 +12,13 @@ namespace DirectAgents.Domain.Abstract
 
         Contact GetContact(int contactId);
         IQueryable<Contact> GetAccountManagers();
-        IQueryable<Advertiser> GetAdvertisers(int? acctMgrId);
+        IQueryable<Advertiser> GetAdvertisers(int? acctMgrId, bool? withBudgetedOffers);
         Advertiser GetAdvertiser(int advertiserId);
-        IQueryable<Offer> GetOffers(int? advertiserId, bool? withBudget);
+        IQueryable<Offer> GetOffers(int? acctMgrId, int? advertiserId, bool? withBudget);
         Offer GetOffer(int offerId);
 
         decimal? GetOfferAvailableBudget(int offerId);
+        decimal? GetOfferAvailableBudget(Offer offer);
         IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId, DateTime? startDate = null, DateTime? endDate = null);
         IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(int offerId);
         IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(Offer offer);

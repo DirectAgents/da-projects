@@ -3,9 +3,21 @@
     var offer = Model;
 }
 
-<td>@Html.ActionLink("edit", "Edit", new { offerId = offer.OfferId })</td>
+<td>@offer.Advertiser.AdvertiserNameTrimmed(12)</td>
 <td style="text-align:right">@offer.OfferId</td>
 <td>@Html.ActionLink(offer.OfferName, "Show", new { offerId = offer.OfferId })</td>
-<td style="text-align:right">@offer.Budget</td>
+<td style="text-align:right">
+    @Html.ActionLink("edit", "Edit", new { offerId = offer.OfferId })
+</td>
+<td style="text-align:right">
+    @if (offer.Budget.HasValue)
+    {
+        @offer.Budget.Value.ToString("N2")
+    }
+    else
+    {
+        <a href="#" onclick="InitOffer(@offer.OfferId); return false">initialize</a>
+    }
+</td>
 <td style="text-align:center">@offer.BudgetIsMonthlyString</td>
 <td>@Html.DisplayFor(m => m.BudgetStart, "Date")</td>

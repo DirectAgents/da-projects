@@ -24,12 +24,7 @@ namespace DirectAgents.Web.Controllers
 
         // ---
 
-        public ActionResult Index()
-        {
-            return RedirectToAction("AccountManagers");
-        }
-
-        public ActionResult AccountManagers()
+        private IEnumerable<Contact> GetAccountManagers()
         {
             IEnumerable<Contact> accountManagers = mainRepo.GetAccountManagers().ToList();
             if (!securityRepo.IsAdmin(User))
@@ -37,14 +32,38 @@ namespace DirectAgents.Web.Controllers
                 var amNames = securityRepo.AccountManagersForUser(User);
                 accountManagers = accountManagers.Where(am => amNames.Contains(am.FullName));
             }
+            return accountManagers;
+        }
+        private IEnumerable<int> GetAccountManagerIds()
+        {
+            return GetAccountManagers().Select(am => am.ContactId);
+        }
+
+        // ---
+
+        public ActionResult Index()
+        {
+            return RedirectToAction("Start");
+        }
+
+        public ActionResult Start()
+        {
+            var accountManagers = GetAccountManagers();
             return View(accountManagers.OrderBy(c => c.FirstName).ThenBy(c => c.LastName));
         }
 
-        public ActionResult Advertisers(int? am)
+        public ActionResult AccountManagers()
         {
+            var accountManagers = GetAccountManagers();
+            return View(accountManagers.OrderBy(c => c.FirstName).ThenBy(c => c.LastName));
+        }
+
+        public ActionResult Advertisers(int? am, bool? withBudget)
+        {
+            var advertisers = mainRepo.GetAdvertisers(am, withBudget).OrderBy(a => a.AdvertiserName);
             var model = new BudgetsVM
             {
-                Advertisers = mainRepo.GetAdvertisers(am).OrderBy(a => a.AdvertiserName)
+                Advertisers = advertisers
             };
             if (am.HasValue)
                 model.AccountManager = mainRepo.GetContact(am.Value);
@@ -60,10 +79,19 @@ namespace DirectAgents.Web.Controllers
             return PartialView(advertiser);
         }
 
-        public ActionResult Offers(int? advId, bool? withBudget)
+        public ActionResult Offers(int? am, int? advId, bool? withBudget)
         {
-            var offers = mainRepo.GetOffers(advId, withBudget);
-            return View(offers.OrderBy(o => o.OfferId));
+            var offers = mainRepo.GetOffers(am, advId, withBudget);
+            return View(offers.OrderBy(o => o.Advertiser.AdvertiserName).ThenBy(o => o.OfferId));
+            //TODO: tolist the offers - but with lazy loading - then include the budget remaining
+        }
+
+        public ActionResult OfferRow(int offerId)
+        {
+            var offer = mainRepo.GetOffer(offerId);
+            if (offer == null)
+                return null;
+            return PartialView(offer);
         }
 
         public ActionResult Show(int offerId)
@@ -129,17 +157,17 @@ namespace DirectAgents.Web.Controllers
             return null;
         }
 
-        //// Set budget to 0 (only if it is null)
-        //public JsonResult Initialize(int offerId)
-        //{
-        //    var offer = mainRepo.GetOffer(offerId);
-        //    if (offer != null && !offer.Budget.HasValue)
-        //    {
-        //        offer.Budget = 0;
-        //        mainRepo.SaveChanges();
-        //    }
-        //    return null;
-        //}
+        // Set budget to 0 (only if it is null)
+        public JsonResult Initialize(int offerId)
+        {
+            var offer = mainRepo.GetOffer(offerId);
+            if (offer != null && !offer.Budget.HasValue)
+            {
+                offer.Budget = 0;
+                mainRepo.SaveChanges();
+            }
+            return null;
+        }
 
         //---
 
@@ -153,14 +181,6 @@ namespace DirectAgents.Web.Controllers
                 text.Append("Group: " + g.WindowsIdentity + "<br>");
             }
             return Content(text.ToString());
-        }
-
-        public ActionResult Setup()
-        {
-            //DASynchAdvertisersCommand.RunStatic(0);
-            DASynchOffersCommand.RunStatic(278);
-
-            return Content("ok");
         }
 
         protected override void Dispose(bool disposing)

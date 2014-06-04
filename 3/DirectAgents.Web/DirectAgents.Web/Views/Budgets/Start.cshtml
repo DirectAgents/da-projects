@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Contact>
+
+<h3>Budgets - Start Page</h3>
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th>Account Manager</th>
+        <th>Advertisers</th>
+        <th>Offers</th>
+    </tr>
+
+@foreach (var contact in Model)
+{
+    <tr>
+        <td>@contact.FullName</td>
+        <td>
+            @Html.ActionLink("show all", "Advertisers", new { am = contact.ContactId }) |
+            @Html.ActionLink("with budgets", "Advertisers", new { am = contact.ContactId, withBudget = true })
+        </td>
+        <td>
+            @Html.ActionLink("show all", "Offers", new { am = contact.ContactId }) |
+            @Html.ActionLink("with budgets", "Offers", new { am = contact.ContactId, withBudget = true })
+        </td>
+    </tr>
+}
+
+</table>

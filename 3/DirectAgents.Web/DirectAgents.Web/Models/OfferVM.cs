@@ -108,7 +108,7 @@ namespace DirectAgents.Web.Models
             get
             {
                 decimal? pctUsed = null;
-                if (Offer.Budget.HasValue)
+                if (Offer.Budget.HasValue && Offer.Budget.Value != 0)
                     pctUsed = Revenue / Offer.Budget.Value;
                 return pctUsed;
             }
