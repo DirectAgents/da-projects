@@ -24,6 +24,11 @@ namespace DirectAgents.Domain.Concrete
 
         // ---
 
+        public Contact GetContact(int contactId)
+        {
+            return context.Contacts.Find(contactId);
+        }
+
         public IQueryable<Contact> GetAccountManagers()
         {
             var accountManagers = context.Advertisers.Where(a => a.AccountManagerId.HasValue).Select(a => a.AccountManager).Distinct();

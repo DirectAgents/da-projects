@@ -10,6 +10,7 @@ namespace DirectAgents.Domain.Abstract
     {
         void SaveChanges();
 
+        Contact GetContact(int contactId);
         IQueryable<Contact> GetAccountManagers();
         IQueryable<Advertiser> GetAdvertisers(int? acctMgrId);
         Advertiser GetAdvertiser(int advertiserId);

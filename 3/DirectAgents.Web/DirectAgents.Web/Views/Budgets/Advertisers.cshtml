@@ -1,13 +1,20 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Advertiser>
+﻿@model DirectAgents.Web.Models.BudgetsVM
+
+@if (Model.AccountManager != null)
+{
+    <text>Account Manager: </text>@Model.AccountManager.FullName
+    <br /><br />
+}
 
 <table style="border: 1px solid gray">
     <tr>
-        <th>Id</th>
+        <th>AdMgr</th>
+        <th>AdvId</th>
         <th>Advertiser</th>
         <th>#Offers</th>
     </tr>
 
-@foreach (var adv in Model)
+@foreach (var adv in Model.Advertisers)
 {
     <tr id="advrow@(adv.AdvertiserId)">
         @Html.Partial("AdvertiserRow", adv)
@@ -16,7 +23,7 @@
 
 </table>
 
-@Model.Count() advertisers
+@Model.Advertisers.Count() advertisers
 <br />
 
 @section scripts {

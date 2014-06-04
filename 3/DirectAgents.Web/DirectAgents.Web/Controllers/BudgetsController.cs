@@ -4,7 +4,9 @@ using DirectAgents.Domain.Concrete;
 using DirectAgents.Domain.Contexts;
 using DirectAgents.Domain.Entities.Cake;
 using DirectAgents.Web.Models;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 
 namespace DirectAgents.Web.Controllers
@@ -12,22 +14,42 @@ namespace DirectAgents.Web.Controllers
     public class BudgetsController : Controller
     {
         private IMainRepository mainRepo;
+        private ISecurityRepository securityRepo;
 
         public BudgetsController()
         {
             this.mainRepo = new MainRepository(new DAContext());
+            this.securityRepo = new SecurityRepository();
+        }
+
+        // ---
+
+        public ActionResult Index()
+        {
+            return RedirectToAction("AccountManagers");
         }
 
         public ActionResult AccountManagers()
         {
-            var accountManagers = mainRepo.GetAccountManagers();
+            IEnumerable<Contact> accountManagers = mainRepo.GetAccountManagers().ToList();
+            if (!securityRepo.IsAdmin(User))
+            {
+                var amNames = securityRepo.AccountManagersForUser(User);
+                accountManagers = accountManagers.Where(am => amNames.Contains(am.FullName));
+            }
             return View(accountManagers.OrderBy(c => c.FirstName).ThenBy(c => c.LastName));
         }
 
         public ActionResult Advertisers(int? am)
         {
-            var advertisers = mainRepo.GetAdvertisers(am);
-            return View(advertisers.OrderBy(a => a.AdvertiserName));
+            var model = new BudgetsVM
+            {
+                Advertisers = mainRepo.GetAdvertisers(am).OrderBy(a => a.AdvertiserName)
+            };
+            if (am.HasValue)
+                model.AccountManager = mainRepo.GetContact(am.Value);
+
+            return View(model);
         }
 
         public ActionResult AdvertiserRow(int advId)
@@ -120,6 +142,18 @@ namespace DirectAgents.Web.Controllers
         //}
 
         //---
+
+        public ActionResult Test()
+        {
+            StringBuilder text = new StringBuilder();
+            var affIds = new List<int>();
+            var groups = securityRepo.GroupsForUser(User);
+            foreach (var g in groups)
+            {
+                text.Append("Group: " + g.WindowsIdentity + "<br>");
+            }
+            return Content(text.ToString());
+        }
 
         public ActionResult Setup()
         {

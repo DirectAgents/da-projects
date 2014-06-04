@@ -17,5 +17,11 @@ namespace DirectAgents.Domain.Entities.Cake
         public string PhoneWork { get; set; }
         public string PhoneCell { get; set; }
         public string PhoneFax { get; set; }
+
+        [NotMapped]
+        public string FullName
+        {
+            get { return FirstName + " " + LastName; }
+        }
     }
 }

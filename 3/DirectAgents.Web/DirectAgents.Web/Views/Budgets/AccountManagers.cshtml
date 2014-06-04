@@ -4,7 +4,6 @@
 
 @foreach (var contact in Model)
 {
-    var name = contact.FirstName + " " + contact.LastName;
-    @Html.ActionLink(name, "Advertisers", new { am = contact.ContactId })
+    @Html.ActionLink(contact.FullName, "Advertisers", new { am = contact.ContactId })
     <br />
 }
