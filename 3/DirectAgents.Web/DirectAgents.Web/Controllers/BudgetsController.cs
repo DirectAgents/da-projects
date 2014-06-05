@@ -140,6 +140,7 @@ namespace DirectAgents.Web.Controllers
             offer.Budget = inOffer.Budget;
             offer.BudgetIsMonthly = inOffer.BudgetIsMonthly;
             offer.BudgetStart = inOffer.BudgetStart;
+            offer.BudgetEnd = inOffer.BudgetEnd;
             mainRepo.SaveChanges();
 
             return RedirectToAction("Show", new { offerId = inOffer.OfferId });
@@ -178,11 +179,11 @@ namespace DirectAgents.Web.Controllers
             return null;
         }
 
-        // Set budget to 0 (only if it is null)
+        // Set budget to 0 (only if it is doesn't exist)
         public JsonResult Initialize(int offerId)
         {
             var offer = mainRepo.GetOffer(offerId);
-            if (offer != null && !offer.Budget.HasValue)
+            if (offer != null && !offer.HasBudget)
             {
                 offer.Budget = 0;
                 mainRepo.SaveChanges();

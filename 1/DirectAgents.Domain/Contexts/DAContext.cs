@@ -1,6 +1,7 @@
 ﻿using DirectAgents.Domain.Entities;
 using DirectAgents.Domain.Entities.Cake;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace DirectAgents.Domain.Contexts
 {
@@ -11,6 +12,7 @@ namespace DirectAgents.Domain.Contexts
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
             string cakeSchema = "cake";
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", cakeSchema);
@@ -25,7 +27,7 @@ namespace DirectAgents.Domain.Contexts
                 })
                 .Map(m =>
                 {
-                    m.Properties(o => new { o.Budget, o.BudgetIsMonthly, o.BudgetStart });
+                    m.Properties(o => new { o.BudgetIsMonthly });
                     m.ToTable("OfferInfo");
                 });
 
@@ -39,5 +41,6 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Role> Roles { get; set; }
         public DbSet<Offer> Offers { get; set; }
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
+        public DbSet<OfferBudget> OfferBudgets { get; set; }
     }
 }

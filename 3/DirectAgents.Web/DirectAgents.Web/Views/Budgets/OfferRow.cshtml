@@ -21,6 +21,7 @@
 </td>
 <td style="text-align:center">@offer.BudgetIsMonthlyString</td>
 <td>@Html.DisplayFor(m => m.BudgetStart, "Date")</td>
+<td>@Html.DisplayFor(m => m.BudgetEnd, "Date")</td>
 <td style="text-align:right">
     @if (offer.BudgetUsed.HasValue)
     {

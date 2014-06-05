@@ -1,5 +1,6 @@
 ﻿using DirectAgents.Domain.Abstract;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -18,11 +19,49 @@ namespace DirectAgents.Domain.Entities.Cake
         public string CurrencyAbbr { get; set; }
         public DateTime DateCreated { get; set; }
 
-        // --- OfferInfo table ---
+        public virtual List<OfferBudget> OfferBudgets { get; set; }
 
-        public Nullable<decimal> Budget { get; set; }
+        // --- OfferInfo table ---
         public bool BudgetIsMonthly { get; set; }
-        public DateTime? BudgetStart { get; set; }
+
+        public OfferBudget OfferBudget
+        {
+            get
+            {
+                if (OfferBudgets == null)
+                    OfferBudgets = new List<OfferBudget>();
+
+                if (OfferBudgets.Count == 0)
+                    OfferBudgets.Add(new OfferBudget());
+
+                return OfferBudgets[0];
+            }
+        }
+
+        [NotMapped]
+        public bool HasBudget
+        {
+            get { return (OfferBudgets == null || OfferBudgets.Count > 0); }
+        }
+
+        [NotMapped]
+        public decimal? Budget
+        {
+            get { return HasBudget ? (decimal?)OfferBudget.Budget : null; }
+            set { if (value.HasValue) OfferBudget.Budget = value.Value; }
+        }
+        [NotMapped]
+        public DateTime? BudgetStart
+        {
+            get { return HasBudget ? (DateTime?)OfferBudget.Start : null; }
+            set { if (value.HasValue) OfferBudget.Start = value.Value; }
+        }
+        [NotMapped]
+        public DateTime? BudgetEnd
+        {
+            get { return HasBudget ? (DateTime?)OfferBudget.End : null; }
+            set { if (value.HasValue) OfferBudget.End = value.Value; }
+        }
 
         // --- misc ---
 
@@ -31,7 +70,7 @@ namespace DirectAgents.Domain.Entities.Cake
         {
             get
             {
-                return (!Budget.HasValue ? "" : (BudgetIsMonthly ? "yes" : "no"));
+                return (BudgetIsMonthly ? "yes" : "no");
             }
         }
 
@@ -65,18 +104,5 @@ namespace DirectAgents.Domain.Entities.Cake
         public DateTime? EarliestStatDate { get; set; }
         [NotMapped]
         public DateTime? LatestStatDate { get; set; }
-
-        //public decimal? GetAvailableBudget(IMainRepository mainRepo)
-        //{
-        //    if (this.Budget == null)
-        //        return null;
-
-        //    decimal spent = 0;
-        //    var ods = mainRepo.GetOfferDailySummariesForBudget(this);
-        //    if (ods.Any())
-        //        spent = ods.Sum(o => o.Revenue);
-
-        //    return (this.Budget.Value - spent);
-        //}
     }
 }
