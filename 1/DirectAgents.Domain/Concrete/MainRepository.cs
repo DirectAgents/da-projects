@@ -53,9 +53,14 @@ namespace DirectAgents.Domain.Concrete
             return context.Advertisers.Find(advertiserId);
         }
 
-        public IQueryable<Offer> GetOffers(int? acctMgrId, int? advertiserId, bool? withBudget)
+        public IQueryable<Offer> GetOffers(bool includeExtended, int? acctMgrId, int? advertiserId, bool? withBudget)
         {
-            var offers = context.Offers.AsQueryable();
+            IQueryable<Offer> offers;
+            if (includeExtended)
+                offers = context.Offers.Include("Advertiser.AccountManager").Include("Advertiser.AdManager").AsQueryable();
+            else
+                offers = context.Offers.AsQueryable();
+
             if (acctMgrId.HasValue)
                 offers = offers.Where(o => o.Advertiser.AccountManagerId == acctMgrId.Value);
             if (advertiserId.HasValue)
@@ -87,12 +92,15 @@ namespace DirectAgents.Domain.Concrete
             if (offer.Budget == null || offer.Budget <= 0)
                 return;
 
-            decimal revenue = 0;
             var ods = GetOfferDailySummariesForBudget(offer);
             if (ods.Any())
-                revenue = ods.Sum(o => o.Revenue);
-
-            offer.BudgetUsed = revenue;
+            {
+                offer.BudgetUsed = ods.Sum(o => o.Revenue);
+                offer.EarliestStatDate = ods.Min(o => o.Date);
+                offer.LatestStatDate = ods.Max(o => o.Date);
+            }
+            else
+                offer.BudgetUsed = 0;
         }
 
         public IQueryable<OfferDailySummary> GetOfferDailySummaries(int offerId, DateTime? startDate = null, DateTime? endDate = null)

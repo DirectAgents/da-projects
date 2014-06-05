@@ -61,6 +61,11 @@ namespace DirectAgents.Domain.Entities.Cake
             }
         }
 
+        [NotMapped]
+        public DateTime? EarliestStatDate { get; set; }
+        [NotMapped]
+        public DateTime? LatestStatDate { get; set; }
+
         //public decimal? GetAvailableBudget(IMainRepository mainRepo)
         //{
         //    if (this.Budget == null)

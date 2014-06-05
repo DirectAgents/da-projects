@@ -30,6 +30,6 @@
 <td style="text-align:center">
     @if (offer.BudgetUsedPercent.HasValue)
     {
-        <text>(</text>@offer.BudgetUsedPercent.Value.ToString("P1")<text>)</text>
+        @offer.BudgetUsedPercent.Value.ToString("P1")
     }
 </td>

@@ -19,7 +19,9 @@
         </td>
         <td>
             @Html.ActionLink("show all", "Offers", new { am = contact.ContactId }) |
-            @Html.ActionLink("with budgets", "Offers", new { am = contact.ContactId, withBudget = true })
+            @Html.ActionLink("with budgets", "Offers", new { am = contact.ContactId, withBudget = true }) |
+            @Html.ActionLink("85%", "Offers", new { am = contact.ContactId, withBudget = true, minPercent = 85 }) |
+            @Html.ActionLink("100%", "Offers", new { am = contact.ContactId, withBudget = true, minPercent = 100 })
         </td>
     </tr>
 }

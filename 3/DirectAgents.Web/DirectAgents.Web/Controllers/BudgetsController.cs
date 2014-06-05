@@ -79,15 +79,26 @@ namespace DirectAgents.Web.Controllers
             return PartialView(advertiser);
         }
 
-        public ActionResult Offers(int? am, int? advId, bool? withBudget)
+        public ActionResult Offers(int? am, int? advId, bool? withBudget, int? minPercent)
         {
-            var offers = mainRepo.GetOffers(am, advId, withBudget);
+            var offers = mainRepo.GetOffers(false, am, advId, withBudget);
             foreach (var offer in offers)
             {
                 mainRepo.FillOfferBudgetStats(offer);
             }
-            return View(offers.OrderBy(o => o.Advertiser.AdvertiserName).ThenBy(o => o.OfferId));
-            //TODO: tolist the offers - but with lazy loading - then include the budget remaining
+            IEnumerable<Offer> offersList;
+            if (minPercent.HasValue)
+            {
+                decimal minPercentDec = minPercent.Value / 100m;
+                offersList = offers.ToList().Where(o => o.BudgetUsedPercent.HasValue && o.BudgetUsedPercent.Value >= minPercentDec)
+                                   .OrderBy(o => o.Advertiser.AdvertiserName).ThenBy(o => o.OfferId);
+            }
+            else
+            {
+                offersList = offers.OrderBy(o => o.Advertiser.AdvertiserName).ThenBy(o => o.OfferId).ToList();
+            }
+            return View(offersList);
+            //TODO: verify offer properties are lazy-loaded
         }
 
         public ActionResult OfferRow(int offerId)
@@ -140,6 +151,12 @@ namespace DirectAgents.Web.Controllers
         {
             DASynchAdvertisersCommand.RunStatic(0, true, false);
             return RedirectToAction("Advertisers");
+        }
+
+        public ActionResult SynchAllStats()
+        {
+            DASynchOfferBudgetStatsCommand.RunStatic();
+            return Content("Synch Stats complete");
         }
 
         public ActionResult SynchStats(int offerId)
