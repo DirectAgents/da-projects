@@ -65,10 +65,11 @@ namespace DirectAgents.Domain.Concrete
                 offers = offers.Where(o => o.Advertiser.AccountManagerId == acctMgrId.Value);
             if (advertiserId.HasValue)
                 offers = offers.Where(o => o.AdvertiserId == advertiserId);
+
             if (withBudget.HasValue && withBudget.Value)
-                offers = offers.Where(o => o.Budget.HasValue);
+                offers = offers.Where(o => o.OfferBudgets.Count > 0);
             if (withBudget.HasValue && !withBudget.Value)
-                offers = offers.Where(o => !o.Budget.HasValue);
+                offers = offers.Where(o => o.OfferBudgets.Count == 0);
 
             return offers;
         }
@@ -124,19 +125,13 @@ namespace DirectAgents.Domain.Concrete
             if (offer == null)
                 return new List<OfferDailySummary>().AsQueryable();
 
-            DateTime statStart;
-            if (offer.BudgetIsMonthly)
+            DateTime? start = null, end = null;
+            if (offer.HasBudget)
             {
-                statStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-                if (offer.BudgetStart.HasValue && offer.BudgetStart.Value > statStart)
-                    statStart = offer.BudgetStart.Value;
+                start = offer.BudgetStart;
+                end = offer.BudgetEnd;
             }
-            else
-            {
-                statStart = (offer.BudgetStart.HasValue ? offer.BudgetStart.Value : offer.DateCreated);
-            }
-            var ods = context.OfferDailySummaries.Where(o => o.OfferId == offer.OfferId && o.Date >= statStart);
-            return ods;
+            return GetOfferDailySummaries(offer.OfferId, start, end);
         }
 
         // ---

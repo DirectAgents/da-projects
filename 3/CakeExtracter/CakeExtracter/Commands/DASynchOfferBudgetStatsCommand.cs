@@ -41,19 +41,20 @@ namespace CakeExtracter.Commands
             var reportingPassword = ConfigurationManager.AppSettings["GmailReporting_Password"];
             emailer = new GmailEmailer(new System.Net.NetworkCredential(reportingEmail, reportingPassword));
 
-            var today = DateTime.Today;
-            var firstOfMonth = new DateTime(today.Year, today.Month, 1);
-            var firstOfLastMonth = firstOfMonth.AddMonths(-1);
-
             var offers = GetOffersWithBudgets();
-            foreach (var offer in offers)
+            foreach (var offer in offers) //TODO: do several in parallel
             {
-                DateTime startDate;
-                if (offer.BudgetIsMonthly)
-                    startDate = firstOfLastMonth;
-                else
-                    startDate = (offer.BudgetStart.HasValue ? offer.BudgetStart.Value : offer.DateCreated.Date);
-                var dateRange = new DateRange(startDate, today.AddDays(1));
+                DateTime startDate = offer.DateCreated.Date;
+                DateTime endDate = DateTime.Today;
+                if (offer.HasBudget)
+                {
+                    if (offer.BudgetStart.HasValue)
+                        startDate = offer.BudgetStart.Value;
+                    if (offer.BudgetEnd.HasValue)
+                        endDate = offer.BudgetEnd.Value;
+                }
+                var dateRange = new DateRange(startDate, endDate.AddDays(1));
+                //TODO: is there a way to know if it's "complete" and we don't need to up this one anymore?
 
                 var extracter = new OfferDailySummariesExtracter(dateRange, 0, offer.OfferId);
                 var loader = new DAOfferDailySummariesLoader();
@@ -119,8 +120,8 @@ namespace CakeExtracter.Commands
             text.AppendFormat("<tr><td>OfferId:</td><td>{0}</td></tr>", offer.OfferId);
             text.AppendFormat("<tr><td>Offer:</td><td>{0}</td></tr>", offer.OfferName);
             text.AppendFormat("<tr><td>Budget:</td><td>{0:N2}</td></tr>", offer.Budget);
-            text.AppendFormat("<tr><td>IsMonthly:</td><td>{0}</td></tr>", offer.BudgetIsMonthlyString);
             text.AppendFormat("<tr><td>BudgetStart:</td><td>{0}</td></tr>", offer.BudgetStart.HasValue ? offer.BudgetStart.Value.ToShortDateString() : "");
+            text.AppendFormat("<tr><td>BudgetEnd:</td><td>{0}</td></tr>", offer.BudgetEnd.HasValue ? offer.BudgetEnd.Value.ToShortDateString() : "");
             text.AppendFormat("<tr><td>Stats:</td><td>{0} - {1}</td></tr>", offer.EarliestStatDate.HasValue ? offer.EarliestStatDate.Value.ToShortDateString() : "",
                                                     offer.LatestStatDate.HasValue ? offer.LatestStatDate.Value.ToShortDateString() : "");
             text.AppendFormat("<tr><td>Percent Used:</td><td>{0:P1}</td></tr>", offer.BudgetUsedPercent);

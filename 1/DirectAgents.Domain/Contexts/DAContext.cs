@@ -18,18 +18,7 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<Advertiser>().ToTable("Advertiser", cakeSchema);
             modelBuilder.Entity<Contact>().ToTable("Contact", cakeSchema);
             modelBuilder.Entity<Role>().ToTable("Role", cakeSchema);
-
-            modelBuilder.Entity<Offer>()
-                .Map(m =>
-                {
-                    m.Properties(o => new { o.OfferId, o.AdvertiserId, o.OfferName, o.DefaultPriceFormatName, o.CurrencyAbbr, o.DateCreated });
-                    m.ToTable("Offer", cakeSchema);
-                })
-                .Map(m =>
-                {
-                    m.Properties(o => new { o.BudgetIsMonthly });
-                    m.ToTable("OfferInfo");
-                });
+            modelBuilder.Entity<Offer>().ToTable("Offer", cakeSchema);
 
             modelBuilder.Entity<OfferDailySummary>()
                 .HasKey(t => new { t.OfferId, t.Date })

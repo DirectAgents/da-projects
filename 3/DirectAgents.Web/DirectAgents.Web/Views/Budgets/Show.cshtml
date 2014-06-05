@@ -29,11 +29,7 @@
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.Offer.Budget)</td>
-            <td>@Html.DisplayFor(m => m.Offer.Budget, "Money")</td>
-        </tr>
-        <tr>
-            <td>@Html.LabelFor(m => m.Offer.BudgetIsMonthly)</td>
-            <td>@Html.DisplayFor(m => m.Offer.BudgetIsMonthlyString)</td>
+            <td>@Html.DisplayFor(m => m.Offer.Budget, "DecimalComma")</td>
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.Offer.BudgetStart)</td>
@@ -59,7 +55,7 @@
         </tr>
         <tr>
             <td>Revenue</td>
-            <td>@Html.DisplayFor(m => m.Revenue, "Money")</td>
+            <td>@Html.DisplayFor(m => m.Revenue, "DecimalComma")</td>
         </tr>
         <tr>
             <td>Clicks</td>
@@ -77,7 +73,7 @@
     <table>
         <tr>
             <td>Budget Remaining</td>
-            <td>@Html.DisplayFor(m => m.BudgetRemaining, "Money")</td>
+            <td>@Html.DisplayFor(m => m.BudgetRemaining, "DecimalComma")</td>
         </tr>
         <tr>
             <td>Percent Used</td>

@@ -138,7 +138,6 @@ namespace DirectAgents.Web.Controllers
                 return Content("Offer not found");
 
             offer.Budget = inOffer.Budget;
-            offer.BudgetIsMonthly = inOffer.BudgetIsMonthly;
             offer.BudgetStart = inOffer.BudgetStart;
             offer.BudgetEnd = inOffer.BudgetEnd;
             mainRepo.SaveChanges();

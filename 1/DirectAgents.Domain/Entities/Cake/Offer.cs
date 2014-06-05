@@ -21,12 +21,10 @@ namespace DirectAgents.Domain.Entities.Cake
 
         public virtual List<OfferBudget> OfferBudgets { get; set; }
 
-        // --- OfferInfo table ---
-        public bool BudgetIsMonthly { get; set; }
-
+        // Note: currently the Offer can only have one OfferBudget
         public OfferBudget OfferBudget
         {
-            get
+            get // create one if none exist
             {
                 if (OfferBudgets == null)
                     OfferBudgets = new List<OfferBudget>();
@@ -64,15 +62,6 @@ namespace DirectAgents.Domain.Entities.Cake
         }
 
         // --- misc ---
-
-        [NotMapped]
-        public string BudgetIsMonthlyString
-        {
-            get
-            {
-                return (BudgetIsMonthly ? "yes" : "no");
-            }
-        }
 
         [NotMapped]
         public decimal? BudgetUsed { get; set; }

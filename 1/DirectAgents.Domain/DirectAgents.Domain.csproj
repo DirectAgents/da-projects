@@ -153,6 +153,10 @@
     <Compile Include="Migrations\201406042147505_OfferBudget.Designer.cs">
       <DependentUpon>201406042147505_OfferBudget.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201406051452281_RmOfferInfo.cs" />
+    <Compile Include="Migrations\201406051452281_RmOfferInfo.Designer.cs">
+      <DependentUpon>201406051452281_RmOfferInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -221,6 +225,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201406042147505_OfferBudget.resx">
       <DependentUpon>201406042147505_OfferBudget.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406051452281_RmOfferInfo.resx">
+      <DependentUpon>201406051452281_RmOfferInfo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
