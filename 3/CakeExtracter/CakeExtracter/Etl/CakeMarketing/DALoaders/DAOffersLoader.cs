@@ -8,8 +8,17 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 {
     public class DAOffersLoader : Loader<Offer>
     {
+        private readonly bool loadInactive;
+
+        public DAOffersLoader(bool loadInactive)
+        {
+            this.loadInactive = loadInactive;
+        }
+
         protected override int Load(List<Offer> items)
         {
+            int numInactiveSkipped = 0;
+            int numInactiveUpdated = 0;
             Logger.Info("Synching {0} offers...", items.Count);
             using (var db = new DirectAgents.Domain.Contexts.DAContext())
             {
@@ -19,6 +28,19 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
 
                 foreach (var item in items)
                 {
+                    if (item.OfferStatus.OfferStatusId == DirectAgents.Domain.Entities.Cake.OfferStatus.Inactive && !loadInactive)
+                    {
+                        // See if already loaded. If so, update it. If not, skip.
+                        if (db.Offers.Any(o => o.OfferId == item.OfferId))
+                        {
+                            numInactiveUpdated++;
+                        }
+                        else
+                        {
+                            numInactiveSkipped++;
+                            continue;
+                        }
+                    }
                     var vertical = db.Verticals.Where(v => v.VerticalId == item.Vertical.VerticalId)
                         .SingleOrFallback(() =>
                         {
@@ -95,6 +117,8 @@ namespace CakeExtracter.Etl.CakeMarketing.DALoaders
                     offer.DateCreated = item.DateCreated;
                 }
 
+                if (numInactiveSkipped > 0 || numInactiveUpdated > 0)
+                    Logger.Info("Inactive Offers: {0} skipped, {1} updated(already loaded)", numInactiveSkipped, numInactiveUpdated);
                 Logger.Info(db.ChangeCountsAsString());
 
                 db.SaveChanges();

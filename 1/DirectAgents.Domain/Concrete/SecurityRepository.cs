@@ -63,10 +63,12 @@ namespace DirectAgents.Domain.Concrete
             return groups.Any(g => g.Name == "Accountants" || g.Name == "Administrators");
         }
 
-        public IEnumerable<string> AccountManagersForUser(IPrincipal user)
+        public IEnumerable<string> AccountManagersForUser(IPrincipal user, bool replaceSlashesWithAmpersands)
         {
             var roles = RolesForUser(user);
             var amNames = roles.SelectMany(r => r.Permissions).Distinct().Where(p => p.Name.StartsWith("AM: ")).Select(p => p.Name.Substring(4));
+            if (replaceSlashesWithAmpersands)
+                amNames = amNames.Select(a => a.Replace("/", " & "));
             return amNames;
         }
     }

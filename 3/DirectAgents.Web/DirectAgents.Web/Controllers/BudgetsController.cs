@@ -29,7 +29,7 @@ namespace DirectAgents.Web.Controllers
             IEnumerable<Contact> accountManagers = mainRepo.GetAccountManagers().ToList();
             if (!securityRepo.IsAdmin(User))
             {
-                var amNames = securityRepo.AccountManagersForUser(User);
+                var amNames = securityRepo.AccountManagersForUser(User, true);
                 accountManagers = accountManagers.Where(am => amNames.Contains(am.FullName));
             }
             return accountManagers;
@@ -41,10 +41,17 @@ namespace DirectAgents.Web.Controllers
 
         // ---
 
+        public ActionResult Admin()
+        {
+            return View();
+        }
+
         public ActionResult Index()
         {
             return RedirectToAction("Start");
         }
+
+        // ---
 
         public ActionResult Start()
         {
@@ -52,6 +59,7 @@ namespace DirectAgents.Web.Controllers
             return View(accountManagers.OrderBy(c => c.FirstName).ThenBy(c => c.LastName));
         }
 
+        //unused?
         public ActionResult AccountManagers()
         {
             var accountManagers = GetAccountManagers();
@@ -81,9 +89,9 @@ namespace DirectAgents.Web.Controllers
             return PartialView(advertiser);
         }
 
-        public ActionResult Offers(int? am, int? advId, bool? withBudget, int? minPercent)
+        public ActionResult Offers(int? am, int? advId, bool? withBudget, int? minPercent, bool includeInactive = false)
         {
-            var offers = mainRepo.GetOffers(false, am, advId, withBudget, false, null);
+            var offers = mainRepo.GetOffers(false, am, advId, withBudget, includeInactive, null);
             foreach (var offer in offers)
             {
                 mainRepo.FillOfferBudgetStats(offer);
@@ -155,7 +163,7 @@ namespace DirectAgents.Web.Controllers
             return RedirectToAction("Advertisers");
         }
 
-        public ActionResult SynchAllStats()
+        public ActionResult SynchBudgetStats()
         {
             DASynchOfferBudgetStatsCommand.RunStatic();
             return Content("Synch Stats complete");
@@ -176,7 +184,7 @@ namespace DirectAgents.Web.Controllers
 
         public JsonResult SynchOffers(int advId)
         {
-            DASynchOffersCommand.RunStatic(advId);
+            DASynchOffersCommand.RunStatic(advId, false);
             return null;
         }
 

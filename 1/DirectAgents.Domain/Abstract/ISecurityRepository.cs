@@ -13,6 +13,6 @@ namespace DirectAgents.Domain.Abstract
 
         bool IsAdmin(IPrincipal user);
         bool IsAccountantOrAdmin(IPrincipal user);
-        IEnumerable<string> AccountManagersForUser(IPrincipal user);
+        IEnumerable<string> AccountManagersForUser(IPrincipal user, bool replaceSlashesWithAmpersands);
     }
 }

@@ -41,9 +41,10 @@
     <script type="text/javascript">
 
         function SynchOffers(advId) {
+            $('#cmd' + advId).html('updating');
             var url = '@Url.Action("SynchOffers")?advId=' + advId;
             $.get(url, function (data) {
-                LoadRow(advId, true);
+                LoadRow(advId, false);
             });
         }
 

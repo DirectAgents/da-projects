@@ -49,7 +49,7 @@ namespace CakeExtracter.Commands
             loaderThread.Join();
 
             if (SynchOffersAlso)
-                DASynchOffersCommand.RunStatic(AdvertiserId);
+                DASynchOffersCommand.RunStatic(AdvertiserId, false);
 
             return 0;
         }

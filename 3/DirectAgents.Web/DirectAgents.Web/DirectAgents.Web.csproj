@@ -850,6 +850,7 @@
     <Content Include="Views\Budgets\AccountManagers.cshtml" />
     <Content Include="Views\Budgets\Start.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\DecimalComma.cshtml" />
+    <Content Include="Views\Budgets\Admin.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
