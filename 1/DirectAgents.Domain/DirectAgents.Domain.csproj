@@ -69,7 +69,10 @@
     <Compile Include="Entities\Cake\Offer.cs" />
     <Compile Include="Contexts\DAContext.cs" />
     <Compile Include="Entities\Cake\OfferDailySummary.cs" />
+    <Compile Include="Entities\Cake\OfferStatus.cs" />
+    <Compile Include="Entities\Cake\OfferType.cs" />
     <Compile Include="Entities\Cake\Role.cs" />
+    <Compile Include="Entities\Cake\Vertical.cs" />
     <Compile Include="Entities\OfferBudget.cs" />
     <Compile Include="Entities\Security\Group.cs">
       <DependentUpon>SecurityModel.tt</DependentUpon>
@@ -157,6 +160,10 @@
     <Compile Include="Migrations\201406051452281_RmOfferInfo.Designer.cs">
       <DependentUpon>201406051452281_RmOfferInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201406052033250_VerticalsEtc.cs" />
+    <Compile Include="Migrations\201406052033250_VerticalsEtc.Designer.cs">
+      <DependentUpon>201406052033250_VerticalsEtc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -228,6 +235,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201406051452281_RmOfferInfo.resx">
       <DependentUpon>201406051452281_RmOfferInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201406052033250_VerticalsEtc.resx">
+      <DependentUpon>201406052033250_VerticalsEtc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

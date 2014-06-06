@@ -10,11 +10,21 @@ namespace DirectAgents.Domain.Entities.Cake
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int OfferId { get; set; }
+        public string OfferName { get; set; }
 
         public Nullable<int> AdvertiserId { get; set; }
         public virtual Advertiser Advertiser { get; set; }
 
-        public string OfferName { get; set; }
+        public Nullable<int> VerticalId { get; set; }
+        public virtual Vertical Vertical { get; set; }
+
+        public Nullable<int> OfferTypeId { get; set; }
+        public virtual OfferType OfferType { get; set; }
+
+        public Nullable<int> OfferStatusId { get; set; }
+        public virtual OfferStatus OfferStatus { get; set; }
+
+        public bool Hidden { get; set; }
         public string DefaultPriceFormatName { get; set; }
         public string CurrencyAbbr { get; set; }
         public DateTime DateCreated { get; set; }

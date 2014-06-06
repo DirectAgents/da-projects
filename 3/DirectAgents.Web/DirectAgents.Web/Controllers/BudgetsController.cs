@@ -58,12 +58,14 @@ namespace DirectAgents.Web.Controllers
             return View(accountManagers.OrderBy(c => c.FirstName).ThenBy(c => c.LastName));
         }
 
-        public ActionResult Advertisers(int? am, bool? withBudget)
+        public ActionResult Advertisers(int? am, bool showAll = false)
         {
-            var advertisers = mainRepo.GetAdvertisers(am, withBudget).OrderBy(a => a.AdvertiserName);
+            bool? withBudgetedOffers = showAll ? null : (bool?)true;
+            var advertisers = mainRepo.GetAdvertisers(am, withBudgetedOffers).OrderBy(a => a.AdvertiserName);
             var model = new BudgetsVM
             {
-                Advertisers = advertisers
+                Advertisers = advertisers,
+                ShowAll = showAll
             };
             if (am.HasValue)
                 model.AccountManager = mainRepo.GetContact(am.Value);
@@ -81,7 +83,7 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult Offers(int? am, int? advId, bool? withBudget, int? minPercent)
         {
-            var offers = mainRepo.GetOffers(false, am, advId, withBudget);
+            var offers = mainRepo.GetOffers(false, am, advId, withBudget, false, null);
             foreach (var offer in offers)
             {
                 mainRepo.FillOfferBudgetStats(offer);

@@ -14,7 +14,7 @@ namespace DirectAgents.Domain.Abstract
         IQueryable<Contact> GetAccountManagers();
         IQueryable<Advertiser> GetAdvertisers(int? acctMgrId, bool? withBudgetedOffers);
         Advertiser GetAdvertiser(int advertiserId);
-        IQueryable<Offer> GetOffers(bool includeExtended, int? acctMgrId, int? advertiserId, bool? withBudget);
+        IQueryable<Offer> GetOffers(bool includeExtended, int? acctMgrId, int? advertiserId, bool? withBudget, bool includeInactive, bool? hidden);
         Offer GetOffer(int offerId);
 
         decimal? GetOfferAvailableBudget(int offerId);

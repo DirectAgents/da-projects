@@ -236,13 +236,16 @@
     <Compile Include="CakeMarketingApi\Entities\Device.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferAffiliateDailySummary.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferContractInfo.cs" />
+    <Compile Include="CakeMarketingApi\Entities\OfferStatus.cs" />
     <Compile Include="CakeMarketingApi\Entities\OfferSummary.cs" />
+    <Compile Include="CakeMarketingApi\Entities\OfferType.cs" />
     <Compile Include="CakeMarketingApi\Entities\Payout.cs" />
     <Compile Include="CakeMarketingApi\Entities\PriceFormat.cs" />
     <Compile Include="CakeMarketingApi\Entities\Received.cs" />
     <Compile Include="CakeMarketingApi\Entities\Region.cs" />
     <Compile Include="CakeMarketingApi\Entities\Role.cs" />
     <Compile Include="CakeMarketingApi\Entities\Tag.cs" />
+    <Compile Include="CakeMarketingApi\Entities\Vertical.cs" />
     <Compile Include="Commands\DASynchAdvertisersCommand.cs" />
     <Compile Include="Commands\DASynchOfferBudgetStatsCommand.cs" />
     <Compile Include="Commands\DASynchOfferDailySummariesCommand.cs" />

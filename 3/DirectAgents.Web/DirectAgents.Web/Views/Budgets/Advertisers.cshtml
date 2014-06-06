@@ -2,11 +2,22 @@
 
 <h3>@Html.ActionLink("Budgets", "Start") - Advertisers</h3>
 
-@if (Model.AccountManager != null)
-{
-    <text>Account Manager: </text>@Model.AccountManager.FullName
-    <br /><br />
+@{
+    string amString = "";
+    if (Model.AccountManager != null)
+    {
+        amString = Model.AccountManager.ContactId.ToString();
+        <text>Account Manager: </text>@Model.AccountManager.FullName
+        <br />
+    }
 }
+@Model.Advertisers.Count() advertisers
+@if (!Model.ShowAll)
+{
+    <text> | </text>@Html.ActionLink("show all", "Advertisers", new { am = amString, showAll = true })
+}
+<br />
+
 
 <table style="border: 1px solid gray">
     <tr>
@@ -25,9 +36,6 @@
 }
 
 </table>
-
-@Model.Advertisers.Count() advertisers
-<br />
 
 @section scripts {
     <script type="text/javascript">

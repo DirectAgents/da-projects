@@ -40,8 +40,9 @@ namespace DirectAgents.Domain.Concrete
             var advertisers = context.Advertisers.AsQueryable();
             if (acctMgrId.HasValue)
                 advertisers = advertisers.Where(a => a.AccountManagerId == acctMgrId.Value);
+
             if (withBudgetedOffers.HasValue && withBudgetedOffers.Value)
-                advertisers = advertisers.Where(a => a.Offers.Any(o => o.Budget.HasValue));
+                advertisers = advertisers.Where(a => a.Offers.Any(o => o.OfferBudgets.Any()));
             if (withBudgetedOffers.HasValue && !withBudgetedOffers.Value)
                 advertisers = advertisers.Where(a => !a.Offers.Any() || a.Offers.Any(o => !o.Budget.HasValue));
 
@@ -53,7 +54,7 @@ namespace DirectAgents.Domain.Concrete
             return context.Advertisers.Find(advertiserId);
         }
 
-        public IQueryable<Offer> GetOffers(bool includeExtended, int? acctMgrId, int? advertiserId, bool? withBudget)
+        public IQueryable<Offer> GetOffers(bool includeExtended, int? acctMgrId, int? advertiserId, bool? withBudget, bool includeInactive, bool? hidden)
         {
             IQueryable<Offer> offers;
             if (includeExtended)
@@ -70,6 +71,13 @@ namespace DirectAgents.Domain.Concrete
                 offers = offers.Where(o => o.OfferBudgets.Count > 0);
             if (withBudget.HasValue && !withBudget.Value)
                 offers = offers.Where(o => o.OfferBudgets.Count == 0);
+
+            if (!includeInactive)
+                offers = offers.Where(o => o.OfferStatusId != OfferStatus.Inactive);
+            if (hidden.HasValue && hidden.Value)
+                offers = offers.Where(o => o.Hidden);
+            if (hidden.HasValue && !hidden.Value)
+                offers = offers.Where(o => !o.Hidden);
 
             return offers;
         }

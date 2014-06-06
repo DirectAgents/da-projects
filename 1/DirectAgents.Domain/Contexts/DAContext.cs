@@ -19,6 +19,9 @@ namespace DirectAgents.Domain.Contexts
             modelBuilder.Entity<Contact>().ToTable("Contact", cakeSchema);
             modelBuilder.Entity<Role>().ToTable("Role", cakeSchema);
             modelBuilder.Entity<Offer>().ToTable("Offer", cakeSchema);
+            modelBuilder.Entity<Vertical>().ToTable("Vertical", cakeSchema);
+            modelBuilder.Entity<OfferType>().ToTable("OfferType", cakeSchema);
+            modelBuilder.Entity<OfferStatus>().ToTable("OfferStatus", cakeSchema);
 
             modelBuilder.Entity<OfferDailySummary>()
                 .HasKey(t => new { t.OfferId, t.Date })
@@ -29,6 +32,10 @@ namespace DirectAgents.Domain.Contexts
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Offer> Offers { get; set; }
+        public DbSet<Vertical> Verticals { get; set; }
+        public DbSet<OfferType> OfferTypes { get; set; }
+        public DbSet<OfferStatus> OfferStatuses { get; set; }
+
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
         public DbSet<OfferBudget> OfferBudgets { get; set; }
     }

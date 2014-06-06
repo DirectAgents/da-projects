@@ -13,9 +13,8 @@
 {
     <tr>
         <td>@contact.FullName</td>
-        <td>
-            @Html.ActionLink("show all", "Advertisers", new { am = contact.ContactId }) |
-            @Html.ActionLink("with budgets", "Advertisers", new { am = contact.ContactId, withBudget = true })
+        <td style="text-align:center">
+            @Html.ActionLink("show", "Advertisers", new { am = contact.ContactId })
         </td>
         <td>
             @Html.ActionLink("show all", "Offers", new { am = contact.ContactId }) |

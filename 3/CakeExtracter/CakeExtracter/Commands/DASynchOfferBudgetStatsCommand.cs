@@ -72,7 +72,7 @@ namespace CakeExtracter.Commands
         {
             using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
             {
-                var offers = repo.GetOffers(true, null, null, true);
+                var offers = repo.GetOffers(true, null, null, true, false, null);
                 foreach (var offer in offers)
                 {
                     repo.FillOfferBudgetStats(offer);

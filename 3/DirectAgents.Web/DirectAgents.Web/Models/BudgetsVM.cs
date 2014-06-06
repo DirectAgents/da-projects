@@ -8,8 +8,8 @@ namespace DirectAgents.Web.Models
 {
     public class BudgetsVM
     {
-        public Contact AccountManager { get; set; }
-
         public IEnumerable<Advertiser> Advertisers { get; set; }
+        public Contact AccountManager { get; set; }
+        public bool ShowAll { get; set; }
     }
 }
