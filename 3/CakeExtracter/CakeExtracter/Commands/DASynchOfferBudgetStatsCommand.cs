@@ -17,22 +17,28 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class DASynchOfferBudgetStatsCommand : ConsoleCommand
     {
-        public static int RunStatic()
+        public static int RunStatic(int? offerId)
         {
-            var cmd = new DASynchOfferBudgetStatsCommand();
+            var cmd = new DASynchOfferBudgetStatsCommand()
+            {
+                OfferId = offerId
+            };
             return cmd.Run();
         }
 
+        public int? OfferId { get; set; }
         private GmailEmailer emailer;
         private string reportingEmail;
 
         public override void ResetProperties()
         {
+            OfferId = null;
         }
 
         public DASynchOfferBudgetStatsCommand()
         {
             IsCommand("daSynchOfferBudgetStats", "synch OfferDailySummaries for all offers with budgets");
+            HasOption<int>("o|offerId=", "Offer Id (default = all with budgets)", c => OfferId = c);
         }
 
         public override int Execute(string[] remainingArguments)
@@ -41,7 +47,7 @@ namespace CakeExtracter.Commands
             var reportingPassword = ConfigurationManager.AppSettings["GmailReporting_Password"];
             emailer = new GmailEmailer(new System.Net.NetworkCredential(reportingEmail, reportingPassword));
 
-            var offers = GetOffersWithBudgets();
+            var offers = GetOffers();
             foreach (var offer in offers) //TODO: do several in parallel
             {
                 DateTime startDate = offer.DateCreated.Date;
@@ -68,11 +74,20 @@ namespace CakeExtracter.Commands
             return 0;
         }
 
-        private IEnumerable<Offer> GetOffersWithBudgets()
+        private IEnumerable<Offer> GetOffers()
         {
             using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
             {
-                var offers = repo.GetOffers(true, null, null, true, false, null);
+                IEnumerable<Offer> offers = new List<Offer>();
+                if (OfferId.HasValue)
+                {
+                    var offer = repo.GetOffer(OfferId.Value, true);
+                    if (offer != null)
+                        ((List<Offer>)offers).Add(offer);
+                }
+                else
+                    offers = repo.GetOffers(true, null, null, true, false, null); // active offers with budget
+
                 foreach (var offer in offers)
                 {
                     repo.FillOfferBudgetStats(offer);
