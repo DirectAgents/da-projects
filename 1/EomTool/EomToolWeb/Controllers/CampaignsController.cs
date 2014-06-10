@@ -11,12 +11,12 @@ namespace EomToolWeb.Controllers
 {
     public class CampaignsController : Controller
     {
-        private ICampaignRepository campaignRepository;
+        private ICampaignRepository campaignRepo;
         private IMainRepository mainRepo;
 
         public CampaignsController(ICampaignRepository campaignRepository, IMainRepository mainRepository)
         {
-            this.campaignRepository = campaignRepository;
+            this.campaignRepo = campaignRepository;
             this.mainRepo = mainRepository;
         }
 
@@ -34,33 +34,33 @@ namespace EomToolWeb.Controllers
             IQueryable<Campaign> campaigns;
             if (pid != null)
             {
-                campaigns = campaignRepository.Campaigns.Where(c => c.Pid == pid.Value);
+                campaigns = campaignRepo.Campaigns.Where(c => c.Pid == pid.Value);
             }
             else
             {
                 if (!string.IsNullOrWhiteSpace(country))
-                    viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+                    viewModel.Country = campaignRepo.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
                 if (viewModel.Country == null) country = null;
 
                 if (!string.IsNullOrWhiteSpace(vertical))
-                    viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
+                    viewModel.Vertical = campaignRepo.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
                 if (viewModel.Vertical == null) vertical = null;
 
                 if (!string.IsNullOrWhiteSpace(traffictype))
-                    viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+                    viewModel.TrafficType = campaignRepo.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
                 if (viewModel.TrafficType == null) traffictype = null;
 
                 var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
                 bool? mobilelpBool = (mobilelp == null) ? (bool?)null : (mobilelp.ToLower() == "yes");
 
-                campaigns = campaignRepository.CampaignsFiltered(excludeStrings, searchstring, country, vertical, traffictype, mobilelpBool, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
+                campaigns = campaignRepo.CampaignsFiltered(excludeStrings, searchstring, country, vertical, traffictype, mobilelpBool, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
 
                 if (viewModel.Country != null) // show campaigns for the specified country first, then multi-country campaigns
                     campaigns = campaigns.OrderBy(c => c.Countries.Count() > 1).ThenBy(c => c.Name);
                 else
                     campaigns = campaigns.OrderBy(c => c.Name);
             }
-            viewModel.CampaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, mainRepo.GetOfferAvailableBudget(c.Pid)));
+            viewModel.CampaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, mainRepo.GetOffer(c.Pid, false, true)));
             return View(viewModel);
         }
 
@@ -118,15 +118,15 @@ namespace EomToolWeb.Controllers
             }
             if (!string.IsNullOrWhiteSpace(country))
             {
-                viewModel.Country = campaignRepository.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
+                viewModel.Country = campaignRepo.Countries.Where(c => c.CountryCode == country).FirstOrDefault();
             }
             if (!string.IsNullOrWhiteSpace(vertical))
             {
-                viewModel.Vertical = campaignRepository.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
+                viewModel.Vertical = campaignRepo.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
             }
             if (!string.IsNullOrWhiteSpace(traffictype))
             {
-                viewModel.TrafficType = campaignRepository.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+                viewModel.TrafficType = campaignRepo.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
             }
             if (!string.IsNullOrWhiteSpace(mobilelp))
             {
@@ -139,9 +139,9 @@ namespace EomToolWeb.Controllers
         {
             List<Country> countries;
             if (WikiSettings.ExcludeInactive)
-                countries = campaignRepository.Countries.ToList();
+                countries = campaignRepo.Countries.ToList();
             else
-                countries = campaignRepository.CountriesWithActiveCampaigns.ToList();
+                countries = campaignRepo.CountriesWithActiveCampaigns.ToList();
 
             var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
             foreach (var country in countries)
@@ -155,20 +155,20 @@ namespace EomToolWeb.Controllers
         // old
         public ActionResult Search()
         {
-            var countryCodes = campaignRepository.AllCountryCodes;
+            var countryCodes = campaignRepo.AllCountryCodes;
             return View(countryCodes);
         }
         // old
         public ActionResult ShowCountries()
         {
-            var countryCodes = campaignRepository.AllCountryCodes;
+            var countryCodes = campaignRepo.AllCountryCodes;
             return View(countryCodes);
         }
 
         // non-Kendo
         public ActionResult Show(int pid)
         {
-            var campaign = campaignRepository.FindById(pid);
+            var campaign = campaignRepo.FindById(pid);
             if (campaign == null)
             {
                 return Content("campaign not found");
@@ -180,7 +180,7 @@ namespace EomToolWeb.Controllers
         [HttpGet]
         public ActionResult Edit(int pid)
         {
-            var campaign = campaignRepository.FindById(pid);
+            var campaign = campaignRepo.FindById(pid);
             if (campaign == null)
             {
                 return Content("campaign not found");
@@ -194,11 +194,11 @@ namespace EomToolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingCampaign = campaignRepository.FindById(campaign.Pid);
+                var existingCampaign = campaignRepo.FindById(campaign.Pid);
                 if (existingCampaign != null)
                 {
                     TryUpdateModel(existingCampaign);
-                    campaignRepository.SaveChanges();
+                    campaignRepo.SaveChanges();
                 }
                 // else... set a ModelState error?
             }
@@ -213,7 +213,7 @@ namespace EomToolWeb.Controllers
         [HttpPost]
         public ActionResult Edit2(Campaign campaign)
         {
-            var c = campaignRepository.FindById(campaign.Pid);
+            var c = campaignRepo.FindById(campaign.Pid);
             if (c != null)
             {
                 c.PayableAction = campaign.PayableAction;
@@ -225,7 +225,7 @@ namespace EomToolWeb.Controllers
                 c.EomNotes = campaign.EomNotes;
 //                c.MobileAllowed = campaign.MobileAllowed;
                 c.MobileLP = campaign.MobileLP;
-                campaignRepository.SaveChanges();
+                campaignRepo.SaveChanges();
             }
             var campaignViewModel = (c != null) ? new CampaignViewModel(c) : null;
             var json = Json(campaignViewModel);
@@ -237,14 +237,14 @@ namespace EomToolWeb.Controllers
             TrafficType trafficTypeEntity = null;
 
             if (traffictype != null)
-                trafficTypeEntity = campaignRepository.TrafficTypes.SingleOrDefault(t => t.Name == traffictype);
+                trafficTypeEntity = campaignRepo.TrafficTypes.SingleOrDefault(t => t.Name == traffictype);
 
             IEnumerable<CampaignSummary> campaignSummaries;
 
             if (trafficTypeEntity == null) // no matching traffic type
-                campaignSummaries = campaignRepository.TopCampaigns(20, by, null);
+                campaignSummaries = campaignRepo.TopCampaigns(20, by, null);
             else
-                campaignSummaries = campaignRepository.TopCampaigns(20, by, traffictype);
+                campaignSummaries = campaignRepo.TopCampaigns(20, by, traffictype);
 
             var model = new TopViewModel { CampaignSummaries = campaignSummaries, By = by, TrafficType = trafficTypeEntity };
 

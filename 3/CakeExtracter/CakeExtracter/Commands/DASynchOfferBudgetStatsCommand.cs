@@ -81,7 +81,7 @@ namespace CakeExtracter.Commands
                 IEnumerable<Offer> offers = new List<Offer>();
                 if (OfferId.HasValue)
                 {
-                    var offer = repo.GetOffer(OfferId.Value, true);
+                    var offer = repo.GetOffer(OfferId.Value, true, false);
                     if (offer != null)
                         ((List<Offer>)offers).Add(offer);
                 }

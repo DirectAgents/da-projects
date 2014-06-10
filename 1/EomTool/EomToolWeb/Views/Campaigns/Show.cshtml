@@ -30,8 +30,6 @@ Payout:
     <b>Important Details (from Wiki):</b><br />
     @MvcHtmlString.Create(Model.ImportantDetailsHtml)<br />
 }
-Budget: @Model.Budget
-<br />
 Payout to Direct Agents:
 @if (Model.RevenueIsPercentage)
 {
@@ -56,9 +54,18 @@ Status: @Model.Status
 <br />
 Hidden: @Model.Hidden
 <br />
-Available Budget:
+Budget:
+@if (Model.Budget.HasValue)
+{
+    <text>$</text>@Model.Budget.Value
+}
+<br />Available Budget:
 @if (Model.AvailableBudget.HasValue)
 {
-    @Model.RevenueCurrency@Model.AvailableBudget.Value
+    <text>$</text>@Model.AvailableBudget.Value
+    if (Model.BudgetEnd.HasValue)
+    {
+        <text>(through @Model.BudgetEnd.Value.ToShortDateString())</text>
+    }
 }
 <br />

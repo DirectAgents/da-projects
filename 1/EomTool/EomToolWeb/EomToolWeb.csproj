@@ -3232,6 +3232,7 @@
     <Content Include="packages.config" />
     <Content Include="Content\kendo\2014.1.416\images\kendoui.ttf" />
     <Content Include="Content\kendo\2014.1.416\images\kendoui.woff" />
+    <None Include="Properties\PublishProfiles\biz-test.pubxml" />
     <None Include="Properties\PublishProfiles\biz.pubxml" />
     <None Include="Properties\PublishProfiles\Profile1.pubxml" />
     <None Include="Properties\PublishProfiles\Sandy.pubxml" />

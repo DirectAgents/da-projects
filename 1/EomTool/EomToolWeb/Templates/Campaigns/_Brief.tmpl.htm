@@ -29,7 +29,7 @@
             </tr>
             <tr>
                 <td class="fieldName">Payout:</td>
-                <td># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { ##= data.CostCurrency + kendo.toString(data.Cost,"n2") ## } } #</td>
+                <td># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { ##= CostCurrency + kendo.toString(Cost,"n2") ## } } #</td>
             </tr>
             <tr>
                 <td class="fieldName">Restrictions:</td>
@@ -40,12 +40,8 @@
                 <td style="overflow: auto">#= ImportantDetailsHtml #</td>
             </tr>
             <tr>
-                <td class="fieldName">Campaign Budget:</td>
-                <td>${Budget}</td>
-            </tr>
-            <tr>
                 <td class="fieldName">Payout to DA:</td>
-                <td># if(RevenueIsPercentage){ #${Revenue}%# }else{ ##= data.RevenueCurrency + kendo.toString(data.Revenue,"n2") ## } #</td>
+                <td># if(RevenueIsPercentage){ #${Revenue}%# }else{ ##= RevenueCurrency + kendo.toString(Revenue,"n2") ## } #</td>
             </tr>
             <tr>
                 <td class="fieldName">Passed Information:</td>
@@ -80,8 +76,15 @@
                 <td>${Hidden}</td>
             </tr>
             <tr>
+                <td class="fieldName">Budget:</td>
+                <td># if(Budget!=null){ ##= "$" + kendo.toString(Budget,"n2") ## } #</td>
+            </tr>
+            <tr>
                 <td class="fieldName">Avail. Budget:</td>
-                <td># if(AvailableBudget!=null){ ##= data.RevenueCurrency + kendo.toString(data.AvailableBudget,"n2") ## } #</td>
+                <td>
+                    # if(AvailableBudget!=null){ ##= data.RevenueCurrency + kendo.toString(data.AvailableBudget,"n2") ## } #
+                    # if(BudgetEnd!=null){ # (through #= kendo.toString(kendo.parseDate(BudgetEnd),"M/d/yyyy") #) # } #
+                </td>
             </tr>
         </table>
     </div>
@@ -129,10 +132,6 @@
                 <td><textarea data-bind="value:ImportantDetails" name="ImportantDetails"></textarea></td>
             </tr>
             <tr>
-                <td class="fieldName">Campaign Budget:</td>
-                <td><input type="text" data-bind="value:Budget" name="Budget" /></td>
-            </tr>
-            <tr>
                 <td class="fieldName">Payout to DA:</td>
                 <td># if(RevenueIsPercentage){ #${Revenue}%# }else{ #${RevenueCurrency}${Revenue}# } #</td>
             </tr>
@@ -169,8 +168,15 @@
                 <td>${Hidden}</td>
             </tr>
             <tr>
+                <td class="fieldName">Budget:</td>
+                <td># if(Budget!=null){ ##= "$" + kendo.toString(Budget,"n2") ## } #</td>
+            </tr>
+            <tr>
                 <td class="fieldName">Avail. Budget:</td>
-                <td># if(AvailableBudget!=null){ ##= data.RevenueCurrency + kendo.toString(data.AvailableBudget,"n2") ## } #</td>
+                <td>
+                    # if(AvailableBudget!=null){ ##= data.RevenueCurrency + kendo.toString(data.AvailableBudget,"n2") ## } #
+                    # if(BudgetEnd!=null){ # (through #= kendo.toString(kendo.parseDate(BudgetEnd),"M/d/yyyy") #) # } #
+                </td>
             </tr>
         </table>
     </div>

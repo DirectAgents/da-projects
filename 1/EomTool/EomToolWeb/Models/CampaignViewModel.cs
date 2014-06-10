@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using DirectAgents.Domain.Entities.Wiki;
+using System;
 
 namespace EomToolWeb.Models
 {
@@ -14,11 +15,20 @@ namespace EomToolWeb.Models
         {
             this.campaign = campaign;
         }
-        public CampaignViewModel(Campaign campaign, decimal? availableBudget)
+        public CampaignViewModel(Campaign campaign, DirectAgents.Domain.Entities.Cake.Offer offerWithStats)
         {
             this.campaign = campaign;
-            this.AvailableBudget = availableBudget;
+            if (offerWithStats != null)
+            {
+                this.Budget = offerWithStats.Budget;
+                this.AvailableBudget = offerWithStats.BudgetAvailable;
+                this.BudgetEnd = offerWithStats.BudgetEnd;
+            }
         }
+
+        public decimal? Budget { get; set; }
+        public decimal? AvailableBudget { get; set; }
+        public DateTime? BudgetEnd { get; set; }
 
         public string AdManagers
         {
@@ -93,8 +103,6 @@ namespace EomToolWeb.Models
 
         public bool RevenueIsPercentage { get { return campaign.RevenueIsPercentage; } }
 
-        public decimal? AvailableBudget { get; set; }
-
         public string ImportantDetails { get { return campaign.ImportantDetails ?? string.Empty; } }
         public string ImportantDetailsHtml
         {
@@ -117,7 +125,7 @@ namespace EomToolWeb.Models
             }
         }
 
-        public string Budget { get { return campaign.Budget ?? string.Empty; } }
+//        public string Budget { get { return campaign.Budget ?? string.Empty; } }
 
         public string PassedInfo { get { return campaign.PassedInfo ?? string.Empty; } }
 

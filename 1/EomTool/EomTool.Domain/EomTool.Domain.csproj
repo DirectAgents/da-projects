@@ -116,7 +116,9 @@
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
     <EntityDeploy Include="Entities\EomToolSecurity.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EomToolSecurity.Designer.cs</LastGenOutput>

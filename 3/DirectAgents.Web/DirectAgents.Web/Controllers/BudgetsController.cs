@@ -113,11 +113,10 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult OfferRow(int offerId, bool? editMode)
         {
-            var offer = mainRepo.GetOffer(offerId, false);
+            var offer = mainRepo.GetOffer(offerId, false, true);
             if (offer == null)
                 return null;
 
-            mainRepo.FillOfferBudgetStats(offer);
             ViewBag.EditMode = editMode;
             return PartialView(offer);
         }
@@ -133,7 +132,7 @@ namespace DirectAgents.Web.Controllers
 
         public ActionResult Show(int offerId)
         {
-            var offer = mainRepo.GetOffer(offerId, false);
+            var offer = mainRepo.GetOffer(offerId, false, false);
             if (offer == null)
                 return Content("Offer not found");
 
@@ -145,7 +144,7 @@ namespace DirectAgents.Web.Controllers
         [HttpGet]
         public ActionResult Edit(int offerId)
         {
-            var offer = mainRepo.GetOffer(offerId, false);
+            var offer = mainRepo.GetOffer(offerId, false, false);
             if (offer == null)
                 return Content("Offer not found");
 
@@ -163,7 +162,7 @@ namespace DirectAgents.Web.Controllers
 
                 ModelState.AddModelError("", "Offer Budget could not be saved");
             }
-            var offer = mainRepo.GetOffer(inOffer.OfferId, false);
+            var offer = mainRepo.GetOffer(inOffer.OfferId, false, false);
             if (offer != null)
                 return View(offer);
             else
@@ -172,7 +171,7 @@ namespace DirectAgents.Web.Controllers
 
         private bool SaveOfferBudget(Offer inOffer)
         {
-            var offer = mainRepo.GetOffer(inOffer.OfferId, false);
+            var offer = mainRepo.GetOffer(inOffer.OfferId, false, false);
             if (offer == null)
                 return false;
 
@@ -205,10 +204,10 @@ namespace DirectAgents.Web.Controllers
             return RedirectToAction("Show", new { offerId = offerId });
         }
 
-        public JsonResult SynchOffers(int advId)
+        public ActionResult SynchOffers(int advId)
         {
             DASynchOffersCommand.RunStatic(advId, false);
-            return null;
+            return Content("Synch Offers complete");
         }
 
         // ---
@@ -216,7 +215,7 @@ namespace DirectAgents.Web.Controllers
         // Set budget to 0 (only if it is doesn't exist)
         public JsonResult Initialize(int offerId)
         {
-            var offer = mainRepo.GetOffer(offerId, false);
+            var offer = mainRepo.GetOffer(offerId, false, false);
             if (offer != null && !offer.HasBudget)
             {
                 offer.Budget = 0;

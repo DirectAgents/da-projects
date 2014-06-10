@@ -65,7 +65,7 @@ namespace EomToolWeb.Controllers
 
             var query = campaigns
                        .AsEnumerable()
-                       .Select(c => new CampaignViewModel(c, mainRepo.GetOfferAvailableBudget(c.Pid)))
+                       .Select(c => new CampaignViewModel(c, mainRepo.GetOffer(c.Pid, false, true)))
                        .AsQueryable();
 
             return query;

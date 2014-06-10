@@ -82,23 +82,17 @@ namespace DirectAgents.Domain.Concrete
             return offers;
         }
 
-        public Offer GetOffer(int offerId, bool includeExtended) //TODO: add arg: bool fillBudgetStats
+        public Offer GetOffer(int offerId, bool includeExtended, bool fillBudgetStats)
         {
+            Offer offer;
             if (includeExtended)
-            {
-                return context.Offers.Include("Advertiser.AccountManager").Include("Advertiser.AdManager").SingleOrDefault(o => o.OfferId == offerId);
-            }
+                offer = context.Offers.Include("Advertiser.AccountManager").Include("Advertiser.AdManager").SingleOrDefault(o => o.OfferId == offerId);
             else
-                return context.Offers.Find(offerId);
-        }
+                offer = context.Offers.Find(offerId);
 
-        public decimal? GetOfferAvailableBudget(int offerId)
-        {
-            var offer = GetOffer(offerId, false);
-            if (offer == null) return null;
-
-            FillOfferBudgetStats(offer);
-            return offer.BudgetAvailable;
+            if (offer != null)
+                FillOfferBudgetStats(offer);
+            return offer;
         }
 
         public void FillOfferBudgetStats(Offer offer)
@@ -130,7 +124,7 @@ namespace DirectAgents.Domain.Concrete
         // get OfferDailySummaries used to compute budget spent for the specified offer
         public IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(int offerId)
         {
-            var offer = GetOffer(offerId, false);
+            var offer = GetOffer(offerId, false, false);
             return GetOfferDailySummariesForBudget(offer);
         }
         public IQueryable<OfferDailySummary> GetOfferDailySummariesForBudget(Offer offer)

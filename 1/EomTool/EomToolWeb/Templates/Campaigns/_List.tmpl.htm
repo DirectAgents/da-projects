@@ -16,15 +16,13 @@
             <dt>Link:</dt>
             <dd><a href="${Link}" target="_blank">${Link}</a></dd>
             <dt>Payout:</dt>
-            <dd># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { ##= data.CostCurrency + kendo.toString(data.Cost,"n2") ## } } #</dd>
+            <dd># if(Cost > 0){ if(DefaultPriceFormat=="RevShare") { #${Cost}%# } else { ##= CostCurrency + kendo.toString(Cost,"n2") ## } } #</dd>
             <dt>Restrictions:</dt>
             <dd style="overflow: auto">#= RestrictionsHtml #</dd>
             <dt>Wiki Details:</dt>
             <dd style="overflow: auto">#= ImportantDetailsHtml #</dd>
-            <dt>Budget:</dt>
-            <dd>${Budget}</dd>
             <dt>Payout to DA:</dt>
-            <dd># if(RevenueIsPercentage){ #${Revenue}%# }else{ ##= data.RevenueCurrency + kendo.toString(data.Revenue,"n2") ## } #</dd>
+            <dd># if(RevenueIsPercentage){ #${Revenue}%# }else{ ##= RevenueCurrency + kendo.toString(Revenue,"n2") ## } #</dd>
             <dt>Passed Info:</dt>
             <dd>${PassedInfo}</dd>
             <dt>Lead Caps:</dt>
@@ -35,8 +33,13 @@
             <dd>${EomNotes}</dd>
             <dt>Countries:</dt>
             <dd>${CountryCodes}</dd>
+            <dt>Budget:</dt>
+            <dd># if(Budget!=null){ ##= "$" + kendo.toString(Budget,"n2") ## } #</dd>
             <dt>Avail. Budget:</dt>
-            <dd># if(AvailableBudget!=null){ ##= data.RevenueCurrency + kendo.toString(data.AvailableBudget,"n2") ## } #</dd>
+            <dd>
+                # if(AvailableBudget!=null){ ##= "$" + kendo.toString(AvailableBudget,"n2") ## } #
+                # if(BudgetEnd!=null){ # (through #= kendo.toString(kendo.parseDate(BudgetEnd),"M/d/yyyy") #) # } #
+            </dd>
         </dl>
     </div>
 </script>
