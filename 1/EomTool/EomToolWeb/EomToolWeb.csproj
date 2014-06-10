@@ -3357,6 +3357,7 @@
     <Content Include="Views\Workflow\_ViewStart.cshtml" />
     <Content Include="Views\Workflow\Index.cshtml" />
     <Content Include="Views\Workflow\AffiliateDrilldown.cshtml" />
+    <Content Include="Views\Campaigns\ListSortable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

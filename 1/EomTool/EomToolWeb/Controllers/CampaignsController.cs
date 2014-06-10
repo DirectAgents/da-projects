@@ -152,6 +152,35 @@ namespace EomToolWeb.Controllers
             return View(countries);
         }
 
+        public ActionResult ListSortable(string sort, bool? desc)
+        {
+            var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
+            var campaigns = campaignRepo.CampaignsFiltered(excludeStrings, null, null, null, null, null, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
+            var campaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, mainRepo.GetOffer(c.Pid, false, true)));
+
+            bool descending = desc.HasValue && desc.Value;
+            switch (sort)
+            {
+                case "budget":
+                    campaignVMs = descending ? campaignVMs.OrderByDescending(c => c.Budget) : campaignVMs.OrderBy(c => c.Budget);
+                    break;
+                case "availbudget":
+                    campaignVMs = descending ? campaignVMs.OrderByDescending(c => c.AvailableBudget) : campaignVMs.OrderBy(c => c.AvailableBudget);
+                    break;
+                case "budgetend":
+                    campaignVMs = descending ? campaignVMs.OrderByDescending(c => c.BudgetEnd) : campaignVMs.OrderBy(c => c.BudgetEnd);
+                    break;
+                default: // "name"
+                    sort = "name";
+                    campaignVMs = descending ? campaignVMs.OrderByDescending(c => c.Name) : campaignVMs.OrderBy(c => c.Name);
+                    break;
+            }
+
+            ViewBag.Sort = sort;
+            ViewBag.Desc = desc;
+            return View(campaignVMs);
+        }
+
         // old
         public ActionResult Search()
         {
