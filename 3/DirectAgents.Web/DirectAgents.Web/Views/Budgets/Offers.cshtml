@@ -2,15 +2,21 @@
 
 <h3>@Html.ActionLink("Budgets", "Start") - Offers</h3>
 
-<table style="border: 1px solid gray; border-spacing: 10px 0">
+<div class="validation-summary-errors" style="display:none">
+    <ul>
+        <li>Row(s) could not be saved.</li>
+    </ul>
+</div>
+
+<table class="editable" style="border: 1px solid gray; border-spacing: 10px 0">
     <tr>
         <th>Advertiser</th>
         <th>OfferId</th>
         <th>Offer</th>
-        <th></th>
         <th>Budget</th>
         <th>StartDate</th>
         <th>EndDate</th>
+        <th></th>
         <th colspan="2">Spent</th>
         <th>Status</th>
         <th>Hidden</th>
@@ -23,26 +29,59 @@
     </tr>
 }
 
+    <tr>
+        <td colspan="6"></td>
+        <td colspan="5">
+            <input type="button" value="Save All" onclick="SaveAllBudgetRows()" />
+        </td>
+    </tr>
 </table>
-
-<br />
-Initialize = set budget to 0 + include in stats update
 
 @section scripts {
     <script type="text/javascript">
-
+@*
         function InitOffer(offerId) {
             var url = '@Url.Action("Initialize")?offerId=' + offerId;
             $.get(url, function (data) {
-                LoadRow(offerId, true);
+                LoadBudgetRow(offerId, true);
+            });
+        }
+*@
+        function SaveBudgetRow(offerId, suppressAlerts) {
+            var url = '@Url.Action("SaveOfferRow")?offerId=' + offerId;
+            var data = {
+                OfferId: offerId,
+                Budget: $('#offrow' + offerId + ' input[name="Budget"]').val(),
+                BudgetStart: $('#offrow' + offerId + ' input[name="BudgetStart"]').val(),
+                BudgetEnd: $('#offrow' + offerId + ' input[name="BudgetEnd"]').val()
+            };
+            $.post(url, data, function (data) {
+                if (data)
+                    LoadBudgetRow(offerId, false);
+                else if (!suppressAlerts)
+                    alert("Row could not be saved");
+                else
+                    $('.validation-summary-errors').show();
             });
         }
 
-        function LoadRow(offerId, showAlert) {
-            var url = '@Url.Action("OfferRow")?offerId=' + offerId;
-            $.get(url, function (data) {
+        function SaveAllBudgetRows() {
+            $('.validation-summary-errors').hide();
+            $('tr input[value="Save"]').each(function() {
+                var offerId = $(this).data('offerId');
+                SaveBudgetRow(offerId, true);
+            });
+        }
+
+        function LoadBudgetRow(offerId, showDoneAlert, editMode) {
+            var url = '@Url.Action("OfferRow")';
+            var data = {
+                offerId: offerId,
+                editMode: editMode
+            };
+            $.get(url, data, function (data) {
                 $('#offrow' + offerId).html(data);
-                if (showAlert) alert('Updated');
+                if (showDoneAlert) alert('Updated');
             });
         }
     </script>

@@ -1,6 +1,7 @@
 ﻿using DirectAgents.Domain.Abstract;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -59,12 +60,15 @@ namespace DirectAgents.Domain.Entities.Cake
             set { if (value.HasValue) OfferBudget.Budget = value.Value; }
         }
         [NotMapped]
+        [DataType(DataType.Date)]
+        //[DisplayFormat(DataFormatString = "{0:M/d/yyyy}")]
         public DateTime? BudgetStart
         {
             get { return HasBudget ? (DateTime?)OfferBudget.Start : null; }
             set { if (value.HasValue) OfferBudget.Start = value.Value; }
         }
         [NotMapped]
+        [DataType(DataType.Date)]
         public DateTime? BudgetEnd
         {
             get { return HasBudget ? (DateTime?)OfferBudget.End : null; }

@@ -9,12 +9,16 @@
     <legend>Offer Details</legend>
     <table>
         <tr>
-            <td>AdMgr</td>
-            <td class="bold">@offer.Advertiser.AdManager.FullName</td>
+            <td>@Html.LabelFor(m => m.Offer.OfferName)</td>
+            <td class="bold">@Html.DisplayFor(m => m.Offer.OfferName)</td>
         </tr>
         <tr>
-            <td>AcctMgr</td>
-            <td class="bold">@offer.Advertiser.AccountManager.FullName</td>
+            <td>@Html.LabelFor(m => m.Offer.OfferId)</td>
+            <td class="bold">@Html.DisplayFor(m => m.Offer.OfferId)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Offer.DateCreated)</td>
+            <td class="bold">@Html.DisplayFor(m => m.Offer.DateCreated)</td>
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.Offer.Advertiser)</td>
@@ -23,16 +27,14 @@
             </td>
         </tr>
         <tr>
-            <td>@Html.LabelFor(m => m.Offer.OfferId)</td>
-            <td class="bold">@Html.DisplayFor(m => m.Offer.OfferId)</td>
+            <td>AdMgr</td>
+            <td class="bold">@offer.Advertiser.AdManager.FullName</td>
         </tr>
         <tr>
-            <td>@Html.LabelFor(m => m.Offer.OfferName)</td>
-            <td class="bold">@Html.DisplayFor(m => m.Offer.OfferName)</td>
-        </tr>
-        <tr>
-            <td>@Html.LabelFor(m => m.Offer.DateCreated)</td>
-            <td class="bold">@Html.DisplayFor(m => m.Offer.DateCreated)</td>
+            <td>AcctMgr</td>
+            <td class="bold">
+                @Html.ActionLink(offer.Advertiser.AccountManager.FullName, "Offers", new { am = offer.Advertiser.AccountManagerId })
+            </td>
         </tr>
     </table>
 </fieldset>

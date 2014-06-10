@@ -111,17 +111,29 @@ namespace DirectAgents.Web.Controllers
             //TODO: verify offer properties are lazy-loaded
         }
 
-        public ActionResult OfferRow(int offerId)
+        public ActionResult OfferRow(int offerId, bool? editMode)
         {
             var offer = mainRepo.GetOffer(offerId, false);
             if (offer == null)
                 return null;
+
+            mainRepo.FillOfferBudgetStats(offer);
+            ViewBag.EditMode = editMode;
             return PartialView(offer);
+        }
+
+        [HttpPost]
+        public JsonResult SaveOfferRow(Offer inOffer)
+        {
+            bool saved = false;
+            if (ModelState.IsValid)
+                saved = SaveOfferBudget(inOffer);
+            return Json(saved);
         }
 
         public ActionResult Show(int offerId)
         {
-            var offer = mainRepo.GetOffer(offerId, true);
+            var offer = mainRepo.GetOffer(offerId, false);
             if (offer == null)
                 return Content("Offer not found");
 
@@ -143,16 +155,33 @@ namespace DirectAgents.Web.Controllers
         [HttpPost]
         public ActionResult Edit(Offer inOffer)
         {
+            if (ModelState.IsValid)
+            {
+                bool saved = SaveOfferBudget(inOffer);
+                if (saved)
+                    return RedirectToAction("Show", new { offerId = inOffer.OfferId });
+
+                ModelState.AddModelError("", "Offer Budget could not be saved");
+            }
+            var offer = mainRepo.GetOffer(inOffer.OfferId, false);
+            if (offer != null)
+                return View(offer);
+            else
+                return View(inOffer);
+        }
+
+        private bool SaveOfferBudget(Offer inOffer)
+        {
             var offer = mainRepo.GetOffer(inOffer.OfferId, false);
             if (offer == null)
-                return Content("Offer not found");
+                return false;
 
             offer.Budget = inOffer.Budget;
             offer.BudgetStart = inOffer.BudgetStart;
             offer.BudgetEnd = inOffer.BudgetEnd;
             mainRepo.SaveChanges();
-
-            return RedirectToAction("Show", new { offerId = inOffer.OfferId });
+            return true;
+            //TODO: catch exceptions and return false?
         }
 
         // --- Cake Synching ---
@@ -176,13 +205,13 @@ namespace DirectAgents.Web.Controllers
             return RedirectToAction("Show", new { offerId = offerId });
         }
 
-        // --- AJAX actions ---
-
         public JsonResult SynchOffers(int advId)
         {
             DASynchOffersCommand.RunStatic(advId, false);
             return null;
         }
+
+        // ---
 
         // Set budget to 0 (only if it is doesn't exist)
         public JsonResult Initialize(int offerId)
@@ -196,8 +225,6 @@ namespace DirectAgents.Web.Controllers
             return null;
         }
 
-        //---
-
         public ActionResult Test()
         {
             StringBuilder text = new StringBuilder();
@@ -209,6 +236,8 @@ namespace DirectAgents.Web.Controllers
             }
             return Content(text.ToString());
         }
+
+        // ---
 
         protected override void Dispose(bool disposing)
         {

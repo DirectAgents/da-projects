@@ -7,20 +7,16 @@
     @Html.ValidationSummary()
 
     <fieldset>
-        <legend>Offer Details</legend>
+        <legend>Offer Budget</legend>
         @Html.HiddenFor(m => m.OfferId)
         <table>
             <tr>
-                <td>@Html.LabelFor(m => m.Advertiser)</td>
-                <td>@Html.DisplayFor(m => m.Advertiser.AdvertiserName)</td>
+                <td>@Html.LabelFor(m => m.OfferName)</td>
+                <td>@Html.DisplayFor(m => m.OfferName)</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.OfferId)</td>
                 <td>@Html.DisplayFor(m => m.OfferId)</td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(m => m.OfferName)</td>
-                <td>@Html.DisplayFor(m => m.OfferName)</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.DateCreated)</td>
