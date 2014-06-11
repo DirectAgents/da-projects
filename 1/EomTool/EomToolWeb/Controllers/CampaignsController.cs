@@ -152,10 +152,26 @@ namespace EomToolWeb.Controllers
             return View(countries);
         }
 
-        public ActionResult ListSortable(string sort, bool? desc)
+        public ActionResult ListSortable(string sort, bool? desc, string vertical, string traffictype, string mobilelp, bool? inner)
         {
+            var viewModel = new CampaignsListViewModel()
+            {
+                Sort = sort,
+                SortDesc = desc,
+                MobileLP = mobilelp
+            };
+            if (!string.IsNullOrWhiteSpace(vertical))
+                viewModel.Vertical = campaignRepo.Verticals.Where(v => v.Name == vertical).FirstOrDefault();
+            if (viewModel.Vertical == null) vertical = null;
+
+            if (!string.IsNullOrWhiteSpace(traffictype))
+                viewModel.TrafficType = campaignRepo.TrafficTypes.Where(t => t.Name == traffictype).FirstOrDefault();
+            if (viewModel.TrafficType == null) traffictype = null;
+
+            bool? mobilelpBool = (mobilelp == null) ? (bool?)null : (mobilelp.ToLower() == "yes");
+
             var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
-            var campaigns = campaignRepo.CampaignsFiltered(excludeStrings, null, null, null, null, null, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
+            var campaigns = campaignRepo.CampaignsFiltered(excludeStrings, null, null, vertical, traffictype, mobilelpBool, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
             var campaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, mainRepo.GetOffer(c.Pid, false, true)));
 
             bool descending = desc.HasValue && desc.Value;
@@ -176,9 +192,11 @@ namespace EomToolWeb.Controllers
                     break;
             }
 
-            ViewBag.Sort = sort;
-            ViewBag.Desc = desc;
-            return View(campaignVMs);
+            viewModel.CampaignVMs = campaignVMs;
+            if (inner.HasValue && inner.Value)
+                return PartialView("ListSortableInner", viewModel);
+            else
+                return View(viewModel);
         }
 
         // old

@@ -1,0 +1,83 @@
+﻿@model CampaignsListViewModel
+
+<div id="CampaignFilters">
+    <div id="CampaignFiltersInner">
+        <input id="verticals" style="width: 200px" />
+        <input id="traffictypes" style="width: 180px" />
+        <input id="mobilelp" style="width: 120px" />
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function ChangeFilter(sort, desc) {
+        var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
+        var vertical = '';
+        if (dataItem.VerticalId != '') vertical = dataItem.Name;
+
+        dataItem = $('#traffictypes').data("kendoDropDownList").dataItem();
+        var traffictype = '';
+        if (dataItem.TrafficTypeId != '') traffictype = dataItem.Name;
+
+        dataItem = $('#mobilelp').data("kendoDropDownList").dataItem();
+        var mobilelp = '';
+        if (dataItem.value != '') mobilelp = dataItem.value;
+
+        if (!sort)
+            sort = $('#tableListSortable').data('sort');
+        if (!desc)
+            desc = $('#tableListSortable').data('desc');
+
+        var url = '@Url.Action("ListSortable")?inner=true&vertical=' + vertical + '&traffictype=' + traffictype + '&mobilelp=' + mobilelp + '&sort=' + sort + '&desc=' + desc;
+        $.get(url, function (data) {
+            $('#divListSortable').html(data);
+        });
+    }
+
+    $(document).ready(function () {
+
+        //--------------------------------------
+        // Vertical filter DDL
+        //--------------------------------------
+        $("#verticals").kendoDropDownList({
+            @((Model.Vertical != null) ? "value: " + Model.Vertical.VerticalId + "," : "")
+            optionLabel: "Show All Verticals",
+            dataTextField: "Name",
+            dataValueField: "VerticalId",
+            dataSource: {
+                type: "json",
+                transport: { read: "@Url.Content("~/api/Verticals")" }
+            },
+            change: function() { ChangeFilter(); }
+        });
+
+        //--------------------------------------
+        // Traffic filter DDL
+        //--------------------------------------
+        $("#traffictypes").kendoDropDownList({
+            @((Model.TrafficType != null) ? "value: " + Model.TrafficType.TrafficTypeId + "," : "")
+            optionLabel: "Show All Traffic Types",
+            dataTextField: "Name",
+            dataValueField: "TrafficTypeId",
+            dataSource: {
+                type: "json",
+                transport: { read: "@Url.Content("~/api/TrafficTypes")" }
+            },
+            change: function() { ChangeFilter(); }
+        });
+
+        //--------------------------------------
+        // MobileLP DDL
+        //--------------------------------------
+        $("#mobilelp").kendoDropDownList({
+            @if (Model.MobileLP != null) { <text>value: "@Model.MobileLP",</text> }
+            optionLabel: "Mobile LP?",
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: [{text: "MobileLP: Yes", value: "yes"}, {text: "MobileLP: No", value: "no"}],
+            change: function () { ChangeFilter(); }
+        });
+
+    });
+
+</script>

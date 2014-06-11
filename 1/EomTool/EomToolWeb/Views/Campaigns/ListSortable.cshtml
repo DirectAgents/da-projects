@@ -1,41 +1,14 @@
-﻿@model IEnumerable<CampaignViewModel>
-
+﻿@model CampaignsListViewModel
 @{
     ViewBag.Title = "Campaign Budgets";
     ViewBag.ParentMenuItem = "List";
     ViewBag.MenuItem = "Sortable";
     ViewBag.NoSearch = true;
     Layout = "~/Views/Shared/_LayoutCampaignWiki.cshtml";
-    
-    bool oddRow = false;
-    string sort = ViewBag.Sort;
-    bool desc = ViewBag.Desc ?? false;
-    string italicStyle = "style=font-style:italic";
-    string nameStyle = (sort == "name" ? italicStyle : "");
-    string budgetStyle = (sort == "budget" ? italicStyle : "");
-    string availbudgetStyle = (sort == "availbudget" ? italicStyle : "");
-    string budgetendStyle = (sort == "budgetend" ? italicStyle : "");
 }
 
-<div style="margin-left: 30px">
-    <h2>Campaigns</h2>
+@Html.Partial("FilterForList")
 
-    <table style="border: 1px solid gray; border-spacing: 10px 0; border-collapse: inherit">
-        <tr>
-            <th @nameStyle>@Html.ActionLink("Name", "ListSortable", new { sort = "name", desc = (sort == "name" && !desc) })</th>
-            <th @budgetStyle>@Html.ActionLink("Budget", "ListSortable", new { sort = "budget", desc = (sort != "budget" || !desc) })</th>
-            <th @availbudgetStyle>@Html.ActionLink("Avail-Budget", "ListSortable", new { sort = "availbudget", desc = (sort != "availbudget" || !desc) })</th>
-            <th @budgetendStyle>@Html.ActionLink("Budget-End", "ListSortable", new { sort = "budgetend", desc = (sort == "budgetend" && !desc) })</th>
-        </tr>
-    @foreach (var campVM in Model)
-    {
-        <tr>
-            <td>@Html.ActionLink(campVM.Name, "List2", new { pid = campVM.Pid })</td>
-            <td style="text-align:right">@(campVM.Budget.HasValue ? "$" + campVM.Budget.Value.ToString("N2") : "")</td>
-            <td style="text-align:right">@(campVM.AvailableBudget.HasValue ? "$" + campVM.AvailableBudget.Value.ToString("N2") : "")</td>
-            <td style="text-align:center">@(campVM.BudgetEnd.HasValue ? campVM.BudgetEnd.Value.ToShortDateString() : "")</td>
-        </tr>
-        oddRow = !oddRow;
-    }
-    </table>
+<div id="divListSortable" style="margin-left: 30px; padding-top: 40px">
+    @Html.Partial("ListSortableInner")
 </div>

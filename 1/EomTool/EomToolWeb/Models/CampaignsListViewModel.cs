@@ -16,5 +16,8 @@ namespace EomToolWeb.Models
         public string MobileLP { get; set; }
 
         public ListViewMode ListViewMode { get; set; }
+
+        public string Sort { get; set; }
+        public bool? SortDesc { get; set; }
     }
 }

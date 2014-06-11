@@ -1,0 +1,33 @@
+﻿@model CampaignsListViewModel
+@{
+    string sort = Model.Sort;
+    bool desc = Model.SortDesc ?? false;
+    string italicStyle = "style=font-style:italic";
+    string nameStyle = (sort == "name" ? italicStyle : "");
+    string budgetStyle = (sort == "budget" ? italicStyle : "");
+    string availbudgetStyle = (sort == "availbudget" ? italicStyle : "");
+    string budgetendStyle = (sort == "budgetend" ? italicStyle : "");
+    //bool oddRow = false;
+}
+
+<h2>Campaigns</h2>
+
+<table id="tableListSortable" data-sort="@Model.Sort" data-desc="@Model.SortDesc" style="border: 1px solid gray; border-spacing: 10px 0; border-collapse: inherit">
+    <tr>
+        <th @nameStyle><a href="#" onclick="ChangeFilter('name', '@(sort == "name" && !desc ? "true" : "false")'); return false">Name</a></th>
+        <th @budgetStyle><a href="#" onclick="ChangeFilter('budget', '@(sort != "budget" || !desc ? "true" : "false")'); return false">Budget</a></th>
+        <th @availbudgetStyle><a href="#" onclick="ChangeFilter('availbudget', '@(sort != "availbudget" || !desc ? "true" : "false")'); return false">Avail-Budget</a></th>
+        <th @budgetendStyle><a href="#" onclick="ChangeFilter('budgetend', '@(sort == "budgetend" && !desc ? "true" : "false")'); return false">Budget-End</a></th>
+    </tr>
+@foreach (var campVM in Model.CampaignVMs)
+{
+    <tr>
+        <td>@Html.ActionLink(campVM.Name, "List2", new { pid = campVM.Pid })</td>
+        <td style="text-align:right">@(campVM.Budget.HasValue ? "$" + campVM.Budget.Value.ToString("N2") : "")</td>
+        <td style="text-align:right">@(campVM.AvailableBudget.HasValue ? "$" + campVM.AvailableBudget.Value.ToString("N2") : "")</td>
+        <td style="text-align:center">@(campVM.BudgetEnd.HasValue ? campVM.BudgetEnd.Value.ToShortDateString() : "")</td>
+    </tr>
+    //oddRow = !oddRow;
+}
+</table>
+@Model.CampaignVMs.Count() campaigns
