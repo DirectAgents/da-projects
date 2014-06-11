@@ -6,7 +6,8 @@
     {
         var budget = offer.OfferBudget; // create a budget
         budget.Start = DateTime.Today;
-        budget.End = DateTime.Today.AddMonths(1);
+        var nextMonth = DateTime.Today.AddMonths(1);
+        budget.End = (new DateTime(nextMonth.Year, nextMonth.Month, 1)).AddDays(-1); // last day of current month
     }
     bool editMode = wantEditMode ?? false;
     if (wantEditMode == null)

@@ -126,38 +126,40 @@ namespace CakeExtracter.Commands
 
         private void SendAlertEmail(Offer offer, bool over100percent)
         {
+            string subject = String.Format("Budget Alert: {0}% reached for: {1}", (over100percent ? "100" : "85"), offer.OfferName);
+
             var adv = offer.Advertiser;
-            StringBuilder text = new StringBuilder("<table>");
+            StringBuilder bodyText = new StringBuilder("<table>");
             string adManagerText = adv.AdManager == null ? "" : String.Format("{0} ({1})", adv.AdManager.FullName, adv.AdManager.EmailAddress);
-            text.AppendFormat("<tr><td>Ad Manager:</td><td>{0}</td></tr>", adManagerText);
+            bodyText.AppendFormat("<tr><td>Ad Manager:</td><td>{0}</td></tr>", adManagerText);
             string acctManagerText = adv.AccountManager == null ? "" : String.Format("{0} ({1})", adv.AccountManager.FullName, adv.AccountManager.EmailAddress);
-            text.AppendFormat("<tr><td>Acct Manager:</td><td>{0}</td></tr>", acctManagerText);
-            text.AppendFormat("<tr><td>OfferId:</td><td>{0}</td></tr>", offer.OfferId);
-            text.AppendFormat("<tr><td>Offer:</td><td>{0}</td></tr>", offer.OfferName);
-            text.AppendFormat("<tr><td>Budget:</td><td>{0:N2}</td></tr>", offer.Budget);
-            text.AppendFormat("<tr><td>BudgetStart:</td><td>{0}</td></tr>", offer.BudgetStart.HasValue ? offer.BudgetStart.Value.ToShortDateString() : "");
-            text.AppendFormat("<tr><td>BudgetEnd:</td><td>{0}</td></tr>", offer.BudgetEnd.HasValue ? offer.BudgetEnd.Value.ToShortDateString() : "");
-            text.AppendFormat("<tr><td>Stats:</td><td>{0} - {1}</td></tr>", offer.EarliestStatDate.HasValue ? offer.EarliestStatDate.Value.ToShortDateString() : "",
+            bodyText.AppendFormat("<tr><td>Acct Manager:</td><td>{0}</td></tr>", acctManagerText);
+            bodyText.AppendFormat("<tr><td>OfferId:</td><td>{0}</td></tr>", offer.OfferId);
+            bodyText.AppendFormat("<tr><td>Offer:</td><td>{0}</td></tr>", offer.OfferName);
+            bodyText.AppendFormat("<tr><td>Budget:</td><td>${0:N2}</td></tr>", offer.Budget);
+            bodyText.AppendFormat("<tr><td>BudgetStart:</td><td>{0}</td></tr>", offer.BudgetStart.HasValue ? offer.BudgetStart.Value.ToShortDateString() : "");
+            bodyText.AppendFormat("<tr><td>BudgetEnd:</td><td>{0}</td></tr>", offer.BudgetEnd.HasValue ? offer.BudgetEnd.Value.ToShortDateString() : "");
+            bodyText.AppendFormat("<tr><td>Stats:</td><td>{0} - {1}</td></tr>", offer.EarliestStatDate.HasValue ? offer.EarliestStatDate.Value.ToShortDateString() : "",
                                                     offer.LatestStatDate.HasValue ? offer.LatestStatDate.Value.ToShortDateString() : "");
-            text.AppendFormat("<tr><td>Percent Used:</td><td>{0:P1}</td></tr>", offer.BudgetUsedPercent);
-            text.AppendFormat("<tr><td>Budget Used:</td><td>{0:N2}</td></tr>", offer.BudgetUsed);
-            text.Append("</table>");
+            bodyText.AppendFormat("<tr><td>Budget Used:</td><td>${0:N2}</td></tr>", offer.BudgetUsed);
+            bodyText.AppendFormat("<tr><td>Percent Used:</td><td>{0:P1}</td></tr>", offer.BudgetUsedPercent);
+            bodyText.Append("</table>");
 
             if (over100percent)
-                text.Append(String.Format("<br/><br/>*** Reached 100% of budget. ***"));
+                bodyText.Append("<br/><br/>*** Reached 100% of budget. ***<br/>Please do not set any new partners live and notify your live partners to slow traffic on this offer.");
             else
-                text.Append(String.Format("<br/><br/>*** Reached 85% of budget. ***"));
+                bodyText.Append("<br/><br/>*** Reached 85% of budget. ***<br/>Please do not set any new partners live at this time.");
 
-            SendEmail(text.ToString());
+            SendEmail(subject, bodyText.ToString());
         }
 
-        private void SendEmail(string text)
+        private void SendEmail(string subject, string body)
         {
             emailer.SendEmail(reportingEmail,
                               new string[] { "kevin@directagents.com" },
                               null,
-                              "Budget Alert",
-                              text,
+                              subject,
+                              body,
                               true);
         }
     }

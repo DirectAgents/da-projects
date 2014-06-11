@@ -58,7 +58,7 @@
 </fieldset>
 
 <fieldset>
-    <legend>Cake Stats @Html.ActionLink("[resync]", "SynchStats", new { offerId = offer.OfferId })</legend>
+    <legend>Cake Stats <span id="resyncLink">@Html.ActionLink("[resync]", "SynchStats", new { offerId = offer.OfferId }, new { onclick = "$('#resyncLink').html('resyncing...')" })</span></legend>
     <table>
         <tr>
             <td>From</td>

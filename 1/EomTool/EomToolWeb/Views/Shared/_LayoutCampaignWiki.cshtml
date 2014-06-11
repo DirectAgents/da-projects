@@ -30,7 +30,7 @@
             <li><span class="@(ViewBag.ParentMenuItem == "List" ? "parentselitem" : "")">List</span>
                 <ul>
                     <li class="@(ViewBag.MenuItem == "ByCountry" ? "selitem" : "")">@Html.ActionLink("By Country", "ListByCountry", "Campaigns")</li>
-                    <li class="@(ViewBag.MenuItem == "Sortable" ? "selitem" : "")">@Html.ActionLink("Sortable", "ListSortable", "Campaigns")</li>
+                    <li class="@(ViewBag.MenuItem == "Sortable" ? "selitem" : "")">@Html.ActionLink("Budgets", "ListSortable", "Campaigns")</li>
                 </ul>
             </li>
             <li class="@(ViewBag.MenuItem == "US" ? "selitem" : "")">@Html.ActionLink("US", "List2", "Campaigns", new { country = "US" }, null)</li>
