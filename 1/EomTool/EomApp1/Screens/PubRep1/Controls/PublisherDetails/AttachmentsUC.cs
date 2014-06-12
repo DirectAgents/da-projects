@@ -1,4 +1,5 @@
 ﻿using EomApp1.Screens.PubRep1.MVP.PublisherDetails;
+using EomTool.Domain40.Entities;
 using System;
 using System.Windows.Forms;
 
@@ -37,7 +38,7 @@ namespace EomApp1.Screens.PubRep1.Controls.PublisherDetails
             }
         }
 
-        public void Fill(EomTool.Domain.Entities.PubAttachment[] attachments)
+        public void Fill(PubAttachment[] attachments)
         {
             this.pubAttachmentBindingSource.Clear();
             foreach (var attachement in attachments)

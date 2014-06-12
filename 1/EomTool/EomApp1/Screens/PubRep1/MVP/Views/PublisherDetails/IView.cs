@@ -1,4 +1,4 @@
-﻿using EomTool.Domain.Entities;
+﻿using EomTool.Domain40.Entities;
 using System;
 
 namespace EomApp1.Screens.PubRep1.MVP.PublisherDetails

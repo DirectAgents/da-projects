@@ -1519,9 +1519,9 @@
       <Project>{B9F971EA-5F76-474C-B3DC-E00FD3760967}</Project>
       <Name>EomApp.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EomTool.Domain\EomTool.Domain.csproj">
-      <Project>{F41DA2E2-D584-479A-9F24-9B2D3D33F927}</Project>
-      <Name>EomTool.Domain</Name>
+    <ProjectReference Include="..\EomTool.Domain40\EomTool.Domain40.csproj">
+      <Project>{2cd0e051-3f32-4ded-8bab-5e2a0ca3c656}</Project>
+      <Name>EomTool.Domain40</Name>
     </ProjectReference>
     <ProjectReference Include="..\HtmlEditorControl\HTMLEditorControl.csproj">
       <Project>{5873DE0F-6853-4C8E-91A4-7A6861069A9A}</Project>
@@ -1607,12 +1607,12 @@
   <ItemGroup>
     <PublishFile Include="Microsoft.mshtml">
       <Visible>False</Visible>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>

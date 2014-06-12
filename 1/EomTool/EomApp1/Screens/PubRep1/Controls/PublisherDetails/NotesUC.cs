@@ -1,5 +1,5 @@
 ﻿using EomApp1.Screens.PubRep1.MVP.PublisherDetails;
-using EomTool.Domain.Entities;
+using EomTool.Domain40.Entities;
 using System;
 using System.Windows.Forms;
 

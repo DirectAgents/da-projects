@@ -138,7 +138,7 @@
             // 
             // pubAttachmentBindingSource
             // 
-            this.pubAttachmentBindingSource.DataSource = typeof(EomTool.Domain.Entities.PubAttachment);
+            this.pubAttachmentBindingSource.DataSource = typeof(EomTool.Domain40.Entities.PubAttachment);
             // 
             // toolStripContainer1
             // 

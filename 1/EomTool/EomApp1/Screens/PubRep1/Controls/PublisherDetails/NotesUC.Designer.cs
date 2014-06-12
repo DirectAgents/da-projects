@@ -134,7 +134,7 @@
             // 
             // pubNoteBindingSource
             // 
-            this.pubNoteBindingSource.DataSource = typeof(EomTool.Domain.Entities.PubNote);
+            this.pubNoteBindingSource.DataSource = typeof(EomTool.Domain40.Entities.PubNote);
             // 
             // toolStrip1
             // 

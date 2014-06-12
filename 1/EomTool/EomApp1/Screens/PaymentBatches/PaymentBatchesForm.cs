@@ -1,5 +1,7 @@
 ﻿using EomApp1.UI;
 using EomAppControls.DataGrid;
+using EomTool.Domain40.Concrete;
+using EomTool.Domain40.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -158,9 +160,9 @@ namespace EomApp1.Screens.PaymentBatches
             var batchId = this.SelectedPaymentBatchId;
             if (batchId > -1)
             {
-                using (var context = new EomTool.Domain.Entities.EomEntities(EomAppCommon.EomAppSettings.ConnStr, false))
+                using (var context = new EomEntities(EomAppCommon.EomAppSettings.ConnStr, false))
                 {
-                    var repository = new EomTool.Domain.Concrete.PaymentBatchRepository(context);
+                    var repository = new PaymentBatchRepository(context);
                     foreach (var itemIDs in this.SelectedItemIdsAsInts)
                     {
                         repository.SetPaymentBatchId(itemIDs, batchId);

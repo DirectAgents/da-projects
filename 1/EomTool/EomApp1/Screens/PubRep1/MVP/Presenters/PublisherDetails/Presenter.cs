@@ -1,5 +1,5 @@
-﻿using EomTool.Domain.Concrete;
-using EomTool.Domain.Entities;
+﻿using EomTool.Domain40.Concrete;
+using EomTool.Domain40.Entities;
 using System;
 using System.IO;
 using System.Linq;
