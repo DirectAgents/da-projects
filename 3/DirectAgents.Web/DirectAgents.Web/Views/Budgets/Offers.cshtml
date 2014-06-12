@@ -1,5 +1,7 @@
-﻿@model IEnumerable<DirectAgents.Domain.Entities.Cake.Offer>
-
+﻿@model DirectAgents.Web.Models.BudgetsVM
+@{
+    string italicStyle = "style=font-style:italic";
+}
 <h3>@Html.ActionLink("Budgets", "Start") - Offers</h3>
 
 <div class="validation-summary-errors" style="display:none">
@@ -12,17 +14,18 @@
     <tr>
         <th>Advertiser</th>
         <th>OfferId</th>
-        <th>Offer</th>
+        <th @(Model.Sort == "name" ? italicStyle : "")>OfferName</th>
         <th>Budget</th>
         <th>StartDate</th>
         <th>EndDate</th>
         <th></th>
-        <th colspan="2">Spent</th>
+        <th>Spent</th>
+        <th @(Model.Sort == "spentpct" ? italicStyle : "")><a href="#" onclick="ChangeSort('spentpct','@(Model.Sort != "spentpct" || !Model.SortDesc ? "true" : "false")'); return false">Spent%</a></th>
         <th>Status</th>
         <th>Hidden</th>
     </tr>
 
-@foreach (var offer in Model)
+@foreach (var offer in Model.Offers)
 {
     <tr id="offrow@(offer.OfferId)">
         @Html.Partial("OfferRow", offer)
@@ -36,6 +39,7 @@
         </td>
     </tr>
 </table>
+@Model.Offers.Count() offers
 
 @section scripts {
     <script type="text/javascript">
@@ -83,6 +87,26 @@
                 $('#offrow' + offerId).html(data);
                 if (showDoneAlert) alert('Updated');
             });
+        }
+
+        function ChangeSort(sort, desc) {
+            var url = '@Url.Action("Offers")?sort=' + sort + '&desc=' + desc;
+            @if (Model.AcctMgrId.HasValue) {
+                <text>url = url + '&am=@Model.AcctMgrId.Value';</text>
+            }
+            @if (Model.AdvId.HasValue) {
+                <text>url = url + '&advId=@Model.AdvId.Value';</text>
+            }
+            @if (Model.WithBudget.HasValue) {
+                <text>url = url + '&withBudget=@Model.WithBudget.Value';</text>
+            }
+            @if (Model.MinPercent.HasValue) {
+                <text>url = url + '&minPercent=@Model.MinPercent.Value';</text>
+            }
+            @if (Model.IncludeInactive) {
+                <text>url = url + '&includeInactive=true';</text>
+            }
+            document.location.href = url;
         }
     </script>
 }

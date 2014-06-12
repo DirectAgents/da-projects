@@ -39,7 +39,7 @@ namespace CakeExtracter.Reports
 
             if (ccAddresses != null)
             {
-                foreach (var ccAddress in ccAddresses)
+                foreach (var ccAddress in ccAddresses.SelectMany(c => c.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries)))
                 {
                     message.CC.Add(ccAddress);
                 }

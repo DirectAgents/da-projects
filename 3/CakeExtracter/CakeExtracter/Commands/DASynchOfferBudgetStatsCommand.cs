@@ -29,6 +29,7 @@ namespace CakeExtracter.Commands
         public int? OfferId { get; set; }
         private GmailEmailer emailer;
         private string reportingEmail;
+        private string testEmail, budgetAlertsEmail;
 
         public override void ResetProperties()
         {
@@ -46,6 +47,9 @@ namespace CakeExtracter.Commands
             reportingEmail = ConfigurationManager.AppSettings["GmailReporting_Email"];
             var reportingPassword = ConfigurationManager.AppSettings["GmailReporting_Password"];
             emailer = new GmailEmailer(new System.Net.NetworkCredential(reportingEmail, reportingPassword));
+
+            testEmail = ConfigurationManager.AppSettings["BudgetAlerts_TestEmail"];
+            budgetAlertsEmail = ConfigurationManager.AppSettings["BudgetAlerts_Email"];
 
             var offers = GetOffers();
             foreach (var offer in offers) //TODO: do several in parallel
@@ -131,7 +135,7 @@ namespace CakeExtracter.Commands
             var adv = offer.Advertiser;
             StringBuilder bodyText = new StringBuilder();
             if (over100percent)
-                bodyText.Append("*** Reached 100% of budget. ***<br/>Please do not set any new partners live and notify your live partners to slow traffic on this offer.<br/><br/>");
+                bodyText.Append("*** Reached 100% of budget. ***<br/>Please pause all partners.<br/><br/>");
             else
                 bodyText.Append("*** Reached 85% of budget. ***<br/>Please do not set any new partners live at this time.<br/><br/>");
 
@@ -153,16 +157,21 @@ namespace CakeExtracter.Commands
             bodyText.AppendFormat("<tr><td>Acct Manager:</td><td>{0}</td></tr>", acctManagerText);
             bodyText.Append("</table>");
 
-            SendEmail(subject, bodyText.ToString());
-        }
-
-        private void SendEmail(string subject, string body)
-        {
+            string toAddress;
+            if (String.IsNullOrWhiteSpace(testEmail))
+            {
+                toAddress = budgetAlertsEmail + "," + (adv.AdManager != null ? adv.AdManager.EmailAddress : "")
+                    + "," + (adv.AccountManager != null ? adv.AccountManager.EmailAddress : "");
+            }
+            else
+            {
+                toAddress = testEmail;
+            }
             emailer.SendEmail(reportingEmail,
-                              new string[] { "kevin@directagents.com" },
+                              new string[] { toAddress },
                               null,
                               subject,
-                              body,
+                              bodyText.ToString(),
                               true);
         }
     }

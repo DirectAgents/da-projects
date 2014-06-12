@@ -89,25 +89,44 @@ namespace DirectAgents.Web.Controllers
             return PartialView(advertiser);
         }
 
-        public ActionResult Offers(int? am, int? advId, bool? withBudget, int? minPercent, bool includeInactive = false)
+        public ActionResult Offers(string sort, bool? desc, int? am, int? advId, bool? withBudget, int? minPercent, bool includeInactive = false)
         {
+            var model = new BudgetsVM()
+            {
+                Sort = (sort == null ? null : sort.ToLower()),
+                SortDesc = desc.HasValue && desc.Value,
+                AcctMgrId = am,
+                AdvId = advId,
+                WithBudget = withBudget,
+                MinPercent = minPercent,
+                IncludeInactive = includeInactive
+            };
+
             var offers = mainRepo.GetOffers(false, am, advId, withBudget, includeInactive, null);
             foreach (var offer in offers)
             {
                 mainRepo.FillOfferBudgetStats(offer);
             }
-            IEnumerable<Offer> offersList;
+            IEnumerable<Offer> offersList = offers.ToList();
             if (minPercent.HasValue)
             {
                 decimal minPercentDec = minPercent.Value / 100m;
-                offersList = offers.ToList().Where(o => o.BudgetUsedPercent.HasValue && o.BudgetUsedPercent.Value >= minPercentDec)
-                                   .OrderBy(o => o.Advertiser.AdvertiserName).ThenBy(o => o.OfferId);
+                offersList = offersList.Where(o => o.BudgetUsedPercent.HasValue && o.BudgetUsedPercent.Value >= minPercentDec);
             }
-            else
+            switch (model.Sort)
             {
-                offersList = offers.OrderBy(o => o.Advertiser.AdvertiserName).ThenBy(o => o.OfferId).ToList();
-            }
-            return View(offersList);
+                case "spentpct":
+                    offersList = model.SortDesc ? offersList.OrderByDescending(o => o.BudgetUsedPercent)
+                                                : offersList.OrderBy(o => o.BudgetUsedPercent);
+                    break;
+                default:
+                    offersList = model.SortDesc ? offersList.OrderByDescending(o => o.Advertiser.AdvertiserName).ThenByDescending(o => o.OfferId)
+                                                : offersList.OrderBy(o => o.Advertiser.AdvertiserName).ThenBy(o => o.OfferId);
+                    break;
+            } //TODO: rework the ToList's
+
+            model.Offers = offersList;
+            return View(model);
             //TODO: verify offer properties are lazy-loaded
         }
 

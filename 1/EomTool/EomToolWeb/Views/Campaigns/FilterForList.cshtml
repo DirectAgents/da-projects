@@ -11,6 +11,8 @@
 <script type="text/javascript">
 
     function ChangeFilter(sort, desc) {
+        $('#divLoading').show();
+
         var dataItem = $('#verticals').data("kendoDropDownList").dataItem();
         var vertical = '';
         if (dataItem.VerticalId != '') vertical = dataItem.Name;
