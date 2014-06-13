@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace EomTool.Domain.Concrete
 {
-    public partial class MainRepository : IMainRepository
+    public partial class MainRepository : IMainRepository, IDisposable
     {
         EomEntities context;
 
@@ -22,16 +22,20 @@ namespace EomTool.Domain.Concrete
         }
         //---
 
-        public AccountManagerTeam GetAccountManagerTeam(int id)
-        {
-            return context.AccountManagerTeams.FirstOrDefault(am => am.id == id);
-        }
-
         public Advertiser GetAdvertiser(int id)
         {
             return context.Advertisers.FirstOrDefault(a => a.id == id);
         }
+        public IQueryable<Advertiser> Advertisers()
+        {
+            return context.Advertisers;
+        }
 
+
+        public AccountManagerTeam GetAccountManagerTeam(int id)
+        {
+            return context.AccountManagerTeams.FirstOrDefault(am => am.id == id);
+        }
         public IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false)
         {
             if (withActivityOnly)
@@ -497,6 +501,26 @@ namespace EomTool.Domain.Concrete
                 i.cost_per_unit == item.cost_per_unit &&
                 i.notes == item.notes &&
                 i.source_id == item.source_id);
+        }
+
+        // ---
+
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                    context.Dispose();
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

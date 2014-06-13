@@ -12,12 +12,12 @@ namespace EomToolWeb.Controllers
     public class CampaignsController : Controller
     {
         private ICampaignRepository campaignRepo;
-        private IMainRepository mainRepo;
+        private IMainRepository daMainRepo;
 
-        public CampaignsController(ICampaignRepository campaignRepository, IMainRepository mainRepository)
+        public CampaignsController(ICampaignRepository campaignRepository, IMainRepository daMainRepository)
         {
             this.campaignRepo = campaignRepository;
-            this.mainRepo = mainRepository;
+            this.daMainRepo = daMainRepository;
         }
 
         // non-Kendo
@@ -60,7 +60,7 @@ namespace EomToolWeb.Controllers
                 else
                     campaigns = campaigns.OrderBy(c => c.Name);
             }
-            viewModel.CampaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, mainRepo.GetOffer(c.Pid, false, true)));
+            viewModel.CampaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, daMainRepo.GetOffer(c.Pid, false, true)));
             return View(viewModel);
         }
 
@@ -172,7 +172,7 @@ namespace EomToolWeb.Controllers
 
             var excludeStrings = WikiSettings.ExcludeStrings().ToArray();
             var campaigns = campaignRepo.CampaignsFiltered(excludeStrings, null, null, vertical, traffictype, mobilelpBool, WikiSettings.ExcludeHidden, WikiSettings.ExcludeInactive);
-            var campaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, mainRepo.GetOffer(c.Pid, false, true)));
+            var campaignVMs = campaigns.AsEnumerable().Select(c => new CampaignViewModel(c, daMainRepo.GetOffer(c.Pid, false, true)));
 
             bool descending = desc.HasValue && desc.Value;
             switch (sort)
@@ -296,6 +296,14 @@ namespace EomToolWeb.Controllers
             var model = new TopViewModel { CampaignSummaries = campaignSummaries, By = by, TrafficType = trafficTypeEntity };
 
             return View(model);
+        }
+
+        // ---
+
+        protected override void Dispose(bool disposing)
+        {
+            daMainRepo.Dispose();
+            base.Dispose(disposing);
         }
 
         WikiSettings WikiSettings { get { return _WikiSettings.Value; } }

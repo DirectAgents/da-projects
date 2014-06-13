@@ -1,20 +1,22 @@
-﻿using System.Linq;
+﻿using EomTool.Domain.DTOs;
 using EomTool.Domain.Entities;
-using EomTool.Domain.DTOs;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EomTool.Domain.Abstract
 {
-    public interface IMainRepository
+    public interface IMainRepository : IDisposable
     {
         void SaveChanges();
 
-        AccountManagerTeam GetAccountManagerTeam(int id);
         Advertiser GetAdvertiser(int id);
+        IQueryable<Advertiser> Advertisers();
 
+        AccountManagerTeam GetAccountManagerTeam(int id);
         IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false);
-        IQueryable<Campaign> Campaigns(int? amId, int? advertiserId, bool activeOnly = false);
 
+        IQueryable<Campaign> Campaigns(int? amId, int? advertiserId, bool activeOnly = false);
         IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate, int? campaignStatus);
 
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);

@@ -10,25 +10,19 @@ using System.Linq;
 
 namespace EomToolWeb.Controllers
 {
-    public class ExtraItemsController : Controller
+    public class ExtraItemsController : EOMController
     {
-        private IMainRepository mainRepo;
-        private IDAMain1Repository daMain1Repository;
-        private IEomEntitiesConfig eomEntitiesConfig;
-
         public ExtraItemsController(IMainRepository mainRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
         {
             this.mainRepo = mainRepository;
-            this.daMain1Repository = daMain1Repository;
+            this.daMain1Repo = daMain1Repository;
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
         [HttpGet]
         public ActionResult Import()
         {
-            DateTime minDateForImport = new DateTime(2014, 1, 1);
-            ViewBag.ChooseMonthSelectList = daMain1Repository.ChooseMonthSelectList(eomEntitiesConfig, minDateForImport);
-            ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
+            SetAccountingPeriodViewData();
             ViewBag.CurrentEomDate = eomEntitiesConfig.CurrentEomDate;
             return View();
         }

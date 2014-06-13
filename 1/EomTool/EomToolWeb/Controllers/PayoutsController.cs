@@ -11,19 +11,15 @@ using System.Text;
 
 namespace EomToolWeb.Controllers
 {
-    public class PayoutsController : Controller
+    public class PayoutsController : EOMController
     {
         public int PageSize = 100;
-        private IMainRepository mainRepository;
-        private ISecurityRepository securityRepository;
-        private IDAMain1Repository daMain1Repository;
-        private IEomEntitiesConfig eomEntitiesConfig;
 
         public PayoutsController(IMainRepository mainRepository, ISecurityRepository securityRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
         {
-            this.mainRepository = mainRepository;
-            this.securityRepository = securityRepository;
-            this.daMain1Repository = daMain1Repository;
+            this.mainRepo = mainRepository;
+            this.securityRepo = securityRepository;
+            this.daMain1Repo = daMain1Repository;
             this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
@@ -37,21 +33,21 @@ namespace EomToolWeb.Controllers
         private List<int> AffIdsForCurrentUser()
         {
             var affIds = new List<int>();
-            var groups = securityRepository.GroupsForUser(User);
+            var groups = securityRepo.GroupsForUser(User);
             if (!groups.Any())
             {
                 string ipAddress = Request.ServerVariables["REMOTE_ADDR"];
-                groups = securityRepository.GroupsForIpAddress(ipAddress);
+                groups = securityRepo.GroupsForIpAddress(ipAddress);
                 if (groups == null || !groups.Any())
                 {
                     ipAddress = WindowsIdentityHelper.GetIpAddress();
-                    groups = securityRepository.GroupsForIpAddress(ipAddress);
+                    groups = securityRepo.GroupsForIpAddress(ipAddress);
                 }
             }
             if (groups != null && groups.Any())
             {
                 var mediaBuyers = groups.SelectMany(g => g.Roles).Distinct().Where(r => r.Name.StartsWith("MB: ")).Select(r => r.Name.Substring(4)).ToArray();
-                affIds = mainRepository.AffiliatesForMediaBuyers(mediaBuyers).Select(a => a.affid).ToList();
+                affIds = mainRepo.AffiliatesForMediaBuyers(mediaBuyers).Select(a => a.affid).ToList();
             }
             return affIds;
         }
@@ -68,15 +64,12 @@ namespace EomToolWeb.Controllers
 
             var viewModel = new PublisherSummaryViewModel
             {
-                PublisherSummaries = mainRepository.PublisherSummariesByMode(mode, includeZero).Where(ps => affIds.Contains(ps.affid)).OrderBy(p => !p.NetTerms.Contains("Net 7")).ThenBy(p => p.NetTerms).ThenBy(p => p.PublisherName),
+                PublisherSummaries = mainRepo.PublisherSummariesByMode(mode, includeZero).Where(ps => affIds.Contains(ps.affid)).OrderBy(p => !p.NetTerms.Contains("Net 7")).ThenBy(p => p.NetTerms).ThenBy(p => p.PublisherName),
                 Mode = mode,
                 IncludeZero = includeZero
             };
 
-            DateTime minDateForMBA = new DateTime(2014, 1, 1);
-            ViewBag.ChooseMonthSelectList = daMain1Repository.ChooseMonthSelectList(eomEntitiesConfig, minDateForMBA);
-            ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
-
+            SetAccountingPeriodViewData();
             return View(viewModel);
         }
 
@@ -119,7 +112,7 @@ namespace EomToolWeb.Controllers
             if (affid != null)
                 affIds = affIds.Where(a => a == affid).ToList();
 
-            var payouts = mainRepository.PublisherPayoutsByMode(mode, includeZero).Where(p => affIds.Contains(p.affid));
+            var payouts = mainRepo.PublisherPayoutsByMode(mode, includeZero).Where(p => affIds.Contains(p.affid));
 
             PayoutsListViewModel viewModel = new PayoutsListViewModel()
             {
@@ -193,7 +186,7 @@ namespace EomToolWeb.Controllers
         public ActionResult Approve(string itemids)
         {
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
-            mainRepository.Media_ApproveItems(itemIdsArray);
+            mainRepo.Media_ApproveItems(itemIdsArray);
 
             if (Request.IsAjaxRequest())
                 return Content("(approved)");
@@ -204,7 +197,7 @@ namespace EomToolWeb.Controllers
         public ActionResult Hold(string itemids)
         {
             int[] itemIdsArray = itemids.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(id => Convert.ToInt32(id)).ToArray();
-            mainRepository.Media_HoldItems(itemIdsArray);
+            mainRepo.Media_HoldItems(itemIdsArray);
 
             if (Request.IsAjaxRequest())
                 return Content("(held)");
@@ -218,7 +211,7 @@ namespace EomToolWeb.Controllers
         {
             StringBuilder text = new StringBuilder();
             var affIds = new List<int>();
-            var groups = securityRepository.GroupsForUser(User);
+            var groups = securityRepo.GroupsForUser(User);
             foreach (var g in groups)
             {
                 text.Append("Group: " + g.WindowsIdentity + "<br>");
@@ -231,7 +224,7 @@ namespace EomToolWeb.Controllers
                 {
                     text.Append("MediaBuyer: " + mb + "<br>");
                 }
-                affIds = mainRepository.AffiliatesForMediaBuyers(mediaBuyers).Select(a => a.affid).ToList();
+                affIds = mainRepo.AffiliatesForMediaBuyers(mediaBuyers).Select(a => a.affid).ToList();
                 foreach (var a in affIds)
                 {
                     text.Append("AffId: " + a + "<br>");

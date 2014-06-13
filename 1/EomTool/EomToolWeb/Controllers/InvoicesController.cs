@@ -13,11 +13,6 @@ namespace EomToolWeb.Controllers
 {
     public class InvoicesController : EOMController
     {
-        private IMainRepository mainRepo;
-        private ISecurityRepository securityRepo;
-        private IDAMain1Repository daMain1Repo;
-        private IEomEntitiesConfig eomEntitiesConfig;
-
         public InvoicesController(IMainRepository mainRepository, ISecurityRepository securityRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
         {
             this.mainRepo = mainRepository;
@@ -61,16 +56,6 @@ namespace EomToolWeb.Controllers
             // ? add a note to record when the status was changed ?
 
             return RedirectToAction("Summary");
-        }
-
-        // ---
-
-        private void SetAccountingPeriodViewData()
-        {
-            DateTime minDateForInvoicing = new DateTime(2014, 1, 1);
-            ViewBag.ChooseMonthSelectList = daMain1Repo.ChooseMonthSelectList(eomEntitiesConfig, minDateForInvoicing);
-            ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
-            ViewBag.CurrentEomDate = eomEntitiesConfig.CurrentEomDate;
         }
 
         // --- AM section ---
