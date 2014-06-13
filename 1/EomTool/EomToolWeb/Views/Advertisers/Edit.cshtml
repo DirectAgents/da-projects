@@ -1,0 +1,39 @@
+﻿@model Advertiser
+@{
+    ViewBag.Title = "Edit Advertiser";
+}
+
+<h3>Edit Advertiser</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Advertiser</legend>
+        @Html.HiddenFor(m => m.id)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.id)</td>
+                <td>@Html.DisplayFor(m => m.id)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.name)</td>
+                <td>@Html.DisplayFor(m => m.name)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.status)</td>
+                <td>@Html.EditorFor(m => m.status)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.invoicing_status)</td>
+                <td>@Html.EditorFor(m => m.invoicing_status)</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+    </fieldset>
+}
+
+<br />
+@Html.ActionLink("Cancel", "Show", new { id = Model.id })

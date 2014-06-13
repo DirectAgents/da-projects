@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Advertiser>
+@{
+    ViewBag.Title = "Advertisers";
+}
+
+<h3>Advertisers</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th></th>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>InvoicingStatus</th>
+    </tr>
+@foreach (var adv in Model)
+{
+    <tr>
+        <td>@Html.ActionLink("edit", "Edit", new { id = adv.id })</td>
+        <td style="text-align:right">@adv.id</td>
+        <td>@Html.ActionLink(adv.name, "Show", new { id = adv.id})</td>
+        <td>@adv.status</td>
+        <td>@adv.invoicing_status</td>
+    </tr>
+}
+</table>

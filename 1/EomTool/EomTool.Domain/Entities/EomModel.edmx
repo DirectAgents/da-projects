@@ -4,34 +4,34 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EomModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EomModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="EomModelStoreContainer">
-          <EntitySet Name="AccountManager" EntityType="EomModel.Store.AccountManager" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Batch" EntityType="EomModel.Store.Batch" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="BatchBatchUpdate" EntityType="EomModel.Store.BatchBatchUpdate" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="BatchUpdate" EntityType="EomModel.Store.BatchUpdate" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Invoice" EntityType="EomModel.Store.Invoice" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="InvoiceItem" EntityType="EomModel.Store.InvoiceItem" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="InvoiceNote" EntityType="EomModel.Store.InvoiceNote" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="InvoiceStatus" EntityType="EomModel.Store.InvoiceStatus" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="MediaBuyer" EntityType="EomModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="MediaBuyerApprovalStatus" EntityType="EomModel.Store.MediaBuyerApprovalStatus" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="PaymentBatch" EntityType="EomModel.Store.PaymentBatch" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="PaymentBatchState" EntityType="EomModel.Store.PaymentBatchState" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="PubAttachment" EntityType="EomModel.Store.PubAttachment" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="PubNotes" EntityType="EomModel.Store.PubNotes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="UnitType" EntityType="EomModel.Store.UnitType" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
-          <EntitySet Name="CampaignsPublisherReportDetails" EntityType="EomModel.Store.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportDetails" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="AccountManager" EntityType="EomModel.Store.AccountManager" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Batch" EntityType="EomModel.Store.Batch" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="BatchBatchUpdate" EntityType="EomModel.Store.BatchBatchUpdate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="BatchUpdate" EntityType="EomModel.Store.BatchUpdate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Campaign" EntityType="EomModel.Store.Campaign" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Invoice" EntityType="EomModel.Store.Invoice" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="InvoiceItem" EntityType="EomModel.Store.InvoiceItem" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="InvoiceNote" EntityType="EomModel.Store.InvoiceNote" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="InvoiceStatus" EntityType="EomModel.Store.InvoiceStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ItemAccountingStatus" EntityType="EomModel.Store.ItemAccountingStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MediaBuyer" EntityType="EomModel.Store.MediaBuyer" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MediaBuyerApprovalStatus" EntityType="EomModel.Store.MediaBuyerApprovalStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PaymentBatch" EntityType="EomModel.Store.PaymentBatch" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PaymentBatchState" EntityType="EomModel.Store.PaymentBatchState" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PubAttachment" EntityType="EomModel.Store.PubAttachment" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PubNotes" EntityType="EomModel.Store.PubNotes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Source" EntityType="EomModel.Store.Source" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="TrackingSystem" EntityType="EomModel.Store.TrackingSystem" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="UnitType" EntityType="EomModel.Store.UnitType" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CampaignsPublisherReportDetails" EntityType="EomModel.Store.CampaignsPublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportDetails">
             <DefiningQuery>SELECT 
       [CampaignsPublisherReportDetails].[ItemIDs] AS [ItemIDs], 
       [CampaignsPublisherReportDetails].[CampaignStatus] AS [CampaignStatus], 
@@ -49,7 +49,7 @@
       [CampaignsPublisherReportDetails].[Total] AS [Total]
       FROM [dbo].[CampaignsPublisherReportDetails] AS [CampaignsPublisherReportDetails]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="CampaignsPublisherReportSummary" EntityType="EomModel.Store.CampaignsPublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportSummary" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="CampaignsPublisherReportSummary" EntityType="EomModel.Store.CampaignsPublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="CampaignsPublisherReportSummary">
             <DefiningQuery>SELECT 
       [CampaignsPublisherReportSummary].[CampaignStatus] AS [CampaignStatus], 
       [CampaignsPublisherReportSummary].[Publisher] AS [Publisher], 
@@ -63,7 +63,7 @@
       [CampaignsPublisherReportSummary].[Total] AS [Total]
       FROM [dbo].[CampaignsPublisherReportSummary] AS [CampaignsPublisherReportSummary]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherPayments" EntityType="EomModel.Store.PublisherPayments" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayments" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="PublisherPayments" EntityType="EomModel.Store.PublisherPayments" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayments">
             <DefiningQuery>SELECT 
       [PublisherPayments].[NetTermTypeId] AS [NetTermTypeId], 
       [PublisherPayments].[NetTermType] AS [NetTermType], 
@@ -82,7 +82,7 @@
       [PublisherPayments].[ItemIds] AS [ItemIds]
       FROM [dbo].[PublisherPayments] AS [PublisherPayments]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherPayouts" EntityType="EomModel.Store.PublisherPayouts" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayouts" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="PublisherPayouts" EntityType="EomModel.Store.PublisherPayouts" store:Type="Views" store:Schema="dbo" store:Name="PublisherPayouts">
             <DefiningQuery>SELECT 
       [PublisherPayouts].[affid] AS [affid], 
       [PublisherPayouts].[Publisher] AS [Publisher], 
@@ -122,7 +122,7 @@
       [PublisherPayouts].[BatchIds] AS [BatchIds]
       FROM [dbo].[PublisherPayouts] AS [PublisherPayouts]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherRelatedItemCounts" EntityType="EomModel.Store.PublisherRelatedItemCounts" store:Type="Views" store:Schema="dbo" store:Name="PublisherRelatedItemCounts" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="PublisherRelatedItemCounts" EntityType="EomModel.Store.PublisherRelatedItemCounts" store:Type="Views" store:Schema="dbo" store:Name="PublisherRelatedItemCounts">
             <DefiningQuery>SELECT 
       [PublisherRelatedItemCounts].[Id] AS [Id], 
       [PublisherRelatedItemCounts].[Publisher] AS [Publisher], 
@@ -130,7 +130,7 @@
       [PublisherRelatedItemCounts].[NumAttachments] AS [NumAttachments]
       FROM [dbo].[PublisherRelatedItemCounts] AS [PublisherRelatedItemCounts]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherReportDetails" EntityType="EomModel.Store.PublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportDetails" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="PublisherReportDetails" EntityType="EomModel.Store.PublisherReportDetails" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportDetails">
             <DefiningQuery>SELECT 
       [PublisherReportDetails].[PublisherName] AS [PublisherName], 
       [PublisherReportDetails].[NetTermTypeName] AS [NetTermTypeName], 
@@ -147,7 +147,7 @@
       [PublisherReportDetails].[ItemIDs] AS [ItemIDs]
       FROM [dbo].[PublisherReportDetails] AS [PublisherReportDetails]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherReports" EntityType="EomModel.Store.PublisherReports" store:Type="Views" store:Schema="dbo" store:Name="PublisherReports" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="PublisherReports" EntityType="EomModel.Store.PublisherReports" store:Type="Views" store:Schema="dbo" store:Name="PublisherReports">
             <DefiningQuery>SELECT 
       [PublisherReports].[ItemIDs] AS [ItemIDs], 
       [PublisherReports].[CampaignStatus] AS [CampaignStatus], 
@@ -165,7 +165,7 @@
       [PublisherReports].[Total] AS [Total]
       FROM [dbo].[PublisherReports] AS [PublisherReports]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherReportSummary" EntityType="EomModel.Store.PublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportSummary" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="PublisherReportSummary" EntityType="EomModel.Store.PublisherReportSummary" store:Type="Views" store:Schema="dbo" store:Name="PublisherReportSummary">
             <DefiningQuery>SELECT 
       [PublisherReportSummary].[Name] AS [Name], 
       [PublisherReportSummary].[Net Terms] AS [Net Terms], 
@@ -301,6 +301,8 @@
           </Key>
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="status" Type="varchar" MaxLength="50" />
+          <Property Name="invoicing_status" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6035: The relationship 'FK_InvoiceItem_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
@@ -1269,6 +1271,8 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" FromRole="Advertiser" ToRole="Campaign" />
+          <Property Type="String" Name="status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="invoicing_status" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Affiliate">
           <Key>
@@ -2084,7 +2088,9 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EomModelStoreContainer" CdmEntityContainer="EomEntities">
           <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="EomModel.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
-            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="invoicing_status" ColumnName="invoicing_status" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Affiliates"><EntityTypeMapping TypeName="EomModel.Affiliate"><MappingFragment StoreEntitySet="Affiliate">

@@ -1062,6 +1062,54 @@ namespace EomTool.Domain.Entities
         private global::System.String _name;
         partial void OnnameChanging(global::System.String value);
         partial void OnnameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String status
+        {
+            get
+            {
+                return _status;
+            }
+            set
+            {
+                OnstatusChanging(value);
+                ReportPropertyChanging("status");
+                _status = StructuralObject.SetValidValue(value, true, "status");
+                ReportPropertyChanged("status");
+                OnstatusChanged();
+            }
+        }
+        private global::System.String _status;
+        partial void OnstatusChanging(global::System.String value);
+        partial void OnstatusChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String invoicing_status
+        {
+            get
+            {
+                return _invoicing_status;
+            }
+            set
+            {
+                Oninvoicing_statusChanging(value);
+                ReportPropertyChanging("invoicing_status");
+                _invoicing_status = StructuralObject.SetValidValue(value, true, "invoicing_status");
+                ReportPropertyChanged("invoicing_status");
+                Oninvoicing_statusChanged();
+            }
+        }
+        private global::System.String _invoicing_status;
+        partial void Oninvoicing_statusChanging(global::System.String value);
+        partial void Oninvoicing_statusChanged();
 
         #endregion
 

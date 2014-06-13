@@ -1,0 +1,31 @@
+﻿@model Advertiser
+@{
+    ViewBag.Title = "Show Advertiser";
+}
+
+<h3>Show Advertiser</h3>
+
+<fieldset>
+    <legend>Advertiser [@Html.ActionLink("Edit", "Edit", new { id = Model.id })]</legend>
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.id)</td>
+            <td>@Html.DisplayFor(m => m.id)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.name)</td>
+            <td>@Html.DisplayFor(m => m.name)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.status)</td>
+            <td>@Html.DisplayFor(m => m.status)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.invoicing_status)</td>
+            <td>@Html.DisplayFor(m => m.invoicing_status)</td>
+        </tr>
+    </table>
+</fieldset>
+
+<br />
+@Html.ActionLink("Back to List", "Index")

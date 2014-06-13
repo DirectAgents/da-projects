@@ -145,6 +145,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdvertisersController.cs" />
     <Compile Include="Controllers\BatchesController.cs" />
     <Compile Include="Controllers\BlogPostController.cs" />
     <Compile Include="Controllers\CampaignsController.cs" />
@@ -3360,6 +3361,9 @@
     <Content Include="Views\Campaigns\ListSortable.cshtml" />
     <Content Include="Views\Campaigns\FilterForList.cshtml" />
     <Content Include="Views\Campaigns\ListSortableInner.cshtml" />
+    <Content Include="Views\Advertisers\Index.cshtml" />
+    <Content Include="Views\Advertisers\_ViewStart.cshtml" />
+    <Content Include="Views\Advertisers\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
