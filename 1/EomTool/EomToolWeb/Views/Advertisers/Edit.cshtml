@@ -1,6 +1,9 @@
 ﻿@model Advertiser
 @{
     ViewBag.Title = "Edit Advertiser";
+    var statusList = new[] { "", "New", "New1", "New2", "Existing" };
+    var paymentTermsList = new[] { "", "Net 7", "Net 7/Biweekly", "Net 15", "Net 30", "Net 45", "Net 60", "Retainer" };
+    var invoicingStatusList = new[] { "", "Not Invoiced", "Invoiced", "Paid", "Positive Retainer", "Negative Retainer" };
 }
 
 <h3>Edit Advertiser</h3>
@@ -23,11 +26,15 @@
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.status)</td>
-                <td>@Html.EditorFor(m => m.status)</td>
+                <td>@Html.DropDownListFor(m => m.status, new SelectList(statusList))</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.payment_terms)</td>
+                <td>@Html.DropDownListFor(m => m.payment_terms, new SelectList(paymentTermsList))</td>
             </tr>
             <tr>
                 <td>@Html.LabelFor(m => m.invoicing_status)</td>
-                <td>@Html.EditorFor(m => m.invoicing_status)</td>
+                <td>@Html.DropDownListFor(m => m.invoicing_status, new SelectList(invoicingStatusList))</td>
             </tr>
         </table>
         <br />

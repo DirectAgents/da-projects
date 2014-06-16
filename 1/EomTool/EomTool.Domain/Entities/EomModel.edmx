@@ -302,6 +302,7 @@
           <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="status" Type="varchar" MaxLength="50" />
+          <Property Name="payment_terms" Type="varchar" MaxLength="50" />
           <Property Name="invoicing_status" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
@@ -1272,6 +1273,7 @@
           <Property Name="name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
           <NavigationProperty Name="Campaigns" Relationship="EomModel.Campaign_Advertiser_id_FK_Advertiser_id_PK" FromRole="Advertiser" ToRole="Campaign" />
           <Property Type="String" Name="status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="payment_terms" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="invoicing_status" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Affiliate">
@@ -2088,7 +2090,8 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EomModelStoreContainer" CdmEntityContainer="EomEntities">
           <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="EomModel.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
-            <ScalarProperty Name="invoicing_status" ColumnName="invoicing_status" />
+                <ScalarProperty Name="invoicing_status" ColumnName="invoicing_status" />
+                <ScalarProperty Name="payment_terms" ColumnName="payment_terms" />
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />

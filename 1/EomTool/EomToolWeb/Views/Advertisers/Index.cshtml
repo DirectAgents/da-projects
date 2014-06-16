@@ -3,7 +3,7 @@
     ViewBag.Title = "Advertisers";
 }
 
-<h3>Advertisers</h3>
+<h3>@Html.ActionLink("Admin", "Index", "Admin") - Advertisers</h3>
 
 Accounting Period:
 @Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
@@ -15,6 +15,7 @@ Accounting Period:
         <th>Id</th>
         <th>Name</th>
         <th>Status</th>
+        <th>PaymentTerms</th>
         <th>InvoicingStatus</th>
     </tr>
 @foreach (var adv in Model)
@@ -24,6 +25,7 @@ Accounting Period:
         <td style="text-align:right">@adv.id</td>
         <td>@Html.ActionLink(adv.name, "Show", new { id = adv.id})</td>
         <td>@adv.status</td>
+        <td>@adv.payment_terms</td>
         <td>@adv.invoicing_status</td>
     </tr>
 }

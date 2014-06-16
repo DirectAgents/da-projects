@@ -1092,6 +1092,30 @@ namespace EomTool.Domain.Entities
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
+        public global::System.String payment_terms
+        {
+            get
+            {
+                return _payment_terms;
+            }
+            set
+            {
+                Onpayment_termsChanging(value);
+                ReportPropertyChanging("payment_terms");
+                _payment_terms = StructuralObject.SetValidValue(value, true, "payment_terms");
+                ReportPropertyChanged("payment_terms");
+                Onpayment_termsChanged();
+            }
+        }
+        private global::System.String _payment_terms;
+        partial void Onpayment_termsChanging(global::System.String value);
+        partial void Onpayment_termsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
         public global::System.String invoicing_status
         {
             get
