@@ -823,6 +823,9 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\InvoiceItem.table.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\InvoiceNote.table.sql" />
     <Build Include="Schema Objects\Schemas\dbo\Tables\InvoiceStatus.table.sql" />
+    <Build Include="Schema Objects\Schemas\dbo\Views\AdvertiserPaymentStatus.view.sql">
+      <SubType>Code</SubType>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">

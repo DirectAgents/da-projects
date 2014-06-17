@@ -12,5 +12,6 @@
 	[date_created] [datetime] NULL,
 	[date_modified] [datetime] NULL,
 	[tracking_system_id] [int] NULL,
-	[external_id] [int] NULL
+	[external_id] [int] NULL, 
+    [status] VARCHAR(50) NULL
 );
