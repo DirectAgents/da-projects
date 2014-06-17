@@ -1,0 +1,43 @@
+﻿@model Affiliate
+@{
+    ViewBag.Title = "Show Affiliate";
+}
+
+<h3>Show Affiliate</h3>
+
+<fieldset>
+    <legend>Affiliate [@Html.ActionLink("Edit", "Edit", new { id = Model.id })]</legend>
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.affid, "AffId")</td>
+            <td>@Html.DisplayFor(m => m.affid)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.name, "Name")</td>
+            <td>@Html.DisplayFor(m => m.name)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.status, "Status")</td>
+            <td>@Html.DisplayFor(m => m.status)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.MediaBuyer)</td>
+            <td>@Html.DisplayFor(m => m.MediaBuyer.name)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.NetTermType, "NetTerms")</td>
+            <td>@Html.DisplayFor(m => m.NetTermType.name)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.AffiliatePaymentMethod, "PaymentMethod")</td>
+            <td>@Html.DisplayFor(m => m.AffiliatePaymentMethod.name)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.Currency)</td>
+            <td>@Html.DisplayFor(m => m.Currency.name)</td>
+        </tr>
+    </table>
+</fieldset>
+
+<br />
+@Html.ActionLink("Back to List", "Index")

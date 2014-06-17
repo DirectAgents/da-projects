@@ -9,6 +9,7 @@
           <EntitySet Name="AccountManager" EntityType="EomModel.Store.AccountManager" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Advertiser" EntityType="EomModel.Store.Advertiser" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Affiliate" EntityType="EomModel.Store.Affiliate" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AffiliatePaymentMethod" EntityType="EomModel.Store.AffiliatePaymentMethod" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Batch" EntityType="EomModel.Store.Batch" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="BatchBatchUpdate" EntityType="EomModel.Store.BatchBatchUpdate" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="BatchUpdate" EntityType="EomModel.Store.BatchUpdate" store:Type="Tables" Schema="dbo" />
@@ -175,6 +176,10 @@
       [PublisherReportSummary].[Total] AS [Total]
       FROM [dbo].[PublisherReportSummary] AS [PublisherReportSummary]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" Association="EomModel.Store.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
+            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
+            <End Role="Affiliate" EntitySet="Affiliate" />
+          </AssociationSet>
           <AssociationSet Name="Affiliate_Currency_id_FK_Currency_id_PK" Association="EomModel.Store.Affiliate_Currency_id_FK_Currency_id_PK">
             <End Role="Currency" EntitySet="Currency" />
             <End Role="Affiliate" EntitySet="Affiliate" />
@@ -250,6 +255,10 @@
           <AssociationSet Name="FK_Item_PaymentBatch" Association="EomModel.Store.FK_Item_PaymentBatch">
             <End Role="PaymentBatch" EntitySet="PaymentBatch" />
             <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_AffiliatePaymentMethod" Association="EomModel.Store.FK_PaymentBatch_AffiliatePaymentMethod">
+            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethod" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatch" />
           </AssociationSet>
           <AssociationSet Name="FK_PaymentBatch_PaymentBatch" Association="EomModel.Store.FK_PaymentBatch_PaymentBatch">
             <End Role="PaymentBatch" EntitySet="PaymentBatch" />
@@ -327,6 +336,14 @@
           <Property Name="date_modified" Type="datetime" />
           <Property Name="tracking_system_id" Type="int" />
           <Property Name="external_id" Type="int" />
+          <Property Name="status" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="AffiliatePaymentMethod">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="Batch">
           <Key>
@@ -783,6 +800,18 @@
           <Property Name="Paid" Type="decimal" Precision="38" Scale="6" />
           <Property Name="Total" Type="decimal" Precision="38" Scale="6" />
         </EntityType>
+        <Association Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
+          <End Role="AffiliatePaymentMethod" Type="EomModel.Store.AffiliatePaymentMethod" Multiplicity="1" />
+          <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AffiliatePaymentMethod">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Affiliate">
+              <PropertyRef Name="payment_method_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="Affiliate_Currency_id_FK_Currency_id_PK">
           <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="1" />
           <End Role="Affiliate" Type="EomModel.Store.Affiliate" Multiplicity="*" />
@@ -1008,6 +1037,18 @@
             </Principal>
             <Dependent Role="Item">
               <PropertyRef Name="payment_batch_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_AffiliatePaymentMethod">
+          <End Role="AffiliatePaymentMethod" Type="EomModel.Store.AffiliatePaymentMethod" Multiplicity="0..1" />
+          <End Role="PaymentBatch" Type="EomModel.Store.PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AffiliatePaymentMethod">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="payment_method_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1264,6 +1305,15 @@
             <End Role="UnitType" EntitySet="UnitTypes" />
             <End Role="InvoiceItem" EntitySet="InvoiceItems" />
           </AssociationSet>
+          <EntitySet Name="AffiliatePaymentMethods" EntityType="EomModel.AffiliatePaymentMethod" />
+          <AssociationSet Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" Association="EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
+            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethods" />
+            <End Role="Affiliate" EntitySet="Affiliates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentBatch_AffiliatePaymentMethod" Association="EomModel.FK_PaymentBatch_AffiliatePaymentMethod">
+            <End Role="AffiliatePaymentMethod" EntitySet="AffiliatePaymentMethods" />
+            <End Role="PaymentBatch" EntitySet="PaymentBatches" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Advertiser">
           <Key>
@@ -1298,6 +1348,8 @@
           <NavigationProperty Name="MediaBuyer" Relationship="EomModel.Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK" FromRole="Affiliate" ToRole="MediaBuyer" />
           <NavigationProperty Name="NetTermType" Relationship="EomModel.Affiliate_NetTermType_id_FK_NetTermType_id_PK" FromRole="Affiliate" ToRole="NetTermType" />
           <NavigationProperty Name="TrackingSystem" Relationship="EomModel.affiliate_tracking_system_fk" FromRole="Affiliate" ToRole="TrackingSystem" />
+          <NavigationProperty Name="AffiliatePaymentMethod" Relationship="EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" FromRole="Affiliate" ToRole="AffiliatePaymentMethod" />
+          <Property Type="String" Name="status" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Campaign">
           <Key>
@@ -1855,6 +1907,7 @@
           <NavigationProperty Name="PaymentBatchState" Relationship="EomModel.FK_PaymentBatch_PaymentBatchState" FromRole="PaymentBatch" ToRole="PaymentBatchState" />
           <Property Type="String" Name="name" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="date_sent" Precision="3" />
+          <NavigationProperty Name="AffiliatePaymentMethod" Relationship="EomModel.FK_PaymentBatch_AffiliatePaymentMethod" FromRole="PaymentBatch" ToRole="AffiliatePaymentMethod" />
         </EntityType>
         <EntityType Name="PaymentBatchState">
           <Key>
@@ -2083,6 +2136,37 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="AffiliatePaymentMethod">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" a:StoreGeneratedPattern="Identity" xmlns:a="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK">
+          <End Type="EomModel.AffiliatePaymentMethod" Role="AffiliatePaymentMethod" Multiplicity="1" />
+          <End Type="EomModel.Affiliate" Role="Affiliate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AffiliatePaymentMethod">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Affiliate">
+              <PropertyRef Name="payment_method_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentBatch_AffiliatePaymentMethod">
+          <End Type="EomModel.AffiliatePaymentMethod" Role="AffiliatePaymentMethod" Multiplicity="0..1" />
+          <End Type="EomModel.PaymentBatch" Role="PaymentBatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AffiliatePaymentMethod">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PaymentBatch">
+              <PropertyRef Name="payment_method_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2097,7 +2181,8 @@
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Affiliates"><EntityTypeMapping TypeName="EomModel.Affiliate"><MappingFragment StoreEntitySet="Affiliate">
-            <ScalarProperty Name="id" ColumnName="id" />
+            <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
             <ScalarProperty Name="media_buyer_id" ColumnName="media_buyer_id" />
             <ScalarProperty Name="affid" ColumnName="affid" />
@@ -2467,6 +2552,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="AffiliatePaymentMethods">
+            <EntityTypeMapping TypeName="EomModel.AffiliatePaymentMethod">
+              <MappingFragment StoreEntitySet="AffiliatePaymentMethod">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2491,7 +2584,7 @@
         <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="7.625" PointY="19.625" Height="1.5956835937500014" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Affiliate" Width="1.5" PointX="8" PointY="12.375" Height="4.480205078125" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Campaign" Width="2" PointX="4.875" PointY="15" Height="5.634013671875" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.CampaignStatus" Width="1.5" PointX="4.125" PointY="12.75" Height="1.5956835937500031" IsExpanded="true" />
+        <EntityTypeShape EntityType="EomModel.CampaignStatus" Width="1.5" PointX="4.25" PointY="12.75" Height="1.5956835937500031" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Currency" Width="1.5" PointX="6.5" PointY="10.375" Height="2.1725878906250005" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Item" Width="2.375" PointX="7" PointY="3.125" Height="6.4032194010416656" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.ItemAccountingStatus" Width="2" PointX="10.75" PointY="4.375" Height="1.5956835937499996" IsExpanded="true" />
@@ -2636,6 +2729,9 @@
         <AssociationConnector Association="EomModel.FK_InvoiceItem_Currency" />
         <AssociationConnector Association="EomModel.FK_InvoiceItem_Invoice" />
         <AssociationConnector Association="EomModel.FK_InvoiceItem_UnitType" />
+        <EntityTypeShape EntityType="EomModel.AffiliatePaymentMethod" Width="2.125" PointX="3.625" PointY="10.625" />
+        <AssociationConnector Association="EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" />
+        <AssociationConnector Association="EomModel.FK_PaymentBatch_AffiliatePaymentMethod" />
         </Diagram>
     </Diagrams>
   </Designer>

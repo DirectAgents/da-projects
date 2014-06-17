@@ -458,6 +458,10 @@ namespace EomTool.Domain.Concrete
             return true;
         }
 
+        public IQueryable<Affiliate> Affiliates()
+        {
+            return context.Affiliates;
+        }
         public bool AffiliateExists(int affId)
         {
             return context.Affiliates.Any(a => a.affid == affId);
@@ -465,6 +469,10 @@ namespace EomTool.Domain.Concrete
         public Affiliate GetAffiliate(int affId)
         {
             return context.Affiliates.FirstOrDefault(a => a.affid == affId);
+        }
+        public Affiliate GetAffiliateById(int id)
+        {
+            return context.Affiliates.FirstOrDefault(a => a.id == id);
         }
         public string AffiliateName(int affId, bool withId = false)
         {

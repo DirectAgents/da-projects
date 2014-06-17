@@ -1,0 +1,36 @@
+﻿@model Affiliate
+@{
+    ViewBag.Title = "Edit Affiliate";
+    var statusList = new[] { "", "New", "New1", "New2", "Existing" };
+}
+
+<h3>Edit Affiliate</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Affiliate</legend>
+        @Html.HiddenFor(m => m.id)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.affid, "AffId")</td>
+                <td>@Html.DisplayFor(m => m.affid)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.name, "Name")</td>
+                <td>@Html.DisplayFor(m => m.name)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.status, "Status")</td>
+                <td>@Html.DropDownListFor(m => m.status, new SelectList(statusList))</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+    </fieldset>
+}
+
+<br />
+@Html.ActionLink("Cancel", "Show", new { id = Model.id })

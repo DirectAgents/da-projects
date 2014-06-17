@@ -145,6 +145,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AffiliatesController.cs" />
     <Compile Include="Controllers\WikiAdminController.cs" />
     <Compile Include="Controllers\AdvertisersController.cs" />
     <Compile Include="Controllers\BatchesController.cs" />
@@ -3368,6 +3369,10 @@
     <Content Include="Views\Advertisers\Show.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\_ViewStart.cshtml" />
+    <Content Include="Views\Affiliates\Index.cshtml" />
+    <Content Include="Views\Affiliates\_ViewStart.cshtml" />
+    <Content Include="Views\Affiliates\Show.cshtml" />
+    <Content Include="Views\Affiliates\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

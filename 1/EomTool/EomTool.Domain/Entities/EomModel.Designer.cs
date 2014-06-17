@@ -46,6 +46,8 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Currency", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Currency), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_Invoice", "Invoice", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.Invoice), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "FK_InvoiceItem_UnitType", "UnitType", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.UnitType), "InvoiceItem", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.InvoiceItem), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK", "AffiliatePaymentMethod", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomTool.Domain.Entities.AffiliatePaymentMethod), "Affiliate", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.Affiliate), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_PaymentBatch_AffiliatePaymentMethod", "AffiliatePaymentMethod", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomTool.Domain.Entities.AffiliatePaymentMethod), "PaymentBatch", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomTool.Domain.Entities.PaymentBatch), true)]
 
 #endregion
 
@@ -608,6 +610,22 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<InvoiceItem> _InvoiceItems;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<AffiliatePaymentMethod> AffiliatePaymentMethods
+        {
+            get
+            {
+                if ((_AffiliatePaymentMethods == null))
+                {
+                    _AffiliatePaymentMethods = base.CreateObjectSet<AffiliatePaymentMethod>("AffiliatePaymentMethods");
+                }
+                return _AffiliatePaymentMethods;
+            }
+        }
+        private ObjectSet<AffiliatePaymentMethod> _AffiliatePaymentMethods;
 
         #endregion
 
@@ -867,6 +885,14 @@ namespace EomTool.Domain.Entities
         public void AddToInvoiceItems(InvoiceItem invoiceItem)
         {
             base.AddObject("InvoiceItems", invoiceItem);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the AffiliatePaymentMethods EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToAffiliatePaymentMethods(AffiliatePaymentMethod affiliatePaymentMethod)
+        {
+            base.AddObject("AffiliatePaymentMethods", affiliatePaymentMethod);
         }
 
         #endregion
@@ -1544,6 +1570,30 @@ namespace EomTool.Domain.Entities
         private Nullable<global::System.Int32> _external_id;
         partial void Onexternal_idChanging(Nullable<global::System.Int32> value);
         partial void Onexternal_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String status
+        {
+            get
+            {
+                return _status;
+            }
+            set
+            {
+                OnstatusChanging(value);
+                ReportPropertyChanging("status");
+                _status = StructuralObject.SetValidValue(value, true, "status");
+                ReportPropertyChanged("status");
+                OnstatusChanged();
+            }
+        }
+        private global::System.String _status;
+        partial void OnstatusChanging(global::System.String value);
+        partial void OnstatusChanged();
 
         #endregion
 
@@ -1700,6 +1750,126 @@ namespace EomTool.Domain.Entities
                 }
             }
         }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK", "AffiliatePaymentMethod")]
+        public AffiliatePaymentMethod AffiliatePaymentMethod
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AffiliatePaymentMethod>("EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK", "AffiliatePaymentMethod").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AffiliatePaymentMethod>("EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK", "AffiliatePaymentMethod").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<AffiliatePaymentMethod> AffiliatePaymentMethodReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AffiliatePaymentMethod>("EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK", "AffiliatePaymentMethod");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AffiliatePaymentMethod>("EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK", "AffiliatePaymentMethod", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="AffiliatePaymentMethod")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class AffiliatePaymentMethod : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new AffiliatePaymentMethod object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="name">Initial value of the name property.</param>
+        public static AffiliatePaymentMethod CreateAffiliatePaymentMethod(global::System.Int32 id, global::System.String name)
+        {
+            AffiliatePaymentMethod affiliatePaymentMethod = new AffiliatePaymentMethod();
+            affiliatePaymentMethod.id = id;
+            affiliatePaymentMethod.name = name;
+            return affiliatePaymentMethod;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value, "id");
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, false, "name");
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
 
         #endregion
 
@@ -6467,6 +6637,44 @@ namespace EomTool.Domain.Entities
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<PaymentBatchState>("EomModel.FK_PaymentBatch_PaymentBatchState", "PaymentBatchState", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_PaymentBatch_AffiliatePaymentMethod", "AffiliatePaymentMethod")]
+        public AffiliatePaymentMethod AffiliatePaymentMethod
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AffiliatePaymentMethod>("EomModel.FK_PaymentBatch_AffiliatePaymentMethod", "AffiliatePaymentMethod").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AffiliatePaymentMethod>("EomModel.FK_PaymentBatch_AffiliatePaymentMethod", "AffiliatePaymentMethod").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<AffiliatePaymentMethod> AffiliatePaymentMethodReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<AffiliatePaymentMethod>("EomModel.FK_PaymentBatch_AffiliatePaymentMethod", "AffiliatePaymentMethod");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<AffiliatePaymentMethod>("EomModel.FK_PaymentBatch_AffiliatePaymentMethod", "AffiliatePaymentMethod", value);
                 }
             }
         }

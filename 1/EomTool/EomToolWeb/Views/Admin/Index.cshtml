@@ -1,7 +1,16 @@
 ﻿
-<h3>Admin</h3>
+@{
+    ViewBag.Title = "EOM Admin";
+}
+
+<h3>EOM Admin</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
 
 @Html.ActionLink("Advertisers", "Index", "Advertisers")<br />
+@Html.ActionLink("Affiliates", "Index", "Affiliates")<br />
 <br />
 @Html.ActionLink("Media Buyer Approvals", "Summary", "Payouts")<br />
 @Html.ActionLink("Invoice Requests", "Summary", "Invoices")<br />

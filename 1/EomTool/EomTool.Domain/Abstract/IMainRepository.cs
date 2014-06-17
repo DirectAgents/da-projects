@@ -43,8 +43,10 @@ namespace EomTool.Domain.Abstract
         Campaign GetCampaign(int pid);
         bool SaveCampaign(Campaign inCampaign);
 
+        IQueryable<Affiliate> Affiliates();
         bool AffiliateExists(int affId);
         Affiliate GetAffiliate(int affId);
+        Affiliate GetAffiliateById(int id);
         string AffiliateName(int affId, bool withId = false);
 
         Source GetSource(int sourceId);

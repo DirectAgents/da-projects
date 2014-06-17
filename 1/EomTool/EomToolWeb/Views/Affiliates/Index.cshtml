@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Affiliate>
+@{
+    ViewBag.Title = "Affiliates";
+}
+
+<h3>@Html.ActionLink("Admin", "Index", "Admin") - Affiliates</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th></th>
+        <th>AffId</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>MediaBuyer</th>
+        <th>NetTerms</th>
+        <th>PaymentMethod</th>
+        <th>Currency</th>
+    </tr>
+@foreach (var aff in Model)
+{
+    <tr>
+        <td>@Html.ActionLink("edit", "Edit", new { id = aff.id })</td>
+        <td style="text-align:right">@aff.affid</td>
+        <td>@Html.ActionLink(aff.name2, "Show", new { id = aff.id})</td>
+        <td style="text-align:center">@aff.status</td>
+        <td>@aff.MediaBuyer.name</td>
+        <td style="text-align:center">@aff.NetTermType.name</td>
+        <td style="text-align:center">@aff.AffiliatePaymentMethod.name</td>
+        <td style="text-align:center">@aff.Currency.name</td>
+    </tr>
+}
+</table>

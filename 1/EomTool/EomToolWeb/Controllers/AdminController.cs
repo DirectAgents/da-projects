@@ -5,10 +5,12 @@ namespace EomToolWeb.Controllers
 {
     public class AdminController : EOMController
     {
-
-        public AdminController(ISecurityRepository securityRepository)
+        public AdminController(IMainRepository mainRepository, ISecurityRepository securityRepository, IDAMain1Repository daMain1Repository, IEomEntitiesConfig eomEntitiesConfig)
         {
+            this.mainRepo = mainRepository;
             this.securityRepo = securityRepository;
+            this.daMain1Repo = daMain1Repository;
+            this.eomEntitiesConfig = eomEntitiesConfig;
         }
 
         public ActionResult Index()
@@ -16,6 +18,7 @@ namespace EomToolWeb.Controllers
             if (!securityRepo.IsAccountantOrAdmin(User))
                 return Content("unauthorized");
 
+            SetAccountingPeriodViewData();
             return View();
         }
 
