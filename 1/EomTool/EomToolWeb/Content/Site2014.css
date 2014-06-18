@@ -5,3 +5,7 @@
 input[type="text"] {
     width: 400px;
 }
+
+.bold {
+    font-weight: bold;
+}

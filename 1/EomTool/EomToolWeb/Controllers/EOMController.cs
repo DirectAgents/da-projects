@@ -43,6 +43,8 @@ namespace EomToolWeb.Controllers
         {
             if (mainRepo != null)
                 mainRepo.Dispose();
+            if (daMain1Repo != null)
+                daMain1Repo.Dispose();
             //TODO: make other repos disposable
 
             base.Dispose(disposing);

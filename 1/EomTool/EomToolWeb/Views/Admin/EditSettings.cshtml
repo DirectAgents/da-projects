@@ -1,0 +1,26 @@
+﻿@model SettingsVM
+@{
+    ViewBag.Title = "Edit Settings";
+}
+
+<h3>Edit Settings</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Settings</legend>
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.MinimumFinalizationMargin)</td>
+                <td>@Html.EditorFor(m => m.MinimumFinalizationMargin) %</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+    </fieldset>
+}
+
+<br />
+@Html.ActionLink("Cancel", "Settings")

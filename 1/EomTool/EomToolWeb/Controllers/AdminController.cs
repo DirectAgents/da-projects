@@ -1,4 +1,5 @@
 ﻿using EomTool.Domain.Abstract;
+using EomToolWeb.Models;
 using System.Web.Mvc;
 
 namespace EomToolWeb.Controllers
@@ -20,6 +21,37 @@ namespace EomToolWeb.Controllers
 
             SetAccountingPeriodViewData();
             return View();
+        }
+
+        public ActionResult Settings()
+        {
+            return View(GetSettingsVM());
+        }
+
+        [HttpGet]
+        public ActionResult EditSettings()
+        {
+            return View(GetSettingsVM());
+        }
+
+        [HttpPost]
+        public ActionResult EditSettings(SettingsVM settingsVM)
+        {
+            if (ModelState.IsValid)
+            {
+                daMain1Repo.SaveSetting("MinimumFinalizationMargin", settingsVM.MinimumFinalizationMargin);
+                return RedirectToAction("Settings");
+            }
+            return View(settingsVM);
+        }
+
+        private SettingsVM GetSettingsVM()
+        {
+            var model = new SettingsVM
+            {
+                MinimumFinalizationMargin = daMain1Repo.GetSettingDecimalValue("MinimumFinalizationMargin")
+            };
+            return model;
         }
 
     }

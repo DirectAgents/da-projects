@@ -1,0 +1,16 @@
+﻿@model SettingsVM
+@{
+    ViewBag.Title = "EOM Settings";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index") - Settings</h3>
+
+<fieldset>
+    <legend>Settings [@Html.ActionLink("Edit", "EditSettings")]</legend>
+    <table>
+        <tr>
+            <td>@Html.LabelFor(m => m.MinimumFinalizationMargin)</td>
+            <td class="bold">@Html.DisplayFor(m => m.MinimumFinalizationMargin) %</td>
+        </tr>
+    </table>
+</fieldset>

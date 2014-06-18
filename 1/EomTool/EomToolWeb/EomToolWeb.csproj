@@ -193,6 +193,7 @@
     <Compile Include="Models\PayoutsListViewModel.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
     <Compile Include="Models\SelectorViewModel.cs" />
+    <Compile Include="Models\SettingsVM.cs" />
     <Compile Include="Models\TopViewModel.cs" />
     <Compile Include="Models\TrafficTypeViewModel.cs" />
     <Compile Include="Models\WorkflowModel.cs" />
@@ -3373,6 +3374,8 @@
     <Content Include="Views\Affiliates\_ViewStart.cshtml" />
     <Content Include="Views\Affiliates\Show.cshtml" />
     <Content Include="Views\Affiliates\Edit.cshtml" />
+    <Content Include="Views\Admin\Settings.cshtml" />
+    <Content Include="Views\Admin\EditSettings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

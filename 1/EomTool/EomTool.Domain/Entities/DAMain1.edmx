@@ -4,9 +4,9 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="DAMain1Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DAMain1Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="DAMain1ModelStoreContainer">
-          <EntitySet Name="DADatabase" EntityType="DAMain1Model.Store.DADatabase" store:Type="Tables" store:Schema="dbo" store:Name="DADatabase" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator">
+          <EntitySet Name="DADatabase" EntityType="DAMain1Model.Store.DADatabase" store:Type="Tables" store:Schema="dbo" store:Name="DADatabase">
             <DefiningQuery>SELECT 
       [DADatabase].[id] AS [id], 
       [DADatabase].[name] AS [name], 
@@ -16,7 +16,8 @@
       [DADatabase].[initialized] AS [initialized]
       FROM [dbo].[DADatabase] AS [DADatabase]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="PublisherNotes" EntityType="DAMain1Model.Store.PublisherNotes" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="PublisherNotes" EntityType="DAMain1Model.Store.PublisherNotes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Settings" EntityType="DAMain1Model.Store.Settings" store:Type="Tables" Schema="dbo" />
         </EntityContainer>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'DAMain1.dbo.DADatabase' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -46,6 +47,14 @@
           <Property Name="added_by_system_user" Type="varchar" MaxLength="255" />
           <Property Name="created" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
+        <EntityType Name="Settings">
+          <Key>
+            <PropertyRef Name="SettingId" />
+          </Key>
+          <Property Name="SettingId" Type="int" Nullable="false" />
+          <Property Name="SettingName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="SettingValue" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -53,6 +62,7 @@
         <EntityContainer Name="DAMain1Entities" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
           <EntitySet Name="DADatabases" EntityType="DAMain1Model.DADatabase" />
           <EntitySet Name="PublisherNotes" EntityType="DAMain1Model.PublisherNote" />
+          <EntitySet Name="Settings" EntityType="DAMain1Model.Setting" />
         </EntityContainer>
         <EntityType Name="DADatabase">
           <Key>
@@ -79,6 +89,14 @@
           <Property Type="String" Name="added_by_system_user" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="created" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
         </EntityType>
+        <EntityType Name="Setting">
+          <Key>
+            <PropertyRef Name="SettingId" />
+          </Key>
+          <Property Type="Int32" Name="SettingId" Nullable="false" />
+          <Property Type="String" Name="SettingName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="SettingValue" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -104,6 +122,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Settings">
+            <EntityTypeMapping TypeName="DAMain1Model.Setting">
+              <MappingFragment StoreEntitySet="Settings">
+                <ScalarProperty Name="SettingValue" ColumnName="SettingValue" />
+                <ScalarProperty Name="SettingName" ColumnName="SettingName" />
+                <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -126,7 +153,8 @@
     <Diagrams>
       <Diagram Name="DAMain1">
         <EntityTypeShape EntityType="DAMain1Model.DADatabase" Width="1.5" PointX="0.75" PointY="0.75" Height="1.9802864583333331" IsExpanded="true" />
-        <EntityTypeShape EntityType="DAMain1Model.PublisherNote" Width="1.875" PointX="3" PointY="1.5" />
+        <EntityTypeShape EntityType="DAMain1Model.PublisherNote" Width="1.875" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DAMain1Model.Setting" Width="1.5" PointX="5" PointY="0.75" />
       </Diagram>
     </Diagrams>
   </Designer>

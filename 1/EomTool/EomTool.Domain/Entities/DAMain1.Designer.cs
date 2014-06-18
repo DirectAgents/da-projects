@@ -96,6 +96,22 @@ namespace EomTool.Domain.Entities
             }
         }
         private ObjectSet<PublisherNote> _PublisherNotes;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Setting> Settings
+        {
+            get
+            {
+                if ((_Settings == null))
+                {
+                    _Settings = base.CreateObjectSet<Setting>("Settings");
+                }
+                return _Settings;
+            }
+        }
+        private ObjectSet<Setting> _Settings;
 
         #endregion
 
@@ -115,6 +131,14 @@ namespace EomTool.Domain.Entities
         public void AddToPublisherNotes(PublisherNote publisherNote)
         {
             base.AddObject("PublisherNotes", publisherNote);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Settings EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToSettings(Setting setting)
+        {
+            base.AddObject("Settings", setting);
         }
 
         #endregion
@@ -474,6 +498,114 @@ namespace EomTool.Domain.Entities
         private global::System.DateTime _created;
         partial void OncreatedChanging(global::System.DateTime value);
         partial void OncreatedChanged();
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="DAMain1Model", Name="Setting")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Setting : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Setting object.
+        /// </summary>
+        /// <param name="settingId">Initial value of the SettingId property.</param>
+        /// <param name="settingName">Initial value of the SettingName property.</param>
+        /// <param name="settingValue">Initial value of the SettingValue property.</param>
+        public static Setting CreateSetting(global::System.Int32 settingId, global::System.String settingName, global::System.String settingValue)
+        {
+            Setting setting = new Setting();
+            setting.SettingId = settingId;
+            setting.SettingName = settingName;
+            setting.SettingValue = settingValue;
+            return setting;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 SettingId
+        {
+            get
+            {
+                return _SettingId;
+            }
+            set
+            {
+                if (_SettingId != value)
+                {
+                    OnSettingIdChanging(value);
+                    ReportPropertyChanging("SettingId");
+                    _SettingId = StructuralObject.SetValidValue(value, "SettingId");
+                    ReportPropertyChanged("SettingId");
+                    OnSettingIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _SettingId;
+        partial void OnSettingIdChanging(global::System.Int32 value);
+        partial void OnSettingIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String SettingName
+        {
+            get
+            {
+                return _SettingName;
+            }
+            set
+            {
+                OnSettingNameChanging(value);
+                ReportPropertyChanging("SettingName");
+                _SettingName = StructuralObject.SetValidValue(value, false, "SettingName");
+                ReportPropertyChanged("SettingName");
+                OnSettingNameChanged();
+            }
+        }
+        private global::System.String _SettingName;
+        partial void OnSettingNameChanging(global::System.String value);
+        partial void OnSettingNameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String SettingValue
+        {
+            get
+            {
+                return _SettingValue;
+            }
+            set
+            {
+                OnSettingValueChanging(value);
+                ReportPropertyChanging("SettingValue");
+                _SettingValue = StructuralObject.SetValidValue(value, false, "SettingValue");
+                ReportPropertyChanged("SettingValue");
+                OnSettingValueChanged();
+            }
+        }
+        private global::System.String _SettingValue;
+        partial void OnSettingValueChanging(global::System.String value);
+        partial void OnSettingValueChanged();
 
         #endregion
 
