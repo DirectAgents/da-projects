@@ -102,9 +102,12 @@ namespace CakeExtracter.Commands
 
         private void CheckOfferBudgetAlerts(Offer offer)
         {
+            //TODO? use 1.0m ? (two places)
+
             if (!offer.BudgetUsedPercent.HasValue || offer.BudgetUsedPercent.Value >= 1)
                 return; // null or already over 100%
             decimal oldPercentUsed = offer.BudgetUsedPercent.Value;
+            decimal oldBudgetUsed = offer.BudgetUsed ?? 0;
 
             using (var repo = new DirectAgents.Domain.Concrete.MainRepository(new DAContext()))
             {
@@ -114,16 +117,19 @@ namespace CakeExtracter.Commands
                 return; // this should never happen
 
             decimal newPercentUsed = offer.BudgetUsedPercent.Value;
+            decimal newBudgetUsed = offer.BudgetUsed ?? 0;
             if (newPercentUsed >= 1)
             {
                 // went over 100%
-                Logger.Info("Offer {0} reached 100% of budget", offer.OfferId);
+                Logger.Info("Offer {0} reached 100% of budget. Prev: {1:N2} ({2:P1}) Now: {3:N2} ({4:P1})",
+                            offer.OfferId, oldBudgetUsed, oldPercentUsed, newBudgetUsed, newPercentUsed);
                 SendAlertEmail(offer, true);
             }
             else if (oldPercentUsed < .85m && newPercentUsed >= .85m)
             {
                 // went over 85%
-                Logger.Info("Offer {0} reached 85% of budget", offer.OfferId);
+                Logger.Info("Offer {0} reached 85% of budget. Prev: {1:N2} ({2:P1}) Now: {3:N2} ({4:P1})",
+                            offer.OfferId, oldBudgetUsed, oldPercentUsed, newBudgetUsed, newPercentUsed);
                 SendAlertEmail(offer, false);
             }
         }
