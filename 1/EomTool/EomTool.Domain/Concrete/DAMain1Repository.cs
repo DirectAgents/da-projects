@@ -51,9 +51,11 @@ namespace EomTool.Domain.Concrete
 
         // --- Settings ---
 
-        public Setting GetSetting(string name)
+        private const string EomAppSettingsPrefix = "EomAppSettings_";
+
+        private Setting GetSetting(string name)
         {
-            return db.Settings.FirstOrDefault(s => s.SettingName == name);
+            return db.Settings.FirstOrDefault(s => s.SettingName == EomAppSettingsPrefix + name);
         }
 
         public string GetSettingValue(string name)
@@ -95,7 +97,7 @@ namespace EomTool.Domain.Concrete
                 setting = new Setting()
                 {
                     SettingId = MaxSettingId() + 1,
-                    SettingName = name,
+                    SettingName = EomAppSettingsPrefix + name,
                     SettingValue = value
                 };
                 db.Settings.AddObject(setting);

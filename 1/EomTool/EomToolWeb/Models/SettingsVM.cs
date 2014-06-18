@@ -3,6 +3,6 @@ namespace EomToolWeb.Models
 {
     public class SettingsVM
     {
-        public decimal? MinimumFinalizationMargin { get; set; }
+        public decimal? FinalizationWorkflow_MinimumMargin { get; set; }
     }
 }

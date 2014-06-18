@@ -14,7 +14,6 @@ namespace EomTool.Domain.Abstract
         IQueryable<PublisherNote> PublisherNotesForPublisher(string pubName);
         void AddPublisherNote(string pubName, string note, string identity);
 
-        Setting GetSetting(string name);
         string GetSettingValue(string name);
         int? GetSettingIntValue(string name);
         decimal? GetSettingDecimalValue(string name);

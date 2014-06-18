@@ -39,7 +39,7 @@ namespace EomToolWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                daMain1Repo.SaveSetting("MinimumFinalizationMargin", settingsVM.MinimumFinalizationMargin);
+                daMain1Repo.SaveSetting("FinalizationWorkflow_MinimumMargin", settingsVM.FinalizationWorkflow_MinimumMargin);
                 return RedirectToAction("Settings");
             }
             return View(settingsVM);
@@ -49,7 +49,7 @@ namespace EomToolWeb.Controllers
         {
             var model = new SettingsVM
             {
-                MinimumFinalizationMargin = daMain1Repo.GetSettingDecimalValue("MinimumFinalizationMargin")
+                FinalizationWorkflow_MinimumMargin = daMain1Repo.GetSettingDecimalValue("FinalizationWorkflow_MinimumMargin")
             };
             return model;
         }
