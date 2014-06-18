@@ -65,6 +65,7 @@ namespace EomToolWeb.Controllers
                 return false;
 
             aff.status = inAff.status;
+            aff.margin_exempt = inAff.margin_exempt;
             mainRepo.SaveChanges();
             return true;
         }

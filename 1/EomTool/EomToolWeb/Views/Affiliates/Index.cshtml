@@ -15,6 +15,7 @@ Accounting Period:
         <th>AffId</th>
         <th>Name</th>
         <th>Status</th>
+        <th>MarginExempt</th>
         <th>MediaBuyer</th>
         <th>NetTerms</th>
         <th>PaymentMethod</th>
@@ -27,6 +28,7 @@ Accounting Period:
         <td style="text-align:right">@aff.affid</td>
         <td>@Html.ActionLink(aff.name2, "Show", new { id = aff.id})</td>
         <td style="text-align:center">@aff.status</td>
+        <td style="text-align:center">@aff.margin_exempt</td>
         <td>@aff.MediaBuyer.name</td>
         <td style="text-align:center">@aff.NetTermType.name</td>
         <td style="text-align:center">@aff.AffiliatePaymentMethod.name</td>

@@ -21,6 +21,10 @@
             <td class="bold">@Html.DisplayFor(m => m.status)</td>
         </tr>
         <tr>
+            <td>@Html.LabelFor(m => m.margin_exempt, "MarginExempt")</td>
+            <td class="bold">@Model.margin_exempt.ToString()</td>
+        </tr>
+        <tr>
             <td>@Html.LabelFor(m => m.MediaBuyer)</td>
             <td class="bold">@Html.DisplayFor(m => m.MediaBuyer.name)</td>
         </tr>

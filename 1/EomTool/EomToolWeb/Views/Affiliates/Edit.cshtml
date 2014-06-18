@@ -26,6 +26,10 @@
                 <td>@Html.LabelFor(m => m.status, "Status")</td>
                 <td>@Html.DropDownListFor(m => m.status, new SelectList(statusList))</td>
             </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.margin_exempt, "MarginExempt")</td>
+                <td>@Html.EditorFor(m => m.margin_exempt)</td>
+            </tr>
         </table>
         <br />
         <input type="submit" value="Save" />

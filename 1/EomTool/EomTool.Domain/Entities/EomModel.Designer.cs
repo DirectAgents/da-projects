@@ -1213,7 +1213,8 @@ namespace EomTool.Domain.Entities
         /// <param name="add_code">Initial value of the add_code property.</param>
         /// <param name="payment_method_id">Initial value of the payment_method_id property.</param>
         /// <param name="name2">Initial value of the name2 property.</param>
-        public static Affiliate CreateAffiliate(global::System.Int32 id, global::System.String name, global::System.Int32 media_buyer_id, global::System.Int32 affid, global::System.Int32 currency_id, global::System.String email, global::System.String add_code, global::System.Int32 payment_method_id, global::System.String name2)
+        /// <param name="margin_exempt">Initial value of the margin_exempt property.</param>
+        public static Affiliate CreateAffiliate(global::System.Int32 id, global::System.String name, global::System.Int32 media_buyer_id, global::System.Int32 affid, global::System.Int32 currency_id, global::System.String email, global::System.String add_code, global::System.Int32 payment_method_id, global::System.String name2, global::System.Boolean margin_exempt)
         {
             Affiliate affiliate = new Affiliate();
             affiliate.id = id;
@@ -1225,6 +1226,7 @@ namespace EomTool.Domain.Entities
             affiliate.add_code = add_code;
             affiliate.payment_method_id = payment_method_id;
             affiliate.name2 = name2;
+            affiliate.margin_exempt = margin_exempt;
             return affiliate;
         }
 
@@ -1594,6 +1596,30 @@ namespace EomTool.Domain.Entities
         private global::System.String _status;
         partial void OnstatusChanging(global::System.String value);
         partial void OnstatusChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean margin_exempt
+        {
+            get
+            {
+                return _margin_exempt;
+            }
+            set
+            {
+                Onmargin_exemptChanging(value);
+                ReportPropertyChanging("margin_exempt");
+                _margin_exempt = StructuralObject.SetValidValue(value, "margin_exempt");
+                ReportPropertyChanged("margin_exempt");
+                Onmargin_exemptChanged();
+            }
+        }
+        private global::System.Boolean _margin_exempt;
+        partial void Onmargin_exemptChanging(global::System.Boolean value);
+        partial void Onmargin_exemptChanged();
 
         #endregion
 

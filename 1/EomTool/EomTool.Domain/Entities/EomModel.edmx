@@ -337,6 +337,7 @@
           <Property Name="tracking_system_id" Type="int" />
           <Property Name="external_id" Type="int" />
           <Property Name="status" Type="varchar" MaxLength="50" />
+          <Property Name="margin_exempt" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="AffiliatePaymentMethod">
           <Key>
@@ -1350,6 +1351,7 @@
           <NavigationProperty Name="TrackingSystem" Relationship="EomModel.affiliate_tracking_system_fk" FromRole="Affiliate" ToRole="TrackingSystem" />
           <NavigationProperty Name="AffiliatePaymentMethod" Relationship="EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" FromRole="Affiliate" ToRole="AffiliatePaymentMethod" />
           <Property Type="String" Name="status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="margin_exempt" Nullable="false" />
         </EntityType>
         <EntityType Name="Campaign">
           <Key>
@@ -2181,7 +2183,8 @@
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Affiliates"><EntityTypeMapping TypeName="EomModel.Affiliate"><MappingFragment StoreEntitySet="Affiliate">
-            <ScalarProperty Name="status" ColumnName="status" />
+            <ScalarProperty Name="margin_exempt" ColumnName="margin_exempt" />
+                <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />
             <ScalarProperty Name="media_buyer_id" ColumnName="media_buyer_id" />
