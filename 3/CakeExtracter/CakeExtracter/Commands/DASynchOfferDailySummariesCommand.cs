@@ -50,7 +50,7 @@ namespace CakeExtracter.Commands
 
             dateRange.ToDate = dateRange.ToDate.AddDays(1); // cake requires the date _after_ the last date you want stats for
 
-            var extracter = new OfferDailySummariesExtracter(dateRange, AdvertiserId, OfferId);
+            var extracter = new OfferDailySummariesExtracter(dateRange, AdvertiserId, OfferId, false);
             var loader = new DAOfferDailySummariesLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);

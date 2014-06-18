@@ -12,21 +12,24 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
         private readonly DateRange dateRange;
         private readonly IEnumerable<int> advertiserIds;
         private readonly int? offerId;
+        private readonly bool skipDeletionsIfAll;
 
         // Note: You can pass in null for advertiserIds - for all advertisers or if offerId is specified
 
-        public OfferDailySummariesExtracter(DateRange dateRange, IEnumerable<int> advertiserIds, int? offerId)
+        public OfferDailySummariesExtracter(DateRange dateRange, IEnumerable<int> advertiserIds, int? offerId, bool skipDeletionsIfAll)
         {
             this.dateRange = dateRange;
             this.advertiserIds = advertiserIds ?? new List<int> { 0 };
             this.offerId = offerId;
+            this.skipDeletionsIfAll = skipDeletionsIfAll;
         }
 
-        public OfferDailySummariesExtracter(DateRange dateRange, int advertiserId, int? offerId)
+        public OfferDailySummariesExtracter(DateRange dateRange, int advertiserId, int? offerId, bool skipDeletionsIfAll)
         {
             this.dateRange = dateRange;
             this.advertiserIds = new List<int> { advertiserId };
             this.offerId = offerId;
+            this.skipDeletionsIfAll = skipDeletionsIfAll;
         }
 
         protected override void Extract()
@@ -61,12 +64,15 @@ namespace CakeExtracter.Etl.CakeMarketing.Extracters
 
                             Add(dailySummaries.Select(c => new OfferDailySummary(offId, c)));
 
-                            // Check for dates with no data
-                            var datesExtracted = dailySummaries.Select(ds => ds.Date);
-                            for (var iDate = dateRange.FromDate; iDate < dateRange.ToDate; iDate = iDate.AddDays(1))
+                            if (dailySummaries.Count > 0 || !skipDeletionsIfAll)
                             {
-                                if (!datesExtracted.Contains(iDate))
-                                    Add(new OfferDailySummary(offId, iDate));
+                                // Check for dates with no data
+                                var datesExtracted = dailySummaries.Select(ds => ds.Date);
+                                for (var iDate = dateRange.FromDate; iDate < dateRange.ToDate; iDate = iDate.AddDays(1))
+                                {
+                                    if (!datesExtracted.Contains(iDate))
+                                        Add(new OfferDailySummary(offId, iDate));
+                                }
                             }
                         });
                     }

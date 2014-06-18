@@ -66,7 +66,7 @@ namespace CakeExtracter.Commands
                 var dateRange = new DateRange(startDate, endDate.AddDays(1));
                 //TODO: is there a way to know if it's "complete" and we don't need to up this one anymore?
 
-                var extracter = new OfferDailySummariesExtracter(dateRange, 0, offer.OfferId);
+                var extracter = new OfferDailySummariesExtracter(dateRange, 0, offer.OfferId, true);
                 var loader = new DAOfferDailySummariesLoader();
                 var extracterThread = extracter.Start();
                 var loaderThread = loader.Start(extracter);
