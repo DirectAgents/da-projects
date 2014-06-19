@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using EomApp1.UI;
+﻿using EomApp1.UI;
+using EomAppCommon;
 using EomAppControls.DataGrid;
 using EomAppControls.Filtering;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace EomApp1.Screens.MediaBuyerWorkflow
 {
@@ -35,7 +36,7 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
                     string mediaBuyerName = mediaBuyerNameCol.Value<string>(e).Trim();
                     string mediaBuyerFirstName = mediaBuyerName.Split(' ').First();
 
-                    var link = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Link + "?period=" + Properties.Settings.Default.StatsDate.ToShortDateString();
+                    var link = EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Link + "?period=" + Properties.Settings.Default.StatsDate.ToShortDateString();
 
                     var emailTemplate = new MediaBuyerEmailTemplate()
                     {
@@ -44,8 +45,8 @@ namespace EomApp1.Screens.MediaBuyerWorkflow
                         TimePeriod = Properties.Settings.Default.DADatabaseName
                     };
 
-                    string subject = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Subject;
-                    string from = EomAppCommon.EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_From;
+                    string subject = EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_Subject;
+                    string from = EomAppSettings.Settings.EomAppSettings_MediaBuyerWorkflow_Email_From;
                     string mediaBuyerEmailAddress = EomApp1.Security.User.GetEmailAddress(mediaBuyerName);
 
                     var sendDialog = new EomApp1.Screens.MediaBuyerWorkflow.SendMailDialog(subject, from, mediaBuyerEmailAddress, emailTemplate);

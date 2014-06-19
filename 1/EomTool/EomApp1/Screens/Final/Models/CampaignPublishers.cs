@@ -4,6 +4,8 @@ namespace EomApp1.Screens.Final.Models
 {
     using UI;
     using System;
+    using EomAppCommon;
+    using System.Collections.Generic;
 
     public class CampaignPublishers : CampaignPublishersBase
     {
@@ -22,23 +24,13 @@ namespace EomApp1.Screens.Final.Models
 
             using (var db = Eom.Create())
             {
-                var itemsQuery = from item in db.Items
-                                 where
-                                     item.pid == Pid &&
-                                     item.campaign_status_id == (int)campaignStatusID &&
-                                     item.Currency.name == this.Currency
-                                 select item;
+                var items = GetItems(db, campaignStatusID, null, null, mediaBuyerStatusID);
 
-                if (mediaBuyerStatusID != null)
-                {
-                    itemsQuery = itemsQuery.Where(i => i.media_buyer_approval_status_id == (int)mediaBuyerStatusID);
-                }
- 
                 var query = from affiliate in db.Affiliates
-                            from item in itemsQuery
+                            from item in items
                             where 
                                 affiliate.affid == item.affid
-                            group item by new { Affiliate = affiliate, RevenueCurrency = item.Currency, CostCurrency = item.Currency1 } into g
+                            group item by new { Affiliate = affiliate, RevenueCurrency = item.RevenueCurrency, CostCurrency = item.CostCurrency } into g
                             select new
                             {
                                 AffId = g.Key.Affiliate.affid,
@@ -69,26 +61,69 @@ namespace EomApp1.Screens.Final.Models
             }
         }
 
+        public void CheckFinalizationMargins(int[] affids, string[] costcurrs, out int[] rejectedAffIds)
+        {
+            var minimumMarginPct = (EomAppSettings.Settings.EomAppSettings_FinalizationWorkflow_MinimumMargin ?? 0) / 100;
+            List<int> rejectedAffIdList = new List<int>();
+
+            using (var db = Models.Eom.Create())
+            {
+                for (var j = 0; j < affids.Length; j++)
+                {
+                    string costcurr = null;
+                    if (j < costcurrs.Length)
+                        costcurr = costcurrs[j];
+
+                    var items = GetItems(db, CampaignStatusId.Default, affids[j], costcurr);
+                    var rows = from affiliate in db.Affiliates
+                               from item in items
+                               where
+                                   affiliate.affid == item.affid
+                               group item by new { affiliate, item.RevenueCurrency, item.CostCurrency } into g
+                               select new
+                               {
+                                   AffId = g.Key.affiliate.affid,
+                                   MarginExempt = g.Key.affiliate.margin_exempt,
+                                   TotalRevenue = g.Sum(i => i.total_revenue ?? 0),
+                                   RevToUSD = g.Key.RevenueCurrency.to_usd_multiplier,
+                                   TotalCost = g.Sum(i => i.total_cost ?? 0),
+                                   CostToUSD = g.Key.CostCurrency.to_usd_multiplier
+                               };
+
+                    // Generally there will just be one row - because we're doing one affiliate at a time
+                    foreach (var row in rows)
+                    {
+                        if (row.MarginExempt)
+                            continue;
+
+                        decimal marginPct = 0;
+                        if (row.TotalRevenue != 0)
+                        {
+                            var revUSD = row.RevToUSD * row.TotalRevenue;
+                            var costUSD = row.CostToUSD * row.TotalCost;
+                            marginPct = (1 - costUSD / revUSD);
+                        }
+                        if (marginPct < minimumMarginPct || marginPct <= 0 || marginPct >= 1)
+                            rejectedAffIdList.Add(row.AffId);
+                    }
+                }
+            }
+            rejectedAffIds = rejectedAffIdList.ToArray();
+        }
+
         public void ChangeCampaignStatus(CampaignStatusId fromStatusID, CampaignStatusId toStatusID, int[] affids, string[] costcurrs, MediaBuyerApprovalStatusId? mbApprovalStatusId = null)
         {
             using (var db = Models.Eom.Create())
             {
                 for (var j = 0; j < affids.Length; j++)
                 {
-                    var affid = affids[j];
-                    var query = from i in db.Items
-                                where i.affid == affid && i.campaign_status_id == (int)fromStatusID && i.pid == Pid && i.Currency.name == Currency
-                                select i;
+                    string costcurr = null;
                     if (j < costcurrs.Length)
-                    {
-                        var costcurr = costcurrs[j];
-                        query = query.Where(i => i.Currency1.name == costcurr);
-                    }
-                    if (mbApprovalStatusId != null)
-                    {
-                        query = query.Where(i => i.media_buyer_approval_status_id == (int)mbApprovalStatusId);
-                    }
-                    foreach (var item in query)
+                        costcurr = costcurrs[j];
+
+                    var items = GetItems(db, fromStatusID, affids[j], costcurr, mbApprovalStatusId);
+
+                    foreach (var item in items)
                     {
                         item.campaign_status_id = (int)toStatusID;
                     }
@@ -96,6 +131,27 @@ namespace EomApp1.Screens.Final.Models
 
                 db.SaveChanges();
             }
+        }
+
+        private IQueryable<Item> GetItems(Eom db, CampaignStatusId campaignStatusId, int? affid = null, string costcurr = null, MediaBuyerApprovalStatusId? mbApprovalStatusId = null)
+        {
+            var items = from i in db.Items
+                        where i.pid == Pid && i.RevenueCurrency.name == Currency
+                           && i.campaign_status_id == (int)campaignStatusId
+                        select i;
+            if (affid.HasValue)
+            {
+                items = items.Where(i => i.affid == affid.Value);
+            }
+            if (costcurr != null)
+            {
+                items = items.Where(i => i.CostCurrency.name == costcurr);
+            }
+            if (mbApprovalStatusId != null)
+            {
+                items = items.Where(i => i.media_buyer_approval_status_id == (int)mbApprovalStatusId);
+            }
+            return items;
         }
     }
 }

@@ -155,5 +155,8 @@
     <Setting Name="SettingsConnectionString" Type="System.String" Scope="User">
       <Value Profile="(Default)">Data Source=biz\sqlexpress;Initial Catalog=DAMain1;User=sa;Password=sp0ngbOb</Value>
     </Setting>
+    <Setting Name="EOMWebBase" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://eomweb.directagents.local</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -38,7 +38,7 @@ namespace EomAppCommon
 
     public class Settings
     {
-        private static Dictionary<string, string> SettingsDictionary;
+//        private static Dictionary<string, string> SettingsDictionary;
         
         public string EomAppSettings_MediaBuyerWorkflow_Email_From { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_From"); } }
         public string EomAppSettings_MediaBuyerWorkflow_Email_Subject { get { return GetSetting("EomAppSettings_MediaBuyerWorkflow_Email_Subject"); } }
@@ -47,6 +47,8 @@ namespace EomAppCommon
         public int? EomAppSettings_PaymentWorkflow_First_Batch_Threshold { get { return GetIntSetting("EomAppSettings_PaymentWorkflow_First_Batch_Threshold"); } }
         public string EomAppSettings_PaymentWorkflow_First_Batch_Approver { get { return GetSetting("EomAppSettings_PaymentWorkflow_First_Batch_Approver"); } }
         public string EomAppSettings_PaymentWorkflow_Second_Batch_Approver { get { return GetSetting("EomAppSettings_PaymentWorkflow_Second_Batch_Approver"); } }
+
+        public decimal? EomAppSettings_FinalizationWorkflow_MinimumMargin { get { return GetDecimalSetting("EomAppSettings_FinalizationWorkflow_MinimumMargin"); } }
 
         private int? GetIntSetting(string settingName)
         {
@@ -57,9 +59,19 @@ namespace EomAppCommon
             else
                 return null;
         }
+        private decimal? GetDecimalSetting(string settingName)
+        {
+            var settingVal = GetSetting(settingName);
+            decimal decimalVal;
+            if (decimal.TryParse(settingVal, out decimalVal))
+                return decimalVal;
+            else
+                return null;
+        }
 
         private string GetSetting(string settingName)
         {
+/*
             if (SettingsDictionary == null)
             {
                 SettingsDictionary = new Dictionary<string, string>();
@@ -76,7 +88,7 @@ namespace EomAppCommon
                     }
                 }
             }
-
+*/
             using (var con = new SqlConnection(EomAppSettings.SettingsConnectionString))
             using (var cmd = new SqlCommand("select SettingValue from Settings where SettingName = '" + settingName + "'", con))
             {

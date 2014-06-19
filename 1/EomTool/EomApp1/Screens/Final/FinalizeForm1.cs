@@ -282,11 +282,11 @@ namespace EomApp1.Screens.Final
                 var query = from c in eom.Items
                             where
                                 c.pid == id && c.campaign_status_id == (int)CampaignStatusId.Finalized &&
-                                c.Currency.name == currency &&
+                                c.RevenueCurrency.name == currency &&
                                 c.media_buyer_approval_status_id == (int)MediaBuyerApprovalStatusId.Default
                             select c;
 
-                var defaultCampaignStatus = eom.CampaignStatus.Single(c => c.name == "default").id;
+                var defaultCampaignStatus = eom.CampaignStatuses.Single(c => c.name == "default").id;
 
                 foreach (var item in query)
                 {
@@ -304,11 +304,11 @@ namespace EomApp1.Screens.Final
                 var query = from c in eom.Items
                             where 
                                 c.pid == id && c.campaign_status_id == (int)CampaignStatusId.Finalized &&
-                                c.Currency.name == currency && 
+                                c.RevenueCurrency.name == currency &&
                                 c.media_buyer_approval_status_id == (int)MediaBuyerApprovalStatusId.Approved
                             select c;
 
-                int verifyCampaignStatus = eom.CampaignStatus.Single(c => c.name == "Verified").id;
+                int verifyCampaignStatus = eom.CampaignStatuses.Single(c => c.name == "Verified").id;
 
                 foreach (var item in query)
                 {

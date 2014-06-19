@@ -319,5 +319,14 @@ namespace EomApp1.Properties {
                 this["SettingsConnectionString"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://eomweb.directagents.local")]
+        public string EOMWebBase {
+            get {
+                return ((string)(this["EOMWebBase"]));
+            }
+        }
     }
 }

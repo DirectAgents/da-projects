@@ -104,7 +104,7 @@ namespace EomApp1.Screens.PaymentBatches
                 {
                     var emailTemplate = new PaymentBatchesEmailTemplate()
                     {
-                        UrlToOpen = "http://eomweb.directagents.local/PaymentBatches/Summary"
+                        UrlToOpen = Properties.Settings.Default.EOMWebBase + "/PaymentBatches/Summary"
                     };
                     string subject = "payment batches are ready for your review";
                     string from = "accounting@directagents.com";
