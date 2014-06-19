@@ -17,6 +17,7 @@ namespace EomTool.Domain.Abstract
         IQueryable<AccountManagerTeam> AccountManagerTeams(bool withActivityOnly = false);
 
         IQueryable<Campaign> Campaigns(int? amId, int? advertiserId, bool activeOnly = false);
+        IEnumerable<CampaignAmount> CampaignAmounts(int pid, int? campaignStatus);
         IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate, int? campaignStatus);
 
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);

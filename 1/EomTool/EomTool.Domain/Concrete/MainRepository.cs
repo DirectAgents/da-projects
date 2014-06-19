@@ -64,6 +64,11 @@ namespace EomTool.Domain.Concrete
                 return campaigns;
         }
 
+        public IEnumerable<CampaignAmount> CampaignAmounts(int pid, int? campaignStatus)
+        {
+            var campaigns = context.Campaigns.Where(c => c.pid == pid);
+            return CampaignAmounts(campaigns, true, campaignStatus);
+        }
         public IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate, int? campaignStatus)
         {
             var campaigns = Campaigns(amId, advertiserId);

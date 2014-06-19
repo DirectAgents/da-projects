@@ -11,7 +11,7 @@ Select the amounts to include in the invoice:
 
 @using (Html.BeginForm("Generate", "Invoices"))
 {
-    Model.ShowCheckboxes = true;
+    Model.ShowInvoiceCheckboxes = true;
     @Html.Partial("../Workflow/CampaignAffiliateAmounts")
     <text>Hover over a campaign to see its display name (as it will appear in an invoice). Click to edit.</text>
     <br /><br />

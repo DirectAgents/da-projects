@@ -1,0 +1,24 @@
+﻿@model CampaignAffiliateAmountsModel
+@{
+    ViewBag.Title = "Margin Approval";
+}
+
+<h3>Margin Approval</h3>
+
+Accounting Period: <b>@Model.CurrentEomDateString</b><br />
+
+@if (!String.IsNullOrWhiteSpace(Model.AdvertiserName))
+{
+    <text>Advertiser: </text><b>@Model.AdvertiserName</b><br />
+}
+<br />
+
+<span style="color: red; font-weight: bold">The following margins are not within threshold.  Please review and check each for approval.</span>
+<br /><br />
+
+@using (Html.BeginForm("MarginApproval", "Workflow"))
+{
+    @Html.Partial("CampaignAffiliateAmounts")
+    <br /><br />
+    <input type="submit" value="Save Approvals" />
+}

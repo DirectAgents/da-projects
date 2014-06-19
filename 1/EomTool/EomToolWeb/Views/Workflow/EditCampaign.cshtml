@@ -1,4 +1,7 @@
 ﻿@model EomTool.Domain.Entities.Campaign
+@{
+    ViewBag.Title = "Edit Campaign";
+}
 
 @using (Html.BeginForm())
 {
@@ -8,11 +11,11 @@
     <table>
         <tr>
             <td>@Html.LabelFor(m => m.pid)</td>
-            <td>@Html.DisplayFor(m => m.pid)</td>
+            <td class="bold">@Html.DisplayFor(m => m.pid)</td>
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.campaign_name)</td>
-            <td>@Html.DisplayFor(m => m.campaign_name)</td>
+            <td class="bold">@Html.DisplayFor(m => m.campaign_name)</td>
         </tr>
         <tr>
             <td>@Html.LabelFor(m => m.display_name)</td>

@@ -11,7 +11,9 @@ namespace EomToolWeb.Models
         public string AdvertiserName { get; set; }
         public IEnumerable<CampaignAmount> CampaignAmounts { get; set; }
         public int? CampaignStatusId { get; set; }
-        public bool ShowCheckboxes { get; set; }
+        public bool ShowInvoiceCheckboxes { get; set; }
+        public bool ShowMarginCheckboxes { get; set; }
+        public decimal? MinimumMarginPct { get; set; }
 
         // totals for a campaign
         public CampaignAmount SummaryAmount(int pid)

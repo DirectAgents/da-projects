@@ -3376,6 +3376,7 @@
     <Content Include="Views\Affiliates\Edit.cshtml" />
     <Content Include="Views\Admin\Settings.cshtml" />
     <Content Include="Views\Admin\EditSettings.cshtml" />
+    <Content Include="Views\Workflow\MarginApproval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
