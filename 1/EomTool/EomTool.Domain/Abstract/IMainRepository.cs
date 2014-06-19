@@ -27,6 +27,8 @@ namespace EomTool.Domain.Abstract
         bool SetInvoiceStatus(int id, int statusId);
 
         // ---
+        void SaveMarginApproval(int pid, int affid, string comment, string userIdentity);
+        // ---
 
         string UnitTypeName(int unitTypeId);
         string ItemCode(int unitTypeId);

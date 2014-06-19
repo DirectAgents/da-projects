@@ -111,10 +111,12 @@ namespace EomToolWeb.Controllers
                 return Content("Nothing approved. Please click \"Back\".");
 
             var campAffIds = Util.ExtractCampAffIds(idpairs2);
-
-            var x = Request.Form["comment" + campAffIds[0].pid + "_" + campAffIds[0].affid];
-
-            return Content("test");
+            foreach (var campAffId in campAffIds)
+            {
+                var comment = Request.Form["comment" + campAffId.pid + "_" + campAffId.affid];
+                mainRepo.SaveMarginApproval(campAffId.pid, campAffId.affid, comment, User.Identity.Name);
+            }
+            return Content("Saved. You may now close this window and return to the EOM Tool.");
         }
 
     }
