@@ -17,21 +17,26 @@ namespace EomApp1.Screens.Final.UI
             View.PublishersToVerifySelected += new EventHandler<PublishersEventArgs>(view_PublishersToVerifySelected);
         }
 
-        private void TestMarginCheck(PublishersEventArgs e)
+        private bool MarginCheck(int[] affIds, string[] costCurrs)
         {
             string url = "http://www.google.com";
 
             int[] rejectedAffIds;
-            Model.CheckFinalizationMargins(e.AffIds, e.CostCurrs, out rejectedAffIds);
+            Model.CheckFinalizationMargins(affIds, costCurrs, out rejectedAffIds);
             if (rejectedAffIds.Length > 0)
+            {
                 url = Properties.Settings.Default.EOMWebBase + "/Workflow/MarginApproval?period=" + Properties.Settings.Default.StatsDate.ToShortDateString()
                         + "&pid=" + Model.Pid + String.Join("", rejectedAffIds.Select(a => "&affid=" + a));
-            System.Diagnostics.Process.Start(url);
+                System.Diagnostics.Process.Start(url);
+                return false;
+            }
+            return true;
         }
 
         void view_PublishersToFinalizeSelected(object sender, PublishersEventArgs e)
         {
-            //TestMarginCheck(e); return;
+            //TODO: check if margins were approved
+            //if (!MarginCheck(e.AffIds, e.CostCurrs)) return;
 
             Model.ChangeCampaignStatus(CampaignStatusId.Default, CampaignStatusId.Finalized, e.AffIds, e.CostCurrs);
             View.PublishersToFinalize.Clear();
