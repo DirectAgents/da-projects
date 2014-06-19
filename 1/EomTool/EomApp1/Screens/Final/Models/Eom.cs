@@ -1,7 +1,7 @@
-﻿using System.Data.EntityClient;
-using EomAppCommon;
-using System.Linq;
+﻿using EomAppCommon;
 using System.Collections.Generic;
+using System.Data.EntityClient;
+using System.Linq;
 
 namespace EomApp1.Screens.Final.Models
 {
@@ -37,6 +37,7 @@ namespace EomApp1.Screens.Final.Models
             return items;
         }
 
+        //TODO: check if margins were approved
         public static void CheckFinalizationMargins(int pid, string revcurr, int[] affids, string[] costcurrs, out int[] rejectedAffIds)
         {
             var minimumMarginPct = (EomAppSettings.Settings.EomAppSettings_FinalizationWorkflow_MinimumMargin ?? 0) / 100;

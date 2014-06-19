@@ -61,11 +61,6 @@ namespace EomApp1.Screens.Final.Models
             }
         }
 
-        public void CheckFinalizationMargins(int[] affids, string[] costcurrs, out int[] rejectedAffIds)
-        {
-            Eom.CheckFinalizationMargins(Pid, Currency, affids, costcurrs, out rejectedAffIds);
-        }
-
         public void ChangeCampaignStatus(CampaignStatusId fromStatusID, CampaignStatusId toStatusID, int[] affids, string[] costcurrs, MediaBuyerApprovalStatusId? mbApprovalStatusId = null)
         {
             using (var db = Models.Eom.Create())

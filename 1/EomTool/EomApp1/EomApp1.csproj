@@ -157,6 +157,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Final\FinalizeUtility.cs" />
     <Compile Include="Screens\Final\Models\MediaBuyerApprovalStatusId.cs" />
     <Compile Include="Screens\MediaBuyerWorkflow\SendMailDialog.cs">
       <SubType>Form</SubType>

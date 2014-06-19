@@ -171,6 +171,9 @@ namespace EomApp1.Screens.Final
                 string note;
                 if (ConfirmationBox.ShowConfirmationModalDialog("Finalize", out note))
                 {
+                    if (!FinalizeUtility.CheckFinalizationMargins(pid, currency, null, null))
+                        return;
+
                     FinalizeCampaign(pid, currency);
                     CampaignNoteUtility.AddCampaignNote(pid, note); // model
                     DoFillCampaigns();
