@@ -1,4 +1,5 @@
 ﻿using EomAppCommon;
+using System;
 using System.Collections.Generic;
 using System.Data.EntityClient;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace EomApp1.Screens.Final.Models
         {
             var minimumMarginPct = (EomAppSettings.Settings.EomAppSettings_FinalizationWorkflow_MinimumMargin ?? 0) / 100;
             List<int> rejectedAffIdList = new List<int>();
+            var now = DateTime.Now;
 
             using (var db = Models.Eom.Create())
             {
@@ -80,20 +82,32 @@ namespace EomApp1.Screens.Final.Models
                     // Generally there will just be one row - because we're doing one affiliate at a time
                     foreach (var row in rows)
                     {
+                        // Skip affiliates that are "exempt"
                         if (row.MarginExempt)
                             continue;
+                        //TODO: check for "margin-exempt exceptions"... where only negative margins need approval
 
-                        decimal marginPct = 0;
                         if (row.TotalRevenue != 0)
                         {
                             var revUSD = row.RevToUSD * row.TotalRevenue;
                             var costUSD = row.CostToUSD * row.TotalCost;
-                            marginPct = (1 - costUSD / revUSD);
+                            var marginPct = (1 - costUSD / revUSD);
+                            if (marginPct < minimumMarginPct || marginPct <= 0 || marginPct >= 1)
+                            {
+                                // Needs approval; see if there's an unused marginApproval. if so, set it to used (and don't add to rejectedAffIdList)
+                                decimal marginPctRounded = decimal.Round(marginPct, 3);
+                                var marginApproval = db.MarginApprovals.Where(ma => ma.pid == pid && ma.affid == row.AffId && ma.margin == marginPctRounded
+                                                                                    && !ma.used.HasValue).FirstOrDefault();
+                                if (marginApproval != null)
+                                    marginApproval.used = now;
+                                else
+                                    rejectedAffIdList.Add(row.AffId);
+                            }
                         }
-                        if (marginPct < minimumMarginPct || marginPct <= 0 || marginPct >= 1)
-                            rejectedAffIdList.Add(row.AffId);
+                        // Q: What to do when revenue is zero (cost could be zero or non-zero)?
                     }
-                }
+                } // loop through affids
+                db.SaveChanges(); // save any MarginApprovals that were marked as used
             }
             rejectedAffIds = rejectedAffIdList.ToArray();
         }

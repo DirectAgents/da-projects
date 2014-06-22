@@ -27,6 +27,8 @@ using System.Xml.Serialization;
 [assembly: EdmRelationshipAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK1", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.Currency), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Item), true)]
 [assembly: EdmRelationshipAttribute("EomModel", "Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(EomApp1.Screens.Final.Models.CampaignStatus), "Item", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.Item), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_MarginApproval_Currency", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomApp1.Screens.Final.Models.Currency), "MarginApproval", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.MarginApproval), true)]
+[assembly: EdmRelationshipAttribute("EomModel", "FK_MarginApproval_Currency1", "Currency", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(EomApp1.Screens.Final.Models.Currency), "MarginApproval", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(EomApp1.Screens.Final.Models.MarginApproval), true)]
 
 #endregion
 
@@ -221,6 +223,22 @@ namespace EomApp1.Screens.Final.Models
             }
         }
         private ObjectSet<Item> _Items;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<MarginApproval> MarginApprovals
+        {
+            get
+            {
+                if ((_MarginApprovals == null))
+                {
+                    _MarginApprovals = base.CreateObjectSet<MarginApproval>("MarginApprovals");
+                }
+                return _MarginApprovals;
+            }
+        }
+        private ObjectSet<MarginApproval> _MarginApprovals;
 
         #endregion
 
@@ -296,6 +314,14 @@ namespace EomApp1.Screens.Final.Models
         public void AddToItems(Item item)
         {
             base.AddObject("Items", item);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the MarginApprovals EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToMarginApprovals(MarginApproval marginApproval)
+        {
+            base.AddObject("MarginApprovals", marginApproval);
         }
 
         #endregion
@@ -1992,76 +2018,6 @@ namespace EomApp1.Screens.Final.Models
         #endregion
 
     
-        #region Navigation Properties
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate")]
-        public EntityCollection<Affiliate> Affiliates
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Affiliate>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Affiliate>("EomModel.Affiliate_Currency_id_FK_Currency_id_PK", "Affiliate", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK", "Item")]
-        public EntityCollection<Item> Items
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.Item_Currency_id_FK_Currency_id_PK", "Item");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.Item_Currency_id_FK_Currency_id_PK", "Item", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("EomModel", "Item_Currency_id_FK_Currency_id_PK1", "Item")]
-        public EntityCollection<Item> Items1
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Item>("EomModel.Item_Currency_id_FK_Currency_id_PK1", "Item");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Item>("EomModel.Item_Currency_id_FK_Currency_id_PK1", "Item", value);
-                }
-            }
-        }
-
-        #endregion
-
     }
     
     /// <summary>
@@ -2815,6 +2771,409 @@ namespace EomApp1.Screens.Final.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<CampaignStatus>("EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK", "CampaignStatus", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="EomModel", Name="MarginApproval")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class MarginApproval : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new MarginApproval object.
+        /// </summary>
+        /// <param name="id">Initial value of the id property.</param>
+        /// <param name="created">Initial value of the created property.</param>
+        public static MarginApproval CreateMarginApproval(global::System.Int32 id, global::System.DateTime created)
+        {
+            MarginApproval marginApproval = new MarginApproval();
+            marginApproval.id = id;
+            marginApproval.created = created;
+            return marginApproval;
+        }
+
+        #endregion
+
+        #region Primitive Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                if (_id != value)
+                {
+                    OnidChanging(value);
+                    ReportPropertyChanging("id");
+                    _id = StructuralObject.SetValidValue(value);
+                    ReportPropertyChanged("id");
+                    OnidChanged();
+                }
+            }
+        }
+        private global::System.Int32 _id;
+        partial void OnidChanging(global::System.Int32 value);
+        partial void OnidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> pid
+        {
+            get
+            {
+                return _pid;
+            }
+            set
+            {
+                OnpidChanging(value);
+                ReportPropertyChanging("pid");
+                _pid = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("pid");
+                OnpidChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _pid;
+        partial void OnpidChanging(Nullable<global::System.Int32> value);
+        partial void OnpidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> affid
+        {
+            get
+            {
+                return _affid;
+            }
+            set
+            {
+                OnaffidChanging(value);
+                ReportPropertyChanging("affid");
+                _affid = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("affid");
+                OnaffidChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _affid;
+        partial void OnaffidChanging(Nullable<global::System.Int32> value);
+        partial void OnaffidChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> revenue_currency_id
+        {
+            get
+            {
+                return _revenue_currency_id;
+            }
+            set
+            {
+                Onrevenue_currency_idChanging(value);
+                ReportPropertyChanging("revenue_currency_id");
+                _revenue_currency_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("revenue_currency_id");
+                Onrevenue_currency_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _revenue_currency_id;
+        partial void Onrevenue_currency_idChanging(Nullable<global::System.Int32> value);
+        partial void Onrevenue_currency_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> total_revenue
+        {
+            get
+            {
+                return _total_revenue;
+            }
+            set
+            {
+                Ontotal_revenueChanging(value);
+                ReportPropertyChanging("total_revenue");
+                _total_revenue = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("total_revenue");
+                Ontotal_revenueChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _total_revenue;
+        partial void Ontotal_revenueChanging(Nullable<global::System.Decimal> value);
+        partial void Ontotal_revenueChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> cost_currency_id
+        {
+            get
+            {
+                return _cost_currency_id;
+            }
+            set
+            {
+                Oncost_currency_idChanging(value);
+                ReportPropertyChanging("cost_currency_id");
+                _cost_currency_id = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("cost_currency_id");
+                Oncost_currency_idChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _cost_currency_id;
+        partial void Oncost_currency_idChanging(Nullable<global::System.Int32> value);
+        partial void Oncost_currency_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> total_cost
+        {
+            get
+            {
+                return _total_cost;
+            }
+            set
+            {
+                Ontotal_costChanging(value);
+                ReportPropertyChanging("total_cost");
+                _total_cost = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("total_cost");
+                Ontotal_costChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _total_cost;
+        partial void Ontotal_costChanging(Nullable<global::System.Decimal> value);
+        partial void Ontotal_costChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Decimal> margin
+        {
+            get
+            {
+                return _margin;
+            }
+            set
+            {
+                OnmarginChanging(value);
+                ReportPropertyChanging("margin");
+                _margin = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("margin");
+                OnmarginChanged();
+            }
+        }
+        private Nullable<global::System.Decimal> _margin;
+        partial void OnmarginChanging(Nullable<global::System.Decimal> value);
+        partial void OnmarginChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String comment
+        {
+            get
+            {
+                return _comment;
+            }
+            set
+            {
+                OncommentChanging(value);
+                ReportPropertyChanging("comment");
+                _comment = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("comment");
+                OncommentChanged();
+            }
+        }
+        private global::System.String _comment;
+        partial void OncommentChanging(global::System.String value);
+        partial void OncommentChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String added_by
+        {
+            get
+            {
+                return _added_by;
+            }
+            set
+            {
+                Onadded_byChanging(value);
+                ReportPropertyChanging("added_by");
+                _added_by = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("added_by");
+                Onadded_byChanged();
+            }
+        }
+        private global::System.String _added_by;
+        partial void Onadded_byChanging(global::System.String value);
+        partial void Onadded_byChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime created
+        {
+            get
+            {
+                return _created;
+            }
+            set
+            {
+                OncreatedChanging(value);
+                ReportPropertyChanging("created");
+                _created = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("created");
+                OncreatedChanged();
+            }
+        }
+        private global::System.DateTime _created;
+        partial void OncreatedChanging(global::System.DateTime value);
+        partial void OncreatedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> used
+        {
+            get
+            {
+                return _used;
+            }
+            set
+            {
+                OnusedChanging(value);
+                ReportPropertyChanging("used");
+                _used = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("used");
+                OnusedChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _used;
+        partial void OnusedChanging(Nullable<global::System.DateTime> value);
+        partial void OnusedChanged();
+
+        #endregion
+
+    
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_MarginApproval_Currency", "Currency")]
+        public Currency RevenueCurrency
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_MarginApproval_Currency", "Currency").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_MarginApproval_Currency", "Currency").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Currency> RevenueCurrencyReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_MarginApproval_Currency", "Currency");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Currency>("EomModel.FK_MarginApproval_Currency", "Currency", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("EomModel", "FK_MarginApproval_Currency1", "Currency")]
+        public Currency CostCurrency
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_MarginApproval_Currency1", "Currency").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_MarginApproval_Currency1", "Currency").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Currency> CostCurrencyReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Currency>("EomModel.FK_MarginApproval_Currency1", "Currency");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Currency>("EomModel.FK_MarginApproval_Currency1", "Currency", value);
                 }
             }
         }

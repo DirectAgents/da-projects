@@ -13,6 +13,7 @@
           <EntitySet Name="CampaignStatus" EntityType="EomModel.Store.CampaignStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Currency" EntityType="EomModel.Store.Currency" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Item" EntityType="EomModel.Store.Item" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MarginApproval" EntityType="EomModel.Store.MarginApproval" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="NetTermType" EntityType="EomModel.Store.NetTermType" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="VerifiedItemsCampaignRevenueSummary" EntityType="EomModel.Store.VerifiedItemsCampaignRevenueSummary" store:Type="Views" store:Schema="dbo" store:Name="VerifiedItemsCampaignRevenueSummary">
             <DefiningQuery>SELECT 
@@ -43,6 +44,14 @@
           <AssociationSet Name="Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Store.Campaign_CampaignStatus_id_FK_CampaignStatus_id_PK">
             <End Role="CampaignStatus" EntitySet="CampaignStatus" />
             <End Role="Campaign" EntitySet="Campaign" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarginApproval_Currency" Association="EomModel.Store.FK_MarginApproval_Currency">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="MarginApproval" EntitySet="MarginApproval" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarginApproval_Currency1" Association="EomModel.Store.FK_MarginApproval_Currency1">
+            <End Role="Currency" EntitySet="Currency" />
+            <End Role="MarginApproval" EntitySet="MarginApproval" />
           </AssociationSet>
           <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Store.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
             <End Role="CampaignStatus" EntitySet="CampaignStatus" />
@@ -75,6 +84,7 @@
           <Property Name="invoicing_status" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
+      warning 6035: The relationship 'FK_MarginApproval_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
       warning 6035: The relationship 'Item_Affiliate_affid_FK_Affiliate_affid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
       -->
         <EntityType Name="Affiliate">
@@ -99,6 +109,7 @@
           <Property Name="margin_exempt" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
+      warning 6035: The relationship 'FK_MarginApproval_Campaign' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
       warning 6035: The relationship 'Item_Campaign_pid_FK_Campaign_pid_UK' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
       -->
         <EntityType Name="Campaign">
@@ -171,6 +182,23 @@
           <Property Name="media_buyer_approval_status_id" Type="int" Nullable="false" />
           <Property Name="batch_id" Type="int" />
           <Property Name="payment_batch_id" Type="int" />
+        </EntityType>
+        <EntityType Name="MarginApproval">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="pid" Type="int" />
+          <Property Name="affid" Type="int" />
+          <Property Name="revenue_currency_id" Type="int" />
+          <Property Name="total_revenue" Type="money" />
+          <Property Name="cost_currency_id" Type="int" />
+          <Property Name="total_cost" Type="money" />
+          <Property Name="margin" Type="money" />
+          <Property Name="comment" Type="varchar(max)" />
+          <Property Name="added_by" Type="varchar" MaxLength="255" />
+          <Property Name="created" Type="datetime" Nullable="false" />
+          <Property Name="used" Type="datetime" />
         </EntityType>
         <EntityType Name="NetTermType">
           <Key>
@@ -253,6 +281,30 @@
             </Principal>
             <Dependent Role="Campaign">
               <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarginApproval_Currency">
+          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="0..1" />
+          <End Role="MarginApproval" Type="EomModel.Store.MarginApproval" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MarginApproval">
+              <PropertyRef Name="revenue_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarginApproval_Currency1">
+          <End Role="Currency" Type="EomModel.Store.Currency" Multiplicity="0..1" />
+          <End Role="MarginApproval" Type="EomModel.Store.MarginApproval" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MarginApproval">
+              <PropertyRef Name="cost_currency_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -340,6 +392,15 @@
           <AssociationSet Name="Item_CampaignStatus_id_FK_CampaignStatus_id_PK" Association="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK">
             <End Role="CampaignStatus" EntitySet="CampaignStatuses" />
             <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <EntitySet Name="MarginApprovals" EntityType="EomModel.MarginApproval" />
+          <AssociationSet Name="FK_MarginApproval_Currency" Association="EomModel.FK_MarginApproval_Currency">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="MarginApproval" EntitySet="MarginApprovals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MarginApproval_Currency1" Association="EomModel.FK_MarginApproval_Currency1">
+            <End Role="Currency" EntitySet="Currencies" />
+            <End Role="MarginApproval" EntitySet="MarginApprovals" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AccountManager">
@@ -484,9 +545,6 @@
           <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="Decimal" Name="to_usd_multiplier" Nullable="false" Precision="14" Scale="4" />
-          <NavigationProperty Name="Affiliates" Relationship="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Affiliate" />
-          <NavigationProperty Name="Items" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK" FromRole="Currency" ToRole="Item" />
-          <NavigationProperty Name="Items1" Relationship="EomModel.Item_Currency_id_FK_Currency_id_PK1" FromRole="Currency" ToRole="Item" />
           </EntityType>
         <Association Name="Affiliate_Currency_id_FK_Currency_id_PK">
           <End Type="EomModel.Currency" Role="Currency" Multiplicity="1" />
@@ -579,6 +637,49 @@
             </Principal>
             <Dependent Role="Item">
               <PropertyRef Name="campaign_status_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MarginApproval">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Type="Int32" Name="id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="pid" />
+          <Property Type="Int32" Name="affid" />
+          <Property Type="Int32" Name="revenue_currency_id" />
+          <Property Type="Decimal" Name="total_revenue" Precision="19" Scale="4" />
+          <Property Type="Int32" Name="cost_currency_id" />
+          <Property Type="Decimal" Name="total_cost" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="margin" Precision="19" Scale="4" />
+          <Property Type="String" Name="comment" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="added_by" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="created" Nullable="false" Precision="3" />
+          <NavigationProperty Name="RevenueCurrency" Relationship="EomModel.FK_MarginApproval_Currency" FromRole="MarginApproval" ToRole="Currency" />
+          <NavigationProperty Name="CostCurrency" Relationship="EomModel.FK_MarginApproval_Currency1" FromRole="MarginApproval" ToRole="Currency" />
+          <Property Type="DateTime" Name="used" Precision="3" />
+        </EntityType>
+        <Association Name="FK_MarginApproval_Currency">
+          <End Type="EomModel.Currency" Role="Currency" Multiplicity="0..1" />
+          <End Type="EomModel.MarginApproval" Role="MarginApproval" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MarginApproval">
+              <PropertyRef Name="revenue_currency_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MarginApproval_Currency1">
+          <End Type="EomModel.Currency" Role="Currency" Multiplicity="0..1" />
+          <End Type="EomModel.MarginApproval" Role="MarginApproval" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currency">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="MarginApproval">
+              <PropertyRef Name="cost_currency_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -712,6 +813,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MarginApprovals">
+            <EntityTypeMapping TypeName="EomModel.MarginApproval">
+              <MappingFragment StoreEntitySet="MarginApproval">
+                <ScalarProperty Name="used" ColumnName="used" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="added_by" ColumnName="added_by" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="margin" ColumnName="margin" />
+                <ScalarProperty Name="total_cost" ColumnName="total_cost" />
+                <ScalarProperty Name="cost_currency_id" ColumnName="cost_currency_id" />
+                <ScalarProperty Name="total_revenue" ColumnName="total_revenue" />
+                <ScalarProperty Name="revenue_currency_id" ColumnName="revenue_currency_id" />
+                <ScalarProperty Name="affid" ColumnName="affid" />
+                <ScalarProperty Name="pid" ColumnName="pid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -732,11 +851,11 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="EomModel" ZoomLevel="103">
+      <Diagram Name="EomModel" ZoomLevel="89">
         <EntityTypeShape EntityType="EomModel.AccountManager" Width="1.625" PointX="2.75" PointY="4.5" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.Advertiser" Width="1.5" PointX="2.75" PointY="0.5" Height="1.5956835937499996" IsExpanded="true" />
         <EntityTypeShape EntityType="EomModel.CampaignStatus" Width="1.625" PointX="2.75" PointY="2.625" Height="1.7879850260416657" IsExpanded="true" />
-        <EntityTypeShape EntityType="EomModel.NetTermType" Width="1.5" PointX="7.125" PointY="3.5" Height="1.5956835937499996" />
+        <EntityTypeShape EntityType="EomModel.NetTermType" Width="1.5" PointX="7.125" PointY="0.5" Height="1.5956835937499996" />
         <EntityTypeShape EntityType="EomModel.Affiliate" Width="1.5" PointX="5" PointY="0.625" Height="4.0956022135416674" />
         <EntityTypeShape EntityType="EomModel.Campaign" Width="1.5" PointX="0.625" PointY="0.5" Height="5.6340136718750031" />
         <AssociationConnector Association="EomModel.Campaign_AccountManager_id_FK_AccountManager_id_PK" >
@@ -755,7 +874,7 @@
           <ConnectorPoint PointX="2.75" PointY="3.2689925130208328" />
           <ConnectorPoint PointX="2.125" PointY="3.2689925130208328" />
         </AssociationConnector>
-        <EntityTypeShape EntityType="EomModel.Currency" Width="1.5" PointX="7.125" PointY="0.5" Height="2.1725878906250031" />
+        <EntityTypeShape EntityType="EomModel.Currency" Width="1.5" PointX="7.125" PointY="2.25" Height="2.1725878906250031" />
         <AssociationConnector Association="EomModel.Affiliate_Currency_id_FK_Currency_id_PK" >
           <ConnectorPoint PointX="7.125" PointY="1.6487939453125" />
           <ConnectorPoint PointX="6.5" PointY="1.6487939453125" />
@@ -771,6 +890,9 @@
           <ConnectorPoint PointX="9.375" PointY="0.98064697265625" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" />
+        <EntityTypeShape EntityType="EomModel.MarginApproval" Width="1.625" PointX="7" PointY="5.25" />
+        <AssociationConnector Association="EomModel.FK_MarginApproval_Currency" />
+        <AssociationConnector Association="EomModel.FK_MarginApproval_Currency1" />
       </Diagram>
     </Diagrams>
   </Designer>
