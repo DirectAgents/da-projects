@@ -6246,6 +6246,30 @@ namespace EomTool.Domain.Entities
         private global::System.DateTime _created;
         partial void OncreatedChanging(global::System.DateTime value);
         partial void OncreatedChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> used
+        {
+            get
+            {
+                return _used;
+            }
+            set
+            {
+                OnusedChanging(value);
+                ReportPropertyChanging("used");
+                _used = StructuralObject.SetValidValue(value, "used");
+                ReportPropertyChanged("used");
+                OnusedChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _used;
+        partial void OnusedChanging(Nullable<global::System.DateTime> value);
+        partial void OnusedChanged();
 
         #endregion
 

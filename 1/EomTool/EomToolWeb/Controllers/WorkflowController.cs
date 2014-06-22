@@ -116,7 +116,7 @@ namespace EomToolWeb.Controllers
                 var comment = Request.Form["comment" + campAffId.pid + "_" + campAffId.affid];
                 mainRepo.SaveMarginApproval(campAffId.pid, campAffId.affid, comment, User.Identity.Name);
             }
-            return Content("Saved. You may now close this window and return to the EOM Tool.");
+            return Content("Approvals saved. Please close this window and return to the EOM Tool to finalize.");
         }
 
     }
