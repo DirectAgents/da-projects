@@ -390,7 +390,7 @@ namespace EomTool.Domain.Concrete
                 var costUSD = (queryItem.gs.cost ?? 0) * queryItem.cc.to_usd_multiplier;
                 if (revenueUSD != 0)
                 {
-                    marginApproval.margin = decimal.Round(1 - costUSD / revenueUSD, 3);
+                    marginApproval.margin_pct = decimal.Round(1 - costUSD / revenueUSD, 3);
                 }
                 context.MarginApprovals.AddObject(marginApproval);
             }

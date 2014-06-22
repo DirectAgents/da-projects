@@ -194,7 +194,7 @@
           <Property Name="total_revenue" Type="money" />
           <Property Name="cost_currency_id" Type="int" />
           <Property Name="total_cost" Type="money" />
-          <Property Name="margin" Type="money" />
+          <Property Name="margin_pct" Type="decimal" Precision="8" Scale="4" />
           <Property Name="comment" Type="varchar(max)" />
           <Property Name="added_by" Type="varchar" MaxLength="255" />
           <Property Name="created" Type="datetime" Nullable="false" />
@@ -402,7 +402,7 @@
             <End Role="Currency" EntitySet="Currencies" />
             <End Role="MarginApproval" EntitySet="MarginApprovals" />
           </AssociationSet>
-        </EntityContainer>
+          </EntityContainer>
         <EntityType Name="AccountManager">
           <Key>
             <PropertyRef Name="id" />
@@ -651,13 +651,13 @@
           <Property Type="Decimal" Name="total_revenue" Precision="19" Scale="4" />
           <Property Type="Int32" Name="cost_currency_id" />
           <Property Type="Decimal" Name="total_cost" Precision="19" Scale="4" />
-          <Property Type="Decimal" Name="margin" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="margin_pct" Precision="8" Scale="4" />
           <Property Type="String" Name="comment" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="added_by" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="created" Nullable="false" Precision="3" />
+          <Property Type="DateTime" Name="used" Precision="3" />
           <NavigationProperty Name="RevenueCurrency" Relationship="EomModel.FK_MarginApproval_Currency" FromRole="MarginApproval" ToRole="Currency" />
           <NavigationProperty Name="CostCurrency" Relationship="EomModel.FK_MarginApproval_Currency1" FromRole="MarginApproval" ToRole="Currency" />
-          <Property Type="DateTime" Name="used" Precision="3" />
         </EntityType>
         <Association Name="FK_MarginApproval_Currency">
           <End Type="EomModel.Currency" Role="Currency" Multiplicity="0..1" />
@@ -683,7 +683,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -820,7 +820,7 @@
                 <ScalarProperty Name="created" ColumnName="created" />
                 <ScalarProperty Name="added_by" ColumnName="added_by" />
                 <ScalarProperty Name="comment" ColumnName="comment" />
-                <ScalarProperty Name="margin" ColumnName="margin" />
+                <ScalarProperty Name="margin_pct" ColumnName="margin_pct" />
                 <ScalarProperty Name="total_cost" ColumnName="total_cost" />
                 <ScalarProperty Name="cost_currency_id" ColumnName="cost_currency_id" />
                 <ScalarProperty Name="total_revenue" ColumnName="total_revenue" />
@@ -890,10 +890,10 @@
           <ConnectorPoint PointX="9.375" PointY="0.98064697265625" />
         </AssociationConnector>
         <AssociationConnector Association="EomModel.Item_CampaignStatus_id_FK_CampaignStatus_id_PK" />
-        <EntityTypeShape EntityType="EomModel.MarginApproval" Width="1.625" PointX="7" PointY="5.25" />
+        <EntityTypeShape EntityType="EomModel.MarginApproval" Width="1.625" PointX="7" PointY="4.75" />
         <AssociationConnector Association="EomModel.FK_MarginApproval_Currency" />
         <AssociationConnector Association="EomModel.FK_MarginApproval_Currency1" />
-      </Diagram>
+        </Diagram>
     </Diagrams>
   </Designer>
 </edmx:Edmx>

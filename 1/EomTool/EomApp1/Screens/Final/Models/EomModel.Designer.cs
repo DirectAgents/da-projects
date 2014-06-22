@@ -2982,24 +2982,24 @@ namespace EomApp1.Screens.Final.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Decimal> margin
+        public Nullable<global::System.Decimal> margin_pct
         {
             get
             {
-                return _margin;
+                return _margin_pct;
             }
             set
             {
-                OnmarginChanging(value);
-                ReportPropertyChanging("margin");
-                _margin = StructuralObject.SetValidValue(value);
-                ReportPropertyChanged("margin");
-                OnmarginChanged();
+                Onmargin_pctChanging(value);
+                ReportPropertyChanging("margin_pct");
+                _margin_pct = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("margin_pct");
+                Onmargin_pctChanged();
             }
         }
-        private Nullable<global::System.Decimal> _margin;
-        partial void OnmarginChanging(Nullable<global::System.Decimal> value);
-        partial void OnmarginChanged();
+        private Nullable<global::System.Decimal> _margin_pct;
+        partial void Onmargin_pctChanging(Nullable<global::System.Decimal> value);
+        partial void Onmargin_pctChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

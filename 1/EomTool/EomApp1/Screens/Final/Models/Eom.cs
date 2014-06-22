@@ -96,7 +96,7 @@ namespace EomApp1.Screens.Final.Models
                             {
                                 // Needs approval; see if there's an unused marginApproval. if so, set it to used (and don't add to rejectedAffIdList)
                                 decimal marginPctRounded = decimal.Round(marginPct, 3);
-                                var marginApproval = db.MarginApprovals.Where(ma => ma.pid == pid && ma.affid == row.AffId && ma.margin == marginPctRounded
+                                var marginApproval = db.MarginApprovals.Where(ma => ma.pid == pid && ma.affid == row.AffId && ma.margin_pct == marginPctRounded
                                                                                     && !ma.used.HasValue).FirstOrDefault();
                                 if (marginApproval != null)
                                     marginApproval.used = now;
