@@ -12,7 +12,7 @@ namespace EomToolWeb
             List<CampAffId> campAffIds = new List<CampAffId>();
             foreach (var idPair in idPairs.Distinct())
             {
-                var ids = idPair.Split(new char[] { ',' }); // pid,affid
+                var ids = idPair.Split(new char[] { ',', '_' }); // pid,affid
                 if (ids.Length >= 2)
                 {
                     var campAffId = new CampAffId(Convert.ToInt32(ids[0]), Convert.ToInt32(ids[1]));

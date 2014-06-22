@@ -88,7 +88,7 @@
                 onclickString = "onclick=\"if (this.checked) ConfirmApproval('" + ca.MarginPct.ToString("P1") + "', this)\"";
             }
             <td style="text-align: center">
-                <input type="checkbox" name="idpairs2" id="mchk@(ca.Pid)_@(ca.AffId)" value="@(ca.Pid + "," + ca.AffId)" @Html.Raw(onclickString) />
+                <input type="checkbox" name="idpairs2" id="mchk@(ca.Pid)_@(ca.AffId)" value="@(ca.Pid + "_" + ca.AffId)" @Html.Raw(onclickString) />
             </td>
         }
     </tr>
@@ -145,6 +145,14 @@
             close: MarginCommentClose
         });
     });
+@*
+    function VerifyMarginComments() {
+        var checked = $('input[name=idpairs2]:checked');
+        for (var i = 0; i < checked.length; i++) {
+            alert(checked[i].value);
+        }
+    }
+*@
 
     function MarginCommentClose(e) {
         var dlg = $('#dlgMarginComment');

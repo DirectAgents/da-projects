@@ -97,6 +97,7 @@
     <Compile Include="Entities\InvoiceStatus.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="Entities\ItemAccountingStatus.cs" />
+    <Compile Include="Entities\MarginApproval.cs" />
     <Compile Include="Entities\MediaBuyerApprovalStatus.cs" />
     <Compile Include="Entities\PaymentBatch.cs" />
     <Compile Include="Entities\PaymentBatchState.cs" />

@@ -350,6 +350,26 @@ namespace EomTool.Domain.Concrete
 
         //---
 
+        public IQueryable<MarginApproval> MarginApprovals(bool fillExtended)
+        {
+            var marginApprovals = context.MarginApprovals.AsQueryable();
+            if (fillExtended)
+            {
+                foreach (var marginApproval in marginApprovals)
+                    SetMarginApprovalExtended(marginApproval);
+            }
+            return marginApprovals;
+        }
+
+        private void SetMarginApprovalExtended(MarginApproval marginApproval)
+        {
+            if (marginApproval.Campaign == null && marginApproval.pid.HasValue)
+                marginApproval.Campaign = GetCampaign(marginApproval.pid.Value);
+
+            if (marginApproval.Affiliate == null && marginApproval.affid.HasValue)
+                marginApproval.Affiliate = GetAffiliate(marginApproval.affid.Value);
+        }
+
         public void SaveMarginApproval(int pid, int affid, string comment, string userIdentity)
         {
             var items = Items(CampaignStatus.Default).Where(i => i.pid == pid && i.affid == affid);

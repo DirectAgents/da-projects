@@ -1,5 +1,6 @@
 ﻿using EomTool.Domain.Abstract;
 using EomToolWeb.Models;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace EomToolWeb.Controllers
@@ -52,6 +53,16 @@ namespace EomToolWeb.Controllers
                 FinalizationWorkflow_MinimumMargin = daMain1Repo.GetSettingDecimalValue("FinalizationWorkflow_MinimumMargin")
             };
             return model;
+        }
+
+        // ---
+
+        public ActionResult MarginApprovals()
+        {
+            var model = mainRepo.MarginApprovals(true).OrderBy(ma => ma.created);
+
+            SetAccountingPeriodViewData();
+            return View(model);
         }
 
     }

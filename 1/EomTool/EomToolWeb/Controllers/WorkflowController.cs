@@ -89,6 +89,7 @@ namespace EomToolWeb.Controllers
             int unfinalizedStatusId = CampaignStatus.Default;
             var campaignAmounts = mainRepo.CampaignAmounts(pid, unfinalizedStatusId);
             campaignAmounts = campaignAmounts.Where(ca => ca.AffId.HasValue && affid.Contains(ca.AffId.Value));
+            //Session["MarginApproval_CampaignAmounts"] = campaignAmounts;
 
             decimal? minimumMargin = daMain1Repo.GetSettingDecimalValue("FinalizationWorkflow_MinimumMargin");
             var model = new CampaignAffiliateAmountsModel()

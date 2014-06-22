@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MarginApproval>
+@{
+    ViewBag.Title = "Margin Approvals";
+}
+
+<h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - Margin Approvals</h3>
+
+Accounting Period:
+@Html.Partial("ChooseMonth", (SelectList)ViewBag.ChooseMonthSelectList)
+<br />
+
+<table style="border: 1px solid gray; border-spacing: 10px 0">
+    <tr>
+        <th>Created</th>
+        <th>Used</th>
+        <th>Pid</th>
+        <th>Campaign</th>
+        <th>Affiliate</th>
+        <th colspan="2">Revenue</th>
+        <th colspan="2">Cost</th>
+        <th>Margin</th>
+        <th>ApprovedBy</th>
+        <th>Comments</th>
+    </tr>
+@foreach (var ma in Model)
+{
+    <tr>
+        <td>@ma.created</td>
+        <td>@ma.used</td>
+        <td>@ma.pid</td>
+        <td>@(ma.Campaign != null ? ma.Campaign.campaign_name : ma.pid.ToString())</td>
+        <td>@(ma.Affiliate != null ? ma.Affiliate.name2 : ma.affid.ToString())</td>
+        <td>@ma.RevenueCurrency.name</td>
+        <td style="text-align:right">@(ma.total_revenue.HasValue ? ma.total_revenue.Value.ToString("N2") : "")</td>
+        <td>@ma.CostCurrency.name</td>
+        <td style="text-align:right">@(ma.total_cost.HasValue ? ma.total_cost.Value.ToString("N2") : "")</td>
+        <td style="text-align:center">@(ma.margin_pct.HasValue ? ma.margin_pct.Value.ToString("P1") : "")</td>
+        <td>@ma.added_by</td>
+        <td>@ma.comment</td>
+    </tr>
+}
+</table>

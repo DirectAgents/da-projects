@@ -27,6 +27,7 @@ namespace EomTool.Domain.Abstract
         bool SetInvoiceStatus(int id, int statusId);
 
         // ---
+        IQueryable<MarginApproval> MarginApprovals(bool fillExtended);
         void SaveMarginApproval(int pid, int affid, string comment, string userIdentity);
         // ---
 
