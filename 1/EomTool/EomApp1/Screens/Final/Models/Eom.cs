@@ -116,7 +116,9 @@ namespace EomApp1.Screens.Final.Models
                         }
                     }
                 } // loop through affids
-                db.SaveChanges(); // save any MarginApprovals that were marked as used
+
+                if (rejectedAffIdList.Count == 0)
+                    db.SaveChanges(); // save any MarginApprovals that were marked as used
             }
             rejectedAffIds = rejectedAffIdList.ToArray();
         }
