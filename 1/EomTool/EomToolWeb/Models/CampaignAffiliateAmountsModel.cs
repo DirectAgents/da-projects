@@ -1,4 +1,5 @@
 ﻿using EomTool.Domain.DTOs;
+using EomTool.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,13 +20,18 @@ namespace EomToolWeb.Models
         public CampaignAmount SummaryAmount(int pid)
         {
             var pidAmounts = CampaignAmounts.Where(ca => ca.Pid == pid);
+            Currency mixedCurr = new Currency
+            {
+                id = -1,
+                name = "(mixed)"
+            };
 
-            string revCurr = "(mixed)";
+            Currency revCurr = mixedCurr;
             var revCurrs = pidAmounts.Select(a => a.RevenueCurrency).Distinct();
             if (revCurrs.Count() == 1)
                 revCurr = revCurrs.First();
 
-            string costCurr = "(mixed)";
+            Currency costCurr = mixedCurr;
             var costCurrs = pidAmounts.Select(a => a.CostCurrency).Distinct();
             if (costCurrs.Count() == 1)
                 costCurr = costCurrs.First();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EomTool.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,19 +18,19 @@ namespace EomTool.Domain.DTOs
         public int? AffId { get; set; }
         public string AffiliateName { get; set; }
 
-        public string RevenueCurrency { get; set; }
+        public Currency RevenueCurrency { get; set; }
         public decimal Revenue { get; set; }
 
         public decimal InvoicedAmount { get; set; }
 
-        public string CostCurrency { get; set; }
+        public Currency CostCurrency { get; set; }
         public decimal Cost { get; set; }
 
         public decimal? Margin
         {
             get
             {
-                if (RevenueCurrency == CostCurrency)
+                if (RevenueCurrency.id == CostCurrency.id)
                     return Revenue - Cost;
                 else
                     return null;
@@ -39,7 +40,7 @@ namespace EomTool.Domain.DTOs
         {
             get
             {
-                if (Revenue == 0 || RevenueCurrency != CostCurrency)
+                if (Revenue == 0 || RevenueCurrency.id != CostCurrency.id)
                     return null;
                 else
                     return (1 - Cost / Revenue);

@@ -43,7 +43,7 @@
         <td>@Html.ActionLink(ca.CampaignName, "EditCampaign", "Workflow", new { pid = ca.Pid }, new { target = "_blank", title = ca.CampaignDisplayName })</td>
         <td style="text-align: center">@ca.NumAffs</td>
         <td style="text-align: center">@ca.NumUnits</td>
-        <td>@ca.RevenueCurrency</td>
+        <td>@ca.RevenueCurrency.name</td>
         <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
         <td style="text-align: right">@ca.InvoicedAmount.ToString("N2")</td>
     </tr>    

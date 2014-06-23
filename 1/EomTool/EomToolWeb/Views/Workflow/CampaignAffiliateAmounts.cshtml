@@ -52,7 +52,7 @@
         </td>
         <td>@ca.AffiliateName</td>
         <td style="text-align: center">@ca.NumUnits</td>
-        <td>@ca.RevenueCurrency</td>
+        <td>@ca.RevenueCurrency.name</td>
         <td style="text-align: right">@ca.Revenue.ToString("N2")</td>
         <td style="text-align: right">@ca.InvoicedAmount.ToString("N2")</td>
         @if (Model.ShowInvoiceCheckboxes)
@@ -73,7 +73,7 @@
                 }
             </td>
         }
-        <td>@ca.CostCurrency</td>
+        <td>@ca.CostCurrency.name</td>
         <td style="text-align: right">@ca.Cost.ToString("N2")</td>
         <td style="text-align: right; white-space: nowrap">@(ca.MarginPct.HasValue ? ca.MarginPct.Value.ToString("P1") : "")</td>
 
@@ -105,7 +105,7 @@
             <td></td>
             <td style="font-weight: bold; text-align: right">CAMPAIGN TOTAL...</td>
             <td style="font-weight: bold; text-align: center">@sa.NumUnits</td>
-            <td style="font-weight: bold">@sa.RevenueCurrency</td>
+            <td style="font-weight: bold">@sa.RevenueCurrency.name</td>
             <td style="font-weight: bold; text-align: right">@sa.Revenue.ToString("N2")</td>
             <td style="font-weight: bold; text-align: right">@sa.InvoicedAmount.ToString("N2")</td>
             @if (Model.ShowInvoiceCheckboxes)
@@ -113,7 +113,7 @@
                 <td></td>
                 <td></td>
             }
-            <td style="font-weight: bold">@sa.CostCurrency</td>
+            <td style="font-weight: bold">@sa.CostCurrency.name</td>
             <td style="font-weight: bold; text-align: right">@sa.Cost.ToString("N2")</td>
             <td></td>
             @if (Model.ShowMarginCheckboxes)
