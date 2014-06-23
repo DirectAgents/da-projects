@@ -25,14 +25,24 @@ namespace EomTool.Domain.DTOs
         public string CostCurrency { get; set; }
         public decimal Cost { get; set; }
 
-        public decimal MarginPct
+        public decimal? Margin
         {
             get
             {
-                if (Revenue != 0 && RevenueCurrency == CostCurrency)
-                    return (1 - Cost / Revenue);
+                if (RevenueCurrency == CostCurrency)
+                    return Revenue - Cost;
                 else
-                    return 0;
+                    return null;
+            }
+        }
+        public decimal? MarginPct
+        {
+            get
+            {
+                if (Revenue == 0 || RevenueCurrency != CostCurrency)
+                    return null;
+                else
+                    return (1 - Cost / Revenue);
             }
         }
 

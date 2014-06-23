@@ -19,7 +19,7 @@
             <th colspan="2" style="text-align: left">&nbsp;Include</th>
         }
         <th colspan="2">Cost</th>
-        <th>Margin</th>
+        <th>Margin%</th>
         @if (Model.ShowMarginCheckboxes)
         {
             <th>Approve?</th>
@@ -75,17 +75,20 @@
         }
         <td>@ca.CostCurrency</td>
         <td style="text-align: right">@ca.Cost.ToString("N2")</td>
-        <td style="text-align: right; white-space: nowrap">@ca.MarginPct.ToString("P1")</td>
+        <td style="text-align: right; white-space: nowrap">@(ca.MarginPct.HasValue ? ca.MarginPct.Value.ToString("P1") : "")</td>
+
         @if (Model.ShowMarginCheckboxes)
         {
             string onclickString = "";
-            if (ca.MarginPct <= 0 || ca.MarginPct >= 1)
+            bool marginWithZeroRevenue = (ca.Revenue == 0 && ca.Cost != 0);
+            bool requiresComment = marginWithZeroRevenue || (ca.MarginPct.HasValue && (ca.MarginPct.Value <= 0 || ca.MarginPct.Value >= 1));
+            if (requiresComment)
             {
                 onclickString = "onclick=\"if (this.checked) GetMarginComment(" + ca.Pid + ", " + ca.AffId + ", this)\"";
             }
-            else if (Model.MinimumMarginPct.HasValue && ca.MarginPct < Model.MinimumMarginPct.Value && ca.MarginPct > 0)
-            {
-                onclickString = "onclick=\"if (this.checked) ConfirmApproval('" + ca.MarginPct.ToString("P1") + "', this)\"";
+            else if (Model.MinimumMarginPct.HasValue && ca.MarginPct.HasValue && ca.MarginPct.Value > 0 && ca.MarginPct.Value < Model.MinimumMarginPct.Value)
+            {  // requires confirmation
+                onclickString = "onclick=\"if (this.checked) ConfirmApproval('" + ca.MarginPct.Value.ToString("P1") + "', this)\"";
             }
             <td style="text-align: center">
                 <input type="checkbox" name="idpairs2" id="mchk@(ca.Pid)_@(ca.AffId)" value="@(ca.Pid + "_" + ca.AffId)" @Html.Raw(onclickString) />
@@ -179,7 +182,7 @@
     }
 
     function ConfirmApproval(percentString, el) {
-        if (!confirm("Approve  " + percentString + "  margin?"))
+        if (!confirm("Are you sure you want to approve  " + percentString + "  margin?"))
             el.checked = false;
     }
 </script>

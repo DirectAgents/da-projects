@@ -38,7 +38,6 @@ namespace EomApp1.Screens.Final.Models
             return items;
         }
 
-        //TODO: check if margins were approved
         public static void CheckFinalizationMargins(int pid, string revcurr, int[] affids, string[] costcurrs, out int[] rejectedAffIds)
         {
             var minimumMarginPct = (EomAppSettings.Settings.EomAppSettings_FinalizationWorkflow_MinimumMargin ?? 0) / 100;
@@ -74,13 +73,15 @@ namespace EomApp1.Screens.Final.Models
                                {
                                    AffId = g.Key.affiliate.affid,
                                    MarginExempt = g.Key.affiliate.margin_exempt,
+                                   RevenueCurrency = g.Key.RevenueCurrency,
                                    TotalRevenue = g.Sum(i => i.total_revenue ?? 0),
                                    RevToUSD = g.Key.RevenueCurrency.to_usd_multiplier,
+                                   CostCurrency = g.Key.CostCurrency,
                                    TotalCost = g.Sum(i => i.total_cost ?? 0),
                                    CostToUSD = g.Key.CostCurrency.to_usd_multiplier
                                };
 
-                    // Generally there will just be one row - because we're doing one affiliate at a time
+                    // Generally there will just be one row - because we're doing one affiliate at a time; but it's possible to have multiple cost currs
                     foreach (var row in rows)
                     {
                         // Skip affiliates that are "exempt" - except for special cases
@@ -109,7 +110,16 @@ namespace EomApp1.Screens.Final.Models
                                     rejectedAffIdList.Add(row.AffId);
                             }
                         }
-                        // Q: What to do when revenue is zero (cost could be zero or non-zero)?
+                        else if (row.TotalCost != 0 && (!row.MarginExempt || affIdsRequireNegativeApproval.Contains(row.AffId)))
+                        { // revenue is 0; cost is not 0; requires approval
+                            var marginApproval = db.MarginApprovals.Where(ma => ma.pid == pid && ma.affid == row.AffId && !ma.used.HasValue &&
+                                                                          ma.RevenueCurrency.name == row.RevenueCurrency.name && ma.total_revenue == row.TotalRevenue &&
+                                                                          ma.CostCurrency.name == row.CostCurrency.name && ma.total_cost == row.TotalCost).FirstOrDefault();
+                            if (marginApproval != null)
+                                marginApproval.used = now;
+                            else
+                                rejectedAffIdList.Add(row.AffId);
+                        }
                     }
                 } // loop through affids
                 db.SaveChanges(); // save any MarginApprovals that were marked as used
