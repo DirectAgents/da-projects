@@ -84,14 +84,14 @@
             bool requiresComment = marginWithZeroRevenue || (ca.MarginPct.HasValue && (ca.MarginPct.Value <= 0 || ca.MarginPct.Value >= 1));
             if (requiresComment)
             {
-                onclickString = "onclick=\"if (this.checked) GetMarginComment(" + ca.Pid + ", " + ca.AffId + ", this)\"";
+                onclickString = "onclick=\"if (this.checked) GetMarginComment(" + ca.Pid + ", " + ca.AffId + ", " + ca.CostCurrency.id + ", this)\"";
             }
             else if (Model.MinimumMarginPct.HasValue && ca.MarginPct.HasValue && ca.MarginPct.Value > 0 && ca.MarginPct.Value < Model.MinimumMarginPct.Value)
             {  // requires confirmation
                 onclickString = "onclick=\"if (this.checked) ConfirmApproval('" + ca.MarginPct.Value.ToString("P1") + "', this)\"";
             }
             <td style="text-align: center">
-                <input type="checkbox" name="idpairs2" id="mchk@(ca.Pid)_@(ca.AffId)" value="@(ca.Pid + "_" + ca.AffId)" @Html.Raw(onclickString) />
+                <input type="checkbox" name="idpairs2" id="mchk@(ca.Pid)_@(ca.AffId)_@(ca.CostCurrency.id)" value="@(ca.Pid + "_" + ca.AffId + "_" + ca.CostCurrency.id)" @Html.Raw(onclickString) />
             </td>
         }
     </tr>
@@ -129,7 +129,7 @@
 {
     foreach (var ca in Model.CampaignAmounts)
     {
-        <input type="hidden" name="comment@(ca.Pid)_@(ca.AffId)" />
+        <input type="hidden" name="comment@(ca.Pid)_@(ca.AffId)_@(ca.CostCurrency.id)" />
     }
 
 <div id="dlgMarginComment">
@@ -161,21 +161,23 @@
         var dlg = $('#dlgMarginComment');
         var pid = dlg.data("pid");
         var affid = dlg.data("affid");
+        var costcurrid = dlg.data("costcurrid");
         var comment = TrimmedMarginComment();
-        $('input[name="comment' + pid + '_' + affid + '"]').val(comment);
+        $('input[name="comment' + pid + '_' + affid + '_' + costcurrid + '"]').val(comment);
         if (!comment)
-            $('#mchk' + pid + '_' + affid).attr('checked', false);
+            $('#mchk' + pid + '_' + affid + '_' + costcurrid).attr('checked', false);
     }
 
     function TrimmedMarginComment() {
         return $.trim($('#textMarginComment').val());
     }
 
-    function GetMarginComment(pid, affid, el) {
-        $('#textMarginComment').val($('input[name="comment' + pid + '_' + affid + '"]').val());
+    function GetMarginComment(pid, affid, costcurrid, el) {
+        $('#textMarginComment').val($('input[name="comment' + pid + '_' + affid + '_' + costcurrid + '"]').val());
         var dlg = $('#dlgMarginComment');
         dlg.data("pid", pid);
         dlg.data("affid", affid);
+        dlg.data("costcurrid", costcurrid);
         var win = dlg.data("kendoWindow");
         //win.setOptions({});
         win.open();

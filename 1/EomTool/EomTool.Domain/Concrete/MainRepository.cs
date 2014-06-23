@@ -370,52 +370,58 @@ namespace EomTool.Domain.Concrete
                 marginApproval.Affiliate = GetAffiliate(marginApproval.affid.Value);
         }
 
-        public void SaveMarginApproval(int pid, int affid, string comment, string userIdentity)
+        public void SaveMarginApproval(MarginApproval marginApproval)
         {
-            var items = Items(CampaignStatus.Default).Where(i => i.pid == pid && i.affid == affid);
-
-            // Usually there will be just one group (per pid/affid)
-            var itemGroups = items.GroupBy(i => new { i.revenue_currency_id, i.cost_currency_id });
-            var groupSummaries = from ig in itemGroups
-                                 select new
-                                 {
-                                     ig.Key.revenue_currency_id,
-                                     revenue = ig.Sum(i => i.total_revenue),
-                                     ig.Key.cost_currency_id,
-                                     cost = ig.Sum(i => i.total_cost)
-                                 };
-
-            var query = from gs in groupSummaries
-                        join rc in context.Currencies on gs.revenue_currency_id equals rc.id
-                        join cc in context.Currencies on gs.cost_currency_id equals cc.id
-                        select new { gs, rc, cc };
-
-            var now = DateTime.Now;
-
-            foreach (var queryItem in query.AsEnumerable())
-            {
-                var marginApproval = new MarginApproval
-                {
-                    pid = pid,
-                    affid = affid,
-                    revenue_currency_id = queryItem.gs.revenue_currency_id,
-                    total_revenue = queryItem.gs.revenue,
-                    cost_currency_id = queryItem.gs.cost_currency_id,
-                    total_cost = queryItem.gs.cost,
-                    comment = comment,
-                    added_by = userIdentity,
-                    created = now
-                };
-                var revenueUSD = (queryItem.gs.revenue ?? 0) * queryItem.rc.to_usd_multiplier;
-                var costUSD = (queryItem.gs.cost ?? 0) * queryItem.cc.to_usd_multiplier;
-                if (revenueUSD != 0)
-                {
-                    marginApproval.margin_pct = decimal.Round(1 - costUSD / revenueUSD, 3);
-                }
-                context.MarginApprovals.AddObject(marginApproval);
-            }
-            context.SaveChanges();
+            context.MarginApprovals.AddObject(marginApproval);
         }
+
+        //public void SaveMarginApproval(int pid, int affid, string comment, string userIdentity)
+        //{
+        //    var items = Items(CampaignStatus.Default).Where(i => i.pid == pid && i.affid == affid);
+
+        //    // Usually there will be just one group (per pid/affid)
+        //    var itemGroups = items.GroupBy(i => new { i.revenue_currency_id, i.cost_currency_id });
+        //    var groupSummaries = from ig in itemGroups
+        //                         select new
+        //                         {
+        //                             ig.Key.revenue_currency_id,
+        //                             revenue = ig.Sum(i => i.total_revenue),
+        //                             ig.Key.cost_currency_id,
+        //                             cost = ig.Sum(i => i.total_cost)
+        //                         };
+
+        //    var query = from gs in groupSummaries
+        //                join rc in context.Currencies on gs.revenue_currency_id equals rc.id
+        //                join cc in context.Currencies on gs.cost_currency_id equals cc.id
+        //                select new { gs, rc, cc };
+
+        //    var now = DateTime.Now;
+
+        //    foreach (var queryItem in query.AsEnumerable())
+        //    {
+        //        var marginApproval = new MarginApproval
+        //        {
+        //            pid = pid,
+        //            affid = affid,
+        //            revenue_currency_id = queryItem.gs.revenue_currency_id,
+        //            total_revenue = queryItem.gs.revenue,
+        //            cost_currency_id = queryItem.gs.cost_currency_id,
+        //            total_cost = queryItem.gs.cost,
+        //            comment = comment,
+        //            added_by = userIdentity,
+        //            created = now
+        //        };
+        //        var revenueUSD = (queryItem.gs.revenue ?? 0) * queryItem.rc.to_usd_multiplier;
+        //        var costUSD = (queryItem.gs.cost ?? 0) * queryItem.cc.to_usd_multiplier;
+        //        if (revenueUSD != 0)
+        //        {
+        //            marginApproval.margin_pct = decimal.Round(1 - costUSD / revenueUSD, 3);
+        //        }
+        //        context.MarginApprovals.AddObject(marginApproval);
+        //    }
+        //    context.SaveChanges();
+        //}
+
         // Use this if margin is computed by the database
         //public void SaveMarginApproval(int pid, int affid, string comment, string userIdentity)
         //{

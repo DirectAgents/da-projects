@@ -40,10 +40,14 @@ namespace EomTool.Domain.DTOs
         {
             get
             {
-                if (Revenue == 0 || RevenueCurrency.id != CostCurrency.id)
+                if (Revenue == 0)
                     return null;
                 else
-                    return (1 - Cost / Revenue);
+                {
+                    var revUSD = Revenue * RevenueCurrency.to_usd_multiplier;
+                    var costUSD = Cost * CostCurrency.to_usd_multiplier;
+                    return (1 - costUSD / revUSD);
+                }
             }
         }
 

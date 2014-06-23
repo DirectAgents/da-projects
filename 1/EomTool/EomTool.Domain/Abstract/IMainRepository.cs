@@ -28,7 +28,7 @@ namespace EomTool.Domain.Abstract
 
         // ---
         IQueryable<MarginApproval> MarginApprovals(bool fillExtended);
-        void SaveMarginApproval(int pid, int affid, string comment, string userIdentity);
+        void SaveMarginApproval(MarginApproval marginApproval);
         // ---
 
         string UnitTypeName(int unitTypeId);

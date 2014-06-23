@@ -1,7 +1,9 @@
 ﻿using EomTool.Domain.Abstract;
+using EomTool.Domain.DTOs;
 using EomTool.Domain.Entities;
 using EomToolWeb.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -89,7 +91,9 @@ namespace EomToolWeb.Controllers
             int unfinalizedStatusId = CampaignStatus.Default;
             var campaignAmounts = mainRepo.CampaignAmounts(pid, unfinalizedStatusId);
             campaignAmounts = campaignAmounts.Where(ca => ca.AffId.HasValue && affid.Contains(ca.AffId.Value));
-            //Session["MarginApproval_CampaignAmounts"] = campaignAmounts;
+
+            var caList = campaignAmounts.ToList();
+            Session["MarginApproval_CampaignAmounts"] = caList;
 
             decimal? minimumMargin = daMain1Repo.GetSettingDecimalValue("FinalizationWorkflow_MinimumMargin");
             var model = new CampaignAffiliateAmountsModel()
@@ -111,12 +115,37 @@ namespace EomToolWeb.Controllers
             if (idpairs2 == null)
                 return Content("Nothing approved. Please click \"Back\".");
 
+            var campaignAmounts = (List<CampaignAmount>)Session["MarginApproval_CampaignAmounts"];
+            if (campaignAmounts == null)
+                return Content("Error retrieving CampaignAmounts from session. Please try again.");
+
+            var now = DateTime.Now;
             var campAffIds = Util.ExtractCampAffIds(idpairs2);
             foreach (var campAffId in campAffIds)
             {
-                var comment = Request.Form["comment" + campAffId.pid + "_" + campAffId.affid];
-                mainRepo.SaveMarginApproval(campAffId.pid, campAffId.affid, comment, User.Identity.Name);
+                var comment = Request.Form["comment" + campAffId.pid + "_" + campAffId.affid + "_" + campAffId.CostCurrId];
+
+                var c = campaignAmounts.Where(ca => ca.Pid == campAffId.pid && ca.AffId == campAffId.affid && ca.CostCurrency.id == campAffId.CostCurrId).FirstOrDefault();
+                if (c != null)
+                {
+                    var marginApproval = new MarginApproval
+                    {
+                        pid = c.Pid,
+                        affid = c.AffId,
+                        revenue_currency_id = c.RevenueCurrency.id,
+                        total_revenue = c.Revenue,
+                        cost_currency_id = c.CostCurrency.id,
+                        total_cost = c.Cost,
+                        comment = comment,
+                        added_by = User.Identity.Name,
+                        created = now,
+                        margin_pct = c.MarginPct
+                    };
+                    mainRepo.SaveMarginApproval(marginApproval);
+                }
             }
+            mainRepo.SaveChanges();
+
             return Content("Approvals saved. Please close this window and return to the EOM Tool to finalize.");
         }
 
