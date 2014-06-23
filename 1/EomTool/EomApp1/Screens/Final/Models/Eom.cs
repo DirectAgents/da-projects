@@ -42,6 +42,7 @@ namespace EomApp1.Screens.Final.Models
         public static void CheckFinalizationMargins(int pid, string revcurr, int[] affids, string[] costcurrs, out int[] rejectedAffIds)
         {
             var minimumMarginPct = (EomAppSettings.Settings.EomAppSettings_FinalizationWorkflow_MinimumMargin ?? 0) / 100;
+            int[] affIdsRequireNegativeApproval = EomAppSettings.Settings.EomAppSettings_FinalizationWorkflow_AffIdsAlwaysRequireApprovalForNegativeMargin;
             List<int> rejectedAffIdList = new List<int>();
             var now = DateTime.Now;
 
@@ -82,17 +83,21 @@ namespace EomApp1.Screens.Final.Models
                     // Generally there will just be one row - because we're doing one affiliate at a time
                     foreach (var row in rows)
                     {
-                        // Skip affiliates that are "exempt"
-                        if (row.MarginExempt)
+                        // Skip affiliates that are "exempt" - except for special cases
+                        if (row.MarginExempt && !affIdsRequireNegativeApproval.Contains(row.AffId))
                             continue;
-                        //TODO: check for "margin-exempt exceptions"... where only negative margins need approval
 
                         if (row.TotalRevenue != 0)
                         {
                             var revUSD = row.RevToUSD * row.TotalRevenue;
                             var costUSD = row.CostToUSD * row.TotalCost;
                             var marginPct = (1 - costUSD / revUSD);
-                            if (marginPct < minimumMarginPct || marginPct <= 0 || marginPct >= 1)
+                            bool approvalNeeded = (marginPct < minimumMarginPct || marginPct <= 0 || marginPct >= 1);
+
+                            if (row.MarginExempt && affIdsRequireNegativeApproval.Contains(row.AffId) && marginPct >= 0)
+                                approvalNeeded = false; // special cases - only exempt from negative margin approval
+
+                            if (approvalNeeded)
                             {
                                 // Needs approval; see if there's an unused marginApproval. if so, set it to used (and don't add to rejectedAffIdList)
                                 decimal marginPctRounded = decimal.Round(marginPct, 3);

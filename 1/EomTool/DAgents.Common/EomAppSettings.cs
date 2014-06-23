@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EomAppCommon
 {
@@ -49,6 +50,25 @@ namespace EomAppCommon
         public string EomAppSettings_PaymentWorkflow_Second_Batch_Approver { get { return GetSetting("EomAppSettings_PaymentWorkflow_Second_Batch_Approver"); } }
 
         public decimal? EomAppSettings_FinalizationWorkflow_MinimumMargin { get { return GetDecimalSetting("EomAppSettings_FinalizationWorkflow_MinimumMargin"); } }
+        public int[] EomAppSettings_FinalizationWorkflow_AffIdsAlwaysRequireApprovalForNegativeMargin
+        {
+            get
+            {
+                List<int> affIdsList = new List<int>();
+                string affIdsString = GetSetting("EomAppSettings_FinalizationWorkflow_AffIdsAlwaysRequireApprovalForNegativeMargin");
+                if (affIdsString != null)
+                {
+                    var affIdsStringArray = affIdsString.Split(new char[] { ',' });
+                    foreach (var affIdString in affIdsStringArray)
+                    {
+                        int affId;
+                        if (int.TryParse(affIdString, out affId))
+                            affIdsList.Add(affId);
+                    }
+                }
+                return affIdsList.ToArray();
+            }
+        }
 
         private int? GetIntSetting(string settingName)
         {
