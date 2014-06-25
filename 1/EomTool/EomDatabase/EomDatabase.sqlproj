@@ -184,6 +184,8 @@
     <Folder Include="Schema Objects\Schemas\dbo\Indexes" />
     <Folder Include="Schema Objects\Schemas\dbo\Triggers" />
     <Folder Include="Schema Objects\Schemas\dbo\Statistics" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
     <BuildContributorArgument Include="OutDir=$(OutDir)" />
@@ -268,18 +270,6 @@
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_DTCampaignStatus_name_FK_DTCampaignStatus_name_UK.fkey.sql">
-      <SubType>Code</SubType>
-    </Build>
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK.fkey.sql">
-      <SubType>Code</SubType>
-    </Build>
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_Currency_id_FK_Currency_id_PK.fkey.sql">
-      <SubType>Code</SubType>
-    </Build>
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_MediaBuyer_id_FK_MediaBuyer_id_PK.fkey.sql">
-      <SubType>Code</SubType>
-    </Build>
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_NetTermType_id_FK_NetTermType_id_PK.fkey.sql">
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\PubReportInstance_Vendor_id_FK_Vendor_id_PK.fkey.sql">
@@ -396,9 +386,6 @@
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_id_PK.pkey.sql">
       <SubType>Code</SubType>
     </Build>
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_id_PK.pkey.sql">
-      <SubType>Code</SubType>
-    </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\PubReportInstance_id_PK.pkey.sql">
       <SubType>Code</SubType>
     </Build>
@@ -499,9 +486,6 @@
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Campaign_pid_UK.ukey.sql">
-      <SubType>Code</SubType>
-    </Build>
-    <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Affiliate_affid_UK.ukey.sql">
       <SubType>Code</SubType>
     </Build>
     <Build Include="Schema Objects\Schemas\dbo\Tables\Keys\Stat_apiurl_UK.ukey.sql">
@@ -826,6 +810,7 @@
     <Build Include="Schema Objects\Schemas\dbo\Views\AdvertiserPaymentStatus.view.sql">
       <SubType>Code</SubType>
     </Build>
+    <Build Include="dbo\Tables\MarginApproval.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Schema Objects\Database Level Objects\Assemblies\SqlServerProjectForDADatabaseR3.dll">
