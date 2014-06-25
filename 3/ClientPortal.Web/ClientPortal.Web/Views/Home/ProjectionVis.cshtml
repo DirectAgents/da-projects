@@ -47,7 +47,18 @@
                 { field: "Conversions", aggregate: "proj" },
                 { field: "Revenue", aggregate: "max" },
                 { field: "Revenue", aggregate: "sum" }
-            ]
+            ],
+            requestEnd: function (e) {
+                if (e.type == "read") {
+                    var infos = e.response.data;
+                    for (var i = 0; i < infos.length; i++) {
+                        infos[i].Date = infos[i].Date.replace(/\d+/, function (n) {
+                            var time = parseInt(n);
+                            return parseInt(time) + new Date(time).getTimezoneOffset() * 60000;
+                        });
+                    }
+                }
+            }
         });
     }
 

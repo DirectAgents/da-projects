@@ -7,7 +7,14 @@ namespace ClientPortal.Data.DTOs
     public class DailyInfo
     {
         public string Id { get { return Date.ToString("yyyyMMdd"); } }
-        public DateTime Date { get; set; }
+
+        private DateTime _date;
+        public DateTime Date
+        {
+            get { return _date; }
+            set { _date = new DateTime(value.Ticks, DateTimeKind.Utc); }
+        }
+
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }
