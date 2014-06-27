@@ -9,7 +9,7 @@ CASE WHEN sum([Cost USD]) over(partition by [Campaign Number])=0 THEN 0 ELSE [Co
 '' AS [Comments],
 '' AS [Previous Periods Open Balance],
 dbo.Advertiser.[invoicing_status] AS [Current Period Invoicing Status],
-CASE WHEN dbo.AccountingView1.[Status]='Finalized' THEN 'Finalized' ELSE 'Unfinalized' END AS [Finalization Status],
+CASE WHEN dbo.AccountingView1.[Status]='default' THEN 'Unfinalized' ELSE 'Finalized' END AS [Finalization Status],
 dbo.AccountingView1.[Unit Type],
 dbo.AccountingView1.[Campaign Name],
 dbo.AccountingView1.[Rev Currency],

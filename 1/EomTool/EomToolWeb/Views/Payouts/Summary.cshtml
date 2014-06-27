@@ -141,7 +141,11 @@
             });
 
             // Display the publisher report
-            $.get('@Url.Action("PublisherReport", new { mode = Model.Mode })?affid=' + affid + '&ts=' + new Date().getTime(), function (publisherReportContent) {
+            var data = {
+                affid: affid,
+                ts: new Date().getTime()
+            };
+            $.get('@Url.Action("PublisherReport", new { mode = Model.Mode })', data, function (publisherReportContent) {
                 $('#publisherReport').empty().html(publisherReportContent);
             });
         }
