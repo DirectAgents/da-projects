@@ -333,7 +333,7 @@
     <Compile Include="Etl\SearchMarketing\Loaders\AnalyticsApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCsvExtracter.cs" />
-    <Compile Include="Etl\TradingDesk\Loaders\DbmLoader.cs" />
+    <Compile Include="Etl\TradingDesk\Loaders\DbmDailySummaryLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsXmlReportExtracter.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\AdWordsLoader.cs" />

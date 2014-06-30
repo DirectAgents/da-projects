@@ -1,6 +1,6 @@
 ﻿using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
-//using CakeExtracter.Etl.TradingDesk.DALoaders;
+using CakeExtracter.Etl.TradingDesk.Loaders;
 using System.ComponentModel.Composition;
 
 namespace CakeExtracter.Commands
@@ -25,7 +25,7 @@ namespace CakeExtracter.Commands
         public override int Execute(string[] remainingArguments)
         {
             var extracter = new DbmCsvExtracter(CsvFile);
-            var loader = new DbmLoader();
+            var loader = new DbmDailySummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();

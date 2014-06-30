@@ -236,6 +236,7 @@
     <Compile Include="Contexts\SearchDailySummary2.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
+    <Compile Include="Contexts\TDContext.cs" />
     <Compile Include="Contexts\UserEvent.cs">
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
@@ -243,6 +244,7 @@
       <DependentUpon>ClientPortal.tt</DependentUpon>
     </Compile>
     <Compile Include="Contracts\IClientPortalRepository.cs" />
+    <Compile Include="Contracts\ITDRepository.cs" />
     <Compile Include="DTOs\AffiliateSummary.cs" />
     <Compile Include="DTOs\CalenderWeek.cs" />
     <Compile Include="DTOs\DateRangeSummary.cs" />
@@ -264,10 +266,13 @@
     <Compile Include="Entities\CreativeStat.cs" />
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Entities\Offer.cs" />
+    <Compile Include="Entities\TD\DailySummary.cs" />
+    <Compile Include="Entities\TD\InsertionOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
     <Compile Include="Services\SearchRepository.cs" />
     <Compile Include="Services\StatsRepository.cs" />
+    <Compile Include="Services\TDRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -310,6 +315,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
