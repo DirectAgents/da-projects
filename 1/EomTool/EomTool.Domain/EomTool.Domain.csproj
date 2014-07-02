@@ -71,6 +71,7 @@
     <Compile Include="DTOs\CampAffId.cs" />
     <Compile Include="DTOs\CampaignAmount.cs" />
     <Compile Include="Entities\Advertiser.cs" />
+    <Compile Include="Entities\Affiliate.cs" />
     <Compile Include="Entities\BatchUpdate.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\CampaignStatus.cs" />

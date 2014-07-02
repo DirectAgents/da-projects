@@ -69,7 +69,7 @@ namespace EomToolWeb.Controllers
 
         // ---
 
-        public ActionResult PeriodMaintenance()
+        public ActionResult AdvertiserMaintenance()
         {
             var advertisers = mainRepo.Advertisers().ToList();
             var advIds = advertisers.Select(a => a.id).ToList();
@@ -98,6 +98,38 @@ namespace EomToolWeb.Controllers
                 NewAdvertisers = newAdvertisers,
                 ExpiredAdvertisers = expiredAdvertisers,
                 ChangedAdvertisers = changedAdvertisers
+            };
+            return View(model);
+        }
+
+        public ActionResult AffiliateMaintenance()
+        {
+            var affiliates = mainRepo.Affiliates().ToList();
+            var affIds = affiliates.Select(a => a.id).ToList();
+
+            var prevRepo = CreateMainRepository(eomEntitiesConfig.CurrentEomDate.AddMonths(-1));
+            var prevAffiliates = prevRepo.Affiliates().ToList();
+            var prevAffIds = prevAffiliates.Select(a => a.id).ToList();
+
+            var newAffiliates = affiliates.Where(a => !prevAffIds.Contains(a.id));
+            var expiredAffiliates = prevAffiliates.Where(a => !affIds.Contains(a.id));
+
+            List<Affiliate> changedAffiliates = new List<Affiliate>();
+            foreach (var aff in affiliates)
+            {
+                var prevAff = prevAffiliates.Where(a => a.id == aff.id).SingleOrDefault();
+                if (prevAff != null && aff.name != prevAff.name)
+                {
+                    aff.PreviousMonthAffiliate = prevAff;
+                    changedAffiliates.Add(aff);
+                }
+            }
+            var model = new PeriodMaintenanceVM
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                NewAffiliates = newAffiliates,
+                ExpiredAffiliates = expiredAffiliates,
+                ChangedAffiliates = changedAffiliates
             };
             return View(model);
         }

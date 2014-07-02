@@ -1,0 +1,45 @@
+﻿@model PeriodMaintenanceVM
+
+Accounting Period: <b>@Model.CurrentEomDateString</b>
+<br /><br />
+
+<b>"Changed" Affiliates (different name last month):</b>
+@if (Model.ChangedAffiliates.Any())
+{
+    <table>
+    @foreach (var aff in Model.ChangedAffiliates.OrderBy(a => a.name))
+    {
+        <tr>
+            <td>@aff.id: @Html.ActionLink(aff.name, "Edit", "Affiliates", new { id = aff.id}, null)</td>
+            <td>[Previously: @aff.PreviousMonthAffiliate.name]</td>
+        </tr>
+    }
+    </table>
+}
+else
+{
+    <br /><i>(none)</i><br />
+}
+
+<br />
+<b>"New" Affiliates (didn't exist last month):</b>
+<br />
+@foreach (var aff in Model.NewAffiliates.OrderBy(a => a.name))
+{
+    @aff.id<text>: </text>@Html.ActionLink(aff.name, "Edit", "Affiliates", new { id = aff.id}, null)<br />
+}
+
+<br />
+<b>"Expired" Affiliates (existed last month but not this month):</b>
+<br />
+@if (Model.ExpiredAffiliates.Any())
+{
+    foreach (var aff in Model.ExpiredAffiliates.OrderBy(a => a.name))
+    {
+        @aff.id<text>: </text>@aff.name<br />
+    }
+}
+else
+{
+    <i>(none)</i><br />
+}
