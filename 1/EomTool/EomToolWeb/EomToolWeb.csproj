@@ -191,6 +191,7 @@
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\PaymentBatchesViewModel.cs" />
     <Compile Include="Models\PayoutsListViewModel.cs" />
+    <Compile Include="Models\PeriodMaintenanceVM.cs" />
     <Compile Include="Models\PublisherSummaryViewModel.cs" />
     <Compile Include="Models\SelectorViewModel.cs" />
     <Compile Include="Models\SettingsVM.cs" />
@@ -3378,6 +3379,7 @@
     <Content Include="Views\Admin\EditSettings.cshtml" />
     <Content Include="Views\Workflow\MarginApproval.cshtml" />
     <Content Include="Views\Admin\MarginApprovals.cshtml" />
+    <Content Include="Views\Admin\PeriodMaintenance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

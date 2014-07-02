@@ -6,5 +6,8 @@ namespace EomTool.Domain.Entities
     {
         [NotMapped]
         public AccountManagerTeam AccountManagerTeam { get; set; }
+
+        [NotMapped]
+        public Advertiser PreviousMonthAdvertiser { get; set; }
     }
 }

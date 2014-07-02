@@ -1,4 +1,7 @@
 ﻿using EomTool.Domain.Abstract;
+using EomTool.Domain.Concrete;
+using EomTool.Domain.Entities;
+using EomToolWeb.Infrastructure;
 using System;
 using System.IO;
 using System.Web.Mvc;
@@ -21,6 +24,24 @@ namespace EomToolWeb.Controllers
             ViewBag.DebugMode = eomEntitiesConfig.DebugMode;
         }
 
+        protected IMainRepository CreateMainRepository(DateTime dateTime)
+        {
+            var config = new EomEntitiesConfigBase()
+            {
+                CurrentEomDate = dateTime
+            };
+
+            IMainRepository repo = null;
+            if (config.DatabaseExistsForDate(dateTime))
+            {
+                var eomEntities = new EomEntities(config);
+                repo = new MainRepository(eomEntities);
+            }
+            return repo;
+        }
+
+        // ---
+
         protected string RenderPartialViewToString(string viewName, object model)
         {
             if (string.IsNullOrEmpty(viewName))
@@ -37,6 +58,7 @@ namespace EomToolWeb.Controllers
                 return sw.GetStringBuilder().ToString();
             }
         }
+
         // ---
 
         protected override void Dispose(bool disposing)
