@@ -156,7 +156,7 @@ namespace EomToolWeb.Controllers
             string from = WebConfigurationManager.AppSettings["EmailFromDefault"]; // this is ignored
             string to = WebConfigurationManager.AppSettings["EmailToInvoiceRequest"];
             string cc = null;
-            string subject = eomEntitiesConfig.CurrentEomDateString + ": Invoice Request";
+            string subject = eomEntitiesConfig.CurrentEomDateString + " " + invoice.Advertiser.name + ": Invoice Request";
 
             ViewBag.From = (idGroup != null) ? idGroup.EmailAddress : "Unknown user";
             ViewBag.ShowNotes = true;
