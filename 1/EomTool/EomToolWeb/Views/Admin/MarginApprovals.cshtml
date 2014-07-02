@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<MarginApproval>
 @{
     ViewBag.Title = "Margin Approvals";
+    var marginApprovals = Model.OrderBy(ma => ma.Affiliate.name2).ThenBy(ma => ma.Campaign.campaign_name).ThenBy(ma => ma.created);
 }
 
 <h3>@Html.ActionLink("EOM Admin", "Index", "Admin") - Margin Approvals</h3>
@@ -22,7 +23,7 @@ Accounting Period:
         <th>ApprovedBy</th>
         <th>Comments</th>
     </tr>
-@foreach (var ma in Model)
+@foreach (var ma in marginApprovals)
 {
     <tr>
         <td>@ma.created</td>

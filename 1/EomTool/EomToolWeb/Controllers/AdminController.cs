@@ -61,7 +61,7 @@ namespace EomToolWeb.Controllers
 
         public ActionResult MarginApprovals()
         {
-            var model = mainRepo.MarginApprovals(true).OrderBy(ma => ma.created);
+            var model = mainRepo.MarginApprovals(true);
 
             SetAccountingPeriodViewData();
             return View(model);

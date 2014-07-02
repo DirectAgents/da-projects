@@ -1,7 +1,7 @@
 ﻿@model InvoicesSummary
 @{
-    var incompleteInvoices = Model.Invoices(false);
-    var completeInvoices = Model.Invoices(true);
+    var incompleteInvoices = Model.Invoices(false).OrderBy(i => i.Advertiser.name).ThenBy(i => i.DateRequested);
+    var completeInvoices = Model.Invoices(true).OrderBy(i => i.Advertiser.name).ThenBy(i => i.DateRequested);
 }
 
 <h2>Invoice Requests</h2>
