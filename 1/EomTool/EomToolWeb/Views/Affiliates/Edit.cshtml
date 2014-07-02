@@ -2,6 +2,11 @@
 @{
     ViewBag.Title = "Edit Affiliate";
     var statusList = new[] { "", "New", "New1", "New2", "Existing" };
+    var paymentOnHoldList = new List<string> { "", "W-9", "Management Discretion", "Previous Periods Open Invoices", "Cashflows", "Finalization Issues", "Banking Information", "Other" };
+    if (Model.payment_on_hold != null && !paymentOnHoldList.Contains(Model.payment_on_hold))
+    {
+        paymentOnHoldList.Add(Model.payment_on_hold);
+    }
 }
 
 <h3>Edit Affiliate</h3>
@@ -30,6 +35,10 @@
                 <td>@Html.LabelFor(m => m.margin_exempt, "MarginExempt")</td>
                 <td>@Html.EditorFor(m => m.margin_exempt)</td>
             </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.payment_on_hold, "PaymentOnHold")</td>
+                <td id="tdPaymentOnHold">@Html.DropDownListFor(m => m.payment_on_hold, new SelectList(paymentOnHoldList))</td>
+            </tr>
         </table>
         <br />
         <input type="submit" value="Save" />
@@ -38,3 +47,12 @@
 
 <br />
 @Html.ActionLink("Cancel", "Show", new { id = Model.id })
+
+<script>
+    $(document).ready(function () {
+        $('#payment_on_hold').change(function () {
+            if ($(this).val() == "Other")
+                $('#tdPaymentOnHold').html('<input type="text" name="payment_on_hold" value="Other">');
+        });
+    });
+</script>

@@ -40,6 +40,10 @@
             <td>@Html.LabelFor(m => m.Currency)</td>
             <td class="bold">@Html.DisplayFor(m => m.Currency.name)</td>
         </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.payment_on_hold, "PaymentOnHold")</td>
+            <td class="bold">@Html.DisplayFor(m => m.payment_on_hold)</td>
+        </tr>
     </table>
 </fieldset>
 

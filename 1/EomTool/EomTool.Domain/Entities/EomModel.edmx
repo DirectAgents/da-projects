@@ -322,6 +322,8 @@
           <Property Name="status" Type="varchar" MaxLength="50" />
           <Property Name="payment_terms" Type="varchar" MaxLength="50" />
           <Property Name="invoicing_status" Type="varchar" MaxLength="50" />
+          <Property Name="comments" Type="varchar" MaxLength="255" />
+          <Property Name="prev_open_balance" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6035: The relationship 'FK_InvoiceItem_Affiliate' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded.
@@ -348,6 +350,7 @@
           <Property Name="external_id" Type="int" />
           <Property Name="status" Type="varchar" MaxLength="50" />
           <Property Name="margin_exempt" Type="bit" Nullable="false" />
+          <Property Name="payment_on_hold" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="AffiliatePaymentMethod">
           <Key>
@@ -1387,6 +1390,8 @@
           <Property Type="String" Name="status" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="payment_terms" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="invoicing_status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="comments" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="prev_open_balance" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Affiliate">
           <Key>
@@ -1413,6 +1418,7 @@
           <NavigationProperty Name="AffiliatePaymentMethod" Relationship="EomModel.Affiliate_AffiliatePaymentMethod_id_FK_AffiliatePaymentMethod_id_PK" FromRole="Affiliate" ToRole="AffiliatePaymentMethod" />
           <Property Type="String" Name="status" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="Boolean" Name="margin_exempt" Nullable="false" />
+          <Property Type="String" Name="payment_on_hold" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Campaign">
           <Key>
@@ -2280,6 +2286,8 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EomModelStoreContainer" CdmEntityContainer="EomEntities">
           <EntitySetMapping Name="Advertisers"><EntityTypeMapping TypeName="EomModel.Advertiser"><MappingFragment StoreEntitySet="Advertiser">
+                <ScalarProperty Name="prev_open_balance" ColumnName="prev_open_balance" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
                 <ScalarProperty Name="invoicing_status" ColumnName="invoicing_status" />
                 <ScalarProperty Name="payment_terms" ColumnName="payment_terms" />
                 <ScalarProperty Name="status" ColumnName="status" />
@@ -2287,7 +2295,8 @@
             <ScalarProperty Name="name" ColumnName="name" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="Affiliates"><EntityTypeMapping TypeName="EomModel.Affiliate"><MappingFragment StoreEntitySet="Affiliate">
-            <ScalarProperty Name="margin_exempt" ColumnName="margin_exempt" />
+            <ScalarProperty Name="payment_on_hold" ColumnName="payment_on_hold" />
+                <ScalarProperty Name="margin_exempt" ColumnName="margin_exempt" />
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="id" ColumnName="id" />
             <ScalarProperty Name="name" ColumnName="name" />

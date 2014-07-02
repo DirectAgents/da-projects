@@ -1186,6 +1186,54 @@ namespace EomTool.Domain.Entities
         private global::System.String _invoicing_status;
         partial void Oninvoicing_statusChanging(global::System.String value);
         partial void Oninvoicing_statusChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String comments
+        {
+            get
+            {
+                return _comments;
+            }
+            set
+            {
+                OncommentsChanging(value);
+                ReportPropertyChanging("comments");
+                _comments = StructuralObject.SetValidValue(value, true, "comments");
+                ReportPropertyChanged("comments");
+                OncommentsChanged();
+            }
+        }
+        private global::System.String _comments;
+        partial void OncommentsChanging(global::System.String value);
+        partial void OncommentsChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String prev_open_balance
+        {
+            get
+            {
+                return _prev_open_balance;
+            }
+            set
+            {
+                Onprev_open_balanceChanging(value);
+                ReportPropertyChanging("prev_open_balance");
+                _prev_open_balance = StructuralObject.SetValidValue(value, true, "prev_open_balance");
+                ReportPropertyChanged("prev_open_balance");
+                Onprev_open_balanceChanged();
+            }
+        }
+        private global::System.String _prev_open_balance;
+        partial void Onprev_open_balanceChanging(global::System.String value);
+        partial void Onprev_open_balanceChanged();
 
         #endregion
 
@@ -1646,6 +1694,30 @@ namespace EomTool.Domain.Entities
         private global::System.Boolean _margin_exempt;
         partial void Onmargin_exemptChanging(global::System.Boolean value);
         partial void Onmargin_exemptChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String payment_on_hold
+        {
+            get
+            {
+                return _payment_on_hold;
+            }
+            set
+            {
+                Onpayment_on_holdChanging(value);
+                ReportPropertyChanging("payment_on_hold");
+                _payment_on_hold = StructuralObject.SetValidValue(value, true, "payment_on_hold");
+                ReportPropertyChanged("payment_on_hold");
+                Onpayment_on_holdChanged();
+            }
+        }
+        private global::System.String _payment_on_hold;
+        partial void Onpayment_on_holdChanging(global::System.String value);
+        partial void Onpayment_on_holdChanged();
 
         #endregion
 

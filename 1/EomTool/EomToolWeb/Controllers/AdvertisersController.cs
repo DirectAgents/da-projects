@@ -67,6 +67,8 @@ namespace EomToolWeb.Controllers
             adv.status = inAdv.status;
             adv.payment_terms = inAdv.payment_terms;
             adv.invoicing_status = inAdv.invoicing_status;
+            adv.comments = inAdv.comments;
+            adv.prev_open_balance = inAdv.prev_open_balance;
             mainRepo.SaveChanges();
             return true;
         }

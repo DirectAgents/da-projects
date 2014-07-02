@@ -20,6 +20,7 @@ Accounting Period:
         <th>NetTerms</th>
         <th>PaymentMethod</th>
         <th>Currency</th>
+        <th>PaymentOnHold</th>
     </tr>
 @foreach (var aff in Model)
 {
@@ -33,6 +34,7 @@ Accounting Period:
         <td style="text-align:center">@aff.NetTermType.name</td>
         <td style="text-align:center">@aff.AffiliatePaymentMethod.name</td>
         <td style="text-align:center">@aff.Currency.name</td>
+        <td>@aff.payment_on_hold</td>
     </tr>
 }
 </table>

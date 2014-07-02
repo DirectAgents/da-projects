@@ -36,6 +36,14 @@
                 <td>@Html.LabelFor(m => m.invoicing_status)</td>
                 <td>@Html.DropDownListFor(m => m.invoicing_status, new SelectList(invoicingStatusList))</td>
             </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.comments)</td>
+                <td>@Html.EditorFor(m => m.comments)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.prev_open_balance)</td>
+                <td>@Html.EditorFor(m => m.prev_open_balance)</td>
+            </tr>
         </table>
         <br />
         <input type="submit" value="Save" />

@@ -43,14 +43,13 @@ else
 {
     <i>(none)</i><br />
 }
-
+@*
 <br />
 <b>Maintenance:</b>
 
 <table style="border: 1px solid gray; border-spacing: 10px 0">
     <tr>
         <td>Advertiser.InvoicingStatus</td>
-        @*<td>@Ajax.ActionLink("clear all", "ClearInvoicingStatus", null, new { onclick = "return ConfirmClearInvoicingStatus()" })</td>*@
         <td><span id="spanClearIS"><a href="#" onclick="ConfirmClearInvoicingStatus(); return false">clear all</a></span></td>
     </tr>
 </table>
@@ -63,3 +62,4 @@ else
         }
     }
 </script>
+*@
