@@ -11,6 +11,7 @@ namespace EomToolWeb.Infrastructure
             kernel.Bind<ICampaignRepository>().To<CampaignRepository>();
             kernel.Bind<IAdmin>().To<AdminImpl>();
             kernel.Bind<IMainRepository>().To<MainRepository>();
+            kernel.Bind<ISecurityRepository>().To<SecurityRepository>();
         }
     }
 }
