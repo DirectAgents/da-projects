@@ -1,2 +1,3 @@
-﻿CREATE USER [DIRECTAGENTS\Account Managers] FOR LOGIN [DIRECTAGENTS\Account Managers] WITH DEFAULT_SCHEMA=[dbo];
+﻿CREATE USER [DIRECTAGENTS\Account Managers] FOR LOGIN [DIRECTAGENTS\Account Managers];
+-- set default schema to dbo?
 

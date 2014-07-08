@@ -1,13 +1,14 @@
 ﻿CREATE VIEW [dbo].[AdvertiserPaymentStatus] AS
 SELECT
+dbo.AccountingView1.[Publisher Payment On Hold] AS [Payment On Hold],
 dbo.AccountingView1.Publisher,
 dbo.AccountingView1.[Publisher Status],
 dbo.AccountingView1.Advertiser,
 dbo.Advertiser.[status] AS [Advertiser Status],
 dbo.Advertiser.[payment_terms] AS [Advertiser Payment Terms],
 CASE WHEN sum([Cost USD]) over(partition by [Campaign Number])=0 THEN 0 ELSE [Cost USD] * 100.0 / sum([Cost USD]) over(partition by [Campaign Number]) END as [Percentage of Traffic Generated],
-'' AS [Comments],
-'' AS [Previous Periods Open Balance],
+dbo.Advertiser.[comments] AS [Comments],
+dbo.Advertiser.[prev_open_balance] AS [Previous Periods Open Balance],
 dbo.Advertiser.[invoicing_status] AS [Current Period Invoicing Status],
 CASE WHEN dbo.AccountingView1.[Status]='default' THEN 'Unfinalized' ELSE 'Finalized' END AS [Finalization Status],
 dbo.AccountingView1.[Unit Type],
