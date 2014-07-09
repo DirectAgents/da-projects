@@ -266,8 +266,19 @@
     <Compile Include="Entities\CreativeStat.cs" />
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Entities\Offer.cs" />
+    <Compile Include="Entities\TD\Creative.cs" />
+    <Compile Include="Entities\TD\CreativeDailySummary.cs" />
     <Compile Include="Entities\TD\DailySummary.cs" />
     <Compile Include="Entities\TD\InsertionOrder.cs" />
+    <Compile Include="Migrations\201406271827066_InitialCreate.cs" />
+    <Compile Include="Migrations\201406271827066_InitialCreate.Designer.cs">
+      <DependentUpon>201406271827066_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407082007021_CreativeDailySummary.cs" />
+    <Compile Include="Migrations\201407082007021_CreativeDailySummary.Designer.cs">
+      <DependentUpon>201407082007021_CreativeDailySummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
     <Compile Include="Services\SearchRepository.cs" />
@@ -315,7 +326,14 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201406271827066_InitialCreate.resx">
+      <DependentUpon>201406271827066_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407082007021_CreativeDailySummary.resx">
+      <DependentUpon>201407082007021_CreativeDailySummary.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

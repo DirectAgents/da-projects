@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ClientPortal.Data.Entities.TD;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientPortal.Data.Contracts
 {
     public interface ITDRepository : IDisposable
     {
-        //void Test();
+        IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
     }
 }

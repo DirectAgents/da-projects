@@ -1,10 +1,7 @@
-﻿using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Contracts;
+﻿using ClientPortal.Data.Contracts;
+using ClientPortal.Data.Entities.TD;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientPortal.Data.Services
 {
@@ -17,10 +14,17 @@ namespace ClientPortal.Data.Services
             this.context = context;
         }
 
-        //public void Test()
-        //{
-        //    var x = context.InsertionOrders.ToList();
-        //}
+        public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
+        {
+            var dailySummaries = context.DailySummaries.AsQueryable();
+
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date >= start.Value);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date <= end.Value);
+
+            if (insertionOrderID.HasValue) dailySummaries = dailySummaries.Where(ds => ds.InsertionOrderID == insertionOrderID);
+
+            return dailySummaries;
+        }
 
         // ---
 
