@@ -8,13 +8,15 @@ using System.Linq;
 namespace CakeExtracter.Etl.TradingDesk.Extracters
 {
     // DoubleClick BidManager Extracter
-    public class DbmCsvExtracter : Extracter<DbmRow>
+    public class DbmCsvExtracter : Extracter<DbmRowBase>
     {
         private readonly string csvFilePath;
+        private readonly bool wantCreativeDailySummaries;
 
-        public DbmCsvExtracter(string csvFilePath)
+        public DbmCsvExtracter(string csvFilePath, bool wantCreativeDailySummaries)
         {
             this.csvFilePath = csvFilePath;
+            this.wantCreativeDailySummaries = wantCreativeDailySummaries;
         }
 
         protected override void Extract()
@@ -25,23 +27,34 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
             End();
         }
 
-        private IEnumerable<DbmRow> EnumerateRows()
+        private IEnumerable<DbmRowBase> EnumerateRows()
         {
             using (StreamReader reader = File.OpenText(csvFilePath))
             {
                 using (CsvReader csv = new CsvReader(reader))
                 {
-                    var csvRows = csv.GetRecords<DbmRow>().ToList();
-                    for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder); i++ )
+                    if (wantCreativeDailySummaries)
                     {
-                        yield return csvRows[i];
+                        var csvRows = csv.GetRecords<DbmRowWithCreative>().ToList();
+                        for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder); i++)
+                        {
+                            yield return csvRows[i];
+                        }
+                    }
+                    else
+                    {
+                        var csvRows = csv.GetRecords<DbmRow>().ToList();
+                        for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].InsertionOrder); i++)
+                        {
+                            yield return csvRows[i];
+                        }
                     }
                 }
             }
         }
     }
 
-    public class DbmRow
+    public class DbmRowBase
     {
         public string Date { get; set; }
 
@@ -60,5 +73,16 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         [CsvField(Name = "Revenue (Adv Currency)")]
         public string Revenue { get; set; } // decimal
+    }
+
+    public class DbmRow : DbmRowBase
+    {
+    }
+
+    public class DbmRowWithCreative : DbmRowBase
+    {
+        public string Creative { get; set; }
+        [CsvField(Name = "Creative ID")]
+        public string CreativeID { get; set; } // int
     }
 }

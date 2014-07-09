@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace CakeExtracter.Etl.TradingDesk.Loaders
 {
-    public class DbmDailySummaryLoader : Loader<DbmRow>
+    public class DbmDailySummaryLoader : Loader<DbmRowBase>
     {
 
-        protected override int Load(List<DbmRow> items)
+        protected override int Load(List<DbmRowBase> items)
         {
             Logger.Info("Loading {0} DailySummaries..", items.Count);
             AddDependentInsertionOrders(items);
@@ -18,7 +18,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             return count;
         }
 
-        private int UpsertDailySummaries(List<DbmRow> items)
+        private int UpsertDailySummaries(List<DbmRowBase> items)
         {
             var addedCount = 0;
             var updatedCount = 0;
@@ -59,7 +59,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
             return itemCount;
         }
 
-        private void AddDependentInsertionOrders(List<DbmRow> items)
+        public static void AddDependentInsertionOrders(List<DbmRowBase> items)
         {
             using (var db = new TDContext())
             {

@@ -268,6 +268,7 @@
     <Compile Include="Commands\SynchSearchDailySummariesAnalyticsCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesBingCommand.cs" />
     <Compile Include="Commands\SynchSearchDailySummariesBingCsvCommand.cs" />
+    <Compile Include="Commands\TDSynchCreativeDailySummariesDbmCsv.cs" />
     <Compile Include="Commands\TDSynchDailySummariesDbmCsv.cs" />
     <Compile Include="Common\CopyPropertiesUtility.cs" />
     <Compile Include="Common\EmailUtility.cs" />
@@ -333,6 +334,7 @@
     <Compile Include="Etl\SearchMarketing\Loaders\AnalyticsApiLoader.cs" />
     <Compile Include="Etl\SearchMarketing\Loaders\BingLoader.cs" />
     <Compile Include="Etl\TradingDesk\Extracters\DbmCsvExtracter.cs" />
+    <Compile Include="Etl\TradingDesk\Loaders\DbmCreativeDailySummaryLoader.cs" />
     <Compile Include="Etl\TradingDesk\Loaders\DbmDailySummaryLoader.cs" />
     <Compile Include="Etl\Transformer.cs" />
     <Compile Include="Etl\SearchMarketing\Extracters\AdWordsXmlReportExtracter.cs" />

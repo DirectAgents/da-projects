@@ -1,12 +1,13 @@
 ﻿using CakeExtracter.Common;
 using CakeExtracter.Etl.TradingDesk.Extracters;
 using CakeExtracter.Etl.TradingDesk.Loaders;
+using System;
 using System.ComponentModel.Composition;
 
 namespace CakeExtracter.Commands
 {
     [Export(typeof(ConsoleCommand))]
-    public class TDSynchDailySummariesDbmCsv : ConsoleCommand
+    public class TDSynchCreativeDailySummariesDbmCsv : ConsoleCommand
     {
         public string CsvFile { get; set; }
 
@@ -15,17 +16,16 @@ namespace CakeExtracter.Commands
             CsvFile = null;
         }
 
-        public TDSynchDailySummariesDbmCsv()
+        public TDSynchCreativeDailySummariesDbmCsv()
         {
-            IsCommand("tdSynchDailySummariesDbmCsv",
-                      "synch DailySummaries for DBM CSV Report");
+            IsCommand("tdSynchCreativeDailySummariesDbmCsv", "synch CreativeDailySummaries for DBM CSV Report");
             HasRequiredOption("f|csvFile=", "CSV File", c => CsvFile = c);
         }
 
         public override int Execute(string[] remainingArguments)
         {
-            var extracter = new DbmCsvExtracter(CsvFile, false);
-            var loader = new DbmDailySummaryLoader();
+            var extracter = new DbmCsvExtracter(CsvFile, true);
+            var loader = new DbmCreativeDailySummaryLoader();
             var extracterThread = extracter.Start();
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
