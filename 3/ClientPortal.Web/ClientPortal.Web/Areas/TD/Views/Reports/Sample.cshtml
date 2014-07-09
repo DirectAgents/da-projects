@@ -1,0 +1,143 @@
+﻿
+<div id="sampleChartSection" class="k-content">
+    <div class="chart-wrapper">
+        <div id="sampleChart"></div>
+    </div>
+</div>
+<div id="sampleGrid"></div>
+
+@section head {
+    <link href="~/Content/kendo/2012.3.1114/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendo/2012.3.1114/kendo.bootstrap.min.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/Scripts/kendo/2012.3.1114/kendo.all.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var datasource = SetupDataSource();
+            CreateGrid(datasource);
+            CreateChart(datasource);
+            datasource.read();
+        });
+
+        function SetupDataSource() {
+            return new kendo.data.DataSource({
+                serverPaging: true,
+                serverSorting: true,
+                serverFiltering: true,
+                serverAggregates: true,
+                pageSize: 100,
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: '@Url.Action("SampleData", "Reports")'
+                        //,data: function () {
+                        //    return {
+                        //        startdate: $('#daysum_startdate').val(),
+                        //        enddate: $('#daysum_enddate').val(),
+                        //        offerid: $('#daysum_offerFilter').val()
+                        //    };
+                        //}
+                    }
+                },
+                schema: {
+                    data: 'data',
+                    total: 'total',
+                    aggregates: 'aggregates',
+                    model: {
+                        id: 'Id',
+                        fields: {
+                            Date: { type: 'date' },
+                            AdvertiserCurrency: { type: 'string' },
+                            Impressions: { type: 'number' },
+                            Clicks: { type: 'number' },
+                            Conversions: { type: 'number' },
+                            Revenue: { type: 'number' }
+                        }
+                    }
+                },
+                //sort: { field: "Date", dir: "asc" },
+                //aggregate: [
+                //    { field: "Impressions", aggregate: "sum" },
+                //    { field: "Clicks", aggregate: "sum" },
+                //    { field: "Conversions", aggregate: "sum" },
+                //    { field: "ConversionPct", aggregate: "agg" },
+                //    { field: "Revenue", aggregate: "sum" },
+                //    { field: "EPC", aggregate: "agg" }
+                //],
+                requestEnd: function (e) {
+                    if (e.type == "read") {
+                        var rows = e.response.data;
+                        for (var i = 0; i < rows.length; i++) {
+                            rows[i].Date = rows[i].Date.replace(/\d+/, function (n) {
+                                var time = parseInt(n);
+                                return parseInt(time) + new Date(time).getTimezoneOffset() * 60000;
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        function CreateGrid(datasource) {
+            $("#sampleGrid").kendoGrid({
+                dataSource: datasource,
+                autoBind: false,
+                height: 500,
+                //groupable: true,
+                //sortable: true,
+                //pageable: {
+                //    refresh: true,
+                //    pageSizes: true,
+                //    buttonCount: 5
+                //},
+                columns: [
+                    { field: 'Date', format: '{0:d}' },
+                    { field: 'Impressions', format: '{0:n0}' },
+                    { field: 'Clicks', format: '{0:n0}' },
+                    { field: 'Conversions' },
+                    { field: 'Revenue' }
+                ],
+                filterable: false,
+                sortable: false,
+                pageable: true
+            });
+        }
+
+        function CreateChart(dataSource) {
+            $("#sampleChart").kendoChart({
+                dataSource: dataSource,
+                autoBind: false,
+                chartArea: {
+                    height: 300
+                },
+                theme: $(document).data("kendoSkin") || "default",
+                series: [
+                    { type: "line", field: "Clicks", name: "Clicks", axis: "clicks", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:N0}',value) #" } },
+                    { type: "line", field: "Revenue", name: "Spend", axis: "spend", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:C}',value) #" } }
+                    // aggregate: "sum",
+                ],
+                categoryAxis: {
+                    baseUnit: "days",
+                    field: "Date",
+                    labels: { rotation: -90 },
+                    axisCrossingValue: [0, 2000]
+                },
+                valueAxis: [
+                    { name: "clicks", labels: { format: "N0", step: 2 }, title: { text: "Clicks" } },
+                    { name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" } }
+                ],
+                tooltip: {
+                    visible: true
+                },
+                legend: {
+                    position: "custom",
+                    offsetX: 90,
+                    offsetY: 0
+                }
+            });
+        }
+    </script>
+}

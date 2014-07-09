@@ -54,6 +54,7 @@ namespace ClientPortal.Web.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IClientPortalRepository>().To<ClientPortalRepository>();
+            kernel.Bind<ITDRepository>().To<TDRepository>();
         }
     }
 }
