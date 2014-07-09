@@ -1,8 +1,8 @@
-﻿@model ClientPortal.Web.Models.IndexModel
+﻿@model bool
 
 @if (Request.IsAuthenticated)
 {
-    if (Model.HasLogo)
+    if (Model) // HasLogo
     {
     <p style="text-align: center">
         <img src="@Url.Action("Logo")" />

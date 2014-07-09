@@ -7,7 +7,7 @@ using ClientPortal.Data.DTOs;
 
 namespace ClientPortal.Data.Services
 {
-    public partial class ClientPortalRepository : IClientPortalRepository
+    public partial class ClientPortalRepository : IClientPortalRepository, IDisposable
     {
         ClientPortalContext context;
 
@@ -761,6 +761,26 @@ namespace ClientPortal.Data.Services
                 return intVal;
             else
                 return null;
+        }
+
+        // ---
+
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                    context.Dispose();
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

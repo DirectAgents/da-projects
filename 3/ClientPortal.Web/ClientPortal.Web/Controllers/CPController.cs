@@ -121,5 +121,12 @@ namespace ClientPortal.Web.Controllers
             }
         }
 
-}
+        // ---
+
+        protected override void Dispose(bool disposing)
+        {
+            cpRepo.Dispose();
+            base.Dispose(disposing);
+        }
+    }
 }

@@ -222,6 +222,7 @@
     <Compile Include="Areas\Admin\Models\CPMReportVM.cs" />
     <Compile Include="Areas\Admin\Models\CPMReportWizardVM.cs" />
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
+    <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -697,6 +698,7 @@
     <Content Include="Areas\TD\Views\Web.config" />
     <Content Include="Areas\TD\Views\_ViewStart.cshtml" />
     <Content Include="Areas\TD\Views\Reports\Sample.cshtml" />
+    <Content Include="Areas\TD\Views\Home\Index.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

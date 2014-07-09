@@ -8,11 +8,11 @@
         <img src="~/Images/logo1a.png" />
     </div>
     <div class="two columns topinfo">
-        @Html.Partial("_HelloPartial")
+        @Html.Partial("_HelloPartial", Model.HasLogo)
     </div>
     <div class="five columns logout">
         <div style="float: right">
-            @Html.Partial("_LoginPartial")
+            @Html.Partial("_LoginPartial", Model.HasLogo)
         </div>
     </div>
 </div>
@@ -166,7 +166,7 @@
         <!-- /Notifications  -->
 
     </ul>
-    <!-- /VTabs -->
+    <!-- /VTabs Content -->
 
 </div>
 <!-- /MainContent -->
@@ -178,7 +178,7 @@
     <div class="twelve columns">
         <div class="row">
             <div class="six columns">
-                <p>&copy; 2013 Direct Agents</p>
+                <p>&copy; 2014 Direct Agents</p>
             </div>
             <div class="six columns">
             </div>

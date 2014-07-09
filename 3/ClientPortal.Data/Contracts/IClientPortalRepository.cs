@@ -6,7 +6,7 @@ using ClientPortal.Data.DTOs;
 
 namespace ClientPortal.Data.Contracts
 {
-    public interface IClientPortalRepository
+    public interface IClientPortalRepository : IDisposable
     {
         void SaveChanges();
 

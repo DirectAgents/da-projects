@@ -20,7 +20,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
 
         public ActionResult Sample()
         {
-            return View();
+            return PartialView();
         }
 
         public JsonResult SampleData(KendoGridRequest request)
@@ -32,5 +32,12 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return json;
         }
 
+        // ---
+
+        protected override void Dispose(bool disposing)
+        {
+            tdRepo.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }
