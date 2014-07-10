@@ -52,14 +52,12 @@
                 }
             },
             //sort: { field: "Date", dir: "asc" },
-            //aggregate: [
-            //    { field: "Impressions", aggregate: "sum" },
-            //    { field: "Clicks", aggregate: "sum" },
-            //    { field: "Conversions", aggregate: "sum" },
-            //    { field: "ConversionPct", aggregate: "agg" },
-            //    { field: "Revenue", aggregate: "sum" },
-            //    { field: "EPC", aggregate: "agg" }
-            //],
+            aggregate: [
+                { field: "Impressions", aggregate: "sum" },
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Conversions", aggregate: "sum" },
+                { field: "Revenue", aggregate: "sum" }
+            ],
             requestEnd: function (e) {
                 if (e.type == "read") {
                     var rows = e.response.data;
@@ -88,10 +86,10 @@
             //},
             columns: [
                 { field: 'Date', format: '{0:d}' },
-                { field: 'Impressions', format: '{0:n0}' },
-                { field: 'Clicks', format: '{0:n0}' },
-                { field: 'Conversions' },
-                { field: 'Revenue', title: 'Spend' }
+                { field: 'Impressions', format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold" } },
+                { field: 'Clicks', format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold" } },
+                { field: 'Conversions', format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold" } },
+                { field: 'Revenue', title: 'Spend', footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight: bold" } }
             ],
             filterable: false,
             sortable: false,

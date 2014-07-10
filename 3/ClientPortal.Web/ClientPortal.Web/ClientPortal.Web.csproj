@@ -224,6 +224,7 @@
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
+    <Compile Include="Areas\TD\Models\ReportModel.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CPController.cs" />
@@ -700,6 +701,7 @@
     <Content Include="Areas\TD\Views\Reports\Sample.cshtml" />
     <Content Include="Areas\TD\Views\Home\Index.cshtml" />
     <Content Include="Areas\TD\Views\Reports\Summary.cshtml" />
+    <Content Include="Areas\TD\Views\Reports\ChartSetup.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -1648,7 +1650,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\TD\Models\" />
     <Folder Include="Areas\TD\Views\Shared\" />
     <Folder Include="Filters\" />
   </ItemGroup>

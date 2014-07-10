@@ -1,15 +1,49 @@
-﻿
+﻿@model ClientPortal.Web.Areas.TD.Models.ReportModel
+@{
+    var metrics = Model.Metrics;
+}
+
 <div id="summaryChartSection" class="k-content">
     <div class="chart-wrapper">
         <div id="summaryChart"></div>
     </div>
 </div>
 
+<h3>Totals</h3>
+<table>
+    <tr>
+        <td>Impressions:</td>
+        <td id="tdImpressions" style="text-align:right"></td>
+    </tr>
+    <tr>
+        <td>Clicks:</td>
+        <td id="tdClicks" style="text-align:right"></td>
+    </tr>
+    <tr>
+        <td>Conversions:</td>
+        <td id="tdConversions" style="text-align:right"></td>
+    </tr>
+    <tr>
+        <td>Spend:</td>
+        <td id="tdSpend" style="text-align:right"></td>
+    </tr>
+</table>
+
+<br />
+@Html.Partial("ChartSetup")
+
 <script>
     $(document).ready(function () {
         var datasource = CreateSummaryDataSource();
         CreateSummaryChart(datasource);
         datasource.read();
+        datasource.bind("change", function () {
+            var aggs = this.aggregates();
+            $('#tdImpressions').html(kendo.toString(aggs.Impressions.sum, 'N0'));
+            $('#tdClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
+            $('#tdConversions').html(kendo.toString(aggs.Conversions.sum, 'N0'));
+            $('#tdSpend').html(kendo.toString(aggs.Revenue.sum, 'C'));
+        });
     });
 
     function CreateSummaryDataSource() {
@@ -50,14 +84,12 @@
                 }
             },
             //sort: { field: "Date", dir: "asc" },
-            //aggregate: [
-            //    { field: "Impressions", aggregate: "sum" },
-            //    { field: "Clicks", aggregate: "sum" },
-            //    { field: "Conversions", aggregate: "sum" },
-            //    { field: "ConversionPct", aggregate: "agg" },
-            //    { field: "Revenue", aggregate: "sum" },
-            //    { field: "EPC", aggregate: "agg" }
-            //],
+            aggregate: [
+                { field: "Impressions", aggregate: "sum" },
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Conversions", aggregate: "sum" },
+                { field: "Revenue", aggregate: "sum" }
+            ],
             requestEnd: function (e) {
                 if (e.type == "read") {
                     var rows = e.response.data;
@@ -81,9 +113,16 @@
             },
             theme: $(document).data("kendoSkin") || "default",
             series: [
-                { type: "line", field: "Clicks", name: "Clicks", axis: "clicks", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:N0}',value) #" } },
-                { type: "line", field: "Revenue", name: "Spend", axis: "spend", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:C}',value) #" } }
-                // aggregate: "sum",
+@for (int i=0; i < metrics.Length; i++)
+{
+    string field = (metrics[i] == "Spend") ? "Revenue" : metrics[i];
+    string format = (metrics[i] == "Spend") ? "C" : "N0";
+    <text>{ type: "line", field: "@field", name: "@metrics[i]", axis: "@metrics[i]", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:@format}',value) #" } }</text>
+    if (i < metrics.Length - 1)
+    {
+        <text>,</text>
+    }
+}
             ],
             categoryAxis: {
                 baseUnit: "days",
@@ -92,8 +131,15 @@
                 axisCrossingValue: [0, 2000]
             },
             valueAxis: [
-                { name: "clicks", labels: { format: "N0", step: 2 }, title: { text: "Clicks" } },
-                { name: "spend", labels: { format: "C", step: 2 }, title: { text: "Spend" } }
+@for (int i=0; i < metrics.Length; i++)
+{
+    string format = (metrics[i] == "Spend") ? "C" : "N0";
+    <text>{ name: "@metrics[i]", labels: { format: "@format", step: 2 }, title: { text: "@metrics[i]" } }</text>
+    if (i < metrics.Length - 1)
+    {
+        <text>,</text>
+    }
+}
             ],
             tooltip: {
                 visible: true

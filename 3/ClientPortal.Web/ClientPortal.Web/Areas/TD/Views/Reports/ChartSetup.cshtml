@@ -1,0 +1,19 @@
+﻿
+@{
+    var metricsList = new[] { "Impressions", "Clicks", "Conversions", "Spend" };
+    var ajaxOptions = new AjaxOptions { UpdateTargetId = "repSumTab" };
+}
+
+<h3>Chart Setup</h3>
+
+@using (Ajax.BeginForm(ajaxOptions))
+{
+    <text>First Metric:</text>
+    @Html.DropDownList("metric1", new SelectList(metricsList), new { style = "width:auto"})
+    <br />
+    <text>Second Metric:</text>
+    @Html.DropDownList("metric2", new SelectList(metricsList, "Clicks"), new { style = "width:auto"})
+    <br />
+    <br />
+    <input type="submit" value="Draw Chart" />
+}
