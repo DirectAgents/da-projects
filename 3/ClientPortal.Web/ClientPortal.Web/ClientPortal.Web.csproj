@@ -699,6 +699,7 @@
     <Content Include="Areas\TD\Views\_ViewStart.cshtml" />
     <Content Include="Areas\TD\Views\Reports\Sample.cshtml" />
     <Content Include="Areas\TD\Views\Home\Index.cshtml" />
+    <Content Include="Areas\TD\Views\Reports\Summary.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

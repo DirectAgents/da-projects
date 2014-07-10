@@ -41,6 +41,7 @@
               +---------------+-->*@
         <dl class="vertical tabs">
             <dd class="active"><a href="#verticalReports" id="vertNav_Reports">Reports</a></dd>
+            <dd><a href="#verticalSample" id="vertNav_Sample">Sample - Daily</a></dd>
         </dl>
         <!-- /VTabs -->
 
@@ -82,6 +83,15 @@
         </li>
         <!-- /Reports   -->
 
+        @*<!--+----------
+              | Sample VTab
+              +------------>*@
+        <li id="verticalSampleTab">
+            <div class="ten columns" id="sampleTab">
+            </div>
+        </li>
+        <!-- /Sample  -->
+
     </ul>
     <!-- /VTabs Content -->
 
@@ -120,14 +130,31 @@
         // ready function
         $(function () {
             LoadSummary();
+            SetupTabs();
         });
 
         function LoadSummary() {
             $.ajax({
+                url: '@Url.Action("Summary", "Reports")',
+                cache: false
+            }).done(function (html) {
+                $('#repSumTab').html(html);
+            });
+        }
+
+        function LoadSample() {
+            $.ajax({
                 url: '@Url.Action("Sample", "Reports")',
                 cache: false
             }).done(function (html) {
-                $("#repSumTab").html(html);
+                $('#sampleTab').html(html);
+            });
+        }
+
+        function SetupTabs() {
+            $('#vertNav_Sample').one("click", function () {
+                $('#sampleTab').html("Loading...");
+                LoadSample();
             });
         }
 

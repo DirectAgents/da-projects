@@ -18,6 +18,11 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             tdRepo = tdRepository;
         }
 
+        public ActionResult Summary()
+        {
+            return PartialView();
+        }
+
         public ActionResult Sample()
         {
             return PartialView();
