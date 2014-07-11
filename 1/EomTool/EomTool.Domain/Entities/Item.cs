@@ -109,7 +109,7 @@ namespace EomTool.Domain.Entities
                         this.num_units = units;
                     break;
                 default:
-                    error = String.Format("Property {0} cannot be set", prop);
+                    error = String.Format("Property '{0}' cannot be set", prop);
                     break;
             }
             return error;
@@ -149,13 +149,13 @@ namespace EomTool.Domain.Entities
 
             var source = mainRepo.GetSource(SourceName);
             if (source == null)
-                errors.Add(String.Format("Source {0} does not exist", SourceName));
+                errors.Add(String.Format("Source '{0}' does not exist", SourceName));
             else
                 source_id = source.id;
 
             var unitType = mainRepo.GetUnitType(UnitTypeName);
             if (unitType == null)
-                errors.Add(String.Format("Unit Type {0} does not exist", UnitTypeName));
+                errors.Add(String.Format("Unit Type '{0}' does not exist", UnitTypeName));
             else
                 unit_type_id = unitType.id;
 
@@ -164,13 +164,13 @@ namespace EomTool.Domain.Entities
 
             var revCurrency = mainRepo.GetCurrency(RevenueCurrencyName);
             if (revCurrency == null)
-                errors.Add(String.Format("Revenue Currency {0} does not exist", RevenueCurrencyName));
+                errors.Add(String.Format("Revenue Currency '{0}' does not exist", RevenueCurrencyName));
             else
                 revenue_currency_id = revCurrency.id;
 
             var costCurrency = mainRepo.GetCurrency(CostCurrencyName);
             if (costCurrency == null)
-                errors.Add(String.Format("Cost Currency {0} does not exist", CostCurrencyName));
+                errors.Add(String.Format("Cost Currency '{0}' does not exist", CostCurrencyName));
             else
                 cost_currency_id = costCurrency.id;
 

@@ -501,7 +501,7 @@ namespace EomTool.Domain.Concrete
         }
         public UnitType GetUnitType(string unitTypeName)
         {
-            return UnitTypeList.FirstOrDefault(ut => ut.name == unitTypeName);
+            return UnitTypeList.FirstOrDefault(ut => ut.name.ToLower() == unitTypeName.ToLower());
         }
 
         //---
@@ -538,7 +538,7 @@ namespace EomTool.Domain.Concrete
         }
         public Currency GetCurrency(string currencyName)
         {
-            return CurrencyList.FirstOrDefault(c => c.name == currencyName);
+            return CurrencyList.FirstOrDefault(c => c.name.ToLower() == currencyName.ToLower());
         }
 
         //---
