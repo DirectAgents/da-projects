@@ -40,8 +40,8 @@
               | Vertical Tabs |
               +---------------+-->*@
         <dl class="vertical tabs">
-            <dd class="active"><a href="#verticalReports" id="vertNav_Reports">Reports</a></dd>
-            <dd><a href="#verticalSample" id="vertNav_Sample">Sample - Daily</a></dd>
+            <dd class="active"><a href="#mainReports" id="mainNav_Reports">Reports</a></dd>
+            <dd><a href="#mainSample" id="mainNav_Sample">Sample - Daily</a></dd>
         </dl>
         <!-- /VTabs -->
 
@@ -58,7 +58,7 @@
         @*<!--+----------
               | Reports VTab
               +------------>*@
-        <li id="verticalReportsTab" class="active">
+        <li id="mainReportsTab" class="active">
             <div class="ten columns portaltabs-h">
 
                 @*<!--+----------------+
@@ -86,7 +86,7 @@
         @*<!--+----------
               | Sample VTab
               +------------>*@
-        <li id="verticalSampleTab">
+        <li id="mainSampleTab">
             <div class="ten columns" id="sampleTab">
             </div>
         </li>
@@ -131,7 +131,25 @@
         $(function () {
             LoadSummary();
             SetupTabs();
+            $(window).bind('resize', WindowResize);
         });
+
+        function WindowResize() {
+            ResizeChart('sample', true);
+            ResizeChart('summary', true);
+        }
+
+        // Resize a chart, optionally refreshing it.
+        function ResizeChart(chart, refresh) {
+            if ($('#' + chart + 'ChartSection').length > 0) {
+                var width = $('#' + chart + 'ChartSection').width();
+                if (width > 0) {
+                    $('#' + chart + 'ChartSection .chart-wrapper').css('width', width);
+                    if (refresh)
+                        $('#' + chart + 'Chart').data('kendoChart').refresh();
+                }
+            }
+        }
 
         function LoadSummary() {
             $.ajax({
@@ -152,7 +170,7 @@
         }
 
         function SetupTabs() {
-            $('#vertNav_Sample').one("click", function () {
+            $('#mainNav_Sample').one("click", function () {
                 $('#sampleTab').html("Loading...");
                 LoadSample();
             });
