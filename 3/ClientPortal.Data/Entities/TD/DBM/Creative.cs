@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ClientPortal.Data.Entities.TD
+namespace ClientPortal.Data.Entities.TD.DBM
 {
     public class Creative
     {

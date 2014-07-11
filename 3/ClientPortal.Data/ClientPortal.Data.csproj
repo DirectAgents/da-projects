@@ -266,10 +266,10 @@
     <Compile Include="Entities\CreativeStat.cs" />
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Entities\Offer.cs" />
-    <Compile Include="Entities\TD\Creative.cs" />
-    <Compile Include="Entities\TD\CreativeDailySummary.cs" />
-    <Compile Include="Entities\TD\DailySummary.cs" />
-    <Compile Include="Entities\TD\InsertionOrder.cs" />
+    <Compile Include="Entities\TD\DBM\Creative.cs" />
+    <Compile Include="Entities\TD\DBM\CreativeDailySummary.cs" />
+    <Compile Include="Entities\TD\DBM\DailySummary.cs" />
+    <Compile Include="Entities\TD\DBM\InsertionOrder.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.Designer.cs">
       <DependentUpon>201406271827066_InitialCreate.cs</DependentUpon>
@@ -334,6 +334,7 @@
       <DependentUpon>201407082007021_CreativeDailySummary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

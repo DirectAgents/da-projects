@@ -1,4 +1,4 @@
-﻿using ClientPortal.Data.Entities.TD;
+﻿using ClientPortal.Data.Entities.TD.DBM;
 using System;
 using System.Linq;
 

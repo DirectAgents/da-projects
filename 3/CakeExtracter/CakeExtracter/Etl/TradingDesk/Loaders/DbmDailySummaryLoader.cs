@@ -1,5 +1,6 @@
 ﻿using CakeExtracter.Etl.TradingDesk.Extracters;
 using ClientPortal.Data.Entities.TD;
+using ClientPortal.Data.Entities.TD.DBM;
 using System;
 using System.Collections.Generic;
 using System.Data;

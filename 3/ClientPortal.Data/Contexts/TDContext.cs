@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using ClientPortal.Data.Entities.TD.DBM;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace ClientPortal.Data.Entities.TD
