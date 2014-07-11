@@ -65,7 +65,8 @@
                       | Reports HTabs  |
                       +----------------+-->*@
                 <dl class="tabs">
-                    <dd class="active"><a href="#repSum" id="repNav_Sum">Summary</a></dd>
+                    <dd class="active"><a href="#repSum" id="repNav_Summary">Summary</a></dd>
+                    <dd><a href="#repCreative" id="repNav_Creative">Creative</a></dd>
                 </dl>
                 <!-- /ReportsHTabs  -->
 
@@ -76,6 +77,7 @@
                     <li id="repSumTab" class="active">
                         <div id="sumNotLoaded"></div>
                     </li>
+                    <li id="repCreativeTab"></li>
                 </ul>
                 <!-- /ReportsContent  -->
 
@@ -88,6 +90,7 @@
               +------------>*@
         <li id="mainSampleTab">
             <div class="ten columns" id="sampleTab">
+                Loading...
             </div>
         </li>
         <!-- /Sample  -->
@@ -137,6 +140,7 @@
         function WindowResize() {
             ResizeChart('sample', true);
             ResizeChart('summary', true);
+            ResizeChart('creative', true);
         }
 
         // Resize a chart, optionally refreshing it.
@@ -160,20 +164,56 @@
             });
         }
 
-        function LoadSample() {
-            $.ajax({
-                url: '@Url.Action("Sample", "Reports")',
-                cache: false
-            }).done(function (html) {
-                $('#sampleTab').html(html);
-            });
+        function CheckRefreshSummary() {
+            if ($('#summaryChart').length != 0) {
+                setTimeout(function () { ResizeChart('summary', true); }, 100);
+            }
         }
 
         function SetupTabs() {
-            $('#mainNav_Sample').one("click", function () {
-                $('#sampleTab').html("Loading...");
-                LoadSample();
+            // Summary
+            $('#mainNav_Reports').click(function() {
+                CheckRefreshSummary();
             });
+            $('#repNav_Summary').click(function () {
+                CheckRefreshSummary();
+            });
+
+            $('#repNav_Creative').click(function () {
+                CheckLoadCreative();
+            });
+
+            $('#mainNav_Sample').click(function () {
+                CheckLoadSample();
+            });
+        }
+
+        function CheckLoadCreative() {
+            if ($('#creativeChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("CreativePartial", "Reports")',
+                    cache: false
+                }).done(function (html) {
+                    $('#repCreativeTab').html(html);
+                    ResizeChart('creative', false);
+                    SetupCreativeGrid();
+                });
+            } else {
+                setTimeout(function () { ResizeChart('creative', true); }, 100);
+            }
+        }
+
+        function CheckLoadSample() {
+            if ($('#sampleChart').length == 0) {
+                $.ajax({
+                    url: '@Url.Action("Sample", "Reports")',
+                    cache: false
+                }).done(function (html) {
+                    $('#sampleTab').html(html);
+                });
+            } else {
+                setTimeout(function () { ResizeChart('sample', true); }, 100);
+            }
         }
 
     </script>

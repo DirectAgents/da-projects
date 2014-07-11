@@ -59,6 +59,11 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return json;
         }
 
+        public ActionResult Creative()
+        {
+            return PartialView();
+        }
+
         // ---
 
         protected override void Dispose(bool disposing)
