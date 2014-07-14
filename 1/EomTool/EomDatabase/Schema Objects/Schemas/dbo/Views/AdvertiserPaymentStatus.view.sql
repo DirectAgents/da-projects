@@ -3,6 +3,7 @@ SELECT
 dbo.AccountingView1.[Publisher Payment On Hold] AS [Payment On Hold],
 dbo.AccountingView1.Publisher,
 dbo.AccountingView1.[Publisher Status],
+dbo.AccountingView1.[name] AS [Publisher Net Terms],
 dbo.AccountingView1.Advertiser,
 dbo.Advertiser.[status] AS [Advertiser Status],
 dbo.Advertiser.[payment_terms] AS [Advertiser Payment Terms],
