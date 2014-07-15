@@ -20,6 +20,7 @@ namespace ClientPortal.Web.Controllers
             this.cpRepo = cpRepository;
         }
 
+        // after login, if no route specified
         public ActionResult Go()
         {
             var userInfo = GetUserInfo();
@@ -28,6 +29,8 @@ namespace ClientPortal.Web.Controllers
 
             if (userInfo.IsAdmin)
                 return Redirect("/Admin");
+            else if (userInfo.HasTradingDesk(true))
+                return RedirectToAction("Index", "Home", new { area = "td" });
             else if (userInfo.HasSearch)
                 return RedirectToAction("Index", "SearchHome");
             else
@@ -40,7 +43,9 @@ namespace ClientPortal.Web.Controllers
             var result = CheckLogout(userInfo);
             if (result != null) return result;
 
-            if (userInfo.HasSearch)
+            if (userInfo.HasTradingDesk(true))
+                return RedirectToAction("Index", "Home", new { area = "td" });
+            else if (userInfo.HasSearch)
                 return RedirectToAction("Index", "SearchHome");
 
             var profiler = MiniProfiler.Current;

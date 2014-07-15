@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
+using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ClientPortal.Web.Controllers
     public class CPController : Controller
     {
         protected IClientPortalRepository cpRepo;
+        protected ITDRepository tdRepo;
 
         protected ActionResult CheckLogout(UserInfo userInfo)
         {
@@ -43,9 +45,14 @@ namespace ClientPortal.Web.Controllers
             var userProfile = GetUserProfile();
 
             Advertiser advertiser = null;
+            InsertionOrder insertionOrder = null;
             if (userProfile != null)
+            {
                 advertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
-            var userInfo = new UserInfo(userProfile, advertiser);
+                if (userProfile.InsertionOrderId.HasValue)
+                    insertionOrder = tdRepo.GetInsertionOrder(userProfile.InsertionOrderId.Value);
+            }
+            var userInfo = new UserInfo(userProfile, advertiser, insertionOrder);
             return userInfo;
         }
 
@@ -119,6 +126,7 @@ namespace ClientPortal.Web.Controllers
         protected override void Dispose(bool disposing)
         {
             if (cpRepo != null) cpRepo.Dispose();
+            if (tdRepo != null) tdRepo.Dispose();
             base.Dispose(disposing);
         }
     }

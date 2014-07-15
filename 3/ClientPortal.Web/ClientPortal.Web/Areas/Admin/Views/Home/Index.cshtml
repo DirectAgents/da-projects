@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ClientPortal.Web.Areas.Admin.Models.AdminModel
+@{
     ViewBag.Title = "Admin";
     Layout = "~/Views/Shared/_Portal.cshtml";
 }
@@ -47,8 +48,12 @@
               | Vertical Tabs |
               +---------------+-->*@
         <dl class="vertical tabs">
-            <dd class="active"><a href="#vertical1" id="vertNav_Home">Admin</a></dd>
+            <dd class="@(Model.TradingDesk ? "" : "active")"><a href="#vertical1" id="vertNav_Home">Admin</a></dd>
             <dd><a href="#cpm" id="vertNav_CPM">CPM Reports</a></dd>
+            @if (Model.TradingDesk)
+            {
+                <dd class="active"><a href="#td" id="vertNav_TD">Trading Desk</a></dd>
+            }
         </dl>
         <!-- /VTabs -->
 
@@ -63,7 +68,7 @@
         @*<!--+-----------+
               | Home VTab |
               +-----------+-->*@
-        <li id="vertical1Tab" class="active">
+        <li id="vertical1Tab" class="@(Model.TradingDesk ? "" : "active")">
             <div class="ten columns portaltabs-h">
 
                 @*<!--+----------------+
@@ -113,6 +118,26 @@
             </div>
         </li>
 
+    @if (Model.TradingDesk)
+    {
+        <li id="tdTab" class="active">
+            <div class="ten columns portaltabs-h">
+                @*<!--+---------------+
+                        | TD HTabs    |
+                        +-------------+-->*@
+                <dl class="tabs">
+                    <dd class="active"><a href="#insertionOrders" id="navInsertionOrders">Insertion Orders</a></dd>
+                </dl>
+                @*<!--+-----------------------+
+                        | TD HTabs Content    |
+                        +---------------------+-->*@
+                <ul class="tabs-content">
+                    <li id="insertionOrdersTab" class="active"></li>
+                </ul>
+            </div>
+        </li>
+    }
+
     </ul>
     <!-- /VTabs -->
 
@@ -156,11 +181,17 @@
 
         // ready function
         $(function () {
-            LoadAdvertisers();
+            @if (Model.TradingDesk)
+            {
+                <text>LoadInsertionOrders();</text>
+            } else {
+                <text>LoadAdvertisers();</text>
+            }
             SetupTabs();
         });
 
         function LoadAdvertisers() {
+            $("#advertisersTab").html("Loading...");
             $.ajax({
                 url: '@Url.Action("Index", "Advertisers")',
                 cache: false
@@ -169,7 +200,25 @@
             });
         }
 
+        function LoadInsertionOrders() {
+            $("#insertionOrdersTab").html("Loading...");
+            $.ajax({
+                url: '@Url.Action("InsertionOrders", "TD")',
+                cache: false
+            }).done(function (html) {
+                $("#insertionOrdersTab").html(html);
+            });
+        }
+
         function SetupTabs() {
+            @if (Model.TradingDesk)
+            {<text>
+                // Home
+                $("#vertNav_Home").one("click", function () {
+                    LoadAdvertisers();
+                });
+            </text>}
+
             // Contacts
             $("#navContacts").one("click", function () {
                 $.ajax({

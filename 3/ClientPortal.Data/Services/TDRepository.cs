@@ -58,6 +58,20 @@ namespace ClientPortal.Data.Services
 
         // ---
 
+        public IQueryable InsertionOrders()
+        {
+            var insertionOrders = context.InsertionOrders;
+            return insertionOrders;
+        }
+
+        public InsertionOrder GetInsertionOrder(int insertionOrderID)
+        {
+            var insertionOrder = context.InsertionOrders.Find(insertionOrderID);
+            return insertionOrder;
+        }
+
+        // ---
+
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)

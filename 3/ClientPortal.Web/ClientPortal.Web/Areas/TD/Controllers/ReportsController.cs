@@ -2,19 +2,17 @@
 using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Areas.TD.Models;
+using ClientPortal.Web.Controllers;
 using DirectAgents.Mvc.KendoGridBinder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace ClientPortal.Web.Areas.TD.Controllers
 {
-    public class ReportsController : Controller
+    public class ReportsController : CPController
     {
-        ITDRepository tdRepo;
-
         int insertionOrderID = 1286935; // Betterment
 
         public ReportsController(ITDRepository tdRepository)
@@ -85,12 +83,5 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return json;
         }
 
-        // ---
-
-        protected override void Dispose(bool disposing)
-        {
-            tdRepo.Dispose();
-            base.Dispose(disposing);
-        }
     }
 }

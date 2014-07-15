@@ -613,6 +613,7 @@
           <Property Name="QuickBooksAdvertiserId" Type="int" />
           <Property Name="SearchWeekStartDay" Type="int" Nullable="false" />
           <Property Name="SearchWeekEndDay" Type="int" Nullable="false" />
+          <Property Name="InsertionOrderId" Type="int" />
         </EntityType>
         <Association Name="FK_Advertiser_CakeContact">
           <End Role="CakeContact" Type="ClientPortalModel.Store.CakeContact" Multiplicity="0..1" />
@@ -1474,6 +1475,7 @@
           <Property Type="Int32" Name="SearchWeekStartDay" Nullable="false" />
           <Property Type="Int32" Name="SearchWeekEndDay" Nullable="false" />
           <NavigationProperty Name="UserEvents" Relationship="ClientPortalModel.FK_UserEvent_UserProfile" FromRole="UserProfile" ToRole="UserEvent" />
+          <Property Type="Int32" Name="InsertionOrderId" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -2236,6 +2238,7 @@
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="InsertionOrderId" ColumnName="InsertionOrderId" />
                 <ScalarProperty Name="SearchWeekEndDay" ColumnName="SearchWeekEndDay" />
                 <ScalarProperty Name="SearchWeekStartDay" ColumnName="SearchWeekStartDay" />
                 <ScalarProperty Name="QuickBooksAdvertiserId" ColumnName="QuickBooksAdvertiserId" />

@@ -7,7 +7,8 @@
         <img src="~/Images/logo1a.png" />
     </div>
     <div class="two columns topinfo">
-        @Html.Partial("_HelloPartial", false)
+        @*Html.Partial("_HelloPartial", false)*@
+        <p style="text-align: center; margin-top: 30px"><span>Hello, @User.Identity.Name!</span></p>
     </div>
     <div class="five columns logout">
         <div style="float: right">

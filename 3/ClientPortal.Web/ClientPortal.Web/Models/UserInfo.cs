@@ -1,24 +1,24 @@
 ﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Controllers;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Web;
 using System.Web.Configuration;
 
 namespace ClientPortal.Web.Models
 {
     public class UserInfo
     {
-        public UserInfo(UserProfile userProfile, Advertiser advertiser)
-        {      
+        public UserInfo(UserProfile userProfile, Advertiser advertiser, InsertionOrder insertionOrder)
+        {
             this.UserProfile = userProfile;
             this.Advertiser = advertiser;
+            this.InsertionOrder = insertionOrder;
         }
 
         private UserProfile UserProfile { get; set; }
         private Advertiser Advertiser { get; set; }
+        private InsertionOrder InsertionOrder { get; set; }
 
         public bool HasUserProfile
         {
@@ -32,6 +32,15 @@ namespace ClientPortal.Web.Models
         public static bool CheckIsAdmin(string userName)
         {
             return (userName == "admin");
+        }
+
+        public bool HasTradingDesk(bool only)
+        {
+            bool hasTradingDesk = (this.InsertionOrder != null);
+            if (only)
+                return hasTradingDesk && (Advertiser == null);
+            else
+                return hasTradingDesk;
         }
 
         public int? AdvertiserId

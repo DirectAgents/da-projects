@@ -1,0 +1,16 @@
+﻿@model IEnumerable<ClientPortal.Data.Entities.TD.DBM.InsertionOrder>
+
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+    </tr>
+@foreach (var io in Model)
+{
+    <tr>
+        <td>@io.InsertionOrderID</td>
+        <td>@io.InsertionOrderName</td>
+    </tr>
+}
+</table>

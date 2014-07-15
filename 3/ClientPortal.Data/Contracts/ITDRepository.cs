@@ -10,5 +10,8 @@ namespace ClientPortal.Data.Contracts
         IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
         IQueryable<CreativeDailySummary> GetCreativeDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
         IQueryable<CreativeSummary> GetCreativeSummaries(DateTime? start, DateTime? end, int? insertionOrderID);
+
+        IQueryable InsertionOrders();
+        InsertionOrder GetInsertionOrder(int insertionOrderID);
     }
 }
