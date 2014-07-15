@@ -45,30 +45,23 @@ namespace ClientPortal.Web.Controllers
             Advertiser advertiser = null;
             if (userProfile != null)
                 advertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
-
             var userInfo = new UserInfo(userProfile, advertiser);
             return userInfo;
         }
 
-        public static ClientPortal.Web.Models.UserProfile GetUserProfile()
+        public UserProfile GetUserProfile()
         {
-            ClientPortal.Web.Models.UserProfile userProfile = null;
+            UserProfile userProfile = null;
 
             if (WebSecurity.Initialized)
-            {
-                var userID = WebSecurity.CurrentUserId;
-                using (var usersContext = new UsersContext())
-                {
-                    userProfile = usersContext.UserProfiles.FirstOrDefault(c => c.UserId == userID);
-                }
-            }
+                userProfile = cpRepo.GetUserProfile(WebSecurity.CurrentUserId);
             else 
                 throw new Exception("web security not initialized");
 
             return userProfile;
         }
 
-        public static int? GetAdvertiserId()
+        public int? GetAdvertiserId()
         {
             int? advertiserId = null;
 
@@ -125,7 +118,7 @@ namespace ClientPortal.Web.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            cpRepo.Dispose();
+            if (cpRepo != null) cpRepo.Dispose();
             base.Dispose(disposing);
         }
     }

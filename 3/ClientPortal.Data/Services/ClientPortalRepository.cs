@@ -711,7 +711,19 @@ namespace ClientPortal.Data.Services
         }
         #endregion
 
-        #region UserEvents
+        #region User methods
+        public UserProfile GetUserProfile(int userId)
+        {
+            var userProfile = context.UserProfiles.Find(userId);
+            return userProfile;
+        }
+
+        public UserProfile GetUserProfile(string userName)
+        {
+            var userProfile = context.UserProfiles.SingleOrDefault(up => up.UserName == userName);
+            return userProfile;
+        }
+
         public IQueryable<UserEvent> UserEvents
         {
             get { return context.UserEvents; }

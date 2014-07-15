@@ -11,25 +11,25 @@ namespace ClientPortal.Web.Models
         {
         }
 
-        public DbSet<UserProfile> UserProfiles { get; set; }
+        //public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Cake.conversion> Conversions { get; set; }
         public DbSet<Cake.click> Clicks { get; set; }
         public DbSet<ConversionData> ConversionDatas { get; set; }
     }
 
-    [Table("UserProfile")]
-    public class UserProfile
-    {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public int? CakeAdvertiserId { get; set; }
-        public int? QuickBooksCompanyId { get; set; }
-        public int? QuickBooksAdvertiserId { get; set; }
-        public int SearchWeekStartDay { get; set; }
-        public int SearchWeekEndDay { get; set; }
-    }
+    //[Table("UserProfile")]
+    //public class UserProfile
+    //{
+    //    [Key]
+    //    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+    //    public int UserId { get; set; }
+    //    public string UserName { get; set; }
+    //    public int? CakeAdvertiserId { get; set; }
+    //    public int? QuickBooksCompanyId { get; set; }
+    //    public int? QuickBooksAdvertiserId { get; set; }
+    //    public int SearchWeekStartDay { get; set; }
+    //    public int SearchWeekEndDay { get; set; }
+    //}
 
     [Table("ConversionData")]
     public class ConversionData

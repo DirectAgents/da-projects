@@ -113,11 +113,11 @@ namespace ClientPortal.Web.Controllers
 
         private void AssociateUserToCakeAdvertiser(string userName, int cakeAdvertiserID)
         {
-            using (var context = new UsersContext())
+            var userProfile = cpRepo.GetUserProfile(userName);
+            if (userProfile != null)
             {
-                var userProfile = context.UserProfiles.Single(c => c.UserName == userName);
                 userProfile.CakeAdvertiserId = cakeAdvertiserID;
-                context.SaveChanges();
+                cpRepo.SaveChanges();
             }
         }
 
@@ -228,6 +228,7 @@ namespace ClientPortal.Web.Controllers
             return View(model);
         }
 
+/*
         //
         // POST: /Account/ExternalLogin
 
@@ -355,6 +356,7 @@ namespace ClientPortal.Web.Controllers
             ViewBag.ShowRemoveButton = externalLogins.Count > 1 || OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
             return PartialView("_RemoveExternalLoginsPartial", externalLogins);
         }
+*/
 
         #region Helpers
         public enum ManageMessageId
