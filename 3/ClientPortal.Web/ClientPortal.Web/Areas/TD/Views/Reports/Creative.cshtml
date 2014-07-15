@@ -5,3 +5,90 @@
     </div>
 </div>
 <div id="creativeGrid"></div>
+
+<script>
+    $(document).ready(function () {
+        var datasource = CreateCreativeDataSource();
+        CreateCreativeGrid(datasource);
+        CreateCreativeChart(datasource);
+        datasource.read();
+    });
+
+    function CreateCreativeDataSource() {
+        return new kendo.data.DataSource({
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            serverAggregates: true,
+            pageSize: 100,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: '@Url.Action("CreativeData", "Reports")'
+                    //,data: function () {
+                    //    return {
+                    //        startdate: $('#daysum_startdate').val(),
+                    //        enddate: $('#daysum_enddate').val(),
+                    //        offerid: $('#daysum_offerFilter').val()
+                    //    };
+                    //}
+                }
+            },
+            schema: {
+                data: 'data',
+                total: 'total',
+                aggregates: 'aggregates',
+                model: {
+                    id: 'Id',
+                    fields: {
+                        CreativeID: { type: 'number' },
+                        CreativeName: { type: 'string' },
+                        //AdvertiserCurrency: { type: 'string' },
+                        Impressions: { type: 'number' },
+                        Clicks: { type: 'number' },
+                        Conversions: { type: 'number' },
+                        Revenue: { type: 'number' }
+                    }
+                }
+            },
+            sort: { field: "Impressions", dir: "desc" },
+            aggregate: [
+                { field: "Impressions", aggregate: "sum" },
+                { field: "Clicks", aggregate: "sum" },
+                { field: "Conversions", aggregate: "sum" },
+                { field: "Revenue", aggregate: "sum" }
+            ]
+            //requestEnd: function (e) {... // for date field
+        });
+    }
+
+    function CreateCreativeGrid(datasource) {
+        $("#creativeGrid").kendoGrid({
+            dataSource: datasource,
+            autoBind: false,
+            height: 500,
+            //groupable: true,
+            //sortable: true,
+            //pageable: {
+            //    refresh: true,
+            //    pageSizes: true,
+            //    buttonCount: 5
+            //},
+            columns: [
+                { field: 'CreativeName', title: 'Creative' },
+                { field: 'Impressions', width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Clicks', width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Conversions', width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Revenue', title: 'Spend', width: 150, attributes: { style: "text-align: right" }, format: '{0:c}', footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
+            ],
+            filterable: false,
+            sortable: true,
+            pageable: true
+        });
+    }
+
+    function CreateCreativeChart(datasource) {
+    }
+
+</script>

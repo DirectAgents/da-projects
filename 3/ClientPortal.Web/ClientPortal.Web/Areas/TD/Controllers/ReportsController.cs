@@ -1,4 +1,5 @@
 ﻿using ClientPortal.Data.Contracts;
+using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Areas.TD.Models;
 using DirectAgents.Mvc.KendoGridBinder;
@@ -13,6 +14,8 @@ namespace ClientPortal.Web.Areas.TD.Controllers
     public class ReportsController : Controller
     {
         ITDRepository tdRepo;
+
+        int insertionOrderID = 1286935; // Betterment
 
         public ReportsController(ITDRepository tdRepository)
         {
@@ -43,7 +46,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
 
         public JsonResult SampleData(KendoGridRequest request)
         {
-            var summaries = tdRepo.GetDailySummaries(null, null, null);
+            var summaries = tdRepo.GetDailySummaries(null, null, insertionOrderID);
             var kgrid = new KendoGrid<DailySummary>(request, summaries);
             if (summaries.Any())
             {
@@ -62,6 +65,24 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         public ActionResult Creative()
         {
             return PartialView();
+        }
+
+        public JsonResult CreativeData(KendoGridRequest request)
+        {
+            var summaries = tdRepo.GetCreativeSummaries(null, null, insertionOrderID);
+            var kgrid = new KendoGrid<CreativeSummary>(request, summaries);
+            if (summaries.Any())
+            {
+                kgrid.aggregates = new
+                {
+                    Impressions = new { sum = summaries.Sum(s => s.Impressions) },
+                    Clicks = new { sum = summaries.Sum(s => s.Clicks) },
+                    Conversions = new { sum = summaries.Sum(s => s.Conversions) },
+                    Revenue = new { sum = summaries.Sum(s => s.Revenue) }
+                };
+            }
+            var json = Json(kgrid, JsonRequestBehavior.AllowGet);
+            return json;
         }
 
         // ---

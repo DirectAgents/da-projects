@@ -191,7 +191,7 @@
         function CheckLoadCreative() {
             if ($('#creativeChart').length == 0) {
                 $.ajax({
-                    url: '@Url.Action("CreativePartial", "Reports")',
+                    url: '@Url.Action("Creative", "Reports")',
                     cache: false
                 }).done(function (html) {
                     $('#repCreativeTab').html(html);
