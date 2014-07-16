@@ -712,6 +712,12 @@ namespace ClientPortal.Data.Services
         #endregion
 
         #region User methods
+        public IQueryable<UserProfile> UserProfiles()
+        {
+            var userProfiles = context.UserProfiles;
+            return userProfiles;
+        }
+
         public UserProfile GetUserProfile(int userId)
         {
             var userProfile = context.UserProfiles.Find(userId);

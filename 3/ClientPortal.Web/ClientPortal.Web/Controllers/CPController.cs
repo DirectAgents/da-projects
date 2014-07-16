@@ -49,7 +49,7 @@ namespace ClientPortal.Web.Controllers
             if (userProfile != null)
             {
                 advertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
-                if (userProfile.InsertionOrderId.HasValue)
+                if (userProfile.InsertionOrderId.HasValue && tdRepo != null)
                     insertionOrder = tdRepo.GetInsertionOrder(userProfile.InsertionOrderId.Value);
             }
             var userInfo = new UserInfo(userProfile, advertiser, insertionOrder);

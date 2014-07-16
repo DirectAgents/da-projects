@@ -1,0 +1,42 @@
+﻿@model ClientPortal.Data.Entities.TD.DBM.InsertionOrder
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("insertionOrdersTab");
+}
+
+@using (Ajax.BeginForm(ajaxOptions))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Create UserProfile</legend>
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.InsertionOrderName, "Insertion Order:")</td>
+                <td>@Html.DisplayFor(m => m.InsertionOrderName)</td>
+            </tr>
+            <tr>
+                <td>UserName</td>
+                <td>@Html.TextBox("username")</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td>@Html.TextBox("password")<input type="button" value="Generate Password" onclick="GeneratePassword()" /></td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+            &nbsp;@Ajax.ActionLink("cancel", "InsertionOrders", ajaxOptions)
+    </fieldset>
+}
+
+<script>
+    function GeneratePassword() {
+        var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+        var string_length = 8;
+        var randomstring = '';
+        for (var i = 0; i < string_length; i++) {
+            var rnum = Math.floor(Math.random() * chars.length);
+            randomstring += chars.substring(rnum, rnum + 1);
+        }
+        $('#password').val(randomstring);
+    }
+</script>

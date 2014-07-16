@@ -72,6 +72,7 @@ namespace ClientPortal.Data.Contracts
         void AddGoal(Goal goal, bool saveChanges = false);
         bool DeleteGoal(int id, int? advertiserId);
 
+        IQueryable<UserProfile> UserProfiles();
         UserProfile GetUserProfile(int userId);
         UserProfile GetUserProfile(string userName);
 

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ClientPortal.Data.Contexts;
+using System;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using ClientPortal.Data.Contexts;
 using System.Web.Helpers;
+using System.Web.Mvc;
 using WebMatrix.WebData;
-using System.Web.Configuration;
-using ClientPortal.Web.Controllers;
 
 namespace ClientPortal.Web.Areas.Admin.Controllers
 {
@@ -18,9 +13,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
     {
         private ClientPortalContext db = new ClientPortalContext();
 
+        const string defaultSort = "AdvertiserId";
         //
         // GET: /Admin/Advertisers/
-        const string defaultSort = "AdvertiserId";
 
         public ActionResult Index(string sort)
         {
@@ -223,28 +218,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
                     new { CakeAdvertiserId = advertiser.AdvertiserId });
 
                 if (sendemail && !String.IsNullOrWhiteSpace(email))
-                    SendUserProfileEmail(username, password, email);
+                    Helpers.SendUserProfileEmail(username, password, email);
             }
             return RedirectToAction("Index");
-        }
-
-        void SendUserProfileEmail(string username, string password, string email)
-        {
-            string from = WebConfigurationManager.AppSettings["EmailFromDefault"];
-            string subject = "Direct Agents Client Portal account created";
-            string url = WebConfigurationManager.AppSettings["PortalUrl"];
-            string body = (@"Congratulations! Your Direct Agents Client Portal account has been created:
-<p>
-Username: [[Username]]<br/>
-Password: [[Password]]<br/>
-<br/>
-Portal URL: [[Url]]
-</p>")
-               .Replace("[[Username]]", username)
-               .Replace("[[Password]]", password)
-               .Replace("[[Url]]", url);
-
-            ControllerHelpers.SendEmail(from, email, null, subject, body, true);
         }
 
         //

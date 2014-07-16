@@ -1,16 +1,32 @@
 ﻿@model IEnumerable<ClientPortal.Data.Entities.TD.DBM.InsertionOrder>
 
+@{
+    //ViewBag.Title = "";
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "insertionOrdersTab",
+        HttpMethod = "Get"
+    };
+}
 
 <table border="1">
     <tr>
         <th>Id</th>
         <th>Name</th>
+        <th>Login</th>
     </tr>
 @foreach (var io in Model)
 {
     <tr>
         <td>@io.InsertionOrderID</td>
         <td>@io.InsertionOrderName</td>
+        <td>
+            @if (io.UserProfiles.Count() > 0) {
+                @(String.Join(", ", io.UserProfiles.Select(u => u.UserName).ToArray()))
+            } else {
+                @Ajax.ActionLink("create", "CreateUserProfile", new { ioID = io.InsertionOrderID }, ajaxOptions)
+            }
+        </td>
     </tr>
 }
 </table>

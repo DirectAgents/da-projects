@@ -15,9 +15,10 @@ namespace ClientPortal.Web.Controllers
     [Authorize]
     public class HomeController : CPController
     {
-        public HomeController(IClientPortalRepository cpRepository)
+        public HomeController(IClientPortalRepository cpRepository, ITDRepository tdRepository)
         {
             this.cpRepo = cpRepository;
+            this.tdRepo = tdRepository;
         }
 
         // after login, if no route specified

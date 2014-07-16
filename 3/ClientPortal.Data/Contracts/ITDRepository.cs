@@ -11,7 +11,7 @@ namespace ClientPortal.Data.Contracts
         IQueryable<CreativeDailySummary> GetCreativeDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
         IQueryable<CreativeSummary> GetCreativeSummaries(DateTime? start, DateTime? end, int? insertionOrderID);
 
-        IQueryable InsertionOrders();
+        IQueryable<InsertionOrder> InsertionOrders();
         InsertionOrder GetInsertionOrder(int insertionOrderID);
     }
 }

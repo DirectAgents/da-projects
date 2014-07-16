@@ -58,7 +58,7 @@ namespace ClientPortal.Data.Services
 
         // ---
 
-        public IQueryable InsertionOrders()
+        public IQueryable<InsertionOrder> InsertionOrders()
         {
             var insertionOrders = context.InsertionOrders;
             return insertionOrders;

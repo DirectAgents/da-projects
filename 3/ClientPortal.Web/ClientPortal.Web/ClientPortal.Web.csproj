@@ -217,6 +217,7 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\OffersController.cs" />
     <Compile Include="Areas\Admin\Controllers\TDController.cs" />
+    <Compile Include="Areas\Admin\Helpers.cs" />
     <Compile Include="Areas\Admin\Models\AdminModel.cs" />
     <Compile Include="Areas\Admin\Models\CampaignDropVM.cs" />
     <Compile Include="Areas\Admin\Models\CampaignDropWizardVM.cs" />
@@ -706,6 +707,7 @@
     <Content Include="Areas\TD\Views\Reports\ChartSetup.cshtml" />
     <Content Include="Areas\TD\Views\Reports\Creative.cshtml" />
     <Content Include="Areas\Admin\Views\TD\InsertionOrders.cshtml" />
+    <Content Include="Areas\Admin\Views\TD\CreateUserProfile.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
