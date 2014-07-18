@@ -708,6 +708,7 @@
     <Content Include="Areas\TD\Views\Reports\Creative.cshtml" />
     <Content Include="Areas\Admin\Views\TD\InsertionOrders.cshtml" />
     <Content Include="Areas\Admin\Views\TD\CreateUserProfile.cshtml" />
+    <Content Include="Areas\Admin\Views\TD\TradingDeskAccounts.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

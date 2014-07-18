@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Contracts;
+using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Models;
 using System;
@@ -45,14 +46,14 @@ namespace ClientPortal.Web.Controllers
             var userProfile = GetUserProfile();
 
             Advertiser advertiser = null;
-            InsertionOrder insertionOrder = null;
+            TradingDeskAccount tradingDeskAccount = null;
             if (userProfile != null)
             {
                 advertiser = GetAdvertiser(userProfile.CakeAdvertiserId);
-                if (userProfile.InsertionOrderId.HasValue && tdRepo != null)
-                    insertionOrder = tdRepo.GetInsertionOrder(userProfile.InsertionOrderId.Value);
+                if (userProfile.TradingDeskAccountId.HasValue && tdRepo != null)
+                    tradingDeskAccount = tdRepo.GetTradingDeskAccount(userProfile.TradingDeskAccountId.Value);
             }
-            var userInfo = new UserInfo(userProfile, advertiser, insertionOrder);
+            var userInfo = new UserInfo(userProfile, advertiser, tradingDeskAccount);
             return userInfo;
         }
 

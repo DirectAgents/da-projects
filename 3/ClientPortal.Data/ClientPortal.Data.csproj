@@ -271,6 +271,7 @@
     <Compile Include="Entities\TD\DBM\CreativeDailySummary.cs" />
     <Compile Include="Entities\TD\DBM\DailySummary.cs" />
     <Compile Include="Entities\TD\DBM\InsertionOrder.cs" />
+    <Compile Include="Entities\TD\TradingDeskAccount.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.Designer.cs">
       <DependentUpon>201406271827066_InitialCreate.cs</DependentUpon>
@@ -278,6 +279,10 @@
     <Compile Include="Migrations\201407082007021_CreativeDailySummary.cs" />
     <Compile Include="Migrations\201407082007021_CreativeDailySummary.Designer.cs">
       <DependentUpon>201407082007021_CreativeDailySummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201407171938435_TradingDeskAccount.cs" />
+    <Compile Include="Migrations\201407171938435_TradingDeskAccount.Designer.cs">
+      <DependentUpon>201407171938435_TradingDeskAccount.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -333,6 +338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407082007021_CreativeDailySummary.resx">
       <DependentUpon>201407082007021_CreativeDailySummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407171938435_TradingDeskAccount.resx">
+      <DependentUpon>201407171938435_TradingDeskAccount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

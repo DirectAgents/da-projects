@@ -1,4 +1,5 @@
 ﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Controllers;
 using System;
@@ -9,16 +10,16 @@ namespace ClientPortal.Web.Models
 {
     public class UserInfo
     {
-        public UserInfo(UserProfile userProfile, Advertiser advertiser, InsertionOrder insertionOrder)
+        public UserInfo(UserProfile userProfile, Advertiser advertiser, TradingDeskAccount tradingDeskAccount)
         {
             this.UserProfile = userProfile;
             this.Advertiser = advertiser;
-            this.InsertionOrder = insertionOrder;
+            this.TradingDeskAccount = tradingDeskAccount;
         }
 
         private UserProfile UserProfile { get; set; }
         private Advertiser Advertiser { get; set; }
-        private InsertionOrder InsertionOrder { get; set; }
+        private TradingDeskAccount TradingDeskAccount { get; set; }
 
         public bool HasUserProfile
         {
@@ -36,7 +37,7 @@ namespace ClientPortal.Web.Models
 
         public bool HasTradingDesk(bool only)
         {
-            bool hasTradingDesk = (this.InsertionOrder != null);
+            bool hasTradingDesk = (this.TradingDeskAccount != null);
             if (only)
                 return hasTradingDesk && (Advertiser == null);
             else

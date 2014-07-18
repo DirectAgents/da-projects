@@ -16,6 +16,11 @@ namespace ClientPortal.Data.Services
             this.context = context;
         }
 
+        public void SaveChanges()
+        {
+            context.SaveChanges();
+        }
+
         public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
         {
             var dailySummaries = context.DailySummaries.AsQueryable();
@@ -68,6 +73,35 @@ namespace ClientPortal.Data.Services
         {
             var insertionOrder = context.InsertionOrders.Find(insertionOrderID);
             return insertionOrder;
+        }
+
+        public bool CreateAccountForInsertionOrder(int insertionOrderID)
+        {
+            var insertionOrder = context.InsertionOrders.Find(insertionOrderID);
+            if (insertionOrder == null)
+                return false;
+
+            var tdAccount = NewTradingDeskAccount();
+            insertionOrder.TradingDeskAccount = tdAccount;
+            context.SaveChanges();
+            return true;
+        }
+
+        private TradingDeskAccount NewTradingDeskAccount()
+        {
+            return new TradingDeskAccount();
+        }
+
+        public IQueryable<TradingDeskAccount> TradingDeskAccounts()
+        {
+            var tdAccounts = context.TradingDeskAccounts;
+            return tdAccounts;
+        }
+
+        public TradingDeskAccount GetTradingDeskAccount(int tradingDeskAccountId)
+        {
+            var tdAccount = context.TradingDeskAccounts.Find(tradingDeskAccountId);
+            return tdAccount;
         }
 
         // ---

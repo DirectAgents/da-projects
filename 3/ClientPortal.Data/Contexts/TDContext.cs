@@ -28,5 +28,7 @@ namespace ClientPortal.Data.Entities.TD
         public DbSet<Creative> Creatives { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }
         public DbSet<CreativeDailySummary> CreativeDailySummaries { get; set; }
+
+        public DbSet<TradingDeskAccount> TradingDeskAccounts { get; set; }
     }
 }

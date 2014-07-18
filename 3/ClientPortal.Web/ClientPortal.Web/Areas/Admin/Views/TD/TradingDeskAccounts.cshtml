@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ClientPortal.Data.Entities.TD.TradingDeskAccount>
+
+@{
+    //ViewBag.Title = "";
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "tdAccountsTab",
+        HttpMethod = "Get"
+    };
+}
+
+Show:
+@*All Advertisers |*@
+@Ajax.ActionLink("Insertion Orders", "InsertionOrders", ajaxOptions)
+<br /><br />
+
+<table border="1">
+    <tr>
+        <th>Id</th>@* TODO: hide this? have it match advertiserid? *@
+        <th>Login</th>
+        <th>Advertiser</th>
+    </tr>
+@foreach (var tda in Model)
+{
+    <tr>
+        <td>@tda.TradingDeskAccountId</td>
+        <td>
+            @if (tda.UserProfiles.Count() > 0) {
+                @(String.Join(", ", tda.UserProfiles.Select(u => u.UserName).ToArray()))
+            //} else {
+            //    @Ajax.ActionLink("create", "CreateUserProfile", new { tdaId = tda.TradingDeskAccountId }, ajaxOptions)
+            }
+        </td>
+        <td>
+            @if (tda.Advertisers.Count() > 0) {
+                @(String.Join(", ", tda.Advertisers.Select(a => a.AdvertiserName).ToArray()))
+            }
+        </td>
+    </tr>
+}
+</table>

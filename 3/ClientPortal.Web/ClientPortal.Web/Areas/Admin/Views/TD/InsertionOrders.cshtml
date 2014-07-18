@@ -4,16 +4,20 @@
     //ViewBag.Title = "";
     var ajaxOptions = new AjaxOptions()
     {
-        UpdateTargetId = "insertionOrdersTab",
+        UpdateTargetId = "tdAccountsTab",
         HttpMethod = "Get"
     };
 }
 
+Show:
+@Ajax.ActionLink("Accounts", "TradingDeskAccounts", ajaxOptions)
+<br /><br />
+
 <table border="1">
     <tr>
         <th>Id</th>
-        <th>Name</th>
-        <th>Login</th>
+        <th>Insertion Order</th>
+        <th>Account</th>
     </tr>
 @foreach (var io in Model)
 {
@@ -21,10 +25,10 @@
         <td>@io.InsertionOrderID</td>
         <td>@io.InsertionOrderName</td>
         <td>
-            @if (io.UserProfiles.Count() > 0) {
-                @(String.Join(", ", io.UserProfiles.Select(u => u.UserName).ToArray()))
+            @if (io.TradingDeskAccount != null) {
+                <text>created</text>
             } else {
-                @Ajax.ActionLink("create", "CreateUserProfile", new { ioID = io.InsertionOrderID }, ajaxOptions)
+                @Ajax.ActionLink("create", "CreateAccount", new { ioID = io.InsertionOrderID }, ajaxOptions)
             }
         </td>
     </tr>

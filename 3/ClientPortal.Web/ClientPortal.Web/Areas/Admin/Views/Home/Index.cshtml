@@ -126,13 +126,13 @@
                         | TD HTabs    |
                         +-------------+-->*@
                 <dl class="tabs">
-                    <dd class="active"><a href="#insertionOrders" id="navInsertionOrders">Insertion Orders</a></dd>
+                    <dd class="active"><a href="#tdAccounts" id="navTDAccounts">Accounts</a></dd>
                 </dl>
                 @*<!--+-----------------------+
                         | TD HTabs Content    |
                         +---------------------+-->*@
                 <ul class="tabs-content">
-                    <li id="insertionOrdersTab" class="active"></li>
+                    <li id="tdAccountsTab" class="active"></li>
                 </ul>
             </div>
         </li>
@@ -183,7 +183,7 @@
         $(function () {
             @if (Model.TradingDesk)
             {
-                <text>LoadInsertionOrders();</text>
+                <text>LoadTDAccounts();</text>
             } else {
                 <text>LoadAdvertisers();</text>
             }
@@ -200,13 +200,13 @@
             });
         }
 
-        function LoadInsertionOrders() {
-            $("#insertionOrdersTab").html("Loading...");
+        function LoadTDAccounts() {
+            $("#tdAccountsTab").html("Loading...");
             $.ajax({
-                url: '@Url.Action("InsertionOrders", "TD")',
+                url: '@Url.Action("TradingDeskAccounts", "TD")',
                 cache: false
             }).done(function (html) {
-                $("#insertionOrdersTab").html(html);
+                $("#tdAccountsTab").html(html);
             });
         }
 
