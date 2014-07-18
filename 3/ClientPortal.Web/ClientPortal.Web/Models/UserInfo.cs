@@ -19,7 +19,7 @@ namespace ClientPortal.Web.Models
 
         private UserProfile UserProfile { get; set; }
         private Advertiser Advertiser { get; set; }
-        private TradingDeskAccount TradingDeskAccount { get; set; }
+        public TradingDeskAccount TradingDeskAccount { get; set; }
 
         public bool HasUserProfile
         {
@@ -33,15 +33,6 @@ namespace ClientPortal.Web.Models
         public static bool CheckIsAdmin(string userName)
         {
             return (userName == "admin");
-        }
-
-        public bool HasTradingDesk(bool only)
-        {
-            bool hasTradingDesk = (this.TradingDeskAccount != null);
-            if (only)
-                return hasTradingDesk && (Advertiser == null);
-            else
-                return hasTradingDesk;
         }
 
         public int? AdvertiserId
@@ -130,6 +121,20 @@ namespace ClientPortal.Web.Models
                 else
                     return true; // (if not specified)
             }
+        }
+
+        public bool HasTradingDesk(bool only = false)
+        {
+            bool hasTradingDesk = (this.TradingDeskAccount != null);
+            if (only)
+                return hasTradingDesk && (Advertiser == null);
+            else
+                return hasTradingDesk;
+        }
+
+        public int? InsertionOrderID
+        {
+            get { return (TradingDeskAccount == null) ? null : TradingDeskAccount.InsertionOrderID(); }
         }
     }
 }

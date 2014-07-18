@@ -255,6 +255,7 @@
     <Compile Include="DTOs\OfferInfo.cs" />
     <Compile Include="DTOs\SearchStat.cs" />
     <Compile Include="DTOs\TD\CreativeSummary.cs" />
+    <Compile Include="DTOs\TD\StatsSummary.cs" />
     <Compile Include="DTOs\WeeklySearchStat.cs" />
     <Compile Include="Entities\Advertiser.cs" />
     <Compile Include="Entities\Affiliate.cs" />

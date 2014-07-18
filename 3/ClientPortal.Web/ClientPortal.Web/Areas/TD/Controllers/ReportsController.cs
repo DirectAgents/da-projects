@@ -11,13 +11,13 @@ using System.Web.Mvc;
 
 namespace ClientPortal.Web.Areas.TD.Controllers
 {
+    [Authorize]
     public class ReportsController : CPController
     {
-        int insertionOrderID = 1286935; // Betterment
-
-        public ReportsController(ITDRepository tdRepository)
+        public ReportsController(ITDRepository tdRepository, IClientPortalRepository cpRepository)
         {
             tdRepo = tdRepository;
+            cpRepo = cpRepository;
         }
 
         public ActionResult Sample()
@@ -44,8 +44,11 @@ namespace ClientPortal.Web.Areas.TD.Controllers
 
         public JsonResult SampleData(KendoGridRequest request)
         {
-            var summaries = tdRepo.GetDailySummaries(null, null, insertionOrderID);
-            var kgrid = new KendoGrid<DailySummary>(request, summaries);
+            int insertionOrderID = 1286935; // Betterment
+
+            //var summaries = tdRepo.GetDailySummaries(null, null, insertionOrderID);
+            var summaries = tdRepo.GetDailyStatsSummaries(null, null, insertionOrderID);
+            var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             if (summaries.Any())
             {
                 kgrid.aggregates = new
@@ -67,7 +70,11 @@ namespace ClientPortal.Web.Areas.TD.Controllers
 
         public JsonResult CreativeData(KendoGridRequest request)
         {
-            var summaries = tdRepo.GetCreativeSummaries(null, null, insertionOrderID);
+            var userInfo = GetUserInfo();
+            if (!userInfo.InsertionOrderID.HasValue)
+                return Json(new { });
+
+            var summaries = tdRepo.GetCreativeSummaries(null, null, userInfo.InsertionOrderID.Value);
             var kgrid = new KendoGrid<CreativeSummary>(request, summaries);
             if (summaries.Any())
             {

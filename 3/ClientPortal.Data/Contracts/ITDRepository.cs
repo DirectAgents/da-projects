@@ -2,6 +2,7 @@
 using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ClientPortal.Data.Contracts
@@ -10,6 +11,7 @@ namespace ClientPortal.Data.Contracts
     {
         void SaveChanges();
 
+        IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID);
         IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
         IQueryable<CreativeDailySummary> GetCreativeDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
         IQueryable<CreativeSummary> GetCreativeSummaries(DateTime? start, DateTime? end, int? insertionOrderID);

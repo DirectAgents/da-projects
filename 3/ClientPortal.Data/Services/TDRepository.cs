@@ -3,6 +3,7 @@ using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ClientPortal.Data.Services
@@ -19,6 +20,20 @@ namespace ClientPortal.Data.Services
         public void SaveChanges()
         {
             context.SaveChanges();
+        }
+
+        public IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID)
+        {
+            var dailySummaries = GetDailySummaries(start, end, insertionOrderID);
+            var statsSummaries = dailySummaries.Select(ds => new StatsSummary
+            {
+                Date = ds.Date,
+                Impressions = ds.Impressions,
+                Clicks = ds.Clicks,
+                Conversions = ds.Conversions,
+                Revenue = ds.Revenue
+            });
+            return statsSummaries.ToList();
         }
 
         public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)

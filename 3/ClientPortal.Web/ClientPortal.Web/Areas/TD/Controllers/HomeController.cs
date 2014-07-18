@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace ClientPortal.Web.Areas.TD.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
 
