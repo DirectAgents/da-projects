@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Data.Contracts;
 using ClientPortal.Data.Entities.TD;
+using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
 using System.Linq;
 using System.Web.Mvc;
@@ -18,7 +19,9 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var userInfo = GetUserInfo();
+            var model = new TDHomeModel(userInfo);
+            return View(model);
         }
 
         public ActionResult InsertionOrders()

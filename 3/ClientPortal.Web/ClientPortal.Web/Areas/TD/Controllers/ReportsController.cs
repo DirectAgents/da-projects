@@ -20,26 +20,44 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             cpRepo = cpRepository;
         }
 
+        public ActionResult Summary(string metric1, string metric2)
+        {
+            var userInfo = GetUserInfo();
+            var model = new TDReportModel(userInfo, metric1, metric2);
+
+            if (model.MetricsToGraph.Length == 0)
+            {
+                return PartialView("ChartSetup", model);
+            }
+
+            return PartialView(model);
+        }
+
+        public JsonResult SummaryData(KendoGridRequest request)
+        {
+            var userInfo = GetUserInfo();
+            if (!userInfo.InsertionOrderID.HasValue)
+                return Json(new { });
+
+            var summaries = tdRepo.GetDailyStatsSummaries(null, null, userInfo.InsertionOrderID.Value);
+            var kgrid = new KendoGrid<StatsSummary>(request, summaries);
+            if (summaries.Any())
+            {
+                kgrid.aggregates = new
+                {
+                    Impressions = new { sum = summaries.Sum(s => s.Impressions) },
+                    Clicks = new { sum = summaries.Sum(s => s.Clicks) },
+                    Conversions = new { sum = summaries.Sum(s => s.Conversions) },
+                    Revenue = new { sum = summaries.Sum(s => s.Revenue) }
+                };
+            }
+            var json = Json(kgrid, JsonRequestBehavior.AllowGet);
+            return json;
+        }
+
         public ActionResult Sample()
         {
             return PartialView();
-        }
-
-        public ActionResult Summary(string metric1, string metric2)
-        {
-            if (String.IsNullOrWhiteSpace(metric1))
-            {
-                return PartialView("ChartSetup");
-            }
-
-            var metricsList = new List<string> { metric1 };
-            if (!String.IsNullOrWhiteSpace(metric2))
-                metricsList.Add(metric2);
-            var model = new ReportModel
-            {
-                Metrics = metricsList.ToArray()
-            };
-            return PartialView(model);
         }
 
         public JsonResult SampleData(KendoGridRequest request)

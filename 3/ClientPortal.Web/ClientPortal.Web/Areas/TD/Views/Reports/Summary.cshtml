@@ -1,6 +1,6 @@
-﻿@model ClientPortal.Web.Areas.TD.Models.ReportModel
+﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
 @{
-    var metrics = Model.Metrics;
+    var metrics = Model.MetricsToGraph;
 }
 
 <div id="summaryChartSection" class="k-content">
@@ -57,7 +57,7 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("SampleData", "Reports")'
+                    url: '@Url.Action("SummaryData", "Reports")'
                     //,data: function () {
                     //    return {
                     //        startdate: $('#daysum_startdate').val(),

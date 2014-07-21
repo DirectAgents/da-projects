@@ -136,5 +136,10 @@ namespace ClientPortal.Web.Models
         {
             get { return (TradingDeskAccount == null) ? null : TradingDeskAccount.InsertionOrderID(); }
         }
+
+        public bool ShowConversions
+        {
+            get { return true; }
+        }
     }
 }

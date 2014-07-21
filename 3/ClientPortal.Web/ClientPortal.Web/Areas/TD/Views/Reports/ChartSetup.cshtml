@@ -1,18 +1,18 @@
-﻿
+﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
 @{
-    var metricsList = new[] { "Impressions", "Clicks", "Conversions", "Spend" };
     var ajaxOptions = new AjaxOptions { UpdateTargetId = "repSumTab" };
+    string secondSelectedValue = (Model.AllMetrics.Length > 1) ? Model.AllMetrics[1] : null;
 }
 
 <h3>Chart Setup</h3>
 
-@using (Ajax.BeginForm(ajaxOptions))
+@using (Ajax.BeginForm("Summary", ajaxOptions))
 {
     <text>First Metric:</text>
-    @Html.DropDownList("metric1", new SelectList(metricsList), new { style = "width:auto"})
+    @Html.DropDownList("metric1", new SelectList(Model.AllMetrics), new { style = "width:auto"})
     <br />
     <text>Second Metric:</text>
-    @Html.DropDownList("metric2", new SelectList(metricsList, "Clicks"), new { style = "width:auto"})
+    @Html.DropDownList("metric2", new SelectList(Model.AllMetrics, secondSelectedValue), new { style = "width:auto"})
     <br />
     <br />
     <input type="submit" value="Draw Chart" />

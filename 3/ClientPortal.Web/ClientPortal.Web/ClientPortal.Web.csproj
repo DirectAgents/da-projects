@@ -227,7 +227,8 @@
     <Compile Include="Areas\Admin\Models\CreativeStatVM.cs" />
     <Compile Include="Areas\TD\Controllers\HomeController.cs" />
     <Compile Include="Areas\TD\Controllers\ReportsController.cs" />
-    <Compile Include="Areas\TD\Models\ReportModel.cs" />
+    <Compile Include="Areas\TD\Models\TDReportModel.cs" />
+    <Compile Include="Areas\TD\Models\TDHomeModel.cs" />
     <Compile Include="Areas\TD\TDAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CPController.cs" />
