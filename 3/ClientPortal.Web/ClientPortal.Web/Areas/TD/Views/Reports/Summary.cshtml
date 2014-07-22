@@ -16,6 +16,25 @@
     <tr>
         <td>@metric:</td>
         <td id="td@(metric)" style="text-align:right"></td>
+        @if (metric == "Impressions")
+        {
+            <td>eCPM:</td>
+            <td id="tdCPM" style="text-align:right"></td>
+        }
+        else if (metric == "Clicks")
+        {
+            <td>eCPC:</td>
+            <td id="tdCPC" style="text-align:right"></td>
+            <td>CTR:</td>
+            <td id="tdCTR" style="text-align:right"></td>
+        }
+        else if (metric == "Conversions")
+        {
+            <td>eCPA:</td>
+            <td id="tdCPA" style="text-align:right"></td>
+            <td>ConvRate:</td>
+            <td id="tdConvRate" style="text-align:right"></td>
+        }
     </tr>
 }
 </table>
@@ -32,8 +51,17 @@
         datasource.bind("change", function () {
             var aggs = this.aggregates();
             $('#tdImpressions').html(kendo.toString(aggs.Impressions.sum, 'N0'));
+            $('#tdCPM').html(kendo.toString(aggs.Impressions.cpm, 'C'));
+
             $('#tdClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
-            $('#tdConversions').html(kendo.toString(aggs.Conversions.sum, 'N0'));
+            $('#tdCPC').html(kendo.toString(aggs.Clicks.cpc, 'C'));
+            $('#tdCTR').html(kendo.toString(aggs.Clicks.ctr, 'P'));
+@if (Model.ShouldShowMetric("Conversions"))
+{
+    <text>$('#tdConversions').html(kendo.toString(aggs.Conversions.sum, 'N0'));</text>
+    <text>$('#tdCPA').html(kendo.toString(aggs.Conversions.cpa, 'C'));</text>
+    <text>$('#tdConvRate').html(kendo.toString(aggs.Conversions.convrate, 'P'));</text>
+}
             $('#tdSpend').html(kendo.toString(aggs.Spend.sum, 'C'));
         });
     });
@@ -105,7 +133,7 @@
             },
             theme: $(document).data("kendoSkin") || "default",
             series: [
-@for (int i=0; i < metrics.Length; i++)
+@for (int i = 0; i < metrics.Length; i++)
 {
     string format = (metrics[i] == "Spend") ? "C" : "N0";
     <text>{ type: "line", field: "@metrics[i]", axis: "@metrics[i]", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:@format}',value) #" } }</text>
@@ -122,7 +150,7 @@
                 axisCrossingValue: [0, 2000]
             },
             valueAxis: [
-@for (int i=0; i < metrics.Length; i++)
+@for (int i = 0; i < metrics.Length; i++)
 {
     string format = (metrics[i] == "Spend") ? "C" : "N0";
     <text>{ name: "@metrics[i]", labels: { format: "@format", step: 2 }, title: { text: "@metrics[i]" } }</text>

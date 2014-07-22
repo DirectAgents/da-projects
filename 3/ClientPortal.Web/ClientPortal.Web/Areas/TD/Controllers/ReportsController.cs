@@ -43,12 +43,19 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             if (summaries.Any())
             {
+                int impressions = summaries.Sum(s => s.Impressions);
+                int clicks = summaries.Sum(s => s.Clicks);
+                int conversions = summaries.Sum(s => s.Conversions);
+                decimal spend = summaries.Sum(s => s.Spend);
+                decimal cpm = (impressions == 0) ? 0 : 1000 * spend / impressions;
+                decimal cpc = (clicks == 0) ? 0 : spend / clicks;
+                decimal cpa = (conversions == 0) ? 0 : spend / conversions;
                 kgrid.aggregates = new
                 {
-                    Impressions = new { sum = summaries.Sum(s => s.Impressions) },
-                    Clicks = new { sum = summaries.Sum(s => s.Clicks) },
-                    Conversions = new { sum = summaries.Sum(s => s.Conversions) },
-                    Spend = new { sum = summaries.Sum(s => s.Spend) }
+                    Impressions = new { sum = impressions, cpm = cpm },
+                    Clicks = new { sum = clicks, cpc = cpc, ctr = Math.Round((double)clicks / impressions, 4) },
+                    Conversions = new { sum = conversions, cpa = cpa, convrate = Math.Round((double)conversions / clicks, 4) },
+                    Spend = new { sum = spend }
                 };
             }
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);
