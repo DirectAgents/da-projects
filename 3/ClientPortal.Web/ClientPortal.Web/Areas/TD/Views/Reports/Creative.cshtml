@@ -48,8 +48,10 @@
                         //AdvertiserCurrency: { type: 'string' },
                         Impressions: { type: 'number' },
                         Clicks: { type: 'number' },
+                        CTR: { type: 'number' },
                         Conversions: { type: 'number' },
-                        Revenue: { type: 'number' }
+                        ConvRate: { type: 'number' },
+                        Spend: { type: 'number' }
                     }
                 }
             },
@@ -58,7 +60,7 @@
                 { field: "Impressions", aggregate: "sum" },
                 { field: "Clicks", aggregate: "sum" },
                 { field: "Conversions", aggregate: "sum" },
-                { field: "Revenue", aggregate: "sum" }
+                { field: "Spend", aggregate: "sum" }
             ]
             //requestEnd: function (e) {... // for date field
         });
@@ -78,22 +80,15 @@
             //},
             columns: [
                 { field: 'CreativeName', title: 'Creative' },
-            @if (Model.ShouldShowMetric("Impressions"))
-            {
-                <text>{ field: 'Impressions',             width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
-            }
-            @if (Model.ShouldShowMetric("Clicks"))
-            {
-                <text>{ field: 'Clicks',                  width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
-            }
+                { field: 'Impressions', width: 100, attributes: { style: "text-align:right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'Clicks',      width: 100, attributes: { style: "text-align:right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
+                { field: 'CTR',         width: 100, attributes: { style: "text-align:right" }, format: '{0:p}' },
             @if (Model.ShouldShowMetric("Conversions"))
             {
-                <text>{ field: 'Conversions',             width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
+                <text>{ field: 'Conversions', width: 100, attributes: { style: "text-align:right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
+                <text>{ field: 'ConvRate',    width: 100, attributes: { style: "text-align:right" }, format: '{0:p}' },</text>
             }
-            @if (Model.ShouldShowMetric("Spend"))
-            {
-                <text>{ field: 'Revenue', title: 'Spend', width: 150, attributes: { style: "text-align: right" }, format: '{0:c}',  footerTemplate: "#= kendo.toString(sum, 'c') #",  footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
-            }
+                { field: 'Spend',       width: 100, attributes: { style: "text-align:right" }, format: '{0:c}',  footerTemplate: "#= kendo.toString(sum, 'c') #",  footerAttributes: { style: "font-weight: bold; text-align: right" } }
             ],
             filterable: false,
             sortable: true,

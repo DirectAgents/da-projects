@@ -71,7 +71,7 @@ namespace ClientPortal.Data.Services
                     Impressions = g.Sum(c => c.Impressions),
                     Clicks = g.Sum(c => c.Clicks),
                     Conversions = g.Sum(c => c.Conversions),
-                    Revenue = g.Sum(c => c.Revenue)
+                    Spend = g.Sum(c => c.Revenue)
                 });
 
             return creativeSummaries;
