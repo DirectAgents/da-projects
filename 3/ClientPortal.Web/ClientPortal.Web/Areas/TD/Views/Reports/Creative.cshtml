@@ -1,4 +1,5 @@
-﻿
+﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
+
 <div id="creativeChartSection" class="k-content">
     <div class="chart-wrapper">
         <div id="creativeChart"></div>
@@ -77,10 +78,22 @@
             //},
             columns: [
                 { field: 'CreativeName', title: 'Creative' },
-                { field: 'Impressions', width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Clicks', width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Conversions', width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
-                { field: 'Revenue', title: 'Spend', width: 150, attributes: { style: "text-align: right" }, format: '{0:c}', footerTemplate: "#= kendo.toString(sum, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } }
+            @if (Model.ShouldShowMetric("Impressions"))
+            {
+                <text>{ field: 'Impressions',             width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
+            }
+            @if (Model.ShouldShowMetric("Clicks"))
+            {
+                <text>{ field: 'Clicks',                  width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
+            }
+            @if (Model.ShouldShowMetric("Conversions"))
+            {
+                <text>{ field: 'Conversions',             width: 150, attributes: { style: "text-align: right" }, format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
+            }
+            @if (Model.ShouldShowMetric("Spend"))
+            {
+                <text>{ field: 'Revenue', title: 'Spend', width: 150, attributes: { style: "text-align: right" }, format: '{0:c}',  footerTemplate: "#= kendo.toString(sum, 'c') #",  footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
+            }
             ],
             filterable: false,
             sortable: true,

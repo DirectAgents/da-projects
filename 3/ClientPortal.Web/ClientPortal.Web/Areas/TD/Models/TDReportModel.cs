@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Web.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ClientPortal.Web.Areas.TD.Models
 {
@@ -29,14 +30,16 @@ namespace ClientPortal.Web.Areas.TD.Models
         {
             List<string> metricsToGraphList = new List<string>();
 
-            if (metricToGraph1 == null && AllMetrics.Length > 0)
-                metricToGraph1 = AllMetrics[0];
-            if (metricToGraph2 == null && AllMetrics.Length > 1)
-                metricToGraph2 = AllMetrics[1];
-
+            if (metricToGraph1 == null && metricToGraph2 == null)
+            {
+                if (AllMetrics.Length > 0)
+                    metricToGraph1 = AllMetrics[0];
+                if (AllMetrics.Length > 1)
+                    metricToGraph2 = AllMetrics[1];
+            }
             if (metricToGraph1 != null || metricToGraph2 != null)
                 metricsToGraphList.Add(metricToGraph1);
-            if (metricToGraph2 != null)
+            if (metricToGraph2 != null && metricToGraph2 != metricToGraph1)
                 metricsToGraphList.Add(metricToGraph2);
 
             MetricsToGraph = metricsToGraphList.ToArray();
@@ -45,6 +48,11 @@ namespace ClientPortal.Web.Areas.TD.Models
         private UserInfo UserInfo { get; set; }
 
         public string[] AllMetrics { get; set; }
-        public string[] MetricsToGraph { get; set; }
+        public string[] MetricsToGraph { get; set; } // e.g. the two metrics to graph on the summary page
+
+        public bool ShouldShowMetric(string metric)
+        {
+            return AllMetrics.Contains(metric);
+        }
     }
 }

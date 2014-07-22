@@ -8,12 +8,17 @@
 
 @using (Ajax.BeginForm("Summary", ajaxOptions))
 {
-    <text>First Metric:</text>
-    @Html.DropDownList("metric1", new SelectList(Model.AllMetrics), new { style = "width:auto"})
-    <br />
-    <text>Second Metric:</text>
-    @Html.DropDownList("metric2", new SelectList(Model.AllMetrics, secondSelectedValue), new { style = "width:auto"})
-    <br />
-    <br />
-    <input type="submit" value="Draw Chart" />
+    <table>
+        <tr>
+            <td>First Metric:</td>
+            <td>@Html.DropDownList("metric1", new SelectList(Model.AllMetrics), new { style = "width:auto"})</td>
+        </tr>
+        <tr>
+            <td>Second Metric:</td>
+            <td>@Html.DropDownList("metric2", new SelectList(Model.AllMetrics, secondSelectedValue), new { style = "width:auto"})</td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Draw Chart" /></td>
+        </tr>
+    </table>
 }

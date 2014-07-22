@@ -11,26 +11,18 @@
 
 <h3>Totals</h3>
 <table>
+@foreach (var metric in Model.AllMetrics)
+{
     <tr>
-        <td>Impressions:</td>
-        <td id="tdImpressions" style="text-align:right"></td>
+        <td>@metric:</td>
+        <td id="td@(metric)" style="text-align:right"></td>
     </tr>
-    <tr>
-        <td>Clicks:</td>
-        <td id="tdClicks" style="text-align:right"></td>
-    </tr>
-    <tr>
-        <td>Conversions:</td>
-        <td id="tdConversions" style="text-align:right"></td>
-    </tr>
-    <tr>
-        <td>Spend:</td>
-        <td id="tdSpend" style="text-align:right"></td>
-    </tr>
+}
 </table>
 
 <br />
 @Html.Partial("ChartSetup")
+<br />
 
 <script>
     $(document).ready(function () {

@@ -83,7 +83,9 @@ namespace ClientPortal.Web.Areas.TD.Controllers
 
         public ActionResult Creative()
         {
-            return PartialView();
+            var userInfo = GetUserInfo();
+            var model = new TDReportModel(userInfo);
+            return PartialView(model);
         }
 
         public JsonResult CreativeData(KendoGridRequest request)
