@@ -1,6 +1,5 @@
 ﻿using ClientPortal.Data.Contexts;
 using ClientPortal.Data.Entities.TD;
-using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Controllers;
 using System;
 using System.Globalization;
@@ -14,12 +13,12 @@ namespace ClientPortal.Web.Models
         {
             this.UserProfile = userProfile;
             this.Advertiser = advertiser;
-            this.TradingDeskAccount = tradingDeskAccount;
+            this.TDAccount = tradingDeskAccount;
         }
 
         private UserProfile UserProfile { get; set; }
         private Advertiser Advertiser { get; set; }
-        public TradingDeskAccount TradingDeskAccount { get; set; }
+        public TradingDeskAccount TDAccount { get; set; }
 
         public bool HasUserProfile
         {
@@ -125,7 +124,7 @@ namespace ClientPortal.Web.Models
 
         public bool HasTradingDesk(bool only = false)
         {
-            bool hasTradingDesk = (this.TradingDeskAccount != null);
+            bool hasTradingDesk = (this.TDAccount != null);
             if (only)
                 return hasTradingDesk && (Advertiser == null);
             else
@@ -134,12 +133,7 @@ namespace ClientPortal.Web.Models
 
         public int? InsertionOrderID
         {
-            get { return (TradingDeskAccount == null) ? null : TradingDeskAccount.InsertionOrderID(); }
-        }
-
-        public bool ShowConversions
-        {
-            get { return true; }
+            get { return (TDAccount == null) ? null : TDAccount.InsertionOrderID(); }
         }
     }
 }

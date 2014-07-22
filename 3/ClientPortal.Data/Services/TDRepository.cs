@@ -4,6 +4,7 @@ using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace ClientPortal.Data.Services
@@ -117,6 +118,13 @@ namespace ClientPortal.Data.Services
         {
             var tdAccount = context.TradingDeskAccounts.Find(tradingDeskAccountId);
             return tdAccount;
+        }
+
+        public void SaveTradingDeskAccount(TradingDeskAccount tdAccount)
+        {
+            var entry = context.Entry(tdAccount);
+            entry.State = EntityState.Modified;
+            context.SaveChanges();
         }
 
         // ---

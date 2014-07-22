@@ -285,6 +285,10 @@
     <Compile Include="Migrations\201407171938435_TradingDeskAccount.Designer.cs">
       <DependentUpon>201407171938435_TradingDeskAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201407221555047_Mig_TDShowConversions.cs" />
+    <Compile Include="Migrations\201407221555047_Mig_TDShowConversions.Designer.cs">
+      <DependentUpon>201407221555047_Mig_TDShowConversions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
@@ -342,6 +346,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407171938435_TradingDeskAccount.resx">
       <DependentUpon>201407171938435_TradingDeskAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407221555047_Mig_TDShowConversions.resx">
+      <DependentUpon>201407221555047_Mig_TDShowConversions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

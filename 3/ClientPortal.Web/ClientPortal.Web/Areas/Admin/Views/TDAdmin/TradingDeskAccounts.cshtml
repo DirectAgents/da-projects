@@ -4,8 +4,7 @@
     //ViewBag.Title = "";
     var ajaxOptions = new AjaxOptions()
     {
-        UpdateTargetId = "tdAccountsTab",
-        HttpMethod = "Get"
+        UpdateTargetId = "tdAccountsTab"
     };
 }
 
@@ -16,14 +15,20 @@ Show:
 
 <table border="1">
     <tr>
-        <th>Id</th>@* TODO: hide this? have it match advertiserid? *@
+        <th></th>
+        <th>Account</th>
         <th>Login</th>
-        <th>Advertiser</th>
+        <th>ShowConversions?</th>
     </tr>
 @foreach (var tda in Model)
 {
     <tr>
-        <td>@tda.TradingDeskAccountId</td>
+        <td>@Ajax.ActionLink("Edit", "EditAccount", new { tdaId = tda.TradingDeskAccountId }, ajaxOptions)</td>
+        <td>
+            @if (tda.Advertisers.Count() > 0) {
+                @(String.Join(", ", tda.Advertisers.Select(a => a.AdvertiserName).ToArray()))
+            }
+        </td>
         <td>
             @if (tda.UserProfiles.Count() > 0) {
                 @(String.Join(", ", tda.UserProfiles.Select(u => u.UserName).ToArray()))
@@ -31,11 +36,7 @@ Show:
             //    @Ajax.ActionLink("create", "CreateUserProfile", new { tdaId = tda.TradingDeskAccountId }, ajaxOptions)
             }
         </td>
-        <td>
-            @if (tda.Advertisers.Count() > 0) {
-                @(String.Join(", ", tda.Advertisers.Select(a => a.AdvertiserName).ToArray()))
-            }
-        </td>
+        <td>@(tda.ShowConversions ? "yes" : "no")</td>
     </tr>
 }
 </table>

@@ -1,12 +1,6 @@
 ﻿@model IEnumerable<ClientPortal.Data.Entities.TD.DBM.InsertionOrder>
-
 @{
-    //ViewBag.Title = "";
-    var ajaxOptions = new AjaxOptions()
-    {
-        UpdateTargetId = "tdAccountsTab",
-        HttpMethod = "Get"
-    };
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("tdAccountsTab");
 }
 
 Show:

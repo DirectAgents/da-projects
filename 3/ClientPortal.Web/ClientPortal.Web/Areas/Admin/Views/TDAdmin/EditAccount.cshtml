@@ -1,0 +1,27 @@
+﻿@model ClientPortal.Data.Entities.TD.TradingDeskAccount
+@{
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("tdAccountsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("tdAccountsTab", null, "Post");
+}
+
+@using (Ajax.BeginForm(ajaxOpts_Post))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Edit Account</legend>
+        @Html.HiddenFor(m => m.TradingDeskAccountId)
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.DisplayName, "Account:")</td>
+                <td>@Html.DisplayFor(m => m.DisplayName)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ShowConversions)</td>
+                <td>@Html.EditorFor(m => m.ShowConversions)</td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" value="Save" />
+            &nbsp;@Ajax.ActionLink("cancel", "TradingDeskAccounts", ajaxOptions)
+    </fieldset>
+}

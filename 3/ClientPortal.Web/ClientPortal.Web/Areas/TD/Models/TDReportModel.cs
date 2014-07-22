@@ -19,7 +19,7 @@ namespace ClientPortal.Web.Areas.TD.Models
 
             metricsList.Add("Impressions");
             metricsList.Add("Clicks");
-            if (UserInfo.ShowConversionData)
+            if (UserInfo.TDAccount.ShowConversions)
                 metricsList.Add("Conversions");
             metricsList.Add("Spend");
 

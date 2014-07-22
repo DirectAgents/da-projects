@@ -1,9 +1,10 @@
 ﻿@model ClientPortal.Data.Entities.TD.DBM.InsertionOrder
 @{
-    var ajaxOptions = RazorHelpers.GetAjaxOptions("insertionOrdersTab");
+    var ajaxOptions = RazorHelpers.GetAjaxOptions("tdAccountsTab");
+    var ajaxOpts_Post = RazorHelpers.GetAjaxOptions("tdAccountsTab", null, "Post");
 }
 
-@using (Ajax.BeginForm(ajaxOptions))
+@using (Ajax.BeginForm(ajaxOpts_Post))
 {
     @Html.ValidationSummary(true)
     <fieldset>

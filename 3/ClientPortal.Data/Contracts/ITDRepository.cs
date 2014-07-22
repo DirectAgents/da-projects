@@ -23,5 +23,6 @@ namespace ClientPortal.Data.Contracts
 
         IQueryable<TradingDeskAccount> TradingDeskAccounts();
         TradingDeskAccount GetTradingDeskAccount(int tradingDeskAccountId);
+        void SaveTradingDeskAccount(TradingDeskAccount tdAccount);
     }
 }

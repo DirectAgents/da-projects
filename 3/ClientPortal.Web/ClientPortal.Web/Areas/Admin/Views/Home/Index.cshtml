@@ -203,7 +203,7 @@
         function LoadTDAccounts() {
             $("#tdAccountsTab").html("Loading...");
             $.ajax({
-                url: '@Url.Action("TradingDeskAccounts", "TD")',
+                url: '@Url.Action("TradingDeskAccounts", "TDAdmin")',
                 cache: false
             }).done(function (html) {
                 $("#tdAccountsTab").html(html);
