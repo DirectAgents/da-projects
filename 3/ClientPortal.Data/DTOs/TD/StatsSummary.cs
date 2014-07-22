@@ -10,6 +10,6 @@ namespace ClientPortal.Data.DTOs.TD
         public int Impressions { get; set; }
         public int Clicks { get; set; }
         public int Conversions { get; set; }
-        public decimal Revenue { get; set; }
+        public decimal Spend { get; set; }
     }
 }

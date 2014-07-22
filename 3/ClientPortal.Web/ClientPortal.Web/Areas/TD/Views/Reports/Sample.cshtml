@@ -47,7 +47,7 @@
                         Impressions: { type: 'number' },
                         Clicks: { type: 'number' },
                         Conversions: { type: 'number' },
-                        Revenue: { type: 'number' }
+                        Spend: { type: 'number' }
                     }
                 }
             },
@@ -56,7 +56,7 @@
                 { field: "Impressions", aggregate: "sum" },
                 { field: "Clicks", aggregate: "sum" },
                 { field: "Conversions", aggregate: "sum" },
-                { field: "Revenue", aggregate: "sum" }
+                { field: "Spend", aggregate: "sum" }
             ],
             requestEnd: function (e) {
                 if (e.type == "read") {
@@ -89,7 +89,7 @@
                 { field: 'Impressions', format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold" } },
                 { field: 'Clicks', format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold" } },
                 { field: 'Conversions', format: '{0:n0}', footerTemplate: "#= kendo.toString(sum, 'n0') #", footerAttributes: { style: "font-weight: bold" } },
-                { field: 'Revenue', title: 'Spend', footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight: bold" } }
+                { field: 'Spend', footerTemplate: "#= kendo.toString(sum, 'n2') #", footerAttributes: { style: "font-weight: bold" } }
             ],
             filterable: false,
             sortable: false,

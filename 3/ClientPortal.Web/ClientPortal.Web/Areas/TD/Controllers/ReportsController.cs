@@ -48,7 +48,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                     Impressions = new { sum = summaries.Sum(s => s.Impressions) },
                     Clicks = new { sum = summaries.Sum(s => s.Clicks) },
                     Conversions = new { sum = summaries.Sum(s => s.Conversions) },
-                    Revenue = new { sum = summaries.Sum(s => s.Revenue) }
+                    Spend = new { sum = summaries.Sum(s => s.Spend) }
                 };
             }
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);
@@ -64,7 +64,6 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         {
             int insertionOrderID = 1286935; // Betterment
 
-            //var summaries = tdRepo.GetDailySummaries(null, null, insertionOrderID);
             var summaries = tdRepo.GetDailyStatsSummaries(null, null, insertionOrderID);
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             if (summaries.Any())
@@ -74,7 +73,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                     Impressions = new { sum = summaries.Sum(s => s.Impressions) },
                     Clicks = new { sum = summaries.Sum(s => s.Clicks) },
                     Conversions = new { sum = summaries.Sum(s => s.Conversions) },
-                    Revenue = new { sum = summaries.Sum(s => s.Revenue) }
+                    Spend = new { sum = summaries.Sum(s => s.Spend) }
                 };
             }
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);

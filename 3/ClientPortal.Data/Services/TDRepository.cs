@@ -32,7 +32,7 @@ namespace ClientPortal.Data.Services
                 Impressions = ds.Impressions,
                 Clicks = ds.Clicks,
                 Conversions = ds.Conversions,
-                Revenue = ds.Revenue
+                Spend = ds.Revenue
             });
             return statsSummaries.ToList();
         }
