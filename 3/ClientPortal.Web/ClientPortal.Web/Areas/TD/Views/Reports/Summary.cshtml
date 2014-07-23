@@ -51,16 +51,16 @@
         datasource.bind("change", function () {
             var aggs = this.aggregates();
             $('#tdImpressions').html(kendo.toString(aggs.Impressions.sum, 'N0'));
-            $('#tdCPM').html(kendo.toString(aggs.Impressions.cpm, 'C'));
+            $('#tdCPM').html(kendo.toString(aggs.CPM.agg, 'C'));
 
             $('#tdClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
-            $('#tdCPC').html(kendo.toString(aggs.Clicks.cpc, 'C'));
-            $('#tdCTR').html(kendo.toString(aggs.Clicks.ctr, 'P'));
+            $('#tdCPC').html(kendo.toString(aggs.CPC.agg, 'C'));
+            $('#tdCTR').html(kendo.toString(aggs.CTR.agg, 'P'));
 @if (Model.ShouldShowMetric("Conversions"))
 {
     <text>$('#tdConversions').html(kendo.toString(aggs.Conversions.sum, 'N0'));</text>
-    <text>$('#tdCPA').html(kendo.toString(aggs.Conversions.cpa, 'C'));</text>
-    <text>$('#tdConvRate').html(kendo.toString(aggs.Conversions.convrate, 'P'));</text>
+    <text>$('#tdCPA').html(kendo.toString(aggs.CPA.agg, 'C'));</text>
+    <text>$('#tdConvRate').html(kendo.toString(aggs.ConvRate.agg, 'P'));</text>
 }
             $('#tdSpend').html(kendo.toString(aggs.Spend.sum, 'C'));
         });

@@ -21,5 +21,18 @@ namespace ClientPortal.Data.DTOs.TD
         {
             get { return (Clicks == 0) ? 0 : Math.Round((double)Conversions / Clicks, 4); }
         }
+
+        public decimal CPM
+        {
+            get { return (Impressions == 0) ? 0 : 1000 * Spend / Impressions; }
+        }
+        public decimal CPC
+        {
+            get { return (Clicks == 0) ? 0 : Spend / Clicks; }
+        }
+        public decimal CPA
+        {
+            get { return (Conversions == 0) ? 0 : Spend / Conversions; }
+        }
     }
 }
