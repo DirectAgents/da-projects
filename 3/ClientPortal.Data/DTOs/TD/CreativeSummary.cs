@@ -34,5 +34,10 @@ namespace ClientPortal.Data.DTOs.TD
         {
             get { return (Conversions == 0) ? 0 : Spend / Conversions; }
         }
+
+        public int Conv // used for sorting
+        {
+            get { return (Conversions > 0) ? 1 : 0; }
+        }
     }
 }

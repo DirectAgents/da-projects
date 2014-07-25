@@ -4,6 +4,7 @@ using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
 using DirectAgents.Mvc.KendoGridBinder;
+using DirectAgents.Mvc.KendoGridBinder.Containers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,7 +111,23 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 return Json(new { });
 
             var summaries = tdRepo.GetCreativeSummaries(null, null, userInfo.InsertionOrderID.Value);
-            var kgrid = new KendoGrid<CreativeSummary>(request, summaries);
+
+            if (request.SortObjects.Any(so => so.Field == "CPA"))
+            {
+                // When sorting on eCPA, make 'N/A' rows high and within those, sort by Spend.
+                List<SortObject> sortObjects = new List<SortObject>();
+                foreach (var sortObject in request.SortObjects)
+                {
+                    if (sortObject.Field == "CPA")
+                    {
+                        sortObjects.Add(new SortObject("Conv", sortObject.Direction == "asc" ? "desc" : "asc"));
+                        sortObjects.Add(new SortObject("Spend", sortObject.Direction));
+                    }
+                    sortObjects.Add(sortObject);
+                }
+                request.SortObjects = sortObjects;
+            }
+            var kgrid = new KendoGrid<CreativeSummary>(request, summaries, true);
             if (summaries.Any())
             {
                 int impressions = summaries.Sum(s => s.Impressions);

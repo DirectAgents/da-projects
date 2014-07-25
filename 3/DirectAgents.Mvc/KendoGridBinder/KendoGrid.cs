@@ -8,12 +8,17 @@ namespace DirectAgents.Mvc.KendoGridBinder
 {
     public class KendoGrid<T>
     {
-        public KendoGrid(KendoGridRequest request, IQueryable<T> query)
+        public KendoGrid(KendoGridRequest request, IQueryable<T> query, bool toListBeforeOrderBy = false)
         {
             // call another method here to get filtering and sorting.
             var filtering = GetFiltering(request);
             var sorting = GetSorting(request);
-            var tempQuery = query.Where(filtering).OrderBy(sorting);
+
+            var tempQuery = query.Where(filtering);
+            if (toListBeforeOrderBy)
+                tempQuery = tempQuery.ToList().AsQueryable();
+
+            tempQuery = tempQuery.OrderBy(sorting);
             total = tempQuery.Count();
             data = tempQuery.Skip(request.Skip);
             if (request.Take > 0)

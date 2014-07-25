@@ -50,6 +50,7 @@
                         Clicks: { type: 'number' },
                         CTR: { type: 'number' },
                         Conversions: { type: 'number' },
+                        Conv: { type: 'number' },@* 1 if there are any conversions, 0 of not *@
                         ConvRate: { type: 'number' },
                         Spend: { type: 'number' },
                         CPM: { type: 'number' },
@@ -100,7 +101,7 @@
                 { field: 'CPM', title: 'eCPM', width: 100, attributes: { style: "text-align:right" }, format: '{0:c}', footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },
             @if (Model.ShouldShowMetric("Conversions"))
             {
-                <text>{ field: 'CPA', title: 'eCPA', width: 100, attributes: { style: "text-align:right" }, format: '{0:c}', footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
+                <text>{ field: 'CPA', title: 'eCPA', template: "# if(Conv==0){# N/A #}else{##= kendo.toString(CPA,'c') ##}#", width: 100, attributes: { style: "text-align:right" }, footerTemplate: "#= kendo.toString(agg, 'c') #", footerAttributes: { style: "font-weight: bold; text-align: right" } },</text>
             }
             ],
             filterable: false,
