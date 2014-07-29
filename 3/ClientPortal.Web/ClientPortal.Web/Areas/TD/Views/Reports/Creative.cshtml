@@ -1,19 +1,81 @@
 ﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
 
-<div id="creativeChartSection" class="k-content">
-    <div class="chart-wrapper">
-        <div id="creativeChart"></div>
+<div class="row">
+    <div class="six columns">
+        <div id="creativeBarChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="creativeBarChart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="six columns">
+        <div id="creativeScatterChartSection" class="k-content">
+            <div class="chart-wrapper">
+                <div id="creativeScatterChart"></div>
+            </div>
+        </div>
     </div>
 </div>
 <div id="creativeGrid"></div>
+<br />
 
 <script>
     $(document).ready(function () {
         var datasource = CreateCreativeDataSource();
         CreateCreativeGrid(datasource);
-        CreateCreativeChart(datasource);
+        CreateCreativeCharts(datasource);
         datasource.read();
+        datasource.bind('change', CreativeDataSourceChange);
     });
+
+    nMetrics = ['Impressions', 'Clicks', 'Conversions'];
+    eMetrics = ['CPM', 'CPC', 'CPA'];
+
+    function CreativeDataSourceChange() {
+        @* Determine the metric for the bar chart based on what's sorted on *@
+        var sort = this.sort();
+        if (sort.length > 0 && sort[0].field != 'CreativeName')
+            metricForBarChart = sort[0].field;
+        if (!metricForBarChart)
+            metricForBarChart = 'Clicks';
+
+        PopulateCreativeBarChart(this.data());
+    }
+
+    function PopulateCreativeBarChart(data) {
+        var chart = $('#creativeBarChart').data('kendoChart');
+        var isNMetric = ($.inArray(metricForBarChart, nMetrics) > -1);
+        var isEMetric = ($.inArray(metricForBarChart, eMetrics) > -1);
+        if (isEMetric)
+            chart.options.series[0].name = 'e' + metricForBarChart;
+        else
+            chart.options.series[0].name = metricForBarChart;
+
+        var dataFormat = '{0:N0}';
+        if (metricForBarChart == 'CTR' || metricForBarChart == 'ConvRate')
+            dataFormat = '{0:P}';
+        else if (metricForBarChart == 'CPM')
+            dataFormat = '{0:C3}';
+        else if (metricForBarChart == 'Spend' || isEMetric)
+            dataFormat = '{0:C}';
+        chart.options.valueAxis = [{ labels: { format: dataFormat, step: 2 } }];
+        chart.options.series[0].tooltip.format = dataFormat;
+
+        @* Construct the bar names and values *@
+        chart.options.categoryAxis.categories = new Array();
+        chart.options.series[0].data = new Array();
+        var maxData = 0;
+        for (var i = 0; i < 5; i++) {
+            chart.options.categoryAxis.categories[i] = data[i].CreativeName;
+            chart.options.series[0].data[i] = data[i][metricForBarChart];
+            if (data[i][metricForBarChart] > maxData)
+                maxData = data[i][metricForBarChart];
+        }
+        if (isNMetric && maxData < 4)
+            chart.options.valueAxis[0].max = 4;
+
+        chart.redraw();
+    }
 
     function CreateCreativeDataSource() {
         return new kendo.data.DataSource({
@@ -110,7 +172,72 @@
         });
     }
 
-    function CreateCreativeChart(datasource) {
+    function CreateCreativeCharts(datasource) {
+        $("#creativeBarChart").kendoChart({
+            title: {
+                text: "Top Creatives"
+            },
+            legend: {
+                position: "bottom"
+            },
+            categoryAxis: {
+                categories: []
+            },
+            //valueAxis: [
+            //    { labels: { step: 2 } }
+            //],
+            seriesDefaults: {
+                type: "bar"
+            },
+            series: [
+                 { name: "", data: [] }
+            ],
+            tooltip: {
+                visible: true
+            }
+        });
+
+        $("#creativeScatterChart").kendoChart({
+            tooltip: {
+                visible: true,
+                format: "{0} / {1}"
+            },
+            title: {
+                text: "Rainfall - Wind Speed"
+            },
+            legend: {
+                position: "bottom"
+            },
+            seriesDefaults: {
+                type: "scatter"
+            },
+            series: [{
+                name: "January 2008",
+                data: [
+                [16.4, 5.4], [21.7, 2], [25.4, 3], [19, 2], [10.9, 1], [13.6, 3.2], [10.9, 7.4], [10.9, 0], [10.9, 8.2], [16.4, 0], [16.4, 1.8], [13.6, 0.3], [13.6, 0], [29.9, 0], [27.1, 2.3], [16.4, 0], [13.6, 3.7], [10.9, 5.2], [16.4, 6.5], [10.9, 0], [24.5, 7.1], [10.9, 0], [8.1, 4.7], [19, 0], [21.7, 1.8], [27.1, 0], [24.5, 0], [27.1, 0], [29.9, 1.5], [27.1, 0.8], [22.1, 2]]
+            }, {
+                name: "January 2009",
+                data: [
+                [6.4, 13.4], [1.7, 11], [5.4, 8], [9, 17], [1.9, 4], [3.6, 12.2], [1.9, 14.4], [1.9, 9], [1.9, 13.2], [1.4, 7], [6.4, 8.8], [3.6, 4.3], [1.6, 10], [9.9, 2], [7.1, 15], [1.4, 0], [3.6, 13.7], [1.9, 15.2], [6.4, 16.5], [0.9, 10], [4.5, 17.1], [10.9, 10], [0.1, 14.7], [9, 10], [2.7, 11.8], [2.1, 10], [2.5, 10], [27.1, 10], [2.9, 11.5], [7.1, 10.8], [2.1, 12]]
+            }, {
+                name: "January 2010",
+                data: [
+                [21.7, 3], [13.6, 3.5], [13.6, 3], [29.9, 3], [21.7, 20], [19, 2], [10.9, 3], [28, 4], [27.1, 0.3], [16.4, 4], [13.6, 0], [19, 5], [16.4, 3], [24.5, 3], [32.6, 3], [27.1, 4], [13.6, 6], [13.6, 8], [13.6, 5], [10.9, 4], [16.4, 0], [32.6, 10.3], [21.7, 20.8], [24.5, 0.8], [16.4, 0], [21.7, 6.9], [13.6, 7.7], [16.4, 0], [8.1, 0], [16.4, 0], [16.4, 0]]
+            }],
+            xAxis: {
+                max: 35,
+                title: {
+                    text: "Wind Speed [km/h]"
+                }
+            },
+            yAxis: {
+                min: -5,
+                max: 25,
+                title: {
+                    text: "Rainfall [mm]"
+                }
+            }
+        });
     }
 
 </script>
