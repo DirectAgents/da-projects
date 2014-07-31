@@ -136,7 +136,7 @@
 @for (int i = 0; i < metrics.Length; i++)
 {
     string format = (metrics[i] == "Spend") ? "C" : "N0";
-    <text>{ type: "line", field: "@metrics[i]", axis: "@metrics[i]", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:@format}',value) #" } }</text>
+    <text>{ type: "line", field: "@metrics[i]", name: "@metrics[i]", axis: "@metrics[i]", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:@format}',value) #" } }</text>
     if (i < metrics.Length - 1)
     {
         <text>,</text>
@@ -165,7 +165,7 @@
             },
             legend: {
                 position: "custom",
-                offsetX: 90,
+                offsetX: 110,
                 offsetY: 0
             }
         });
