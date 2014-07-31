@@ -6,7 +6,7 @@
 
 @using (Ajax.BeginForm(ajaxOpts_Post))
 {
-    @Html.ValidationSummary(true)
+    @Html.ValidationSummary()
     <fieldset>
         <legend>Edit Account</legend>
         @Html.HiddenFor(m => m.TradingDeskAccountId)
@@ -18,6 +18,14 @@
             <tr>
                 <td>@Html.LabelFor(m => m.ShowConversions)</td>
                 <td>@Html.EditorFor(m => m.ShowConversions)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.FixedMetricName, "FixedMetric")</td>
+                <td>@Html.DropDownListFor(m => m.FixedMetricName, ViewData["FixedMetricItems"] as List<SelectListItem>)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.FixedMetricValue)</td>
+                <td>@Html.TextBoxFor(m => m.FixedMetricValue, "{0:0.##########}")</td>
             </tr>
         </table>
         <br />

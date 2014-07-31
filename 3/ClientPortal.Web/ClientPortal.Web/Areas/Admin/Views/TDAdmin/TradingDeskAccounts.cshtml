@@ -18,7 +18,8 @@ Show:
         <th></th>
         <th>Account</th>
         <th>Login</th>
-        <th>ShowConversions?</th>
+        <th>ShowConv?</th>
+        <th>FixedMetric</th>
     </tr>
 @foreach (var tda in Model)
 {
@@ -37,6 +38,7 @@ Show:
             }
         </td>
         <td>@(tda.ShowConversions ? "yes" : "no")</td>
+        <td>@tda.FixedMetricDisplay</td>
     </tr>
 }
 </table>

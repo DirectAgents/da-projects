@@ -289,6 +289,10 @@
     <Compile Include="Migrations\201407221555047_Mig_TDShowConversions.Designer.cs">
       <DependentUpon>201407221555047_Mig_TDShowConversions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201407311458183_Mig_FixedMetric.cs" />
+    <Compile Include="Migrations\201407311458183_Mig_FixedMetric.Designer.cs">
+      <DependentUpon>201407311458183_Mig_FixedMetric.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientPortalRepository.cs" />
@@ -349,6 +353,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407221555047_Mig_TDShowConversions.resx">
       <DependentUpon>201407221555047_Mig_TDShowConversions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201407311458183_Mig_FixedMetric.resx">
+      <DependentUpon>201407311458183_Mig_FixedMetric.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

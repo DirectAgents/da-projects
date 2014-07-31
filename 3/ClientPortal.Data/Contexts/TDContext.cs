@@ -22,6 +22,8 @@ namespace ClientPortal.Data.Entities.TD
             modelBuilder.Entity<CreativeDailySummary>()
                 .HasKey(cds => new {cds.Date, cds.CreativeID})
                 .ToTable("CreativeDailySummary", dbmSchema);
+
+            modelBuilder.Entity<TradingDeskAccount>().Property(m => m.FixedMetricValue).HasPrecision(18, 6);
         }
 
         public DbSet<InsertionOrder> InsertionOrders { get; set; }

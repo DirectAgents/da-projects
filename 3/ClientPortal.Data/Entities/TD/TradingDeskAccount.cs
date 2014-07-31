@@ -11,6 +11,8 @@ namespace ClientPortal.Data.Entities.TD
     {
         public int TradingDeskAccountId { get; set; }
         public bool ShowConversions { get; set; }
+        public string FixedMetricName { get; set; }
+        public decimal? FixedMetricValue { get; set; }
 
         public virtual ICollection<InsertionOrder> InsertionOrders { get; set; }
 
@@ -30,6 +32,19 @@ namespace ClientPortal.Data.Entities.TD
                     return String.Join(", ", UserProfiles.Select(u => u.UserName).ToArray());
                 else
                     return TradingDeskAccountId.ToString();
+            }
+        }
+        [NotMapped]
+        public string FixedMetricDisplay
+        {
+            get
+            {
+                if (String.IsNullOrWhiteSpace(FixedMetricName))
+                    return "(none)";
+                //else if (FixedMetricName == "CPM" || FixedMetricName == "CPC")
+                //    return String.Format("{0}: {1:C}", FixedMetricName, FixedMetricValue);
+                else
+                    return String.Format("{0}: {1:0.##########}", FixedMetricName, FixedMetricValue);
             }
         }
 

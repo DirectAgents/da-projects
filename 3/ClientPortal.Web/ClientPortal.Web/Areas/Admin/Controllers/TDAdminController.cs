@@ -2,6 +2,7 @@
 using ClientPortal.Data.Entities.TD;
 using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebMatrix.WebData;
@@ -15,13 +16,6 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             tdRepo = tdRepository;
             cpRepo = cpRepository;
-        }
-
-        public ActionResult Index()
-        {
-            var userInfo = GetUserInfo();
-            var model = new TDHomeModel(userInfo);
-            return View(model);
         }
 
         public ActionResult InsertionOrders()
@@ -70,7 +64,18 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             var advIds = tdAccount.AdvertiserIds();
             tdAccount.Advertisers = cpRepo.Advertisers.Where(a => advIds.Contains(a.AdvertiserId)).ToList();
 
+            ViewData["FixedMetricItems"] = FixedMetricItems();
             return View(tdAccount);
+        }
+        private List<SelectListItem> FixedMetricItems()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            items.AddRange(new[]{
+                new SelectListItem() {Text="(none)", Value=""},
+                new SelectListItem() {Text="CPM", Value="CPM"},
+                new SelectListItem() {Text="CPC", Value="CPC"},
+                new SelectListItem() {Text="Spend Multiplier", Value="SpendMult"}});
+            return items;
         }
 
         [HttpPost]
@@ -78,6 +83,8 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrWhiteSpace(tdAccount.FixedMetricName))
+                    tdAccount.FixedMetricValue = null;
                 tdRepo.SaveTradingDeskAccount(tdAccount);
                 return RedirectToAction("TradingDeskAccounts");
             }
