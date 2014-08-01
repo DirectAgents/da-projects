@@ -111,24 +111,29 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             if (!userInfo.InsertionOrderID.HasValue)
                 return Json(new { });
 
-            var summaries = tdRepo.GetCreativeStatsSummaries(null, null, userInfo.InsertionOrderID.Value);
+            var tda = userInfo.TDAccount;
+            var summaries = tdRepo.GetCreativeStatsSummaries(null, null, userInfo.InsertionOrderID.Value, tda.SpendMultiplier, tda.FixedCPM, tda.FixedCPC);
 
-            if (request.SortObjects.Any(so => so.Field == "CPA"))
+            var costPerFields = new[] { "CPM", "CPC", "CPA" };
+            if (request.SortObjects.Any(so => costPerFields.Contains(so.Field)))
             {
-                // When sorting on eCPA, make 'N/A' rows high and within those, sort by Spend.
                 List<SortObject> sortObjects = new List<SortObject>();
                 foreach (var sortObject in request.SortObjects)
                 {
+                    // when sorting on eCPA, make 'N/A' rows high
                     if (sortObject.Field == "CPA")
                     {
                         sortObjects.Add(new SortObject("Conv", sortObject.Direction == "asc" ? "desc" : "asc"));
-                        sortObjects.Add(new SortObject("Spend", sortObject.Direction));
                     }
                     sortObjects.Add(sortObject);
+                    if (costPerFields.Contains(sortObject.Field))
+                    {   // for rows with identical sort values (CPM/CPC/CPA), sort secondarily by Spend
+                        sortObjects.Add(new SortObject("Spend", sortObject.Direction));
+                    }
                 }
                 request.SortObjects = sortObjects;
             }
-            var kgrid = new KendoGrid<CreativeStatsSummary>(request, summaries, true);
+            var kgrid = new KendoGrid<CreativeStatsSummary>(request, summaries);
             if (summaries.Any())
             {
                 int impressions = summaries.Sum(s => s.Impressions);

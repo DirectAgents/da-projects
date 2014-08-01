@@ -94,19 +94,46 @@ namespace ClientPortal.Data.Services
             return cds;
         }
 
-        public IQueryable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID)
+        public IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID, decimal? spendMultiplier = null, decimal? fixedCPM = null, decimal? fixedCPC = null)
         {
             var creativeDailySummaries = GetCreativeDailySummaries(start, end, insertionOrderID);
-            var creativeSummaries = creativeDailySummaries.GroupBy(cds => cds.Creative).Select(g =>
-                new CreativeStatsSummary {
+            IEnumerable<CreativeStatsSummary> creativeSummaries = creativeDailySummaries.GroupBy(cds => cds.Creative).Select(g =>
+                new CreativeStatsSummary
+                {
                     CreativeID = g.Key.CreativeID,
                     CreativeName = g.Key.CreativeName,
                     Impressions = g.Sum(c => c.Impressions),
                     Clicks = g.Sum(c => c.Clicks),
                     Conversions = g.Sum(c => c.Conversions),
                     Spend = g.Sum(c => c.Revenue)
-                });
+                }).ToList();
 
+            if (fixedCPM.HasValue || fixedCPC.HasValue)
+            {
+                creativeSummaries = creativeSummaries.Select(c =>
+                    new CreativeStatsSummary
+                    {
+                        CreativeID = c.CreativeID,
+                        CreativeName = c.CreativeName,
+                        Impressions = c.Impressions,
+                        Clicks = c.Clicks,
+                        Conversions = c.Conversions,
+                        Spend = fixedCPM.HasValue ? fixedCPM.Value * c.Impressions / 1000 : fixedCPC.Value * c.Clicks
+                    });
+            }
+            else if (spendMultiplier.HasValue)
+            {
+                creativeSummaries = creativeSummaries.Select(c =>
+                    new CreativeStatsSummary
+                    {
+                        CreativeID = c.CreativeID,
+                        CreativeName = c.CreativeName,
+                        Impressions = c.Impressions,
+                        Clicks = c.Clicks,
+                        Conversions = c.Conversions,
+                        Spend = c.Spend * spendMultiplier.Value
+                    });
+            }
             return creativeSummaries;
         }
 
