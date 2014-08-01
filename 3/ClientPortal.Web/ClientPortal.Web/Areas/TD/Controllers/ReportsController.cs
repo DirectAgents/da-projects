@@ -110,7 +110,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             if (!userInfo.InsertionOrderID.HasValue)
                 return Json(new { });
 
-            var summaries = tdRepo.GetCreativeSummaries(null, null, userInfo.InsertionOrderID.Value);
+            var summaries = tdRepo.GetCreativeStatsSummaries(null, null, userInfo.InsertionOrderID.Value);
 
             if (request.SortObjects.Any(so => so.Field == "CPA"))
             {
@@ -127,7 +127,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 }
                 request.SortObjects = sortObjects;
             }
-            var kgrid = new KendoGrid<CreativeSummary>(request, summaries, true);
+            var kgrid = new KendoGrid<CreativeStatsSummary>(request, summaries, true);
             if (summaries.Any())
             {
                 int impressions = summaries.Sum(s => s.Impressions);

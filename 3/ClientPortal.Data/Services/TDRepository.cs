@@ -23,6 +23,18 @@ namespace ClientPortal.Data.Services
             context.SaveChanges();
         }
 
+        private IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
+        {
+            var dailySummaries = context.DailySummaries.AsQueryable();
+
+            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date >= start.Value);
+            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date <= end.Value);
+
+            if (insertionOrderID.HasValue) dailySummaries = dailySummaries.Where(ds => ds.InsertionOrderID == insertionOrderID.Value);
+
+            return dailySummaries;
+        }
+
         public IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID)
         {
             var dailySummaries = GetDailySummaries(start, end, insertionOrderID);
@@ -37,19 +49,7 @@ namespace ClientPortal.Data.Services
             return statsSummaries.ToList();
         }
 
-        public IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
-        {
-            var dailySummaries = context.DailySummaries.AsQueryable();
-
-            if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date >= start.Value);
-            if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date <= end.Value);
-
-            if (insertionOrderID.HasValue) dailySummaries = dailySummaries.Where(ds => ds.InsertionOrderID == insertionOrderID.Value);
-
-            return dailySummaries;
-        }
-
-        public IQueryable<CreativeDailySummary> GetCreativeDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
+        private IQueryable<CreativeDailySummary> GetCreativeDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
         {
             var cds = context.CreativeDailySummaries.AsQueryable();
             if (start.HasValue)
@@ -61,11 +61,11 @@ namespace ClientPortal.Data.Services
             return cds;
         }
 
-        public IQueryable<CreativeSummary> GetCreativeSummaries(DateTime? start, DateTime? end, int? insertionOrderID)
+        public IQueryable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID)
         {
             var creativeDailySummaries = GetCreativeDailySummaries(start, end, insertionOrderID);
             var creativeSummaries = creativeDailySummaries.GroupBy(cds => cds.Creative).Select(g =>
-                new CreativeSummary {
+                new CreativeStatsSummary {
                     CreativeID = g.Key.CreativeID,
                     CreativeName = g.Key.CreativeName,
                     Impressions = g.Sum(c => c.Impressions),

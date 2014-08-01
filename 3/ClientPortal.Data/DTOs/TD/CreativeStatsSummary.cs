@@ -2,7 +2,7 @@
 
 namespace ClientPortal.Data.DTOs.TD
 {
-    public class CreativeSummary
+    public class CreativeStatsSummary
     {
         public int CreativeID { get; set; }
         public string CreativeName { get; set; }

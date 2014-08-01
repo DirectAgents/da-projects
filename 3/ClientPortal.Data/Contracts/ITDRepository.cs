@@ -11,10 +11,10 @@ namespace ClientPortal.Data.Contracts
     {
         void SaveChanges();
 
+        //IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
         IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID);
-        IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
-        IQueryable<CreativeDailySummary> GetCreativeDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
-        IQueryable<CreativeSummary> GetCreativeSummaries(DateTime? start, DateTime? end, int? insertionOrderID);
+        //IQueryable<CreativeDailySummary> GetCreativeDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID);
+        IQueryable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID);
 
         IQueryable<InsertionOrder> InsertionOrders();
         InsertionOrder GetInsertionOrder(int insertionOrderID);
