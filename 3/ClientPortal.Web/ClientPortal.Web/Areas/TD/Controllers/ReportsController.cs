@@ -40,7 +40,8 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             if (!userInfo.InsertionOrderID.HasValue)
                 return Json(new { });
 
-            var summaries = tdRepo.GetDailyStatsSummaries(null, null, userInfo.InsertionOrderID.Value);
+            var tda = userInfo.TDAccount;
+            var summaries = tdRepo.GetDailyStatsSummaries(null, null, userInfo.InsertionOrderID.Value, tda.SpendMultiplier, tda.FixedCPM, tda.FixedCPC);
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             if (summaries.Any())
             {

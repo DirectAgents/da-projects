@@ -23,6 +23,8 @@ namespace ClientPortal.Data.Services
             context.SaveChanges();
         }
 
+        // ---
+
         private IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
         {
             var dailySummaries = context.DailySummaries.AsQueryable();
@@ -35,17 +37,48 @@ namespace ClientPortal.Data.Services
             return dailySummaries;
         }
 
-        public IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID)
+        public IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID, decimal? spendMultiplier = null, decimal? fixedCPM = null, decimal? fixedCPC = null)
         {
             var dailySummaries = GetDailySummaries(start, end, insertionOrderID);
-            var statsSummaries = dailySummaries.Select(ds => new StatsSummary
+            IQueryable<StatsSummary> statsSummaries;
+
+            if (fixedCPM.HasValue)
             {
-                Date = ds.Date,
-                Impressions = ds.Impressions,
-                Clicks = ds.Clicks,
-                Conversions = ds.Conversions,
-                Spend = ds.Revenue
-            });
+                statsSummaries = dailySummaries.Select(ds => new StatsSummary
+                {
+                    Date = ds.Date,
+                    Impressions = ds.Impressions,
+                    Clicks = ds.Clicks,
+                    Conversions = ds.Conversions,
+                    Spend = fixedCPM.Value * ds.Impressions / 1000
+                    //Spend = fixedCPM.HasValue ? fixedCPM.Value * ds.Impressions / 1000 : fixedCPC.Value * ds.Clicks
+                });
+            }
+            else if (fixedCPC.HasValue)
+            {
+                statsSummaries = dailySummaries.Select(ds => new StatsSummary
+                {
+                    Date = ds.Date,
+                    Impressions = ds.Impressions,
+                    Clicks = ds.Clicks,
+                    Conversions = ds.Conversions,
+                    Spend = fixedCPC.Value * ds.Clicks
+                });
+            }
+            else
+            {
+                decimal spendMult = 1;
+                if (spendMultiplier.HasValue)
+                    spendMult = spendMultiplier.Value;
+                statsSummaries = dailySummaries.Select(ds => new StatsSummary
+                {
+                    Date = ds.Date,
+                    Impressions = ds.Impressions,
+                    Clicks = ds.Clicks,
+                    Conversions = ds.Conversions,
+                    Spend = ds.Revenue * spendMult
+                });
+            }
             return statsSummaries.ToList();
         }
 

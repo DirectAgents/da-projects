@@ -51,10 +51,10 @@
         datasource.bind("change", function () {
             var aggs = this.aggregates();
             $('#tdImpressions').html(kendo.toString(aggs.Impressions.sum, 'N0'));
-            $('#tdCPM').html(kendo.toString(aggs.CPM.agg, 'C'));
+            $('#tdCPM').html(kendo.toString(aggs.CPM.agg, 'C3'));
 
             $('#tdClicks').html(kendo.toString(aggs.Clicks.sum, 'N0'));
-            $('#tdCPC').html(kendo.toString(aggs.CPC.agg, 'C'));
+            $('#tdCPC').html(kendo.toString(aggs.CPC.agg, 'C3'));
             $('#tdCTR').html(kendo.toString(aggs.CTR.agg, 'P'));
 @if (Model.ShouldShowMetric("Conversions"))
 {

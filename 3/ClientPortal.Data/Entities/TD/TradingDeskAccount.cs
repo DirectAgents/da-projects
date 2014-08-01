@@ -47,6 +47,21 @@ namespace ClientPortal.Data.Entities.TD
                     return String.Format("{0}: {1:0.##########}", FixedMetricName, FixedMetricValue);
             }
         }
+        [NotMapped]
+        public decimal? SpendMultiplier
+        {
+            get { return FixedMetricName == "SpendMult" ? FixedMetricValue : null; }
+        }
+        [NotMapped]
+        public decimal? FixedCPM
+        {
+            get { return FixedMetricName == "CPM" ? FixedMetricValue : null; }
+        }
+        [NotMapped]
+        public decimal? FixedCPC
+        {
+            get { return FixedMetricName == "CPC" ? FixedMetricValue : null; }
+        }
 
         //Usually there is just one InsertionOrder per TDAccount
         public int? InsertionOrderID()

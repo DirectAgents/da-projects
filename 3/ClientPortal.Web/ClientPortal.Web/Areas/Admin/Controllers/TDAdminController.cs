@@ -72,9 +72,10 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             List<SelectListItem> items = new List<SelectListItem>();
             items.AddRange(new[]{
                 new SelectListItem() {Text="(none)", Value=""},
-                new SelectListItem() {Text="CPM", Value="CPM"},
-                new SelectListItem() {Text="CPC", Value="CPC"},
-                new SelectListItem() {Text="Spend Multiplier", Value="SpendMult"}});
+                new SelectListItem() {Text="Spend Multiplier", Value="SpendMult"},
+                new SelectListItem() {Text="Fixed CPM", Value="CPM"},
+                new SelectListItem() {Text="Fixed CPC", Value="CPC"},
+            });
             return items;
         }
 
