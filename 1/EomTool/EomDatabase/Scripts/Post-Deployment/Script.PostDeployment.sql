@@ -63,6 +63,8 @@ GO
 
 GRANT EXECUTE ON [dbo].[tousd3] TO [DIRECTAGENTS\Account Managers]
 GO
+GRANT CONNECT TO [DIRECTAGENTS\Account Managers]
+GO
 
 /*
 ALTER TABLE dbo.Item ADD
