@@ -14,22 +14,11 @@ namespace EomApp1.Screens.Synch.Models.Eom
             // Campaign (offer) gets created on demand
             eomEntities.Campaigns.IdOrCreate(pid, cakeService, logger);
 
-            var splitType = conversion.ConversionType.Split(new string[] { " - " }, StringSplitOptions.None);
-            string unitTypeString = "";
-            if (splitType.Length > 1) unitTypeString = splitType[1];
-
-            var unitType = eomEntities.UnitTypes.Where(c => c.name == unitTypeString).SingleOrDefault();
+            string unitTypesTried;
+            var unitType = conversion.GetUnitType(eomEntities, out unitTypesTried);
             if (unitType == null)
-            {   // unitType not found from the conversion; try from the campaign (offer)
-                var campaign = eomEntities.Campaigns.Where(c => c.pid == this.pid).FirstOrDefault();
-                if (campaign != null)
-                    unitType = eomEntities.UnitTypes.Where(c => c.name == campaign.campaign_type).SingleOrDefault();
-                if (unitType == null)
-                {
-                    string notFoundName = unitTypeString + (campaign != null ? "\" or \"" + (campaign.campaign_type ?? "[NULL]") : "");
-                    throw new EntityNotFoundException("UnitType", notFoundName); //TODO: allow to pass in multiple notFoundName's
-                }
-            }
+                throw new EntityNotFoundException("UnitType", unitTypesTried);
+
             var revenueCurrency = eomEntities.Currencies.Where(c => c.name == conversion.PriceReceivedCurrency).SingleOrDefault();
             if (revenueCurrency == null)
                 throw new EntityNotFoundException("Revenue Currency", conversion.PriceReceivedCurrency);

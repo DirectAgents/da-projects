@@ -302,46 +302,58 @@ namespace EomApp1.Screens.Synch
         private void LoadItems()
         {
             logger.Log("Loading items from conversion summaries...");
-
-            foreach (var conversionSummary in this.itemsFromConversionSummaries.Keys.ToList())
+            var conversionTypes = this.itemsFromConversionSummaries.Keys.Select(s => s.ConversionType).Distinct();
+            foreach (var conversionType in conversionTypes)
             {
-                // check the dictionary of conversionSummary to existing item
-                var item = this.itemsFromConversionSummaries[conversionSummary];
-
-                if (item == null)  // no existing item?
-                {
-                    // ?10a
-                    item = CreateItem(conversionSummary, item);
-                }
-                else
-                {
-                    logger.Log(string.Format("Updating item {0} from conversion {1}.", item.name, conversionSummary.Name));
-                }
-
-                // Here's the logic that used to be required when there were two tracking systems and the campaign IDs could conflict
-                // Lesson to be learned, when there's an external system, use a key that will never conflict now or in the future
-                if (this.parameters.CampaignId != this.parameters.CampaignExternalId)
-                {
-                    logger.Log(string.Format("Cake Offer {0} is redirecting to PID {1}.", this.parameters.CampaignExternalId, this.parameters.CampaignId));
-                }
-
                 try
                 {
-                    // 11 - alot of stuff happens in the implementation of Update
-                    item.Update(this.eomEntities, conversionSummary, this.parameters.CampaignId, this.cakeService, this.logger);
-                }
-                catch (CannotChangePromotedItemException)
-                {
-                    logger.Log(string.Format("Item for Pid {0} not being updated; already promoted.", this.parameters.CampaignId));
-                    continue;
-                }
+                    var conversionSummaryKeys = this.itemsFromConversionSummaries.Keys.Where(s => s.ConversionType == conversionType).ToList();
+                    foreach (var conversionSummary in conversionSummaryKeys)
+                    {
+                        // check the dictionary of conversionSummary to existing item
+                        var item = this.itemsFromConversionSummaries[conversionSummary];
 
-                if (item.affid != conversionSummary.Affiliate_Id)
+                        bool needToAddItem = false;
+                        if (item == null)  // no existing item?
+                        {
+                            // ?10a
+                            item = CreateItem(conversionSummary, item);
+                            needToAddItem = true;
+                        }
+                        else
+                        {
+                            logger.Log(string.Format("Updating item {0} from conversion {1}.", item.name, conversionSummary.Name));
+                        }
+
+                        // Here's the logic that used to be required when there were two tracking systems and the campaign IDs could conflict
+                        // Lesson to be learned, when there's an external system, use a key that will never conflict now or in the future
+                        if (this.parameters.CampaignId != this.parameters.CampaignExternalId)
+                        {
+                            logger.Log(string.Format("Cake Offer {0} is redirecting to PID {1}.", this.parameters.CampaignExternalId, this.parameters.CampaignId));
+                        }
+
+                        try
+                        {
+                            // 11 - alot of stuff happens in the implementation of Update
+                            item.Update(this.eomEntities, conversionSummary, this.parameters.CampaignId, this.cakeService, this.logger);
+                        }
+                        catch (CannotChangePromotedItemException)
+                        {
+                            logger.Log(string.Format("Item for Pid {0} not being updated; already promoted.", this.parameters.CampaignId));
+                            continue;
+                        }
+                        if (needToAddItem)
+                            this.eomEntities.Items.AddObject(item);
+
+                        if (item.affid != conversionSummary.Affiliate_Id)
+                            logger.Log(string.Format("Cake Affiliate {0} is redirecting to ID {1}.", conversionSummary.Affiliate_Id, item.affid));
+                    }
+                }
+                catch (EntityNotFoundException ex)
                 {
-                    logger.Log(string.Format("Cake Affiliate {0} is redirecting to ID {1}.", conversionSummary.Affiliate_Id, item.affid));
+                    logger.LogError("error for stats(pid=" + this.parameters.CampaignId + ") - EntityNotFound: " + ex.Message);
                 }
             }
-
             logger.Log("Items loaded.");
         }
 
@@ -352,7 +364,6 @@ namespace EomApp1.Screens.Synch
 
             item = new Item() { media_buyer_approval_status_id = 1, campaign_status_id = 1 };
             item.pid = this.parameters.CampaignId;
-            eomEntities.Items.AddObject(item);
 
             return item;
         }
@@ -396,6 +407,37 @@ namespace EomApp1.Screens.Synch
                                select c;
 
             return matchingItem.FirstOrDefault();
+        }
+
+        public string UnitTypeName()
+        {
+            string unitTypeName = "";
+            var splitType = ConversionType.Split(new string[] { " - " }, StringSplitOptions.None);
+            if (splitType.Length > 1)
+                unitTypeName = splitType[1];
+            return unitTypeName;
+        }
+        public UnitType GetUnitType(EomDatabaseEntities eomEntities, out string unitTypesTried)
+        {
+            unitTypesTried = null;
+            string unitTypeName = this.UnitTypeName();
+            var unitType = eomEntities.UnitTypes.Where(c => c.name == unitTypeName).SingleOrDefault();
+            if (unitType == null)
+            {   // unitType not found from the conversion; try from the campaign (offer)
+                if (this.Offer_Id.HasValue)
+                {
+                    var campaign = eomEntities.Campaigns.Where(c => c.pid == this.Offer_Id.Value).FirstOrDefault();
+                    if (campaign != null)
+                        unitType = eomEntities.UnitTypes.Where(c => c.name == campaign.campaign_type).SingleOrDefault();
+                    if (unitType == null)
+                        unitTypesTried = unitTypeName + (campaign == null ? "" : "/" + (campaign.campaign_type ?? "[NULL]"));
+                }
+                else
+                {
+                    unitTypesTried = unitTypeName;
+                }
+            }
+            return unitType;
         }
     }
 }
