@@ -226,13 +226,16 @@ namespace EomApp1.Screens.Synch
             public int RedirectedPid { get; set; }
         }
 
-        private void SynchCampaigns(List<int> pidList)
+        private void SynchCampaigns(IEnumerable<int> pidList)
         {
             Log("synch starting..");
-            pidList.AsParallel().ForAll(pid =>
+            foreach (var pidListBatch in pidList.InBatches(5))
             {
-                SynchStats(pid, 0); // redirect pid
-            });
+                pidListBatch.AsParallel().ForAll(pid =>
+                {
+                    SynchStats(pid, 0); // redirect pid
+                });
+            }
             Log("synch done.");
         }
 
@@ -265,10 +268,6 @@ namespace EomApp1.Screens.Synch
             try
             {
                 SynchStatsFromCake(pid, startDay, endDay);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                Logger.LogError("error for stats(pid=" + pid + ") - EntityNotFound: " + ex.Message);
             }
             catch (Exception ex)
             {
