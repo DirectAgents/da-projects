@@ -56,6 +56,43 @@ namespace EomToolWeb.Controllers
             return View(model);
         }
 
+        // ---
+
+        public ActionResult AffiliateCampaigns()
+        {
+            if (!securityRepo.IsAccountantOrAdmin(User))
+                return Content("unauthorized");
+
+            var model = new AffiliateCampaignAmountsModel
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                CampaignAmounts = mainRepo.CampaignAmounts2(null)
+            };
+            return View("AffiliateCampaignAmounts", model);
+        }
+
+        public ActionResult UnitTypeDropDown(string name, string selected)
+        {
+            var unitTypeList = mainRepo.UnitTypeList;
+            ViewBag.Name = name;
+            ViewBag.Selected = selected;
+            return PartialView(unitTypeList);
+        }
+
+        public ActionResult ChangeUnitType(string itemIds, int unitTypeId)
+        {
+            if (!securityRepo.IsAccountantOrAdmin(User))
+                return Content("unauthorized");
+
+            var itemIdStringArray = itemIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var itemIdInts = itemIdStringArray.Select(i => Convert.ToInt32(i));
+            mainRepo.ChangeUnitType(itemIdInts, unitTypeId);
+
+            return Content("ok");
+        }
+
+        // ---
+
         [HttpGet]
         public ActionResult EditCampaign(int pid)
         {

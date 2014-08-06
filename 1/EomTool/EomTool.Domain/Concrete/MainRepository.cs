@@ -182,6 +182,51 @@ namespace EomTool.Domain.Concrete
             }
             return amounts;
         }
+        // version2; no joining to invoiced amounts; include unittype and *item ids*
+        public IEnumerable<CampaignAmount> CampaignAmounts2(int? campaignStatus)
+        {
+            var items = Items(campaignStatus);
+            var itemGroups = items.GroupBy(i => new { i.pid, i.affid, i.revenue_currency_id, i.cost_currency_id, i.unit_type_id });
+            var rawAmounts = from ig in itemGroups
+                             select new
+                             {
+                                 ig.Key.pid,
+                                 ig.Key.affid,
+                                 ig.Key.unit_type_id,
+                                 numUnits = (int)ig.Sum(g => g.num_units),
+                                 ig.Key.revenue_currency_id,
+                                 revenue = ig.Sum(g => g.total_revenue.HasValue ? g.total_revenue.Value : 0),
+                                 ig.Key.cost_currency_id,
+                                 cost = ig.Sum(g => g.total_cost.HasValue ? g.total_cost.Value : 0),
+                                 itemIds = ig.Select(i => i.id)
+                             };
+            var query = from ra in rawAmounts.ToList()
+                        join c in context.Campaigns on ra.pid equals c.pid
+                        join a in context.Affiliates on ra.affid equals a.affid
+                        join u in context.UnitTypes on ra.unit_type_id equals u.id
+                        join rc in context.Currencies on ra.revenue_currency_id equals rc.id
+                        join cc in context.Currencies on ra.cost_currency_id equals cc.id
+                        select new { ra, c, a, u, rc, cc };
+            var amounts = query.Select(q => new CampaignAmount
+            {
+                AdvId = q.c.advertiser_id,
+                AdvertiserName = q.c.Advertiser.name,
+                Pid = q.ra.pid,
+                CampaignName = q.c.campaign_name,
+                CampaignDisplayName = q.c.DisplayName,
+                AffId = q.ra.affid,
+                AffiliateName = q.a.name2,
+                RevenueCurrency = q.rc,
+                Revenue = q.ra.revenue,
+                CostCurrency = q.cc,
+                Cost = q.ra.cost,
+                NumUnits = q.ra.numUnits,
+                NumAffs = 1,
+                UnitType = q.u,
+                ItemIds = q.ra.itemIds
+            });
+            return amounts;
+        }
 
         // unused...
         public IEnumerable<CampaignAmount> CampaignAmounts(IEnumerable<CampAffId> campAffIds)
@@ -464,8 +509,18 @@ namespace EomTool.Domain.Concrete
 
         //---
 
+        public void ChangeUnitType(IEnumerable<int> itemIds, int unitTypeId)
+        {
+            var items = context.Items.Where(i => itemIds.Contains(i.id));
+            foreach(var item in items)
+            {
+                item.unit_type_id = unitTypeId;
+            }
+            SaveChanges();
+        }
+
         private List<UnitType> _unitTypeList;
-        private List<UnitType> UnitTypeList
+        public List<UnitType> UnitTypeList
         {
             get
             {

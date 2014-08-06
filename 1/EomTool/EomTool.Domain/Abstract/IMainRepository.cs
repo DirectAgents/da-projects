@@ -20,6 +20,8 @@ namespace EomTool.Domain.Abstract
         IEnumerable<CampaignAmount> CampaignAmounts(int pid, int? campaignStatus);
         IEnumerable<CampaignAmount> CampaignAmounts(int? amId, int? advertiserId, bool byAffiliate, int? campaignStatus);
 
+        IEnumerable<CampaignAmount> CampaignAmounts2(int? campaignStatus);
+
         Invoice GenerateInvoice(IEnumerable<CampAffId> campAffIds);
         void SaveInvoice(Invoice invoice, bool markSentToAccounting = false);
         IQueryable<Invoice> Invoices(bool fillExtended);
@@ -31,6 +33,9 @@ namespace EomTool.Domain.Abstract
         void SaveMarginApproval(MarginApproval marginApproval);
         // ---
 
+        void ChangeUnitType(IEnumerable<int> itemIds, int unitTypeId);
+
+        List<UnitType> UnitTypeList { get; }
         string UnitTypeName(int unitTypeId);
         string ItemCode(int unitTypeId);
         bool UnitTypeExists(int unitTypeId);

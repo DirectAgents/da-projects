@@ -53,5 +53,12 @@ namespace EomTool.Domain.DTOs
 
         public int NumUnits { get; set; }
         public int NumAffs { get; set; }
+        public UnitType UnitType { get; set; }
+        public IEnumerable<int> ItemIds { get; set; }
+
+        public string ItemIdsString
+        {
+            get { return String.Join(",", ItemIds); }
+        }
     }
 }

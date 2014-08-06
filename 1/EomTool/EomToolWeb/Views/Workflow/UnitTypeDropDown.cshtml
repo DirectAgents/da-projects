@@ -1,0 +1,8 @@
+﻿@model IEnumerable<UnitType>
+@{
+    string selected = ViewBag.Selected;
+    var unitTypeSelectList = new SelectList(Model, "id", "name", selected);
+    string name = ViewBag.Name;
+}
+
+@Html.DropDownList(name, unitTypeSelectList)
