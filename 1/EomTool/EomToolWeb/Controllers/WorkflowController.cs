@@ -63,12 +63,42 @@ namespace EomToolWeb.Controllers
             if (!securityRepo.IsAccountantOrAdmin(User))
                 return Content("unauthorized");
 
-            var model = new AffiliateCampaignAmountsModel
+            var model = new AffiliateAmountsModel
             {
                 CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
                 CampaignAmounts = mainRepo.CampaignAmounts2(null)
             };
             return View("AffiliateCampaignAmounts", model);
+        }
+
+        public ActionResult AffiliateAmounts(string sort)
+        {
+            if (!securityRepo.IsAccountantOrAdmin(User))
+                return Content("unauthorized");
+
+            var model = new AffiliateAmountsModel
+            {
+                CurrentEomDateString = eomEntitiesConfig.CurrentEomDateString,
+                CampaignAmounts = mainRepo.CampaignAmounts2(null),
+                Sort = (sort != null ? sort.ToLower() : "")
+            };
+            switch (model.Sort)
+            {
+                case "campaign":
+                    model.CampaignAmounts = model.CampaignAmounts.OrderBy(c => c.CampaignName).ThenBy(c => c.AffiliateName).ThenBy(c => c.UnitType.name);
+                    break;
+                case "pid":
+                    model.CampaignAmounts = model.CampaignAmounts.OrderBy(c => c.Pid).ThenBy(c => c.AffiliateName).ThenBy(c => c.UnitType.name);
+                    break;
+                case "affiliate":
+                    model.CampaignAmounts = model.CampaignAmounts.OrderBy(c => c.AffiliateName).ThenBy(c => c.AdvertiserName).ThenBy(c => c.CampaignName).ThenBy(c => c.UnitType.name);
+                    break;
+                default:
+                    model.Sort = "advertiser";
+                    model.CampaignAmounts = model.CampaignAmounts.OrderBy(c => c.AdvertiserName).ThenBy(c => c.CampaignName).ThenBy(c => c.AffiliateName).ThenBy(c => c.UnitType.name);
+                    break;
+            }
+            return View(model);
         }
 
         public ActionResult UnitTypeDropDown(string name, string selected)

@@ -1,11 +1,11 @@
 ﻿@model AffiliateAmountsModel
 @{
     //ViewBag.Title?
-    var campaignAmounts = Model.CampaignAmounts.OrderBy(a => a.AffiliateName).ThenBy(a => a.AdvertiserName)
-                                                .ThenBy(a => a.CampaignName).ThenBy(a => a.UnitType.name).ToList();
-    int? lastAffId = -1;
+    int? lastGroupId = -1;
     bool grayRow = false;
     bool unitTypeEditable = true;
+    int i = 0;
+    int thisGroupId;
 }
 
 <h2>Affiliate Amounts</h2>
@@ -14,10 +14,10 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
 
 <table style="border: 1px solid gray">
     <tr>
-        <th>Affiliate</th>
-        <th>Advertiser</th>
-        <th>PID</th>
-        <th>Campaign</th>
+        <th>@Html.ActionLink("Advertiser", "AffiliateAmounts", new { sort="advertiser" })</th>
+        <th>@Html.ActionLink("PID", "AffiliateAmounts", new { sort="pid" })</th>
+        <th>@Html.ActionLink("Campaign", "AffiliateAmounts", new { sort="campaign" })</th>
+        <th>@Html.ActionLink("Affiliate", "AffiliateAmounts", new { sort="affiliate" })</th>
         <th>#Units</th>
         <th>UnitType</th>
         <th colspan="2">Revenue</th>
@@ -26,19 +26,19 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
         @* finalization status? *@
         @* AM? *@
     </tr>
-@for (int i = 0; i < campaignAmounts.Count; i++)
+@foreach (var ca in Model.CampaignAmounts)
 {
-    var ca = campaignAmounts[i];
-    if (ca.AffId != lastAffId)
+    thisGroupId = (Model.Sort == "affiliate") ? ca.AffId.Value : ca.Pid;
+    if (thisGroupId != lastGroupId)
     {
-        lastAffId = ca.AffId;
+        lastGroupId = thisGroupId;
         grayRow = !grayRow;
     }
     <tr style="@(grayRow ? "background-color:#ddd" : "")">
-        <td>@ca.AffiliateName</td>
         <td>@ca.AdvertiserName</td>
         <td style="text-align:center">@ca.Pid</td>
         <td>@ca.CampaignName</td>
+        <td>@ca.AffiliateName</td>
         <td style="text-align:center">@ca.NumUnits</td>
         <td id="tdUnitType@(i)" style="text-align:center">
             @if (unitTypeEditable)
@@ -55,6 +55,7 @@ Accounting Period: <b>@Model.CurrentEomDateString</b><br />
         <td style="text-align: right">@ca.Cost.ToString("N2")</td>
     </tr>
     @Html.Hidden("ids" + i, ca.ItemIdsString)
+    i++;
 }
 </table>
 
