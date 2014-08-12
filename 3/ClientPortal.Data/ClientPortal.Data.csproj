@@ -270,7 +270,7 @@
     <Compile Include="Entities\Offer.cs" />
     <Compile Include="Entities\TD\DBM\Creative.cs" />
     <Compile Include="Entities\TD\DBM\CreativeDailySummary.cs" />
-    <Compile Include="Entities\TD\DBM\DailySummary.cs" />
+    <Compile Include="Entities\TD\DBM\DBMDailySummary.cs" />
     <Compile Include="Entities\TD\DBM\InsertionOrder.cs" />
     <Compile Include="Entities\TD\TradingDeskAccount.cs" />
     <Compile Include="Migrations\201406271827066_InitialCreate.cs" />
@@ -292,6 +292,10 @@
     <Compile Include="Migrations\201407311458183_Mig_FixedMetric.cs" />
     <Compile Include="Migrations\201407311458183_Mig_FixedMetric.Designer.cs">
       <DependentUpon>201407311458183_Mig_FixedMetric.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201408112123400_Mig_DBMDailySummary.cs" />
+    <Compile Include="Migrations\201408112123400_Mig_DBMDailySummary.Designer.cs">
+      <DependentUpon>201408112123400_Mig_DBMDailySummary.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -356,6 +360,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201407311458183_Mig_FixedMetric.resx">
       <DependentUpon>201407311458183_Mig_FixedMetric.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201408112123400_Mig_DBMDailySummary.resx">
+      <DependentUpon>201408112123400_Mig_DBMDailySummary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

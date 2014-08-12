@@ -25,9 +25,9 @@ namespace ClientPortal.Data.Services
 
         // ---
 
-        private IQueryable<DailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
+        private IQueryable<DBMDailySummary> GetDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
         {
-            var dailySummaries = context.DailySummaries.AsQueryable();
+            var dailySummaries = context.DBMDailySummaries.AsQueryable();
 
             if (start.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date >= start.Value);
             if (end.HasValue) dailySummaries = dailySummaries.Where(ds => ds.Date <= end.Value);
@@ -51,7 +51,6 @@ namespace ClientPortal.Data.Services
                     Clicks = ds.Clicks,
                     Conversions = ds.Conversions,
                     Spend = fixedCPM.Value * ds.Impressions / 1000
-                    //Spend = fixedCPM.HasValue ? fixedCPM.Value * ds.Impressions / 1000 : fixedCPC.Value * ds.Clicks
                 });
             }
             else if (fixedCPC.HasValue)

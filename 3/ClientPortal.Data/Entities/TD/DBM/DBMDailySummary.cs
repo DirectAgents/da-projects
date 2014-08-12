@@ -2,7 +2,7 @@
 
 namespace ClientPortal.Data.Entities.TD.DBM
 {
-    public class DailySummary
+    public class DBMDailySummary
     {
         public DateTime Date { get; set; }
         public int InsertionOrderID { get; set; }

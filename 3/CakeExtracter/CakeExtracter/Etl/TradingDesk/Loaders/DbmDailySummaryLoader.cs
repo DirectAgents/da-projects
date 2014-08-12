@@ -30,7 +30,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                 {
                     DateTime date = DateTime.Parse(item.Date);
                     int ioID = int.Parse(item.InsertionOrderID);
-                    var source = new DailySummary
+                    var source = new DBMDailySummary
                     {
                         Date = date,
                         InsertionOrderID = ioID,
@@ -40,10 +40,10 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                         Conversions = (int)decimal.Parse(item.TotalConversions),
                         Revenue = decimal.Parse(item.Revenue)
                     };
-                    var target = db.Set<DailySummary>().Find(date, ioID);
+                    var target = db.Set<DBMDailySummary>().Find(date, ioID);
                     if (target == null)
                     {
-                        db.DailySummaries.Add(source);
+                        db.DBMDailySummaries.Add(source);
                         addedCount++;
                     }
                     else
