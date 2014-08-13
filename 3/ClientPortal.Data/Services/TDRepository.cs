@@ -1,6 +1,7 @@
 ﻿using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Entities.TD;
+using ClientPortal.Data.Entities.TD.AdRoll;
 using ClientPortal.Data.Entities.TD.DBM;
 using System;
 using System.Collections.Generic;
@@ -81,22 +82,24 @@ namespace ClientPortal.Data.Services
             return statsSummaries.ToList();
         }
 
+        // ---
+
         private IQueryable<CreativeDailySummary> GetCreativeDailySummaries(DateTime? start, DateTime? end, int? insertionOrderID)
         {
             var cds = context.CreativeDailySummaries.AsQueryable();
             if (start.HasValue)
-                cds = cds.Where(c => c.Date >= start.Value);
+                cds = cds.Where(s => s.Date >= start.Value);
             if (end.HasValue)
-                cds = cds.Where(c => c.Date <= end.Value);
+                cds = cds.Where(s => s.Date <= end.Value);
             if (insertionOrderID.HasValue)
-                cds = cds.Where(c => c.Creative.InsertionOrderID == insertionOrderID.Value);
+                cds = cds.Where(s => s.Creative.InsertionOrderID == insertionOrderID.Value);
             return cds;
         }
 
-        public IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID, decimal? spendMultiplier = null, decimal? fixedCPM = null, decimal? fixedCPC = null)
+        private IEnumerable<CreativeStatsSummary> GetCreativeStatsSummariesDBM(DateTime? start, DateTime? end, int insertionOrderID)
         {
             var creativeDailySummaries = GetCreativeDailySummaries(start, end, insertionOrderID);
-            IEnumerable<CreativeStatsSummary> creativeSummaries = creativeDailySummaries.GroupBy(cds => cds.Creative).Select(g =>
+            var creativeStatsSummaries = creativeDailySummaries.GroupBy(cds => cds.Creative).Select(g =>
                 new CreativeStatsSummary
                 {
                     CreativeID = g.Key.CreativeID,
@@ -106,10 +109,55 @@ namespace ClientPortal.Data.Services
                     Conversions = g.Sum(c => c.Conversions),
                     Spend = g.Sum(c => c.Revenue)
                 }).ToList();
+            return creativeStatsSummaries;
+        }
 
-            if (fixedCPM.HasValue || fixedCPC.HasValue)
+        private IQueryable<AdDailySummary> GetAdDailySummaries(DateTime? start, DateTime? end, int? adrollProfileId)
+        {
+            var ads = context.AdDailySummaries.AsQueryable();
+            if (start.HasValue)
+                ads = ads.Where(s => s.Date >= start.Value);
+            if (end.HasValue)
+                ads = ads.Where(s => s.Date <= end.Value);
+            if (adrollProfileId.HasValue)
+                ads = ads.Where(s => s.AdRollAd.AdRollProfileId == adrollProfileId.Value);
+            return ads;
+        }
+
+        private IEnumerable<CreativeStatsSummary> GetCreativeStatsSummariesAdRoll(DateTime? start, DateTime? end, int adrollProfileId)
+        {
+            var dailySummaries = GetAdDailySummaries(start, end, adrollProfileId);
+            var summaries = dailySummaries.GroupBy(ads => ads.AdRollAd).Select(g =>
+                new CreativeStatsSummary
+                {
+                    CreativeID = g.Key.Id,
+                    CreativeName = g.Key.Name,
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Conversions = g.Sum(s => s.Conversions),
+                    Spend = g.Sum(s => s.Spend)
+                }).ToList();
+            return summaries;
+        }
+
+        //public IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID, decimal? spendMultiplier = null, decimal? fixedCPM = null, decimal? fixedCPC = null)
+        public IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tda)
+        {
+            //TODO: find matching creatives from the two sources and combine their stats
+            int? insertionOrderID = tda.InsertionOrderID();
+            int? adrollProfileId = tda.AdRollProfileId();
+            IEnumerable<CreativeStatsSummary> summaries;
+
+            if (insertionOrderID.HasValue)
+                summaries = GetCreativeStatsSummariesDBM(start, end, insertionOrderID.Value);
+            else
+                summaries = new List<CreativeStatsSummary>();
+            if (adrollProfileId.HasValue)
+                summaries = summaries.Concat(GetCreativeStatsSummariesAdRoll(start, end, adrollProfileId.Value));
+
+            if (tda.FixedCPM.HasValue || tda.FixedCPC.HasValue)
             {
-                creativeSummaries = creativeSummaries.Select(c =>
+                summaries = summaries.Select(c =>
                     new CreativeStatsSummary
                     {
                         CreativeID = c.CreativeID,
@@ -117,12 +165,12 @@ namespace ClientPortal.Data.Services
                         Impressions = c.Impressions,
                         Clicks = c.Clicks,
                         Conversions = c.Conversions,
-                        Spend = fixedCPM.HasValue ? fixedCPM.Value * c.Impressions / 1000 : fixedCPC.Value * c.Clicks
+                        Spend = tda.FixedCPM.HasValue ? tda.FixedCPM.Value * c.Impressions / 1000 : tda.FixedCPC.Value * c.Clicks
                     });
             }
-            else if (spendMultiplier.HasValue)
+            else if (tda.SpendMultiplier.HasValue)
             {
-                creativeSummaries = creativeSummaries.Select(c =>
+                summaries = summaries.Select(c =>
                     new CreativeStatsSummary
                     {
                         CreativeID = c.CreativeID,
@@ -130,10 +178,10 @@ namespace ClientPortal.Data.Services
                         Impressions = c.Impressions,
                         Clicks = c.Clicks,
                         Conversions = c.Conversions,
-                        Spend = c.Spend * spendMultiplier.Value
+                        Spend = c.Spend * tda.SpendMultiplier.Value
                     });
             }
-            return creativeSummaries;
+            return summaries;
         }
 
         // ---

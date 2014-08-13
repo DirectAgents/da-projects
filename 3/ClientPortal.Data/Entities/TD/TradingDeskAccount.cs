@@ -65,7 +65,16 @@ namespace ClientPortal.Data.Entities.TD
             get { return FixedMetricName == "CPC" ? FixedMetricValue : null; }
         }
 
-        //Usually there is just one InsertionOrder per TDAccount
+        //Usually there is just one AdRollProfile and one InsertionOrder per TDAccount
+        public int? AdRollProfileId()
+        {
+            int? profileId = null;
+            if (AdRollProfiles.Count > 0)
+            {
+                profileId = AdRollProfiles.First().Id;
+            }
+            return profileId;
+        }
         public int? InsertionOrderID()
         {
             int? ioID = null;

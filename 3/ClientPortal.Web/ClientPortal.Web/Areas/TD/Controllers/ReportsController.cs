@@ -108,11 +108,10 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         public JsonResult CreativeData(KendoGridRequest request)
         {
             var userInfo = GetUserInfo();
-            if (!userInfo.InsertionOrderID.HasValue)
+            if (userInfo.TDAccount == null)
                 return Json(new { });
 
-            var tda = userInfo.TDAccount;
-            var summaries = tdRepo.GetCreativeStatsSummaries(null, null, userInfo.InsertionOrderID.Value, tda.SpendMultiplier, tda.FixedCPM, tda.FixedCPC);
+            var summaries = tdRepo.GetCreativeStatsSummaries(null, null, userInfo.TDAccount);
 
             var costPerFields = new[] { "CPM", "CPC", "CPA" };
             if (request.SortObjects.Any(so => costPerFields.Contains(so.Field)))
