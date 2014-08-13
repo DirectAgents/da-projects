@@ -38,48 +38,53 @@ namespace ClientPortal.Data.Services
             return dailySummaries;
         }
 
-        public IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID, decimal? spendMultiplier = null, decimal? fixedCPM = null, decimal? fixedCPC = null)
+        private IEnumerable<StatsSummary> GetDailyStatsSummariesDBM(DateTime? start, DateTime? end, int insertionOrderID)
         {
             var dailySummaries = GetDailySummaries(start, end, insertionOrderID);
-            IQueryable<StatsSummary> statsSummaries;
+            var statsSummaries = dailySummaries.Select(s => new StatsSummary
+            {
+                Date = s.Date,
+                Impressions = s.Impressions,
+                Clicks = s.Clicks,
+                Conversions = s.Conversions,
+                Spend = s.Revenue
+            }).ToList();
+            return statsSummaries;
+        }
 
-            if (fixedCPM.HasValue)
+        public IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tda)
+        {
+            int? insertionOrderID = tda.InsertionOrderID();
+            if (!insertionOrderID.HasValue)
+                return new List<StatsSummary>();
+
+            var summaries = GetDailyStatsSummariesDBM(start, end, insertionOrderID.Value);
+
+            if (tda.FixedCPM.HasValue || tda.FixedCPC.HasValue)
             {
-                statsSummaries = dailySummaries.Select(ds => new StatsSummary
-                {
-                    Date = ds.Date,
-                    Impressions = ds.Impressions,
-                    Clicks = ds.Clicks,
-                    Conversions = ds.Conversions,
-                    Spend = fixedCPM.Value * ds.Impressions / 1000
-                });
+                summaries = summaries.Select(s =>
+                    new StatsSummary
+                    {
+                        Date = s.Date,
+                        Impressions = s.Impressions,
+                        Clicks = s.Clicks,
+                        Conversions = s.Conversions,
+                        Spend = tda.FixedCPM.HasValue ? tda.FixedCPM.Value * s.Impressions / 1000 : tda.FixedCPC.Value * s.Clicks
+                    });
             }
-            else if (fixedCPC.HasValue)
+            else if (tda.SpendMultiplier.HasValue)
             {
-                statsSummaries = dailySummaries.Select(ds => new StatsSummary
-                {
-                    Date = ds.Date,
-                    Impressions = ds.Impressions,
-                    Clicks = ds.Clicks,
-                    Conversions = ds.Conversions,
-                    Spend = fixedCPC.Value * ds.Clicks
-                });
+                summaries = summaries.Select(s =>
+                    new StatsSummary
+                    {
+                        Date = s.Date,
+                        Impressions = s.Impressions,
+                        Clicks = s.Clicks,
+                        Conversions = s.Conversions,
+                        Spend = s.Spend * tda.SpendMultiplier.Value
+                    });
             }
-            else
-            {
-                decimal spendMult = 1;
-                if (spendMultiplier.HasValue)
-                    spendMult = spendMultiplier.Value;
-                statsSummaries = dailySummaries.Select(ds => new StatsSummary
-                {
-                    Date = ds.Date,
-                    Impressions = ds.Impressions,
-                    Clicks = ds.Clicks,
-                    Conversions = ds.Conversions,
-                    Spend = ds.Revenue * spendMult
-                });
-            }
-            return statsSummaries.ToList();
+            return summaries;
         }
 
         // ---
@@ -140,7 +145,6 @@ namespace ClientPortal.Data.Services
             return summaries;
         }
 
-        //public IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID, decimal? spendMultiplier = null, decimal? fixedCPM = null, decimal? fixedCPC = null)
         public IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tda)
         {
             //TODO: find matching creatives from the two sources and combine their stats

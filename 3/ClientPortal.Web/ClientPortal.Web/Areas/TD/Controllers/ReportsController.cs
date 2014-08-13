@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Data.Contracts;
 using ClientPortal.Data.DTOs.TD;
+using ClientPortal.Data.Entities.TD;
 using ClientPortal.Data.Entities.TD.DBM;
 using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
@@ -37,11 +38,11 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         public JsonResult SummaryData(KendoGridRequest request)
         {
             var userInfo = GetUserInfo();
-            if (!userInfo.InsertionOrderID.HasValue)
+            if (userInfo.TDAccount == null)
                 return Json(new { });
 
             var tda = userInfo.TDAccount;
-            var summaries = tdRepo.GetDailyStatsSummaries(null, null, userInfo.InsertionOrderID.Value, tda.SpendMultiplier, tda.FixedCPM, tda.FixedCPC);
+            var summaries = tdRepo.GetDailyStatsSummaries(null, null, tda);
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             if (summaries.Any())
             {
@@ -81,8 +82,14 @@ namespace ClientPortal.Web.Areas.TD.Controllers
         public JsonResult SampleData(KendoGridRequest request)
         {
             int insertionOrderID = 1286935; // Betterment
+            var tda = new TradingDeskAccount
+            {
+                InsertionOrders = new[] { new InsertionOrder { InsertionOrderID = insertionOrderID } }
+            };
+            var start = new DateTime(2014, 5, 27);
+            var end = new DateTime(2014, 6, 25);
 
-            var summaries = tdRepo.GetDailyStatsSummaries(null, null, insertionOrderID);
+            var summaries = tdRepo.GetDailyStatsSummaries(start, end, tda);
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             if (summaries.Any())
             {

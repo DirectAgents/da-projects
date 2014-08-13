@@ -11,7 +11,7 @@ namespace ClientPortal.Data.Contracts
     {
         void SaveChanges();
 
-        IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, int? insertionOrderID, decimal? spendMultiplier = null, decimal? fixedCPM = null, decimal? fixedCPC = null);
+        IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tdAccount);
         IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tdAccount);
 
         IQueryable<InsertionOrder> InsertionOrders();

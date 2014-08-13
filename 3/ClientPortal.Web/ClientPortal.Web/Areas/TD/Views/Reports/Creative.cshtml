@@ -26,10 +26,10 @@
         CreateCreativeCharts(datasource);
 
         datasource.bind('change', CreativeDataSourceChange);
-        datasource.fetch(function () {
-            PopulateCreativeScatterChart(this.data());
-        });
-        //datasource.read();
+        //datasource.fetch(function () {
+        //    PopulateCreativeScatterChart(this.data());
+        //});
+        datasource.read();
     });
 
     nMetrics = ['Impressions', 'Clicks', 'Conversions'];
@@ -83,14 +83,14 @@
         chart.redraw();
     }
 
-    function PopulateCreativeScatterChart(data) {
-        var chart = $('#creativeScatterChart').data('kendoChart');
-        chart.options.series[0].data = new Array();
-        for (var i = 0; i < data.length; i++) {
-            chart.options.series[0].data[i] = [data[i].CTR, data[i].Impressions];
-        }
-        chart.redraw();
-    }
+    //function PopulateCreativeScatterChart(data) {
+    //    var chart = $('#creativeScatterChart').data('kendoChart');
+    //    chart.options.series[0].data = new Array();
+    //    for (var i = 0; i < data.length; i++) {
+    //        chart.options.series[0].data[i] = [data[i].CTR, data[i].Impressions];
+    //    }
+    //    chart.redraw();
+    //}
 
     function CreateCreativeDataSource() {
         return new kendo.data.DataSource({
@@ -213,9 +213,12 @@
         });
 
         $("#creativeScatterChart").kendoChart({
+            dataSource: datasource,
+            autoBind: false,
             tooltip: {
                 visible: true,
-                format: "Impressions: {1:n0} / CTR: {0:p}"
+                //format: "Impressions: {1:n0} / CTR: {0:p}"
+                template: "#= dataItem.CreativeName + '<br/>Impressions: ' + kendo.toString(dataItem.Impressions, 'n0') + ' / CTR: ' + kendo.toString(dataItem.CTR, 'p') #"
             },
             title: {
                 text: "Impressions vs. Click-Through Rate"
@@ -226,9 +229,13 @@
             seriesDefaults: {
                 type: "scatter"
             },
-            series: [
-                 { name: "", data: [] }
-            ],
+            series: [{
+                xField: "CTR",
+                yField: "Impressions",
+//                color: function (point) { // supported in newer version of kendo?
+//                    return "red";
+//                }
+            }],
             xAxis: {
                 labels: { format: "{0:p}" },
                 title: { text: "CTR" }
