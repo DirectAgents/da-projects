@@ -1,4 +1,5 @@
 ﻿using ClientPortal.Data.Contexts;
+using ClientPortal.Data.Entities.TD.AdRoll;
 using ClientPortal.Data.Entities.TD.DBM;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ClientPortal.Data.Entities.TD
         public string FixedMetricName { get; set; }
         public decimal? FixedMetricValue { get; set; }
 
+        public virtual ICollection<AdRollProfile> AdRollProfiles { get; set; }
         public virtual ICollection<InsertionOrder> InsertionOrders { get; set; }
 
         [NotMapped]

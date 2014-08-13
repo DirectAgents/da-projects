@@ -268,6 +268,13 @@
     <Compile Include="Entities\CreativeStat.cs" />
     <Compile Include="Entities\Goal.cs" />
     <Compile Include="Entities\Offer.cs" />
+    <Compile Include="Entities\TD\AdRoll\AdDailySummary.cs" />
+    <Compile Include="Entities\TD\AdRoll\AdRollAd.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Entities\TD\AdRoll\AdRollProfile.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Entities\TD\DBM\Creative.cs" />
     <Compile Include="Entities\TD\DBM\CreativeDailySummary.cs" />
     <Compile Include="Entities\TD\DBM\DBMDailySummary.cs" />
@@ -296,6 +303,10 @@
     <Compile Include="Migrations\201408112123400_Mig_DBMDailySummary.cs" />
     <Compile Include="Migrations\201408112123400_Mig_DBMDailySummary.Designer.cs">
       <DependentUpon>201408112123400_Mig_DBMDailySummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201408121512151_Mig_AdDailySummary.cs" />
+    <Compile Include="Migrations\201408121512151_Mig_AdDailySummary.Designer.cs">
+      <DependentUpon>201408121512151_Mig_AdDailySummary.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -363,6 +374,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201408112123400_Mig_DBMDailySummary.resx">
       <DependentUpon>201408112123400_Mig_DBMDailySummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201408121512151_Mig_AdDailySummary.resx">
+      <DependentUpon>201408121512151_Mig_AdDailySummary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
