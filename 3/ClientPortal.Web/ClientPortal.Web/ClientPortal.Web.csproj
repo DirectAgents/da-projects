@@ -712,6 +712,7 @@
     <Content Include="Areas\Admin\Views\TDAdmin\TradingDeskAccounts.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\EditAccount.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\Upload.cshtml" />
+    <Content Include="Areas\TD\Views\Shared\_TDDateFuncs.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />
@@ -1660,7 +1661,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\TD\Views\Shared\" />
     <Folder Include="Filters\" />
   </ItemGroup>
   <PropertyGroup>

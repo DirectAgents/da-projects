@@ -1,4 +1,4 @@
-﻿@* @model ClientPortal.Web.Areas.TD.Models.TDHomeModel *@
+﻿@model ClientPortal.Web.Areas.TD.Models.TDHomeModel
 
 @*<!--+---------+
       | Top Bar |
@@ -130,6 +130,7 @@
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.de-DE.min.js"></script>
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2012.3.1114/cultures/kendo.culture.en-AU.min.js"></script>
+    @Html.Partial("_TDDateFuncs", Model.Dates)
     <script>
 
         // ready function

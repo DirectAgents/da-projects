@@ -1,0 +1,66 @@
+﻿@model ClientPortal.Web.Controllers.DatesModel
+
+<script>
+    function DateChanged(report) {
+        $('#' + report + '_dateRangeSel').data('kendoDropDownList').value('custom');
+        $('#' + report + '_filterBtn').attr('disabled', false);
+    }
+
+    function ChangeDateRange(report, useUS) {
+        var startId = '#' + report + '_startdate';
+        var endId = '#' + report + '_enddate';
+        var refresh = true;
+        var dateRange = $('#' + report + '_dateRangeSel').val();
+        switch (dateRange) {
+            case "today":
+                $(startId).val('@Model.Today');
+                $(endId).val('@Model.Today');
+                break;
+            case "yesterday":
+                $(startId).val('@Model.Yesterday');
+                $(endId).val('@Model.Yesterday');
+                break;
+            case "wtd":
+                $(startId).val('@Model.FirstOfWeek');
+                $(endId).val('@Model.Latest');
+                break;
+            case "mtd":
+                $(startId).val('@Model.FirstOfMonth');
+                $(endId).val('@Model.Latest');
+                break;
+            case "ytd":
+                $(startId).val('@Model.FirstOfYear');
+                $(endId).val('@Model.Latest');
+                break;
+            case "lastweek":
+                $(startId).val('@Model.FirstOfLastWeek');
+                $(endId).val('@Model.LastOfLastWeek');
+                break;
+            case "lastmonth":
+                $(startId).val('@Model.FirstOfLastMonth');
+                $(endId).val('@Model.LastOfLastMonth');
+                break;
+            default:
+                refresh = false;
+        }
+        if (refresh)
+            RefreshGrid(report, useUS);
+    }
+
+    function RefreshGrid(report, useUS) {
+        if (useUS)
+            kendo.culture('en-US');@* show all in USD for now *@
+        else
+            kendo.culture(cultureGlobal);
+
+        var gridDataSource = null;
+//        var gridDataSource = $('#' + report + 'Grid').data('kendoGrid').dataSource;
+//        gridDataSource.read();
+        if ($('#' + report + 'Chart').length > 0) {
+            var chartDataSource = $('#' + report + 'Chart').data('kendoChart').dataSource;
+            if (chartDataSource !== gridDataSource)
+                chartDataSource.read();
+        }
+        $('#' + report + '_filterBtn').attr('disabled', true);
+    }
+</script>

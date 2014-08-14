@@ -35,14 +35,14 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             return PartialView(model);
         }
 
-        public JsonResult SummaryData(KendoGridRequest request)
+        public JsonResult SummaryData(KendoGridRequest request, string startdate, string enddate)
         {
+            DateTime? start, end;
             var userInfo = GetUserInfo();
-            if (userInfo.TDAccount == null)
+            if (!ControllerHelpers.ParseDates(startdate, enddate, userInfo.CultureInfo, out start, out end) || userInfo.TDAccount == null)
                 return Json(new { });
-            var tda = userInfo.TDAccount;
 
-            var summaries = tdRepo.GetDailyStatsSummaries(null, null, tda);
+            var summaries = tdRepo.GetDailyStatsSummaries(start, end, userInfo.TDAccount);
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             if (summaries.Any())
             {
@@ -51,7 +51,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 int conversions = summaries.Sum(s => s.Conversions);
                 decimal spend = summaries.Sum(s => s.Spend);
 
-                kgrid.aggregates = Aggregates(impressions, clicks, conversions, spend, tda.ManagementFeePct);
+                kgrid.aggregates = Aggregates(impressions, clicks, conversions, spend, userInfo.TDAccount.ManagementFeePct);
             }
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);
             return json;

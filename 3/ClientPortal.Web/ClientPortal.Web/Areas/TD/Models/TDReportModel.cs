@@ -6,11 +6,17 @@ namespace ClientPortal.Web.Areas.TD.Models
 {
     public class TDReportModel
     {
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+
         public TDReportModel(UserInfo userInfo, string metricToGraph1 = null, string metricToGraph2 = null)
         {
             UserInfo = userInfo;
             SetupMetrics();
             SetMetricsToGraph(metricToGraph1, metricToGraph2);
+
+            StartDate = userInfo.Dates.FirstOfMonth.ToString("d", userInfo.CultureInfo);
+            EndDate = userInfo.Dates.Yesterday.ToString("d", userInfo.CultureInfo);
         }
 
         public void SetupMetrics()
