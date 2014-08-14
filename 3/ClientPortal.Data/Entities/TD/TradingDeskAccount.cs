@@ -14,6 +14,7 @@ namespace ClientPortal.Data.Entities.TD
         public bool ShowConversions { get; set; }
         public string FixedMetricName { get; set; }
         public decimal? FixedMetricValue { get; set; }
+        public decimal? ManagementFeePct { get; set; }
 
         public virtual ICollection<AdRollProfile> AdRollProfiles { get; set; }
         public virtual ICollection<InsertionOrder> InsertionOrders { get; set; }

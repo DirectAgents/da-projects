@@ -20,6 +20,7 @@ Show:
         <th>Login</th>
         <th>ShowConv?</th>
         <th>FixedMetric</th>
+        <th>MgmtFeePct</th>
     </tr>
 @foreach (var tda in Model)
 {
@@ -39,6 +40,7 @@ Show:
         </td>
         <td>@(tda.ShowConversions ? "yes" : "no")</td>
         <td>@tda.FixedMetricDisplay</td>
+        <td>@tda.ManagementFeePct</td>
     </tr>
 }
 </table>

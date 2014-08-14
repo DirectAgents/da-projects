@@ -27,6 +27,10 @@
                 <td>@Html.LabelFor(m => m.FixedMetricValue)</td>
                 <td>@Html.TextBoxFor(m => m.FixedMetricValue, "{0:0.##########}")</td>
             </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.ManagementFeePct)</td>
+                <td>@Html.EditorFor(m => m.ManagementFeePct)</td>
+            </tr>
         </table>
         <br />
         <input type="submit" value="Save" />

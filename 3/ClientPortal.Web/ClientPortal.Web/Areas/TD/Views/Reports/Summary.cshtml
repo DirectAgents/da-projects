@@ -9,10 +9,17 @@
     </div>
 </div>
 
+<div class="row">
+<div class="eight columns">
+
 <h3>Totals</h3>
 <table>
 @foreach (var metric in Model.AllMetrics)
 {
+    if (metric == "Spend")
+    {
+        continue;
+    }
     <tr>
         <td>@metric:</td>
         <td id="td@(metric)" style="text-align:right"></td>
@@ -37,11 +44,25 @@
         }
     </tr>
 }
+    <tr>
+        <td>Media Spend:</td>
+        <td id="tdSpend" style="text-align:right"></td>
+    </tr>
+    <tr>
+        <td>Management Fee:</td>
+        <td id="tdMgmtFee" style="text-align:right"></td>
+    </tr>
+    <tr>
+        <td>Total Spend:</td>
+        <td id="tdTotalSpend" style="text-align:right"></td>
+    </tr>
 </table>
+</div>
 
-<br />
-@Html.Partial("ChartSetup")
-<br />
+<div class="four columns">
+    @Html.Partial("ChartSetup")
+</div>
+</div>
 
 <script>
     $(document).ready(function () {
@@ -63,6 +84,8 @@
     <text>$('#tdConvRate').html(kendo.toString(aggs.ConvRate.agg, 'P'));</text>
 }
             $('#tdSpend').html(kendo.toString(aggs.Spend.sum, 'C'));
+            $('#tdMgmtFee').html(kendo.toString(aggs.Spend.fee, 'C'));
+            $('#tdTotalSpend').html(kendo.toString(aggs.Spend.total, 'C'));
         });
     });
 

@@ -40,8 +40,8 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var userInfo = GetUserInfo();
             if (userInfo.TDAccount == null)
                 return Json(new { });
-
             var tda = userInfo.TDAccount;
+
             var summaries = tdRepo.GetDailyStatsSummaries(null, null, tda);
             var kgrid = new KendoGrid<StatsSummary>(request, summaries);
             if (summaries.Any())
@@ -51,14 +51,18 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 int conversions = summaries.Sum(s => s.Conversions);
                 decimal spend = summaries.Sum(s => s.Spend);
 
-                kgrid.aggregates = Aggregates(impressions, clicks, conversions, spend);
+                kgrid.aggregates = Aggregates(impressions, clicks, conversions, spend, tda.ManagementFeePct);
             }
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);
             return json;
         }
 
-        private object Aggregates(int impressions, int clicks, int conversions, decimal spend)
+        private object Aggregates(int impressions, int clicks, int conversions, decimal spend, decimal? managementFeePct)
         {
+            decimal fee = 0;
+            if (managementFeePct.HasValue)
+                fee = spend * managementFeePct.Value / 100;
+
             var aggregates = new
             {
                 Impressions = new { sum = impressions },
@@ -66,7 +70,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 CTR = new { agg = Math.Round((double)clicks / impressions, 4) },
                 Conversions = new { sum = conversions },
                 ConvRate = new { agg = Math.Round((double)conversions / clicks, 4) },
-                Spend = new { sum = spend },
+                Spend = new { sum = spend, fee = fee, total = spend + fee },
                 CPM = new { agg = (impressions == 0) ? 0 : 1000 * spend / impressions },
                 CPC = new { agg = (clicks == 0) ? 0 : spend / clicks },
                 CPA = new { agg = (conversions == 0) ? 0 : spend / conversions }
@@ -117,8 +121,9 @@ namespace ClientPortal.Web.Areas.TD.Controllers
             var userInfo = GetUserInfo();
             if (userInfo.TDAccount == null)
                 return Json(new { });
+            var tda = userInfo.TDAccount;
 
-            var summaries = tdRepo.GetCreativeStatsSummaries(null, null, userInfo.TDAccount);
+            var summaries = tdRepo.GetCreativeStatsSummaries(null, null, tda);
 
             var costPerFields = new[] { "CPM", "CPC", "CPA" };
             if (request.SortObjects.Any(so => costPerFields.Contains(so.Field)))
@@ -147,7 +152,7 @@ namespace ClientPortal.Web.Areas.TD.Controllers
                 int conversions = summaries.Sum(s => s.Conversions);
                 decimal spend = summaries.Sum(s => s.Spend);
 
-                kgrid.aggregates = Aggregates(impressions, clicks, conversions, spend);
+                kgrid.aggregates = Aggregates(impressions, clicks, conversions, spend, tda.ManagementFeePct);
             }
             var json = Json(kgrid, JsonRequestBehavior.AllowGet);
             return json;
