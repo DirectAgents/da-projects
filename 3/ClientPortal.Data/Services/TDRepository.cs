@@ -52,13 +52,50 @@ namespace ClientPortal.Data.Services
             return statsSummaries;
         }
 
+        private IEnumerable<StatsSummary> GetDailyStatsSummariesAdRoll(DateTime? start, DateTime? end, int adrollProfileId)
+        {
+            var dailySummaries = GetAdDailySummaries(start, end, adrollProfileId);
+            var summaries = dailySummaries.GroupBy(ads => ads.Date).Select(g =>
+                new StatsSummary
+                {
+                    Date = g.Key,
+                    Impressions = g.Sum(s => s.Impressions),
+                    Clicks = g.Sum(s => s.Clicks),
+                    Conversions = g.Sum(s => s.Conversions),
+                    Spend = g.Sum(s => s.Spend)
+                }).ToList();
+            return summaries;
+        }
+
         public IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tda)
         {
             int? insertionOrderID = tda.InsertionOrderID();
-            if (!insertionOrderID.HasValue)
+            int? adrollProfileId = tda.AdRollProfileId();
+            if (!insertionOrderID.HasValue && !adrollProfileId.HasValue)
                 return new List<StatsSummary>();
 
-            var summaries = GetDailyStatsSummariesDBM(start, end, insertionOrderID.Value);
+            IEnumerable<StatsSummary> summaries = null;
+            if (insertionOrderID.HasValue)
+                summaries = GetDailyStatsSummariesDBM(start, end, insertionOrderID.Value);
+            if (adrollProfileId.HasValue)
+            {
+                var summariesAdRoll = GetDailyStatsSummariesAdRoll(start, end, adrollProfileId.Value);
+                if (!insertionOrderID.HasValue)
+                    summaries = summariesAdRoll;
+                else
+                { // combine two sources
+                    summaries = summaries.Concat(summariesAdRoll);
+                    summaries = summaries.GroupBy(s => s.Date).Select(g =>
+                        new StatsSummary
+                        {
+                            Date = g.Key,
+                            Impressions = g.Sum(s => s.Impressions),
+                            Clicks = g.Sum(s => s.Clicks),
+                            Conversions = g.Sum(s => s.Conversions),
+                            Spend = g.Sum(s => s.Spend)
+                        }).ToList();
+                }
+            }
 
             if (tda.FixedCPM.HasValue || tda.FixedCPC.HasValue)
             {
