@@ -127,12 +127,14 @@
                         +-------------+-->*@
                 <dl class="tabs">
                     <dd class="active"><a href="#tdAccounts" id="navTDAccounts">Accounts</a></dd>
+                    <dd><a href="#tdUpload" id ="navTDUpload">Upload</a></dd>
                 </dl>
                 @*<!--+-----------------------+
                         | TD HTabs Content    |
                         +---------------------+-->*@
                 <ul class="tabs-content">
                     <li id="tdAccountsTab" class="active"></li>
+                    <li id="tdUploadTab"></li>
                 </ul>
             </div>
         </li>
@@ -216,6 +218,16 @@
                 // Home
                 $("#vertNav_Home").one("click", function () {
                     LoadAdvertisers();
+                });
+
+                // TD Upload
+                $("#navTDUpload").one("click", function() {
+                    $.ajax({
+                        url: '@Url.Action("Upload", "TDAdmin")',
+                        cache: false
+                    }).done(function (html) {
+                        $("#tdUploadTab").html(html);
+                    });
                 });
             </text>}
 

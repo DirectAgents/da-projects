@@ -10,10 +10,13 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
     public class AdrollCsvExtracter : Extracter<AdrollRow>
     {
         private readonly string csvFilePath;
+        private readonly StreamReader streamReader;
+        // if streamReader is not null, use it. otherwise use csvFilePath.
 
-        public AdrollCsvExtracter(string csvFilePath)
+        public AdrollCsvExtracter(string csvFilePath, StreamReader streamReader)
         {
             this.csvFilePath = csvFilePath;
+            this.streamReader = streamReader;
         }
 
         protected override void Extract()
@@ -26,15 +29,29 @@ namespace CakeExtracter.Etl.TradingDesk.Extracters
 
         private IEnumerable<AdrollRow> EnumerateRows()
         {
-            using (StreamReader reader = File.OpenText(csvFilePath))
+            if (streamReader != null)
             {
-                using (CsvReader csv = new CsvReader(reader))
+                foreach (var row in EnumerateRowsInner(streamReader))
+                    yield return row;
+            }
+            else
+            {
+                using (StreamReader reader = File.OpenText(csvFilePath))
                 {
-                    var csvRows = csv.GetRecords<AdrollRow>().ToList();
-                    for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].AdName); i++)
-                    {
-                        yield return csvRows[i];
-                    }
+                    foreach (var row in EnumerateRowsInner(reader))
+                        yield return row;
+                }
+            }
+        }
+
+        private IEnumerable<AdrollRow> EnumerateRowsInner(StreamReader reader)
+        {
+            using (CsvReader csv = new CsvReader(reader))
+            {
+                var csvRows = csv.GetRecords<AdrollRow>().ToList();
+                for (int i = 0; i < csvRows.Count && !String.IsNullOrWhiteSpace(csvRows[i].AdName); i++)
+                {
+                    yield return csvRows[i];
                 }
             }
         }

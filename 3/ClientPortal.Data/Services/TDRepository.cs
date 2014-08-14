@@ -227,6 +227,12 @@ namespace ClientPortal.Data.Services
 
         // ---
 
+        public IQueryable<AdRollProfile> AdRollProfiles()
+        {
+            var profiles = context.AdRollProfiles;
+            return profiles;
+        }
+
         public IQueryable<InsertionOrder> InsertionOrders()
         {
             var insertionOrders = context.InsertionOrders;

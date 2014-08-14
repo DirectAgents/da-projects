@@ -711,6 +711,7 @@
     <Content Include="Areas\Admin\Views\TDAdmin\CreateUserProfile.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\TradingDeskAccounts.cshtml" />
     <Content Include="Areas\Admin\Views\TDAdmin\EditAccount.cshtml" />
+    <Content Include="Areas\Admin\Views\TDAdmin\Upload.cshtml" />
     <None Include="Properties\PublishProfiles\clientportal.directagents.local - Debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - debug.pubxml" />
     <None Include="Properties\PublishProfiles\gogrid - prod.pubxml" />

@@ -1,5 +1,6 @@
 ﻿using ClientPortal.Data.DTOs.TD;
 using ClientPortal.Data.Entities.TD;
+using ClientPortal.Data.Entities.TD.AdRoll;
 using ClientPortal.Data.Entities.TD.DBM;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace ClientPortal.Data.Contracts
 
         IEnumerable<StatsSummary> GetDailyStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tdAccount);
         IEnumerable<CreativeStatsSummary> GetCreativeStatsSummaries(DateTime? start, DateTime? end, TradingDeskAccount tdAccount);
+
+        IQueryable<AdRollProfile> AdRollProfiles();
 
         IQueryable<InsertionOrder> InsertionOrders();
         InsertionOrder GetInsertionOrder(int insertionOrderID);

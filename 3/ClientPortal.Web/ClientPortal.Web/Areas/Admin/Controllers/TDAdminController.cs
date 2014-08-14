@@ -1,9 +1,12 @@
-﻿using ClientPortal.Data.Contracts;
+﻿using CakeExtracter.Commands;
+using ClientPortal.Data.Contracts;
 using ClientPortal.Data.Entities.TD;
 using ClientPortal.Web.Areas.TD.Models;
 using ClientPortal.Web.Controllers;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using WebMatrix.WebData;
 
@@ -116,5 +119,20 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             return RedirectToAction("TradingDeskAccounts");
         }
 
+        [HttpGet]
+        public ActionResult Upload()
+        {
+            var adrollProfiles = tdRepo.AdRollProfiles();
+            return View(adrollProfiles);
+        }
+        [HttpPost]
+        public ActionResult Upload(HttpPostedFileBase file, int profileId)
+        {
+            using (var reader = new StreamReader(file.InputStream))
+            {
+                TDSynchAdDailySummariesAdrollCsv.RunStatic(reader, profileId);
+            }
+            return null;
+        }
     }
 }

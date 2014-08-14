@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ClientPortal.Data.Entities.TD.AdRoll.AdRollProfile>
+
+@{
+    //ViewBag.Title = "";
+    var ajaxOptions = new AjaxOptions()
+    {
+        UpdateTargetId = "tdUploadTab"
+    };
+    var profileSelectList = new SelectList(Model, "Id", "Name");
+}
+
+<h3>Upload Stats File</h3>
+
+<table><tr><td>
+<form method="post" action="@Url.Action("Upload")" enctype="multipart/form-data">
+    <div>
+        Select AdRoll Profile:
+        @Html.DropDownList("selectAdRollProfile", profileSelectList)
+    </div>
+    <div>
+        <br />
+        <input id="fileUpload" name="file" type="file" />
+    </div>
+</form>
+
+<div style="display:none" id="divComplete">
+    Upload complete.<br />
+    @Ajax.ActionLink("Refresh", "Upload", ajaxOptions)
+</div>
+</td></tr></table>
+
+<script>
+    $(function () {
+        $("#fileUpload").kendoUpload({
+            async: {
+                saveUrl: "@Url.Action("Upload")",
+                autoUpload: false
+            },
+            localization: {
+                select: "Select&nbsp;file...",
+                uploadSelectedFiles: "Upload"
+            },
+            multiple: false,
+            upload: function (e) {
+                e.data = { profileid: $('#selectAdRollProfile').val() };
+            },
+            complete: UploadComplete
+        });
+    });
+
+    function UploadComplete() {
+        $('#divComplete').show();
+    }
+</script>
