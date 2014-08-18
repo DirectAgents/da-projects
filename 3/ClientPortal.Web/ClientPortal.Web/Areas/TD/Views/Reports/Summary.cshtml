@@ -73,12 +73,42 @@
 </table>
 </div>
 
+@{
+    string secondSelectedValue = (Model.AllMetrics.Length > 1) ? Model.AllMetrics[1] : null;
+}
 <div class="four columns">
-    @Html.Partial("ChartSetup")
+    <h3>Chart Setup</h3>
+    <table>
+        <tr>
+            <td>First Metric:</td>
+            <td>@Html.DropDownList("selMetric1", new SelectList(Model.AllMetrics), new { style = "width:auto"})</td>
+        </tr>
+        <tr>
+            <td>Second Metric:</td>
+            <td>@Html.DropDownList("selMetric2", new SelectList(Model.AllMetrics, secondSelectedValue), new { style = "width:auto"})</td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="button" value="Redraw Chart" onclick="ChangeChartMetrics()" /></td>
+        </tr>
+    </table>
 </div>
 </div>
 
 <script>
+    function ChangeChartMetrics() {
+        var metrics = [$('#selMetric1').val()];
+        var metric2 = $('#selMetric2').val();
+        if (metric2 != metrics[0])
+            metrics.push(metric2);
+        var a = ConstructSummaryChartArrays(metrics);
+        var chart = $("#summaryChart").data("kendoChart");
+        chart.setOptions({
+            series: a.SeriesArray,
+            valueAxis: a.ValueAxisArray
+        });
+        chart.refresh();
+    }
+
     $(document).ready(function () {
         $('#summary_dateRangeSel').kendoDropDownList();
         $('#summary_startdate').kendoDatePicker({ footer: ' ' });
@@ -118,8 +148,8 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("SummaryData", "Reports")'
-                    ,data: function () {
+                    url: '@Url.Action("SummaryData", "Reports")',
+                    data: function () {
                         return {
                             startdate: $('#summary_startdate').val(),
                             enddate: $('#summary_enddate').val(),
@@ -165,6 +195,34 @@
     }
 
     function CreateSummaryChart(dataSource) {
+        var metrics = [
+@for (int i = 0; i < metrics.Length; i++)
+{
+    <text>"@(metrics[i])"@(i < metrics.Length -1 ? "," : "")</text>
+}
+        ];
+        var a = ConstructSummaryChartArrays(metrics);
+        CreateSummaryChartInner(dataSource, a.SeriesArray, a.ValueAxisArray);
+    }
+
+    function ConstructSummaryChartArrays(metrics) {
+        var format;
+        var seriesArray = [], valueAxisArray = [];
+        for (var i = 0; i < metrics.length; i++) {
+            if (metrics[i] == "Spend")
+                format = "C";
+            else
+                format = "N0";
+            seriesArray.push({ type: "line", field: metrics[i], name: metrics[i], axis: metrics[i], markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:" + format + "}',value) #" } });
+            valueAxisArray.push({ name: metrics[i], labels: { format: format, step: 2 }, title: { text: metrics[i] } });
+        }
+        return {
+            SeriesArray: seriesArray,
+            ValueAxisArray: valueAxisArray
+        };
+    }
+
+    function CreateSummaryChartInner(dataSource, seriesArray, valueAxisArray) {
         $("#summaryChart").kendoChart({
             dataSource: dataSource,
             autoBind: false,
@@ -172,34 +230,14 @@
                 height: 300
             },
             theme: $(document).data("kendoSkin") || "default",
-            series: [
-@for (int i = 0; i < metrics.Length; i++)
-{
-    string format = (metrics[i] == "Spend") ? "C" : "N0";
-    <text>{ type: "line", field: "@metrics[i]", name: "@metrics[i]", axis: "@metrics[i]", markers: { visible: false }, tooltip: { template: "#= kendo.format('{0:d}', category) #: #= kendo.format('{0:@format}',value) #" } }</text>
-    if (i < metrics.Length - 1)
-    {
-        <text>,</text>
-    }
-}
-            ],
+            series: seriesArray,
             categoryAxis: {
                 baseUnit: "days",
                 field: "Date",
                 labels: { rotation: -90 },
                 axisCrossingValue: [0, 2000]
             },
-            valueAxis: [
-@for (int i = 0; i < metrics.Length; i++)
-{
-    string format = (metrics[i] == "Spend") ? "C" : "N0";
-    <text>{ name: "@metrics[i]", labels: { format: "@format", step: 2 }, title: { text: "@metrics[i]" } }</text>
-    if (i < metrics.Length - 1)
-    {
-        <text>,</text>
-    }
-}
-            ],
+            valueAxis: valueAxisArray,
             tooltip: {
                 visible: true
             },

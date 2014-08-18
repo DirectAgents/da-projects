@@ -1,5 +1,19 @@
 ﻿@model ClientPortal.Web.Areas.TD.Models.TDReportModel
 
+<div style="height: 35px">
+    <select style="width: 140px" id="creative_dateRangeSel" onchange="ChangeDateRange('creative', true)">@* show all in USD for now *@
+        <option value="mtd">Month to Date</option>
+        <option value="ytd">Year to Date</option>
+        <option value="lastmonth">Last Month</option>
+        <option value="custom">- custom -</option>
+    </select>
+    <span class="paddedlabel">Start:</span>
+    <input id="creative_startdate" name="startdate" type="text" value="@Model.StartDate" onchange="DateChanged('creative')" />
+    <span class="paddedlabel">End:</span>
+    <input id="creative_enddate" name="enddate" type="text" value="@Model.EndDate" onchange="DateChanged('creative')" />  @* show all in USD for now *@
+    <a class="button paddedbutton" id="creative_filterBtn" href="#" onclick="if($(this).attr('disabled') != 'disabled') RefreshGrid('creative', true); return false">Filter</a>
+</div>
+
 <div class="row">
     <div class="six columns">
         <div id="creativeBarChartSection" class="k-content">
@@ -21,14 +35,15 @@
 
 <script>
     $(document).ready(function () {
+        $('#creative_dateRangeSel').kendoDropDownList();
+        $('#creative_startdate').kendoDatePicker({ footer: ' ' });
+        $('#creative_enddate').kendoDatePicker({ footer: ' ' });
+
         var datasource = CreateCreativeDataSource();
         CreateCreativeGrid(datasource);
         CreateCreativeCharts(datasource);
 
         datasource.bind('change', CreativeDataSourceChange);
-        //datasource.fetch(function () {
-        //    PopulateCreativeScatterChart(this.data());
-        //});
         datasource.read();
     });
 
@@ -45,7 +60,6 @@
 
         var data = this.data();
         PopulateCreativeBarChart(data);
-        //PopulateCreativeScatterChart(data); //TODO: do this when daterange changes
     }
 
     function PopulateCreativeBarChart(data) {
@@ -71,7 +85,7 @@
         chart.options.categoryAxis.categories = new Array();
         chart.options.series[0].data = new Array();
         var maxValue = 0;
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 5 && i < data.length; i++) {
             chart.options.categoryAxis.categories[i] = data[i].CreativeName;
             chart.options.series[0].data[i] = data[i][metricForBarChart];
             if (data[i][metricForBarChart] > maxValue)
@@ -82,15 +96,6 @@
 
         chart.redraw();
     }
-
-    //function PopulateCreativeScatterChart(data) {
-    //    var chart = $('#creativeScatterChart').data('kendoChart');
-    //    chart.options.series[0].data = new Array();
-    //    for (var i = 0; i < data.length; i++) {
-    //        chart.options.series[0].data[i] = [data[i].CTR, data[i].Impressions];
-    //    }
-    //    chart.redraw();
-    //}
 
     function CreateCreativeDataSource() {
         return new kendo.data.DataSource({
@@ -103,14 +108,13 @@
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: '@Url.Action("CreativeData", "Reports")'
-                    //,data: function () {
-                    //    return {
-                    //        startdate: $('#daysum_startdate').val(),
-                    //        enddate: $('#daysum_enddate').val(),
-                    //        offerid: $('#daysum_offerFilter').val()
-                    //    };
-                    //}
+                    url: '@Url.Action("CreativeData", "Reports")',
+                    data: function () {
+                        return {
+                            startdate: $('#creative_startdate').val(),
+                            enddate: $('#creative_enddate').val(),
+                        };
+                    }
                 }
             },
             schema: {
