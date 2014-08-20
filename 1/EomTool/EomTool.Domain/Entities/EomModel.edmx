@@ -339,7 +339,7 @@
           <Property Name="media_buyer_id" Type="int" Nullable="false" />
           <Property Name="affid" Type="int" Nullable="false" />
           <Property Name="currency_id" Type="int" Nullable="false" />
-          <Property Name="email" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="email" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="add_code" Type="varchar" Nullable="false" MaxLength="100" />
           <Property Name="net_term_type_id" Type="int" />
           <Property Name="payment_method_id" Type="int" Nullable="false" />
@@ -1402,7 +1402,7 @@
           <Property Name="media_buyer_id" Type="Int32" Nullable="false" />
           <Property Name="affid" Type="Int32" Nullable="false" />
           <Property Name="currency_id" Type="Int32" Nullable="false" />
-          <Property Name="email" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
           <Property Name="add_code" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="net_term_type_id" Type="Int32" />
           <Property Name="payment_method_id" Type="Int32" Nullable="false" />

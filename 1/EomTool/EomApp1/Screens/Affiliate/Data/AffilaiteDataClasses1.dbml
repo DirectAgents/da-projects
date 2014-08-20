@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DADatabaseR1" Class="AffilaiteDataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=aaron\sqlexpress;Initial Catalog=DADatabaseR1;Integrated Security=True" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=biz\sqlexpress;Initial Catalog=DADatabaseR1;User ID=sa" SettingsObjectName="EomApp1.Properties.Settings" SettingsPropertyName="DADatabaseR1ConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Affiliate" Member="Affiliates">
     <Type Name="Affiliate">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -7,7 +7,7 @@
       <Column Name="media_buyer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="affid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="currency_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="email" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="email" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="add_code" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
       <Column Name="name2" Type="System.String" DbType="VarChar(358) NOT NULL" IsDbGenerated="true" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="net_term_type_id" Type="System.Int32" DbType="Int" CanBeNull="true" />

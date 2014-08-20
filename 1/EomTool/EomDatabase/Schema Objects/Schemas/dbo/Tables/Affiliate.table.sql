@@ -4,7 +4,7 @@
     [media_buyer_id]     INT           NOT NULL,
     [affid]              INT           NOT NULL,
     [currency_id]        INT           NOT NULL,
-    [email]              VARCHAR (100) NOT NULL,
+    [email]              VARCHAR (255) NOT NULL,
     [add_code]           VARCHAR (100) NOT NULL,
     [net_term_type_id]   INT           NULL,
     [payment_method_id]  INT           NOT NULL,
