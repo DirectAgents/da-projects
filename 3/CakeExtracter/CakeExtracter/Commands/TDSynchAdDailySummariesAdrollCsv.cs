@@ -10,14 +10,16 @@ namespace CakeExtracter.Commands
     [Export(typeof(ConsoleCommand))]
     public class TDSynchAdDailySummariesAdrollCsv : ConsoleCommand
     {
-        public static int RunStatic(StreamReader streamReader, int adrollProfileId)
+        public static int RunStatic(StreamReader streamReader, int adrollProfileId, out string status)
         {
             var cmd = new TDSynchAdDailySummariesAdrollCsv
             {
                 StreamReader = streamReader,
                 AdRollProfileId = adrollProfileId
             };
-            return cmd.Run();
+            int result = cmd.Run();
+            status = cmd.Status;
+            return result;
         }
 
         public StreamReader StreamReader { get; set; }
@@ -46,8 +48,12 @@ namespace CakeExtracter.Commands
             var loaderThread = loader.Start(extracter);
             extracterThread.Join();
             loaderThread.Join();
+
+            Status = String.Format("MinDate: {0:d}\nMaxDate: {1:d}\nNumCreatives: {2}", loader.MinDate, loader.MaxDate, loader.AdsAffected.Count);
             return 0;
         }
+
+        public string Status { get; set; }
 
     }
 }

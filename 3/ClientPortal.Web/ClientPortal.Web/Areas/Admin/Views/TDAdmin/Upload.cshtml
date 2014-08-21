@@ -24,8 +24,10 @@
 </form>
 
 <div style="display:none" id="divComplete">
-    Upload complete.<br />
-    @Ajax.ActionLink("Refresh", "Upload", ajaxOptions)
+    <div id="divUploadStatus"></div>
+    <!--Upload complete.<br />-->
+    <br />
+    @Ajax.ActionLink("Reset Tab", "Upload", ajaxOptions)
 </div>
 </td></tr></table>
 
@@ -44,11 +46,20 @@
             upload: function (e) {
                 e.data = { profileid: $('#selectAdRollProfile').val() };
             },
-            complete: UploadComplete
+            success: UploadSuccess,
+            error: UploadError,
+            complete: UploadComplete,
         });
     });
 
-    function UploadComplete() {
+    function UploadError(e) {
+        if (e.operation == "upload")
+            $('#divUploadStatus').html('Error uploading file');
+    }
+    function UploadSuccess(e) {
+        $('#divUploadStatus').html('<b>Upload Complete</b><br/>' + e.response.status);
+    }
+    function UploadComplete(e) {
         $('#divComplete').show();
     }
 </script>

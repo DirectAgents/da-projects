@@ -128,11 +128,12 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase file, int profileId)
         {
+            string status;
             using (var reader = new StreamReader(file.InputStream))
             {
-                TDSynchAdDailySummariesAdrollCsv.RunStatic(reader, profileId);
+                TDSynchAdDailySummariesAdrollCsv.RunStatic(reader, profileId, out status);
             }
-            return null;
+            return Json(new { status = status.Replace("\n", "<br/>") }, "text/plain");
         }
     }
 }

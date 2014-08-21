@@ -14,6 +14,10 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
         private readonly int adrollProfileId;
         private Dictionary<string, int> adIdLookupByName = new Dictionary<string, int>();
 
+        public DateTime? MinDate { get; set; }
+        public DateTime? MaxDate { get; set; }
+        public Dictionary<int, string> AdsAffected = new Dictionary<int, string>();
+
         public AdrollAdDailySummaryLoader(int adrollProfileId)
         {
             this.adrollProfileId = adrollProfileId;
@@ -31,6 +35,7 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
         {
             var addedCount = 0;
             var updatedCount = 0;
+            var skippedCount = 0;
             var itemCount = 0;
             using (var db = new TDContext())
             {
@@ -58,14 +63,31 @@ namespace CakeExtracter.Etl.TradingDesk.Loaders
                         }
                         else
                         {
-                            AutoMapper.Mapper.Map(source, target);
-                            db.Entry(target).State = EntityState.Modified;
-                            updatedCount++;
+                            var entry = db.Entry(target);
+                            if (entry.State == EntityState.Unchanged)
+                            {
+                                AutoMapper.Mapper.Map(source, target);
+                                entry.State = EntityState.Modified;
+                                updatedCount++;
+                            }
+                            else
+                            {
+                                skippedCount++;
+                            }
+                            // Note: In the case that the csv has two identical rows and it's a new entry, we now avoid problems on the second row,
+                            //       because Find will return the same "target". We don't want to change state from Added to Modified in that case.
                         }
                         itemCount++;
+
+                        if (!MinDate.HasValue || date < MinDate.Value)
+                            MinDate = date;
+                        if (!MaxDate.HasValue || date > MaxDate.Value)
+                            MaxDate = date;
+                        if (!AdsAffected.ContainsKey(source.AdRollAdId))
+                            AdsAffected[source.AdRollAdId] = item.AdName;
                     }
                 }
-                Logger.Info("Saving {0} AdDailySummaries ({1} updates, {2} additions)", itemCount, updatedCount, addedCount);
+                Logger.Info("Saving {0} AdDailySummaries ({1} updates, {2} additions, {3} duplicates)", itemCount, updatedCount, addedCount, skippedCount);
                 db.SaveChanges();
             }
             return itemCount;
