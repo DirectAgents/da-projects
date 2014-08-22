@@ -1,0 +1,11 @@
+﻿@model ClientPortal.Data.DTOs.TD.StatsRollup
+
+<b>Existing Stats</b><br />
+
+@if (Model.MinDate.HasValue) {
+    <text>MinDate: </text>@Model.MinDate.Value.ToShortDateString()<br />
+}
+@if (Model.MaxDate.HasValue) {
+    <text>MaxDate: </text>@Model.MaxDate.Value.ToShortDateString()<br />
+}
+NumCreatives: @Model.NumCreatives

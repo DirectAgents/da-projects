@@ -227,6 +227,21 @@ namespace ClientPortal.Data.Services
 
         // ---
 
+        public StatsRollup AdRollStatsRollup(int profileId)
+        {
+            var adDailySummaries = context.AdDailySummaries.Where(s => s.AdRollAd.AdRollProfileId == profileId);
+            var statsRollup = new StatsRollup();
+            if (adDailySummaries.Any())
+            {
+                statsRollup.MinDate = adDailySummaries.Min(s => s.Date);
+                statsRollup.MaxDate = adDailySummaries.Max(s => s.Date);
+                statsRollup.NumCreatives = adDailySummaries.Select(s => s.AdRollAdId).Distinct().Count();
+            }
+            return statsRollup;
+        }
+
+        // ---
+
         public IQueryable<AdRollProfile> AdRollProfiles()
         {
             var profiles = context.AdRollProfiles;

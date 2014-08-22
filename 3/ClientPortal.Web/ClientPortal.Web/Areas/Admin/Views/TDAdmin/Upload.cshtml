@@ -14,8 +14,7 @@
 <table><tr><td>
 <form method="post" action="@Url.Action("Upload")" enctype="multipart/form-data">
     <div>
-        Select AdRoll Profile:
-        @Html.DropDownList("selectAdRollProfile", profileSelectList)
+        @Html.DropDownList("selectAdRollProfile", profileSelectList, "Select AdRollProfile...", new { onchange = "ProfileChange()" })
     </div>
     <div>
         <br />
@@ -23,15 +22,28 @@
     </div>
 </form>
 
+<div id="divStatsRollup"></div>
+<br />
+
 <div style="display:none" id="divComplete">
     <div id="divUploadStatus"></div>
-    <!--Upload complete.<br />-->
     <br />
     @Ajax.ActionLink("Reset Tab", "Upload", ajaxOptions)
 </div>
 </td></tr></table>
 
 <script>
+    function ProfileChange() {
+        var profileId = $('#selectAdRollProfile').val();
+        if (profileId) {
+            $.get('@Url.Action("StatsRollup")', { profileid: profileId }, function (result) {
+                $('#divStatsRollup').html(result);
+            });
+        } else {
+            $('#divStatsRollup').html("");
+        }
+    }
+
     $(function () {
         $("#fileUpload").kendoUpload({
             async: {
@@ -43,14 +55,22 @@
                 uploadSelectedFiles: "Upload"
             },
             multiple: false,
-            upload: function (e) {
-                e.data = { profileid: $('#selectAdRollProfile').val() };
-            },
+            upload: OnUpload,
             success: UploadSuccess,
             error: UploadError,
             complete: UploadComplete,
         });
     });
+
+    function OnUpload(e) {
+        var profileId = $('#selectAdRollProfile').val();
+        if (profileId)
+            e.data = { profileid: profileId };
+        else {
+            alert('Please select an AdRollProfile.');
+            e.preventDefault();
+        }
+    }
 
     function UploadError(e) {
         if (e.operation == "upload")

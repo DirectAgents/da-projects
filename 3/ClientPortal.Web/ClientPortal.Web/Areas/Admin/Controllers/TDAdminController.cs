@@ -135,5 +135,11 @@ namespace ClientPortal.Web.Areas.Admin.Controllers
             }
             return Json(new { status = status.Replace("\n", "<br/>") }, "text/plain");
         }
+
+        public ActionResult StatsRollup(int profileId)
+        {
+            var statsRollup = tdRepo.AdRollStatsRollup(profileId);
+            return View(statsRollup);
+        }
     }
 }
