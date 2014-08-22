@@ -10,19 +10,16 @@
       Web.config for quickly configuring and running a simple application.
       However, it is not mandatory to provide your settings in the config file,
       you may also set or override these settings at runtime. See
-      https://code.google.com/p/google-api-adwords-dotnet/wiki/HowToUseAdWordsUser
+      https://github.com/googleads/googleads-dotnet-lib/wiki/Getting-Started
       for details.
 
       You can refer to
-      https://code.google.com/p/google-api-adwords-dotnet/wiki/UnderstandingAppConfig
+      https://github.com/googleads/googleads-dotnet-lib/wiki/Understanding-App.config
       for detailed explanation of each configuration key.
     -->
 
     <!-- Settings related to SOAP logging. -->
-    <add key="LogPath" value="C:\Logs\"/>
-    <add key="LogToFile" value="false"/>
     <add key="MaskCredentials" value="true"/>
-    <add key="LogErrorsOnly" value="true"/>
 
     <!-- Settings related to general library behaviour. -->
 
@@ -58,10 +55,9 @@
          run Common\Util\OAuth2TokenGenerator.cs to generate this section of the
          config file.
     -->
-    <add key="AuthorizationMethod" value="OAuth2" />
     <!-- Provide the OAuth2 client ID and secret. You can create one from
-         https://code.google.com/apis/console/. See
-         https://code.google.com/p/google-api-adwords-dotnet/wiki/UsingOAuth
+         https://console.developers.google.com. See
+         https://github.com/googleads/googleads-dotnet-lib/wiki/Using-OAuth2
          for more details.
     -->
     <add key="OAuth2ClientId" value="INSERT_OAUTH2_CLIENT_ID_HERE" />
@@ -96,7 +92,7 @@
          You should comment out all the keys for Web / Installed application
          OAuth flow above. See
          https://developers.google.com/adwords/api/docs/guides/service-accounts
-         and https://code.google.com/p/google-api-adwords-dotnet/wiki/UsingOAuth
+         https://github.com/googleads/googleads-dotnet-lib/wiki/Using-OAuth2
          for more details.
     -->
     <!--
@@ -109,21 +105,6 @@
     <add key="OAuth2JwtCertificatePassword"
         value="INSERT_OAUTH2_JWT_CERTIFICATE_PASSWORD_HERE" />
     -->
-
-    <!-- Settings specific to use ClientLogin as authentication mechanism. -->
-    <!-- To use ClientLogin as authentication mechanism, uncomment the following
-         section and comment the OAuth2 section above. Keep in mind that
-         ClientLogin API is deprecated, and its use is strongly discouraged.
-         See https://developers.google.com/accounts/docs/AuthForInstalledApps
-         for details.-->
-    <!--
-    <add key="AuthorizationMethod" value="ClientLogin" />
-    <add key="Email" value="INSERT_YOUR_LOGIN_EMAIL_HERE"/>
-    <add key="Password" value="INSERT_YOUR_PASSWORD_HERE"/>
-    -->
-    <!-- Optional: uncomment this if you want to reuse an authToken multiple
-         times. -->
-    <!-- <add key="AuthToken" value="INSERT_YOUR_AUTH_TOKEN_HERE"/> -->
   </AdWordsApi>
   <system.web>
     <webServices>
@@ -149,6 +130,30 @@
             initializeData="Application" />
         </listeners>
       </source>
+      <source name="AdsClientLibs.SoapXmlLogs"
+        switchName="AdsClientLibs.SoapXmlLogs"
+        switchType="System.Diagnostics.SourceSwitch">
+        <listeners>
+          <!-- Modify the initializeData attribute below to control the
+                path to the SOAP XML log file. -->
+          <add name="soapXmlLogListener"
+            type="System.Diagnostics.TextWriterTraceListener"
+            initializeData="C:\Logs\soap_xml.log" />
+          <remove name="Default" />
+        </listeners>
+      </source>
+      <source name="AdsClientLibs.RequestInfoLogs"
+        switchName="AdsClientLibs.RequestInfoLogs"
+        switchType="System.Diagnostics.SourceSwitch">
+        <listeners>
+          <!-- Modify the initializeData attribute below to control the
+                path to the request info log file. -->
+          <add name="requestInfoLogListener"
+            type="System.Diagnostics.TextWriterTraceListener"
+            initializeData="C:\Logs\request_info.log" />
+          <remove name="Default" />
+        </listeners>
+      </source>
     </sources>
     <switches>
       <!-- Use this trace switch to control the deprecation trace messages
@@ -157,6 +162,15 @@
           http://msdn.microsoft.com/en-us/library/system.diagnostics.sourcelevels.aspx
           for all possible values this key can take. -->
       <add name="AdsClientLibs.DeprecationMessages" value="Warning"/>
+      <!-- Use this trace switch to control the SOAP XML logs written by Ads*
+          .NET libraries. The default level is set to Off. Logs are generated at
+          both the Error and Information levels. -->
+      <add name="AdsClientLibs.SoapXmlLogs" value="Off"/>
+      <!-- Use this trace switch to control the Request Info logs written by
+          Ads* .NET libraries. The default level is set to Off. Logs are
+          generated at both the Error and Information levels. -->
+      <add name="AdsClientLibs.RequestInfoLogs" value="Off"/>
     </switches>
+    <trace autoflush="true" />
   </system.diagnostics>
 </configuration>

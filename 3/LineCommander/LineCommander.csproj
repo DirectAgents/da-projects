@@ -66,13 +66,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ClientPortal.Web\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Ads.Common, Version=1.8.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
+    <Reference Include="Google.Ads.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ClientPortal.Web\packages\Google.Ads.Common.1.8.0\lib\net20\Google.Ads.Common.dll</HintPath>
+      <HintPath>..\ClientPortal.Web\packages\Google.Ads.Common.3.2.0\lib\net40\Google.Ads.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Google.AdWords, Version=16.1.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
+    <Reference Include="Google.AdWords, Version=18.3.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ClientPortal.Web\packages\Google.AdWords.16.1.0\lib\net20\Google.AdWords.dll</HintPath>
+      <HintPath>..\ClientPortal.Web\packages\Google.AdWords.18.3.0\lib\net40\Google.AdWords.dll</HintPath>
     </Reference>
     <Reference Include="ManyConsole">
       <HintPath>..\ClientPortal.Web\packages\ManyConsole.0.4.2.16\lib\ManyConsole.dll</HintPath>

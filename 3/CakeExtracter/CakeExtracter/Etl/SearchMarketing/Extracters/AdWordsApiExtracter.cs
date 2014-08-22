@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Google.Api.Ads.AdWords.Lib;
+using Google.Api.Ads.AdWords.Util.Reports;
+using Google.Api.Ads.AdWords.v201406;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Xml;
-using Google.Api.Ads.AdWords.Lib;
-using Google.Api.Ads.AdWords.Util.Reports;
-using Google.Api.Ads.AdWords.v201306;
 
 namespace CakeExtracter.Etl.SearchMarketing.Extracters
 {
@@ -40,7 +40,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
             {
                 "AccountDescriptiveName",
                 "AccountCurrencyCode",
-                "AccountId",
+                "ExternalCustomerId",
                 "AccountTimeZoneId",
                 "CampaignId",
                 "CampaignName",
@@ -59,7 +59,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
 
             string duringString = string.Format("DURING {0},{1}", this.beginDate.ToString("yyyyMMdd"), this.endDate.ToString("yyyyMMdd"));
 
-            string queryFormat = "SELECT {0} FROM CAMPAIGN_PERFORMANCE_REPORT WHERE Impressions > 0 AND CampaignStatus IN [ACTIVE, PAUSED] {1}";
+            string queryFormat = "SELECT {0} FROM CAMPAIGN_PERFORMANCE_REPORT WHERE Impressions > 0 AND CampaignStatus IN [ENABLED, PAUSED] {1}";
 
             string query = string.Format(queryFormat, string.Join(",", fieldsArray), duringString);
 
@@ -68,7 +68,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Extracters
                 var user = new AdWordsUser();
                 ((AdWordsAppConfig)user.Config).ClientCustomerId = this.clientCustomerId; //"999-213-1770" is RamJet
                 var utilities = new ReportUtilities(user);
-                utilities.ReportVersion = "v201306";
+                utilities.ReportVersion = "v201406";
                 utilities.DownloadClientReport(query, DownloadFormat.XML.ToString(), this.reportFilePath);
             }
             catch (Exception ex)

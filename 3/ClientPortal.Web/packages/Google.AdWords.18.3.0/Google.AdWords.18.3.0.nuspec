@@ -2,21 +2,21 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Google.AdWords</id>
-    <version>16.1.0</version>
+    <version>18.3.0</version>
     <title>AdWords API Dotnet Client Library</title>
-    <authors>Anash P. Oommen</authors>
-    <owners>Anash P. Oommen</owners>
+    <authors>https://github.com/AnashOommen,  https://github.com/Narwalter,  https://github.com/jimper</authors>
+    <owners>https://github.com/AnashOommen,  https://github.com/Narwalter,  https://github.com/jimper</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <projectUrl>http://code.google.com/p/google-api-adwords-dotnet/</projectUrl>
+    <projectUrl>https://github.com/googleads/googleads-dotnet-lib/</projectUrl>
     <iconUrl>https://ssl.gstatic.com/codesite/ph/images/search-48.gif</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>This library provides you with functionality to access the AdWords API.</description>
     <summary>This library provides you with functionality to access the AdWords API.</summary>
-    <releaseNotes>See https://code.google.com/p/google-api-adwords-dotnet/source/browse/trunk/ChangeLog</releaseNotes>
+    <releaseNotes>See https://github.com/googleads/googleads-dotnet-lib/blob/master/ChangeLog</releaseNotes>
     <copyright>Copyright 2011, Google Inc. All Rights Reserved.</copyright>
     <tags>Adwords Google</tags>
     <dependencies>
-      <dependency id="Google.Ads.Common" version="1.8.0" />
+      <dependency id="Google.Ads.Common" version="3.2.0" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Web.Services" targetFramework="" />

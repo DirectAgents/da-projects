@@ -564,141 +564,6 @@
             <param name="nodeName">The root node name for fault node.</param>
             <returns>The fault node.</returns>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_ConnectionGroupName">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_ConnectionGroupName(System.String)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_Credentials">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_Credentials(System.Net.ICredentials)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_PreAuthenticate">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_PreAuthenticate(System.Boolean)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_RequestEncoding">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_RequestEncoding(System.Text.Encoding)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_Timeout">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_Timeout(System.Int32)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_Url">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_Url(System.String)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_UseDefaultCredentials">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_UseDefaultCredentials(System.Boolean)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_AllowAutoRedirect">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_AllowAutoRedirect(System.Boolean)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_ClientCertificates">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_CookieContainer">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_CookieContainer(System.Net.CookieContainer)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_EnableDecompression">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_EnableDecompression(System.Boolean)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_Proxy">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_Proxy(System.Net.IWebProxy)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_UnsafeAuthenticatedConnectionSharing">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_UnsafeAuthenticatedConnectionSharing(System.Boolean)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#get_UserAgent">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.AdsSoapClient.Google#Api#Ads#Common#Lib#AdsClient#set_UserAgent(System.String)">
-            <summary>
-            Base class for all SOAP services supported by this library.
-            </summary>
-        </member>
         <member name="P:Google.Api.Ads.Common.Lib.AdsSoapClient.User">
             <summary>
             Gets or sets the AdsUser object that created this
@@ -923,21 +788,6 @@
             Gets the default OAuth2 scope.
             </summary>
         </member>
-        <member name="P:Google.Api.Ads.Common.Lib.AppConfig.LogErrorsOnly">
-            <summary>
-            Gets whether the SOAP logs that correspond to an error should be logged.
-            </summary>
-        </member>
-        <member name="P:Google.Api.Ads.Common.Lib.AppConfig.LogPath">
-            <summary>
-            Gets the path to which the SOAP logs are to be saved.
-            </summary>
-        </member>
-        <member name="P:Google.Api.Ads.Common.Lib.AppConfig.LogToFile">
-            <summary>
-            Gets whether the SOAP logs should be written to file.
-            </summary>
-        </member>
         <member name="P:Google.Api.Ads.Common.Lib.AppConfig.MaskCredentials">
             <summary>
             Gets whether the credentials in the log file should be masked.
@@ -1072,21 +922,6 @@
             The short name to identify this assembly.
             </summary>
         </member>
-        <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.LOG_PATH">
-            <summary>
-            Key name for logPath.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.LOG_TO_FILE">
-            <summary>
-            Key name for logToFile.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.LOG_ERRORS_ONLY">
-            <summary>
-            Key name for logErrorsOnly.
-            </summary>
-        </member>
         <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.PROXY_SERVER">
             <summary>
             Key name for proxyServer
@@ -1206,22 +1041,6 @@
         <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.DEFAULT_TIMEOUT">
             <summary>
             Default value for timeout for Ads services.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.logPath">
-            <summary>
-            Path to which the SOAP logs are to be saved.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.logToFile">
-            <summary>
-            True, if the SOAP logs should be written to file.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.logErrorsOnly">
-            <summary>
-            True, if only the SOAP logs that correspond to an error
-            should be logged.
             </summary>
         </member>
         <member name="F:Google.Api.Ads.Common.Lib.AppConfigBase.proxy">
@@ -1373,22 +1192,6 @@
             <param name="propertyName">Name of the property.</param>
             <param name="field">The property field to be set.</param>
             <param name="newValue">The new value to be set to the propery.</param>
-        </member>
-        <member name="P:Google.Api.Ads.Common.Lib.AppConfigBase.LogPath">
-            <summary>
-            Gets the path to which the SOAP logs are to be saved.
-            </summary>
-        </member>
-        <member name="P:Google.Api.Ads.Common.Lib.AppConfigBase.LogErrorsOnly">
-            <summary>
-            Gets whether the SOAP logs that correspond to an error
-            should be logged.
-            </summary>
-        </member>
-        <member name="P:Google.Api.Ads.Common.Lib.AppConfigBase.LogToFile">
-            <summary>
-            Gets whether the SOAP logs should be written to file.
-            </summary>
         </member>
         <member name="P:Google.Api.Ads.Common.Lib.AppConfigBase.MaskCredentials">
             <summary>
@@ -1680,6 +1483,26 @@
             <returns>The auth token, or null if the cache doesn't have a token.
             </returns>
         </member>
+        <member name="M:Google.Api.Ads.Common.Lib.AuthTokenCache.AddToken(System.String,System.String,System.String)">
+            <summary>
+            Adds an auth token to cache.
+            </summary>
+            <param name="service">The ClientLogin service for which this auth token
+            is generated.</param>
+            <param name="email">The login email.</param>
+            <param name="token">The auth token.</param>
+            <returns>The auth token.</returns>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.AuthTokenCache.GetToken(System.String,System.String)">
+            <summary>
+            Gets an auth token from cache.
+            </summary>
+            <param name="service">The ClientLogin service for which this auth token
+            is generated.</param>
+            <param name="email">The login email.</param>
+            <returns>The auth token, or null if the cache doesn't have a token.
+            </returns>
+        </member>
         <member name="M:Google.Api.Ads.Common.Lib.AuthTokenCache.InvalidateToken(System.String)">
             <summary>
             Invalidates an auth token.
@@ -1919,25 +1742,25 @@
             <param name="key">The key for which value should be retrieved.</param>
             <returns>The object's value, or null if the key is missing.</returns>
         </member>
-        <member name="T:Google.Api.Ads.Common.Lib.CredentialsExpiredException">
+        <member name="T:Google.Api.Ads.Common.Lib.CredentialsExpiredException`1">
             <summary>
             Exception thrown when credentials are expired.
             </summary>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException.#ctor(System.String)">
+        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException`1.#ctor(`0)">
             <summary>
             Public constructor.
             </summary>
             <param name="expiredCredential">The expired credential.</param>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException.#ctor(System.String,System.String)">
+        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException`1.#ctor(`0,System.String)">
             <summary>
             Public constructor.
             </summary>
             <param name="message">Error message for this API exception.</param>
             <param name="expiredCredential">The expired credential.</param>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException.#ctor(System.String,System.String,System.Exception)">
+        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException`1.#ctor(`0,System.String,System.Exception)">
             <summary>
             Public constructor.
             </summary>
@@ -1945,7 +1768,7 @@
             <param name="message">Error message for this API exception.</param>
             <param name="innerException">Inner exception, if any.</param>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
             Protected constructor. Used by serialization frameworks while
             deserializing an exception object.
@@ -1954,7 +1777,7 @@
             <param name="context">A streaming context that represents the
             serialization stream.</param>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+        <member name="M:Google.Api.Ads.Common.Lib.CredentialsExpiredException`1.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
             <summary>
             Gets details about the exception for serialization.
             </summary>
@@ -1963,7 +1786,7 @@
             <param name="context">Contains contextual information about the source
             or destination.</param>
         </member>
-        <member name="P:Google.Api.Ads.Common.Lib.CredentialsExpiredException.ExpiredCredential">
+        <member name="P:Google.Api.Ads.Common.Lib.CredentialsExpiredException`1.ExpiredCredential">
             <summary>
             Gets the expired credential.
             </summary>
@@ -1973,7 +1796,7 @@
             Default implementation of auth token cache.
             </summary>
         </member>
-        <member name="F:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.tokenMap">
+        <member name="F:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.tokenCache">
             <summary>
             An internal dictionary for caching auth tokens.
             </summary>
@@ -2003,6 +1826,26 @@
             The auth token, or null if the cache doesn't have a token.
             </returns>
         </member>
+        <member name="M:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.AddToken(System.String,System.String,System.String)">
+            <summary>
+            Adds an auth token to cache.
+            </summary>
+            <param name="service">The ClientLogin service for which this auth token
+            is generated.</param>
+            <param name="email">The login email.</param>
+            <param name="token">The auth token.</param>
+            <returns>The auth token.</returns>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.GetToken(System.String,System.String)">
+            <summary>
+            Gets an auth token from cache.
+            </summary>
+            <param name="service">The ClientLogin service for which this auth token
+            is generated.</param>
+            <param name="email">The login email.</param>
+            <returns>The auth token, or null if the cache doesn't have a token.
+            </returns>
+        </member>
         <member name="M:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.InvalidateToken(System.String)">
             <summary>
             Invalidates an auth token.
@@ -2014,94 +1857,73 @@
             Clears the cache.
             </summary>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.GetKey(System.String,System.String,System.String)">
+        <member name="M:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.GetKey(System.String,System.String)">
             <summary>
             Gets a unique key for cache map.
             </summary>
             <param name="service">The ClientLogin service.</param>
             <param name="email">The login email.</param>
-            <param name="password">The login password.</param>
             <returns>The cache map key.</returns>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.CalculateMD5Hash(System.String)">
-            <summary>
-            Calculates the MD5 hash for a string.
-            </summary>
-            <param name="input">The input text.</param>
-            <returns>The MD5 hash string for the input.</returns>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.ValidateParams(System.String,System.String,System.String)">
+        <member name="M:Google.Api.Ads.Common.Lib.DefaultAuthTokenCache.ValidateParams(System.String,System.String)">
             <summary>
             Validates the input params.
             </summary>
             <param name="service">The ClientLogin service name.</param>
             <param name="email">The login email.</param>
-            <param name="password">The login password.</param>
-        </member>
-        <member name="T:Google.Api.Ads.Common.Lib.DefaultTraceWriter">
-            <summary>
-            Default trace writer, that write trace to a file on disk.
-            </summary>
-        </member>
-        <member name="T:Google.Api.Ads.Common.Lib.TraceWriter">
-            <summary>
-            Interface for writing SOAP and HTTP trace logs.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.TraceWriter.Write(System.String,System.String)">
-            <summary>
-            Write the SOAP and HTTP trace logs.
-            </summary>
-            <param name="soapLog">The SOAP log.</param>
-            <param name="requestLog">The HTTP request log.</param>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.DefaultTraceWriter.MAX_ATTEMPTS">
-            <summary>
-            Maximum number of attempts to write to log file if it is locked.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.DefaultTraceWriter.soapFileName">
-            <summary>
-            The filename to which we log the SOAP messages.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.DefaultTraceWriter.requestInfoFileName">
-            <summary>
-            The filename to which we log the request info.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.DefaultTraceWriter.#ctor(Google.Api.Ads.Common.Lib.AppConfig)">
-            <summary>
-            Overloaded constructor.
-            </summary>
-            <param name="config">The application configuration class for configuring
-            this instance.</param>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.DefaultTraceWriter.Write(System.String,System.String)">
-            <summary>
-            Write the SOAP and HTTP trace logs.
-            </summary>
-            <param name="soapLog">The SOAP log.</param>
-            <param name="requestLog">The HTTP request log.</param>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Lib.DefaultTraceWriter.WriteToFile(System.String,System.String)">
-            <summary>
-            Writes a log string into a specified log file.
-            </summary>
-            <param name="fileName">The file to which the log text should be written.
-            </param>
-            <param name="logText">The log text to be written to the file.</param>
         </member>
         <member name="T:Google.Api.Ads.Common.Lib.ErrorHandler">
             <summary>
             Handles errors for an Ads API.
             </summary>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.#ctor(Google.Api.Ads.Common.Lib.AdsUser)">
+        <member name="F:Google.Api.Ads.Common.Lib.ErrorHandler.WAIT_TIME">
+            <summary>
+            Wait time in ms to wait before retrying a call. The actual retry time
+            will be higher due to exponential backoff.
+            </summary>
+        </member>
+        <member name="F:Google.Api.Ads.Common.Lib.ErrorHandler.numRetries">
+            <summary>
+            Number of retry attempts made.
+            </summary>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.#ctor(Google.Api.Ads.Common.Lib.AppConfig)">
             <summary>
             Initializes a new instance of the <see cref="T:Google.Api.Ads.Common.Lib.ErrorHandler"/> class.
             </summary>
             <param name="user">The user.</param>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.DoExponentialBackoff">
+            <summary>
+            Does the exponential backoff.
+            </summary>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.HaveMoreRetryAttemptsLeft">
+            <summary>
+            Checks if there are more retry attempts left.
+            </summary>
+            <returns>True, if there are more retry attempts left, false otherwise.
+            </returns>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.IncrementRetriedAttempts">
+            <summary>
+            Increment the counter for attempts retried.
+            </summary>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.IsTransientError(System.Exception)">
+            <summary>
+            Determines whether the exception thrown by the server is a transient
+            error.</summary>
+            <param name="ex">The exception.</param>
+            <returns>True, if the server exception is a transient error, false
+            otherwise.</returns>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.PrepareForRetry(System.Exception)">
+            <summary>
+            Prepares the system for retrying the last failed call.
+            </summary>
+            <param name="ex">The exception.</param>
         </member>
         <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.ShouldRetry(System.Exception)">
             <summary>
@@ -2110,11 +1932,56 @@
             <param name="ex">The exception.</param>
             <returns>True, if the call should be retried, false otherwise.</returns>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.ErrorHandler.PrepareForRetry(System.Exception)">
+        <member name="T:Google.Api.Ads.Common.Lib.InMemoryTokenCache`1">
             <summary>
-            Prepares the system for retrying the last failed call.
+            Implements an in-memory cache for holding tokens.
             </summary>
-            <param name="ex">The exception.</param>
+        </member>
+        <member name="F:Google.Api.Ads.Common.Lib.InMemoryTokenCache`1.tokenMap">
+            <summary>
+            An internal dictionary for caching tokens.
+            </summary>
+        </member>
+        <member name="F:Google.Api.Ads.Common.Lib.InMemoryTokenCache`1.signatureMap">
+            <summary>
+            An internal dictionary for caching token signatures.
+            </summary>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.InMemoryTokenCache`1.AddToken(System.String,`0)">
+            <summary>
+            Adds a token to cache.
+            </summary>
+            <param name="signature">The token signature, used as a key.</param>
+            <param name="token">The token to be cached.</param>
+            <returns>
+            The cached token.
+            </returns>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.InMemoryTokenCache`1.GetToken(System.String)">
+            <summary>
+            Gets a token from cache.
+            </summary>
+            <param name="signature">The token signature, used as a key.</param>
+            <returns>
+            The cached token, or null if the cache doesn't have a token.
+            </returns>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.InMemoryTokenCache`1.InvalidateToken(`0)">
+            <summary>
+            Invalidates a cached token.
+            </summary>
+            <param name="token">The cached token.</param>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.InMemoryTokenCache`1.Clear">
+            <summary>
+            Clears the cache.
+            </summary>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Lib.InMemoryTokenCache`1.ValidateParams(System.String)">
+            <summary>
+            Validates the input params.
+            </summary>
+            <param name="signature">The token signature, used as a key.</param>
         </member>
         <member name="F:Google.Api.Ads.Common.Lib.OAuth2ProviderBase.AUTH_ENDPOINT">
             <summary>
@@ -2521,6 +2388,13 @@
             </summary>
             <param name="config">The configuration class.</param>
         </member>
+        <member name="M:Google.Api.Ads.Common.Lib.ServiceFactory.CheckServicePreconditions(Google.Api.Ads.Common.Lib.ServiceSignature)">
+            <summary>
+            Checks preconditions of the service signature and throws and exception if the service
+            cannot be generated.
+            </summary>
+            <param name="signature">the service signature for generating the service</param>
+        </member>
         <member name="P:Google.Api.Ads.Common.Lib.ServiceFactory.Config">
             <summary>
             Gets an App.config reader suitable for this factory.
@@ -2802,14 +2676,14 @@
             Listens to SOAP messages sent and received by this library.
             </summary>
         </member>
+        <member name="F:Google.Api.Ads.Common.Lib.TraceListener.MASK_PATTERN">
+            <summary>
+            The mask pattern to be used when masking sensitive data in logs.
+            </summary>
+        </member>
         <member name="F:Google.Api.Ads.Common.Lib.TraceListener.config">
             <summary>
             The config class to be used with this class.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Lib.TraceListener.writer">
-            <summary>
-            The writer for writing trace logs.
             </summary>
         </member>
         <member name="M:Google.Api.Ads.Common.Lib.TraceListener.#ctor(Google.Api.Ads.Common.Lib.AppConfig)">
@@ -2894,7 +2768,7 @@
             <param name="headers">The HTTP headers.</param>
             <returns>The modified SOAP xml for appending to the logs.</returns>
         </member>
-        <member name="M:Google.Api.Ads.Common.Lib.TraceListener.MaskCredentialsInLogs(System.Xml.XmlDocument,System.String[])">
+        <member name="M:Google.Api.Ads.Common.Lib.TraceListener.MaskCredentialsInLogs(System.Xml.XmlDocument,System.Collections.Generic.ISet{System.String})">
             <summary>
             Masks a list of fields in the SOAP message before logging it.
             </summary>
@@ -2905,11 +2779,6 @@
         <member name="P:Google.Api.Ads.Common.Lib.TraceListener.Config">
             <summary>
             Gets the config class to be used with this class.
-            </summary>
-        </member>
-        <member name="P:Google.Api.Ads.Common.Lib.TraceListener.Writer">
-            <summary>
-            Gets or sets the writer for writing trace logs.
             </summary>
         </member>
         <member name="T:Google.Api.Ads.Common.Util.CsvException">
@@ -3138,46 +3007,12 @@
             Thrown if <paramref name="sourceStream"/> or
             <paramref name="targetStream"/> is null.</exception>
         </member>
-        <member name="T:Google.Api.Ads.Common.Util.OAuth2TokenGenerator">
+        <member name="M:Google.Api.Ads.Dfp.Util.PreconditionUtilities.CheckArgumentNotNull(System.Object,System.String)">
             <summary>
-            This utility class generates the necessary configuration that allows you
-            to configure your application to use OAuth2 as authentication mechanism
-            when working with various Ads* API .NET libraries.
+            Utility method for null checking arguments.
             </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Util.OAuth2TokenGenerator.APP_CONFIG_PATCH">
-            <summary>
-            The App.config patch to be displayed to the user.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Util.OAuth2TokenGenerator.USAGE">
-            <summary>
-            The usage string to be displayed to the user.
-            </summary>
-        </member>
-        <member name="F:Google.Api.Ads.Common.Util.OAuth2TokenGenerator.LOCALHOST_ADDRESS">
-            <summary>
-            The address for running local web server.
-            </summary>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Util.OAuth2TokenGenerator.Main(System.String[])">
-            <summary>
-            Run the application.
-            </summary>
-            <param name="args">The command line arguments.</param>
-        </member>
-        <member name="M:Google.Api.Ads.Common.Util.OAuth2TokenGenerator.AcceptInputWithRetry(System.String)">
-            <summary>
-            Accepts an input from the user, and retries if the user enters an empty
-            value.
-            </summary>
-            <param name="message">The prompt message.</param>
-            <returns>The user input</returns>
-        </member>
-        <member name="T:Google.Api.Ads.Common.Util.OAuth2TokenGenerator.SimpleAppConfig">
-            <summary>
-            A minimal AppConfig class.
-            </summary>
+            <param name="obj">The Object to check</param>
+            <param name="argument">The name of the argument being checked</param>
         </member>
         <member name="T:Google.Api.Ads.Common.Util.SerializationUtilities">
             <summary>
@@ -3265,6 +3100,21 @@
             <remarks><paramref name="objToSerialize"/> must me XmlSerializable.
             </remarks>
         </member>
+        <member name="T:Google.Api.Ads.Common.Util.SerializationUtilities.Utf8StringWriter">
+            <summary>
+            Used for serializing string into UTF-8 xml, instead of default Unicode.
+            (utf-16). 
+            </summary>
+        </member>
+        <member name="P:Google.Api.Ads.Common.Util.SerializationUtilities.Utf8StringWriter.Encoding">
+            <summary>
+            Gets the <see cref="T:System.Text.Encoding" /> in which the output is
+            written.
+            </summary>
+            <returns>
+            The Encoding in which the output is written.
+              </returns>
+        </member>
         <member name="T:Google.Api.Ads.Common.Util.TraceUtilities">
             <summary>
             Provides utility methods to write to Trace stream.
@@ -3278,6 +3128,16 @@
         <member name="F:Google.Api.Ads.Common.Util.TraceUtilities.GENERAL_WARNING_MESSAGES_SOURCE">
             <summary>
             Trace source for general warning messages.
+            </summary>
+        </member>
+        <member name="F:Google.Api.Ads.Common.Util.TraceUtilities.SOAP_XML_LOGS_SOURCE">
+            <summary>
+            Trace source for SOAP XML logs.
+            </summary>
+        </member>
+        <member name="F:Google.Api.Ads.Common.Util.TraceUtilities.REQUEST_INFO_LOGS_SOURCE">
+            <summary>
+            Trace source for request info logs.
             </summary>
         </member>
         <member name="F:Google.Api.Ads.Common.Util.TraceUtilities.ADS_API_TRACE_ID">
@@ -3312,6 +3172,24 @@
             <remarks>The trace levels may be controlled from App.config by setting
             the level for AdsClientLibs.GeneralWarningMessages trace switch. </remarks>
         </member>
+        <member name="M:Google.Api.Ads.Common.Util.TraceUtilities.WriteSoapXmlLogs(System.String,System.Boolean)">
+            <summary>
+            Writes the SOAP XML logs.
+            </summary>
+            <param name="message">The SOAP XML logs.</param>
+            <param name="isError">Indicates whether or not these are error logs.</param>
+            <remarks>The trace levels may be controlled from App.config by setting
+            the level for AdsClientLibs.SoapXmlLogs trace switch. </remarks>
+        </member>
+        <member name="M:Google.Api.Ads.Common.Util.TraceUtilities.WriteRequestInfoLogs(System.String,System.Boolean)">
+            <summary>
+            Writes the request info logs.
+            </summary>
+            <param name="message">The request info logs.</param>
+            <param name="isError">Indicates whether or not these are error logs.</param>
+            <remarks>The trace levels may be controlled from App.config by setting
+            the level for AdsClientLibs.RequestInfoLogs trace switch. </remarks>
+        </member>
         <member name="M:Google.Api.Ads.Common.Util.TraceUtilities.Write(System.String,System.Diagnostics.TraceEventType,System.String)">
             <summary>
             Writes to the specified Trace source.
@@ -3344,6 +3222,11 @@
         <member name="P:Google.Api.Ads.Common.CommonErrorMessages.EmailCannotBeNull">
             <summary>
               Looks up a localized string similar to Email cannot be null.
+            </summary>
+        </member>
+        <member name="P:Google.Api.Ads.Common.CommonErrorMessages.FailedToParseAuthTokenException">
+            <summary>
+              Looks up a localized string similar to Failed to parse response from server. See inner exception for more details..
             </summary>
         </member>
         <member name="P:Google.Api.Ads.Common.CommonErrorMessages.InvalidStageForSoapMessage">
@@ -3389,6 +3272,11 @@
         <member name="P:Google.Api.Ads.Common.CommonErrorMessages.ServiceCannotBeNull">
             <summary>
               Looks up a localized string similar to Service cannot be null.
+            </summary>
+        </member>
+        <member name="P:Google.Api.Ads.Common.CommonErrorMessages.SignatureCannotBeNull">
+            <summary>
+              Looks up a localized string similar to Cache signature cannot be null..
             </summary>
         </member>
         <member name="P:Google.Api.Ads.Common.CommonErrorMessages.SoapListenerExtensionNotLoaded">

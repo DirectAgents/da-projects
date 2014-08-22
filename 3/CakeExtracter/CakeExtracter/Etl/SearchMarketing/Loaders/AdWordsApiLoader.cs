@@ -36,12 +36,12 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
 
                 foreach (var item in items)
                 {
-                    var accountId = item["accountID"];
+                    var customerId = item["customerID"];
                     var campaignId = int.Parse(item["campaignID"]);
 
                     var searchAccount = passedInAccount;
-                    if (searchAccount.ExternalId != accountId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == accountId && sa.Channel == googleChannel);
+                    if (searchAccount.ExternalId != customerId)
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
 
                     var pk1 = searchAccount.SearchCampaigns.Single(c => c.ExternalId == campaignId).SearchCampaignId;
                     var pk2 = DateTime.Parse(item["day"].Replace('-', '/'));
@@ -57,7 +57,7 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         ClickType = pk5,
                         Revenue = decimal.Parse(item["totalConvValue"]),
                         Cost = decimal.Parse(item["cost"]) / 1000000, // convert from mincrons to dollars
-                        Orders = int.Parse(item["conv1PerClick"]),
+                        Orders = int.Parse(item["convertedClicks"]),
                         Clicks = int.Parse(item["clicks"]),
                         Impressions = int.Parse(item["impressions"]),
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1 // NOTE: non USD (if exists) -1 for now
@@ -96,22 +96,22 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 var searchAccount = db.SearchAccounts.Find(this.searchAccountId);
 
-                var accountTuples = items.Select(i => Tuple.Create(i["account"], i["accountID"])).Distinct();
+                var accountTuples = items.Select(i => Tuple.Create(i["account"], i["customerID"])).Distinct();
                 bool multipleAccounts = accountTuples.Count() > 1;
 
                 foreach (var tuple in accountTuples)
                 {
                     var accountName = tuple.Item1;
-                    var accountID = tuple.Item2;
+                    var customerId = tuple.Item2;
                     SearchAccount existing = null;
 
-                    if (searchAccount.ExternalId == accountID || !multipleAccounts)
-                    {   // if the accountID matches or if there's only one account in the items-to-load, use the passed-in SearchAccount
+                    if (searchAccount.ExternalId == customerId || !multipleAccounts)
+                    {   // if the customerId matches or if there's only one account in the items-to-load, use the passed-in SearchAccount
                         existing = searchAccount;
                     }
                     else
-                    {   // See if there are any sibling SearchAccounts that match by accountID... or finally, by name
-                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == accountID && sa.Channel == googleChannel);
+                    {   // See if there are any sibling SearchAccounts that match by customerId... or finally, by name
+                        existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
                         if (existing == null)
                             existing = searchAccount.Advertiser.SearchAccounts.SingleOrDefault(sa => sa.Name == accountName && sa.Channel == googleChannel);
                     }
@@ -123,9 +123,9 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             Name = accountName,
                             Channel = googleChannel,
                             //AccountCode = , // todo: have extracter get client code
-                            ExternalId = accountID
+                            ExternalId = customerId
                         });
-                        Logger.Info("Saving new SearchAccount: {0} ({1})", accountName, accountID);
+                        Logger.Info("Saving new SearchAccount: {0} ({1})", accountName, customerId);
                     }
                     else
                     {
@@ -134,10 +134,10 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                             existing.Name = accountName;
                             Logger.Info("Saving updated SearchAccount name: {0} ({1})", accountName, existing.SearchAccountId);
                         }
-                        if (existing.ExternalId != accountID)
+                        if (existing.ExternalId != customerId)
                         {
-                            existing.ExternalId = accountID;
-                            Logger.Info("Saving updated SearchAccount ExternalId: {0} ({1})", accountID, existing.SearchAccountId);
+                            existing.ExternalId = customerId;
+                            Logger.Info("Saving updated SearchAccount ExternalId: {0} ({1})", customerId, existing.SearchAccountId);
                         }
                     }
                     db.SaveChanges();
@@ -151,15 +151,15 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
             {
                 var passedInAccount = db.SearchAccounts.Find(this.searchAccountId);
 
-                foreach (var tuple in items.Select(c => Tuple.Create(c["accountID"], c["campaign"], c["campaignID"])).Distinct())
+                foreach (var tuple in items.Select(c => Tuple.Create(c["customerID"], c["campaign"], c["campaignID"])).Distinct())
                 {
-                    var accountId = tuple.Item1;
+                    var customerId = tuple.Item1;
                     var campaignName = tuple.Item2;
                     var campaignId = int.Parse(tuple.Item3);
 
                     var searchAccount = passedInAccount;
-                    if (searchAccount.ExternalId != accountId)
-                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == accountId && sa.Channel == googleChannel);
+                    if (searchAccount.ExternalId != customerId)
+                        searchAccount = searchAccount.Advertiser.SearchAccounts.Single(sa => sa.ExternalId == customerId && sa.Channel == googleChannel);
 
                     var existing = searchAccount.SearchCampaigns.SingleOrDefault(c => c.ExternalId == campaignId);
 

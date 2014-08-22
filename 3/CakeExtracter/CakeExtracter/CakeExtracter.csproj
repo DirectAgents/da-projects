@@ -80,18 +80,21 @@
     <Reference Include="EntityFramework.Extended">
       <HintPath>..\..\ClientPortal.Web\packages\EntityFramework.Extended.5.0.0.73\lib\net45\EntityFramework.Extended.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Ads.Common">
-      <HintPath>..\..\ClientPortal.Web\packages\Google.Ads.Common.1.8.0\lib\net20\Google.Ads.Common.dll</HintPath>
+    <Reference Include="Google.Ads.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Ads.Common.3.2.0\lib\net40\Google.Ads.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Google.AdWords">
-      <HintPath>..\..\ClientPortal.Web\packages\Google.AdWords.16.1.0\lib\net20\Google.AdWords.dll</HintPath>
+    <Reference Include="Google.AdWords, Version=18.3.0.0, Culture=neutral, PublicKeyToken=52807268f2b614dc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\Google.AdWords.18.3.0\lib\net40\Google.AdWords.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis, Version=1.8.2.23762, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.1.8.2\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Analytics.v3">
-      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Analytics.v3.1.5.0.71-beta\lib\portable-net4+sl4+wp71+win8\Google.Apis.Analytics.v3.dll</HintPath>
+    <Reference Include="Google.Apis.Analytics.v3, Version=1.8.1.99, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Analytics.v3.1.8.1.990\lib\portable-net4+sl4+wp71+win8\Google.Apis.Analytics.v3.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Auth">
       <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Auth.1.8.2\lib\net40\Google.Apis.Auth.dll</HintPath>

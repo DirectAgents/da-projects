@@ -45,7 +45,8 @@ namespace CakeExtracter.Etl.SearchMarketing.Loaders
                         ClickType = pk5,
                         Revenue = decimal.Parse(item["totalConvValue"]),
                         Cost = decimal.Parse(item["cost"]),
-                        Orders = int.Parse(item["conv1PerClick"]),
+                        //Orders = int.Parse(item["conv1PerClick"]),
+                        Orders = int.Parse(item["convertedClicks"]),
                         Clicks = int.Parse(item["clicks"]),
                         Impressions = int.Parse(item["impressions"]),
                         CurrencyId = (!item.Keys.Contains("currency") || item["currency"] == "USD") ? 1 : -1 // NOTE: non USD (if exists) -1 for now
