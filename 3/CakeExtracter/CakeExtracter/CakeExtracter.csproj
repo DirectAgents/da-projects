@@ -86,17 +86,31 @@
     <Reference Include="Google.AdWords">
       <HintPath>..\..\ClientPortal.Web\packages\Google.AdWords.16.1.0\lib\net20\Google.AdWords.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis">
-      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.1.5.0-beta\lib\net40\Google.Apis.dll</HintPath>
+    <Reference Include="Google.Apis, Version=1.8.2.23762, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.1.8.2\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Analytics.v3">
       <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Analytics.v3.1.5.0.71-beta\lib\portable-net4+sl4+wp71+win8\Google.Apis.Analytics.v3.dll</HintPath>
     </Reference>
+    <Reference Include="Google.Apis.Auth">
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Auth.1.8.2\lib\net40\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices">
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Auth.1.8.2\lib\net40\Google.Apis.Auth.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Apis.Authentication.OAuth2">
       <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Authentication.1.5.0-beta\lib\net40\Google.Apis.Authentication.OAuth2.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.PlatformServices">
-      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.1.5.0-beta\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
+    <Reference Include="Google.Apis.Core">
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Core.1.8.2\lib\portable-net4+sl4+wp71+win8\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.8.2.23765, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.1.8.2\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Storage.v1">
+      <HintPath>..\..\ClientPortal.Web\packages\Google.Apis.Storage.v1.1.8.1.70\lib\portable-net4+sl4+wp71+win8\Google.Apis.Storage.v1.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\ClientPortal.Web\packages\log4net.2.0.2\lib\net40-full\log4net.dll</HintPath>
