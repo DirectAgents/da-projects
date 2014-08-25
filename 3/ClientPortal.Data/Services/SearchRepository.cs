@@ -108,17 +108,20 @@ namespace ClientPortal.Data.Services
             if (!String.IsNullOrWhiteSpace(device) && useAnalytics)
                 throw new Exception("specifying a device and useAnalytics not supported");
 
+            DateTime today = DateTime.Today;
             DateTime start;
             if (numWeeks.HasValue) // If the number of weeks is present
-                start = DateTime.Today.AddDays(-7 * numWeeks.Value + 6); // Then set start date to numWeeks weeks ago, plus 6 (works with leap year?)
+                start = today.AddDays(-7 * numWeeks.Value + 6); // Then set start date to numWeeks weeks ago, plus 6 (works with leap year?)
+            //else if (today.Month == 12)
+            //    start = new DateTime(today.Year, 1, 1);
             else
-                start = DateTime.Today.AddYears(-1); // Otherwise set the start date to a year ago
+                start = today.AddMonths(-11); // Otherwise set the start date to 11 months ago
 
             // Now move start date back to the closest startDayOfWeek
             while (start.DayOfWeek != startDayOfWeek)
                 start = start.AddDays(-1);
 
-            var latestDate = includeToday ? DateTime.Today : DateTime.Today.AddDays(-1);
+            var latestDate = includeToday ? today : today.AddDays(-1);
 
             var daySums =
                 GetSearchDailySummaries(advertiserId, channel, searchAccountId, channelPrefix, device, start, null, includeToday)
