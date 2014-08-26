@@ -41,6 +41,7 @@
           <EntitySet Name="SearchChannel" EntityType="ClientPortalModel.Store.SearchChannel" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary" EntityType="ClientPortalModel.Store.SearchDailySummary" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SearchDailySummary2" EntityType="ClientPortalModel.Store.SearchDailySummary2" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SearchProfile" EntityType="ClientPortalModel.Store.SearchProfile" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserEvent" EntityType="ClientPortalModel.Store.UserEvent" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="UserProfile" EntityType="ClientPortalModel.Store.UserProfile" store:Type="Tables" Schema="dbo" />
           <AssociationSet Name="FK_Advertiser_CakeContact" Association="ClientPortalModel.Store.FK_Advertiser_CakeContact">
@@ -170,6 +171,10 @@
           <AssociationSet Name="FK_UserEvent_UserProfile" Association="ClientPortalModel.Store.FK_UserEvent_UserProfile">
             <End Role="UserProfile" EntitySet="UserProfile" />
             <End Role="UserEvent" EntitySet="UserEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserProfile_SearchProfile" Association="ClientPortalModel.Store.FK_UserProfile_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfile" />
+            <End Role="UserProfile" EntitySet="UserProfile" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Advertiser">
@@ -593,6 +598,14 @@
           <Property Name="Device" Type="nchar" Nullable="false" MaxLength="1" />
           <Property Name="ClickType" Type="nchar" Nullable="false" MaxLength="1" />
         </EntityType>
+        <EntityType Name="SearchProfile">
+          <Key>
+            <PropertyRef Name="SearchProfileId" />
+          </Key>
+          <Property Name="SearchProfileId" Type="int" Nullable="false" />
+          <Property Name="SearchProfileName" Type="nvarchar(max)" />
+          <Property Name="StartDayOfWeek" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserEvent">
           <Key>
             <PropertyRef Name="EventId" />
@@ -614,6 +627,7 @@
           <Property Name="SearchWeekStartDay" Type="int" Nullable="false" />
           <Property Name="SearchWeekEndDay" Type="int" Nullable="false" />
           <Property Name="TradingDeskAccountId" Type="int" />
+          <Property Name="SearchProfileId" Type="int" />
         </EntityType>
         <Association Name="FK_Advertiser_CakeContact">
           <End Role="CakeContact" Type="ClientPortalModel.Store.CakeContact" Multiplicity="0..1" />
@@ -1003,6 +1017,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserProfile_SearchProfile">
+          <End Role="SearchProfile" Type="ClientPortalModel.Store.SearchProfile" Multiplicity="0..1" />
+          <End Role="UserProfile" Type="ClientPortalModel.Store.UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Principal>
+            <Dependent Role="UserProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -1168,6 +1194,11 @@
           </AssociationSet>
           <EntitySet Name="OfferDailySummaries" EntityType="ClientPortalModel.OfferDailySummary" />
           <EntitySet Name="DailySummaries" EntityType="ClientPortalModel.DailySummary" />
+          <EntitySet Name="SearchProfiles" EntityType="ClientPortalModel.SearchProfile" />
+          <AssociationSet Name="FK_UserProfile_SearchProfile" Association="ClientPortalModel.FK_UserProfile_SearchProfile">
+            <End Role="SearchProfile" EntitySet="SearchProfiles" />
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+          </AssociationSet>
           </EntityContainer>
         <EnumType Name="EmailStatus">
           <Member Name="Default" Value="1" />
@@ -1476,6 +1507,8 @@
           <Property Type="Int32" Name="SearchWeekEndDay" Nullable="false" />
           <NavigationProperty Name="UserEvents" Relationship="ClientPortalModel.FK_UserEvent_UserProfile" FromRole="UserProfile" ToRole="UserEvent" />
           <Property Type="Int32" Name="TradingDeskAccountId" />
+          <Property Type="Int32" Name="SearchProfileId" />
+          <NavigationProperty Name="SearchProfile" Relationship="ClientPortalModel.FK_UserProfile_SearchProfile" FromRole="UserProfile" ToRole="SearchProfile" />
         </EntityType>
         <EntityType Name="SearchDailySummary2">
           <Key>
@@ -2058,6 +2091,27 @@
           <Property Type="Decimal" Name="Cost" Nullable="false" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="Revenue" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
+        <EntityType Name="SearchProfile">
+          <Key>
+            <PropertyRef Name="SearchProfileId" />
+          </Key>
+          <Property Type="Int32" Name="SearchProfileId" Nullable="false" />
+          <Property Type="String" Name="SearchProfileName" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfiles" Relationship="ClientPortalModel.FK_UserProfile_SearchProfile" FromRole="SearchProfile" ToRole="UserProfile" />
+          <Property Type="Int32" Name="StartDayOfWeek" Nullable="false" DefaultValue="1" />
+        </EntityType>
+        <Association Name="FK_UserProfile_SearchProfile">
+          <End Type="ClientPortalModel.SearchProfile" Role="SearchProfile" Multiplicity="0..1" />
+          <End Type="ClientPortalModel.UserProfile" Role="UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SearchProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Principal>
+            <Dependent Role="UserProfile">
+              <PropertyRef Name="SearchProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2238,6 +2292,7 @@
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="ClientPortalModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
                 <ScalarProperty Name="TradingDeskAccountId" ColumnName="TradingDeskAccountId" />
                 <ScalarProperty Name="SearchWeekEndDay" ColumnName="SearchWeekEndDay" />
                 <ScalarProperty Name="SearchWeekStartDay" ColumnName="SearchWeekStartDay" />
@@ -2526,6 +2581,15 @@
                 <ScalarProperty Name="AffiliateId" ColumnName="AffiliateId" />
                 <ScalarProperty Name="OfferId" ColumnName="OfferId" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SearchProfiles">
+            <EntityTypeMapping TypeName="ClientPortalModel.SearchProfile">
+              <MappingFragment StoreEntitySet="SearchProfile">
+                <ScalarProperty Name="StartDayOfWeek" ColumnName="StartDayOfWeek" />
+                <ScalarProperty Name="SearchProfileName" ColumnName="SearchProfileName" />
+                <ScalarProperty Name="SearchProfileId" ColumnName="SearchProfileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

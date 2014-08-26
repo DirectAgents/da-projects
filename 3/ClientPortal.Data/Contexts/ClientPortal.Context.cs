@@ -61,5 +61,6 @@ namespace ClientPortal.Data.Contexts
         public DbSet<CPMReport> CPMReports { get; set; }
         public DbSet<OfferDailySummary> OfferDailySummaries { get; set; }
         public DbSet<DailySummary> DailySummaries { get; set; }
+        public DbSet<SearchProfile> SearchProfiles { get; set; }
     }
 }

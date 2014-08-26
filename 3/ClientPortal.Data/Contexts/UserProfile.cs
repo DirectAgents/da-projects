@@ -27,7 +27,9 @@ namespace ClientPortal.Data.Contexts
         public int SearchWeekStartDay { get; set; }
         public int SearchWeekEndDay { get; set; }
         public Nullable<int> TradingDeskAccountId { get; set; }
+        public Nullable<int> SearchProfileId { get; set; }
     
         public virtual ICollection<UserEvent> UserEvents { get; set; }
+        public virtual SearchProfile SearchProfile { get; set; }
     }
 }
