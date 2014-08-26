@@ -1,4 +1,4 @@
-﻿@model ClientPortal.Web.Models.IndexModel
+﻿@model ClientPortal.Web.Models.SearchIndexModel
 
 <style>
     .searchdiv {
@@ -123,7 +123,7 @@
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-GB.min.js"></script>
     <script src="~/Scripts/kendo/2013.1.514/cultures/kendo.culture.en-AU.min.js"></script>
     <script src="~/Scripts/search_grids_charts.js"></script>
-    @Html.Partial("_DateFuncs")
+    @Html.Partial("_DateFuncs", Model.Dates)
 
     <script>
         // ready function

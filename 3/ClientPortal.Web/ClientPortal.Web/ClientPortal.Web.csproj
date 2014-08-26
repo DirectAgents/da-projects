@@ -262,6 +262,7 @@
     <Compile Include="Models\QuickBooksModels.cs" />
     <Compile Include="Models\ReportModel.cs" />
     <Compile Include="Models\ScheduledReportVM.cs" />
+    <Compile Include="Models\SearchIndexModel.cs" />
     <Compile Include="Models\SearchReportModel.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Web.Mvc;
-using ClientPortal.Data.Contracts;
+﻿using ClientPortal.Data.Contracts;
 using ClientPortal.Web.Models;
+using System;
+using System.Web.Mvc;
 
 namespace ClientPortal.Web.Controllers
 {
@@ -22,7 +22,7 @@ namespace ClientPortal.Web.Controllers
             if (!userInfo.HasSearch)
                 return RedirectToAction("Index", "Home");
 
-            var model = new IndexModel(userInfo);
+            var model = new SearchIndexModel(userInfo);
             return View(model);
         }
 

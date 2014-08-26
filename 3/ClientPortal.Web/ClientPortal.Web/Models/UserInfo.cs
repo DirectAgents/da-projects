@@ -66,8 +66,11 @@ namespace ClientPortal.Web.Models
 
         public bool HasSearch
         {
-            get { return (Advertiser == null) ? false : Advertiser.HasSearch; }
-            //get { return (UserProfile != null && UserProfile.SearchProfile != null); }
+            get {
+                if (UserProfile != null && UserProfile.SearchProfile != null)
+                    return true;
+                return (Advertiser == null) ? false : Advertiser.HasSearch;
+            }
         }
 
         public SearchProfile SearchProfile
